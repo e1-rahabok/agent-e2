@@ -18,28 +18,22 @@ Virtual machine memory translation involves three distinct address spaces:
 2. **GPA (Guest Physical Address):** The contiguous physical address space presented by the virtual hardware configuration to the Guest OS.
 3. **HPA / MPN (Host Physical Address / Machine Page Number):** The actual hardware RAM address allocated by the host hypervisor Kernel/VMkernel.
 
-```
-+-----------------------------------------------------------------------+
-|                        Guest OS User Space                            |
-|  [Application GVA]                                                    |
-+-----------------------------------------------------------------------+
-                                   | (Guest OS Page Tables / CR3)
-                                   v
-+-----------------------------------------------------------------------+
-|                       Guest OS Kernel Space                           |
-|  [Guest Physical Address (GPA)]                                       |
-+-----------------------------------------------------------------------+
-                                   | (Hardware SLAT: Intel EPT / AMD RVI)
-                                   v
-+-----------------------------------------------------------------------+
-|                        Host Hypervisor Layer                          |
-|  [Host Physical Address (HPA) / Machine Page Number (MPN)]            |
-+-----------------------------------------------------------------------+
-                                   |
-                                   v
-+-----------------------------------------------------------------------+
-|                         Physical DRAM Hardware                        |
-+-----------------------------------------------------------------------+
+```mermaid
+flowchart TD
+    subgraph UserSpace["Guest OS User Space"]
+        GVA["Application GVA"]
+    end
+    subgraph KernelSpace["Guest OS Kernel Space"]
+        GPA["Guest Physical Address (GPA)"]
+    end
+    subgraph HostLayer["Host Hypervisor Layer"]
+        HPA["Host Physical Address (HPA) / Machine Page Number (MPN)"]
+    end
+    DRAM["Physical DRAM Hardware"]
+
+    GVA -->|"Guest OS page tables (CR3)"| GPA
+    GPA -->|"Hardware SLAT: Intel EPT / AMD RVI"| HPA
+    HPA --> DRAM
 ```
 
 ---
@@ -134,30 +128,30 @@ The foundational behavior of hardware-assisted memory virtualization is identica
 
 The following trace details the exact step-by-step memory lifecycle within the VMware VMkernel architecture.
 
-```
-[Guest OS]                                  [Hardware CPU (EPT)]                    [ESXi VMkernel / VMM]
-    |                                                |                                        |
-    |--- 1. Boots & writes to GPA 0x00001000 ------->|                                        |
-    |                                                |--- 2. EPT Entry Missing (Violation) -->|
-    |                                                |                                        |--- 3. Allocates MPN 0x00005000
-    |                                                |<-- 4. Writes EPT Mapping ------------|
-    |<-- 5. Execution Resumes -----------------------|       (GPA 0x00001000 -> MPN 0x00005000)   |
-    |                                                |                                        |
-    |                                                |                                        |
-    |=== PHASE 2: Application Closes (Idle) =========|                                        |
-    |                                                |                                        |
-    |--- 6. Updates internal free list ------------->| (Normal Memory Write)                  |
-    |    (Clears PTEs for GPA 0x00001000)            |---> No EPT Fault Generated ----------->| [Unaware of Free State]
-    |                                                |                                        | Consumed remains 10 GB
-    |                                                |                                        |
-    |                                                |                                        |
-    |=== PHASE 3: New App Launches (Needs 2 GB) =====|                                        |
-    |                                                |                                        |
-    |--- 7. Re-assigns GPA 0x00001000 to New App --->|                                        |
-    |--- 8. App writes to GVA ---------------------->|--- 9. Translates GVA -> GPA ----------->|
-    |                                                |--- 10. EPT Translates GPA -> MPN ----->| [Zero Intervention]
-    |                                                |       (Direct Hardware Access)         | No Swap / No Balloon
-    v                                                v                                        v
+```mermaid
+sequenceDiagram
+    participant G as Guest OS
+    participant CPU as Hardware CPU (EPT)
+    participant V as ESXi VMkernel / VMM
+
+    Note over G,V: Phase 1: Initial allocation
+    G->>CPU: 1. Boots and writes to GPA 0x00001000
+    CPU->>V: 2. EPT entry missing (violation, VM-Exit)
+    V->>V: 3. Allocates MPN 0x00005000
+    V-->>CPU: 4. Writes EPT mapping (GPA 0x00001000 to MPN 0x00005000)
+    CPU-->>G: 5. Execution resumes
+
+    Note over G,V: Phase 2: Application closes (idle)
+    G->>CPU: 6. Updates internal free list (clears PTEs for GPA 0x00001000)
+    Note over CPU: Normal memory write, no EPT fault generated
+    Note over V: Unaware of free state, Consumed remains 10 GB
+
+    Note over G,V: Phase 3: New app launches (needs 2 GB)
+    G->>CPU: 7. Re-assigns GPA 0x00001000 to new app
+    G->>CPU: 8. App writes to GVA
+    Note over CPU: 9. Guest page tables translate GVA to GPA
+    Note over CPU: 10. EPT translates GPA to MPN (direct hardware access)
+    Note over V: Zero intervention: no swap, no balloon
 ```
 
 ### Trace Step Explanations
