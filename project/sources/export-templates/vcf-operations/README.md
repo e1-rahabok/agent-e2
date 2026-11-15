@@ -43,6 +43,7 @@ Datastore IOPS per host: `datastore:<id>|numberReadAveraged_average` and `number
 
 ## Not collected yet
 
-- **Metric picker labels.** The screen names (and their order in the picker) are not in the API. They need the logged-in browser session on the VCF Operations UI. The author has to sign in again in the browser; no credentials are entered by Claude.
-- **List view export** (VMs, a few metrics, Max/Min/First/Last over 7 days). This is a UI export and is not done.
-- **Decompression Rate** and the exact "Peak Transmitted Packet Dropped" key: not found under those names. Recorded above as missing or unclear, not guessed.
+- **Metric picker labels: collected**, see [picker-labels.md](picker-labels.md) and the grid [picker-search-grid.png](picker-search-grid.png). Read from the Metrics tab of a VM in the inventory, by typing each name into the picker's search box. Only the labels were read; no values.
+- **List view export** (VMs, a few metrics, Max/Min/First/Last over 7 days): not done. It is a UI export, and the headless session can reach the Metrics page to do it.
+- **CSV export format** of a VCF Operations chart or list (time stamp, delimiter, quoting): not done, same reason.
+- **Decompression Rate** (no picker entry, "No metrics to select.") and the exact "Peak Transmitted Packet Dropped" key: not found under those names. Recorded above as missing or unclear, not guessed.
