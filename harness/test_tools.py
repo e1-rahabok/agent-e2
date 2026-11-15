@@ -754,6 +754,20 @@ class PlannerTest(unittest.TestCase):
         for d in DOCS[self.READY].meta.get('internal_derive') or []:
             self.assertIn(d, used)
 
+    def test_named_files_strongest_first_and_only_the_first_whole(self):
+        # A question names many metric files by one plain title word; 9% of those are needed (retrieval check
+        # 2026-11-15). Names of two or more words come first, and only the first plan_named_whole are read whole.
+        ret = Retriever(DOCS, CHUNKS)
+        q = 'A VM shows CPU Ready at 8%, Co-stop at 3%, high Latency and Wait.'
+        tiers = planner.plan(ret, q, self.CFG)[0]
+        named = tiers['named']
+        self.assertLess(named.index(self.READY), named.index('vsphere/technology/cpu/metrics/virtual-motherboard/wait'))
+        ctx, used, _, tier = planner.reading_set(ret, q, dict(self.CFG, plan_named_whole=1))
+        in_named = [i for i in used if tier[i] == 'named']
+        self.assertGreater(len(in_named), 1)
+        self.assertIn(f'### {DOCS[in_named[0]].title}\n', ctx)               # the first is whole
+        self.assertIn(f'### {DOCS[in_named[1]].title} (sections)', ctx)      # the next give their best sections
+
     def test_same_question_same_reading_set_within_budget(self):
         ret = Retriever(DOCS, CHUNKS)
         q = 'Users say the VM is slow. CPU Ready is 2% and Run is 10%. What do you check first?'

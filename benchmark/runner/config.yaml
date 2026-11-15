@@ -51,6 +51,7 @@ embedding_model: alibaba/qwen3-embedding-0.6b   # null = BM25 only
 search_k: 6                   # hybrid search hits of the question: the top 3 read whole (tier 3), 4-6 as sections (harness/planner.py)
 context_tokens: 16000         # the reading set's budget (harness/AGENT.md, section 4.2)
 plan_section_tokens: 400      # reading plan: files below the whole-file tiers give their best sections, at most this many tokens each
+plan_named_whole: 3           # reading plan: named files read whole, strongest names first; the others give their best sections (harness/AGENT.md, 4.2)
 plan_derive_n: 8              # reading plan: internal_derive files taken per named file (the mechanism closure)
 plan_claims_max: 10           # reading plan: one search per claim, at most this many claims
 term_map: true                # user words -> knowledge-base terms, files and notes (knowledge/catalog/user-terms.yaml, harness/terms.py)

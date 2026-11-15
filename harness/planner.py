@@ -179,7 +179,13 @@ def plan(retriever, question, cfg, case=None):
     if flow_kind:
         tiers['flow'] = [h['id'] for h in retriever.search(search_text(question), filters={'retriever_guide': flow_kind}, k=2, min_hits=1)
                          if docs.get(h['id']) and docs[h['id']].meta.get('retriever_guide') == flow_kind][:1]
-    tiers['named'] = terms.files(matched, docs, cfg.get('term_map_files', 2)) + anchors(docs, question) + case_files(docs, case)
+    # Named files in order of strength: term-map rows, then names of two or more words, hyphenated names and counter
+    # keys, then the case's metrics, then files named by one plain word of their title (Latency, Wait, Disk), of which
+    # 9% were needed (retrieval check 2026-11-15). Only the first plan_named_whole files are read whole.
+    named = anchors(docs, question)
+    strong = anchors(docs, question, strict=True)
+    tiers['named'] = (terms.files(matched, docs, cfg.get('term_map_files', 2)) + strong + case_files(docs, case)
+                      + [i for i in named if i not in strong])
     stem = _stem(question)
     second = []
     found = claims(question)
@@ -202,7 +208,7 @@ def plan(retriever, question, cfg, case=None):
 
 
 ORDER = ('flow', 'named', 'search', 'mechanism', 'claims', 'search_rest', 'more')
-WHOLE = ('flow', 'named', 'search')  # read in full; the other tiers give their best sections (cfg plan_section_tokens)
+WHOLE = ('flow', 'named', 'search')  # read in full (named: the first plan_named_whole); the rest give their best sections
 
 
 def sections_of(retriever, doc_id, query, cap):
@@ -230,11 +236,14 @@ def reading_set(retriever, question, cfg, budget=None, case=None):
     """The reading set: (text, ids used in order, search hits, tier of each id)."""
     tiers, matched, hits = plan(retriever, question, cfg, case)
     ids, whole = [], set()
+    named_whole = cfg.get('plan_named_whole')   # named files read whole; the others give their best sections. None: all
     for t in ORDER:
+        n = 0
         for i in tiers[t]:
             if i in retriever.docs and i not in ids:
                 ids.append(i)
-                if t in WHOLE:
+                n += 1
+                if t in WHOLE and not (t == 'named' and named_whole is not None and n > named_whole):
                     whole.add(i)
     budget, parts, used = budget or cfg['context_tokens'], [], []
     notes = terms.block(matched)
