@@ -94,18 +94,6 @@ Each entry:
 - Recommended: A only with field evidence, else B.
 - Answer:
 
-### Q243 · CPU > Used · "CPU Used is buggy"
-
-- Files: [ESXi CPU Used](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/used.md), [VM CPU Used](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/used.md).
-- Search: "CPU Used is buggy".
-- Now: both files say "CPU Used is buggy. Do not build conclusions on it alone." No bug is named, so the model cannot say what is wrong or what to read instead.
-- Question:
-  - A. Name the mechanism: the two Hyper-Threading rules (VM CPU Used 62.5% per vCPU with a busy sibling, ESXi CPU Used 50% per thread; Q225) and Turbo make it hard to read; read Run and Ready with it.
-  - B. A specific defect: give the KB or the case.
-  - C. Delete the line.
-- Recommended: A.
-- Answer:
-
 ### Q222 · SP5 > Availability · Does a host in maintenance mode lower availability?
 
 - Files: [IaaS SLAs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (Availability SLA); [Cluster availability](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/metrics/availability.md).
