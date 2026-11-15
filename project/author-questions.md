@@ -34,17 +34,6 @@ Each entry:
 - Recommended: accept. The CPU names form one family with CPU Throughput (your Q203 answer); "Nominal" is the glossary's word for base clock. "Claimed" says pages held, not pages in use, and pairs with reclamation.
 - Answer:
 
-### Q207 · Benchmark > Field set · Real questions from you
-
-- Files: [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) (step 9); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (7.5, held-out set); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (4.6, coverage boundary).
-- Now: every benchmark question was written from the knowledge files, in their words. Only real operator questions show how often a question falls outside the knowledge base, and how search copes with an operator's words. Stems alone already lose much: recall 83% to 72% (retrieval check, 2026-11-15).
-- Question: can you give real questions? Tickets, consulting cases, customer emails, chats. Text only, as asked; no answer needed; kept out of the repository.
-  - A. Yes, now. About how many?
-  - B. At release only.
-  - C. None. The 20 of the live test are enough.
-- Recommended: A.
-- Answer:
-
 ## Future release
 
 ### Q222 · SP5 > Availability · Does a host in maintenance mode lower availability?

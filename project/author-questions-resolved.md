@@ -144,6 +144,15 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
   - Effective limit = limit + VM overhead: shown by the 8 GB chart in the knowledge base (Consumed 2.6 MB under the limit, Effective limit 97 MB above it).
   - VM Memory Overhead's wrong line is replaced. 0141 option A said "just above 2 GB" against data at or below 2 GB; now "at or just under 2 GB". Key unchanged.
 
+### Q207 · Benchmark > Field set · Real questions from you
+
+- Files: [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) (step 9: 20 real questions); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 7.5, held-out set); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (section 4.6, coverage boundary).
+- Question: can you give real questions now, and about how many? Real means asked by an operator, not written from the knowledge base: your tickets, consulting cases, customer emails and chats. The question text only, as asked; no answer needed; kept out of the repository (customer data). (A) yes, now, about N; (B) at release only; (C) none: the 20 of the live test are enough.
+- Why it needs you: Claude wrote every benchmark question from the knowledge files, so the questions use the files' own words. Only real questions show how often an operator's question falls outside the knowledge base, and how retrieval does on an operator's words. The stems alone, options removed, already lose much: recall 83% to 72%, main file missing on 18 to 37 of 275 (retrieval check, BM25, 2026-11-15).
+- Written as now: held-out set of 30, drawn at release; 20 real questions in the live test; the coverage boundary has no search-score limit, waiting for this set. Public Broadcom community questions Claude can collect without you (question text only).
+- Recommended: A.
+- Answer: Author (2026-11-15): C. No real questions from tickets, consulting cases or customer chats; not relevant in 1.0. Applied: no field set in 1.0; the held-out set is drawn from the run set's kind of question, written by a session that does not edit the knowledge base (benchmark/design.md, section 7.5); the coverage boundary has no search-score limit in 1.0 (harness/AGENT.md, section 4.6). The live test (step 9) keeps the author's 20 questions from his own field experience.
+
 ### Q223 · Memory > Balloon · Does "VMware Tools not running" stop ballooning?
 
 - Files: [Ballooning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md); question [0022](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-013-relationship-between-vm-and-guest-os-memory-metrics.md).
