@@ -37,15 +37,6 @@ Each entry has:
 - Re-checked 2026-11-14: still the first build step for the real world (guided troubleshooting is a 1.0 requirement, MISSION.md, Ways to ask, 4). In the field a question arrives without options, so the flow tier and the computed path carry more of the answer than in the benchmark.
 - Answer:
 
-### Q216 · CPU > NUMA > Virtual NUMA · `numa.*` options and the topology rebuild in vSphere 9.1
-
-- Files: [Virtual NUMA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/virtual-numa.md); [project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md) (section 4); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (After 1.0, the manual reminder on `numa.autosize.once`).
-- Search: not from the book; the uploaded NUMA sizing guide, section 4.
-- Question: three lines of virtual-numa come from the uploaded guide, and the vSphere 9.1 documentation says otherwise. (1) "Do not add `numa.*` attributes in the VM's Advanced Parameters: they are no longer offered there or supported" vs vSphere 9.1 (p. 1940, and TechDocs Virtual NUMA Controls, updated 2026-11-09): "You can add these advanced options"; p. 1028 uses `numa.allowHotadd` to keep vNUMA with CPU Hot Add on hardware version 20. (2) "ESXi rebuilds the topology at every power cycle" vs TechDocs 9.1, Using Virtual NUMA: the topology "does not change unless the number of vCPUs ... is changed". (3) Your decision of 2026-11-13 that the 9.1 UI no longer offers `numa.autosize.once` (the UI wins) vs p. 1945, which lists it with default TRUE. Which holds in your 9.1 lab? (A) the guide and the UI: the 9.1 manual is out of date (add these to the manual reminder); (B) the manual: `numa.*` options stay valid as VMX options, and the topology persists unless the vCPU count changes; (C) mixed: name which.
-- Written as now: the guide's three statements. The review of 2026-11-14 added the CPU Hot Add rule with `numa.allowHotadd` (vSphere 9.1 p. 1028; Broadcom KB 313375), itself a `numa.*` option, so line 13 now contradicts the file's own Hot Add line.
-- Final answer (review 2026-11-14): needs you (a lab check). Expert reading: B at least for `numa.allowHotadd` (documented with hardware 20 and a KB), so line 13 must allow it; (2) and (3) need the lab.
-- Answer:
-
 ### Q217 · Guest OS > CPU > Run queue · Peak CPU Queue: per vCPU or total?
 
 - Files: [Guest OS Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-performance.md); [Processor queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/metrics/run-queue.md); [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md); [thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (kpi row); [thresholds-alerts.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-alerts.yaml) (the queue symptom).
@@ -303,4 +294,17 @@ Each entry has:
 - Search: not from the book; the lab exports of 2026-11-15.
 - Question: low priority, not blocking. The files say host Reservation consumed counts a VM's reservation as set: one 8 GiB VM that had consumed 5.5 GiB raised it by exactly 8,192 MB. An earlier step of 820 MB (about 03:59 UTC, 11:59 local) on a 1 GB VM does not fit. Only if you remember it: what reservation did you set on the 1 GB VM? (A) 1 GB, so the counter counted touched pages there; (B) about 820 MB, so as set; (C) do not remember: drop it.
 - Written as now: "counted as set", with a review note naming the open step. No screenshot or CSV needed.
+- Answer:
+
+### Q216 · CPU > NUMA > Virtual NUMA · Topology rebuild and `numa.autosize.once` in vSphere 9.1 (lab checks)
+
+- Files: [Virtual NUMA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/virtual-numa.md) (Topology initialization, Misconceptions); [project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md) (section 4).
+- Search: not from the book; the uploaded NUMA sizing guide, section 4.
+- Question: the guide says ESXi rebuilds the topology at every power cycle; vSphere 9.1 (TechDocs, Using Virtual NUMA) says it "does not change unless the number of vCPUs ... is changed"; p. 1945 lists `numa.autosize.once` (default TRUE). Lab checks, text output (no screenshot):
+  - (a) `numa.allowHotadd`: hardware version 20 or later, 12 or more vCPUs, CPU Hot Add on. Run without and with the option. After each power-on paste `lscpu | grep -i numa` (Linux) or `coreinfo -n` (Windows), and `grep -i numa <vm>.vmx` from the host. Expected from the manual: one node without the option, vNUMA with it.
+  - (b) Persistence: a VM wider than one NUMA node (for example 24 vCPU). Paste guest NUMA output and `grep -i numa <vm>.vmx`; power off; vMotion to a host with a different NUMA node size; power on; paste both again. A changed node count or `numa.autosize.cookie` = the guide holds; unchanged = the manual holds.
+  - (c) `numa.autosize.once`: after the first power-on, is it in the vmx? Add it with FALSE, repeat (b).
+- Settled 2026-11-15 (lab, vSphere 9.1 Edit Settings > Advanced Parameters): the tab offers Add and accepts any attribute with no validation; a VM carries only `numa.autosize.cookie` (20012) and `numa.autosize.vcpu.maxPerVirtualNode` (2) by default, and `numa.autosize.once` is not listed. A key accepted by the UI is not proof that ESXi honors it. A powered-off VM keeps both keys.
+- Written as now: the guide's statements on rebuild at every power cycle and on `numa.autosize.once`; both unverified. Line 13 no longer forbids `numa.*` attributes.
+- Not in release 1.0 (author, 2026-11-15): no benchmark question depends on this (L4-025, L4-088, L4-154 name no `numa.*` option and no rebuild option).
 - Answer:
