@@ -85,6 +85,5 @@ attachments: []
 origin: synthetic
 source_path: "Drafted 2026-11-13 for author question Q194 (project/plan.md)"
 misconception_type: [layer-confusion, tool-confusion]
-pair: "0419"
 status: draft
 ```

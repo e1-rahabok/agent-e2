@@ -46,6 +46,7 @@ F: "The VM with the most memory in swap is the slowest one."
 - I false: the wrong action from F. That VM does not wait now; the VMs reading back from swap or the compression cache do.
 
 ## Notes
+- Retired 2026-11-15 (question bank audit): its partner 0068 already gives the esxtop memory panel as text, so an export adds no new fact (exports review 2026-11-15, section 4).
 - Paired with 0068 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item C15.
 - The options name VMs by their values, not by name, because the names are masked.
 - Review fixes 2026-11-15: options reworded away from 0068; the reading of the largest-SWCUR VM moved into the key, since it negated F (T2); screen readings added (B, D true; E false); host cache excluded. Key A, B, C, H → A, B, C, D.
@@ -77,6 +78,5 @@ source_path: "Pairing plan 2026-11-14, item C15"
 answer: [A, B, C, D]
 misconception: [F]
 misconception_type: [reclamation-as-contention, cumulative-vs-current]
-pair: "0068"
-status: awaiting-input
+status: retired
 ```

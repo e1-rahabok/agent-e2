@@ -241,7 +241,7 @@ def main():
                     if str(x) not in letters: bad(f, f'{k} letter {x} is not an option in ## Prompt')
             if not fm.get('answer'): bad(f, 'deterministic question has no answer')
         for att in (fm or {}).get('attachments') or []:
-            if not os.path.exists(os.path.join('benchmark', 'questions', att)) and (fm or {}).get('status') != 'awaiting-input':
+            if not os.path.exists(os.path.join('benchmark', 'questions', att)) and (fm or {}).get('status') not in ('awaiting-input', 'deferred'):
                 bad(f, f'attachment not found: {att}')
 
     kb_images = {hashlib.sha256(open(p_, 'rb').read()).hexdigest(): p_ for p_ in glob.glob('knowledge/**/*', recursive=True)

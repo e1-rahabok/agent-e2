@@ -30,7 +30,7 @@ python3 -m unittest project/tools/test_exportgen.py
 ## Conventions
 
 - Names are invented (VM, host, datastore, cluster), never a customer's. Lab names from the templates (sun05-..., acepod) do not appear.
-- No lab values. Only names and formats come from `project/sources/export-templates/`.
+- No lab values. Only names and formats come from [`project/sources/export-templates/`](../../sources/export-templates).
 - Every derived value is recomputed per row (state sums, Readiness, rollups, sums of worlds).
 - Distractor columns are part of the case: near names (Readiness vs Ready, Usage vs Run) stay consistent with the relations.
 - Cut the period to the event: a CSV stays under 24,000 characters.

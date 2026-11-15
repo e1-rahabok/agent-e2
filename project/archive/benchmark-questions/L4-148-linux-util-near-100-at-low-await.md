@@ -44,6 +44,7 @@ B: %util near 100% means a saturated disk, so move it to faster storage. Or E: a
 - K false: the screen reading. r_await is within 15% of the vCenter Read latency.
 
 ## Notes
+- Retired 2026-11-15 (question bank audit): its partner 0360 already gives the iostat columns as text, so an export adds no new fact (exports review 2026-11-15, section 4).
 - Paired with the theory question 0360 (theory and practical; design.md, section 3.9).
 - No option rests on the Paravirtual SCSI queue depth.
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C24 (origin: synthetic). Counts only after author approval.
@@ -74,6 +75,5 @@ source_path: "Pairing plan 2026-11-14, item C24"
 answer: [A, C, D, G]
 misconception: [B, F]
 misconception_type: [layer-confusion, tool-confusion]
-pair: "0360"
-status: awaiting-input
+status: retired
 ```

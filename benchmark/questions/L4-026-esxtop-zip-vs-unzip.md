@@ -65,6 +65,5 @@ source_path: "Drafted by Claude 2026-11-05"
 answer: [A, C, E, F]
 misconception: [B, D]
 misconception_type: [reclamation-as-contention, cumulative-vs-current]
-pair: "0389"
 status: draft
 ```

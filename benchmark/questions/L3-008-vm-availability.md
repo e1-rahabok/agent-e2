@@ -35,6 +35,7 @@ Which statements are correct?
 - K is false: the over-correction. The services run on the Guest OS, which is down; an available VM says nothing about the layers above it.
 
 ## Notes
+- Deferred 2026-11-15: availability is not in release 1.0 (author, exports review 2026-11-15, section 9).
 - Paired with the screenshot question 0435 (design.md, section 3.9).
 - Tests: Principle: a VM is the virtual hardware, not the OS.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
@@ -63,5 +64,5 @@ tool: [none]
 knowledge_main: vsphere/architecture/vm-vs-guest-os
 misconception_type: [layer-confusion]
 pair: "0435"
-status: draft
+status: deferred
 ```

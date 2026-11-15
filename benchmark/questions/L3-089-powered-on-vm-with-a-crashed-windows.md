@@ -40,6 +40,7 @@ A: the Guest OS crash read as a VM outage, and E, the action that follows from i
 - I true: the console shows the Windows stop screen: the Guest OS layer has failed.
 
 ## Notes
+- Deferred 2026-11-15: availability is not in release 1.0 (author, exports review 2026-11-15, section 9).
 - Review 2026-11-15: options reworded away from the theory half 0015; screen readings added (B true, C false, I true). Key changed from B, C, D to B, D, I.
 - Practical half of 0015 (pair: design.md, section 3.9).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C32). The options hold for any capture that meets the condition above. Counts only after author approval.
@@ -68,5 +69,5 @@ answer: [B, D, I]
 misconception: [A, E]
 misconception_type: [layer-confusion]
 pair: "0015"
-status: awaiting-input
+status: deferred
 ```
