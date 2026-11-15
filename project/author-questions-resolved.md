@@ -4,6 +4,14 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q231 · Memory > ESXi > Reservation consumed · A 820 MB step on a 1 GB VM
+
+- Files: [ESXi Memory Reservation counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/reservation.md) (review note, section Counter scope).
+- Search: not from the book; the lab exports of 2026-11-15.
+- Question: low priority, not blocking. The files say host Reservation consumed counts a VM's reservation as set: one 8 GiB VM that had consumed 5.5 GiB raised it by exactly 8,192 MB. An earlier step of 820 MB (about 03:59 UTC, 11:59 local) on a 1 GB VM does not fit. Only if you remember it: what reservation did you set on the 1 GB VM? (A) 1 GB, so the counter counted touched pages there; (B) about 820 MB, so as set; (C) do not remember: drop it.
+- Written as now: "counted as set", with a review note naming the open step. No screenshot or CSV needed.
+- Answer: (author, 2026-11-15) the task of the 1 GB VM shows `config.memoryAllocation.reservation: 204 -> 1024` (MB), not 0 to 1024: the step is 820 MB, the difference. So both VMs agree: host Reservation consumed counts a VM's reservation as set. Closed; the review note is deleted and reservation.md states it as fact (two VMs).
+
 ### Q230 · Memory > VM > Entitlement · Entitlement = Granted + Overhead, or about 1.1 times Consumed?
 
 - Files: [VM Memory Entitlement](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/entitlement.md); [VM memory metrics compared](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/comparisons/vm-memory-metrics.md) (the table Virtual view vs physical view says Entitlement is Granted + Overhead).

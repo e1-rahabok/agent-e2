@@ -3,7 +3,8 @@
 ## Meaning
 - Host physical memory the VM is entitled to, as the ESXi scheduler determines it (vSphere API 9.1, `mem.entitlement`).
 - The scheduler's allocation rests on the estimated demand and on the reservation, limit and shares of the VMs on the host (API 9.1, `mem.mementitlement`, the host-level counter).
-- A value of VMkernel memory management, not an operations counter. Capacity work does not use it.
+- A value of VMkernel memory management, not an operations counter. vCenter shows it among the VM memory counters, so administrators meet it and misuse it.
+- Relevance for operations: none for capacity, sizing or alerting. Do not size, alert or report on it.
 - Troubleshooting use: a value below the VM's configured memory. Alone it is not a fault: on a host without memory pressure it follows the VM's estimated demand, and a lab VM at rest showed a value below its configured memory with nothing reclaimed. Read it with Ballooned, Swapped, Compressed and Latency.
 - It does not follow a reservation: setting and removing a reservation left it where it was ([VM memory metrics compared](../comparisons/vm-memory-metrics.md), section VM reservation across counters).
 
