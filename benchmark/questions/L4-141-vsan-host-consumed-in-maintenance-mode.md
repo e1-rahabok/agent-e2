@@ -45,7 +45,7 @@ D: "With no VMs, Consumed should show what the kernel has reserved." Or F: "An e
 
 ## Notes
 - Paired with 0056 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item C16.
-- No option says whether the kernel reservation is above or below kernel use: that is open (author question Q202). No option names the VCF Operations metric ESX System Usage (open author question Q215).
+- No option says whether the kernel reservation is above or below kernel use: that is open (author question Q202). No option names the VCF Operations metric ESX System Usage (Q215 answered 2026-11-15: a VCF Operations metric, not a vCenter counter; the System Resource Reservation page is the host/system allocation minimum). E stays true: the figure is a reservation. Key unchanged.
 - The System Resource Reservation page is the one the CPU Demand files point to (vsphere/technology/cpu/metrics/host/demand); here only its memory value is read.
 - Review fixes 2026-11-15: new situation (firmware wait, vendor leak report); options reworded away from 0056; screen readings added (A true, B false; B is not the negation of A); the condition keeps the knowledge-base and 0056 numbers out. Key A, D, G → A, C, E, I.
 - The key holds whenever the condition of `## Input to supply` holds.

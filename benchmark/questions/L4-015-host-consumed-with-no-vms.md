@@ -32,7 +32,7 @@ B: expecting Consumed to equal the kernel reservation. Or F, the over-correction
 - Revised 2026-11-12: option E added; tags added.
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Rewritten 2026-11-14 (design.md 3.9; project/question-pairing-2026-11-14.md): the stem no longer copies the knowledge example (new numbers: 512 GB host, 470 to 41 GB, 49 GB reservation); A one fact; F the over-correction and G the wrong action added. Key unchanged: A, C.
-- No option rests on what ESX System Usage measures (open author question Q215): the reservation is read from the host's System Resource Reservation page.
+- No option names ESX System Usage; the reservation is read from the host's System Resource Reservation page. Q215 is answered (2026-11-15): ESX System Usage is a VCF Operations metric; the page shows the host/system allocation minimum, a reservation and not use (lab: 4.17 GiB reservation, 2.1 GiB consumed), which supports C. Key unchanged.
 
 ## Metadata
 ```yaml

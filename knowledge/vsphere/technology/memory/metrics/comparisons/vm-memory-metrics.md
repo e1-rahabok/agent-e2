@@ -46,6 +46,14 @@
 
 - Targets: Zip/Swap Target covers pages before zip and swapped. Balloon Target covers ballooned pages.
 
+## VM reservation across counters
+- Test on a 9.1 lab VM with 8 GiB of configured memory, vCenter Advanced Performance, 20-second samples: the reservation was set from 0 to 8 GiB (8,192 MB), and 16 minutes later back to 0. Both changes were Reconfigure virtual machine tasks that completed in about 0.2 seconds.
+- None of the VM counters moved at either change: Consumed stayed near 5.5 GiB (5,758,392 to 5,837,780 KB across the hour), Granted at 6,356,764 KB (6.06 GiB), Overhead consumed at 58,460 KB, Ballooned memory at 0. Entitlement stayed near 6.1 GiB (6,400,836 KB).
+- The reservation of 8 GiB was above Consumed (5.5 GiB) and Granted (6.06 GiB): a reservation does not make ESXi back the pages. Consumed rises only as the guest touches memory.
+- Entitlement did not rise to the reservation: it stayed at 6.1 GiB during the 16 minutes with an 8 GiB reservation. It moved sample by sample with Consumed, at about 1.104 times Consumed, while Granted stayed flat ([VM Memory Entitlement](../virtual-motherboard/entitlement.md)).
+- The reservation shows in the host counters Reservation consumed and Reservation available, which moved by the full 8,192 MB ([ESXi memory metrics compared](host-memory-metrics.md), section VM reservation across counters).
+- To see a reservation on a VM, read its configuration (Edit Settings, or the task and event log); no VM memory counter carries it. The vSphere Client records each change as a task with `config.memoryAllocation.reservation: 0 -> 8192` (MB).
+
 ## Demand
 - vCenter has no memory Demand counter. CPU has one.
 - Demand = met demand (used) + unmet demand.
@@ -56,6 +64,8 @@
 ## Misconceptions
 - "Use VM metrics to size the Guest OS" → use Guest OS metrics.
 - "Ballooned, Swapped, Compressed are performance counters" → they measure space. Latency measures the wait.
+- "Raising a VM's memory reservation raises its Consumed, Granted or Entitlement" → none of the VM counters moves. Only the host reservation counters do.
+- "A VM with a reservation shows the reservation in its memory chart" → no VM memory counter carries it. Read it from the VM configuration or the reconfigure task.
 
 ## Metadata
 ```yaml

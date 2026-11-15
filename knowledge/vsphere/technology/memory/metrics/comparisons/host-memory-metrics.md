@@ -37,7 +37,7 @@
 
 | Counter (vCenter) | Unit | Moves with a VM reservation | Reading |
 |---|---|---|---|
-| Reservation consumed | MB | Yes, by the full step | VMs only; no kernel reservation or kernel use |
+| Reservation consumed | MB | Yes, by the full step | VMs only, the reservation as set; no kernel reservation or kernel use |
 | Reservation available | KB | Yes, falls by the same amount | Total reservation minus Reservation consumed |
 | Total reservation | MB | No | Reservable capacity of the host, about 362,000 MB on the lab host |
 | Consumed | KB | No | Pages the host holds; about 12.4 GB, flat |
@@ -47,7 +47,7 @@
 
 - Reason: Consumed, Granted and VMkernel consumed count pages in use. A reservation change by itself does not change the pages the host holds, so a VM reservation is in none of them.
 - A VM reservation therefore shows only in the reservation counters. A host can hold large reservations and show a low Consumed.
-- The kernel reservation (System Resource Reservation, 4.21 GB on the lab host) is in none of these seven counters; it is host/system Resource memory allocation minimum ([overhead](../../../../architecture/overhead.md), section Memory metrics).
+- The kernel reservation (System Resource Reservation, about 4.2 GB on the lab host) is in none of these seven counters; it is host/system Resource memory allocation minimum ([overhead](../../../../architecture/overhead.md), section Memory metrics).
 
 ## Misconceptions
 - "Use host Latency for performance" → it is an average. Use the worst VM.

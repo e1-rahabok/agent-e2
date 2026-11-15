@@ -38,6 +38,7 @@ Which statements are correct?
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): A one fact (memory backed on touch), D the wrong action (lower the CPU reservation), H the CPU mechanism stated positively. Key changed from A to A, H (author approved, 2026-11-14).
 - Review 2026-11-15: the reason for D reworded so that it does not restate H. Key unchanged.
+- Lab check 2026-11-15 (author, one 8 GiB VM, 9.1; vm-memory-metrics, section VM reservation across counters): the reservation set to 8 GiB while the VM had consumed 5.5 GiB, then removed. VM Consumed, Granted, Entitlement and Overhead consumed stayed flat, which supports A and the falsity of B, E and G. The host counter Reservation consumed does move with the reservation; no option rests on it. Key unchanged.
 
 ## Metadata
 ```yaml
