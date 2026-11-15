@@ -48,7 +48,8 @@
 
 ## Example: limit, swap and compress in opposite directions
 - 64 GB VM. Swapped plus compressed peaked at 20 GB over 7 days.
-- Consumed was flat for 7 days, just under the effective limit: a limit. The effective limit includes the VM's overhead, so Consumed stays a little below it.
+- Consumed was flat for 7 days, just under VCF Operations Memory|Effective limit: a limit.
+- Consumed stays under Memory|Effective limit by at least the VM overhead: the effective limit is the configured limit plus the overhead, and the limit caps Consumed alone (see [`vsphere/technology/memory/concepts/memory-limit`](memory-limit.md), section Signs in the counters).
 - Granted hovered above Consumed and above the effective limit: Granted ignores the limit.
 - The guest kept using pages: some were swapped in; others were compressed or swapped to make room under the limit. So Swapped fell while Compressed rose: they moved in opposite directions. The balloon, first in line under a limit, was already at its ceiling or could not take enough (see [`vsphere/technology/memory/concepts/memory-limit`](memory-limit.md)).
 - Each swap-in is a wait for the vCPU that touched the page, so VM memory contention rose at those moments. That is the slowness the application sees.
@@ -116,7 +117,6 @@ source:
   path: Memory > VM > Swap + Compress; Transition; Example; Quiz; Memory counters, swaptarget (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html)
 corrections: []
 review_notes:
-- 'To check: Section ''Example: limit, swap and compress in opposite directions'': the effective limit includes the VM overhead (Consumed just under it; Granted above it), read from the chart of this example; check against the VCF Operations 9.1 metric definition of Memory|Effective limit, https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1.html.'
 - 'Overcommit technique content: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'Section ''Swap instead of ballooning'': from the vSphere 9.1 documentation, vSphere Resource Management > Using Swap Files, Swap Space and Memory Overcommitment, Memory Compression, Advanced Virtual Machine Attributes (pp. 1841, 1873-1874, 1944).'
 status: draft

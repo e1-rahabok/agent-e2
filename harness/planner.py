@@ -167,6 +167,8 @@ def plan(retriever, question, cfg, case=None):
     Returns (tiers, matched term rows, search hits)."""
     docs = retriever.docs
     matched = terms.match(question) if cfg.get('term_map', True) else []
+    if cfg.get('term_map', True):
+        matched += terms.case_labels(case, matched)   # a product label the case read from a screenshot (Q208)
     hits = retriever.search(terms.query(search_text(question), matched), k=cfg.get('search_k', 6))
     top = [h['id'] for h in hits]
     tiers = {'flow': [], 'named': [], 'search': top[:3], 'mechanism': [], 'claims': [], 'search_rest': top[3:], 'more': []}

@@ -22,19 +22,19 @@
 
 ## NUMA
 - NUMA node = a memory domain, not always a socket. One socket (package) holds several NUMA nodes with Sub-NUMA Clustering (SNC, formerly Cluster-on-Die) or AMD NPS2 and NPS4.
-- AMD EPYC 9005: AMD states the socket is best divided into 4 NUMA domains. The setting is called NPS4.
-- In NPS4, each domain has 6 memory DIMMs and 3 memory controllers.
+- AMD EPYC 9005: NPS4 divides the socket into 4 NUMA domains, each with 3 memory channels and their controllers (6 DIMMs at two DIMMs per channel).
 - Intel: SAP recommends enabling Sub-NUMA Clustering (SNC). The workload situation is similar to AMD NPS4.
-- Where the domains come from, by processor (the BIOS setting that matches the silicon):
+- Where the domains come from, by processor:
 
-| Processor | Silicon | Memory | Matching setting | NUMA node |
-|---|---|---|---|---|
-| AMD EPYC 9005 (Zen 5, Turin) | up to 16 CCDs around one central IOD | 12 DDR5 channels | NPS4 | 4 per socket, 3 channels each |
-| Intel Xeon 6 6900P (Granite Rapids AP) | up to 3 compute tiles and 2 I/O tiles; the memory controllers sit in the compute tiles | 12 DDR5 channels | SNC3 | 3 per socket, one per compute tile, 4 channels each |
-| AMD EPYC 9006 (Zen 6, Venice), e.g. EPYC 9996 | 8 CCDs of 32 cores (256 cores); two IODs per socket | 16 DDR5 channels | NPS2 | 2 per socket, one per IOD: 128 cores and 8 channels each |
+| Processor | Silicon | Memory | Setting whose nodes follow the dies |
+|---|---|---|---|
+| AMD EPYC 9005 (Zen 5, Turin) | up to 16 CCDs around one central IOD | 12 DDR5 channels | none: one IOD; NPS4 splits it into 4 nodes of 3 channels |
+| Intel Xeon 6 6900P (Granite Rapids AP) | up to 3 compute tiles and 2 I/O tiles; the memory controllers sit in the compute tiles | 12 DDR5 channels | SNC3: 3 nodes per socket, one per compute tile, 4 channels each |
+| AMD EPYC 9006 (Zen 6, Venice), e.g. EPYC 9996 | 8 CCDs of 32 cores (256 cores); two IODs per socket | 16 DDR5 channels | NPS2: 2 nodes per socket, one per IOD, 128 cores and 8 channels each |
 
-- The setting follows the silicon: a node boundary at a real die boundary (an IOD, a compute tile with its own controllers) keeps a thread's memory behind its own controllers.
-- The vSphere default for AMD is NPS-1 ([`vsphere/technology/cpu/configuration/numa-settings`](../configuration/numa-settings.md)); the table gives the setting that matches the silicon. Author question Q198.
+- A node boundary at a die boundary (an IOD, a compute tile with its own memory controllers) keeps the memory of a thread behind its own controllers: a remote access crosses a die-to-die link.
+- A node boundary inside one IOD (NPS4 on EPYC 9005) removes no die-to-die hop: every CCD reaches every memory controller through the same IOD, so a local access saves only part of the path across that die.
+- The BIOS setting for a general-purpose cluster, NPS-1 for AMD EPYC, and when to depart from it: [`vsphere/technology/cpu/configuration/numa-settings`](../configuration/numa-settings.md), section AMD EPYC.
 - Broadcom KB 314059 shows a NUMA effect: NUMA nodes heavily load-imbalanced.
 
 ## Cache latency
@@ -76,9 +76,10 @@ images:
     image_type: diagram
 source:
   document: Knowledge base
-  path: 'CPU > Architecture > CPU vs vCPU > System on a Chip; NUMA. Also the knowledge base, vSphere NUMA Architecture and Sizing Guide (vSphere 9.1), sections 1 and 2'
+  path: 'CPU > Architecture > CPU vs vCPU > System on a Chip; NUMA'
 corrections: []
 review_notes:
+- 'To check: Section ''NUMA'': the EPYC 9006 row (8 CCDs of 32 cores, two IODs per socket, 16 channels) against an AMD document; read so far in press reports of the launch (ServeTheHome, 2026-09-25: two IODs on the high-end parts; StorageReview, 2026-09-26: EPYC 9996, 256 cores, 16 channels). AMD Documentation Hub: https://docs.amd.com'
 - 'To check: Section ''NUMA'': Broadcom KB not read (https://knowledge.broadcom.com/external/article/314059/numa-nodes-are-heavily-load-imbalanced-c.html).'
 - 'To check: Section ''NUMA'': SAP source not read (https://help.sap.com/docs/SUPPORT_CONTENT/virtualization/4181102237.html).'
 status: draft

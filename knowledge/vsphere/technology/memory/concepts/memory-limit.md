@@ -1,7 +1,9 @@
 # Memory limit
 
 ## Mechanism
-- A memory limit (`sched.mem.max`, Edit Settings, Memory, Limit) caps the physical memory ESXi backs the VM with. Consumed cannot grow past it. Granted can: it counts VM pages, shared and zero pages included.
+- A memory limit (`sched.mem.max`, Edit Settings, Memory, Limit) caps the physical memory ESXi backs the VM's memory with. Consumed cannot grow past it. Granted can: it counts VM pages, shared and zero pages included.
+- A VM limit caps Consumed only, not the VM overhead. The limit bounds the same memory as the configured size (vSphere 9.1, Virtual Machine Memory), and ESXi bounds the overhead with a separate overhead limit, which DRS sets (see [`vsphere/technology/memory/concepts/memory-overhead`](memory-overhead.md)).
+- The VMkernel counts the memory a limited VM can request as its limit plus its reserved overhead (esxtop MEM overcommit, Broadcom KB 382249): the overhead comes on top of the limit.
 - Shares and reservations act when demand exceeds supply. A limit is enforced at all times, also on a host in the High state with free memory.
 - The Guest OS does not see the limit. It sees the configured memory, fills it with cache and free pages, and Consumed climbs until it meets the limit.
 - A resource pool caps its VMs the same way. A VM that shows Unlimited can sit under a limit on its parent or an ancestor pool.
@@ -18,7 +20,10 @@
 - The vendor troubleshooting text reads it the same way: free host memory with high swap or balloon on a VM or pool means it reached its resource limit (vSphere 9.1, Monitoring and Performance, memory performance problems).
 
 ## Signs in the counters
-- Consumed flat at or a little under the limit. Granted above it.
+- Consumed flat at or a little under the configured limit. Granted above it.
+- VCF Operations Memory|Effective limit (`mem|effective_limit`) of a VM with a limit reads the configured limit plus the VM overhead. VCF Operations 9.1 defines it only as Memory Effective Limit; on charts it sits flat above the set limit by the size of the overhead.
+- Compare Consumed with the configured limit, not with Memory|Effective limit: Consumed stays under the effective limit by at least the overhead, and that gap is not room to grow.
+- Example (VCF Operations, 12 GB VM, 8 GB limit, chart in [`vsphere/technology/memory/metrics/virtual-motherboard/granted`](../metrics/virtual-motherboard/granted.md)): Consumed 8,385,908 KB, 2.6 MB under the 8,388,608 KB limit; Effective limit 8,488,260 KB, 97 MB above the limit, the VM overhead.
 - Ballooned, Compressed or Swapped above 0 while the host has free memory and no other VM is reclaimed.
 - A balloon flat near 65% of configured memory on a host with free memory: look for a limit on the VM, its pool and the ancestor pools.
 - Swapped and Compressed can move in opposite directions: the guest reads swapped pages back while ESXi compresses others to stay under the limit. See the example in [`vsphere/technology/memory/concepts/swap-and-compression`](swap-and-compression.md).
@@ -34,6 +39,7 @@
 - "A limit causes only Compressed or Swapped, never Balloon" → the balloon is first when the driver runs. Compression and swap take over when it cannot reclaim enough.
 - "Switching the balloon off (`sched.mem.maxmemctl` 0) stops the reclamation" → the memory above the limit must still go: ESXi compresses and swaps instead, blind to which pages the guest uses.
 - "Moving the VM to a host with more free memory ends the swapping" → the limit belongs to the VM or its pool and follows it to any host.
+- "Consumed can climb to Memory|Effective limit" → the configured limit caps Consumed. The effective limit adds the VM overhead, which the limit does not cap.
 
 ## Metadata
 ```yaml
@@ -61,13 +67,15 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/compressed
 - vsphere/architecture/resource-controls
 - vsphere/object-types/resource-pool/resource-pool-design
+- vsphere/technology/memory/metrics/virtual-motherboard/overhead
+- vsphere/technology/memory/metrics/virtual-motherboard/granted
+- vsphere/technology/memory/concepts/memory-overhead
 source:
-  document: Knowledge base; vSphere 9.1 documentation
-  path: Memory > VM > Contention Metrics > Balloon; vSphere Monitoring and Performance, Solutions for Memory Performance Problems (p. 2037); Resource Management, Mem.CtlMaxPercent (p. 600)
+  document: Knowledge base; vSphere 9.1 documentation (PDF built 2026-11-02); Broadcom KB 382249 (ESXi 7.0, 8.0); VCF Operations 9.1 documentation (TechDocs, Virtual Machine Metrics, updated 2026-11-12)
+  path: Memory > VM > Contention Metrics > Balloon; vSphere Monitoring and Performance, Solutions for Memory Performance Problems (p. 2037); Resource Management, Mem.CtlMaxPercent (p. 600); Resource Management, Virtual Machine Memory (pp. 1833-1834) and DRS Overhead Memory Management for VMs (p. 1902); KB 382249, MEM overcommit avg (https://knowledge.broadcom.com/external/article/382249); Mem|Effective Limit, key mem|effective_limit (https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/virtual-machine-metrics.html)
 corrections: []
 review_notes:
 - 'Section ''Enforcement order'': the order balloon, compression, swap under a limit, and that the Balloon Target is the excess above the limit. Vendor text found: the memory performance table of vSphere 9.1 (p. 2037) and Broadcom KB 326270; no vendor text states the Balloon Target formula. Check against https://knowledge.broadcom.com/external/article/326270.'
-- 'To check: Section ''Mechanism'': the limit caps Consumed and not the VM overhead (overhead is bounded by sched.mem.overheadMax); the VCF Operations Effective limit would then be the limit plus overhead (Q205). Check against the VCF Operations 9.1 metric definition of Memory|Effective limit.'
 - 'To check: whether VMkernel lowers the balloon ceiling when the guest reports little free memory. No vendor text found.'
 status: draft
 ```

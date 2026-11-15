@@ -21,6 +21,16 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
 - Each step states: the metric (exact name, matching the metric file title), the object, the threshold with its source, and the next step for each outcome.
   - Example: 1. Check VM CPU Ready (VirtualMachine). Above <threshold> (<source>) → step 2. Otherwise → step 4.
 - Every metric or flow named in a step is linked in `internal_derive`, so retrieval brings in the files with the flow.
+- Steps as data (Q166, design 2026-11-15; to build). The numbered step stays the text the model reads. A `steps` list in the flow's `## Metadata` holds what code needs, one entry per step that code can compare:
+  - `step`: the step number.
+  - `object`: the object type.
+  - `metric`: a metric file title, so it resolves through the catalog.
+  - `test`: a catalog row id (metric, object, interval, use), or a comparison of two case values (vCPUs against physical cores). Never a number typed in the flow.
+  - `then`: each band or outcome, and its next step.
+  - A step code cannot compare (logs, the application team's reading, a known bug) has no entry; the model reads it.
+  - Lint checks that each entry matches its numbered step: the metric is named in the text, the targets equal the `→ step N` arrows.
+  - First flow: [`vm-cpu-contention-high`](../../knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md) (steps 1, 3, 4 and 6 compare numbers). VM slow follows as the router: its step 4 picks the sub-flow from the counter that pulls VM Performance (%) down. Why not VM slow first: one numeric step; the rest is the application team, breadth, configuration, bugs and logs.
+  - A value the case lacks: in a conversation the agent asks for it (one round, [harness/AGENT.md](../../harness/AGENT.md), 4.4). In a single-turn answer code stops at that step, and the model states both branches and what to read.
 - Mermaid node text repeats the step number: `S1[1. VM CPU Ready above threshold?]`. Step numbers tie the chart to the text.
 - Keep each flowchart to about 15 nodes. Split a larger flow into linked flow files.
 - draw.io files are not read by the LLM: the XML is mostly layout and style, and compressed files are unreadable.

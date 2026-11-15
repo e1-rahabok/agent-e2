@@ -4,10 +4,11 @@
 - Reports 100% when one thread of the core runs.
 - Also reports 100% when both threads run.
 - To tell the two cases apart, check Thread Utilization.
+- Definition: a core counts as utilized while at least one of its threads is unhalted (vSphere 9.1 documentation, esxtop CORE UTIL(%); vSphere Web Services API 9.1, cpu.coreUtilization: either or both logical CPUs).
 
 ## Reason
 - The core does the work, not the thread. A core running one thread is fully busy.
-- Thread Utilization reports 200% for a core when both threads are busy (esxtop). Core Utilization stays at 100%.
+- Both threads busy: Core Utilization stays at 100%, and each thread's Thread Utilization reads 100%. No counter adds the two threads of a core: [`vsphere/technology/cpu/concepts/hyper-threading`](../../concepts/hyper-threading.md), section Thread Utilization.
 - Core Utilization is a static metric: it ignores frequency.
 - It is not the capacity reading under Hyper-Threading: a core with one busy thread still has a free thread. For capacity (space) use Thread Utilization. See [`vsphere/technology/cpu/metrics/host/utilization`](utilization.md), section The capacity reading.
 - Its use is speed: it shows how many cores already run work, where a second thread would share the core.
@@ -50,8 +51,8 @@ related:
 - vsphere/technology/cpu/concepts/hyper-threading
 - vsphere/technology/cpu/metrics/host/imbalance
 source:
-  document: Knowledge base
-  path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture > ESXi ≠ VM + Kernel; Impacts on ESXi; CPU > ESXi > Thread Utilization
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); vSphere Web Services API 9.1 reference, CPU Counters
+  path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture > ESXi ≠ VM + Kernel; Impacts on ESXi; CPU > ESXi > Thread Utilization; vSphere Monitoring and Performance > resxtop and esxtop > CPU Panel, CORE UTIL(%) (p. 2155); https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html, coreUtilization
 corrections: []
 review_notes:
 - Sections Reason: from CPU > Architecture.

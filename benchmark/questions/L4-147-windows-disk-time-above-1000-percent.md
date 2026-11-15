@@ -47,7 +47,7 @@ E and F: the queue is waiting inside Windows, and a queue above 2 per disk is th
 
 ## Notes
 - Paired with the theory question 0311 (theory and practical; design.md, section 3.9).
-- No option rests on the Paravirtual SCSI queue depth (open question Q195).
+- No option rests on the Paravirtual SCSI queue depth.
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C23 (origin: synthetic). Counts only after author approval.
 - Review 2026-11-15: F, I and J reworded away from 0311; L (a false screen reading) added. Key unchanged: A, C, D, G, I.
 

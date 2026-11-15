@@ -45,7 +45,7 @@
 | queueLatency | QAVG | Must always be 0. Above 0: workload too high; the array cannot process data fast enough. |
 | totalReadLatency, totalWriteLatency | GAVG | kernelLatency + deviceLatency. |
 
-- The knowledge base uses lower values: KAVG above 0.5 ms → check QAVG and queue depths; DAVG healthy well within 5 ms. See [`vsphere/technology/storage/troubleshooting/host-storage-latency`](../../technology/storage/troubleshooting/host-storage-latency.md).
+- The knowledge base uses lower values: the flow tests of [`vsphere/technology/storage/troubleshooting/host-storage-latency`](../../technology/storage/troubleshooting/host-storage-latency.md), step 1.
 - The documentation's device remedy names spindles: the 15 ms value comes from spinning-disk arrays. Flash arrays run far lower; compare with the array's own baseline.
 - Documentation actions: more VM memory for guest caching (less IO); antivirus on-demand scans off for VMDK and VMEM files; array-side statistics; Storage vMotion to spread IO-heavy VMs; spread busy LUNs across adapters; adequate HBA and RAID controller queue depth (Disk.SchedNumReqOutstanding); multipathing when IO exceeds one HBA; preallocated virtual disks.
 
@@ -105,7 +105,6 @@ source:
   path: vSphere Monitoring and Performance > Overview Performance Charts > Chart Analysis sections (Clusters, Hosts, Resource Pools, Virtual Machines); Troubleshoot and Enhance Performance (pp. 2033-2123)
 corrections: []
 review_notes:
-- 'To check (Q195): Section ''Storage latency'': the documentation (4 ms kernel, 15 ms device, queue 0) differs from the values in vsphere/technology/storage/troubleshooting/host-storage-latency (KAVG 0.5 ms, DAVG within 5 ms).'
 - 'To check: Section ''Storage latency'': the 15 ms value comes from spinning-disk arrays (inferred from the remedy text, more spindles).'
 - 'Section ''CPU'': the documentation gives VM CPU Ready above 20% with Usage above 90% in the VM chart analysis and in Solutions for Consistently High CPU Usage.'
 - 'To check: Section ''Network'': AppSpeed is a discontinued product, so the file says external tools; the documentation names VMware AppSpeed for network latency.'

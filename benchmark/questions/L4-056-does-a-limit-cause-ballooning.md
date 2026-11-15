@@ -7,7 +7,7 @@
 
 Which statements are correct?
 
-- A. Consumed stays flat just above 2 GB all week: the limit caps the memory ESXi gives the VM.
+- A. Consumed stays flat at or just under 2 GB all week: the limit caps the memory ESXi gives the VM.
 - B. Granted at about 2.9 GB, above the limit, shows that ESXi does not enforce the limit on this VM at all.
 - C. Granted counts every mapped VM page, shared and zero pages included, so it can sit above the limit.
 - D. About 10.2 GB of the 13.5 GB Needed Memory are pages the balloon driver holds inside Linux, counted as used.
@@ -18,7 +18,7 @@ B: Granted above the limit read as the limit not working. Or E: ballooned memory
 
 ## Expected key points
 - Answer: A, C, D.
-- A: under a limit, Consumed sits at the limit and cannot grow past it.
+- A: under a limit, Consumed sits at or just under the configured limit (1.83-1.99 GB here) and cannot grow past it. Memory|Effective limit (2.12 GB) is the 2 GB limit plus the VM overhead, which the limit does not cap.
 - B is wrong: the limit caps the physical memory ESXi gives the VM, which is Consumed. Consumed stays at the limit.
 - C: Granted is the VM's view of mapped pages; shared and zero pages, once shared, cost little physical memory. It ignores the limit; Consumed does not.
 - D: the balloon driver is a kernel driver inside Linux, so its 63.66% of 16 GB (about 10.2 GB) counts as used in the Guest OS counters. Exclude it when sizing the guest.
@@ -28,6 +28,7 @@ B: Granted above the limit read as the limit not working. Or E: ballooned memory
 - From the author's samples (docx, 2026-11-12): a 16 GB MySQL VM on RHEL with a 2 GB limit (effective limit 2.12 GB); Guest Needed Memory 13.4-13.6 GB; Granted about 2.8-3.0 GB; Consumed just under 2 GB; Balloon flat at 63.66% for 7 days. The CSV is generated to reproduce those values.
 - Open with the author: does a limit cause ballooning? The author's sample reads the flat balloon as proof that it does not. Vendor documents say a VM at its limit can show high balloon or swap (vSphere 9.1 Monitoring and Performance, memory troubleshooting: "high swap or balloon memory ... has reached its resource limit"; Broadcom KB 326270). 63.66% is near the Mem.CtlMaxPercent default of 65% (vSphere 9.1 documentation, advanced memory attributes). The key avoids the disputed point.
 - This question also tests "ballooned pages show as In Use in the guest" (option D).
+- 2026-11-15: option A read "just above 2 GB" while the CSV holds 1.83-1.99 GB; reworded to "at or just under 2 GB" (key unchanged: A true). Author question Q205 settled the same day: a VM limit caps Consumed, and VCF Operations Memory|Effective limit is the configured limit plus the VM overhead (knowledge: memory-limit, section Signs in the counters). No option reads the effective limit yet; an option on it can now be added. The knowledge base does not state this CSV's values. Needed files: memory-limit (the home of the limit mechanism) replaces VM Memory Overhead, which no option needs since the line on the limit left it.
 
 ## Metadata
 ```yaml
@@ -44,7 +45,7 @@ tool: [vcf-operations]
 knowledge:
   - vsphere/technology/memory/metrics/virtual-motherboard/ballooned
   - vsphere/technology/memory/concepts/ballooning
-  - vsphere/technology/memory/metrics/virtual-motherboard/overhead
+  - vsphere/technology/memory/concepts/memory-limit
   - vsphere/technology/memory/metrics/virtual-motherboard/granted
   - vsphere/technology/memory/metrics/virtual-motherboard/consumed
 knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/granted

@@ -12,7 +12,7 @@
 ESXi CPU Ready (%) = ESXi CPU Ready (ms) / (sample length in ms × vCPUs of running VMs) × 100
 ```
 
-- Sample length: vCenter real time and VCF Operations 20,000 ms (a VCF Operations 5-minute point averages the 15 20-second values); vCenter rollups are sums: 300,000 ms (past day), 1,800,000 ms (past week), 7,200,000 ms (past month), 86,400,000 ms (past year).
+- Sample length by tool and chart (vCenter real time and rollups, VCF Operations points): [`sp5-framework/observability/collection-interval`](collection-interval.md), section Base of a millisecond value.
 - Example: a host with 149,116 ms Ready in a 20-second sample runs 67 VMs with 195 vCPUs: 149,116 / (20,000 × 195) × 100 = 3.8%.
 - Divide by running vCPUs, not by physical cores or threads: Ready is a state of each vCPU.
 - A VM powered on or moved in during the sample counts only part of it, so the result is slightly low.

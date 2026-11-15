@@ -3,11 +3,11 @@
 ## Prompt
 - A 4-vCPU Ubuntu VM runs an API service. The application team says it is slow and asks for 4 more vCPUs.
 - Its host runs about 30 other VMs. The host power policy is Balanced.
-- [The attached VCF Operations export](0104/ubuntu-api-04-cpu-7-days.csv) holds 7 days in 2-hour points, each the average of the 5-minute values: CPU Run, Used, System and Overlap in ms per 5-minute collection cycle, summed over the 4 vCPUs (1,200,000 ms is 100%), and Ready (%) and Co-stop (%).
+- [The attached VCF Operations export](0104/ubuntu-api-04-cpu-7-days.csv) holds 7 days in 2-hour points, each the average of the 5-minute values: CPU Run, Used, System and Overlap in ms for the VM as a whole (not per vCPU), and Ready (%) and Co-stop (%).
 
 Do you add the vCPUs, and what do you check instead? Which statements are correct?
 
-- A. Run averages about 375,000 of 1,200,000 ms, about 31%: the 4 vCPUs are far from full.
+- A. Run averages about 25,000 ms, about 31% of the time the 4 vCPUs have: the vCPUs are far from full.
 - B. Ready below 1% and Co-stop near 0 show that the VM is not waiting for CPU.
 - C. Used is about 44% of Run while System and Overlap are small: each millisecond of run completes less work.
 - D. The likely causes are a clock speed lowered by power saving under Balanced, and busy sibling threads on the same cores.
@@ -25,22 +25,23 @@ Do you add the vCPUs, and what do you check instead? Which statements are correc
 
 ## Expected key points
 - Answer: A, B, C, D, E, F.
-- A true: Run is 365,000-385,000 ms in every point; 1,200,000 ms is 100% for 4 vCPUs.
+- A true: Run is about 24,300-25,700 ms in every point. A VCF Operations 5-minute ms value is the average of the 15 20-second values, so 100% is 20,000 ms per vCPU, 80,000 ms for 4 vCPUs; the 2-hour points average the 5-minute values and keep that base. Read against 1,200,000 ms (the vCenter Past Day sum), Run would look like 2%.
 - B true: Ready 0.25-0.6%, Co-stop 0-0.04%.
-- C true: Used averages about 165,000 ms against 375,000 ms of Run; System is about 3,000 ms and Overlap about 1,600 ms.
+- C true: Used averages about 11,000 ms against 25,000 ms of Run; System is about 200 ms and Overlap about 110 ms.
 - D true: with little System and Overlap, Used below Run comes from power saving and Hyper-Threading.
 - E true: power management and the actual frequency first (a setting), then the sibling-thread load, read as Thread against Core Utilization (it depends on the other VMs).
 - F true: the gap is in how fast each vCPU runs, not in how many vCPUs it has; adding vCPUs to a VM at 31% Run is the wrong answer to a request for speed.
 - G false: Used is a charge adjusted for a shared core, frequency and hypervisor work, not the share of CPU the VM needs.
 - H false: waiting shows in Ready and Co-stop, which are near 0; the gap is in the quality of the run time.
-- I false: System and Overlap together are under 5,000 ms of a gap of about 210,000 ms; System even adds to Used.
+- I false: System and Overlap together are under 400 ms of a gap of about 14,000 ms; System even adds to Used.
 - J false: Run is time only; Used (and Usage) count the work done, adjusted for frequency and Hyper-Threading.
 - K false: Used counts cycles but is converted to ms at the static (nominal) frequency, so it compares directly with Run.
 
 ## Notes
 - From the author's samples: a 4-vCPU 64-bit Ubuntu VM with Used about 44% of Run, minimal System and Overlap; Used lowered by power saving and SMT; if Run is far from 100% and the team wants faster performance, the answer is not to add vCPUs. Values reproduced in the export.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). Dropped from the old key: "ask for the guest's view (run queue and per-process CPU) before any size change"; the guest run queue knowledge is in guest-os/cpu/metrics/run-queue (Q217 settled 2026-11-15).
-- Leak closed 2026-11-14 on the knowledge side (project/question-pairing-2026-11-14.md, decision 3): the example row of run-vs-used-gap no longer gives this VM's numbers. The export and its base are unchanged while the author question on VCF Operations 5-minute ms values is open.
+- Leak closed 2026-11-14 on the knowledge side (project/question-pairing-2026-11-14.md, decision 3): the example row of run-vs-used-gap no longer gives this VM's numbers.
+- Export rescaled 2026-11-15 (Q224): a VCF Operations 5-minute ms value averages the 15 20-second values, so 100% is 20,000 ms per vCPU (Broadcom KB 315941; KB 444403 for VCF Operations 9.x). Every ms value is divided by 15; ratios, Ready (%), Co-stop (%) and the key are unchanged. The base line (1,200,000 ms) left the stem, so option A now needs the base. Old export: project/archive/benchmark-questions/attachments/0104-ubuntu-api-04-cpu-7-days-before-2026-11-15.csv.
 - Paired with 0003 (theory and practical, design.md 3.9).
 
 ## Metadata
@@ -62,6 +63,7 @@ knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/used
   - vsphere/technology/cpu/metrics/virtual-motherboard/run
   - vsphere/technology/cpu/concepts/power-states
+  - sp5-framework/observability/collection-interval
 knowledge_main: vsphere/technology/cpu/troubleshooting/run-vs-used-gap
 attachments:
   - 0104/ubuntu-api-04-cpu-7-days.csv

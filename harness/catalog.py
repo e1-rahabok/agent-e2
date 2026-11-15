@@ -7,7 +7,7 @@ Tables:
   counters    vCenter chart counters (knowledge/catalog/vcenter-counters.yaml)
   api_counters  counters as the vCenter API returns them, with API units (knowledge/catalog/vcenter-api-counters.yaml)
   esxtop      esxtop panel fields (knowledge/catalog/esxtop-fields.yaml)
-  thresholds  one-value tests, labelled by use: decision, rule (thresholds-capacity.yaml)
+  thresholds  one-value tests, labelled by use: decision, rule (thresholds-capacity.yaml); flow, with its step (thresholds-performance.yaml, flow)
   symptoms, alerts, alert_symptoms   alert definitions: one test per symptom, alerts combine them (thresholds-alerts.yaml)
   bands       capacity model inputs with colour bands (thresholds-capacity.yaml, models)
   kpi         KPI colour levels, the one copy (thresholds-performance.yaml, kpi)
@@ -89,7 +89,7 @@ class Catalog:
           CREATE TABLE esxtop (panel TEXT, field TEXT, key TEXT, description TEXT, page INT);
           CREATE TABLE thresholds (id TEXT, use TEXT, criticality TEXT, class TEXT, pillar TEXT, metric TEXT, object TEXT, layer TEXT,
                                    instance TEXT, interval TEXT, operator TEXT, value REAL, value_high REAL, unit TEXT,
-                                   condition TEXT, meaning TEXT, source TEXT, kb TEXT);
+                                   condition TEXT, meaning TEXT, source TEXT, kb TEXT, step INT);
           CREATE TABLE bands (kb TEXT, grp TEXT, metric TEXT, object TEXT, grey TEXT, green TEXT, yellow TEXT, orange TEXT, red TEXT, source TEXT, pillar TEXT, interval TEXT);
           CREATE TABLE metrics (id TEXT, title TEXT, object TEXT, layer TEXT, technology TEXT, metric_class TEXT, instance TEXT,
                                 same_name TEXT, same_meaning TEXT, status TEXT);
@@ -122,14 +122,15 @@ class Catalog:
             c.execute('INSERT INTO formulas VALUES (?,?)', (f['formula'], f'esxtop {f["panel"]} panel, {doc}, p. {f["page"]}'))
         # Threshold files are split by use: the section name is the use (one place; no use field on the rows).
         perf, cap, al = (load_yaml(f'thresholds-{n}.yaml') for n in ('performance', 'capacity', 'alerts'))
-        tests = [(cap, 'decisions', 'capacity'), (cap, 'rules', 'capacity')]
+        # A flow test is the number one step of a flow file compares with; kb is the flow file, step its numbered step.
+        tests = [(cap, 'decisions', 'capacity'), (cap, 'rules', 'capacity'), (perf, 'flow', 'performance')]
         for data, section, pillar in tests:
             use = {'decisions': 'decision', 'rules': 'rule'}.get(section, section)
             for r in data.get(section) or []:
-                c.execute('INSERT INTO thresholds VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                c.execute('INSERT INTO thresholds VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
                           (r['id'], use, r.get('criticality'), r.get('class'), r.get('pillar') or pillar, r['metric'], r.get('object'),
                            r.get('layer'), r.get('instance'), r.get('interval'), r['operator'], r['value'], r.get('value_high'),
-                           r.get('unit'), r.get('condition'), r.get('meaning'), r['source'], r['kb']))
+                           r.get('unit'), r.get('condition'), r.get('meaning'), r['source'], r['kb'], r.get('step')))
         for r in cap.get('models') or []:
             b = r['bands']
             c.execute('INSERT INTO bands VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
@@ -269,7 +270,7 @@ class Catalog:
                 al[r['id']] = (s, r)
         th, bd, lv, al = _best(th, limit), _best(bd, limit), _best(lv, limit), _best(list(al.values()), limit)
         return {'thresholds': [_compact(r, ('use', 'criticality', 'class', 'metric', 'object', 'instance', 'interval', 'operator', 'value',
-                                            'value_high', 'unit', 'condition', 'meaning', 'source', 'kb')) for r in th],
+                                            'value_high', 'unit', 'condition', 'meaning', 'source', 'kb', 'step')) for r in th],
                 'bands': [_compact(r, ('metric', 'grp', 'grey', 'green', 'yellow', 'orange', 'red', 'interval', 'pillar', 'kb')) for r in bd],
                 'kpi': [_kpi(r) for r in lv],
                 'alerts': [_alert(r) for r in al]}
@@ -378,12 +379,12 @@ def _best(scored, limit, keep=0.6):
     return [r for s, r in scored if s >= top * keep][:limit]
 
 
-USE_LABELS = {'decision': 'Capacity decision', 'rule': 'Capacity rule'}
+USE_LABELS = {'decision': 'Capacity decision', 'rule': 'Capacity rule', 'flow': 'Flow test'}
 
 
 def _use_label(r):
     """What the number is for, first in every line: a KPI level, an alert and a capacity rule for one metric differ."""
-    extra = r['class'] or r['criticality']
+    extra = r['class'] or r['criticality'] or (f"step {r['step']}" if r.get('step') else None)
     return USE_LABELS.get(r['use'], r['use']) + (f', {extra}' if extra else '')
 
 

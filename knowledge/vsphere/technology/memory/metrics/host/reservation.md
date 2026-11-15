@@ -19,8 +19,9 @@
 ## Three reservation counters
 - A provider must account for reservations: they cannot be overcommitted.
 - Memory reservation is sticky. CPU has only 1 reservation counter: CPU reservation is transient.
-- A memory reservation is held only after it is used. Until a VM has touched its full reservation, the VMkernel can give the unused part of the reservation to other VMs. Once touched, the pages stay with the VM even when it goes idle: that is the sticky part.
-- Admission control is a separate check: it counts the full reservation whether used or not. A VM powers on only if the unreserved memory covers its reservation, so an untouched reservation still blocks new reservations, not other VMs' use of the pages.
+- Pages: a memory reservation is held only after it is used. Until a VM has touched its full reservation, the VMkernel can give the unused part of the reservation to other VMs (vSphere 9.1, Virtual Machine Memory). Once touched, the pages stay with the VM even when it goes idle: that is the sticky part.
+- Admission: admission control is a separate check. It counts the full reservation whether used or not. A VM powers on only if the unreserved memory covers its reservation, so an untouched reservation still blocks new reservations, not other VMs' use of the pages.
+- The kernel reservation (System Resource Reservation) follows the same two rules: admission control withholds it from VM reservations, and the pages the kernel has not consumed can serve VMs. See [`vsphere/architecture/overhead`](../../../../architecture/overhead.md), section Memory metrics.
 
 ## Misconceptions
 - "Reserved = used" → a reservation is a guarantee, not use. Check VM Memory Consumed and Active for use.
@@ -54,11 +55,10 @@ related:
 - vsphere/technology/memory/metrics/host/consumed
 - vsphere/architecture/resource-controls
 source:
-  document: Knowledge base
-  path: Memory > ESXi > Overview; Consumption Metrics > Reservation
+  document: Knowledge base; vSphere 9.1 documentation (PDF built 2026-11-02)
+  path: Memory > ESXi > Overview; Consumption Metrics > Reservation; Resource Management, Virtual Machine Memory (pp. 1833-1834), Admission Control (p. 1826)
 corrections: []
 review_notes:
 - 'Section ''Counter scope'': API 9.1 (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html) defines reservedCapacity as the reservation used by powered-on VMs and vSphere services and totalCapacity as that reservation used and available; the match of these to the UI labels Reservation consumed and Total reservation is by unit and definition.'
-- 'Section ''Three reservation counters'': check the 9.1 wording that the VMkernel can allocate the unused portion of a reservation to other VMs until the VM consumes it (stated in vSphere 8.0 Resource Management; no 9.1 page found yet). https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management.html'
 status: draft
 ```

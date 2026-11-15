@@ -2,7 +2,7 @@
 
 Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../KNOWLEDGE-ENGINEERING.md). For writers and reviewers. Not indexed.
 
-Agent E2 has four jobs with words. Each has one home, so a fact is written once.
+Agent E2 has five jobs with words. Each has one home, so a fact is written once.
 
 | Job | Failure it prevents | Home | Reaches the model |
 |---|---|---|---|
@@ -10,12 +10,20 @@ Agent E2 has four jobs with words. Each has one home, so a fact is written once.
 | Know what a term means here | The public meaning wins (ESXi CPU Demand read where capacity Demand is meant) | Glossary entry; the file for a metric | Search: the reading set |
 | Keep two terms apart | The answer uses the wrong one of two real terms | Glossary, Not to confuse with | Up-front block `terms` |
 | Drop a wrong belief | A confident rule of thumb, never looked up | The `## Misconceptions` line of its file, marked `up_front` | Up-front block `rules` |
+| Read a product label | The label's name wins over what it computes (Total Capacity (GHz) read as capacity) | Glossary entry named by the label: Product label, Invites, Better name | Term-map note when the question or the case names the label; the teaching order in an open answer |
 
 Glossary entry ([`knowledge/glossary.md`](../../knowledge/glossary.md), read by [`harness/kb.py`](../../harness/kb.py), checked by lint):
 - `- **Term**: meaning`, then optional lines `  - Also called: a, b`, `  - Not to confuse with Other term: difference.`, ``  - File: `id` ``. Grouped by area under `###` headings, alphabetical within each. Not `##`: the glossary must stay one chunk, so search never ranks this summary above the files that hold the mechanism (retrieval check 2026-11-11: with `##` areas the glossary entered 18 of 95 retrieved contexts instead of 3, and 2 questions lost a needed file).
 - Meaning only where Agent E2's meaning differs from public text, or a 32B model lacks it (SP5 and VCF Operations terms, redefined words). No Level 100 or 200 definitions.
 - A metric with its own file is an entry only when it has another name or a confusable partner.
 - Same name, two things (Demand for capacity, Demand on ESXi): two entries with a qualifier, each pointing at the other.
+
+Product label entry (design: [KNOWLEDGE-ENGINEERING.md](../../KNOWLEDGE-ENGINEERING.md), section Product label and better model):
+- For a label that invites a decision its computed model does not support, when the knowledge base holds the better model.
+- Named by the label as a question names it, with its object: ESXi CPU Usage (%), not Usage (%).
+- The meaning line says what the product computes. Then `  - Product label: the label verbatim (where it shows)`, `  - Invites: the decision the label invites`, `  - Better name: Name: the better model`, and a `File:` line for the file that owns the metric. Lint requires all four.
+- Short: the term map sends meaning, Invites and Better name to the model as one note, inside the reading set, so every word costs a file section at the budget's edge.
+- One term-map row names the entry (`label:`) and carries the match patterns; it has no note. A pattern must match the entry term. A new row goes at the end of the term map. The mechanism and the misconception line stay in the File.
 
 A confusable pair passes all four tests:
 1. Two (or three) terms of the same kind, each a real term: two metrics, two processes, two scores. "Reservation vs usage" is a rule, not a pair.

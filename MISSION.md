@@ -136,7 +136,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 - So the value is the text twin of each screen: which tool and screen, which object, which counters with unit, interval and rollup, how to read it, and its misconceptions.
 - Where it helps:
   - an uploaded screenshot (release 1.0) is matched to its screen file, which says what the screen shows and how to read it;
-  - tool confusion, one of the 12 misconception types: the same counter name reads differently in esxtop, vCenter and VCF Operations.
+  - tool confusion, one of the 13 misconception types: the same counter name reads differently in esxtop, vCenter and VCF Operations.
 - The image itself helps only when the agent fetches it for a vision model at answer time; each costs about 1,500 prompt tokens.
 - Why not every screen:
   - most of the hundreds of screens are configuration, not performance or capacity;

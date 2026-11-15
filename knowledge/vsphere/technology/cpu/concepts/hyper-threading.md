@@ -11,7 +11,7 @@
 - The BIOS must support it. Check the system documentation.
 - Enable it in the system BIOS.
 - BIOS labels vary: "Logical Processor" or "Enable Hyper-Threading".
-- The source recommends activating it for best performance.
+- Performance Best Practices for vSphere 9.1 recommends activating it for best performance.
 
 ## Logical processor numbering
 - ESX assigns adjacent CPU numbers to the logical processors of one core.
@@ -31,7 +31,7 @@
 ## Affinity caution
 - The two logical processors share most processor resources.
 - Pinning vCPUs to both logical processors of one core can cause poor performance.
-- The source gives this example: CPU 0 and CPU 1 on the same core.
+- Example: CPU 0 and CPU 1 on the same core.
 - The caution applies whether the vCPUs come from different VMs or from one SMP VM.
 
 - CPU admission control ignores affinity: a pinned VM can be admitted and still not get its reservation.
@@ -55,11 +55,21 @@
 - The gain is hard to measure: the core frequency does not change.
 
 ## Hyper-Threading accounting: Accounting
-- ESXi records the core gain as 1.25x, regardless of the real gain.
-- The real gain for an application can be lower or higher. The counter still reports 1.25x.
-- Both threads running: the core records 1.25x. Each thread gets 62.5% of the core.
-- From each VM's vantage point, an idle sibling thread is better: 100% instead of 62.5%.
+- ESXi records the core gain as 1.25x, regardless of the real gain: a flat 25% throughput benefit for the core when both threads run (Broadcom KB 335065).
+- The real gain for an application can be lower or higher. The counters still use 1.25x.
+- The 1.25x goes into VM CPU Used and VM CPU Usage only; ESXi CPU Used splits the core in half. See section Hyper-Threading accounting: VM CPU Used and ESXi CPU Used.
+- From each VM's vantage point, an idle sibling thread is better: the vCPU is charged 100% of the core instead of 62.5%.
 - The drop can be significant. So the latency sensitivity setting gives the vCPU a full core reservation. The scheduler runs nothing on the sibling thread.
+
+## Hyper-Threading accounting: VM CPU Used and ESXi CPU Used
+- Two counters apply two rules to the same busy core: VM CPU Used charges each vCPU, for fairness between VMs; ESXi CPU Used accounts the core's time.
+- VM CPU Used, sibling thread running: the vCPU is charged 62.5% of the core, its half of the core's 1.25x. VM CPU Usage carries the same charge.
+- VM CPU Used, sibling thread halted: the vCPU is charged the full core, because it gets all of the core's execution resources (vSphere 9.1 documentation, Hyperthreading and ESX Hosts: a VM running with the full resources of a core is charged more than one running on a half core).
+- ESXi CPU Used, both threads running: each thread (PCPU) is charged half of the core, so the pair adds to 100% of the core (vSphere 9.1 documentation, esxtop CPU panel, PCPU USED(%)). A thread running alone is charged the full core.
+- Both threads busy all the time, nominal clock, per 20-second sample: VM CPU Run 20,000 ms (100%) per vCPU, VM CPU Used 12,500 ms (62.5%) per vCPU, ESXi CPU Used 10,000 ms (50%) per thread.
+- The two vCPUs are charged 25,000 ms of a core whose ESXi CPU Used is 20,000 ms. So on a busy Hyper-Threading host the VM CPU Used of all VMs plus the kernel exceeds ESXi CPU Used.
+- Frequency scales both rules alike: Turbo raises VM CPU Used and ESXi CPU Used, power saving lowers both.
+- The esxtop %USED of a vCPU world carries the same charge as VM CPU Used, because both are the CPU time accounted to the world (vSphere Web Services API 9.1, cpu.used: time accounted to the virtual machine).
 
 ## Run vs Used
 - Run is unaware of Hyper-Threading. It counts time only.
@@ -104,6 +114,9 @@ VM A Used = 25% × 0.625  (B also running)
 - Averaged over the sample. 50% means running half the time, not running at half speed.
 - Ignores frequency and Hyper-Threading.
 - Relevant only when Hyper-Threading is enabled. Without it, Thread Utilization equals Core Utilization.
+- Both threads of a core busy all the time: each thread reads 100%, and Core Utilization reads 100%.
+- No counter adds the two threads of a core. esxtop PCPU UTIL(%) is per PCPU (thread) and CORE UTIL(%) per core, each at most 100% (vSphere 9.1 documentation, esxtop CPU panel); vCenter Utilization (%) and Core Utilization (%) report the same instances.
+- An esxtop value of 200% belongs to a group, not to a core: a VM's %RUN adds its vCPU worlds, up to 100% per vCPU.
 
 ## Core Utilization
 - 100% when one thread runs. 100% when both run.
@@ -138,10 +151,10 @@ Core Utilization (ESXi)   = (75% + 100%) / 2          = 87.5%
 - Core Utilization below 2 × Thread Utilization: some cores run 2 threads while other cores are idle.
 - The scheduler spreads vCPUs across cores before pairing threads on one core (vSphere 9.1 documentation: VMs are "preferentially scheduled on two different cores"). Uneven core load comes from the workload and NUMA placement.
 
-## Used per thread
-- Used splits a core's time when both threads run: 10,000 ms each, not 20,000.
-- ESXi considers Hyper-Threading to deliver 1.25x. 12,500 ms per thread is easier to read.
-- At ESXi level the split is normalized back.
+## ESXi CPU Used per thread
+- ESXi CPU Used splits a core's time when both threads run: 10,000 ms each, not 20,000. A thread running alone gets 20,000 ms.
+- The vCPUs on those two threads are charged 12,500 ms each: the 1.25x shows in VM CPU Used, not in ESXi CPU Used (section Hyper-Threading accounting: VM CPU Used and ESXi CPU Used).
+- At nominal clock a core's ESXi CPU Used never passes 20,000 ms per sample, with one thread or two.
 ![Utilization and Used per thread for 6 scenarios on a 2-core host](../images/esxi-cpu-utilization-vs-used-per-thread-6-scenarios-2-core-host.png)
 
 | Scenario | Utilization (ms) C1-HT1, C1-HT2, C2-HT1, C2-HT2 | Used (ms) |
@@ -169,18 +182,22 @@ Core Utilization (ESXi)   = (75% + 100%) / 2          = 87.5%
 | ESXi Core Utilization (%) | ESXi Core Usage (MHz) |
 
 - A VM vCPU maps to a physical thread, which runs on a shared core.
-- Example, 1 GHz base, both threads busy: each vCPU and each thread 625 MHz; the core 1,250 MHz. The 2 threads sum to the core.
+- Example, 1 GHz base, both threads busy: each vCPU is charged 625 MHz (VM Usage), 1,250 MHz for the two.
+- Same example on the ESXi side: ESXi CPU Used gives each thread 500 MHz and the core 1,000 MHz. The 2 threads sum to the core; the 1.25x is in VM CPU Used and VM CPU Usage only.
 - Usage has 3 factors: running time, efficiency of the run, speed of the run.
 - The cycle-based counters are volatile: typically 15%-40% upward from Turbo Boost.
 ![Time taken vs distance travelled for VM and ESXi CPU metrics](../images/cpu-metrics-time-taken-vs-work-done-vm-and-esxi.png)
 
 ## Misconceptions
-- "Hyper-Threading doubles CPU capacity" → the source gives a slight to significant gain, not a doubling.
+- "Hyper-Threading doubles CPU capacity" → Hyper-Threading gives a slight to significant gain, not a doubling (Performance Best Practices for vSphere 9.1).
 - "Pin each vCPU to a logical processor for isolation" → pinning both threads of one core can cause poor performance.
 - "Run 50% means the VM got 50% of a core" → Run ignores the shared core. Used shows 40.625%.
 - "Hyper-Threading gain is 25% for every workload" → 1.25x is a hardcoded accounting value.
 - "Ready shows Hyper-Threading contention" → Ready does not change when the sibling thread is busy. Use CPU Latency.
 - "Sum thread utilization to get core utilization" → each thread has its own 100%. Read Core Utilization.
+- "esxtop shows 200% for a core with both threads busy" → no esxtop field adds the two threads of a core: PCPU UTIL(%) reads 100% on each thread and CORE UTIL(%) 100% for the core. 200% is a group value, such as the %RUN of a 2-vCPU VM.
+- "ESXi CPU Used per thread is 62.5% when both threads run" → ESXi CPU Used gives each thread of a busy pair half the core; 62.5% is the VM CPU Used of each vCPU.
+- "The VMs on a host cannot be charged more CPU than ESXi CPU Used" → with both threads of a core busy, VM CPU Used carries the 1.25x and ESXi CPU Used does not.
 - "Core Utilization shown on a PCPU is half the core" → it is duplicated on both threads.
 - "Thread Idle 10,000 ms means half idle" → 10,000 ms is a fully idle thread with Hyper-Threading on.
 
@@ -220,6 +237,7 @@ related:
 - vsphere/technology/cpu/metrics/host/usage
 - vsphere/technology/cpu/metrics/host/idle
 - vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics
+- vsphere/tools/esxtop/cpu
 images:
 - path: ../images/hyper-threading-vm-cpu-used-62-5-percent-when-sibling-runs.png
   product:
@@ -287,16 +305,14 @@ images:
   topic: CPU time-based vs work-based metrics
   image_type: table
 source:
-  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX CPU Considerations > Hyper-Threading (p. 28); Guest Operating System CPU Considerations (p. 57); Hardware BIOS Settings (p. 21); CPU > Architecture (pp. 75-77) > CPU Efficiency (from former vsphere/technology/cpu/concepts/hyper-threading); CPU > ESXi > Consumption Metrics > Core vs Thread; Thread Utilization; Used | Usage; Summary (from former vsphere/technology/cpu/concepts/hyper-threading)
-corrections: []
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Broadcom KB 335065; vSphere Web Services API 9.1 reference, CPU Counters
+  path: ESX CPU Considerations > Hyper-Threading (p. 28); Guest Operating System CPU Considerations (p. 57); Hardware BIOS Settings (p. 21); CPU > Architecture (pp. 75-77) > CPU Efficiency (from former vsphere/technology/cpu/concepts/hyper-threading); CPU > ESXi > Consumption Metrics > Core vs Thread; Thread Utilization; Used | Usage; Summary (from former vsphere/technology/cpu/concepts/hyper-threading); vSphere Resource Management > Hyperthreading and ESX Hosts, Using CPU Affinity, Potential Issues with CPU Affinity (pp. 1829-1831); vSphere Monitoring and Performance > resxtop and esxtop > CPU Panel, PCPU USED(%) and PCPU UTIL(%) (p. 2153), CORE UTIL(%) (p. 2155); KB 335065 (CPU usage increase after update to ESXi 7.0.3 or later), Cause; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html, used
+corrections:
+- 'Section ''Hyper-Threading accounting: VM CPU Used and ESXi CPU Used'': differs from two lines of the vSphere 9.1 esxtop CPU panel text (PCPU USED(%), %RUN); both entries are in the corrections of vsphere/tools/esxtop/cpu.'
 review_notes:
-- 'Sections ''Scheduling behaviour'', ''Affinity caution'': throughput, charging, scheduler preference and affinity side effects from the vSphere 9.1 documentation, vSphere Resource Management > Hyperthreading and ESX Hosts, Using CPU Affinity, Potential Issues with CPU Affinity (pp. 1829-1831).'
 - Checked against 9.1 (revision 20260624). Page 28 unchanged. Page references updated.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: Hyper-Threading penalty figures, 37.5% (VM Usage) and 50% (ESXi Used); Performance Best Practices for VMware vSphere 9.1 gives no penalty percentages.'
-- 'To check: Section ''Worked example'': the formula line, reconstructed from description (VM A runs 50% of the time, half of it with VM B running); gives only the result (40.625%).'
-- 'Hyper-Threading figures (1.25x, 62.5%) are not in Performance Best Practices for vSphere 9.1. Open item in project/plan.md.'
 - 'To check: Section ''Time base'': what the sibling thread shows when a thread running alone reaches 20,000 ms Used; not tested.'
+- 'To redraw: Section ''Time taken vs distance travelled'': the image shows ESXi Thread Usage 625 MHz and ESXi Core Usage 1,250 MHz; ESXi CPU Used gives each thread of a busy pair half the core (vSphere 9.1 documentation, esxtop CPU panel, PCPU USED(%), p. 2153), so the ESXi rows read 500 MHz and 1,000 MHz. Redraw the ESXi rows, or label them as the charge in VM CPU Used.'
 status: draft
 ```

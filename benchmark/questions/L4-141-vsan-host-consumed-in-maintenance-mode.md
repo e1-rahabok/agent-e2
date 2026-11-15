@@ -12,7 +12,7 @@ Which statements are correct?
 - B. Consumed fell to about 0 once the last VM had left the host for maintenance.
 - C. With no VMs left, Consumed holds the host's own working memory: kernel modules, vSAN and other services.
 - D. An empty host's Consumed should match the memory figure on the System Resource Reservation page.
-- E. The System Resource Reservation figure is set aside for the host's own services, not measured use.
+- E. The System Resource Reservation figure is a reservation for the host's own services, not measured use.
 - F. The steady Consumed of the empty host is a kernel memory leak to report to the vendor.
 - G. Only vSAN keeps an empty host's Consumed above 0; a host without it would show none.
 - H. Restart the host before it returns to service, so that it starts again with Consumed at 0.
@@ -37,7 +37,7 @@ D: "With no VMs, Consumed should show what the kernel has reserved." Or F: "An e
 - B false: with 0 VMs the line stays above 10 GB.
 - C true: host Consumed counts every ESXi page in use: VMs, VM overhead and all kernel processes, vSAN included. With 0 VMs it is the kernel and its services.
 - D false: Consumed is actual use, not reservation; on an empty host the two can sit far apart.
-- E true: the reservation is what the host sets aside for its own services; what they use shows in Consumed.
+- E true: the figure is the host/system allocation minimum, a reservation for the host's own services; what they use shows in Consumed.
 - F false: vSAN and the kernel modules keep their memory with no VMs; a level Consumed after the evacuation is their steady use, not growth.
 - G false: over-correction. Without vSAN the kernel, its processes and NSX still consume memory; an empty host does not read 0.
 - H false: the wrong action. Nothing leaks; after a restart the kernel and vSAN take their memory again.
@@ -45,7 +45,7 @@ D: "With no VMs, Consumed should show what the kernel has reserved." Or F: "An e
 
 ## Notes
 - Paired with 0056 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item C16.
-- No option says whether the kernel reservation is above or below kernel use: that is open (author question Q202). No option names the VCF Operations metric ESX System Usage (Q215 answered 2026-11-15: a VCF Operations metric, not a vCenter counter; the System Resource Reservation page is the host/system allocation minimum). E stays true: the figure is a reservation. Key unchanged.
+- No option says whether the kernel reservation is above or below kernel use: it does not follow use and differs by host (author question Q202, settled 2026-11-15). E reworded the same day from "set aside for" to "a reservation for": the knowledge base now says the kernel reservation holds no pages at boot (Q201), so "set aside" could read as physical pages. No option names the VCF Operations metric ESX System Usage (Q215 answered 2026-11-15: a VCF Operations metric, not a vCenter counter; the System Resource Reservation page is the host/system allocation minimum). E stays true: the figure is a reservation. Key unchanged.
 - The System Resource Reservation page is the one the CPU Demand files point to (vsphere/technology/cpu/metrics/host/demand); here only its memory value is read.
 - Review fixes 2026-11-15: new situation (firmware wait, vendor leak report); options reworded away from 0056; screen readings added (A true, B false; B is not the negation of A); the condition keeps the knowledge-base and 0056 numbers out. Key A, D, G → A, C, E, I.
 - The key holds whenever the condition of `## Input to supply` holds.
