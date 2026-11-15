@@ -15,7 +15,7 @@
 - Block size: derive with a super metric (throughput / IOPS).
 
 ## Example: 192 hosts
-- Worst write latency in a week: 250 ms on one host, while its 95th percentile was 0.33 ms: a one-off.
+- Worst write latency in a week: 250 ms on one host, while its 95th percentile was 0.33 ms. The 95th alone does not prove a one-off: check the 99th percentile, or how many samples passed a level, before calling it one ([`aggregation`](../../../../../sp5-framework/observability/aggregation.md), section Techniques).
 - The other 191 hosts: maximum 5 ms.
 - Using the 99th percentile instead of the maximum still revealed hosts with real latency problems. Drill down per adapter.
 ![ESXi storage adapter latency: 99th and 95th percentile read and write, sorted by write latency](../../images/esxi-storage-adapter-latency-99th-vs-95th-percentile-sorted.png)

@@ -22,14 +22,20 @@ watch esxcli network nic stats get -n vmnic#
 
 | esxcli counter | Meaning |
 |---|---|
-| Total receive errors, Total transmit errors | Sum of the errors below, including checksum errors (not reported separately). |
+| Total receive errors, Total transmit errors | Sum of the error counters below, CRC errors included. Checksum errors roll into the total (not reported separately). |
 | Checksum errors (csumerr, driver private stats) | Layer 3: hardware, typically cabling. Layer 4: encapsulated packets (VXLAN, overlay). Receive rate too high for hardware checksum: passed to ESXi, counted as error. |
 | Receive length errors | Actual packet size differs from the size in the header. |
-| Receive over errors | Packets discarded by the NIC hardware buffer. Includes CRC errors. |
-| Receive CRC errors | CRC calculated by ESXi differs from the FCS field. |
-| Receive FIFO errors, Transmit FIFO errors | NIC cannot process: ring buffer full. |
-| Receive missed errors | NIC cannot store or process packets: hardware limits. |
-| Receive frame errors; Transmit aborted, carrier, heartbeat, window errors | Listed without description. |
+| Receive over errors | Packets discarded by the NIC hardware buffer. |
+| Receive CRC errors | CRC calculated by ESXi differs from the FCS field; the host discards the frame. Typically a bad cable. |
+| Receive FIFO errors, Transmit FIFO errors | The NIC cannot keep up with peak traffic at the current ring buffer size. |
+| Receive missed errors | The NIC cannot keep up with peak incoming traffic at the current receive ring size. |
+| Receive frame errors | Bad cable, mismatched speed or bad hardware. |
+| Transmit carrier errors | Speed or duplex mismatch, or the physical connection. |
+| Transmit aborted, heartbeat, window errors | Listed without description. |
+
+- The NIC reports these errors only to the ESXi host. Work them with the hardware vendor, and check that the NIC driver and firmware are current (Broadcom KB 341594).
+- A larger ring buffer addresses FIFO and missed errors, not CRC errors. Confirm a ring size change with the hardware vendor first.
+- Record the counters before a host reboot: a reboot resets them.
 
 ## Observations
 - Hosts with receive errors spanned clusters, hardware models and ESXi builds. No correlation with other packet types.
@@ -67,11 +73,10 @@ images:
     metric: ['ESXi Network Error Packets', 'ESXi Network Unknown Protocol Frames']
     image_type: table
 source:
-  document: Knowledge base
-  path: Network > ESXi > Contention Metrics > Error Metrics; esxcli
+  document: Knowledge base; Broadcom KB 341594 (ESXi 8.x and 9.x)
+  path: Network > ESXi > Contention Metrics > Error Metrics; esxcli; KB 341594, Troubleshooting and understanding physical NIC receive or transmit dropped, missed and error counters in ESXi
 corrections: []
 review_notes:
-- 'To check: KB 341594, not read; the esxcli descriptions are a summary (https://knowledge.broadcom.com/external/article?articleNumber=341594).'
 - 'To check: whether the vCenter error counters are esxcli Total receive errors and Total transmit errors.'
 - 'Section ''Host TCP retransmits'': Broadcom KB 424515 (net-stats tcptx rexmit), KB 419500 (Performance for Support, tcpTxRetransmitRate), KB 415001 (vSAN 8.x and 9.x). To check: the chart name in the vSAN 9.x TechDocs.'
 status: draft

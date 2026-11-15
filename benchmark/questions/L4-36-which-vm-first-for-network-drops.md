@@ -17,8 +17,8 @@ A: ranking VMs by the maximum percentage, which short spikes on near-idle VMs do
 
 ## Expected key points
 - Answer: B.
-- The top five by maximum are near-idle job VMs: their 99th percentile is 0 and they dropped a few hundred to about 1,300 packets in the week. A high percentage in a sample with almost no traffic is a few packets.
-- db-07: 1% of the week's samples (about 100 minutes) are at 1.9% or more, and it dropped about 4.18 million transmitted packets while carrying real traffic. At about 1.5 KB per packet that is about 6 GB resent.
+- A is wrong: the top five by maximum are near-idle job VMs: their 99th percentile is 0 and they dropped a few hundred to about 1,300 packets in the week. A high percentage in a sample with almost no traffic is a few packets.
+- B is correct: db-07: 1% of the week's samples (about 100 minutes) are at 1.9% or more, and it dropped about 4.18 million transmitted packets while carrying real traffic. At about 1.5 KB per packet that is about 6 GB resent.
 - Rank drops by a percentile and by the packet count, not by the maximum percentage. The maximum of a short, spiky metric says little.
 - C is wrong: web-04's 99th percentile is 0.02% and its totals are small; its maximum is one spike.
 - D is wrong: rpt-11's 1,334 receive drops lead the five, but its 99th percentile is 0 at 4 KBps: a near-idle VM with a few short spikes.
