@@ -1,8 +1,8 @@
 # A two-minute burst: Real-time vs past day
 
 ## Prompt
-- A VM owner reports that his VM ran at full CPU for a couple of minutes this morning. He sends [the Real-time CPU chart](0432/vcenter-vm-cpu-usage-real-time.png).
-- An hour later you open [the past-day CPU chart](0432/vcenter-vm-cpu-usage-past-day.png) of the same VM. The owner says the second chart is wrong, because it never shows the full peak.
+- A VM owner reports that his VM was very busy for a short while this morning. He sends [the Real-time CPU chart](0432/vcenter-vm-cpu-usage-real-time.png).
+- An hour later you show him [the past-day CPU chart](0432/vcenter-vm-cpu-usage-past-day.png) of the same VM. He says it is wrong, because it does not match the first.
 
 Which statements are correct?
 
@@ -11,7 +11,8 @@ Which statements are correct?
 - C. The Real-time chart shows the VM busy at close to its full CPU for about 2 minutes.
 - D. The past-day chart shows that the VM ran at that lower level for the whole 5 minutes.
 - E. Open a support case: vCenter dropped the peak samples during the rollup.
-- F. A burst shorter than 5 minutes leaves no mark at all in the past-day chart.
+- F. Without the Real-time chart, the past-day chart would give no hint that anything happened at that time.
+- G. The past-day point that holds the burst reads above 80%.
 
 ## Input to supply
 - Product and version: vSphere 9.1 (vSphere Client), vCenter at the default collection intervals and statistics level.
@@ -32,9 +33,11 @@ A: the past-day chart is expected to keep the peak, so it is called wrong; E, th
 - C true: the Real-time samples show the burst: about 6 consecutive samples of 20 seconds near 100%.
 - D false: a 5-minute average says nothing about how the load was spread inside the 5 minutes; the Real-time chart shows a short burst at full height, not a steady lower level.
 - E false: the wrong action. The rollup averages by design; nothing was dropped.
-- F false: the over-correction. The burst lifts the point that holds it by its share of the 15 samples; it is diluted, not erased.
+- F false: the over-correction. The point that holds the burst stands at about 30-50% against neighbours below 10%; the burst is diluted, not erased.
+- G false: the point that holds the burst reads between 30% and 50%.
 
 ## Notes
+- Review 2026-11-15: the stem no longer gives the burst's length or height; F reworded away from 0047 E; G added as a false reading. Key unchanged.
 - Practical half of 0047 (pair: design.md, section 3.9).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C8). The options hold for any capture that meets the condition above. Counts only after author approval.
 

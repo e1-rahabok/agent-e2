@@ -13,7 +13,7 @@ Which statements about how the burst shows in the vCenter charts are correct?
 - E. The burst leaves no trace in the 1 Day chart: a 5-minute point cannot carry a 20-second event.
 - F. The Real-time chart still shows the burst at its 20-second height this morning.
 - G. Raise the statistics level to 4 now, so the 1 Day chart shows the maximum of last night's burst.
-- H. In the 1 Year chart, the burst is diluted 4,320 times.
+- H. Once that day is rolled up, a 1 Year point dilutes the burst 4,320 times.
 
 ## Likely wrong answer
 C: 288 is the number of points per day, read as the dilution of one point. Or D: the chart is read as a chart of peaks.

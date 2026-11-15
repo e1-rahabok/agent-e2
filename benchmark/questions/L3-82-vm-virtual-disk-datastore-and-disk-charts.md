@@ -11,12 +11,12 @@ Which statements are correct?
 - C. The Datastore chart includes snapshot IO, which the Virtual disk chart leaves out.
 - D. The Disk chart shows the total IO of the whole LUN, from every VM on it.
 - E. The Disk chart includes the RDM's IO.
-- F. The three charts measure different IO and never agree.
+- F. Even with all disks on one VMFS datastore on one LUN and no snapshot, the three charts show clearly different IOPS.
 - G. A gap between the Datastore and Virtual disk charts shows a statistics collection fault.
-- H. The Disk chart splits the VM's IO per virtual disk.
+- H. The Disk chart breaks the VM's device IO down per scsiM:N disk.
 
 ## Likely wrong answer
-D: the Disk chart is the whole LUN. Or F, the overshoot: the three charts never agree.
+D: the Disk chart is the whole LUN. Or F, the overshoot: the three charts differ even in the simplest layout.
 
 ## Expected key points
 - Answer: A, B, C, E.
@@ -25,13 +25,14 @@ D: the Disk chart is the whole LUN. Or F, the overshoot: the three charts never 
 - C true: snapshots live at datastore level; virtual disk metrics exclude snapshot data.
 - D false: the misconception. The VM Disk chart is this VM's IO at the device level, not the IO other VMs send to the shared LUN.
 - E true: the VM Disk level covers VMFS and RDM devices (not NFS).
-- F false: the over-correction. With all disks on one datastore backed by one LUN, virtual disk, disk and datastore metrics are nearly identical; the differences come from files outside the virtual disks and from RDMs.
+- F false: the over-correction. With all disks on one datastore backed by one LUN, virtual disk, disk and datastore metrics are nearly identical; differences come from files outside the virtual disks (snapshots, logs, swap) and from RDMs.
 - G false: the wrong conclusion. RDM IO and snapshot IO explain the gap; each chart is right from its level.
-- H false: the Disk level is not split per virtual disk.
+- H false: the Disk level is per device; it is not split per virtual disk.
 
 ## Notes
 - Theory half of pair D7 with 0427 (practical; design.md, section 3.9). Different disk layout from 0427 (RDM here, NFS there).
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item D7 (origin: synthetic). Counts only after author approval.
+- Review 2026-11-15: F and H reworded away from 0427. Key unchanged: A, B, C, E.
 
 ## Metadata
 ```yaml

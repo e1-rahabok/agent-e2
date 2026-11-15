@@ -7,13 +7,14 @@
 Which statements are correct?
 
 - A. The Processor Queue Length, sustained above about 2 per vCPU, shows threads waiting for a processor.
-- B. The Processor Queue Length includes the threads running on the 4 vCPUs.
-- C. The context switch rate shown, by itself, calls for more vCPUs.
+- B. Threads already executing on a vCPU are part of the queue figure in the graph.
+- C. A rising Context Switches/sec line is reason enough to add vCPUs.
 - D. With all 4 vCPUs near 100% and a long queue, the batch wants more CPU time than Windows gets.
 - E. Check the VM's CPU Ready and Co-stop for the same hour before adding vCPUs.
 - F. Add 4 vCPUs now: a queue above 2 per vCPU settles it.
 - G. vCenter shows the VM's CPU Usage at the same value as Windows % Processor Time.
-- H. A queue of any length is harmless on a VM, since Windows always has threads waiting.
+- H. With all four processors this busy, the queue length adds nothing to the diagnosis.
+- I. The graph shows the queue at 0 for most of the hour.
 
 ## Input to supply
 - Product and version: Windows Server 2022 or 2025 in a VM on vSphere 9.1, 4 vCPUs, VMware Tools running, no CPU limit.
@@ -31,14 +32,16 @@ F: the queue read as proof that more vCPUs are needed, without the VM's view. Or
 - Answer: A, D, E.
 - A true: Windows excludes running threads from the queue, so a queue sustained above about 2 per processor means threads wait for a processor (MSDN reads above 2 sustained as congestion).
 - B false: Windows counts threads in the Ready, Standby and Deferred Ready states; running threads are not in the queue (Linux counts them).
-- C false: the misconception. A high switch rate is not a CPU shortage on its own; the queue is the counter to read, and more vCPUs can raise switching.
+- C false: the misconception. A high or rising switch rate is not a CPU shortage on its own; the queue is the counter to read, and more vCPUs can raise switching.
 - D true: queue high with every vCPU busy is the case where the workload demands more runtime than the Guest OS gets.
 - E true: a vCPU waiting for a physical thread is invisible to Windows; Ready and Co-stop show whether the VM got the runtime it asked for, and more vCPUs on a busy host can raise them.
 - F false: the wrong action. The Guest OS view alone does not settle it; VM contention comes first.
 - G false: the two are measured in different layers. Windows CPU usage ignores the host's Hyper-Threading; VM CPU Usage, measured by the VMkernel, accounts for it (for example 62.5% for a Windows vCPU at 100% on a shared core).
-- H false: the over-correction. Ready threads cannot run; the queue is the primary Guest OS counter for whether the CPU keeps up.
+- H false: the over-correction. Busy processors alone do not show that threads wait; the queue is the primary Guest OS counter for whether the CPU keeps up.
+- I false: the queue stays above 8 (2 per vCPU) for most of the hour.
 
 ## Notes
+- Review 2026-11-15: B, C and H reworded away from the options of 0010; I added as a false reading of the graph. Key unchanged.
 - Practical half of 0010 (pair: design.md, section 3.9).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C30). The options hold for any capture that meets the condition above. Counts only after author approval.
 

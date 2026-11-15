@@ -4,7 +4,7 @@
 Choose all the correct sentences about Windows and Linux CPU performance:
 
 - A. The Guest OS is aware of Hyper-Threading and schedules its processes accordingly.
-- B. The CPU run queue has no bearing on application performance, since Windows and Linux queue threads all the time.
+- B. The CPU run queue has no bearing on application performance.
 - C. A high context switch rate calls for more vCPUs.
 - D. Windows Processor Queue Length leaves out the running threads; the Linux run queue counts them.
 - E. A context switch costs CPU time that could otherwise run application work.

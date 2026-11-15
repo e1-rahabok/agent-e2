@@ -24,13 +24,11 @@ Which statements about the two pairs of numbers and the next step are correct?
 - L. For the 14:15 slowness, the 5-minute VCF Operations values are sharper evidence than the 1 Week point.
 - M. Co-stop tends to rise with the vCPU count, so a next check is whether the work of app-07 needs eight vCPUs.
 - N. History and analysis of contention are read in VCF Operations; vCenter keeps a short, averaged history.
-- O. VCF Operations computes CPU Usage with its own formula, as it does CPU Contention.
-- P. A CPU Contention of 9.8% at 14:15 calls for another host in the cluster.
+- O. A CPU Contention of 9.8% at 14:15 calls for another host in the cluster.
 
 ## Likely wrong answer
 - B: "The tools disagree on Usage, so the VCF Operations data is wrong or delayed."
 - F: "Contention is the vSphere Ready counter under another name, so 9.8% against 2.9% shows an error."
-- O: "Both counters differ between the tools" (the over-correction).
 
 ## Expected key points
 - Answer: A, C, E, G, I, L, M, N.
@@ -48,16 +46,15 @@ Which statements about the two pairs of numbers and the next step are correct?
 - L true: the 5-minute points show the 96% and 92% plateau that the 30-minute average hides.
 - M true: Co-stop tends to be higher on VMs with more vCPUs. Next in the contention flow: Ready against Run at the 20-second peak, Co-stop and the vCPU count against the work, limits and shares, and the host load in the same cycles.
 - N true: vCenter is the administrative tool, with a short history that rolls peaks away; capacity and performance analysis are done in VCF Operations.
-- O false: CPU Usage is passed through from vSphere; only computed metrics such as Contention have their own formula.
-- P false: most of the 9.8% is Co-stop, which comes from the VM's own size; another host does not change it.
+- O false: most of the 9.8% is Co-stop, which comes from the VM's own size; another host does not change it.
 
 ## Notes
 - Public source: Broadcom KB 394770, How is CPU Contention (%) calculated (Aria/VCF Operations 8.x; no updated date shown): "Value is the sum of CPU overlap, ready, co-stop and other wait", from the 15 20-second points of each 5-minute cycle. vSphere 9.1 Monitoring and Performance: Data Collection Intervals (1 Week: 30-minute points; 6 points of 1 Day); Usage rollup is an average. The knowledge file states that Other Wait is added only when below 1% and that from VCF Operations 8.18 the formula includes limit time; the KB does not say so, and neither fact is used in the key (Other Wait is 0.3% and the VM has no limit in the scenario).
-- Why one answer: both differences are arithmetic on the numbers given plus documented definitions.
+- Why the key holds: both differences are arithmetic on the numbers given plus documented definitions.
 - Debatable risk: low. I did not verify the knowledge file's July 2024 (8.18) change of the formula; the question does not rely on it.
 - Rests on: the role file's principle that a passed-through metric means what its source means and only computed metrics have their own definition; the vendor sources above.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). Option H rests on Broadcom KB 394770 (the formula) and the knowledge file's comparison of Contention and Latency, not on the 8.18 date.
-- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the stem no longer says the vSphere Client has no Contention counter (that is now option E); A and B one fact each and no longer negations of each other; E no longer negates H; O (the over-correction) and P (the wrong action) added. Key unchanged.
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the stem no longer says the vSphere Client has no Contention counter (that is now option E); A and B one fact each and no longer negations of each other; E no longer negates H; O (the wrong action) added. An over-correction option (VCF Operations CPU Usage has its own formula) was tried and dropped on review 2026-11-15: no knowledge file states that VM CPU Usage is passed through. Key unchanged.
 - Paired with 0370 (theory and practical, design.md 3.9).
 
 ## Metadata

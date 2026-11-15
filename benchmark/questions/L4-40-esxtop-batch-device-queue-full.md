@@ -7,7 +7,7 @@
 Which statements about where the latency is added, and what to check, are correct?
 
 - A. In the ESXi kernel: the device queue is full, so commands wait before the array.
-- B. In the array: DAVG, the time from the HBA to the array and back, is the cause.
+- B. In the array: DAVG is the cause.
 - C. In the Guest OS: the VMs queue the IO inside Windows and Linux before sending it.
 - D. Nowhere: a LOAD above 1 is normal for any busy device and needs no action.
 - E. Compare the queue depth of 32 with the HBA and the array's per-LUN guidance.
@@ -19,14 +19,15 @@ B: blaming the array.
 - Answer: A, E.
 - A: %USD = ACTV / DQLEN = 100% means the device queue is full. LOAD = (ACTV + QUED) / DQLEN near 3: about twice as many commands wait in the kernel as the device accepts. KAVG (and QAVG inside it) carries the added time: GAVG ≈ 3 ms = KAVG 2 ms + DAVG 1 ms.
 - E: the device queue depth is the limit here, and queue depths must match along the stack (HBA, device, array). Spreading the busy disks over more LUNs also gives more device queues.
-- B is wrong: DAVG stays near 1 ms through the window. The array serves each command as fast as before; the commands wait before they get there.
-- C is wrong: esxtop does not see the Guest OS queues.
+- B is wrong: DAVG (the HBA, the fabric and the array) stays near 1 ms through the window. The array serves each command as fast as before; the commands wait before they get there.
+- C is wrong: GAVG = KAVG + DAVG accounts for the whole rise; the added time is in the kernel, below the Guest OS, whose queues esxtop does not see.
 - D is wrong: LOAD above 1 means commands are queued in the kernel.
 - The other LUN, naa.624a9370b2, has no queue at the same time: the host and its adapters are not the limit.
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: the screenshot removed; the batch output reduced to two devices, one-minute samples and the panel's field names; the Storage I/O Control option removed (deprecated in VCF 9.0). Counts only after author approval.
 - 2026-11-14: the stem bullet that read the CSV for the candidate (ACTV equal to DQLEN, QUED, %USD, LOAD, KAVG against DAVG in the window) removed (design.md 6.2); question made plural. Practical half of 0043 (project/question-pairing-2026-11-14.md, A16). Key unchanged.
+- Review 2026-11-15: the key point for C names the mechanism. Key unchanged.
 
 ## Metadata
 ```yaml

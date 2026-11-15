@@ -13,7 +13,7 @@ Which statements are correct?
 - E. Each VM's CPU Run is about 100%, because Run counts time and ignores the shared core.
 - F. Each VM's CPU Latency shows about 37.5%, the part lost to the shared core.
 - G. Each VM gets only 62.5% of the CPU time it asks for and waits in Ready for the rest.
-- H. ESXi records a core with both threads busy as 1.25 times one thread's work and charges each thread half of it.
+- H. ESXi records a core with both threads busy as 1.25 times one thread's work, and charges each of the two vCPUs 62.5% of a core.
 - I. The CPU Ready of both VMs rises, because the sibling thread on the same core is busy.
 - J. The 62.5% is a reporting error: a fully busy single-vCPU VM should show 100% CPU Usage.
 - K. Each VM gets as much work done as it would with the core to itself.
@@ -33,7 +33,7 @@ Which statements are correct?
 - E is true: Run is unaware of Hyper-Threading and counts time only; both VMs run all the time.
 - F is true: Used + Latency = 100%; with both threads running Used is 62.5% and Latency 37.5%.
 - G is false: the 62.5% is an accounting charge for sharing the core, not unmet demand; Ready stays 0.
-- H is true: VM Usage is Hyper-Threading aware: the core counts 1.25x, so each thread is charged 62.5% of one core, a 37.5% penalty.
+- H is true: VM Usage is Hyper-Threading aware: the core counts 1.25x, so each vCPU is charged 62.5% of one core, a 37.5% penalty.
 - I is false: Ready does not register Hyper-Threading contention; sharing the core happens in hardware, not in the scheduler.
 - J is false: not a bug; a different vantage point from the host. The VM cannot see the core or its threads; ESXi can.
 - K is false: the shared core delivers about 1.25 times one thread's work in total, so each VM does about 62.5% of what it would do alone.

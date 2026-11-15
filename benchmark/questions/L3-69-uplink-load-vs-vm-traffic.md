@@ -1,39 +1,40 @@
 # Uplink load and VM network traffic
 
 ## Prompt
-- An ESXi host has four 25 GbE uplinks on one distributed switch. They carry VM traffic, vMotion and vSAN.
-- The capacity planner wants to size the uplinks from the network counters of the VMs on the host.
+- The hosts of a cluster share one distributed switch; each host has four 25 GbE uplinks that carry VM traffic, vMotion and vSAN.
+- A web VM and a database VM run on the same host and port group and exchange several Gb/s. The application team wants an anti-affinity rule to keep them on different hosts.
 
 Which statements are correct?
 
-- A. Traffic between two VMs on the same host and the same port group does not show on any vmnic.
-- B. The vmnic counters include VMkernel traffic such as vMotion and vSAN, which no VM counter shows.
-- C. The load on the uplinks equals the sum of the VMs' transmit and receive.
-- D. VM traffic never crosses the uplinks, so the VM counters say nothing about them.
-- E. Moving one of two VMs that exchange a lot of traffic to another host raises the uplink load of both hosts.
+- A. Two VMs on one host and port group can exchange more than the uplink speed.
+- B. A vMotion leaving the host shows on the vmnics and in no VM's network counters.
+- C. The two VMs' traffic already loads the uplinks, so moving them apart changes nothing there.
+- D. VM traffic never crosses the uplinks, so VM counters say nothing about uplink load.
+- E. Once the two VMs run on different hosts, their flow shows on the vmnics of both hosts.
 - F. The vmnic counters break their traffic down per VM.
 - G. With full duplex, each 25 GbE uplink carries up to 25 Gb/s in each direction at the same time.
-- H. When the VMs' traffic adds up to more than the uplinks' speed, the host needs more uplinks.
-- I. A flow between two VMs on the same host counts twice in the VM sum: as transmit on one VM and as receive on the other.
+- H. Size the uplinks for the new placement from the sum of all VMs' transmit and receive on the host.
+- I. While the two VMs share a host, their flow counts twice in the sum of the host's VM counters: as transmit on one, as receive on the other.
 
 ## Likely wrong answer
-C: adding up the VMs' throughput and reading it as the load on the uplinks.
+C: VM traffic is uplink traffic, so placement does not matter. Or D, the overshoot: VM counters say nothing about the uplinks.
 
 ## Expected key points
 - Answer: A, B, E, G, I.
-- A true: VM-to-VM traffic on the same host is switched inside the host and never reaches the physical network; vmnic metrics do not see it.
-- B true: the vmnics carry VM and kernel traffic over shared uplinks; vMotion and vSAN use VMkernel ports, not VM ports.
-- C false: in-host VM-to-VM traffic and kernel traffic break that equation.
-- D false: VM traffic to and from outside the host does cross the uplinks; only in-host flows stay off them.
+- A true: VM-to-VM traffic on the same host never reaches the physical network; while it stays in the host it has no fixed limit, and a VMXNET3 adapter can pass the speed it reports.
+- B true: vMotion uses a VMkernel port; the vmnics carry VM and kernel traffic over shared uplinks, and no VM counter includes kernel traffic.
+- C false: the misconception. Today the flow is switched inside the host and never touches a vmnic.
+- D false: the over-correction. VM traffic to and from outside the host does cross the uplinks; only in-host flows stay off them.
 - E true: once the two VMs sit on different hosts, their flow leaves both hosts through the uplinks.
 - F false: physical NICs have no per-VM or per-kernel-interface breakdown.
 - G true: full duplex is 100% in each direction.
-- H false: the VM sum is not the uplink load; plan uplink capacity from the vmnic counters, per direction.
-- I true: each VM's counters measure its own side of the flow, so one in-host flow appears on two VM ports and on no vmnic.
+- H false: the wrong action. The VM sum is not the uplink load (in-host flows, kernel traffic); plan from the vmnic counters per direction, plus the flow that the rule moves onto the wire.
+- I true: each VM's counters measure its own side, so one in-host flow appears on two VM ports and on no vmnic.
 
 ## Notes
 - Theory half of the pair with 0217 (practical; design.md, section 3.9). Different host and numbers from 0217.
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item B9 (origin: synthetic). Counts only after author approval.
+- Review 2026-11-15: new situation (an anti-affinity rule, not a capacity planner summing VMs) and options reworded away from 0217. Key unchanged: A, B, E, G, I.
 
 ## Metadata
 ```yaml
@@ -41,7 +42,7 @@ id: "0407"
 title: "Uplink load and VM network traffic"
 product: [vsphere, vsan]
 technology: [network]
-task: decide-capacity
+task: explain-mechanism
 level: 300
 answer_type: deterministic
 input: [text]

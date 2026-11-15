@@ -31,7 +31,7 @@
 |---|---|
 | VM Run | Guest OS sizing: counts each vCPU used by the guest. |
 | VM Usage (%) | Not for VM capacity: shows 62.5% when the VM already runs 100%. |
-| ESXi Usage (%) | Capacity: conservative. Not for performance: cannot show remaining room. |
+| ESXi Usage (%) | Not for capacity: it read 100% with half the threads free. Not for performance: cannot show remaining room. |
 | ESXi Thread Utilization (%) | Performance: tracks the ramp. Capacity: 100% means a performance hit; the HT effect starts at 50%. |
 
 ## Misconceptions

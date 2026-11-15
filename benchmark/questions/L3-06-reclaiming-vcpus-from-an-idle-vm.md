@@ -10,7 +10,7 @@ Choose all the correct statements:
 - B. On a 2 GHz host, removing 20 idle vCPUs frees about 40 GHz of CPU cycles for other VMs.
 - C. Removing 20 vCPUs frees allocation: the cluster's vCPU-to-core overcommit ratio falls.
 - D. Power off the VM: that frees the host memory its guest once touched.
-- E. Check disk and network activity too: a VM can process heavy IO with almost no CPU cycles.
+- E. A VM can process heavy disk and network IO with almost no CPU cycles.
 - F. Reducing the idle VM's vCPU count also frees its memory on the host.
 
 ## Likely wrong answer
@@ -22,11 +22,11 @@ B (vCPU × GHz counted as freed cycles) or E (IO assumed to cost no CPU).
 - B is wrong: idle vCPUs used almost no cycles, so no cycles are freed; reclaiming them frees allocation only. A busy VM placed in that "room" adds real load.
 - C is correct: an idle or oversized VM gives back allocation, which lowers the overcommit ratio.
 - D is correct: Windows and Linux keep memory they once touched, so the host keeps it mapped; power-off releases it.
-- E is wrong: every IO costs CPU cycles (packets processed, data copied to memory), so CPU idleness implies the rest.
+- E is wrong: every IO costs CPU cycles (packets processed, data copied to memory), so CPU idleness implies low disk and network activity, and idle is defined on CPU alone.
 - F is wrong: reducing vCPUs frees allocation, not memory; only power-off returns the consumed pages.
 
 ## Notes
-- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): old B and C each split into one fact (freed cycles, freed allocation); old C's vague "blank air" wording dropped; F is new. Key letters unchanged, C, D; C now states the allocation fact (author approved, 2026-11-14).
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): old B and C each split into one fact (freed cycles, freed allocation); old C's vague "blank air" wording dropped; E states the IO fact without the action; F is new. Key letters unchanged, C, D; C now states the allocation fact (author approved, 2026-11-14).
 
 ## Metadata
 ```yaml

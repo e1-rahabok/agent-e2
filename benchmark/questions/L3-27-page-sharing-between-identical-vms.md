@@ -8,7 +8,7 @@
 Which statements are correct?
 
 - A. ESXi shares pages only between VMs in the same resource pool.
-- B. Two VMs share a page only when their salt values match.
+- B. With default settings, two VMs share a page only when their salt values match.
 - C. By default, each VM gets a salt value of its own.
 - D. The small saving shows that page sharing is broken on these hosts: open a support case and collect logs.
 - E. Sharing pages between VMs is still on by default in vSphere 9.1.
@@ -21,16 +21,17 @@ D: low sharing read as a fault. Or E: the pre-6.0 default assumed to still hold.
 ## Expected key points
 - Answer: B, C, F.
 - A is false: resource pools play no part in page sharing.
-- B is true: since vSphere 6.0, inter-VM sharing needs the same salt value.
+- B is true: since vSphere 6.0, inter-VM sharing needs the same salt value unless the host setting in F turns salting off.
 - C is true: the default salt is the VM's own `vc.uuid`, unique per VM on a host, which prevents inter-VM sharing.
 - D is false: the behaviour is the default, not a fault.
 - E is false: since vSphere 6.0 the default is sharing within a VM only; earlier releases shared between VMs by default.
 - F is true: `Mem.ShareForceSalting = 0` applies to all VMs on the host and restores the pre-6.0 behaviour (KB 2097593). The per-VM option `sched.mem.pshare.salt` builds smaller sharing groups.
-- G is false: one salt for every VM makes a single sharing pool, the pre-6.0 default that was changed for security; review the security implications first (KB 2080735, 2097593). This is the over-correction: the fix taken as free.
+- G is false: one salt for every VM makes a single sharing pool, the pre-6.0 default that was changed for security; review the security implications first (KB 2080735, 2097593). The fix taken as free.
 
 ## Notes
 - Sources: Performance Best Practices for vSphere 9.1, Memory Page Sharing; Broadcom KB 2097593 and 2080735 (salting); the knowledge base, page sharing.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): A no longer adds a case fact the stem does not give (desktops in different pools); old B split into B, C and F; E one fact; G the over-correction added. Old C (sharing within a VM is off by default) removed: the same fact is option G of 0146. Key changed from B to B, C, F.
+- Review 2026-11-15: B scoped to default settings (F changes it). An added over-correction ("no pages shared at all, not even within a VM") was dropped again: it tests the fact of 0146 G. A setting question, so no over-correction is required. Key unchanged: B, C, F.
 
 ## Metadata
 ```yaml

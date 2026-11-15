@@ -14,7 +14,8 @@ Which statements are correct?
 - E. The array is slow: the virtual disk latency comes from the device.
 - F. Ask the storage team to move the LUN to faster media.
 - G. A high QAVG on a LUN always means an IOPS limit on one of its virtual disks.
-- H. Removing the limit, which is the default setting, takes away the wait in the kernel queue.
+- H. Setting Limit - IOPS back to Unlimited, its default, takes away the wait in the kernel queue.
+- I. On the esxtop screen, DAVG/cmd is higher than KAVG/cmd.
 
 ## Input to supply
 - Product and version: vSphere 9.1 (ESXi 9.1, vSphere Client 9.1).
@@ -39,6 +40,7 @@ E or F: the latency is high, so the array is slow. Or C: 250 reads per second is
 - F false: the wrong action. Faster media do not change a wait set by the VM's own limit.
 - G false: the over-correction. High QAVG means IO waits in a kernel queue; queue depths at each level of the stack are other causes. Here screen 3 shows the limit.
 - H true: the default is no limit; without it the reads are no longer held in the kernel queue.
+- I false: the screen reading. DAVG/cmd is below 1 ms and KAVG/cmd at least 10 times higher.
 
 ## Reasoning path
 1. Read rate / read requests per second: the IO size.
@@ -49,6 +51,7 @@ E or F: the latency is high, so the array is slow. Or C: 250 reads per second is
 - Practical half of pair D6 with 0424 (theory; design.md, section 3.9).
 - No option rests on the Paravirtual SCSI queue depth or Disk.SchedNumReqOutstanding (open question Q195).
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item D6 (origin: synthetic). Counts only after author approval.
+- Review 2026-11-15: H names the setting as the product shows it; I (a false screen reading) added. Key unchanged: A, B, D, H.
 
 ## Metadata
 ```yaml

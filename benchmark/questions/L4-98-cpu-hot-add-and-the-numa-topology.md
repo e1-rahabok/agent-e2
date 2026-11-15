@@ -15,6 +15,7 @@ What does the Guest OS see, and what follows for the database? Which statements 
 - E. ESX runs the 20 vCPUs across both physical nodes, because they do not fit one node of 16 cores.
 - F. A vCPU hot added later joins the single node the Guest OS already sees.
 - G. Part of the database's memory access goes to the other node's memory.
+- H. Pin the VM to one socket with CPU and memory affinity so that all of its memory stays local.
 
 ## Likely wrong answer
 B: virtual NUMA is exposed to every VM with more than 8 vCPUs, so the Guest OS sees the host layout. Or D: hot add costs nothing until it is used.
@@ -28,11 +29,12 @@ B: virtual NUMA is exposed to every VM with more than 8 vCPUs, so the Guest OS s
 - E is true: 20 vCPUs exceed the 16 cores of one physical node, so ESX splits the VM over both nodes.
 - F is true: with virtual NUMA off, hot-added vCPUs join the one node the guest sees.
 - G is true: the database sees no node boundary, so it cannot place threads and memory by node; some of its memory is on the other node (remote).
+- H is false: 20 vCPUs do not fit the 16 cores of one node, and affinity takes the VM out of NUMA management (no rebalancing, no memory migration). The fix is to turn CPU Hot Plug off (or size the VM to fit one node) and power-cycle it.
 
 ## Notes
 - Public source: vSphere 9.1 documentation (VMware vSphere 9.1 PDF, build of 2026-11-02), vSphere Resource Management, "Using Virtual NUMA" ("Enabling CPU HotAdd deactivates virtual NUMA", virtual NUMA is active by default above eight vCPUs, topology not influenced by cores per socket), and vSphere Virtual Machine Administration, "CPU Hot Plug" and "Virtual Topology in ESX". Broadcom KB 321931 (ESXi 7.x and 8.x; "Updated On" field empty).
 - Debatable risk: the 9.1 page "Virtual Topology in ESX" says ESX 8.0 and later (hardware version 20 or later) can expose NUMA for virtual devices and a vNUMA topology with CPU hotplug enabled, and that by default a VM with hotplug enforces a single NUMA node. The question uses hardware version 19, where the older rule holds, so the guest sees one node on every reading.
-- Rewritten 2026-11-14 to one fact per option (design.md 3.9; project/question-pairing-2026-11-14.md): the stem line on an advanced NUMA parameter was removed (it touched open author question Q216); D, F and G are new. Key changed from B to A, E, F, G.
+- Rewritten 2026-11-14 to one fact per option (design.md 3.9; project/question-pairing-2026-11-14.md): the stem line on an advanced NUMA parameter was removed (it touched open author question Q216); D, F, G and H (the wrong action) are new. Key changed from B to A, E, F, G. The stem keeps virtual hardware version 19: on version 20 and later the enhanced virtual topology can give a hot-plug VM a vNUMA layout (numa, virtual-numa).
 
 ## Metadata
 ```yaml
@@ -56,6 +58,6 @@ origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
 answer: [A, E, F, G]
 misconception: [B, D]
-misconception_type: []
+misconception_type: [layer-confusion]
 status: draft
 ```

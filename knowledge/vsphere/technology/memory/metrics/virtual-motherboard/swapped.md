@@ -5,7 +5,7 @@
 - The ESXi equivalent is called Swap Used. Different names for different vantage points.
 
 ## Behaviour
-- Pages that do not compress below 2 KB are swapped. Compressed and Swapped are mutually exclusive and move together.
+- Pages that do not compress below 2 KB are swapped. Compressed and Swapped are mutually exclusive per page. Both grow while ESXi reclaims; afterwards they can move apart: when the guest reads swapped pages back while ESXi compresses others, for example under a limit, Swapped falls as Compressed rises ([`vsphere/technology/memory/concepts/swap-and-compression`](../../concepts/swap-and-compression.md), section Example: limit, swap and compress in opposite directions).
 - ESXi swaps pages at random: it cannot see guest free memory.
 - Swapped is not Swap in - Swap out: both run in parallel on different pages.
 - vMotion can make Swapped larger than swap out minus swap in: a VM that arrives with memory already swapped brings those pages with it.

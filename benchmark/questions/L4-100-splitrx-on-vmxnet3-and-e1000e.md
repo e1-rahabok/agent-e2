@@ -58,6 +58,6 @@ origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
 answer: [A, C, E]
 misconception: [B, D]
-misconception_type: []
+misconception_type: [layer-confusion]
 status: draft
 ```

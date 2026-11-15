@@ -16,13 +16,14 @@ Which statements are correct?
 - H. %MLMTD is 0, so none of the VM's Ready came from a CPU limit.
 - I. %USED shows how long each vCPU was stopped.
 - J. %RDY is above 0: add vCPUs to the VM.
+- K. %SWPWT reads 0 on every vcpu world, so memory plays no part here.
 
 ## Input to supply
 - Product and version: ESXi 9.1, esxtop in an SSH session (interactive mode), CPU panel (`c`).
 - Object: one VM with 4 vCPUs, expanded with `e` so its vcpu worlds show.
 - Screen: the CPU panel with the expanded VM. Fields shown: %USED, %RUN, %SYS, %WAIT, %VMWAIT, %RDY, %IDLE, %OVRLP, %CSTP, %MLMTD, %SWPWT (use `f` to add any missing). Save as `0376/esxtop-cpu-vm-states.png`.
 - How to produce it in a lab: a 4-vCPU VM with moderate load on a busy host (other VMs running CPU burners) and memory pressure on the VM so that pages it touches come back from ESXi swap, for example a memory limit well below the memory a load in the guest keeps touching. No CPU limit.
-- Condition the key depends on: on the vcpu worlds, %RDY 2-10%, %CSTP above 0.5% on at least one, %SWPWT above 0.5%, %OVRLP above 0; %IDLE within 10 points of %WAIT; %MLMTD 0.00.
+- Condition the key depends on: on the vcpu worlds, %RDY 2-10%, %CSTP above 0.5% on at least one, %SWPWT above 0.5%, %OVRLP above 0; %WAIT at least 40% on each vcpu world, with %IDLE within 10 points of it; %MLMTD 0.00.
 - Masking: mask every VM, host, datastore and cluster name.
 
 ## Likely wrong answer
@@ -34,16 +35,18 @@ F: all of %WAIT is time lost to the VM. Or G: swap wait is memory, not time the 
 - B true: Co-stop holds a vCPU that ran ahead of a sibling.
 - C true: the vCPU stalls until the page is read back; the guest sees a freeze.
 - D true: Overlap is time stolen from a running vCPU for system services; the guest is frozen during it, even though Run keeps counting.
-- E true: %WAIT = %VMWAIT + %IDLE; here %IDLE is nearly all of it.
+- E true: reading. %WAIT = %VMWAIT + %IDLE; with %WAIT at 40% or more and %IDLE within 10 points of it, %IDLE is most of it.
 - F false: the misconception. %IDLE inside %WAIT is the guest's own idle time, not a wait imposed on it.
 - G false: over-correction. Swap wait is a stall of the vCPU, whatever its cause; it belongs to memory contention, but the vCPU could not run.
-- H true: %MLMTD (Max Limited) is counted inside %RDY; at 0 the Ready is not from a limit.
+- H true: reading. %MLMTD (Max Limited) is counted inside %RDY; at 0 the Ready is not from a limit.
 - I false: %USED is consumption and moves with frequency and Hyper-Threading; it does not measure stopped time.
 - J false: wrong action. More vCPUs tend to raise Ready on a busy host.
+- K false: reading. %SWPWT is above 0.5%: the vCPUs stall on pages coming back from swap.
 
 ## Notes
 - Paired with the theory question 0009 (theory and practical; design.md, section 3.9).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C29). Counts only after author approval.
+- Review 2026-11-15: condition now requires %WAIT of 40% or more (E decidable); screen reading K (false) added. Key unchanged: A, B, C, D, E, H.
 
 ## Metadata
 ```yaml

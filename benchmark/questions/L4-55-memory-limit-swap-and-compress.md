@@ -29,21 +29,22 @@ Why do the reports slow down, and what do you change? Which statements are corre
 - Answer: A, C, E, I.
 - A true: Consumed stays flat (15.66-15.83 GB) just below the Effective limit (16.19 GB in every sample), while the host has over 200 GB free and no other VM is reclaimed: the cause is a limit on the VM or its pool, not the host.
 - B false: with free host memory and no other VM swapped or compressed, the host is not short.
-- C true: in and out run at the same time on different pages; in each run Swapped falls (about 6.12 to 4.86, 4.86 to 3.78 and 3.80 to 2.98 GB) while Compressed rises (about 0.24 to 0.80, 0.80 to 1.27 and 1.28 to 1.66 GB), and Consumed stays flat.
+- C true: in and out run at the same time on different pages; in each run Swapped falls (about 6.12 to 4.86, 4.85 to 3.79 and 3.80 to 2.99 GB) while Compressed rises (about 0.24 to 0.80, 0.80 to 1.28 and 1.28 to 1.65 GB), and Consumed stays flat.
 - D false: Swapped falls because the guest asked for swapped pages (swap-in, the costly part); other pages go out at the same time to stay under the limit.
-- E true: Contention is about 3.4-6.2% in the samples of 01:00 to 02:30 and at most 0.5% at other times: each page read back is a wait for the vCPU that touched it.
+- E true: Contention is about 3.2-6.2% in the samples of 01:00 to 02:30 and at most 0.05% at other times: each page read back is a wait for the vCPU that touched it.
 - F false: swap-out is not contention by itself; only swap-in, when the guest asks for the page, makes the vCPU wait.
 - G false: the limit moves with the VM; the host was never short.
 - H false: the limit, not the configured size, caps Consumed; more configured memory changes nothing while the limit stays.
 - I true: the limit is the cause; removing it or raising it to the guest's need is the fix.
 - J false: Consumed is flat because the limit caps it; the guest keeps touching pages that ESXi swaps and compresses.
-- K false: outside the runs Contention stays at 0.5% or less; swapped pages the guest does not touch cost no wait. This is the over-correction of A: a limit read as a wait at every moment.
+- K false: outside the runs Contention stays at 0.05% or less, mostly 0; swapped pages the guest does not touch cost no wait. This is the over-correction of A: a limit read as a wait at every moment.
 
 ## Notes
 - Rewritten 2026-11-14 (project/question-pairing-2026-11-14.md, pair A14) (author approved, 2026-11-14): the old scenario (a 64 GB Linux VM, Oracle E-Business Suite, 7 days in 1-hour samples, an effective limit of 40.44 GB) was a near-copy of the knowledge example in swap-and-compression, section Example: limit, swap and compress in opposite directions. New scenario: a 24 GB Windows SQL Server VM whose nightly reports read swapped pages back; a new CSV from a seeded script (seed 14020261114, 3 days, 30-minute samples). The old CSV is in project/archive/benchmark-questions/attachments.
 - Old option A ("Consumed stays flat below an Effective limit that reads 40.44 GB in every sample") is replaced by a statement of the cause alone: no option reads the gap between Consumed and the effective limit, or what the effective limit adds to the configured limit (open author question Q205). Granted, which ignores the limit and sits above it, is not an option either.
 - No option on ballooning under a limit (open author question Q214).
 - K, the over-correction, is added. Key unchanged: A, C, E, I.
+- Review 2026-11-15: the off-run Contention was 0.08-0.51%, never 0, so K ("waits all day") could read true; the CSV was regenerated (same seed, off-run Contention 0.00-0.05%) and the key points follow the new values. Key unchanged.
 - From the author's samples (docx, 2026-11-12): a 64 GB VM, heavy swap and compression over 7 days, Consumed flat under the effective limit; the knowledge base keeps that example.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
 

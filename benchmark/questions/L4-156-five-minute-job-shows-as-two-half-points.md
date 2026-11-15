@@ -1,8 +1,8 @@
 # A five-minute job shows as two half-height points
 
 ## Prompt
-- An application owner says a batch job ran his VM at full CPU for 5 minutes. He sends [the vCenter Real-time chart](0440/vcenter-vm-cpu-usage-real-time.png) taken during the job, and [the VCF Operations chart](0440/vcf-operations-vm-cpu-usage-2-hours.png) of the same VM from later that day.
-- He asks why VCF Operations shows no point above about half, and thinks VCF Operations lost data.
+- An application owner says a batch job kept his VM busy for a few minutes. He sends [the vCenter Real-time chart](0440/vcenter-vm-cpu-usage-real-time.png) taken during the job, and [the VCF Operations chart](0440/vcf-operations-vm-cpu-usage-2-hours.png) of the same VM from later that day.
+- He asks why VCF Operations never shows the full peak, and thinks VCF Operations lost data.
 
 Which statements are correct?
 
@@ -12,7 +12,7 @@ Which statements are correct?
 - D. VCF Operations lost samples during the job; open a support case.
 - E. 5-minute data can never show a 5-minute burst at full height.
 - F. The Real-time chart shows the job at its full height because its points are 20-second averages.
-- G. VCF Operations CPU Usage is a different counter from the vCenter one, which explains the lower peak.
+- G. The VCF Operations chart shows one point near 100% at the time of the job.
 
 ## Input to supply
 - Product and version: vSphere 9.1 (vSphere Client) and VCF Operations 9.1 collecting from that vCenter every 5 minutes.
@@ -34,9 +34,10 @@ A: two half-height points read as a long job at half load. Or D: the split read 
 - D false: the wrong action. Nothing is lost; the split follows from where the job started against the cycle.
 - E false: the over-correction. A 5-minute burst aligned with a cycle fills one point at full height; a burst that may start anywhere needs about 10 minutes to fill one whole point.
 - F true: Real-time points are 20-second averages, short enough to show a 5-minute plateau at full height.
-- G false: VM CPU Usage is passed through from vCenter; the same samples, averaged over the 5-minute cycle, give the lower points.
+- G false: the two points that hold the job read between 40% and 60%; no point passes 70%.
 
 ## Notes
+- Review 2026-11-15: the owner's question no longer gives the chart's value; G (VCF Operations CPU Usage as a different counter) dropped, as no knowledge file settles it; G is now a false reading of the chart. Key unchanged.
 - Practical half of the new pair D9; theory half: 0439 (design.md, section 3.9).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item D9). The options hold for any capture that meets the condition above. Counts only after author approval.
 
@@ -55,7 +56,6 @@ tool: [vcenter, vcf-operations]
 knowledge:
   - sp5-framework/observability/collection-interval
   - vsphere/tools/vsphere-client/vcenter-statistics
-  - vcf-operations/vcf-operations-role
 knowledge_main: sp5-framework/observability/collection-interval
 attachments:
   - 0440/vcenter-vm-cpu-usage-real-time.png
@@ -64,7 +64,7 @@ origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D9"
 answer: [B, C, F]
 misconception: [A, D]
-misconception_type: [rollup-and-interval, tool-confusion]
+misconception_type: [rollup-and-interval]
 pair: "0439"
 status: awaiting-input
 ```

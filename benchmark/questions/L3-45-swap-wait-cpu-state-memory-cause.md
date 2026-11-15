@@ -1,16 +1,16 @@
 # CPU Swap Wait above zero
 
 ## Prompt
-- An 8-vCPU database VM. vCenter Real-time chart, per vCPU over 30 minutes: Swap Wait about 3% of each 20-second sample, Readiness below 0.5%, Co-stop 0.
-- The DBA sees a CPU counter above 0 and asks for more CPU for the VM.
+- An 8-vCPU Java application server. vCenter Real-time chart, per vCPU over 30 minutes: Swap Wait about 3% of each 20-second sample, Readiness below 0.5%, Co-stop 0.
+- The middleware team sees a CPU counter above 0 and asks for 4 more vCPUs.
 
 Which statements about CPU Swap Wait are correct?
 
-- A. Swap Wait is time a vCPU waits for a memory page to be read back from ESXi swap.
+- A. Swap Wait counts the time a vCPU stalls until a page it touched is brought back in from ESXi swap.
 - B. Swap Wait is part of the vCPU's Wait state, not of Ready.
 - C. Swap Wait shows the VM is short of CPU: its vCPUs wait for physical threads.
 - D. VCF Operations counts this wait in Memory Contention (%), not in CPU Contention (%).
-- E. Memory Latency also counts time spent decompressing pages, which Swap Wait leaves out.
+- E. Memory Latency is the wider counter: it adds decompression to swap-in.
 - F. Because its cause is memory, Swap Wait does not slow the guest's CPU work.
 - G. Swap Wait rises while ESXi writes the VM's pages out to swap.
 - H. Add vCPUs to the VM, so that the remaining vCPUs can run while some of them wait.
@@ -34,6 +34,7 @@ C: a CPU counter is above 0, so the VM needs more CPU. Or F: the wait belongs to
 ## Notes
 - Paired with the practical question 0109 (theory and practical; design.md, section 3.9). Situation numbers differ from 0109 on purpose.
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item B16). Counts only after author approval.
+- Review 2026-11-15: requester changed (middleware team of an application server); options A and E reworded away from 0109. Key unchanged: A, B, D, E, I.
 
 ## Metadata
 ```yaml

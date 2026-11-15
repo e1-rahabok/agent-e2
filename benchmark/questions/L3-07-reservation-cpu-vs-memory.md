@@ -24,7 +24,7 @@ Which statements are correct?
 - A is true: a memory reservation is on demand. Before the VM asks for memory, ESXi does not back the reservation with physical RAM; Consumed grows as the VM touches pages.
 - B is false: Consumed grows only as the VM touches memory; it does not jump to the reservation.
 - C is false: Run, Used, Demand and Usage do not include a CPU reservation; with no OS running they are 0 or near 0.
-- D is false: a CPU reservation does not come into play while the VM uses no CPU or the host has CPU for every VM; the other VMs run on the cycles the idle VM does not use.
+- D is false: a reservation guarantees the VM runtime when it asks for it; it holds no cycles back. The other VMs run on the cycles the idle VM leaves unused, so lowering the reservation frees nothing now.
 - E is false: the knowledge base example is this VM at the BIOS: Consumed stays low.
 - F is false: once a reserved page has been touched, ESXi keeps it held for the VM, even if the VM is idle for days. This is the over-correction of "reservations are on demand".
 - G is false: Active is a sampled estimate of recently touched memory; a reservation adds nothing to it.
@@ -37,6 +37,7 @@ Which statements are correct?
 - Left out of the options: whether the VMkernel can give untouched reserved memory to other VMs (open author question Q201).
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): A one fact (memory backed on touch), D the wrong action (lower the CPU reservation), H the CPU mechanism stated positively. Key changed from A to A, H (author approved, 2026-11-14).
+- Review 2026-11-15: the reason for D reworded so that it does not restate H. Key unchanged.
 
 ## Metadata
 ```yaml

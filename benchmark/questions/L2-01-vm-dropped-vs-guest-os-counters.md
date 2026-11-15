@@ -1,33 +1,34 @@
 # Why VM dropped packets differ from the Guest OS
 
 ## Prompt
-- A Linux VM with one VMXNET3 adapter shows dropped packets in vCenter today: Receive packets dropped and Transmit packets dropped are both above 0.
-- Inside Linux, `ip -s link show eth0` shows 0 dropped packets in both directions.
-- `ethtool -S eth0` shows `pkts rx OOB: 0` on every receive queue.
+- An administrator compares a VM's dropped-packet counters in vCenter (Receive packets dropped, Transmit packets dropped) with the interface counters of its Guest OS, and finds that they rarely match.
 
-Which statements about drops that vCenter counts and Linux does not are correct?
+Which statements are correct?
 
-- A. ESXi dropped received frames before delivery, such as frames that break the port group's security policy.
-- B. The host dropped packets after the guest sent them, for example on a distributed firewall rule.
-- C. Linux has no counter for drops on a full VMXNET3 receive ring.
-- D. ESXi and Linux count the same dropped packets, so one of the two counters is faulty.
-- E. Raise the VMXNET3 receive ring in Linux to stop the drops that vCenter shows.
+- A. Frames that break the port group's security policy are dropped by ESXi before the Guest OS can count them.
+- B. A packet that the host drops after the guest sent it, for example on a distributed firewall rule, is counted on the VM and not in the guest.
+- C. No dropped packet is ever counted both by ESXi and by the Guest OS.
+- D. The receive drops that vCenter shows for a VM should equal the receive drops that its Guest OS reports.
+- E. Across a fleet of VMs, receive drops run far higher than transmit drops.
+- F. Each receive drop that vCenter shows for a VM is a ticket for the network team.
 
 ## Likely wrong answer
-D: "The counts should match, so one of them is broken." Or C: "a full receive ring is invisible to the guest."
+D: "The counts should match, so one of them is broken." Or C: "the VM and the guest never see the same drop."
 
 ## Expected key points
-- Answer: A, B.
-- A is true: ESXi drops received frames that are not for the guest or that break the port group's security settings. The guest never receives them, so it cannot count them.
-- B is true: a packet dropped after it left the guest (for example an NSX distributed firewall reject) is counted by ESXi on the VM, not by the guest. The guest sees only the resend delay.
-- C is false: the VMXNET3 device shares a ring-full drop with the guest driver; Linux shows it per receive queue as `pkts rx OOB` in `ethtool -S`. It reads 0 here, so the ring was not full.
+- Answer: A, B, E.
+- A is true: ESXi drops received frames that are not for the guest or that break the port group's security settings; the guest never receives them.
+- B is true: transmitted packets are dropped after they leave the Guest OS (for example an NSX distributed firewall reject), so ESXi counts them on the VM and the guest sees only the resend delay.
+- C is false: a full VMXNET3 receive ring is counted at the port and on the VM (droppedRx, %DRPRX) and also by the guest driver (Linux `ethtool -S`, pkts rx OOB).
 - D is false: received drops happen before the Guest OS and transmitted drops after it, so the two layers count different packets.
-- E is false: `pkts rx OOB` is 0, so the ring did not overflow; a larger ring changes nothing for these drops.
+- E is true: over 3,938 VMs and one month, receive drops were far higher than transmit drops.
+- F is false: a full VMXNET3 receive ring is caused and fixed in the Guest OS (ring size, guest CPU), so the Guest OS owner fixes it; other receive drops are ESXi enforcing policy.
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12, then after the independent review: Linux guest with a decidable counter. `ip -s link` RX dropped does not include the device's out-of-buffer count; `ethtool -S` shows it as `pkts rx OOB` per queue (upstream Linux vmxnet3 driver, vmxnet3_ethtool.c).
-- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the compound option C split; the two options not in the knowledge base (Tools resets counters, bytes against packets) replaced by the misconception D and the wrong action E. Ring-drop visibility is kept here and in 0212 only. Key unchanged: A, B.
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the compound option C split; the two options not in the knowledge base (Tools resets counters, bytes against packets) replaced by a misconception and a wrong action.
+- Review 2026-11-15: made generic. The stem had become the capture condition of its practical half 0420 in words (vCenter drops above 0, `ip -s link` 0, pkts rx OOB 0), and four options matched 0420's. New options: security-policy drops, host drops after the guest, the over-correction C (ring-drop visibility, also tested in 0420), the fleet profile E and the wrong action F. Key changed from A, B to A, B, E.
 
 ## Metadata
 ```yaml
@@ -49,8 +50,8 @@ knowledge_main: vsphere/technology/network/concepts/packet-drop-accounting
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05"
-answer: [A, B]
-misconception: [C, D]
+answer: [A, B, E]
+misconception: [D, C]
 misconception_type: [layer-confusion]
 pair: "0420"
 status: draft

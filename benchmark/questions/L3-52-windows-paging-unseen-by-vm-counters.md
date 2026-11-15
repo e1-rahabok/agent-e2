@@ -7,11 +7,11 @@
 Which statements about what the VM memory counters show in this case are correct?
 
 - A. Page file reads and writes reach ESXi only as ordinary IO on the VM's virtual disk.
-- B. VM Memory Latency counts the time Windows waits for pages from its page file.
+- B. A vCPU stalled on a read from the Windows page file adds to the VM's memory Latency.
 - C. VM Swapped shows how much of the guest's memory sits in the Windows page file.
 - D. The VM can show 0 balloon, 0 swap and 0% Memory Latency while Windows pages heavily.
 - E. ESXi gives a paging guest extra memory from the host's free memory.
-- F. VM memory counters add nothing when Windows is short of memory, since they cannot see its paging.
+- F. When Windows is short of memory, the VM memory counters can neither rule the host in nor out.
 - G. Paging in both directions at once, while the disk queue is high, points to a memory shortage inside Windows.
 - H. Set a full memory reservation on the VM, so that Windows stops paging to its page file.
 
@@ -21,7 +21,7 @@ B: "Memory Latency is 0%, so Windows is not paging." Or C: the guest page file t
 ## Expected key points
 - Answer: A, D, G.
 - A true: the page file sits on a partition of a virtual disk; ESXi sees the guest's reads and writes, not what they are for. The Guest OS page file is an ESXi blind spot.
-- B false: VM Memory Latency is the share of time a vCPU waits for a page fault that ESXi resolves (swap-in, decompression). Windows paging to its own page file is not in it.
+- B false: VM Memory Latency is the share of time a vCPU waits for a page fault that ESXi resolves (swap-in, decompression). A read from the guest's page file is guest disk IO, not such a fault.
 - C false: VM Swapped is memory ESXi swapped to the VM's swap file; the guest page file is invisible to ESXi.
 - D true: with free host memory and no limit, ESXi reclaims nothing and the VM does not wait on ESXi, while Windows pages inside its own memory.
 - E false: the Guest OS cannot see host memory; Windows runs its configured memory as if on a physical server.
@@ -32,6 +32,7 @@ B: "Memory Latency is 0%, so Windows is not paging." Or C: the guest page file t
 ## Notes
 - Paired with 0265 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item B13.
 - `knowledge_main` is guest-os-vs-vm-memory, not windows-memory as the plan proposed: the blind spot (guest page file) and the counter map (guest paging has no VM counter) that decide B, C and D are in that file.
+- Review fixes 2026-11-15: B reworded (it was close to 0265 G); F made one fact. Key unchanged: A, D, G.
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
 ## Metadata

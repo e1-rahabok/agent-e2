@@ -14,12 +14,13 @@ Which statements about the power-on check are correct?
 - F. Turning off HA admission control on the cluster lets the VM power on.
 - G. Reserving all of the cluster's CPU costs nothing, since usage plays no part in the check.
 - H. A VM pinned with CPU affinity can pass the check and still not receive its full CPU reservation.
+- I. A request that an expandable pool cannot meet climbs the tree and stops at the first ancestor with a fixed reservation.
 
 ## Likely wrong answer
 C: expecting admission control to look at usage, so a host at 10% must have room.
 
 ## Expected key points
-- Answer: A, B, H.
+- Answer: A, B, H, I.
 - A is true: admission control counts reservations, not usage; a host at 10% CPU usage can have all of its capacity reserved.
 - B is true: the per-VM overhead memory counts as reserved, in addition to the memory reservation.
 - C is false: the misconception. Usage plays no part in the check.
@@ -28,8 +29,10 @@ C: expecting admission control to look at usage, so a host at 10% must have room
 - F is false: the wrong action. Host and DRS admission control run at every power-on and cannot be turned off; only HA admission control can be disabled.
 - G is false: the over-correction. Near 100% reserved, reservation changes and pool edits fail and DRS cannot migrate VMs; the documentation advises leaving at least 10% unreserved.
 - H is true: CPU admission control ignores CPU affinity, so a pinned VM can be admitted and still not get its full reservation.
+- I is true: an expandable pool admits from its own unreserved capacity, then its parent's, up the tree while each ancestor is expandable; a fixed ancestor admits only from its own unreserved capacity.
 
 ## Notes
+- Review 2026-11-15: I added, so the pair with 0085 tests one fact (the walk up the pool tree stops at a fixed reservation). Key changed from A, B, H to A, B, H, I.
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): A no longer restates the knowledge file nor negates C; one fact per option; wrong action (F) and over-correction (G) added. Key changed from A, B to A, B, H.
 - Paired with the table question 0085 (the same mechanism through a resource pool tree).
@@ -50,7 +53,7 @@ knowledge:
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05"
-answer: [A, B, H]
+answer: [A, B, H, I]
 misconception: [C]
 object: [esxi, vm]
 tool: [none]

@@ -34,7 +34,9 @@
 - ESXi 8.0 enhanced virtual topology:
   - selects optimal coresPerSocket values for VMs,
   - selects optimal virtual L3 sizes,
-  - exposes NUMA for virtual devices, and vNUMA topology, when CPU hot plug is enabled.
+  - can expose NUMA for virtual devices, and a vNUMA topology, on a VM with CPU hot plug enabled.
+- The enhanced virtual topology needs virtual hardware version 20 or later. On older virtual hardware, CPU Hot Add still gives the guest one NUMA node.
+- Even on virtual hardware 20 and later, a VM with CPU hot plug gets one NUMA node by default; a vNUMA layout with hot plug needs a manual NUMA configuration ([`vsphere/technology/cpu/concepts/virtual-numa`](virtual-numa.md), section CPU Hot Add).
 
 ## Hardware locality (ESXi 9.1)
 - NICs, NVMe drives and GPUs are usually associated with a specific NUMA node.
@@ -76,8 +78,8 @@ related:
 - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 - vsphere/technology/cpu/concepts/cpu-topology
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 29-30); Hardware BIOS Settings > General BIOS Settings (p. 21)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: 'ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 29-30); Hardware BIOS Settings > General BIOS Settings (p. 21). vSphere 9.1, vSphere Resource Management > Virtual Topology in ESX (pp. 1939-1940), hardware version 20 or later; by default a VM with CPU hotplug enforces a single NUMA node'
 corrections: []
 review_notes:
 - 'Section ''Scheduler mechanics'': from the vSphere 9.1 documentation, vSphere Resource Management > How ESX NUMA Scheduling Works, Home Nodes and Initial Placement, Dynamic Load Balancing and Page Migration, Transparent Page Sharing Optimized for NUMA, Specifying NUMA Controls (pp. 1936-1942).'

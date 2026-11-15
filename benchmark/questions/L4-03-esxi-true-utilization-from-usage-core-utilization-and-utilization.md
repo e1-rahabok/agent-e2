@@ -6,13 +6,14 @@
 - [The second attachment](0004/esxi-cpu-usage-core-utilization-utilization-zoom-on-ramp.png) zooms into the start of the chart.
 - The host runs ESXi 7.
 
-Three metrics show three values at the end of the chart, where the counters spike. Which options give the ESXi utilization at that point, from a capacity management perspective?
+Three metrics show three values at the end of the chart, where the counters spike. From a capacity management perspective, what is the ESXi utilization at that point, and what follows? Which statements are correct?
 
 - A. About 100%, the blue Usage line: no physical cores or threads are left.
 - B. About 85%, the green Core Utilization line: it balances cores and threads.
 - C. About 54%, the black Utilization line: nearly half of the physical threads are idle.
 - D. Not shown: about 70%, the average of the green and black lines, because Hyper-Threading is enabled.
 - E. Not shown: add up the running VMs and the kernel to get the utilization.
+- F. Add a host: this host has no CPU left.
 
 ## Attachments
 ![vCenter chart, 1 hour, of one ESXi host: CPU Usage (blue) flat at 100% from the ramp on; Core Utilization (green) about 75%, rising to 84.94% at the end; Utilization (black) about 46%, rising to 54.38% at the end](0004/esxi-cpu-usage-core-utilization-utilization-1-hour-vcenter-chart.png)
@@ -29,13 +30,14 @@ A (100%): reading CPU Usage as utilization. Or B (85%): treating Core Utilizatio
 - C is correct: the legend's Latest value is 54.38%, so about 46% of the physical threads are idle and can still run work. Capacity counts space (threads available), not speed.
 - D is wrong: averaging thread and core utilization has no meaning.
 - E is wrong: it mixes the consumer (VM) and provider (ESXi) perspectives.
+- F is wrong: the wrong action from reading Usage as capacity. About 46% of the threads are idle and can still take work.
 
 ## Notes
 - Attachments: host names masked in the legend before commit.
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "(From vSphere 8.0 Update 3 this counter is no longer capped and would exceed 100%: Broadcom KB 417702.)"
 - Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "What is the ESXi utilization, from capacity management perspective?"
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Hint: capacity is about space, while performance is about speed. Capacity is about quantity, performance is about quality."
-- Stem and options changed 2026-11-14 (author agreed; project/question-pairing-2026-11-14.md, A1 and section 5): the stem typed Core Utilization about 70% and Utilization about 40%, which disagreed with the chart (plateau about 75% and 46%, Latest 84.94% and 54.38%) and equalled the example in the ESXi CPU Utilization knowledge file. The bullets are deleted; the options carry the chart's values at the end (the legend's Latest). The version line stays: a case fact (Usage capped at 100% on ESXi 7). Key unchanged, C.
+- Stem and options changed 2026-11-14 (author agreed; project/question-pairing-2026-11-14.md, A1 and section 5): the stem typed Core Utilization about 70% and Utilization about 40%, which disagreed with the chart (plateau about 75% and 46%, Latest 84.94% and 54.38%) and equalled the example in the ESXi CPU Utilization knowledge file. The bullets are deleted; the options carry the chart's values at the end (the legend's Latest). The version line stays: a case fact (Usage capped at 100% on ESXi 7). F (the wrong action) added, so the stem asks also what follows. Key unchanged, C.
 - Paired with 0012 (theory and practical, design.md 3.9).
 
 ## Metadata

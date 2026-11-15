@@ -14,7 +14,7 @@ Which statements about CPU Ready and these two readings are correct?
 - D. web-14 waits about 30 ms for every 100 ms it runs; db-07 about 5 ms.
 - E. db-07 has the higher Readiness, so its work suffers more from Ready than the work of web-14.
 - F. A VM that runs more than 85% of the time cannot be slowed down by Ready, whatever its value.
-- G. Add a vCPU to web-14, so that each vCPU carries less of its load and waits less.
+- G. Reserve CPU for db-07, the VM over the alert level.
 - H. Read Ready from the 5-minute average, since a Ready problem builds up over minutes.
 - I. Readiness (%) is normalized by the vCPU count, so the 8-vCPU and the 2-vCPU VM compare on one scale.
 
@@ -29,13 +29,14 @@ E: db-07 is over the alert level and web-14 is well below it, so db-07 is the VM
 - D true: 1.8 / 6 = 0.30 and 4.2 / 88 = 0.048.
 - E false: the misconception. db-07 loses about 5% against its run time, web-14 about 30%.
 - F false: over-correction. Read against Run, Ready on a busy VM is mild, not harmless: very high Ready with high Usage gives poor performance.
-- G false: more vCPUs make a VM harder to schedule on a busy host and tend to raise Ready.
+- G false: wrong action. db-07 loses the least relative to its work; web-14 is the VM whose work is delayed. A reservation acts only under contention and is best kept for real needs.
 - H false: Ready usually lasts seconds; the 20-second peak shows it, a 5-minute average dilutes it.
 - I true: the % counter divides by the vCPU count; Ready (ms) sums over the vCPUs and does not compare across VM sizes.
 
 ## Notes
 - Paired with the practical question 0106 (theory and practical; design.md, section 3.9). Situation numbers differ from 0106 on purpose.
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item B1). Counts only after author approval.
+- Review 2026-11-15: option G now a wrong action of its own (a reservation for the VM over the alert level), away from 0106. Key unchanged: A, B, C, D, I.
 
 ## Metadata
 ```yaml

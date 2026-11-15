@@ -17,7 +17,7 @@ Which statements about vCPU Usage Disparity and these two VMs are correct?
 - G. Any disparity between a VM's vCPUs is a fault: a healthy guest uses its vCPUs evenly.
 - H. Add vCPUs to vm-x, so that the work of its busiest vCPU spreads over more of them.
 - I. VCF Operations cannot see inside the guest, so the disparity does not show why one vCPU is busier.
-- J. vCPUs taking turns at being the busiest point to processes moving between vCPUs.
+- J. When the busiest vCPU changes from one sample to the next, the guest is likely moving its work between vCPUs.
 - K. On a 16-vCPU VM the minimum among the vCPUs tells little: some vCPU almost always sits near 0%.
 
 ## Likely wrong answer
@@ -40,6 +40,7 @@ D: a disparity above 100% is impossible, so the data is wrong. Or E: the VM aver
 ## Notes
 - Paired with the practical question 0101 (theory and practical; design.md, section 3.9). Situation numbers differ from 0101 and from the knowledge example on purpose.
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item B14). Counts only after author approval.
+- Review 2026-11-15: option J reworded away from 0101. Key unchanged: A, C, F, I, J, K.
 
 ## Metadata
 ```yaml

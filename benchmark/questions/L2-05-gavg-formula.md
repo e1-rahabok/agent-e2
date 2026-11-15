@@ -11,7 +11,7 @@ Which statements about these counters are correct?
 - D. DAVG is the time from the host's HBA to the array and back.
 - E. A command that finds the device queue full waits in the kernel, which raises QAVG and KAVG.
 - F. QAVG can read higher than KAVG, because QAVG also counts IO that the kernel issues for itself.
-- G. A KAVG above about 0.5 ms always points to a fault on the host.
+- G. A high KAVG always points to a fault on the host.
 - H. With KAVG at 4.6 ms and DAVG at 0.8 ms, open a case with the array vendor.
 
 ## Likely wrong answer
@@ -31,6 +31,7 @@ B: adding QAVG on top of KAVG, counting the queue time twice. Or H: "Latency is 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: values added so the relation can be checked. Counts only after author approval.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the theory half of 0086 (a full device queue). Plural stem, new values (different from 0086), one fact per option; over-correction G and wrong action H added. Key changed from A to A, D, E, F.
+- Review 2026-11-15: G no longer names a KAVG value. Key unchanged.
 
 ## Metadata
 ```yaml

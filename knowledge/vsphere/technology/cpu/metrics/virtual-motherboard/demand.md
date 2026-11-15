@@ -22,7 +22,7 @@
 - Example: a 32-vCPU Hadoop worker, the only VM on a host with more than 32 cores. Demand and Usage were identical and exceeded total capacity several times.
 
 ## Demand vs Usage vs Latency
-- Demand jumps and Usage drops: the VM demanded more CPU, and the extra demand was not met.
+- Demand jumps and Usage drops with Ready flat: the gap is the Hyper-Threading charge on Usage, not CPU time the VM was denied.
 - CPU Latency can exceed Demand - Usage.
 - Example: Demand 25%, Usage 15%, Latency about 20%.
 - Reason: Latency includes both frequency and Hyper-Threading. Demand - Usage includes only Hyper-Threading.

@@ -67,6 +67,6 @@ knowledge_main: vsphere/technology/network/concepts/network-characteristics
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05"
-misconception_type: []
+misconception_type: [layer-confusion]
 status: draft
 ```

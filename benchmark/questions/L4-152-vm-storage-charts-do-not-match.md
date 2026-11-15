@@ -8,13 +8,13 @@
 Which statements are correct?
 
 - A. The NFS disk's IO is missing from the VM's Disk chart, because that chart covers block devices (VMFS and RDM) only.
-- B. The VM's Disk chart counts only this VM's IO on the LUN.
+- B. The VM's Disk line matches its Hard disk 1 line within 10%.
 - C. The host's chart of the LUN counts the IO of every VM on this host that uses the LUN.
 - D. The VM's Disk chart is the whole LUN's IO, so it should match the host's chart of the LUN.
 - E. The three VM charts measure different IO and never agree.
 - F. Raise a support case: the vCenter statistics are inconsistent.
 - G. The VM's Datastore chart shows the NFS disk's IO.
-- H. The VM's Disk chart splits the LUN's IO per virtual disk.
+- H. Screen 3 shows one line for each virtual disk of the VM.
 
 ## Input to supply
 - Product and version: vSphere 9.1 (vSphere Client 9.1).
@@ -34,17 +34,18 @@ D: the VM's Disk chart is the LUN, so it should match the host's chart. Or E and
 ## Expected key points
 - Answer: A, B, C, G.
 - A true: the VM Disk level covers VMFS and RDM devices, not NFS: an NFS datastore has no SCSI device.
-- B true: the VM Disk value is this VM's IO only, not the whole device that other VMs share.
+- B true: the screen reading. Screens 3 and 1 agree within 10%: the VM Disk value is this VM's IO on the LUN, and only Hard disk 1 sits on it.
 - C true: the host's device counters cover all the IO this host sends to the LUN, for all its VMs; there is no breakdown per VM at the device.
-- D false: the misconception. Screen 4 shows at least 1.5 times screen 3: the other VMs of the host on the same LUN.
+- D false: the misconception. The VM Disk value is this VM's IO only; screen 4 shows at least 1.5 times screen 3: the other VMs of the host on the same LUN.
 - E false: the over-correction. Hard disk 1, the VM's Disk chart and its VMFS datastore line agree within 10%: one LUN, no extents, no snapshot.
 - F false: the wrong action. Each chart is right from its level.
 - G true: the VM datastore level covers VMFS and NFS.
-- H false: the Disk level is not split per virtual disk.
+- H false: the screen reading. The Disk chart shows the LUN, a device; it is not split per virtual disk, and the NFS disk has no line there.
 
 ## Notes
 - Practical half of pair D7 with 0426 (theory; design.md, section 3.9).
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item D7 (origin: synthetic). Counts only after author approval.
+- Review 2026-11-15: B is a screen reading now (it was the negation of D); H a false screen reading. Key unchanged: A, B, C, G.
 
 ## Metadata
 ```yaml

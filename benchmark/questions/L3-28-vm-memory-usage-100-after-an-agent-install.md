@@ -23,16 +23,17 @@ Which statements are correct?
 ## Expected key points
 - Answer: B, C.
 - A is false: the guest counters show no shortage; the nightly 100% is the Active estimate of recently touched pages, not memory the guest lacks.
-- B is true: vCenter VM memory Usage (%) maps to Active: in every row of the export, Usage (%) = Active (KB) / 8,388,608 KB × 100 (for example 7,829,308 KB at 02:00 gives 93.33%).
+- B is true: vCenter VM memory Usage (%) maps to Active: in every row of the export, Usage (%) = Active (KB) / 8,388,608 KB × 100 (for example 7,875,853 KB at 02:00 gives 93.89%).
 - C is true: about 2.4 GB stayed available during the job and Linux swapped nothing in or out; free memory near 0 is normal, since Linux uses it as page cache.
 - D is false: Consumed holds every page the guest has touched, cache included, and does not drop when the guest frees memory; it is not the guest's need.
-- E is false: vCenter Usage (%) is Active, an ESXi estimate; it does not use Linux counters. At 14:00 it reads about 13% while Linux uses about 4.4 of 7.8 GB.
-- F is false: VM memory Latency (Memory Contention in VCF Operations) is the share of time the VM waited for memory; it shows the wait that Usage does not. This is the over-correction of A.
+- E is false: vCenter Usage (%) is Active, an ESXi estimate; it does not use Linux counters. At 14:00 it reads about 14% while Linux uses about 4.4 of 7.8 GB.
+- F is false: VM memory Latency (Memory Contention in VCF Operations) is the share of time the VM waited for memory; it shows the wait that Usage does not.
 
 ## Notes
 - Rewritten 2026-11-14 (project/question-pairing-2026-11-14.md, pair A2): the old scenario (a domain controller, an agent collecting every 5 minutes, Active at 100% for over 12 hours, a vCenter alarm) was a near-copy of the knowledge example in Guest OS memory vs VM memory, section Example: Guest OS more accurate. New scenario and a new CSV from a seeded script (seed 15120261114): a nightly ETL job on a Linux database VM.
 - Removed with the old scenario: the alarm option, and the option on VCF Operations VM memory Usage (%) (Guest OS Needed Memory, falling back to Active), which the new pair D2 tests.
 - Paired with 0020 (theory and practical; design.md, section 3.9). Key changed from B, C, D, E, G, H to B, C.
+- Review 2026-11-15: the CSV was regenerated (same seed) with Active capped below Consumed (it passed Consumed at 01:35, 01:50 and 02:05); key point B follows the new 02:00 values. F is not labelled an over-correction. Key unchanged.
 
 ## Metadata
 ```yaml

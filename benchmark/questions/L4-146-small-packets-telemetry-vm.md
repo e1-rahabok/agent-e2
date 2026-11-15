@@ -1,22 +1,23 @@
-# A telemetry VM loses messages at low bandwidth
+# A load balancer VM times out at low bandwidth
 
 ## Prompt
-- A telemetry ingest VM receives sensor messages over UDP. Since more sensors were added, the application reports gaps in the data.
-- The network team says the VM uses a tiny part of its 10 Gb/s uplink, so the network cannot be the cause.
-- See [the vSphere Client network chart of the VM](0415/vcenter-vm-network-packets-real-time.png).
+- A VM runs a software load balancer in front of a web farm. During a sales campaign, clients get timeouts.
+- The VM's owner points to the bandwidth: the VM uses a few percent of its 10 Gb/s link, so he looks for the cause in the web servers.
+- See [the vSphere Client network chart of the load balancer VM](0415/vcenter-vm-network-packets-real-time.png).
 
 Which statements are correct?
 
 - A. Packets received is a count per 20-second sample: divided by 20 it gives packets per second.
-- B. Packets received is already a rate in packets per second.
+- B. Packets received / 300 gives packets per second in this chart.
 - C. The VM receives roughly 100,000 to 200,000 packets per second.
 - D. The average received packet is about 120 to 250 bytes long.
-- E. A small share of the uplink's bandwidth shows that the network path cannot limit the VM.
-- F. Bandwidth counters are of no use for this VM: only packet counts matter.
-- G. Move the VM to a host with faster uplinks.
+- E. A VM that uses a few percent of its link's bandwidth cannot be limited by its network path.
+- F. The Data receive rate line can be ignored here: the packet line alone tells the story.
+- G. Give the VM a faster uplink, a 25 Gb/s port instead of 10 Gb/s.
 - H. Data receive rate is in kilobits per second.
-- I. Each received packet costs CPU in the host and in the guest, whatever its size.
-- J. Packets received includes the packets that ESXi dropped for the VM.
+- I. Each received packet costs CPU to process, whatever its size.
+- J. The Packets received line also counts packets ESXi discarded before delivery.
+- K. On this chart the VM receives about 2 to 4 million packets per second.
 
 ## Input to supply
 - Product and version: vSphere 9.1 (vSphere Client 9.1).
@@ -27,29 +28,31 @@ Which statements are correct?
 - Masking: mask every VM, host, datastore and cluster name.
 
 ## Likely wrong answer
-E: a tiny share of the bandwidth, so the network cannot be the problem. Or B: reading the packet count as packets per second.
+E: a few percent of the bandwidth, so the network cannot be the problem. Or K: reading the count per sample as packets per second.
 
 ## Expected key points
 - Answer: A, C, D, I.
 - A true: packet counters are totals per sample interval, not per second; the Real-time interval is 20 seconds.
-- B false: the counter is a summation over the 20-second sample.
-- C true: 2,000,000 to 4,000,000 per sample is 100,000 to 200,000 packets per second.
-- D true: average packet size = throughput / packet rate. For example 25,000 KBps x 1,024 / 150,000 is about 170 bytes, far below 1,500.
-- E false: with small packets the load is the packet rate, not the bandwidth; low Mbps does not mean low network load.
+- B false: 300 seconds is the 5-minute interval of the 1 Day history; a Real-time sample is 20 seconds.
+- C true: the screen reading. 2,000,000 to 4,000,000 per 20-second sample is 100,000 to 200,000 packets per second.
+- D true: average packet size = throughput / packet rate; for example 25,000 KBps x 1,024 / 150,000 is about 170 bytes, far below 1,500.
+- E false: the misconception. With small packets the load is the packet rate, not the bandwidth; low Mbps does not mean low network load.
 - F false: the over-correction. The data rate is needed to compute the packet size, which shows that the packets are small.
-- G false: the uplink bandwidth is not the limit; faster uplinks add nothing. Check the VM's receive drops and CPU first.
+- G false: the wrong action. The bandwidth is not the limit; a faster port adds nothing. Check the VM's receive drops and CPU first.
 - H false: vCenter network rates are kilobytes per second.
 - I true: each packet costs CPU to receive; bandwidth can remain while packets per second saturate.
 - J false: packet counts exclude dropped packets; drops have their own counters.
+- K false: the screen reading. The chart's 2 to 4 million is a count per 20-second sample, about 100,000 to 200,000 per second.
 
 ## Notes
 - Paired with the theory question 0211 (theory and practical; design.md, section 3.9).
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C20 (origin: synthetic). Counts only after author approval.
+- Review 2026-11-15: new situation (a load balancer, not a UDP collector); options reworded away from 0211; B no longer the negation of A; K (a false screen reading) added. Key unchanged: A, C, D, I. The lab method stays a UDP stream with small packets: the screen shows only counts and rates.
 
 ## Metadata
 ```yaml
 id: "0415"
-title: "A telemetry VM loses messages at low bandwidth"
+title: "A load balancer VM times out at low bandwidth"
 product: [vsphere]
 technology: [network]
 task: troubleshoot
@@ -69,7 +72,7 @@ attachments:
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C20"
 answer: [A, C, D, I]
-misconception: [E]
+misconception: [E, K]
 misconception_type: [unit-and-normalization, consumption-as-contention]
 pair: "0211"
 status: awaiting-input

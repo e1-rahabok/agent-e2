@@ -9,10 +9,10 @@
 Which statements about Capacity Remaining are correct?
 
 - A. It is the usable capacity minus the highest projected utilization over the next 3 days.
-- B. It is the capacity free right now: usable capacity minus the utilization of the last collection.
+- B. 31% means 69% of usable capacity is in use at this moment.
 - C. A projected point above usable capacity anywhere in its window sets it to 0.
-- D. The month-end batch of 30 November plays no part in today's 31%.
-- E. Place the month-end batch's extra load on this cluster: 31% remaining covers it.
+- D. 30 November lies outside the window that sets today's 31%.
+- E. Accept the month-end batch on this cluster without more capacity: 31% covers it.
 - F. It is the average room left over the next 3 days.
 - G. Time Remaining counts down from Capacity Remaining.
 - H. The approved project of 200 VMs is not counted in it.
@@ -25,9 +25,9 @@ B: Capacity Remaining read as free capacity now, so 31% looks like room for the 
 ## Expected key points
 - Answer: A, C, D, H, I, J.
 - A true: usable capacity minus the highest projected utilization over the next 3 days: the smallest remaining capacity in the window, at its tightest point. The 3 days are fixed.
-- B false: the misconception. It is a projection over the next 3 days, set by its tightest point, not the current free capacity.
+- B false: the misconception. Capacity Remaining is a projection over the next 3 days, set by its tightest point, not the share of usable capacity in use now.
 - C true: projected utilization above 100% of usable capacity at any point gives 0.
-- D true: the window covers the next 3 days only (to 12 November); a peak further ahead is not in Capacity Remaining.
+- D true: the window is the next 3 days (9 to 12 November); a peak further ahead is not in Capacity Remaining.
 - E false: the wrong action. The 31% does not see 30 November; read the highest values of past month-ends.
 - F false: not an average over the window; the tightest point sets it.
 - G false: Time Remaining comes from the projection of utilization, not from Capacity Remaining.
@@ -36,6 +36,7 @@ B: Capacity Remaining read as free capacity now, so 31% looks like room for the 
 - J true: on a container, Capacity Remaining Percentage is the value of the most constrained resource.
 
 ## Notes
+- Review 2026-11-15: B, D and E reworded away from the options of 0235. Key unchanged.
 - Theory half of 0235 (pair: design.md, section 3.9). Different numbers from 0235, so one does not give away the other.
 - No option rests on the risk-level mapping or the projection window of Time Remaining: both carry open review notes in vcf-operations/features/capacity-forecast.
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item B5). Counts only after author approval.

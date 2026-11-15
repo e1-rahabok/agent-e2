@@ -6,7 +6,7 @@
 
 ## Behaviour
 - Pages that compress below 2 KB stay compressed (4:1 or 2:1). Others are swapped.
-- Compressed and Swapped are mutually exclusive and move together.
+- Compressed and Swapped are mutually exclusive per page. Both grow while ESXi reclaims; afterwards they can move apart: when the guest reads swapped pages back while ESXi compresses others, for example under a limit, Swapped falls as Compressed rises ([`vsphere/technology/memory/concepts/swap-and-compression`](../../concepts/swap-and-compression.md), section Example: limit, swap and compress in opposite directions).
 - Under a limit, pages are compressed to make room for newly requested pages. Example: limit 2 GB, Consumed fell 0.4 GB in 20 minutes; Compressed spiked to 0.6 GB.
 - ESXi compresses pages at random: it cannot see guest free memory.
 - Excluded from Granted: the page is not directly accessible.

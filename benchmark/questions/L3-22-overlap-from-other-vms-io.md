@@ -14,6 +14,7 @@ Which statements about Overlap are correct?
 - E. For the guest, Overlap is time frozen on that vCPU.
 - F. Used counts the Overlap time as work done by the VM.
 - G. Moving this VM's disks to a faster datastore cuts its Overlap.
+- H. A VM's own IO never causes Overlap on its own vCPUs.
 
 ## Likely wrong answer
 B: Overlap is always caused by the VM's own IO. Or D: Overlap is counted in Ready.
@@ -27,9 +28,10 @@ B: Overlap is always caused by the VM's own IO. Or D: Overlap is counted in Read
 - E: the guest clock does not tick for that vCPU during the interruption; include Overlap when sizing the guest.
 - F is wrong: Used subtracts Overlap from Run; Usage goes down when Overlap goes up.
 - G is wrong: the interrupting IO belongs to the neighbours and to the host; this VM's own disks are not the source.
+- H is wrong: the over-correction of B. The kernel service that interrupts a vCPU can be on behalf of the interrupted VM or of another VM.
 
 ## Notes
-- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): E no longer compares Overlap with Ready (Linux steal time counts Ready and not Overlap); F (Used) and G (the wrong action) added. Key unchanged, A, C, E.
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): E no longer compares Overlap with Ready (Linux steal time counts Ready and not Overlap); F (Used), G (the wrong action) and H (the over-correction of B) added. Key unchanged, A, C, E.
 
 ## Metadata
 ```yaml

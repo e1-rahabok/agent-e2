@@ -11,12 +11,13 @@ Which statements are correct?
 - C. In this report, Avg. Disk Queue Length equals Disk Transfers/sec times Avg. Disk sec/Transfer.
 - D. The Windows time per transfer is close to the vCenter read latency, so nearly all the time per I/O is spent at or below the virtual disk.
 - E. Avg. Disk Queue Length counts only the requests that have not left Windows yet.
-- F. A queue length above 2 per disk shows that Windows is the bottleneck.
+- F. Keeping Avg. Disk Queue Length below 2 is the right target for this virtual disk.
 - G. Disk transfers per second times the vCenter read latency accounts for most of the Windows queue.
 - H. Add vCPUs to the VM so that Windows clears its disk queue faster.
-- I. At the same transfer rate, a lower storage latency would lower the queue length.
-- J. The vCenter virtual disk latency includes the time requests wait in Windows queues.
+- I. If the storage answered twice as fast at the same transfer rate, % Disk Time would fall to about half.
+- J. The vSphere Client read latency already contains the wait in the Windows Storport queue.
 - K. Windows disk counters cannot be compared with the vCenter virtual disk counters.
+- L. The report shows Windows spending far longer per transfer than the vCenter Read latency.
 
 ## Input to supply
 - Product and version: Windows Server 2022 VM on vSphere 9.1 (vSphere Client 9.1); one data virtual disk (E:) on a Paravirtual SCSI controller.
@@ -27,7 +28,7 @@ Which statements are correct?
 - Masking: mask every VM, host, datastore and cluster name, and the computer name in the report.
 
 ## Likely wrong answer
-E and F: the queue is waiting inside Windows, and a queue above 2 per disk is a Windows bottleneck. Or B: % Disk Time cannot pass 100%.
+E and F: the queue is waiting inside Windows, and a queue above 2 per disk is the problem. Or B: % Disk Time cannot pass 100%.
 
 ## Expected key points
 - Answer: A, C, D, G, I.
@@ -36,17 +37,19 @@ E and F: the queue is waiting inside Windows, and a queue above 2 per disk is a 
 - C true: Windows derives Avg. Disk Queue Length from Disk Transfers/sec x Avg. Disk sec/Transfer (Little's law); the report shows it within 5%.
 - D true: when the guest time per I/O is close to the vCenter virtual disk latency, the time is spent in ESXi queues, the storage path and the array; Windows adds little.
 - E false: the misconception. The counter counts every request below the partition manager: waiting, in service at the device, and on the way back.
-- F false: the Microsoft guideline of about 2 counts physical spindles; a virtual disk has none.
+- F false: the Microsoft guideline of about 2 per disk counts physical spindles; a virtual disk has none.
 - G true: requests at or below the virtual disk = transfers per second x vCenter latency; with the two latencies within 15%, that is most of the queue, and the remainder is not a count of requests blocked in Windows.
 - H false: the wrong action. The time per I/O is spent below the virtual disk; more vCPUs do not shorten it.
-- I true: at the same IOPS, a lower time per transfer gives a lower queue, because the counter includes the time in service.
-- J false: the vCenter virtual disk latency starts at the virtual disk; time waiting in Windows is not in it.
+- I true: % Disk Time is the queue x 100, and the queue is transfers x time per transfer; nearly all of that time is below the virtual disk, so halving it about halves the queue.
+- J false: the vCenter virtual disk latency starts at the virtual disk; time waiting in Windows queues, Storport included, is not in it.
 - K false: the over-correction. Comparing the Windows time per I/O with the vCenter latency for the same period is the first test of where the time is spent.
+- L false: the screen reading. Avg. Disk sec/Transfer is within 15% of the vCenter Read latency.
 
 ## Notes
 - Paired with the theory question 0311 (theory and practical; design.md, section 3.9).
 - No option rests on the Paravirtual SCSI queue depth (open question Q195).
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C23 (origin: synthetic). Counts only after author approval.
+- Review 2026-11-15: F, I and J reworded away from 0311; L (a false screen reading) added. Key unchanged: A, C, D, G, I.
 
 ## Metadata
 ```yaml

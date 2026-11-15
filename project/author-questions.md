@@ -140,6 +140,15 @@ Each entry has:
 - Final answer (expert call): (a): availability is measured against the planned service; usable capacity is what is safe to use now. For you: choose.
 - Answer:
 
+### Q227 · Guest OS > Sizing · Ballooned memory in Guest OS sizing: include or exclude?
+
+- Files: [Ballooning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md) (section Capacity impact; Misconceptions); [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md) (section Memory, rule table).
+- Search: not from the book. In the files: "Exclude it from Guest OS sizing"; "Include balloon".
+- Question: ballooning.md says a balloon is a request from ESXi, not from the application, so it is excluded from Guest OS sizing. guest-os-sizing.md includes it, conservatively: a ballooned page taken from a free guest page is not demand, one taken from a used page is, and the two cannot be told apart. Broadcom KBs give VCF Operations memory Utilization as Guest Needed Memory + page-in + Total Capacity - Guest Physically Usable Memory (KB 439253, KB 390432); none says where ballooned pages go. Which rule? (A) Include, conservatively; ballooning.md changes. (B) Exclude; guest-os-sizing.md changes. (C) Split: deduct ballooned pages taken from free memory, keep those taken from in-use memory, when the guest shows which (ballooning.md describes the split but says the two cannot be told apart).
+- Written as now: both, in two files. No benchmark option rests on it.
+- Final answer (expert call): (A) for sizing, which must not cut a VM that the balloon already squeezes; ballooning.md keeps the mechanism and points to guest-os-sizing for the rule. For you: choose.
+- Answer:
+
 ### Q198 · CPU > NUMA settings · NPS-1 default or the setting that matches the silicon?
 
 - Files: [NUMA settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md) (section AMD EPYC); [CPU topology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-topology.md) (section NUMA); source: project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md, section 2.

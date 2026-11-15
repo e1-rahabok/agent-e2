@@ -8,7 +8,7 @@ Which statements are correct?
 - A. Windows In Use and VM Consumed are two views of one utilization; the gap between them is collection timing.
 - B. Windows and ESXi manage the VM's memory independently.
 - C. ESXi cannot see how Windows classifies its pages as In Use, Modified, Standby or Free.
-- D. ESXi learns of a guest page when the guest first touches it; freeing the page later only updates Windows's own lists.
+- D. ESXi maps a guest page when the guest first touches it.
 - E. When Windows frees memory, In Use falls while Consumed stays where it was.
 - F. With VMware Tools running, ESXi reads Windows In Use and uses it to update Consumed.
 - G. VM Active is the VM counter that maps to Windows In Use.
@@ -25,7 +25,7 @@ Which statements are correct?
 - A is false: there is no mapping; the two layers count different things, so no timing fix makes them agree.
 - B is true: the Guest OS cannot see host memory and runs its memory as if on a physical server; ESXi cannot see the guest's lists.
 - C is true: how the guest classifies pages and its page file are ESXi blind spots; ESXi sees only reads and writes (Active: recently touched; Consumed: touched and still backed).
-- D is true: ESXi maps a guest physical page at the first touch (a fault in the second-level page tables); freeing and reusing pages are ordinary memory writes that never reach ESXi.
+- D is true: ESXi maps a guest physical page at the first touch (a fault in the second-level page tables); later freeing and reuse are ordinary memory writes that never reach ESXi.
 - E is true: the ESXi page stays mapped after the guest frees it, so Consumed does not drop; Consumed is not the guest's utilization.
 - F is false: Consumed is ESXi memory mapped to the VM (Granted minus sharing savings); VMware Tools plays no part in it.
 - G is false: Windows In Use = VM Active is the same mistake on another counter; Active is a sampled estimate for the kernel.
@@ -39,6 +39,7 @@ Which statements are correct?
 - The prompt is the author's own words (a real exchange); the key was drafted by Claude 2026-11-10 from the knowledge files listed in `knowledge`. Counts only after author approval.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). The author's words are kept as the VM owner's message.
 - Rewritten 2026-11-14 to the theory option rules (design.md 3.9 and 6.2; project/question-pairing-2026-11-14.md) (author approved, 2026-11-14): the owner's sentence "How come there is no mapping?" removed from the prompt (it stated the key); B one fact; G no longer negates A's counter pairing with a "not Consumed" clause; old H ("Size the Guest OS from Guest OS counters, and read the VM counters for what ESXi does") removed, since the sizing fact is tested by 0021 and 0079; I the over-correction and J the wrong action added. Key changed from B, C, D, E, H to B, C, D, E.
+- Review 2026-11-15: D holds one fact (the first touch). Key unchanged.
 
 ## Metadata
 ```yaml

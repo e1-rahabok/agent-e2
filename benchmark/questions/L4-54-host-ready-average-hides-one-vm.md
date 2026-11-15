@@ -15,6 +15,7 @@ Which statements are correct?
 - E. db-07 waits because of Hyper-Threading: a busy sibling thread puts its vCPUs into Ready.
 - F. Next, check what else ran on esx-07 at that hour, a CPU limit or low shares on db-07 or its resource pool, and whether its 16 vCPUs fit the host, before any talk of adding hosts.
 - G. Read each VM's own Ready per vCPU at the 20-second peak; the host value is only a starting point.
+- H. Add a host to the cluster: esx-07 is short of CPU.
 
 ## Likely wrong answer
 B: the host average read as every VM. Or D: the slowness must be in the guest.
@@ -28,9 +29,10 @@ B: the host average read as every VM. Or D: the slowness must be in the guest.
 - E is wrong: Ready does not register Hyper-Threading; a busy sibling thread slows a running vCPU, it does not make it wait.
 - F: a 16-vCPU VM needs many threads free at about the same time; a limit or low shares can also hold one VM back. Check these before treating it as a cluster capacity problem.
 - G: contention is per consumer; sort the VMs by their own Ready, at the 20-second peak that keeps short waits visible.
+- H is wrong: the other 27 VMs barely wait (Ready below 0.7%) and the host runs at about 60%; one large VM waits, so check its size, limits and shares before any capacity change.
 
 ## Notes
-- Stem changed 2026-11-14 (design.md 6.2; project/question-pairing-2026-11-14.md, A3): the phrase "averaged over its 110 vCPUs" stated the mechanism that option A tests; the stem now gives only the host's value. Key unchanged.
+- Stem changed 2026-11-14 (design.md 6.2; project/question-pairing-2026-11-14.md, A3): the phrase "averaged over its 110 vCPUs" stated the mechanism that option A tests; the stem now gives only the host's value. H (the wrong action) added. Key unchanged.
 - Paired with 0016 (theory and practical, design.md 3.9).
 
 ## Metadata

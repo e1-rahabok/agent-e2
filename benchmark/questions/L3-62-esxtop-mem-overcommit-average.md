@@ -2,11 +2,12 @@
 
 ## Prompt
 - The esxtop memory panel of an ESXi 9.1 host shows `MEM overcommit avg: 0.82, 0.81, 0.80` in its header.
+- No VM on the host has a memory limit.
 
 Which statements about this line are correct?
 
 - A. The line compares the memory requested on the host with the memory ESXi manages, minus 1.
-- B. The three values are averages over the last 1, 5 and 15 minutes.
+- B. The three values are exponentially weighted averages with 1-, 5- and 15-minute windows.
 - C. Requested memory counts each VM's configured memory, whether or not the guest has touched it.
 - D. Any value above 0 shows that the host lacks the memory its VMs need right now.
 - E. A value of 0.82 means that 82% of the memory ESXi manages is in use by the VMs.
@@ -32,6 +33,7 @@ D: "Overcommit above 0, so the host is short of memory and will swap." Or E: the
 
 ## Notes
 - Paired with 0399 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D10.
+- Review fixes 2026-11-15: B reworded (exponentially weighted, with 1-, 5- and 15-minute windows); the stem states that no VM has a memory limit, so C holds (requested counts a limit in place of configured memory). Key unchanged: A, B, C, H, I.
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
 ## Metadata

@@ -1,4 +1,4 @@
-# Power-on fails at 30% usage
+# Power-on fails at 25% usage
 
 ## Prompt
 - DRS cluster cl-east-02: 6 hosts, about 880 GHz of CPU. Cluster CPU usage is about 25%.
@@ -15,7 +15,7 @@ Why does the power-on fail when the cluster is at 25%, what do you change, and w
 - E. RP-FIN has about 1,600 MHz unreserved: 9,600 MHz minus 4,800 MHz for its own VMs minus 3,200 MHz for RP-FIN-BATCH.
 - F. As the reservation of RP-FIN is fixed, the check stops there and never reaches the unreserved CPU of the root.
 - G. The 14,000 MHz reservation of RP-INFRA takes the unreserved CPU that fin-batch02 needs at power-on.
-- H. Turning off HA admission control on the cluster removes the check, so fin-batch02 powers on.
+- H. The message comes from vSphere HA; disable HA on cl-east-02 and retry.
 - I. Raising the CPU reservation of RP-FIN to 11,000 MHz lets fin-batch02 power on.
 - J. Raising the CPU reservation of RP-FIN-BATCH to 5,600 MHz lets fin-batch02 power on without any change to RP-FIN.
 - K. Setting RP-FIN to an expandable reservation lets the request reach the cluster root, which has CPU to spare.
@@ -25,6 +25,7 @@ Why does the power-on fail when the cluster is at 25%, what do you change, and w
 - O. An expandable reservation isolates the VMs of a pool from the demands of the sibling pools under the same parent.
 - P. Keep part of the cluster capacity unreserved; the vSphere documentation advises at least 10%.
 - Q. Lowering the CPU reservation of fin-erp-app01 from 2,400 to 1,800 MHz lets fin-batch02 power on.
+- R. The export shows that each VM of RP-TEST reserves 4,000 MHz of CPU.
 
 ## Likely wrong answer
 - B: "The cluster is short of CPU: add a host."
@@ -40,7 +41,7 @@ Why does the power-on fail when the cluster is at 25%, what do you change, and w
 - E true: 9,600 - (2,400 + 1,800 + 0 + 600 + 0) - 3,200 = 1,600 MHz, less than the 2,400 MHz asked.
 - F true: a fixed reservation admits only from the pool's own unreserved capacity; the walk up the tree continues only while each ancestor is expandable.
 - G false: RP-INFRA is a sibling of RP-FIN under the root, and the root has plenty unreserved; the check never reaches the root.
-- H false: the error names the parent resource pool: resource pool (DRS) admission control, which runs at every power-on and cannot be turned off. Only HA admission control can be disabled.
+- H false: the error names the parent resource pool: it is resource pool (DRS) admission control, which runs at every power-on and cannot be turned off. Disabling vSphere HA does not remove it and drops the cluster's failover protection.
 - I true: 11,000 - 4,800 - 3,200 = 3,000 MHz, enough for 2,400; the root has the extra 1,400 MHz to give.
 - J false: a pool reservation is taken from the parent when it is set; RP-FIN has only 1,600 MHz unreserved, so the 2,400 MHz increase itself fails admission control.
 - K true: an expandable RP-FIN borrows from the root; the cost is that RP-FIN no longer isolates its VMs.
@@ -50,8 +51,10 @@ Why does the power-on fail when the cluster is at 25%, what do you change, and w
 - O false: only a fixed reservation isolates; with an expandable one, a child can take all of the parent's spare reservation and leave none for its siblings.
 - P true: headroom for reservation changes, pool edits, overhead and DRS migrations.
 - Q false: RP-FIN would then have 9,600 - 4,200 - 3,200 = 2,200 MHz unreserved, still less than the 2,400 MHz asked; lowering the reservations of RP-FIN's own VMs by 800 MHz or more in total would work.
+- R false: the 4,000 MHz of the RP-TEST VMs is in the CPU limit column; their CPU reservation is 0.
 
 ## Notes
+- Review 2026-11-15: H reworded (it copied 0048 F); R added as a false reading of the export; title follows the 25% in the prompt. Key unchanged.
 - Revised 2026-11-12: the tree as a CSV export, the error as text; no screenshot.
 - Expandable reservations walk up the tree while each ancestor is expandable (vSphere 9.1 Resource Management, Expandable Reservations Example).
 - Admission control questions test different facts: L2-10 (reservations, not usage), L4-30 (Invalid vs Overcommitted), this one (the walk up the tree stops at a fixed reservation).
@@ -62,7 +65,7 @@ Why does the power-on fail when the cluster is at 25%, what do you change, and w
 ## Metadata
 ```yaml
 id: "0085"
-title: "Power-on fails at 30% usage"
+title: "Power-on fails at 25% usage"
 product: [vsphere]
 technology: [system, cpu]
 task: judge-setting

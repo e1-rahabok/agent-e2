@@ -27,7 +27,7 @@ C: a smaller VM gets fewer shares per vCPU, so a downsize makes each vCPU wait l
 - C false: the misconception. Each vCPU keeps 1,000 shares; what falls is the VM's total.
 - D true: the total halves while the demand stays at about 5 vCPUs. A VM's shares are shared among its vCPUs, so before the change 12,000 shares covered 5 vCPUs of work; now 6,000 cover the same work. On a contended host its entitlement can fall below its demand: Ready rises and Usage falls below Demand, while the guest run queue stays the same.
 - E true: without contention every VM gets its demand; shares act only when demand exceeds supply.
-- F false: over-correction. Downsizing an oversized VM usually lowers Ready and Co-stop, but not when the same work now needs more per vCPU than the VM's shares give it on a contended host, as here.
+- F false: over-correction. Downsizing an oversized VM usually lowers Ready and Co-stop, but not when the same work now needs more per vCPU than the VM's shares give it on a contended host.
 - G false: the vCPU count was not the constraint. Raise the VM's shares or move it to a less busy host, then check that Ready falls and Usage meets Demand.
 - H true: only default share levels are recalculated; a custom number stays as set.
 - I false: shares are relative and act only on what reservations leave; a reservation is the guarantee.
@@ -37,6 +37,7 @@ C: a smaller VM gets fewer shares per vCPU, so a downsize makes each vCPU wait l
 - Vendor sources: VMware vSphere 9.1 product documentation (project/sources/vmware-vsphere-9-1.pdf), vSphere Resource Management > CPU Virtualization: "With the default resource allocation settings, all virtual machines associated with the same ESX host receive an equal share of CPU per virtual CPU." vSphere Automation API (developer.broadcom.com, latest), Shares, level NORMAL: "For CPU: Shares = 1000 * number of virtual CPUs" (https://developer.broadcom.com/xapis/vsphere-automation-api/latest/appliance/data-structures/Vcenter_Settings_V1_Config_Components_Managementcluster_Shares/); vSphere Resource Management, Resource Allocation Shares (Normal: 1,000 shares per virtual CPU).
 - The knowledge base stated in one file that shares are per VM, not per vCPU; that line is being corrected in the same change set (project/question-pairing-2026-11-14.md, section 5). The key rests on resource-controls and ready.
 - Drafted 2026-11-14 for the question pairing plan (item B12). Counts only after author approval.
+- Review 2026-11-15: key point F no longer calls this VM the exception (12 vCPUs carrying 5 vCPUs of work is the oversized case). Key unchanged: A, B, D, E, H.
 
 ## Metadata
 ```yaml

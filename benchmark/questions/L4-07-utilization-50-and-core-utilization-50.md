@@ -9,7 +9,7 @@ Which statements are correct?
 - A. Half the cores run both of their threads while the other half sit idle: the worst possible imbalance.
 - B. Each running core runs one thread, so every running vCPU has a core to itself.
 - C. Half of the host's threads are free to take more work.
-- D. This combination cannot occur: Utilization is always lower than Core Utilization.
+- D. This combination cannot occur with Hyper-Threading on: Utilization then always sits below Core Utilization.
 - E. The host is out of CPU capacity: add a host before placing more VMs on it.
 - F. With Hyper-Threading off, the two counters always read the same.
 - G. Half the cores run two threads and the other half run one.
@@ -30,7 +30,7 @@ B (equal values read as one thread per core). Or D, the over-correction: equal v
 - H is true: a vCPU on a thread whose sibling is busy loses throughput to Hyper-Threading, which CPU Latency counts (up to 37.5%).
 
 ## Notes
-- Rewritten 2026-11-14 as the theory half of 0004 (project/question-pairing-2026-11-14.md, A1; design.md 3.9): the stem states that Hyper-Threading is on; one fact per option; old C ("Nothing. Not enough information") was vague; E (the wrong action), F, G and H are new. Key changed from A to A, C, F, H (author approved, 2026-11-14).
+- Rewritten 2026-11-14 as the theory half of 0004 (project/question-pairing-2026-11-14.md, A1; design.md 3.9): the stem states that Hyper-Threading is on; one fact per option; old C ("Nothing. Not enough information") was vague; E (the wrong action), F, G and H are new; D scoped to Hyper-Threading on (review 2026-11-15), so that F does not contradict it. Key changed from A to A, C, F, H (author approved, 2026-11-14).
 - Paired with 0004 (theory and practical, design.md 3.9).
 
 ## Metadata

@@ -11,8 +11,10 @@ Choose all the correct statements about the Xeon 6520P:
 - C. vSphere counts 2.4 GHz per core when it reports the host's Total Capacity (GHz).
 - D. Under load on every core, the cores spend most of their time near 2.4 GHz.
 - E. At 4 GHz the processor draws more than 210 W.
-- F. The 4 GHz Max Turbo is reached only while few cores are active and the rest are idle.
+- F. The 4 GHz Max Turbo is the single-core figure that single-thread benchmarks quote.
 - G. With Hyper-Threading, the 48 threads deliver twice the work of the 24 cores.
+- H. Under load on every core, the cores run near the 4 GHz Max Turbo most of the time.
+- I. Turn Turbo Boost off in the BIOS to keep the processor within its 210 W.
 
 ## Likely wrong answer
 B (TDP read as maximum power draw), D (base frequency read as the speed a loaded CPU runs at), or E (power read as rising with the highest clock).
@@ -24,8 +26,10 @@ B (TDP read as maximum power draw), D (base frequency read as the speed a loaded
 - C is true: vSphere uses the base (nominal) frequency for Total Capacity, because Intel does not expose All-Core Turbo through an API.
 - D is false: a loaded CPU rarely runs at base clock; it spends most of its time near All-Core Turbo, so base understates throughput.
 - E is false: power and frequency are not linear. At Single-Core Turbo the other cores are idle, so total power can stay below TDP.
-- F is true: Max Turbo (Single-Core Turbo) is reached only when few cores are active and the rest are idle.
+- F is true: Max Turbo is the Single-Core Turbo figure, a marketing figure that single-thread benchmarks use.
 - G is false: Hyper-Threading delivers about 1.25 times the work of one thread per core, not 2 times.
+- H is false: the over-correction of D. Single-Core Turbo is reached only when few cores are active and the rest are idle; with every core loaded the ceiling is All-Core Turbo, 3.4 GHz.
+- I is false: Turbo works within the socket's power envelope; under heavy instructions the processor lowers its frequency to stay under the limit, so turning Turbo off only gives up throughput.
 
 ## Notes
 - The Intel web page image holds the same specification as the prompt. It is not sent to the candidate: it is not a product screenshot (author, 2026-11-05).
@@ -34,7 +38,7 @@ B (TDP read as maximum power draw), D (base frequency read as the speed a loaded
 
 - Fact source for the TDP definition: Intel's published definition, as quoted in the author's key.
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Be aware of the architectural difference between AMD EPYC and Intel Xeon."
-- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): one fact per option. Old C (only High Performance reaches Max Turbo) and D (Balanced costs performance for every workload) removed: the same facts are options E and G of 0111. C, D, F and G are new. Key changed from A to A, C, F (author approved, 2026-11-14).
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): one fact per option. Old C (only High Performance reaches Max Turbo) and D (Balanced costs performance for every workload) removed: the same facts are options E and G of 0111. C, D, F, G, H (the over-correction of D) and I (the wrong action) are new. Key changed from A to A, C, F (author approved, 2026-11-14).
 
 ## Metadata
 ```yaml

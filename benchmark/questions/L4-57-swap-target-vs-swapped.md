@@ -12,8 +12,8 @@ Which statements are correct?
 - B. ESXi will swap about 9.5 GB more of the VM, the amount shown in Swap target.
 - C. Swap target is the reclamation level ESXi aims at for this VM, which it need not reach.
 - D. The gap of about 440 MB between Swap target and Swapped is pages still waiting to be swapped out.
-- E. Swap target moves against Consumed in most samples: when Consumed rises, the target falls.
-- F. The flat Granted shows that the guest did not ask ESXi for new pages during the hour.
+- E. In most 20-second steps of the export, Swap target and Consumed change in opposite directions.
+- F. Granted stays the same all hour, so ESXi mapped no new pages for the guest in that hour.
 - G. The VM is not waiting for its swapped pages during this hour.
 - H. Add memory to the VM: it is short of memory.
 - I. The swapped pages stay out until the guest touches them.
@@ -29,9 +29,9 @@ Which statements are correct?
 ## Expected key points
 - Answer: A, C, E, F, G, I.
 - A true: Swap in rate, Swap out rate, Compression rate and Decompression rate are 0 all hour; Swapped is 9,486,212 KB in every sample (maximum = minimum).
-- B false: Swap target is an input, not pages queued on top of Swapped; with every rate at 0, nothing goes out.
+- B false: Swap target is a level that ESXi compares with Swapped, not pages queued on top of Swapped; above Swapped, ESXi can swap when it must, and with every rate at 0 nothing goes out.
 - C true: the target is a compress-swap target, an input; ESXi need not reach it if it does not have to.
-- D false: the target is not the same thing as Swapped, and no page is going out: every rate is 0.
+- D false: the gap is the distance between a target level and the current amount, not a queue; no page is going out: every rate is 0.
 - E true: in the export the target moves against Consumed in 161 of the 179 steps (the two mirror each other), and changes by less than 0.1 MB per step.
 - F true: Granted is 6,118,124 KB in every sample.
 - G true: swap-in is the contention; at 0, the guest does not wait for these pages now. A wait would show as swap-in, decompression and memory latency.
@@ -47,6 +47,7 @@ Which statements are correct?
 - Swap target is compared with Swapped (vSphere Monitoring and Performance, memory counters; Broadcom KB 374743, esxtop SWTGT vs SWCUR: https://knowledge.broadcom.com/external/article/374743). Here the target sits above Swapped while every rate is 0; the key relies on the zero rates, not on the gap.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). Dropped from the old key: "Active is tiny and flat: the guest barely touches memory" (Active is a sampled kernel estimate with no operational use: VM Memory Active) and "a reboot clears them" (no knowledge file states it).
 - Options rewritten 2026-11-14 to one fact each (design.md 3.9; project/question-pairing-2026-11-14.md) (author approved, 2026-11-14): A, C, F, H, I, K and L no longer carry a second clause; the vMotion clause of old I moved to the reason of J. Key unchanged: A, C, E, F, G, I.
+- Review 2026-11-15: E and F paraphrased (they restated sentences of the knowledge example); the reasons for B and D follow the corrected swap-and-compression.md (Swap target is a level compared with Swapped; vSphere Web Services API 9.1, memory counters, swaptarget). Key unchanged.
 - Paired with 0143 (theory and practical; design.md, section 3.9).
 
 ## Metadata

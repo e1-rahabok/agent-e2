@@ -5,6 +5,7 @@
 - The VM has a CPU limit of 1,200 MHz.
 - [The attached vSphere Client export](0103/build-runner-03-cpu-real-time.csv) holds 30 minutes of Real-time points (20 seconds): CPU Demand (MHz), Usage (MHz), Run (ms), Used (ms) and Max limited (ms).
 - System time is about 25 ms per sample.
+- The developers say builds now take twice as long.
 
 Which statements are correct?
 
@@ -14,6 +15,7 @@ Which statements are correct?
 - D. Run at about 36% shows the guest is idle almost two thirds of the time, so it needs no more CPU.
 - E. Remove or raise the limit: it caps this VM in MHz.
 - F. Add a second vCPU to give the VM more CPU.
+- G. Used above Run shows the VM gets more than its 1,200 MHz limit.
 
 ## Likely wrong answer
 B: equal Demand and Usage read as a VM that gets all it asks for. Or D: Run at 36% read as spare CPU.
@@ -26,9 +28,10 @@ B: equal Demand and Usage read as a VM that gets all it asks for. Or D: Run at 3
 - D is wrong: Run (about 7,200 ms) plus Max limited (about 12,700 ms) fill almost the whole sample. The vCPU was held back, not idle.
 - E: the limit holds Usage at its value in MHz whatever the guest demands.
 - F is wrong: a second vCPU would share the same 1,200 MHz; the limit, not the vCPU count, caps this VM.
+- G is wrong: Usage stays just under 1,200 MHz. Used counts work at the actual clock and converts it to ms at the base clock, so a core above base (Turbo) puts Used above Run within the limit.
 
 ## Notes
-- From the author's samples: a single-vCPU VM under a CPU limit whose Demand equals Usage. Export regenerated 2026-11-14 with new numbers and a new VM (seeded script; project/question-pairing-2026-11-14.md, decision 3): the old export reproduced the example of run-vs-used-gap. Option A states the reading only (its old clause negated B); F (the wrong action) added. Key unchanged (author approved, 2026-11-14).
+- From the author's samples: a single-vCPU VM under a CPU limit whose Demand equals Usage. Export regenerated 2026-11-14 with new numbers and a new VM (seeded script; project/question-pairing-2026-11-14.md, decision 3): the old export reproduced the example of run-vs-used-gap. Option A states the reading only (its old clause negated B); F (the wrong action) added; on review 2026-11-15 the stem gained the developers' complaint and G (the Used gap read as CPU beyond the limit) was added. Key unchanged (author approved, 2026-11-14).
 - Paired with 0066 (theory and practical, design.md 3.9).
 - Revised 2026-11-12 after review: the earlier option on why Demand equals Usage under a limit was dropped. The vSphere API defines cpu.demand as what the VM would use with no contention or limit, while the knowledge base says a limit leaves Demand equal to Usage; the conflict goes to the author. The question keeps only the observation. The Used vs Run (Turbo) option was dropped: 0100 tests it.
 

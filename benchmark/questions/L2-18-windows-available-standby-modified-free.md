@@ -12,7 +12,7 @@ Which statements about these Windows memory counters are correct?
 - D. Cached is the sum of the Standby and Modified pages that Windows holds.
 - E. Free that stays low all day shows that Windows is running out of memory.
 - F. In Use is the least memory that Windows and its applications can run with.
-- G. While Available stays high, Windows can grant every new memory allocation.
+- G. No Windows counter can show that the guest is short of memory.
 - H. A VM whose Free stays below 500 MB all day needs more memory.
 
 ## Likely wrong answer
@@ -26,11 +26,12 @@ E: "Free is almost 0, so Windows is out of memory." Or H: "The free memory alert
 - D true: Cached is Standby plus Modified.
 - E false: Windows fills memory with Standby cache, and Free can touch 0 for a moment. Read Available, paging together with the disk queue, and % Committed.
 - F false: In Use is not a minimum: Windows compresses In Use pages it does not use, even with plenty of memory free.
-- G false: a new allocation needs commit, and committed memory must be backed by RAM or the page file. Near the commit limit allocations fail even with Available high.
+- G false: over-correction. Low Free alone is not a shortage, but page-in and page-out together with a high disk queue are the Windows sign of a memory performance problem.
 - H false: low Free alone does not mean the guest needs more memory; Windows fills added memory with more Standby cache, so Free stays low.
 
 ## Notes
 - Paired with 0264 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item B2.
+- Review fixes 2026-11-15: G replaced; the commit-limit fact stays with 0270 and 0393, and G is now the over-correction of E. Key unchanged: A, B, C, D.
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
 ## Metadata

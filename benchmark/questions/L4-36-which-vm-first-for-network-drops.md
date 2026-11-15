@@ -21,6 +21,7 @@ A: ranking VMs by the maximum percentage, which short spikes on near-idle VMs do
 - db-07: 1% of the week's samples (about 100 minutes) are at 1.9% or more, and it dropped about 4.18 million transmitted packets while carrying real traffic. At about 1.5 KB per packet that is about 6 GB resent.
 - Rank drops by a percentile and by the packet count, not by the maximum percentage. The maximum of a short, spiky metric says little.
 - C is wrong: web-04's 99th percentile is 0.02% and its totals are small; its maximum is one spike.
+- D is wrong: rpt-11's 1,334 receive drops lead the five, but its 99th percentile is 0 at 4 KBps: a near-idle VM with a few short spikes.
 - E is wrong: on a busy database, about 100 minutes a week at 1.9% or more and millions of dropped packets are real loss that TCP hides by resending. Raise it with the network team.
 
 ## Notes
@@ -28,6 +29,7 @@ A: ranking VMs by the maximum percentage, which short spikes on near-idle VMs do
 - Revised 2026-11-12: the 400-VM workbook became a 40-VM CSV; the management pack score removed (fairness). The question now tests which statistic ranks VMs for drops; the spike formula is in 0061, transmit drops hidden by TCP in 0074. The CSV is synthetic, generated with a fixed seed.
 - Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which VM should be investigated first?"
 - 2026-11-14: the stem line "You can open one ticket today" removed: it told the candidate that one option is correct (design.md 6.2). Practical half of 0061 (project/question-pairing-2026-11-14.md, A13). Key unchanged.
+- Review 2026-11-15: the key point for D added. Key unchanged.
 
 ## Metadata
 ```yaml

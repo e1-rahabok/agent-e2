@@ -5,7 +5,7 @@ Review [the attached screenshot](0050/esxtop-disk-device-panel.png).
 
 For the device with the highest GAVG, where does most of the latency come from? Which statements are correct?
 
-- A. Beyond the host: the network and the NFS server (DAVG).
+- A. Outside the host: on the storage network or in the NAS.
 - B. The VMkernel queue (KAVG).
 - C. The Guest OS.
 - D. It cannot be told from esxtop: an NFS datastore has no device latency in esxtop.
@@ -26,6 +26,7 @@ D: assuming an NFS datastore does not show in the device panel and has no DAVG.
 - C is wrong: esxtop has no Guest OS metrics.
 
 ## Notes
+- Review 2026-11-15: A reworded so it does not restate option A of the paired theory question 0186. Key unchanged.
 - 2026-11-14 (project/question-pairing-2026-11-14.md, A15): the hand-drawn marks beside DAVG and GAVG on the answer row masked; the stale `## Input to supply` removed (screenshot supplied by the author 2026-11-05, esxtop on one ESXi 9.1 host); closing line made plural (Q199).
 - Author 2026-11-05: Level 300; the misconception is thinking an NFS datastore is not in the device panel and has no DAVG.
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.

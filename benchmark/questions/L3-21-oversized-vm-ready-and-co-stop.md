@@ -14,6 +14,7 @@ Which statements are correct?
 - C. Co-stop of 3% shows the database threads wait on each other inside the guest.
 - D. A vCPU of this VM can be co-stopped at moments when the host has a free thread for it.
 - E. The host is short of CPU: move other VMs off it first.
+- F. Ready of 5% and Co-stop of 3% are too small to matter, so the VM needs no change.
 
 ## Likely wrong answer
 B: more vCPUs to cure a CPU wait. Or E: the host is short of CPU.
@@ -25,9 +26,10 @@ B: more vCPUs to cure a CPU wait. Or E: the host is short of CPU.
 - C is wrong: Co-stop is a wait in the ESXi scheduler: a vCPU held back to stay in step with a sibling vCPU. The guest's short run queue shows its threads are not waiting.
 - D: a co-stopped vCPU is held back because it is too far ahead of a sibling, even when physical threads are free for it.
 - E is wrong: the small VMs on the same host barely wait and the host is at about 55%. The wait is the VM's own size.
+- F is wrong: the over-correction. Ready is read against Run: 5% Ready on 9% Net Run per vCPU is a wait of more than half the run time, and Co-stop in a high-performing environment stays below 1%.
 
 ## Notes
-- Options rewritten 2026-11-14 (design.md 3.9; project/question-pairing-2026-11-14.md): old D (default shares per vCPU after a downsize) removed because it repeats option G of 0236; new D tests the Co-stop mechanism; B now carries the misreading of Net Run. Key changed from A to A, D.
+- Options rewritten 2026-11-14 (design.md 3.9; project/question-pairing-2026-11-14.md): old D (default shares per vCPU after a downsize) removed because it repeats option G of 0236; new D tests the Co-stop mechanism; B now carries the misreading of Net Run; F (the over-correction) added. Key changed from A to A, D.
 
 ## Metadata
 ```yaml

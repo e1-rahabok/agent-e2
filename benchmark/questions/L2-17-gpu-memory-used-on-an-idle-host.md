@@ -17,7 +17,7 @@ Which statements are correct?
 - G. When the cluster's free GPU memory exceeds a profile's size, a VM with that profile is sure to power on.
 - H. A 1-week chart of these per-GPU host counters at the default statistics level would show the same lines.
 - I. The memory of a GPU given to a VM by DirectPath I/O passthrough is counted in the cluster's gpu.mem.reserved.
-- J. With compute below 5%, these GPUs have room for another vGPU VM.
+- J. Compute below 5% shows that frame buffer is free on these GPUs for another vGPU VM.
 - K. Buy more GPUs now: these workloads have outgrown the two GPUs.
 
 ## Likely wrong answer
@@ -34,7 +34,7 @@ Which statements are correct?
 - G is false: placement is per physical GPU and per profile; four GPUs with 8 GB free each cannot place a 16 GB profile (Broadcom KB 312021).
 - H is false: the per-device host GPU counters are statistics level 4; at the default level 1 vCenter keeps no history for them. Use the cluster or resource pool GPU counters, which are level 1.
 - I is false: a passthrough GPU bypasses the NVIDIA vGPU Manager, so the host does not count its memory; read it inside the guest with nvidia-smi.
-- J is false: the frame buffer is allocated whole at power-on and never overcommitted; only compute is shared, so idle compute frees no frame buffer. This is the over-correction of A.
+- J is false: the frame buffer is allocated whole at power-on and never overcommitted; only compute is shared, so idle compute frees no frame buffer (here 88-94% of it is allocated). This is the over-correction of A: having learned that the memory reading is not work, the reader takes idle compute as free memory.
 - K is false: the workloads are idle; the frame buffer is held by the profiles of the powered-on VMs, not by work. Whether another vGPU VM fits is a placement question per GPU and per profile, not this percentage.
 
 ## Notes
@@ -44,6 +44,7 @@ Which statements are correct?
 - Dropped from the key: nvidia-smi inside a vGPU guest as a second way to read workload use; the knowledge base names nvidia-smi only for passthrough GPUs.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): one fact per option (A, C, D, E); F stated as the placement fact instead of next to its negation G; J the over-correction and K the wrong action added. Key unchanged: B, C, D, E, F.
+- Review 2026-11-15: J reworded; "room for another vGPU VM" depended on the profile size, which the stem does not give. Key unchanged.
 
 ## Metadata
 ```yaml

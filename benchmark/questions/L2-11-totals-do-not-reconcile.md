@@ -11,7 +11,7 @@ Which statements are correct?
 - B. IO from the PROD-C hosts to the 12 datastores is in the datastore sum but in neither PROD-B sum.
 - C. One of the three sums must be wrong, since the same IO is counted in each.
 - D. Snapshot IO adds to the datastore sum and not to the VMs' virtual disk sum.
-- E. RDM IO adds to the VMs' virtual disk sum and not to the datastore sum.
+- E. IO that the ESXi kernel issues for its own modules adds to the host sum and to no VM's sum.
 - F. A gap between one VM's virtual disk read IOPS and its datastore read IOPS cannot point to anything on that VM.
 - G. Open a support case to have the vCenter statistics collection checked.
 
@@ -24,13 +24,14 @@ C: concluding that a metric is broken.
 - B is true: the hosts of PROD-C add IO to the 12 datastores that is in neither the PROD-B VM sum nor the PROD-B host sum.
 - C is false: the relationships are many-to-many (a VM spans datastores, a datastore holds many VMs and is mounted by hosts of more than one cluster), so totals across VM, datastore, host and cluster do not reconcile, and each value is still correct from its vantage point.
 - D is true: virtual disk counters exclude snapshot IO; datastore counters include it.
-- E is true: virtual disk counters cover VMDKs and RDMs; datastore counters exclude RDMs, whose data is on their own LUNs.
+- E is true: the kernel does IO for all VMs and for its own modules (for example vSAN); its own IO belongs to no VM.
 - F is false: the gap has known causes that tell something; for example a datastore read IOPS consistently above the virtual disk read IOPS on VMFS points to a snapshot on that VM.
 - G is false: a gap between vantage points is expected and is no fault of the statistics collection.
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: shared datastores stated in the stem. Counts only after author approval.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): "virtual disk IOPS" in the stem; the vague option "each sum is correct from its vantage point" replaced by single mechanisms (snapshot IO, RDM IO); over-correction F and wrong action G added. Key changed from A, B, D to A, B, D, E.
+- Review 2026-11-15: E (RDM IO, the fact of 0185) replaced by kernel IO in the host sum. Key unchanged: A, B, D, E.
 
 ## Metadata
 ```yaml
@@ -48,7 +49,6 @@ knowledge:
   - vsphere/architecture/object-relationships
   - vsphere/technology/storage/concepts/storage-layers
   - vsphere/technology/storage/concepts/snapshot-impact
-  - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
   - vsphere/technology/storage/metrics/virtual-motherboard/datastore
 knowledge_main: vsphere/architecture/object-relationships
 attachments: []

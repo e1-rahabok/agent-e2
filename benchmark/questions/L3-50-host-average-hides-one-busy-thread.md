@@ -1,48 +1,48 @@
-# A quiet host and one busy thread
+# An alert on host Utilization to catch single-threaded jobs
 
 ## Prompt
-- An ESXi 9.1 host: 2 sockets of 24 cores, Hyper-Threading on, 96 threads.
-- vCenter, last hour: host CPU Utilization (%) about 11%, Usage (%) about 13%.
-- The owner of a VM on this host says a single-threaded report job is CPU-bound. The host team answers that the host is nearly idle.
+- A capacity team plans one alert per ESXi host: CPU Utilization (%) above 80% for 15 minutes. They expect it to catch the single-threaded month-end jobs that run slowly.
+- The hosts have 2 sockets of 28 cores, Hyper-Threading on: 112 threads.
 
 Which statements are correct?
 
-- A. Host Utilization (%) is the average of the utilization of its threads.
-- B. One thread busy all the time moves the Utilization of a 96-thread host by about 1 point.
-- C. With the host at about 11%, no thread can have been much busier than about 11%.
-- D. On a lightly loaded host, uneven load among threads is normal: it follows the workloads and where they are placed.
-- E. A thread near 100% on a quiet host shows that the ESXi scheduler balances the load badly.
-- F. Add a host to the cluster so that the report job gets more CPU.
-- G. To find a hot thread, read the busiest thread, not the host value.
-- H. Which thread is the hot one can change over time without changing the conclusion.
-- I. Host Usage (%) is built on the cores of the host, so one busy core barely moves it either.
-- J. A single-threaded job runs faster when its VM gets more vCPUs.
+- A. Host Utilization (%) is the mean of the utilization of each of its threads.
+- B. A single thread busy all the time adds about 1 point to the Utilization of a 112-thread host.
+- C. Below 80% host Utilization, no thread of the host can be saturated.
+- D. On an otherwise quiet host, the planned alert stays silent while one job holds a thread at 100%.
+- E. Threads loaded unevenly on a quiet host mean the scheduler is misbalanced, which is worth its own alert.
+- F. When the month-end jobs run slowly, add hosts to the cluster.
+- G. To catch one saturated thread, a check must read the busiest thread, not the host value.
+- H. Which thread runs hot can change between samples without changing that reading.
+- I. Host Usage (%) rests on the host's cores as a whole, so it hides one busy core in the same way.
+- J. Host-level CPU utilization is of no use for capacity planning, since it hides busy threads.
 
 ## Likely wrong answer
-C: the host is at 11%, so nothing on it can be busy. The job cannot be CPU-bound.
+C: if the host stays below 80%, no single thread can be saturated, so the alert catches the jobs.
 
 ## Expected key points
 - Answer: A, B, D, G, H, I.
 - A true: each thread has its own 100%; the host value is their average.
-- B true: 100 / 96 is about 1.04 points.
-- C false: the misconception. An average over 96 threads hides one or a few threads at 100%.
-- D true: imbalance among cores is expected while utilization is low; the scheduler spreads vCPUs across cores, but load follows the work and NUMA placement.
-- E false: over-correction. Imbalance at low load is not a fault.
-- F false: wrong action. The host has plenty of free threads; a single-threaded job is held by one vCPU, not by the cluster's capacity.
-- G true: the host average cannot show one hot thread; the per-thread values (or their maximum) can.
+- B true: 100 / 112 is about 0.9 points.
+- C false: the misconception. An average over 112 threads hides one or a few threads at 100%.
+- D true: one thread at 100% lifts a quiet host by about a point, far from 80%.
+- E false: over-correction. Imbalance among threads at low load is normal: load follows the workloads and their NUMA placement.
+- F false: wrong action. A single-threaded job is held by one thread's speed, not by the cluster's free capacity.
+- G true: the host average cannot show one hot thread; the per-thread values, or their maximum, can.
 - H true: threads can take turns being the hot one; the reading is the same.
 - I true: host Usage is summed over physical cores and based on Core Utilization, an average over cores, adjusted for frequency.
-- J false: the work runs on one thread; more vCPUs add idle vCPUs.
+- J false: over-correction. Thread Utilization is the host's capacity reading (space); it only cannot show the speed of one thread.
 
 ## Notes
 - Paired with the practical question 0379 (theory and practical; design.md, section 3.9). Situation numbers differ from 0379 on purpose.
 - The VCF Operations host metric for the busiest core is left out: its presence in VCF Operations 9.1 is not confirmed (Aria Operations 8.16 documents CPU|Peak CPU Core Usage). Fairness F2.
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item D5). Counts only after author approval.
+- Review 2026-11-15: new situation (an alert plan of a capacity team), away from the story of 0379; options reworded. Key letters A, B, D, G, H, I, on the new options.
 
 ## Metadata
 ```yaml
 id: "0378"
-title: "A quiet host and one busy thread"
+title: "An alert on host Utilization to catch single-threaded jobs"
 product: [vsphere]
 technology: [cpu]
 task: read-metric

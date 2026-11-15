@@ -21,6 +21,7 @@
 
 ## Interpretation
 - Most traffic should be unicast. A high multicast or broadcast share explains receive drops and wasted CPU on every VM in the broadcast domain. See [`vsphere/technology/network/metrics/vm-network-metrics`](../vm-network-metrics.md).
+- A VLAN is one broadcast domain. A broadcast reaches every port of its VLAN on every host that carries the VLAN, and no port of another VLAN, even on the same host and uplinks. So a VM moved to another host of the same VLAN still receives every broadcast, and VMs of another VLAN receive none of them.
 - LAG counts show whether traffic spreads across the uplinks of a link aggregation group.
 - VCF Operations shows distributed port group metrics aggregated over all hosts. vCenter itself keeps none on the port group. See [`vsphere/technology/network/concepts/network-observability`](../../concepts/network-observability.md).
 
@@ -54,11 +55,11 @@ related:
 - vsphere/technology/network/metrics/host/throughput
 - vsphere/tools/vsphere-client/vcenter-statistics
 source:
-  document: Repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922)
-  path: https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv; README section Object types without metrics
+  document: Repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv; README section Object types without metrics; vSphere Networking > What is VLAN Policy, How to Use VLANs to Isolate Network Traffic (pp. 1166, 1188); vSphere Security > Consider VLANs to Protect Your Environment (p. 1571)
 corrections: []
 review_notes:
 - 'Whole file: counter names, scopes, level, rollup, stat type and summaries from the vCenter 9.1.0 API export. The distributed port group returned no counters (same README).'
-- 'To check: Sections ''Meaning'' (what a DVPort connects to), ''Interpretation'' and the third misconception: inferred from the counter scopes, not from a document.'
+- 'To check: Section ''Meaning'' (what a DVPort connects to), the first two lines of ''Interpretation'' and the third misconception: inferred from the counter scopes, not from a document. The VLAN line of ''Interpretation'' follows the vSphere 9.1 documentation (a VLAN is a logical broadcast domain; broadcast traffic stays within the VLAN).'
 status: draft
 ```

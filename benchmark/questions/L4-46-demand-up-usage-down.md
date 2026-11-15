@@ -6,7 +6,7 @@
 - vCenter keeps statistics level 4 for the past-week interval.
 - On 10 November at about 21:30 the lines changed and stayed changed. Nobody changed the VM.
 
-Why did Demand rise while Usage fell, why is Latency higher than Demand minus Usage, and what do you check? Which statements are correct?
+What explains the change at 21:30, and what do you check? Which statements are correct?
 
 - A. After 21:30, Demand rose from about 27% to about 36.5% of capacity while Usage fell from about 26.5% to about 24%.
 - B. Readiness stayed below 1% in every point, before and after 21:30.
@@ -43,7 +43,7 @@ Why did Demand rise while Usage fell, why is Latency higher than Demand minus Us
 - From the author's samples: Demand jumped while Usage dropped, and the contention line jumped more than Demand minus Usage, because it accounts for both frequency and Hyper-Threading. In VCF Operations 8.18 and later the CPU Contention metric no longer counts frequency and Hyper-Threading, so the question uses the vSphere CPU Latency counter, which does.
 - Not used from that sample: Usage above Demand at some points (Demand is smoothed over a longer window).
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
-- Export regenerated 2026-11-14 with new numbers and a new VM (seeded script; project/question-pairing-2026-11-14.md, decision 3): the old export equalled the Demand, Usage and Latency example of the VM CPU Demand knowledge file. Options A and B now state the reading only and D one fact: their old clauses (the extra demand was not met; the vCPUs were not waiting; the gap holds only the Hyper-Threading charge) negated F and H. Key unchanged (author approved, 2026-11-14).
+- Export regenerated 2026-11-14 with new numbers and a new VM (seeded script; project/question-pairing-2026-11-14.md, decision 3): the old export equalled the Demand, Usage and Latency example of the VM CPU Demand knowledge file. The stem question no longer reads the export for the candidate (it named Demand up, Usage down and Latency above the gap). Options A and B now state the reading only and D one fact: their old clauses (the extra demand was not met; the vCPUs were not waiting; the gap holds only the Hyper-Threading charge) negated F and H. Key unchanged (author approved, 2026-11-14).
 - Paired with 0002 (theory and practical, design.md 3.9).
 
 ## Metadata

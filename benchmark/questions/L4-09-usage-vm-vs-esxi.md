@@ -14,7 +14,7 @@ Which statements are correct?
 - E. Host Memory Usage at 95% means the host needs more RAM.
 - F. Cluster Memory Usage in vCenter is based on Active memory, like the VM's.
 - G. Memory works as a cache, so host Consumed near 100% is the expected state of a host whose VMs have run for a while.
-- H. A memory shortage on the host shows as memory Latency (contention) in its VMs.
+- H. VMs that wait for memory the host took from them show it as memory Latency (Contention).
 - I. Host Memory Usage has no use in capacity management.
 
 ## Likely wrong answer
@@ -37,6 +37,7 @@ Which statements are correct?
 - Tests: Same name, different formula per object (distinction).
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md) (author approved, 2026-11-14): G and H no longer negate E; the key point of H no longer lists balloon as contention; I the over-correction added; old H (VCF Operations VM Memory Usage (%) is the vCenter value) removed, since that fact is tested by the new pair D2. Key changed from B, D, G, I to B, D, G, H (relettered; same facts).
+- Review 2026-11-15: H reworded to the wait of the VMs whose memory the host took. Key unchanged.
 - Paired with 0151 (theory and practical; design.md, section 3.9).
 
 ## Metadata

@@ -7,30 +7,31 @@
 
 Which statements about how the limit acts and how it shows are correct?
 
-- A. The limit caps the pool's VMs together, across all the hosts they run on.
-- B. On a host with spare CPU, a VM held by the pool limit shows lower CPU Usage and no CPU Ready.
-- C. A VM of RP-Reports on a quiet host can be held back by the load of the pool's VMs on other hosts.
-- D. The limit on RP-Reports raises CPU Ready in the VMs of RP-Apps.
-- E. vCenter reports the time a VM is held back by a limit as Max Limited (ms).
-- F. Add two hosts to the cluster, so that the pool's VMs get more CPU at the busiest hour.
-- G. At the limit, the pool's CPU usage runs flat at one value, sample after sample.
+- A. A limit on RP-Reports also caps any child pool created under it.
+- B. On a host with spare CPU, a VM held by the pool limit shows no CPU Ready.
+- C. Two VMs of RP-Reports on different hosts draw on the same 60 GHz.
+- D. Capping RP-Reports pushes up the wait of the VMs in RP-Apps.
+- E. The vSphere Client keeps the time a vCPU is held back by a limit as a counter of its own.
+- F. Spread RP-Reports over two extra hosts to lift its throughput at the peak.
+- G. Once capped, the pool's total CPU barely moves from one sample to the next.
 - H. CPU Ready on any VM of the cluster is a sign that the limit of RP-Reports is reached.
 
 ## Likely wrong answer
-B: a limit is read as a cap on Usage that leaves Ready at 0 when the host has spare CPU. Or F: Ready is read as a cluster short of CPU.
+B: a limit is read as a cap that leaves Ready at 0 when the host has spare CPU. Or F: more hosts are expected to lift a capped pool.
 
 ## Expected key points
 - Answer: A, C, E, G.
-- A true: a pool's reservation, limit and shares apply across the cluster, while each of its VMs runs on one host.
+- A true: a limit on one pool caps that pool and its descendants.
 - B false: the misconception. Ready includes the time a vCPU is held back by a limit (the limbo queue), whatever the host's free CPU.
-- C true: the cap is cluster-wide, so the pool's load elsewhere can hold back a VM on a host with spare CPU.
+- C true: a pool's reservation, limit and shares apply across the cluster, while each of its VMs runs on one host; the VMs of the pool share one ceiling wherever they run.
 - D false: a limit caps only its own pool and frees CPU for the siblings; it cannot raise Ready in a sibling pool.
-- E true: vCenter also reports the time held back by a limit as Max Limited (ms).
+- E true: vCenter reports the time held back by a limit as Max Limited (ms).
 - F false: the wrong action. More hosts do not help a pool at its limit: its VMs share the same cap.
 - G true: a pool at its limit shows its CPU usage flat near the limit while its hosts have spare CPU; a pool that is not capped varies with its load.
 - H false: the over-correction. Ready also comes from host contention, shares and vMotion; the wait from the pool limit follows the pool, not the host.
 
 ## Notes
+- Review 2026-11-15: B one fact; A, C, D, E, F, G reworded away from 0239 (its options B, D, E, H, L, M). Key letters unchanged.
 - Theory half of 0239 (pair: design.md, section 3.9). Different numbers and names from 0239, so one does not give away the other.
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item B4). Counts only after author approval.
 

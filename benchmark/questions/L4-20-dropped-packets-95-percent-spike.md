@@ -19,6 +19,7 @@ Which statements are correct?
 - D. Packets Dropped (%) counts transmitted drops only, so these received drops are not part of it.
 - E. Packets Dropped (%) has no use for any VM: only the dropped packet count matters.
 - F. Open an outage ticket for the VM's network for 03:20 to 03:30.
+- G. Sorted by the week's maximum Packets Dropped (%), the VM at the top of a list is the VM that lost the most packets.
 
 ## Likely wrong answer
 A: reading 88-90% as that share of the VM's normal traffic lost.
@@ -31,10 +32,12 @@ A: reading 88-90% as that share of the VM's normal traffic lost.
 - D is false: the formula adds received and transmitted drops; here the received drops make the whole value.
 - E is false: the percentage is read with the packet count, not dropped: a drop profile uses the 99th percentile of the drop percentage next to the sum of dropped packets.
 - F is false: a short spike near 90% at near-zero throughput, driven by received drops, is not an outage; no user saw one and the job finished on time.
+- G is false: a near-idle VM like this one reaches 88-90% with under 300 dropped packets, while a busy VM can drop millions at a few percent; rank by a percentile and by the dropped packet count.
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the stem gives the counters instead of the formula's terms ("delivered and dropped together") and no longer mirrors the knowledge file's example; the negation pair B/D resolved (old D dropped); over-correction E and wrong action F added. Key unchanged: B, C.
+- Review 2026-11-15: G added (a list sorted by the maximum percentage puts near-idle VMs on top), the fact its practical half 0082 shows on screen. Key unchanged: B, C.
 - Revised 2026-11-12: this question tests only the formula at low traffic. Transmit drops hidden by TCP are tested in 0074; ranking VMs by the right statistic in 0082.
 
 ## Metadata
@@ -57,7 +60,7 @@ attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05"
 answer: [B, C]
-misconception: [A]
+misconception: [A, G]
 misconception_type: [unit-and-normalization]
 pair: "0082"
 status: draft

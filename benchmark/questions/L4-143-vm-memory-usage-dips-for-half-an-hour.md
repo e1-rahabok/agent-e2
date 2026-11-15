@@ -8,42 +8,46 @@ See [the VCF Operations memory charts of the VM](0397/vcf-operations-vm-memory-g
 
 Which statements are correct?
 
-- A. During the dip, Usage (%) matches Active as a share of the VM's total memory.
-- B. During the dip, Workload (%) rises to match Consumed as a share of the VM's total memory.
-- C. Guest Needed Memory has no values in the minutes of the dip.
-- D. The application freed memory during the dip and took it back afterwards.
-- E. The VM's memory history in VCF Operations is unreliable for the whole day.
-- F. Downsize the VM to the Usage (%) value of the dip.
-- G. ESXi took memory from the VM during the dip, which lowered its Usage (%).
+- A. The Needed Memory chart has no points where the dip is.
+- B. During the dip, the Usage (%) line sits at the level of the active memory line.
+- C. While Usage (%) dips, Utilization rises to about the level of Consumed.
+- D. Consumed falls during the dip.
+- E. The guest needed less memory for half an hour and then needed it again.
+- F. Every Usage (%) value on these charts, before and after the dip too, comes from active memory.
+- G. Size the VM down to the lowest Usage (%) on these charts.
 
 ## Input to supply
-- Product: VCF Operations 9.1; a Windows Server VM with VMware Tools, 8 GB or more, whose guest uses much of its memory as cache (Needed Memory well above Active).
+- Product: VCF Operations 9.1; a Windows Server VM with VMware Tools, 8 GB or more, whose guest uses much of its memory as cache (Guest|Needed Memory well above active memory).
+- Before the capture: VM Memory|Usage (%) (`mem|usage_average`) is disabled by default in the VCF Operations 9.1 metric list; enable it in the policy at least a day before.
 - Lab step: stop the VMware Tools service in the guest (`net stop vmtools`) for 25-35 minutes, then start it again. Change nothing else on the VM.
-- Screen: VCF Operations > the VM > Metrics, a 2-hour window around the stop, six charts stacked: Memory|Usage (%), Memory|Workload (%), Guest|Needed Memory (KB), Memory|Non Zero Active (KB), Memory|Consumed (KB), Memory|Total Capacity (KB). Save as `benchmark/questions/0397/vcf-operations-vm-memory-guest-data-gap-2h.png`.
-- Condition the key depends on, in the points of the stop:
-  - Guest|Needed Memory has no data points;
-  - Usage (%) within 2 points of Non Zero Active / Total Capacity × 100, and at least 20 points below its value before the stop;
-  - Workload (%) within 3 points of Consumed / Total Capacity × 100, and above its value before the stop;
-  - Consumed flat (within 5%) across the whole window.
+- Screen: VCF Operations > the VM > Metrics, a 2-hour window around the stop, six charts stacked: Memory|Usage (%), Mem|Guest Active Memory (%), Guest|Needed Memory, Mem|Utilization (KB), Mem|Consumed (KB), Mem|Total Capacity (KB). Save as `benchmark/questions/0397/vcf-operations-vm-memory-guest-data-gap-2h.png`.
+- Condition the key depends on:
+  - Guest|Needed Memory has no data points during the stop;
+  - during the stop, Memory|Usage (%) within 2 points of Mem|Guest Active Memory (%), and at least 20 points below its value before the stop;
+  - before and after the stop, Memory|Usage (%) within 2 points of Guest|Needed Memory / Mem|Total Capacity × 100;
+  - during the stop, Mem|Utilization (KB) within 5% of Mem|Consumed (KB), and above its value before the stop;
+  - Mem|Consumed (KB) flat (within 5%) at every point of the window.
 - Masking: mask every VM, host, datastore and cluster name.
 
 ## Likely wrong answer
-D: "Memory usage fell, so the application released memory for half an hour." Or F: downsizing on the dip.
+E: "Memory usage fell, so the application needed less memory for half an hour." Or G: downsizing on the dip.
 
 ## Expected key points
 - Answer: A, B, C.
-- A true: without guest data, VCF Operations Usage (%) falls back to Active; the dip equals Active against total memory.
-- B true: without guest data, Workload (%) falls back to Consumed; it rises to Consumed against total memory while Usage falls.
-- C true: the gap in Needed Memory is the missing guest data that triggers both fallbacks; VMware Tools derives Needed Memory inside the guest.
-- D false: the guest did not change; the source of the metric changed. Needed Memory has no values, and Usage returns as soon as guest data does.
-- E false: over-correction. Only the points without guest data use the fallback; before and after, the metrics read the guest as usual.
-- F false: the wrong action. Without guest data there is no Needed Memory and so no sizing; the dip shows Active, which does not stand in for the guest's need.
-- G false: Consumed stays flat through the dip, so ESXi reclaimed nothing; Usage moved because its source moved.
+- A true: Needed Memory comes from VMware Tools inside the guest; the chart has a gap where the dip is.
+- B true: without guest data, VCF Operations Usage (%) falls back to active memory, and the dip sits on the active line.
+- C true: without guest data, VM memory Utilization falls back to Consumed, so it rises while Usage falls.
+- D false: Consumed is level through the whole window.
+- E false: the guest did not change; the source of the metric changed. Usage comes back as soon as guest data does.
+- F false: over-correction. Only the points without guest data use the fallback; before and after the dip, Usage matches Needed Memory against Total Capacity.
+- G false: the wrong action. Without guest data there is no Needed Memory and so no sizing; the dip shows active memory, which does not stand in for the guest's need.
 
 ## Notes
 - Paired with 0396 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D8.
 - The stem does not name the stopped service: the gap in Needed Memory on the screen is the evidence to read.
 - Never attach the knowledge-base image of the same fallback (vcf-operations-vm-memory-usage-falls-back-to-active.png); the capture must be new.
+- Metric names from the VCF Operations 9.1 Virtual Machine metric list (TechDocs, updated 2026-11-12): https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/virtual-machine-metrics.html. It has no VM Memory|Workload (%), so the Consumed fallback is read on Mem|Utilization (KB), whose fallback is in virtual-motherboard/utilization.
+- Review fixes 2026-11-15: options rewritten as screen readings (A, B, C true; D false), away from the wording of 0396; Workload (%) replaced by Utilization (KB). Key A, B, C → A, B, C.
 - The key holds whenever the condition of `## Input to supply` holds.
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
@@ -71,7 +75,7 @@ attachments:
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D8"
 answer: [A, B, C]
-misconception: [D]
+misconception: [E]
 misconception_type: [layer-confusion, tool-confusion]
 pair: "0396"
 status: awaiting-input
