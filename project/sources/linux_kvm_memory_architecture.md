@@ -12,32 +12,33 @@ Unlike ESXi's monolithic hypervisor kernel, Linux implements virtualization by t
 
 Synchronization between the core Linux VMM (`HVA -> HPA`) and KVM (`GPA -> HPA`) is enforced by **Linux MMU Notifiers** (`struct mmu_notifier`). Whenever the host kernel unmaps, swaps, or migrates an `HVA`, `kvm_mmu_notifier_invalidate_range_start()` zaps the corresponding `EPT`/`NPT` Shadow Page Table Entry (`SPTE`) in `kvm.ko`.
 
-```text
-+-----------------------------------------------------------------------------+
-| GUEST OS                                                                    |
-|   [ Guest Applications / Kernel ]                                           |
-|                 | (Guest Page Tables: GVA -> GPA)                           |
-|                 v                                                           |
-|   [ Guest Physical Address Space (GFNs) ] <--- Pins GFNs --- [virtio_balloon]|
-+-----------------|-------------------------------------------------|---------+
-                  | (KVM TDP MMU EPT/NPT: GPA -> HPA)               | inflate_vq
-==================|=================================================|==========
-| HOST LINUX KERNEL & USERSPACE VMM                                 v         |
-|   [ Userspace VMM Address Space (HVA) ] <--- madvise(MADV_DONTNEED)         |
-|                 | (Host Page Tables: HVA -> HPA)                            |
-|                 v                                                           |
-|   [ Core Linux VMM (mm/) ] === MMU Notifier ===> [ kvm.ko (TDP MMU) ]       |
-|                 ^                                                           |
-|                 | (Enforces memory.max via Direct Reclaim / OOM)            |
-|   [ cgroup v2 Memory Controller (memcg) ]                                   |
-|      |                          |                          |                |
-|      | (Resident HPA)           | (Compressed)             | (Evicted)      |
-|      v                          v                          v                |
-| +-----------------+    +------------------+    +-------------------------+  |
-| | Physical DRAM   |    | zswap Pool       |    | Host Swap Partition/File|  |
-| | (VmRSS/RssAnon) |    | (Host RAM)       |    | (Block Storage)         |  |
-| +-----------------+    +------------------+    +-------------------------+  |
-+-----------------------------------------------------------------------------+
+```mermaid
+flowchart TD
+    subgraph Guest["Guest OS"]
+        GA["Guest applications and kernel"]
+        GFN["Guest physical address space (GFNs)"]
+        VB["virtio_balloon (pins GFNs)"]
+    end
+    subgraph Host["Host Linux kernel and userspace VMM"]
+        HVA["Userspace VMM address space (HVA)"]
+        MM["Core Linux VMM (mm/)"]
+        KVM["kvm.ko (TDP MMU)"]
+        CG["cgroup v2 memory controller (memcg)<br/>Enforces memory.max via direct reclaim or OOM"]
+        DRAM["Physical DRAM<br/>VmRSS, RssAnon"]
+        ZS["zswap pool (host RAM)"]
+        SW["Host swap partition or file (block storage)"]
+    end
+
+    GA -->|"Guest page tables: GVA to GPA"| GFN
+    GFN -->|"KVM TDP MMU EPT or NPT: GPA to HPA"| KVM
+    VB -->|"Pins GFNs"| GFN
+    VB -->|"inflate_vq: madvise MADV_DONTNEED"| HVA
+    HVA -->|"Host page tables: HVA to HPA"| MM
+    MM <-->|"MMU notifier"| KVM
+    CG -->|"Resident HPA"| DRAM
+    CG -->|"Compressed"| ZS
+    CG -->|"Evicted"| SW
+    CG -.->|"Direct reclaim or OOM"| MM
 ```
 
 ### Telemetry & Accounting Metrics
@@ -92,21 +93,18 @@ Unlike ESXi—where setting `sched.mem.max` automatically triggers `vmmemctl` ba
 ### Step-by-Step Reclamation Flow (`memory.current > memory.max`)
 When `memory.max` is set below `memory.current` (or when a VM faults in new `HPA`s that breach `memory.max`), the host kernel executes forced direct reclamation without consulting the Guest OS:
 
-```text
-[ memory.current > memory.max ]
-               |
-               v
-  1. Synchronous Direct Reclaim -------> memory_max_write() / try_to_free_mem_cgroup_pages()
-               |
-               v
-  2. Host LRU Scan & THP Split --------> shrink_lruvec() scans VMM anon LRU (blind to guest)
-               |
-               v
-  3. Reverse Map & MMU Notifier -------> try_to_unmap() clears HVA PTE & zaps KVM EPT SPTE
-               |
-               +---> [ Host Swap / zswap Available ] ---> Pageout HPA -> memory.current drops
-               |
-               +---> [ No Host Swap / Swap Full ] -----> mem_cgroup_out_of_memory() -> SIGKILL
+```mermaid
+flowchart TD
+    A["memory.current greater than memory.max"]
+    B["1. Synchronous direct reclaim<br/>memory_max_write, try_to_free_mem_cgroup_pages"]
+    C["2. Host LRU scan and THP split<br/>shrink_lruvec scans VMM anon LRU, blind to guest"]
+    D["3. Reverse map and MMU notifier<br/>try_to_unmap clears HVA PTE, zaps KVM EPT SPTE"]
+    E["Host swap or zswap available<br/>Pageout HPA, memory.current drops"]
+    F["No host swap or swap full<br/>mem_cgroup_out_of_memory, SIGKILL"]
+
+    A --> B --> C --> D
+    D -->|"Host swap or zswap available"| E
+    D -->|"No host swap or swap full"| F
 ```
 
 1. **Synchronous Direct Reclaim:** Writing a lower byte value to `memory.max` invokes `memory_max_write()` in `mm/memcontrol.c`, entering a synchronous reclaim loop via `try_to_free_mem_cgroup_pages()` to shed the excess bytes immediately.
