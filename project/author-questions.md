@@ -63,15 +63,6 @@ Each entry has:
 - Written as now: both, unreconciled.
 - Answer:
 
-### Q223 · Memory > Balloon · Does "VMware Tools not running" stop ballooning?
-
-- Files: [Ballooning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md); question [0022](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-013-relationship-between-vm-and-guest-os-memory-metrics.md).
-- Search: not from the book.
-- Question: your answer of 2026-11-14 on question 0022: the balloon driver comes from the VMware Tools service, so they are the same thing. ballooning.md says: "Ballooning needs the balloon driver loaded, not the VMware Tools service: a Linux VM keeps ballooning while vmtoolsd is stopped." On Linux the driver is `vmw_balloon`, in the upstream kernel; open-vm-tools does not contain it. On Windows the driver ships with VMware Tools and runs as a kernel driver, apart from the Tools service; "VMware Tools: Not running" in vCenter reports the service. Broadcom KB 313773 lists the kernel commits of `vmw_balloon`; no vendor document found says whether the service is needed, so the documents do not settle it. Does a stopped Tools service stop ballooning? Question [0052](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-013-balloon-above-zero.md) dropped its option on this point until the answer.
-- Written as now: ballooning.md as quoted. Question 0022, option D, now states the case both agree on (VMware Tools not installed on a Windows VM); key A, B, D, E.
-- Final answer (expert call): the knowledge base stands: "not running" (the service) and "not installed" (no driver) differ. For you: a case you have seen where a VM with Tools installed but its service stopped was not ballooned; else accept.
-- Answer:
-
 ### Q224 · Observability > Collection interval · VCF Operations 5-minute ms values: 100% at 20,000 or 300,000 ms per vCPU?
 
 - Files: [Collection interval](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/collection-interval.md) (section Short problems in 5-minute collection; Misconceptions); [Aggregation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/aggregation.md) (Sample length); question [0104](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-048-run-above-used-more-vcpus.md).

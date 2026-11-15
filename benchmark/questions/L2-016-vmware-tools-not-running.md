@@ -13,22 +13,24 @@ Which of these counters still have data for those three days?
 - E. VM virtual disk latency.
 - F. Guest OS context switch rate.
 - G. VM Memory Swapped.
+- H. VM Memory Ballooned.
 
 ## Likely wrong answer
-C, D or F: counters from inside Linux, stored on the VM object, assumed to come from the hypervisor. Or the over-correction: leaving out G, as if memory reclamation needed VMware Tools.
+C, D or F: counters from inside Linux, stored on the VM object, assumed to come from the hypervisor. Or the over-correction: leaving out G or H, as if memory reclamation needed VMware Tools.
 
 ## Expected key points
-- Answer: A, B, E, G.
+- Answer: A, B, E, G, H.
 - A, B, E are correct: the VMkernel measures them itself, from outside the guest: CPU scheduling, the memory pages it backs, and the IO the VM sends.
 - C is wrong: the run queue is a Linux counter; VMware Tools collects it inside the guest. Without Tools it does not exist in vSphere.
 - D is wrong: the guest disk queue is also collected inside the guest by VMware Tools; it is stored on the VM object, but the Guest OS produces it.
 - F is wrong: the context switch rate is a Guest OS counter that VMware Tools collects inside the guest.
 - G is correct: ESXi swaps the VM's pages itself, at random and blind to guest free memory; no guest component takes part, so Swapped keeps its data.
+- H is correct: the VMkernel counts ballooned pages itself, and on Linux the balloon driver is the kernel module `vmw_balloon`, not part of open-vm-tools, so ballooning goes on while vmtoolsd is stopped.
 
 ## Notes
 - Review 2026-11-15: G added as the over-correction trap (a VM memory counter that needs no guest component). Key changed from A, B, E to A, B, E, G.
 - Options rewritten 2026-11-14 (project/question-pairing-2026-11-14.md): D (file system free space) and F (IP addresses and host name) were not in the knowledge base; replaced by two Guest OS counters that VMware Tools collects. Key unchanged.
-- Ballooning is not an option here: whether a stopped Tools service stops ballooning is open (Q223). G uses Swapped instead, which needs no guest component.
+- 2026-11-15, Q223 answered (a stopped Tools service does not stop ballooning on Linux): H (Ballooned) added. Key changed from A, B, E, G to A, B, E, G, H.
 
 ## Metadata
 ```yaml
@@ -48,11 +50,12 @@ knowledge:
   - guest-os/storage/disk-queue
   - guest-os/cpu/metrics/context-switch
   - vsphere/technology/memory/metrics/virtual-motherboard/swapped
+  - vsphere/technology/memory/concepts/ballooning
 knowledge_main: vsphere/architecture/vm-vs-guest-os
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12"
-answer: [A, B, E, G]
+answer: [A, B, E, G, H]
 misconception: [C, D, F]
 misconception_type: [layer-confusion]
 status: draft

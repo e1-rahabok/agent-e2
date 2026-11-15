@@ -15,6 +15,7 @@ Which statements are correct?
 - G. ESXi keeps physical pages behind the ballooned 2 GB, ready to hand back to the VM at once.
 - H. Ballooning cannot slow this VM, whatever the guest does next.
 - I. Adding the requested memory is the right response to the 2 GB balloon.
+- J. Stopping the VMware Tools service (vmtoolsd) on this VM would stop the balloon.
 
 ## Likely wrong answer
 - A: "Balloon above 0 means the VM is starved of memory and slow: give it more RAM."
@@ -30,8 +31,10 @@ Which statements are correct?
 - G is false: ballooned pages map to no ESXi page; ESXi gave their physical pages to other VMs.
 - H is false: a problem occurs when the guest requests a ballooned page again; the more is ballooned, the higher the chance of a future hit. This is the over-correction of A.
 - I is false: the balloon alone shows no wait; check Latency first. With no wait, more memory fixes nothing the owner sees.
+- J is false: the Linux balloon driver is the kernel module `vmw_balloon`, not part of open-vm-tools; ballooning goes on while vmtoolsd is stopped.
 
 ## Notes
+- 2026-11-15, Q223 answered (a stopped Tools service does not stop ballooning on Linux): the dropped option returns as J, false. Key unchanged: B, C, D, F.
 - Revised 2026-11-12: situation and the owner's claim added; key points aligned with the knowledge files.
 - Left out of the options: whether a VM or resource pool limit causes ballooning (open author question Q214), and "adding memory does not stop the balloon", which leans on the same question.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).

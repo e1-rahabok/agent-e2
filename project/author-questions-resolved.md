@@ -4,6 +4,15 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q223 · Memory > Balloon · Does "VMware Tools not running" stop ballooning?
+
+- Files: [Ballooning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md); question [0022](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-013-relationship-between-vm-and-guest-os-memory-metrics.md).
+- Search: not from the book.
+- Question: your answer of 2026-11-14 on question 0022: the balloon driver comes from the VMware Tools service, so they are the same thing. ballooning.md says: "Ballooning needs the balloon driver loaded, not the VMware Tools service: a Linux VM keeps ballooning while vmtoolsd is stopped." On Linux the driver is `vmw_balloon`, in the upstream kernel; open-vm-tools does not contain it. On Windows the driver ships with VMware Tools and runs as a kernel driver, apart from the Tools service; "VMware Tools: Not running" in vCenter reports the service. Broadcom KB 313773 lists the kernel commits of `vmw_balloon`; no vendor document found says whether the service is needed, so the documents do not settle it. Does a stopped Tools service stop ballooning? Question [0052](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-013-balloon-above-zero.md) dropped its option on this point until the answer.
+- Written as now: ballooning.md as quoted. Question 0022, option D, now states the case both agree on (VMware Tools not installed on a Windows VM); key A, B, D, E.
+- Final answer (expert call): the knowledge base stands: "not running" (the service) and "not installed" (no driver) differ. For you: a case you have seen where a VM with Tools installed but its service stopped was not ballooned; else accept.
+- Answer (2026-11-15): the author added to ballooning.md: "In Linux OS, ballooning can be done even if the VMware Tools service (vmtoolsd) is stopped." The knowledge base stands. Applied: 0022 option H (false), 0052 option J (false), 0271 option H (true; key A, B, E, G, H).
+
 ### Q234 · Guest OS > CPU > Run queue · Threads waiting for a lock: Ready or Wait?
 
 - Files: [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md) (section Guest OS CPU run queue, step 3); [Processor queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/metrics/run-queue.md) (section Cases, Misconceptions); [Windows CPU scheduling](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/windows-cpu-scheduling.md).
