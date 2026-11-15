@@ -82,7 +82,7 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
   - Also called: Touch (ESXi), Non Zero Active (VCF Operations)
   - File: [`vsphere/technology/memory/metrics/virtual-motherboard/active`](vsphere/technology/memory/metrics/virtual-motherboard/active.md)
 - **Balloon Target**: Memory ESXi asks the balloon driver to reclaim.
-- **Entitlement (memory)**: Granted + Overhead.
+- **Entitlement (memory)**: Host memory the ESXi scheduler allocates to the VM, from its estimated demand and the reservation, limit and shares policies. A kernel value, used in operations only when below configured memory.
 - **ESXi pages**: Pages ESXi manages on DIMM, host cache or tiered NVMe.
   - Also called: machine pages, machine memory
 - **Granted**: VM pages with ESXi pages mapped. VM view.

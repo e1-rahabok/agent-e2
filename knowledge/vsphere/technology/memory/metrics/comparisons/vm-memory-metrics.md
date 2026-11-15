@@ -41,7 +41,7 @@
 | Ballooned | VM | Reclaimed by the balloon driver and not requested back. The bigger it is, the higher the chance a page is needed later. |
 | Free | VM | Never touched since power-on. Drops toward 0 as the guest pages in and out. |
 | Overhead | ESXi | Virtualization data structures. Negligible. |
-| Entitlement | ESXi | Granted + Overhead. |
+| Entitlement | ESXi | Set by the ESXi scheduler. A kernel value. |
 | Consumed | ESXi | Granted - sharing savings, capped by limit. |
 
 - Targets: Zip/Swap Target covers pages before zip and swapped. Balloon Target covers ballooned pages.
@@ -50,7 +50,7 @@
 - Test on a 9.1 lab VM, vCenter Advanced Performance, 20-second samples: the memory reservation was set to a value above the VM's Consumed and Granted, and 16 minutes later removed. Both changes were Reconfigure virtual machine tasks that completed in under a second.
 - None of the VM counters moved at either change: Consumed, Granted, Overhead consumed, Ballooned memory and Entitlement kept their level and their ordinary sample-to-sample noise. Ballooned memory stayed 0.
 - The reservation was above Consumed and Granted: a reservation does not make ESXi back the pages. Consumed rises only as the guest touches memory.
-- Entitlement did not rise to the reservation. It kept following Consumed while Granted stayed flat ([VM Memory Entitlement](../virtual-motherboard/entitlement.md)).
+- Entitlement did not rise to the reservation ([VM Memory Entitlement](../virtual-motherboard/entitlement.md)).
 - The reservation shows in the host counters Reservation consumed and Reservation available, which moved by the amount of the change ([ESXi memory metrics compared](host-memory-metrics.md), section VM reservation across counters).
 - To see a reservation on a VM, read its configuration (Edit Settings, or the task and event log). None of the memory counters on the lab VM chart carried it. The vSphere Client records each change as a task event that names the old and the new value: `config.memoryAllocation.reservation: <old> -> <new>` (MB).
 
