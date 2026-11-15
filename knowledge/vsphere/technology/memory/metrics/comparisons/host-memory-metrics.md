@@ -47,6 +47,7 @@
 
 - Reason: Consumed, Granted and VMkernel consumed count pages in use. A reservation change by itself does not change the pages the host holds, so a VM reservation is in none of them.
 - A VM reservation therefore shows only in the reservation counters. A host can hold large reservations and show a low Consumed.
+- Operational use: Reservation available is the figure that decides whether a new reservation or power-on fits (admission control). Total reservation is a constant of the host: nothing to alert or trend on. Reservation consumed is the sum of the running VMs' reservations: a planning figure, not a measure of use.
 - The kernel reservation (System Resource Reservation, about 4.2 GB on the lab host) is in none of these seven counters; it is host/system Resource memory allocation minimum ([overhead](../../../../architecture/overhead.md), section Memory metrics).
 
 ## Misconceptions

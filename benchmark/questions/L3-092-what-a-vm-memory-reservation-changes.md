@@ -38,7 +38,7 @@ Which statements are correct?
 
 ## Notes
 - Pair with 0442 (practical: the same fact on a VM chart and the task list). A fact gets two questions at most (design.md, section 3.9).
-- No option rests on whether Reservation consumed counts the reservation as set or only the touched part (author question Q231, future release): D and the key read the same under both readings. No option uses Entitlement, a kernel value with no operations use (Q230, answered 2026-11-15).
+- No option rests on whether Reservation consumed counts the reservation as set or only the touched part (Q231, answered 2026-11-15: counted as set): D and the key hold under either reading. No option uses Entitlement, a kernel value with no operations use (Q230, answered 2026-11-15).
 - Distinct from 0014 (a memory reservation is backed as pages are touched, with a CPU reservation as the contrast): this question asks which counters take a reservation change.
 - Evidence behind C, D, E and F (E: Overhead consumed): the author's lab test of 2026-11-15, one VM, the reservation set and later removed (knowledge: vm-memory-metrics, section VM reservation across counters; host-memory-metrics, section VM reservation across counters).
 - Written 2026-11-15 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).

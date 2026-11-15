@@ -288,14 +288,6 @@ Each entry has:
 
 ## Future release
 
-### Q231 · Memory > ESXi > Reservation consumed · A 820 MB step on a 1 GB VM
-
-- Files: [ESXi Memory Reservation counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/reservation.md) (review note, section Counter scope).
-- Search: not from the book; the lab exports of 2026-11-15.
-- Question: low priority, not blocking. The files say host Reservation consumed counts a VM's reservation as set: one 8 GiB VM that had consumed 5.5 GiB raised it by exactly 8,192 MB. An earlier step of 820 MB (about 03:59 UTC, 11:59 local) on a 1 GB VM does not fit. Only if you remember it: what reservation did you set on the 1 GB VM? (A) 1 GB, so the counter counted touched pages there; (B) about 820 MB, so as set; (C) do not remember: drop it.
-- Written as now: "counted as set", with a review note naming the open step. No screenshot or CSV needed.
-- Answer:
-
 ### Q216 · CPU > NUMA > Virtual NUMA · Topology rebuild and `numa.autosize.once` in vSphere 9.1 (lab checks)
 
 - Files: [Virtual NUMA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/virtual-numa.md) (Topology initialization, Misconceptions); [project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md) (section 4).
