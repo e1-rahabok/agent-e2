@@ -1,3 +1,5 @@
+> **NOT DIGESTED.** Kept for a future release. Nothing from this note is in `knowledge/`: Linux KVM is a competitor product, out of scope for release 1.0 (project/plan.md, Not doing; project/knowledge-rules/placement.md). Decision: author, 2026-11-15 (Q229). Do not write knowledge from it without a new decision.
+
 # Linux KVM Memory Architecture — Ballooning and Limits
 
 ## 1. Memory Translation & Accounting Architecture
