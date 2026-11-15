@@ -29,25 +29,14 @@ The virtualization layers added by VMware ESXi—including the PVSCSI virtual de
 
 Despite passing through a virtualized environment, there are only **three physical hardware locations** where the data payload resides.
 
-```
-+-------------------------------------------------------------------------+
-| SPACE 1: Host System RAM (Physical DRAM Frame)                          |
-| [ Guest RAM (GPA) mapped directly to Host RAM (HPA) via CPU EPT/NPT ]   |
-+-------------------------------------------------------------------------+
-                                     |
-                                     |  Physical Hop #1: Physical PCIe Bus DMA Read
-                                     v
-+-------------------------------------------------------------------------+
-| SPACE 2: Physical Storage Controller Memory                             |
-| [ Onboard NVMe Controller / Host Bus Adapter DRAM / SRAM Cache Buffer ] |
-+-------------------------------------------------------------------------+
-                                     |
-                                     |  Physical Hop #2: Flash Controller Write Execution
-                                     v
-+-------------------------------------------------------------------------+
-| SPACE 3: Physical Storage Media                                         |
-| [ Non-Volatile NAND Flash Memory Cells on Motherboard SSD ]             |
-+-------------------------------------------------------------------------+
+```mermaid
+flowchart TD
+    S1["SPACE 1: Host system RAM (physical DRAM frame)<br/>Guest RAM (GPA) mapped to host RAM (HPA) via CPU EPT or NPT"]
+    S2["SPACE 2: Physical storage controller memory<br/>Onboard NVMe controller or HBA DRAM or SRAM cache"]
+    S3["SPACE 3: Physical storage media<br/>Non-volatile NAND flash cells on motherboard SSD"]
+
+    S1 -->|"Physical hop 1: PCIe bus DMA read"| S2
+    S2 -->|"Physical hop 2: flash controller write"| S3
 ```
 
 ### Memory Address Translation (GPA to HPA)
@@ -63,24 +52,27 @@ Despite passing through a virtualized environment, there are only **three physic
 
 This section traces a single SCSI write command from an application inside a VM down to the physical SSD.
 
-```
-[ GUEST OS - USER SPACE ]
-  └── 1. Application (SQL / Database)  -> Calls Write API with O_DIRECT / FILE_FLAG_NO_BUFFERING
-[ GUEST OS - KERNEL SPACE ]
-  ├── 2. Guest OS File System          -> Translates offset to Guest Logical Block Address (LBA)
-  ├── 3. Guest Block Layer             -> Packages request into Guest I/O packet (bio / IRP)
-  └── 4. Guest PVSCSI Driver           -> Writes request descriptor into PVSCSI Command Ring (Shared RAM)
-                                          Rings virtual controller Doorbell via MMIO / Hypercall
------------------------------------ VIRTUALIZATION BOUNDARY -----------------------------------
-[ HYPERVISOR - VMM & VMKERNEL ]
-  ├── 5. VMM / Virtual Device Layer    -> Intercepts PVSCSI MMIO doorbell write.
-  │                                       Translates Guest Physical Address (GPA) to Host Physical Address (HPA).
-  ├── 6. VMFS File System Layer        -> Translates file-relative LBA (.vmdk offset) 
-  │                                       into VMFS Volume Physical Block Address (PBA).
-  ├── 7. VMkernel Storage Core (FSS)   -> Schedules SCSI command block (`scsi_cmnd`) in VMkernel queue.
-  ├── 8. PSA / HPP Path Management     -> Pluggable Storage Architecture / High Performance Plug-in routes request.
-  └── 9. Physical Native Driver        -> Converts command to hardware protocol (e.g., nvme-pcie / vmw_ahci),
-                                          writes to physical PCIe Submission Queue, rings hardware Doorbell.
+```mermaid
+flowchart TD
+    subgraph GuestUser["Guest OS - user space"]
+        N1["1. Application (SQL / Database)<br/>Write API with O_DIRECT or FILE_FLAG_NO_BUFFERING"]
+    end
+    subgraph GuestKernel["Guest OS - kernel space"]
+        N2["2. Guest file system<br/>Offset to guest LBA"]
+        N3["3. Guest block layer<br/>Packages request into bio or IRP"]
+        N4["4. Guest PVSCSI driver<br/>Writes descriptor to PVSCSI command ring in shared RAM<br/>Rings virtual doorbell via MMIO or hypercall"]
+    end
+    subgraph Hypervisor["Hypervisor - VMM and VMkernel"]
+        N5["5. VMM / virtual device layer<br/>Intercepts doorbell, translates GPA to HPA"]
+        N6["6. VMFS file system layer<br/>.vmdk offset to VMFS physical block address"]
+        N7["7. VMkernel storage core (FSS)<br/>Schedules scsi_cmnd in VMkernel queue"]
+        N8["8. PSA / HPP path management<br/>Routes request"]
+        N9["9. Physical native driver<br/>Converts to hardware protocol (nvme-pcie, vmw_ahci)<br/>Writes PCIe submission queue, rings hardware doorbell"]
+    end
+
+    N1 --> N2 --> N3 --> N4
+    N4 -->|"Virtualization boundary"| N5
+    N5 --> N6 --> N7 --> N8 --> N9
 ```
 
 ### Component Breakdown: Program vs. Memory Context
@@ -105,21 +97,13 @@ In a virtualized ESXi environment, storage queue statistics are monitored using 
 
 Unlike bare-metal operating systems which measure queue depth at a single driver boundary, ESXi breaks down latency and queuing across **four distinct layers**:
 
-```
-[ Guest OS Application ]
-        |
-        |--- GAVG (Guest Total Average Latency)
-        v
-+--------------------------------------------------+
-| ESXi VMkernel Storage Stack                      |  <-- QAVG (Queue Latency)
-| (PSA / HPP / Device Driver Queues)               |  <-- KAVG (Kernel Latency = QAVG + Stack Overhead)
-+--------------------------------------------------+
-        |
-        |--- DAVG (Device Latency)
-        v
-+--------------------------------------------------+
-| Physical Storage Hardware / Controller / Disk    |
-+--------------------------------------------------+
+```mermaid
+flowchart TD
+    G["Guest OS application<br/>GAVG: total round trip seen by the VM"]
+    K["ESXi VMkernel storage stack (PSA / HPP / device driver queues)<br/>QAVG: time waiting in VMkernel queues<br/>KAVG: kernel latency = QAVG + stack overhead"]
+    D["Physical storage hardware, controller, disk<br/>DAVG: device latency"]
+
+    G --> K --> D
 ```
 
 ### Key Latency & Queue Formulas in `esxtop`
@@ -144,4 +128,3 @@ $$
 * **High `DAVG` ($> 10\text{–}15\text{ ms}$), Low `KAVG`:** The physical storage drive or hardware controller is saturated or experiencing physical bottlenecks.
 * **High `KAVG` / `QAVG` ($> 2\text{–}5\text{ ms}$), Low `DAVG`:** The hypervisor software queues are throttling requests. This usually occurs when the VM’s concurrent requests exceed configured device queue depths (e.g., `pvscsi` queue depth or `Disk.SchedNumReqOutstanding`).
 
-```

@@ -26,25 +26,14 @@ To understand Windows storage performance and metrics, the system architecture m
 
 There are only **three distinct physical spaces** where the data block resides during the lifetime of a write operation.
 
-```
-+-------------------------------------------------------+
-| SPACE 1: Host System Memory (RAM)                     |
-| [ SQL Server Buffer Pool Memory (Pinned by OS MDL) ]  |
-+-------------------------------------------------------+
-                           |
-                           |  Physical Hop #1: PCIe Bus DMA Read
-                           v
-+-------------------------------------------------------+
-| SPACE 2: Storage Controller Memory                    |
-| [ Onboard NVMe / Controller SRAM / DRAM Cache ]      |
-+-------------------------------------------------------+
-                           |
-                           |  Physical Hop #2: Internal Write Execution
-                           v
-+-------------------------------------------------------+
-| SPACE 3: Physical Storage Media                       |
-| [ Non-Volatile NAND Flash Cells / Magnetic Platters ] |
-+-------------------------------------------------------+
+```mermaid
+flowchart TD
+    S1["SPACE 1: Host system memory (RAM)<br/>SQL Server buffer pool memory, pinned by OS MDL"]
+    S2["SPACE 2: Storage controller memory<br/>Onboard NVMe or controller SRAM or DRAM cache"]
+    S3["SPACE 3: Physical storage media<br/>NAND flash cells or magnetic platters"]
+
+    S1 -->|"Physical hop 1: PCIe bus DMA read"| S2
+    S2 -->|"Physical hop 2: internal write execution"| S3
 ```
 
 ### Space 1: Host System RAM (User Buffer Pool)
@@ -72,18 +61,22 @@ There are only **three distinct physical spaces** where the data block resides d
 
 While the data payload resides statically in Space 1 waiting for the DMA engine, the host CPU executes software logic down the Windows driver stack to build the instructions required by the storage controller.
 
-```
-[ User Space ]
-  └── 1. sqlservr.exe               -> Calls WriteFile() with buffer pointer & offset
-[ Kernel Space ]
-  ├── 2. ntdll.dll / ntoskrnl.exe    -> System Call Transition & IRP Allocation
-  ├── 3. I/O Manager                -> Creates IRP, locks memory pages (MDL)
-  ├── 4. ntfs.sys / refs.sys        -> File offset -> Logical Cluster Number (LCN)
-  ├── 5. volmgr.sys                 -> LCN -> Volume Logical Block Address (LBA)
-  ├── 6. partmgr.sys                -> Tracks queue metric! Partition LBA -> Disk LBA
-  ├── 7. disk.sys                   -> Builds SCSI / Storage Request Block (SRB)
-  ├── 8. storport.sys               -> Adapter queue management & protocol binding
-  └── 9. stornvme.sys               -> Translates SRB to NVMe SQ entry & rings Doorbell
+```mermaid
+flowchart TD
+    subgraph User["User space"]
+        W1["1. sqlservr.exe<br/>WriteFile() with buffer pointer and offset"]
+    end
+    subgraph Kernel["Kernel space"]
+        W2["2. ntdll.dll / ntoskrnl.exe<br/>System call transition and IRP allocation"]
+        W3["3. I/O Manager<br/>Creates IRP, locks pages with MDL"]
+        W4["4. ntfs.sys / refs.sys<br/>File offset to logical cluster number (LCN)"]
+        W5["5. volmgr.sys<br/>LCN to volume LBA"]
+        W6["6. partmgr.sys<br/>Volume LBA to disk LBA, partition queue metric tracked here"]
+        W7["7. disk.sys<br/>IRP to storage request block (SRB)"]
+        W8["8. storport.sys<br/>Adapter queue management and protocol binding"]
+        W9["9. stornvme.sys<br/>SRB to NVMe SQ entry, rings doorbell"]
+    end
+    W1 --> W2 --> W3 --> W4 --> W5 --> W6 --> W7 --> W8 --> W9
 ```
 
 ### Component Breakdown: Program vs. Space
@@ -123,4 +116,3 @@ Where:
 ### Why the Metric Can Be Misleading
 * **It does not mean files are waiting in a line:** A high queue length (e.g., Queue Length = 32 on modern NVMe drives) usually means the storage controller's hardware interface (which can handle 64,000 parallel queues) is executing 32 requests concurrently in hardware.
 * **It measures instruction metadata concurrency, not data size:** An IRP for a $4\text{ KB}$ write and an IRP for a $1\text{ MB}$ write both equal exactly $1.0$ in queue length count while active.
-```

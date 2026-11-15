@@ -26,32 +26,23 @@ The state machine consists of five discrete operational states: **High**, **Clea
 
 Hysteresis ensures that temporary memory allocation spikes do not cause rapid oscillation ("flapping") between memory states.
 
-```
-       [ HIGH STATE ]  (Normal Execution)
-             |
-   Free RAM  | Drop below 300% minFree
-   Decreases v
-       [ CLEAR STATE ] (Page Splitting Active)
-             |
-   Free RAM  | Drop below 64% minFree
-   Decreases v
-       [ SOFT STATE ]  (Ballooning Active)
-             |
-   Free RAM  | Drop below 32% minFree
-   Decreases v
-       [ HARD STATE ]  (Compression & Hypervisor Swapping Active)
-             |
-   Free RAM  | Drop below 16% minFree
-   Decreases v
-       [ LOW STATE ]   (Allocations Blocked)
+```mermaid
+flowchart TD
+    HIGH["HIGH STATE<br/>Normal execution"]
+    CLEAR["CLEAR STATE<br/>Page splitting active"]
+    SOFT["SOFT STATE<br/>Ballooning active"]
+    HARD["HARD STATE<br/>Compression and hypervisor swapping active"]
+    LOW["LOW STATE<br/>Allocations blocked"]
 
-=======================================================
-RECOVERY REVERSE PATH (Requires higher % to step up):
-- LOW   --> HARD:  Recovery above 24% minFree
-- HARD  --> SOFT:  Recovery above 48% minFree
-- SOFT  --> CLEAR: Recovery above 100% minFree
-- CLEAR --> HIGH:  Recovery above 400% minFree
-=======================================================
+    HIGH -->|"Free RAM drops below 300% minFree"| CLEAR
+    CLEAR -->|"Free RAM drops below 64% minFree"| SOFT
+    SOFT -->|"Free RAM drops below 32% minFree"| HARD
+    HARD -->|"Free RAM drops below 16% minFree"| LOW
+
+    LOW -.->|"Recovery above 24% minFree"| HARD
+    HARD -.->|"Recovery above 48% minFree"| SOFT
+    SOFT -.->|"Recovery above 100% minFree"| CLEAR
+    CLEAR -.->|"Recovery above 400% minFree"| HIGH
 ```
 
 ---
