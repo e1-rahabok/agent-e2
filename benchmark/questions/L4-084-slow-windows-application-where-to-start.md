@@ -35,8 +35,8 @@ Which statements are correct?
 - F true: with no wait in Windows, or every vCPU busy, or a disk queue with high VM disk latency, the wait is below Windows: read the VM.
 - G true: a busy vCPU can be waiting for a physical thread; Windows cannot see it.
 - H true: the two layers are separate; the VM and ESXi cannot see Windows' queues.
-- I false: a queue with idle vCPUs gets worse with more vCPUs (more context switching); read the queues before any change.
-- J false: queue high with idle vCPUs means locks, threads that cannot run in parallel or kernel work; more vCPUs make it worse.
+- I false: a queue with idle vCPUs does not drain through more vCPUs and can grow (more context switching); read the queues before any change.
+- J false: queue high with idle vCPUs means locks, threads that cannot run in parallel or kernel work; more vCPUs do not shorten it and can lengthen it.
 - K false: binaries, memory-mapped files and prefetch cause page-in; look for page-in and page-out together with a high disk queue.
 - L false: IO waiting in the Windows queue (filter driver, antivirus, application) never reaches the VM, so VM disk latency stays low.
 

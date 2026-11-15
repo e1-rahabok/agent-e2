@@ -9,7 +9,7 @@
 
 Which statements are correct?
 
-- A. Reduce the VM toward what the guest uses, for example 8 vCPUs, so that Ready and Co-stop fall.
+- A. Reduce the VM toward what the guest uses, for example 8 vCPUs, which tends to lower Ready and Co-stop; read both again after the change.
 - B. Add the 8 vCPUs: a Net Run of 9% per vCPU shows the vCPUs are saturated.
 - C. Co-stop of 3% shows the database threads wait on each other inside the guest.
 - D. A vCPU of this VM can be co-stopped at moments when the host has a free thread for it.

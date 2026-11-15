@@ -18,6 +18,12 @@
 - The peak is never below the 5-minute value and never above 15 times it. The ratio reaches 15 only when one sample holds all the queue and the other 14 are zero; the median is about 5.
 - Checked on exports of a 6-vCPU and an 8-vCPU VM (1 day to 1 month). The counter is confirmed per vCPU for both metrics; the 20-second alert in the catalog reads the same per vCPU value (see Thresholds).
 
+## After a change of the vCPU count
+- The total queue is not constant across a resize. Windows counts waiting threads only: total = runnable - running, never below 0. A burst of 18 runnable threads reads 0 on 20 vCPUs and 8 on 10 (0 and 0.8 per vCPU). Linux counts running threads too: 18 on both, and the per vCPU value follows the vCPU count (0.9 and 1.8).
+- The runnable threads move too, in no predictable direction. Fewer vCPUs can lower Ready and Co-stop and, when the VM now fits one NUMA node, remove remote memory, so threads finish sooner. The same cut can raise Ready when default shares halve on a contended host.
+- A vCPU in Ready looks like running to the guest, so it is not in the queue: a queue that did not rise does not show that the VM did not wait. Ready and Co-stop do.
+- So halving the vCPUs does not double the per vCPU value. Compare the same busy hours before and after, against the KPI levels, with Ready, Co-stop, Usage against Demand and N%L ([`sp5-framework/capacity/rightsizing`](../../../sp5-framework/capacity/rightsizing.md), section Before vs after).
+
 ## Thresholds
 - Colour levels per processor: the Guest OS KPI row "Peak vCPU run queue length (count)" in the threshold catalog (one place per number). The VCF Operations value is already per vCPU, so it compares directly with the KPI levels; a PerfMon or `vmstat` total is divided by the vCPU count first.
 - The alert symptoms on these metrics (red above 20 for the 20-second peak, above 4 for the 5-minute value) are tested on the same per vCPU value, so one value works for a VM of any size. 20 per vCPU is high on purpose (a total of 160 threads on 8 vCPUs, 320 on 16): the alert fires only on an extreme queue, to avoid false positives. The KPI turns red at 16. When the alert fires, read the two checks in [`guest-os/guest-os-alerts`](../guest-os-alerts.md), section Guest OS CPU run queue.
@@ -40,6 +46,7 @@
 - "The queue in VCF Operations is the Windows Processor Queue Length" → it is that value divided by the vCPU count. Multiply by the vCPU count to compare it with PerfMon or `vmstat`.
 - "The 20-second peak is 15 times the 5-minute value" → the peak is the highest of 15 samples and the 5-minute value their mean: the ratio runs from 1 to 15.
 - "Queue 53 on 8 vCPUs means add vCPUs" → check vCPU imbalance, processor affinity and kernel time first.
+- "Halving the vCPUs doubles the queue per vCPU" → only if the total stayed the same, and it does not: the Windows total changes with the vCPU count, Ready, Co-stop and NUMA. Verify after the resize.
 - "Threads waiting on a lock lengthen the processor queue" → a blocked thread is in Wait; it joins the queue only when the lock is released.
 
 ## Metadata
@@ -67,6 +74,7 @@ related:
 - guest-os/cpu/windows-cpu-scheduling
 - guest-os/system/concepts/guest-os-sizing
 - guest-os/system/guest-os-performance
+- sp5-framework/capacity/rightsizing
 images:
   - path: ../images/windows-run-queue-peak-vs-99th-percentile-scatter.png
     product: [windows]

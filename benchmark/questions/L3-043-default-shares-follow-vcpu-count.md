@@ -25,7 +25,7 @@ C: a smaller VM gets fewer shares per vCPU, so a downsize makes each vCPU wait l
 - A true: Normal is 1,000 shares per vCPU; 12 vCPUs hold 12,000.
 - B true: a resize in the vSphere Client recalculates default shares from the new vCPU count: 6 x 1,000.
 - C false: the misconception. Each vCPU keeps 1,000 shares; what falls is the VM's total.
-- D true: the total halves while the demand stays at about 5 vCPUs. A VM's shares are shared among its vCPUs, so before the change 12,000 shares covered 5 vCPUs of work; now 6,000 cover the same work. On a contended host its entitlement can fall below its demand: Ready rises and Usage falls below Demand, while the guest run queue stays the same.
+- D true: the total halves while the demand stays at about 5 vCPUs. A VM's shares are shared among its vCPUs, so before the change 12,000 shares covered 5 vCPUs of work; now 6,000 cover the same work. On a contended host its entitlement can fall below its demand: Ready rises and Usage falls below Demand. The guest cannot see that wait, so its run queue need not move.
 - E true: without contention every VM gets its demand; shares act only when demand exceeds supply.
 - F false: over-correction. Downsizing an oversized VM usually lowers Ready and Co-stop, but not when the same work now needs more per vCPU than the VM's shares give it on a contended host.
 - G false: the vCPU count was not the constraint. Raise the VM's shares or move it to a less busy host, then check that Ready falls and Usage meets Demand.

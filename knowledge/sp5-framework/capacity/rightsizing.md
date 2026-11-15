@@ -127,12 +127,14 @@
 
 ## Before vs after
 
-- CPU:
+- Verifying after a resize is a required step. No counter read before the change predicts the CPU counters after it: the guest queue, Ready, Co-stop and NUMA placement each move with the vCPU count, in a direction that depends on the host's load and the application. Agree counters, busy hours and rollback trigger before the change.
+- CPU, same busy hours before and after (include the month-end peak):
   - total CPU use should stay the same;
-  - if CPU cycles (GHz) drop after the change, raise the VM's shares instead of adding vCPUs back. Why: default shares are per vCPU, so halving the vCPUs halves the VM's shares while its demand stays the same. On a contended host the VM then gets less than it demands: Usage falls below Demand and Ready rises, while the guest's total run queue stays the same ([`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../../vsphere/technology/cpu/metrics/virtual-motherboard/ready.md));
-  - load spread across all vCPUs → each remaining vCPU shows higher utilization;
-  - uneven load, vCPUs taking turns → each remaining vCPU shows about the same utilization;
-  - Guest OS CPU run queue: the total should stay the same; if it rises, check the thread states. VCF Operations shows the queue per vCPU, so for the same total it rises in proportion to the cut (16 to 8 vCPUs doubles the value shown) ([`guest-os/cpu/metrics/run-queue`](../../guest-os/cpu/metrics/run-queue.md), section Scale in VCF Operations);
+  - if CPU cycles (GHz) drop after the change, raise the VM's shares instead of adding vCPUs back. Why: default shares are per vCPU, so halving the vCPUs halves the VM's shares while its demand stays the same. On a contended host the VM then gets less than it demands: Usage falls below Demand and Ready rises. The guest cannot see that wait, so its queue need not move ([`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../../vsphere/technology/cpu/metrics/virtual-motherboard/ready.md));
+  - Ready and Co-stop at the 20-second peak: on a wide VM they tend to fall (fewer free threads needed at once), but not when the shares halved on a busy host; read them, never assume the fall;
+  - NUMA, esxtop NHN, NRMEM and N%L: a VM that now fits one node reads one home node and next to no remote memory; a VM still wide, or with memory beyond a node, keeps remote memory ([`vsphere/technology/cpu/concepts/numa`](../../vsphere/technology/cpu/concepts/numa.md));
+  - load spread across all vCPUs → each remaining vCPU shows higher utilization; uneven load, vCPUs taking turns → about the same utilization;
+  - Guest OS CPU run queue, per vCPU in VCF Operations: read it against the KPI levels, not against the value before. Halving the vCPUs does not double it ([`guest-os/cpu/metrics/run-queue`](../../guest-os/cpu/metrics/run-queue.md), section After a change of the vCPU count);
   - context switches rise when the application runs many threads; the rise should be small.
 - Memory:
   - less free memory and more paging in the Guest OS;
@@ -149,6 +151,8 @@
 - "Saving money convinces the owner" → owners paid already; show performance.
 - "Average CPU of large VMs is 40%, so they are oversized" → 40% average with a Max near 80% is a right-sized fleet; below 20% all month is oversized.
 - "CPU cycles dropped after the downsize, so add the vCPUs back" → raise the shares; the vCPU count was not the constraint.
+- "Halve the vCPUs and the queue per vCPU doubles" → the total queue changes with the vCPU count, Ready, Co-stop and NUMA, so no ratio can be predicted. Verify after the resize.
+- "The guest queue did not rise, so the VM does not wait" → a vCPU in Ready looks like running to the guest. Read Ready and Co-stop.
 - "Free memory dropped after the downsize: a problem" → expected; the removed memory was unused.
 - "Start every VM small" → upsizing is harder, slower and NUMA-sensitive; price is the better lever.
 - "Consumed memory stays high, so the VM needs more memory" → memory is a cache: Consumed stays high once pages are touched; that is not demand. VM Active is not a capacity counter. Size a Guest OS from Guest OS counters.
