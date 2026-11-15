@@ -32,7 +32,7 @@ symptoms:
 - id: sym-guest-os-cpu-queue-above-20
   object: VirtualMachine
   layer: guest-os
-  metric: Guest OS Peak CPU Queue
+  metric: Guest OS Peak vCPU Queue
   interval: 20s
   operator: '>'
   value: 20

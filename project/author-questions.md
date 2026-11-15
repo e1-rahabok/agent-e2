@@ -37,13 +37,13 @@ Each entry has:
 - Re-checked 2026-11-14: still the first build step for the real world (guided troubleshooting is a 1.0 requirement, MISSION.md, Ways to ask, 4). In the field a question arrives without options, so the flow tier and the computed path carry more of the answer than in the benchmark.
 - Answer:
 
-### Q232 · Guest OS > Alerts > CPU run queue · Alert value 20 on a per vCPU metric
+### Q234 · Guest OS > CPU > Run queue · Threads waiting for a lock: Ready or Wait?
 
-- Files: [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md) (section Guest OS CPU run queue); [thresholds-alerts.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-alerts.yaml) (`sym-guest-os-cpu-queue-above-20`, alert `alert-guest-os-cpu-queue-red`); [Processor queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/metrics/run-queue.md).
-- Search: "Peak CPU Queue above 10 with Net Run above 75%" is not a string from the book; check the alert table in Guest OS Alerts for the queue value.
-- Question: since Q217 the peak queue is known to be per vCPU. The red symptom above 20 then needs a total of 160 threads on 8 vCPUs, and the KPI turns red at 16 per vCPU. Was 20 written for a total, or for the per vCPU value? (A) per vCPU as written (the alert is rare by design); (B) 20 was a total, so the per vCPU value is lower: give the value to keep (and the optional orange, now half of it); (C) other.
-- Written as now: 20 (red) and the optional orange of 10, both read per vCPU, with a review note; the catalog unit is `count per vCPU`.
-- Expert reading: B is likely, but a new number cannot be invented; it needs your value.
+- Files: [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md) (section Guest OS CPU run queue, step 3); [Processor queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/metrics/run-queue.md) (section Cases, Misconceptions); [Windows CPU scheduling](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/windows-cpu-scheduling.md).
+- Search: "waiting for a Software Lock (like a Mutex or Semaphore)" (author's text in Q232); "marked as \"Ready\" because they aren't waiting on I/O".
+- Question: your text for the alert says threads waiting for a lock are marked Ready. run-queue.md and its misconception say a thread blocked on a lock is in the Wait state and joins the queue (Ready) only when the lock is released; the queue counts Ready threads only. Which holds? (A) a blocked thread is Wait; the queue holds the threads that were woken and are runnable but make no progress (contention on the lock, spinning); (B) threads waiting for the lock are counted in the queue; (C) other.
+- Written as now: A, in both files (alert step 3 and run-queue).
+- Expert reading: A. On Windows a thread blocked on a mutex or semaphore is Waiting; Processor Queue Length counts Ready, Standby and Deferred Ready.
 - Answer:
 
 ### Q233 · Benchmark > L4-077 · Option C (queue unchanged after a downsize) with a per vCPU metric
