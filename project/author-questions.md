@@ -196,6 +196,29 @@ Each entry has:
 - Written as now: an untouched reservation can serve other VMs; admission control counts the full reservation (draft, review note).
 - Answer:
 
+## Future release
+
+### Q235 · Sizing > VM CPU sizing note · Levels and units of the decision matrix
+
+- Files: [VM CPU Sizing Best Practices](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/vm_cpu_sizing_best_practices.md) (Sizing Decision Matrix, Post-Resize Verification); [thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (Guest OS and VM contention rows); [rightsizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (Before vs after).
+- Search: not from the book.
+- Question: the note decides a vCPU count from the 20-second queue, Ready and Co-stop, and verifies with N%L. Four things are not in the knowledge base. (1) Its matrix reads the queue as a total (10, 11-25, above 25 threads), its verification table per vCPU (2-3, above 10): which unit do you keep? (2) Ready above 5% and Co-stop above 3% as the reason to stay at 10 vCPUs: the KPI levels start yellow at 2% Ready and 1% Co-stop at the 20-second peak; keep the KPI levels (A), or a separate sizing rule (B)? (3) N%L above 90% healthy and below 85% a red flag: no vendor level in the knowledge base; give a source or drop it. (4) 14 or 15 vCPUs on a 16-core node to leave headroom for hypervisor interrupts: field experience or a document? Without answers, none of these numbers enters the knowledge base; the decision matrix is not built as a decision tree.
+- Written as now: only the verification step and its checks (rightsizing), no matrix, no N%L level, no headroom rule.
+- Answer:
+
+### Q216 · CPU > NUMA > Virtual NUMA · Topology rebuild and `numa.autosize.once` in vSphere 9.1 (lab checks)
+
+- Files: [Virtual NUMA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/virtual-numa.md) (Topology initialization, Misconceptions); [project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md) (section 4).
+- Search: not from the book; the uploaded NUMA sizing guide, section 4.
+- Question: the guide says ESXi rebuilds the topology at every power cycle; vSphere 9.1 (TechDocs, Using Virtual NUMA) says it "does not change unless the number of vCPUs ... is changed"; p. 1945 lists `numa.autosize.once` (default TRUE). Lab checks, text output (no screenshot):
+  - (a) `numa.allowHotadd`: hardware version 20 or later, 12 or more vCPUs, CPU Hot Add on. Run without and with the option. After each power-on paste `lscpu | grep -i numa` (Linux) or `coreinfo -n` (Windows), and `grep -i numa <vm>.vmx` from the host. Expected from the manual: one node without the option, vNUMA with it.
+  - (b) Persistence: a VM wider than one NUMA node (for example 24 vCPU). Paste guest NUMA output and `grep -i numa <vm>.vmx`; power off; vMotion to a host with a different NUMA node size; power on; paste both again. A changed node count or `numa.autosize.cookie` = the guide holds; unchanged = the manual holds.
+  - (c) `numa.autosize.once`: after the first power-on, is it in the vmx? Add it with FALSE, repeat (b).
+- Settled 2026-11-15 (lab, vSphere 9.1 Edit Settings > Advanced Parameters): the tab offers Add and accepts any attribute with no validation; a VM carries only `numa.autosize.cookie` (20012) and `numa.autosize.vcpu.maxPerVirtualNode` (2) by default, and `numa.autosize.once` is not listed. A key accepted by the UI is not proof that ESXi honors it. A powered-off VM keeps both keys.
+- Written as now: the guide's statements on rebuild at every power cycle and on `numa.autosize.once`; both unverified. Line 13 no longer forbids `numa.*` attributes.
+- Not in release 1.0 (author, 2026-11-15): no benchmark question depends on this (L4-025, L4-088, L4-154 name no `numa.*` option and no rebuild option).
+- Answer:
+
 ### Q124 · Part 1 > Reclamation > TRIM and Unmap · Per datastore
 
 - Files: [ESXi Datastore metrics (host view)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/datastore.md) (section Unmap); [esxtop storage counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/storage.md).
@@ -276,27 +299,4 @@ Each entry has:
   - The frontier reference runs in mode `web` (search available, the model decides; [Q164](author-questions-resolved.md#q164--benchmarkdesignmd-sections-1-and-8--what-frontier-model-means-in-the-claim), Q209), so a URL question tests whether a model agrees with a page it reads.
   - Change if accepted: one URL question per accepted page, multiple choice like every question since Q199 (options: the page's claims and the corrections, each true or false; Level 300); design.md section 3.4.
   - For you: accept or pick from the list; add pages you know to be wrong.
-- Answer:
-
-## Future release
-
-### Q235 · Sizing > VM CPU sizing note · Levels and units of the decision matrix
-
-- Files: [VM CPU Sizing Best Practices](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/vm_cpu_sizing_best_practices.md) (Sizing Decision Matrix, Post-Resize Verification); [thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (Guest OS and VM contention rows); [rightsizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (Before vs after).
-- Search: not from the book.
-- Question: the note decides a vCPU count from the 20-second queue, Ready and Co-stop, and verifies with N%L. Four things are not in the knowledge base. (1) Its matrix reads the queue as a total (10, 11-25, above 25 threads), its verification table per vCPU (2-3, above 10): which unit do you keep? (2) Ready above 5% and Co-stop above 3% as the reason to stay at 10 vCPUs: the KPI levels start yellow at 2% Ready and 1% Co-stop at the 20-second peak; keep the KPI levels (A), or a separate sizing rule (B)? (3) N%L above 90% healthy and below 85% a red flag: no vendor level in the knowledge base; give a source or drop it. (4) 14 or 15 vCPUs on a 16-core node to leave headroom for hypervisor interrupts: field experience or a document? Without answers, none of these numbers enters the knowledge base; the decision matrix is not built as a decision tree.
-- Written as now: only the verification step and its checks (rightsizing), no matrix, no N%L level, no headroom rule.
-- Answer:
-
-### Q216 · CPU > NUMA > Virtual NUMA · Topology rebuild and `numa.autosize.once` in vSphere 9.1 (lab checks)
-
-- Files: [Virtual NUMA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/virtual-numa.md) (Topology initialization, Misconceptions); [project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md) (section 4).
-- Search: not from the book; the uploaded NUMA sizing guide, section 4.
-- Question: the guide says ESXi rebuilds the topology at every power cycle; vSphere 9.1 (TechDocs, Using Virtual NUMA) says it "does not change unless the number of vCPUs ... is changed"; p. 1945 lists `numa.autosize.once` (default TRUE). Lab checks, text output (no screenshot):
-  - (a) `numa.allowHotadd`: hardware version 20 or later, 12 or more vCPUs, CPU Hot Add on. Run without and with the option. After each power-on paste `lscpu | grep -i numa` (Linux) or `coreinfo -n` (Windows), and `grep -i numa <vm>.vmx` from the host. Expected from the manual: one node without the option, vNUMA with it.
-  - (b) Persistence: a VM wider than one NUMA node (for example 24 vCPU). Paste guest NUMA output and `grep -i numa <vm>.vmx`; power off; vMotion to a host with a different NUMA node size; power on; paste both again. A changed node count or `numa.autosize.cookie` = the guide holds; unchanged = the manual holds.
-  - (c) `numa.autosize.once`: after the first power-on, is it in the vmx? Add it with FALSE, repeat (b).
-- Settled 2026-11-15 (lab, vSphere 9.1 Edit Settings > Advanced Parameters): the tab offers Add and accepts any attribute with no validation; a VM carries only `numa.autosize.cookie` (20012) and `numa.autosize.vcpu.maxPerVirtualNode` (2) by default, and `numa.autosize.once` is not listed. A key accepted by the UI is not proof that ESXi honors it. A powered-off VM keeps both keys.
-- Written as now: the guide's statements on rebuild at every power cycle and on `numa.autosize.once`; both unverified. Line 13 no longer forbids `numa.*` attributes.
-- Not in release 1.0 (author, 2026-11-15): no benchmark question depends on this (L4-025, L4-088, L4-154 name no `numa.*` option and no rebuild option).
 - Answer:
