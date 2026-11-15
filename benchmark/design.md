@@ -55,10 +55,10 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 
 | Level | The expert can | Example |
 |---|---|---|
-| 100 | Name and recognise: which counter, which object, which tool | [Device latency in esxtop](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L1-02-esxtop-device-latency-davg.md) |
-| 200 | Define and explain one item in isolation | [Co-stop on a multi-vCPU VM](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-14-co-stop-multi-vcpu.md) |
-| 300 | Apply common practice correctly: read a value, convert a unit, apply a published threshold | [High CPU Wait](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-01-cpu-wait-includes-idle.md) |
-| 400 | Explain the mechanism, know when a reading misleads, and combine several facts or tables to a conclusion | [VM vs Guest OS metrics](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-08-vm-vs-guest-os-metrics.md) |
+| 100 | Name and recognise: which counter, which object, which tool | [Device latency in esxtop](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L1-002-esxtop-device-latency-davg.md) |
+| 200 | Define and explain one item in isolation | [Co-stop on a multi-vCPU VM](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-014-co-stop-multi-vcpu.md) |
+| 300 | Apply common practice correctly: read a value, convert a unit, apply a published threshold | [High CPU Wait](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-001-cpu-wait-includes-idle.md) |
+| 400 | Explain the mechanism, know when a reading misleads, and combine several facts or tables to a conclusion | [VM vs Guest OS metrics](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-008-vm-vs-guest-os-metrics.md) |
 
 - Level 400 is hard and complex, not tricky. It tests knowledge of the system, not reading of English. To stay unambiguous it is often long: the situation, the values, the tool, the time window, and one clear question.
 - Level 400 combines facts inside one answer: several knowledge files, a calculation, a flow, several inputs. There is no back-and-forth with the user; the agent's code does the chaining (the reading plan and the computed facts of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)).
@@ -76,7 +76,7 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 
 - Every question of the run set is deterministic (author, Q199 F, 2026-11-14): exact, cheap, free of scorer bias, and covered by consensus of samples. The judge scored free text unreliably: a 250-word answer scored 0 when one side sentence contradicted a key point, and judged answers carried most of the confident-wrong rate.
 - What options lose, and where it is measured instead: a real administrator asks without options, and options can reward recognition. The guard in the set: many plausible false options, each wrong for a reason the knowledge base states, the Level 300 misconception among them, and exact match of the whole set (section 3.8). The free-text answer itself is measured in the live test, judged by the author.
-- Example, deterministic ([CPU reservation behaviour](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-05-cpu-reservation-behaviour.md)): "Choose all the correct statements" about CPU reservation, options A to G. Key: A, B, C, D. Any other set of letters is wrong.
+- Example, deterministic ([CPU reservation behaviour](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-005-cpu-reservation-behaviour.md)): "Choose all the correct statements" about CPU reservation, options A to G. Key: A, B, C, D. Any other set of letters is wrong.
 - Metadata: `answer_type: deterministic` (lint rejects any other value).
 
 ### 3.4 By input type
@@ -145,7 +145,7 @@ An administrator rarely questions a counter in the abstract. The question comes 
 - Pairs are written where the trap shows on a screen, not for every counter. A practical half whose screenshot does not exist yet waits with status `awaiting-input` and a `## Input to supply` that states the capture its key needs (benchmark/README.md); it does not run until the author supplies the image. A fact gets two questions at most: every question weighs the same (section 3.6).
 - The pairing of the whole set (audit, decisions, the pairs and their captures): [project/question-pairing-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-pairing-2026-11-14.md).
 - Theory options, from the first pair: each option one fact about the mechanism, no option the negation of another, no vague "they differ"; the Level 300 misconception and its over-correction both present; a false option that draws the wrong action from the reading.
-- First pair: [ESXi CPU Demand and Usage: vCenter vs VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-41-esxi-cpu-demand-vcenter-vs-vcf-operations.md) and [ESXi CPU Demand differs between VCF Operations and vCenter](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-130-esxi-cpu-demand-differs-between-tools.md). The practical question is Level 400: it needs arithmetic across three screenshots.
+- First pair: [ESXi CPU Demand and Usage: vCenter vs VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-041-esxi-cpu-demand-vcenter-vs-vcf-operations.md) and [ESXi CPU Demand differs between VCF Operations and vCenter](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-130-esxi-cpu-demand-differs-between-tools.md). The practical question is Level 400: it needs arithmetic across three screenshots.
 
 ## 4. Sample size
 - The set has no target size. What its size buys is precision, and the report prints it for the set as run: the 95% margin on the final score (`report.py`, `_margin`; the summary README).
