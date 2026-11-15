@@ -1,6 +1,6 @@
 # Export templates: headers, units, formats
 
-Work in progress (2026-11-15). Collected so far: Windows (typeperf, systeminfo, Win32_PageFileUsage) and vCenter real-time, last-day and last-week exports for host and VM (see vcenter-chart-export/README.md). Not yet collected: VCF Operations, esxtop, Linux, and the remaining vCenter objects.
+Work in progress (2026-11-15). Collected so far: Windows (typeperf, systeminfo, Win32_PageFileUsage), vCenter real-time, last-day and last-week exports for host and VM (see vcenter-chart-export/README.md), and VCF Operations metric keys (see the section below). Not yet collected: VCF Operations labels and List export, esxtop, Linux, and the remaining vCenter objects.
 
 ## Windows typeperf
 
@@ -34,3 +34,11 @@ Work in progress (2026-11-15). Collected so far: Windows (typeperf, systeminfo, 
 - VCF Operations metric names and List export: needs the metric picker in the logged-in browser.
 - esxtop batch CSV and the panel screens: the session is in the Terminal panel tab `c1`; keys cannot be typed into it from here.
 - Linux: sun05-webmin01 is Ubuntu Linux (64-bit) and powered on, but no login was made to it, so `top`, `sar`, `iostat` and the other Linux outputs are not collected.
+
+## VCF Operations (metric keys)
+
+- Folder: [vcf-operations/](vcf-operations/), with [README.md](vcf-operations/README.md) (what was read, the requested metric mapping, and what is missing).
+- Names are the suite API's keys, for example `cpu|readyPct`, `mem|balloonPct`, `guest|cpu_queue`, `virtualDisk:scsi0:0|totalReadLatency_average`. The screen label (metric picker) is not in the API and is not yet captured.
+- Version: VCF Operations 9.1.1.0 (as the API reports it).
+- Not found: VM Decompression Rate; an exact Network Peak Transmitted Packet Dropped.
+- Not collected yet: the List export, the metric picker labels, time stamp and delimiter of the VCF Operations CSV export (need an export from the UI).

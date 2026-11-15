@@ -1,0 +1,266 @@
+badge|compliance
+badge|efficiency
+badge|health
+badge|risk
+badge|workload
+config|hardware|disk_Space
+config|hardware|num_Cpu
+cost|additionalMTDCost
+cost|allocation|allocationBasedCpuMTDCost
+cost|allocation|allocationBasedDailyCpuCost
+cost|allocation|allocationBasedDailyMemoryCost
+cost|allocation|allocationBasedDailyStorageCost
+cost|allocation|allocationBasedMemoryMTDCost
+cost|allocation|allocationBasedStorageMTDCost
+cost|allocation|allocationBasedTotalCost
+cost|dailyAdditionalCost
+cost|demandBasedCpuMTDCost
+cost|demandBasedDailyCpuCost
+cost|demandBasedDailyMemoryCost
+cost|demandBasedDailyStorageCost
+cost|demandBasedMemoryMTDCost
+cost|demandBasedStorageMTDCost
+cost|effectiveCpuMTDCost
+cost|effectiveDailyCost
+cost|effectiveDailyCpuCost
+cost|effectiveDailyMemoryCost
+cost|effectiveDailyStorageCost
+cost|effectiveMemoryMTDCost
+cost|effectiveProjectedTotalCost
+cost|effectiveStorageMTDCost
+cost|effectiveTotalCost
+cost|monthlyProjectedCost
+cost|monthlyTotalCost
+cost|oversizedVMReclaimableCost
+cost|reclaimableCost
+cpu|20_sec_peak_costopPct
+cpu|20_sec_peak_iowaitPct
+cpu|20_sec_peak_overlap
+cpu|20_sec_peak_readyPct
+cpu|capacity_contentionPct
+cpu|corecount_provisioned
+cpu|costopPct
+cpu|demandmhz
+cpu|demandPct
+cpu|effective_limit
+cpu|iowaitPct
+cpu|net_run
+cpu|peak_vcpu_ready
+cpu|peak_vcpu_usage
+cpu|readyPct
+cpu|run_summation
+cpu|swapwaitPct
+cpu|usage_average
+cpu|usagemhz_average
+cpu|usagemhz_average_daily
+cpu|vcpu_usage_disparity
+cpu|vm_capacity_provisioned
+cpu|workload
+datastore:Aggregate of all instances|commandsAveraged_average
+datastore:Aggregate of all instances|totalLatency_average
+datastore:Aggregate of all instances|totalReadLatency_average
+datastore:Aggregate of all instances|totalWriteLatency_average
+datastore:Aggregate of all instances|usage_average
+datastore|demand_oio
+datastore|numberReadAveraged_average
+datastore|numberWriteAveraged_average
+datastore|read_average
+datastore|write_average
+disk:Aggregate of all instances|commandsAveraged_average
+disk|read_average
+disk|usage_average
+disk|write_average
+diskspace-total|workload
+diskspace:232|perDsUsed
+diskspace:232|provisioned
+diskspace|activeNotShared
+diskspace|notshared
+diskspace|provisionedSpace
+diskspace|snapshot
+diskspace|snapshot|used
+diskspace|used
+diskspace|workload
+Guest OS Services|mkInComingConnectionCount
+Guest OS Services|mkKnownServiceCount
+Guest OS Services|mkOutGoingConnectionCount
+Guest OS Services|mkServiceCount
+Guest OS Services|mkUserDefinedServiceCount
+guest|20_sec_peak_contextSwapRate_latest
+guest|20_sec_peak_cpu_queue
+guest|20_sec_peak_disk_queue
+guest|20_sec_peak_page.outRate_latest
+guest|contextSwapRate_latest
+guest|cpu_queue
+guest|disk_queue
+guest|mem.free_latest
+guest|mem.needed_latest
+guest|mem.physUsable_latest
+guest|page.inRate_latest
+guest|page.outRate_latest
+guest|page.size_latest
+guest|swap.spaceRemaining_latest
+guest|tools_running_status
+guest|used_memory
+guestfilesystem:/|capacity
+guestfilesystem:/|percentage
+guestfilesystem:/|usage
+guestfilesystem:/boot/efi|capacity
+guestfilesystem:/boot/efi|percentage
+guestfilesystem:/boot/efi|usage
+guestfilesystem:/boot|capacity
+guestfilesystem:/boot|percentage
+guestfilesystem:/boot|usage
+guestfilesystem|capacity_total
+guestfilesystem|percentage_total
+guestfilesystem|usage_total
+mem-host|workload
+mem:NVMe|bandwidth.read_latest
+mem:NVMe|bandwidth.write_latest
+mem|20_sec_peak_host_contentionPct
+mem|active_average
+mem|balloonPct
+mem|compressed_average
+mem|consumed_average
+mem|consumed_average_daily
+mem|consumedPct
+mem|effective_limit
+mem|guest_activePct
+mem|guest_demand
+mem|guest_provisioned
+mem|guest_usage
+mem|host_contentionPct
+mem|host_demand
+mem|nonzero_active
+mem|overhead_average
+mem|overheadMax_average
+mem|reservation_used
+mem|swapinRate_average
+mem|swapoutRate_average
+mem|swapped_average
+mem|usage_average
+mem|vmMemoryDemand
+mem|workload
+net:4000|droppedRx_summation_sum
+net:4000|packetsRx_summation_sum
+net:4000|packetsTx_summation_sum
+net:4000|received_average
+net:4000|transmitted_average
+net:Aggregate of all instances|droppedPct
+net:Aggregate of all instances|packetsRxPerSec
+net:Aggregate of all instances|packetsTxPerSec
+net:vmnic0|packetsRx_summation_sum
+net:vmnic0|packetsTx_summation_sum
+net:vmnic0|received_average
+net:vmnic0|transmitted_average
+net:vmnic1|packetsRx_summation_sum
+net:vmnic1|packetsTx_summation_sum
+net:vmnic1|received_average
+net:vmnic1|transmitted_average
+net:vmnic2|packetsRx_summation_sum
+net:vmnic2|packetsTx_summation_sum
+net:vmnic2|received_average
+net:vmnic2|transmitted_average
+net:vmnic3|packetsRx_summation_sum
+net:vmnic3|packetsTx_summation_sum
+net:vmnic3|received_average
+net:vmnic3|transmitted_average
+net|20_sec_peak_packetsPerSec
+net|20_sec_peak_usage_average
+net|broadcastTx_summation
+net|broadcastTx_summation_sum
+net|droppedRx_summation_sum
+net|droppedTx_summation
+net|droppedTx_summation_sum
+net|droppedTxPct_max
+net|multicastTx_summation
+net|multicastTx_summation_sum
+net|packetsRx_summation_sum
+net|packetsTx_summation_sum
+net|received_average
+net|transmitted_average
+net|usage_average
+OnlineCapacityAnalytics|capacityRemainingPercentage
+OnlineCapacityAnalytics|cpu|capacityRemaining
+OnlineCapacityAnalytics|cpu|recommendedSize
+OnlineCapacityAnalytics|cpu|timeRemaining
+OnlineCapacityAnalytics|diskspace|capacityRemaining
+OnlineCapacityAnalytics|diskspace|recommendedSize
+OnlineCapacityAnalytics|diskspace|timeRemaining
+OnlineCapacityAnalytics|mem|capacityRemaining
+OnlineCapacityAnalytics|mem|recommendedSize
+OnlineCapacityAnalytics|mem|timeRemaining
+OnlineCapacityAnalytics|timeRemaining
+performance|number_of_kpis_breached
+power|energy_summation_sum
+rescpu|actav1_latest
+rescpu|actav5_latest
+storage|totalReadLatency_average
+storage|totalWriteLatency_average
+summary|availability_kpi
+summary|idle
+summary|oversized
+summary|oversized|memory
+summary|oversized|potentialMemConsumed
+summary|oversized|vcpus
+summary|poweredOff
+summary|running
+summary|snapshot_count
+summary|snapshot_non_native_count
+summary|snapshot_non_native_space_used
+summary|snapshot_space_used
+summary|snapshotSpace
+summary|undersized
+summary|undersized|memory
+summary|undersized|vcpus
+Super Metric|sm_1cd5caa5-e8d8-48f8-b02b-c233fd8d235e
+Super Metric|sm_77c9b561-8a30-496c-80bc-4b049bd63b96
+Super Metric|sm_9ee466de-616a-41a9-b573-e8513e646ea3
+Super Metric|sm_b3d09238-cad2-4051-af74-d90816c2bfe8
+Super Metric|sm_f4184f6d-e711-4dc2-93ca-941754a135e7
+sys|osUptime_latest
+sys|poweredOn
+sys|uptime_latest
+System Attributes|alert_count_critical
+System Attributes|alert_count_immediate
+System Attributes|alert_count_info
+System Attributes|alert_count_warning
+System Attributes|all_metrics
+System Attributes|availability
+System Attributes|child_all_metrics
+System Attributes|health
+System Attributes|self_alert_count
+System Attributes|total_alarms
+System Attributes|total_alert_count
+vCommunity|Configuration|SCSI Controllers|Count
+vCommunity|Configuration|Share per MB of Memory
+vCommunity|Configuration|Share per vCPU
+vCommunity|Configuration|Share per vCPU (count unit test)
+vCommunity|Guest OS Performance|Guest OS Performance Score
+vCommunity|VM Guest OS KPI
+vCommunity|VM Performance|Memory Zip Swap
+vCommunity|VM Performance|VM Performance Score
+virtualDisk:Aggregate of all instances|commandsAveraged_average
+virtualDisk:Aggregate of all instances|numberReadAveraged_average
+virtualDisk:Aggregate of all instances|numberWriteAveraged_average
+virtualDisk:Aggregate of all instances|totalLatency
+virtualDisk:Aggregate of all instances|totalReadLatency_average
+virtualDisk:Aggregate of all instances|totalWriteLatency_average
+virtualDisk:Aggregate of all instances|usage
+virtualDisk:Aggregate of all instances|vDiskOIO
+virtualDisk:scsi0:0|actualUsage
+virtualDisk:scsi0:0|numberReadAveraged_average
+virtualDisk:scsi0:0|numberWriteAveraged_average
+virtualDisk:scsi0:0|read_average
+virtualDisk:scsi0:0|totalReadLatency_average
+virtualDisk:scsi0:0|totalWriteLatency_average
+virtualDisk:scsi0:0|write_average
+virtualDisk|20_sec_peak_totalLatency_average
+virtualDisk|peak_vDisk_iops
+virtualDisk|peak_vDisk_readLatency
+virtualDisk|peak_vDisk_writeLatency
+virtualDisk|read_average
+virtualDisk|write_average
+vmop|vmotion|total_failures
+vmop|vmotion|total_successes
+vsan_dp|local_protection|is_protected
+vsan_dp|replication|is_protected
