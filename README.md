@@ -111,7 +111,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | Questions | 8 | 18 | 70 | 130 | 226 |
 
 - A question counts in every area it touches, so the area rows add up to more than 226. Current counts: `python3 project/tools/coverage.py`.
-- Retrieval check (2026-11-15, keyword search): Agent E2's reading set holds 84% of the needed files (146 of 226 questions complete). Hybrid search last measured at 80% (117 of 196) before the structure review of 2026-11-14 ([output](benchmark/results/retrieval-2026-11-14/hybrid.md)).
+- Retrieval check (2026-11-15, keyword search, 275 questions): Agent E2's reading set holds 82% of the needed files (171 complete; main file missing on 21); with the question text only, 71% (119 complete; 39). Hybrid search last measured at 80% (117 of 196) before the structure review of 2026-11-14 ([output](benchmark/results/retrieval-2026-11-14/hybrid.md)).
 - Earlier generations (classic and agentic modes) and their results are archived in [`project/archive/`](project/archive) and not compared.
 - Plan, milestones and decisions: [`project/plan.md`](project/plan.md).
 
