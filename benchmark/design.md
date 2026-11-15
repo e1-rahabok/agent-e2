@@ -284,7 +284,7 @@ The frontier model must be able to answer every question from public knowledge. 
 - Why 85%, not 90%: at about 200 questions 85 and 90 still overlap inside the margin (±5); the confident-wrong limit does more for the operator than 5 more points.
 - Reading the gap: within the margin (printed in the report) it is a tie; the paired test says whether a larger gap is more than luck.
 - Held-out set:
-  - 30 questions drawn at release in the proportions of the run set at that time (level, answer type, input; `coverage.py`), from real questions where the author has them (Q207).
+  - 30 questions drawn at release in the proportions of the run set at that time (level, answer type, input; `coverage.py`). No field set of real operator questions in 1.0 (Q207, 2026-11-15).
   - Written by a session that does not edit the knowledge base, reviewed by the author, never committed to the repository. Run once, on the release configuration.
   - Why drawn at release, not now: a question that exists while the knowledge base is still edited can leak into it. A fresh draw cannot.
   - Why the 11-point limit replaces "within 5 points": on 20-30 questions the noise alone is about ±13 points, so a 5-point rule fails or passes by luck.
