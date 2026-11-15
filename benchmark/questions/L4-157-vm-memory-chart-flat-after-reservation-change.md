@@ -11,8 +11,8 @@ Which statements are correct?
 - A. Consumed did not rise when the reservation was set, so the reservation was not applied.
 - B. The task list shows the reservation set from 0 to 8,192 MB and later back to 0, both tasks completed.
 - C. Entitlement rose to 8 GB while the reservation was set and fell back when it was removed.
-- D. In UTC the changes fall at about 04:06 and 04:22, and Consumed at those minutes stays inside its range for the hour.
-- E. Ballooned memory of 0 all hour shows that the reservation kept ESXi from ballooning the VM.
+- D. In UTC the changes fall at about 04:06 and 04:22, and Consumed never moves by 1% between neighbouring rows, those times included.
+- E. Ballooned memory is 0 only while the reservation is set, so the reservation kept ESXi from ballooning the VM.
 - F. Granted stays below 8 GB in every row, so the VM had touched less memory than it reserved.
 - G. The reservation did nothing, so it can be set on every VM to its full memory at no cost.
 - H. Overhead consumed fell when the reservation was removed, because the reservation had raised it.
@@ -27,8 +27,8 @@ Which statements are correct?
 - A false: a reservation does not back pages, so VM Consumed does not rise with it; the tasks completed.
 - B true: the task events show `config.memoryAllocation.reservation: 0 -> 8192` and later `8192 -> 0`, both Completed.
 - C false: Entitlement stays between 6,359,036 and 6,438,876 KB (about 6.1 GiB) in every row, below 8 GB; it follows Consumed, not the reservation.
-- D true: 12:06 and 12:22 in UTC+8 are 04:06 and 04:22 in UTC; Consumed at those minutes (5,791,872 and 5,814,256 KB) sits inside the hour's range (5,758,392 to 5,830,972 KB).
-- E false: Ballooned memory is 0 before the first change as well; with free host memory nothing was ballooned, so the reservation shows no effect on it.
+- D true: 12:06 and 12:22 in UTC+8 are 04:06 and 04:22 in UTC; the largest change of Consumed between two neighbouring rows in the hour is 0.44%, and the changes at 04:06 and 04:22 are 0.4% or less, so no step shows at either time.
+- E false: Ballooned memory is 0 in every row, before the first change and after the removal too; with free host memory nothing was ballooned, so the reservation shows no effect on it.
 - F true: Granted is flat at 6,356,764 KB (6.06 GiB), below 8 GB (8,388,608 KB); Granted counts the pages the VM has mapped, so the VM had touched less than its reservation.
 - G false: the over-correction. A reservation shows in no VM counter but it counts against the host's unreserved memory at power-on and limits overcommit; it is not free.
 - H false: Overhead consumed is 58,460 KB in every row.
