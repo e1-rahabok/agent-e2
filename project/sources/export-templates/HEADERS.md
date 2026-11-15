@@ -41,7 +41,8 @@ Work in progress (2026-11-15). Collected so far: Windows (typeperf, systeminfo, 
 - Names are the suite API's keys, for example `cpu|readyPct`, `mem|balloonPct`, `guest|cpu_queue`, `virtualDisk:scsi0:0|totalReadLatency_average`. The screen label (metric picker) is not in the API; the labels are in [picker-labels.md](vcf-operations/picker-labels.md), for example `Ready (%)`, `Peak vCPU Ready within collection cycle (%)`, `Balloon (%)`, `Swap In Rate (KBps)`, `Guest Free Memory (KB)`, `Read Latency (ms)`.
 - Version: VCF Operations 9.1.1.0 (as the API reports it).
 - Not found: VM Decompression Rate (the picker has no entry for it); an exact Network Peak Transmitted Packet Dropped.
-- Not collected yet: the List export, and the time stamp, delimiter and quoting of the VCF Operations CSV export.
+- Chart CSV (from the chart's More Actions menu, "Download comma separated data"): title line `<object> - <metric label>`, blank line, header `Date & Time,Value,Low DT,High DT,Smooth,` (trailing comma), then rows `"<Month D, YYYY, H:MM:SS AM/PM GMT+08:00>",<value>,-,-,-,`. Time in the browser's zone; values at full precision, unquoted; 5-minute interval. Sample: [chart-export-sample.csv](vcf-operations/chart-export-sample.csv).
+- Not collected yet: the List view export.
 
 ## esxtop (batch and panels)
 
