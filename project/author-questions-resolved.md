@@ -4,6 +4,14 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q233 · Benchmark > L4-077 · Option C (queue unchanged after a downsize) with a per vCPU metric
+
+- Files: [CPU usage dropped after a downsize](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-077-cpu-usage-dropped-after-downsize.md) (option C, the export 0236); [rightsizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (CPU checks after a change).
+- Search: not from the book.
+- Question: the key says the guest peak queue "should stay the same after a downsize" and the export shows 2-4 in both weeks. VCF Operations shows the queue per vCPU, so halving the vCPUs (16 to 8) with the same total queue doubles the value. Does the export hold the VCF Operations per vCPU value (then a flat value means the total halved, which contradicts a VM waiting more), or a total? (A) rebuild the export as per vCPU, with the value doubling, and reword C to the total; (B) keep the export as a total and say so in the prompt; (C) other.
+- Written as now: knowledge says the total stays the same, per vCPU rises in proportion; the question is unchanged, with a note. Same check for L4-042 ("run queue 2, in total for the 24 vCPUs": the wording says total, so it holds).
+- Answer: (author, 2026-11-15) it depends on NUMA, Ready and Co-stop, so the ratio cannot be predicted; verifying after a sizing change is an essential step of the best practice. Not (A) or (B): the export is rebuilt as the per vCPU value of VCF Operations (fractions, whole multiples of 1/16 and 1/8), and option C is reworded to read the queue against the 2 per processor guideline, not against the value before. Applied: run-queue (new section After a change of the vCPU count: the Windows total is runnable minus running, so 18 threads read 0 on 20 vCPUs and 8 on 10; the runnable threads move with Ready, Co-stop and NUMA; a vCPU in Ready is invisible to the guest), rightsizing (section Before vs after opens with the required verification and its checks; two misconceptions), L4-077 (option C, key point C, notes, export), L3-043 (key point D), L3-021 (option A), L4-084 (key points on adding vCPUs to a queue with idle vCPUs). L4-042 holds: its prompt says the queue is a total.
+
 ### Q232 · Guest OS > Alerts > CPU run queue · Alert value 20 on a per vCPU metric
 
 - Files: [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md) (section Guest OS CPU run queue); [thresholds-alerts.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-alerts.yaml) (`sym-guest-os-cpu-queue-above-20`, alert `alert-guest-os-cpu-queue-red`); [Processor queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/metrics/run-queue.md).

@@ -46,14 +46,6 @@ Each entry has:
 - Expert reading: A. On Windows a thread blocked on a mutex or semaphore is Waiting; Processor Queue Length counts Ready, Standby and Deferred Ready.
 - Answer:
 
-### Q233 · Benchmark > L4-077 · Option C (queue unchanged after a downsize) with a per vCPU metric
-
-- Files: [CPU usage dropped after a downsize](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-077-cpu-usage-dropped-after-downsize.md) (option C, the export 0236); [rightsizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (CPU checks after a change).
-- Search: not from the book.
-- Question: the key says the guest peak queue "should stay the same after a downsize" and the export shows 2-4 in both weeks. VCF Operations shows the queue per vCPU, so halving the vCPUs (16 to 8) with the same total queue doubles the value. Does the export hold the VCF Operations per vCPU value (then a flat value means the total halved, which contradicts a VM waiting more), or a total? (A) rebuild the export as per vCPU, with the value doubling, and reword C to the total; (B) keep the export as a total and say so in the prompt; (C) other.
-- Written as now: knowledge says the total stays the same, per vCPU rises in proportion; the question is unchanged, with a note. Same check for L4-042 ("run queue 2, in total for the 24 vCPUs": the wording says total, so it holds).
-- Answer:
-
 ### Q220 · CPU > Hyper-Threading · Thread Utilization with both threads busy: 100% or 200%?
 
 - Files: [ESXi CPU Usage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/usage.md); [Core Utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md); [Hyper-Threading](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/hyper-threading.md).
@@ -295,6 +287,14 @@ Each entry has:
 - Answer:
 
 ## Future release
+
+### Q235 · Sizing > VM CPU sizing note · Levels and units of the decision matrix
+
+- Files: [VM CPU Sizing Best Practices](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/vm_cpu_sizing_best_practices.md) (Sizing Decision Matrix, Post-Resize Verification); [thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (Guest OS and VM contention rows); [rightsizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (Before vs after).
+- Search: not from the book.
+- Question: the note decides a vCPU count from the 20-second queue, Ready and Co-stop, and verifies with N%L. Four things are not in the knowledge base. (1) Its matrix reads the queue as a total (10, 11-25, above 25 threads), its verification table per vCPU (2-3, above 10): which unit do you keep? (2) Ready above 5% and Co-stop above 3% as the reason to stay at 10 vCPUs: the KPI levels start yellow at 2% Ready and 1% Co-stop at the 20-second peak; keep the KPI levels (A), or a separate sizing rule (B)? (3) N%L above 90% healthy and below 85% a red flag: no vendor level in the knowledge base; give a source or drop it. (4) 14 or 15 vCPUs on a 16-core node to leave headroom for hypervisor interrupts: field experience or a document? Without answers, none of these numbers enters the knowledge base; the decision matrix is not built as a decision tree.
+- Written as now: only the verification step and its checks (rightsizing), no matrix, no N%L level, no headroom rule.
+- Answer:
 
 ### Q216 · CPU > NUMA > Virtual NUMA · Topology rebuild and `numa.autosize.once` in vSphere 9.1 (lab checks)
 
