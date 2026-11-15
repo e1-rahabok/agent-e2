@@ -10,27 +10,26 @@ ESXi manages three distinct memory address spaces for every running Virtual Mach
 
 Hardware-assisted Memory Management Units (Intel Extended Page Tables `EPT` / AMD Nested Page Tables `NPT`) translate `GPA -> HMA` directly in silicon, while VMkernel maintains parallel `pmap` metadata structures to track page ownership, sharing, and reclamation state.
 
-```text
-+-----------------------------------------------------------------------------+
-| GUEST OS                                                                    |
-|   [ Guest Applications / Kernel ]                                           |
-|                 | (Guest Page Tables: GVA -> GPA)                           |
-|                 v                                                           |
-|   [ Guest Physical Address Space (PPNs) ]  <--- Pins PPNs --- [ vmmemctl ]  |
-+-----------------|-------------------------------------------------|---------+
-                  | (Hardware EPT / NPT: PPN -> MPN)                | VMMEMCTL
-==================|=================================================|==========
-| ESXI HYPERVISOR (VMM & VMkernel)                                  | Hypercall
-|                 v                                                 v         |
-|   [ VMkernel Memory Scheduler (memsched) ] <--- Enforces sched.mem.max      |
-|      |                          |                          |                |
-|      | (Active MPNs)            | (Compressed)             | (Evicted)      |
-|      v                          v                          v                |
-| +-----------------+    +------------------+    +-------------------------+  |
-| | Physical DRAM   |    | Compression Cache|    | VM Swap File (.vswp)    |  |
-| | (mem.consumed)  |    | (mem.compressed) |    | (mem.swapped)           |  |
-| +-----------------+    +------------------+    +-------------------------+  |
-+-----------------------------------------------------------------------------+
+```mermaid
+flowchart TD
+    subgraph Guest["Guest OS"]
+        GA["Guest applications and kernel"]
+        PPN["Guest physical address space (PPNs)"]
+        VM["vmmemctl (pins PPNs)"]
+    end
+    subgraph ESXi["ESXi hypervisor (VMM and VMkernel)"]
+        MS["VMkernel memory scheduler (memsched)<br/>Enforces sched.mem.max"]
+        DR["Physical DRAM<br/>mem.consumed"]
+        CC["Compression cache<br/>mem.compressed"]
+        VS["VM swap file .vswp<br/>mem.swapped"]
+    end
+
+    GA -->|"Guest page tables: GVA to GPA"| PPN
+    PPN -->|"Hardware EPT or NPT: PPN to MPN"| MS
+    VM -->|"VMMEMCTL hypercall"| MS
+    MS -->|"Active MPNs"| DR
+    MS -->|"Compressed"| CC
+    MS -->|"Evicted"| VS
 ```
 
 ### Telemetry & Accounting Metrics
@@ -77,20 +76,18 @@ Unlike shares or reservations—which only take effect during host contention—
 ### Step-by-Step Reclamation Flow (`Consumed > Limit`)
 When `sched.mem.max` is lowered below current `mem.consumed` (or when a VM grows toward its limit), VMkernel executes a strict, multi-stage reclamation hierarchy:
 
-```text
-[ mem.consumed > sched.mem.max ]
-               |
-               v
-  1. Transparent Page Sharing (TPS) ---> Deduplicates identical 4 KiB MPNs
-               | (If Consumed still > Limit)
-               v
-  2. Ballooning (vmmemctl) ------------> Guest OS drops cache / uses guest swap
-               | (If vmmemctl missing, capped, or too slow)
-               v
-  3. Memory Compression ---------------> VMkernel compresses 4 KiB MPN -> <=2 KiB
-               | (If incompressible or compression cache full)
-               v
-  4. VMkernel Host Swap (.vswp) -------> VMkernel evicts 4 KiB MPN to storage
+```mermaid
+flowchart TD
+    A["mem.consumed greater than sched.mem.max"]
+    B["1. Transparent page sharing (TPS)<br/>Deduplicates identical 4 KiB MPNs"]
+    C["2. Ballooning (vmmemctl)<br/>Guest drops cache or uses guest swap"]
+    D["3. Memory compression<br/>4 KiB MPN compressed to 2 KiB or smaller"]
+    E["4. VMkernel host swap (.vswp)<br/>VMkernel evicts 4 KiB MPN to storage"]
+
+    A --> B
+    B -->|"Consumed still above limit"| C
+    C -->|"vmmemctl missing, capped or too slow"| D
+    D -->|"Incompressible or compression cache full"| E
 ```
 
 1. **Stage 1 — Transparent Page Sharing (TPS):** VMkernel hashes `4 KiB` `MPN`s (salted intra-VM by default) and collapses identical pages into a single Copy-on-Write (`CoW`) `MPN`.
