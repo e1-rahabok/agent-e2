@@ -90,6 +90,10 @@ Demand = Max (Utilization, Reservation)
 ```
 
 - This Demand is the capacity model, not the vCenter counter `cpu.demand`, which leaves reservations out. ESXi CPU Demand in VCF Operations follows this model per VM (the higher of demand and reservation) and adds the kernel's reservation (ESXi CPU Demand, section vCenter vs VCF Operations).
+- This file is the one home of the capacity model. Two other memory formulas use the word Demand: the VCF Operations formulas and the VM footprint ([`vsphere/technology/memory/concepts/memory-capacity`](../../vsphere/technology/memory/concepts/memory-capacity.md), section Demand).
+- Memory: Utilization per VM is VM Memory Utilization, which reads Guest OS Needed Memory ([`vsphere/technology/memory/metrics/virtual-motherboard/utilization`](../../vsphere/technology/memory/metrics/virtual-motherboard/utilization.md)). ESXi Memory Utilization in VCF Operations follows this model per VM and adds the kernel reservation ([`vsphere/technology/memory/metrics/host/utilization`](../../vsphere/technology/memory/metrics/host/utilization.md), section Formula).
+- The hypervisor follows the same rule as a VM: its reservation counts whether the kernel consumes it or not. VCF Operations adds the kernel reservation for CPU and for memory, not kernel use.
+- VM memory Consumed plus ballooned, compressed and swapped pages is the VM's footprint on ESXi, not this Demand: Consumed holds every page the VM touched, mostly inactive ([`sp5-framework/capacity/vm-footprint-sizing`](vm-footprint-sizing.md), section Memory).
 - A reservation not yet consumed affects capacity, not performance.
 - Example: a VM using 4 GHz with a 5 GHz reservation counts as 5 GHz: the extra 1 GHz is guaranteed to it.
 - Compute per VM, then sum at the ESXi host. A sum of utilization and a sum of reservation taken separately gives a different, wrong number.
@@ -143,6 +147,7 @@ Demand = Max (Utilization, Reservation)
 - "Mixed classes are the most common case, so they are the recommended design" → common because of budget and physical constraints; the design is one class per cluster.
 - "UAT at 70% CPU is fine until 85%" → not wrong but misleading: utilization alone does not close a cluster; read contention and risk.
 - "Utilization is low, so the reservation does not matter" → demand is the higher of utilization and reservation; an unused reservation is still taken.
+- "Memory demand is ESXi Consumed plus what ESXi ballooned, compressed and swapped" → that sum is the footprint of pages ESXi holds or took back, mostly inactive. Memory demand per VM is the higher of VM Memory Utilization and the reservation.
 - "Doubling the CPU shares halves CPU Ready" → no deterministic link between shares or reservation and contention.
 - "Count powered-off VMs in demand to be safe" → powered-on VMs only; counting powered-off VMs makes capacity too conservative.
 - "A thin disk that is not full has free space to give away" → its unwritten part is a reservation in effect: it grows to its configured size.
@@ -174,6 +179,8 @@ internal_derive:
 - vsphere/architecture/resource-controls
 related:
 - vsphere/technology/cpu/metrics/host/demand
+- vsphere/technology/memory/metrics/host/utilization
+- vsphere/technology/memory/concepts/memory-capacity
 - sp5-framework/capacity/capacity-management
 - sp5-framework/capacity/overcommit
 - sp5-framework/capacity/forecasting

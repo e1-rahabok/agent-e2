@@ -31,11 +31,12 @@
 ![Heavily ballooned VM: latency spikes are rare](../images/vm-memory-heavy-balloon-with-rare-latency-spikes.png)
 
 ## Capacity impact
-- A balloon is a request from ESXi, not from the application. Exclude it from Guest OS sizing.
-- It distorts Guest OS sizing, and there is no way to measure the distortion.
-- Guest OS In Use rises when the balloon allocates: the driver is treated like any process.
-- Pages taken from Free: deduct the balloon from In Use.
-- Pages taken from In Use: In Use does not change; the Guest OS pages out. Add Page Out or Cache back.
+- A balloon is a request from ESXi, not from the application: its size says nothing about what the application demands.
+- Guest OS In Use rises when the balloon allocates: the driver is treated like any process, and its pinned pages are neither free nor cache.
+- Pages taken from Free: In Use rises by the balloon size while the application's need does not change.
+- Pages taken from In Use: In Use does not change; the Guest OS paged the data out, and that data is still demand.
+- The Guest OS counters show the balloon size, not how much of it came from Free, so the distortion of Guest OS sizing is bounded by the balloon size but not measured.
+- Sizing rule for ballooned memory (include it, no deduction): [`guest-os/system/concepts/guest-os-sizing`](../../../../guest-os/system/concepts/guest-os-sizing.md), section Ballooned memory in sizing.
 
 ## Ballooned vs compressed and swapped
 - ESXi knows nothing of free memory inside the guest. Compression and swapping pick pages at random. Ballooning lets the guest choose.
@@ -55,7 +56,6 @@
 - "ESXi can balloon any VM" → only a VM with the balloon driver loaded (VMware Tools on Windows, the kernel module on Linux); otherwise the host compresses and swaps.
 - "Ballooned 10 GB, so the guest is slow" → only requested pages cause a hit. Check Latency.
 - "Balloon frees exactly its size in ESXi" → shared pages free less.
-- "Include ballooned memory in Guest OS sizing" → exclude it.
 - "A VM that frees memory and then needs it again gets swapped or ballooned to make room" → no: the guest reuses pages it already has mapped; ESXi is not involved unless the host is under pressure.
 
 ## Metadata
@@ -81,6 +81,7 @@ related:
 - vsphere/technology/memory/concepts/swap-and-compression
 - vsphere/technology/memory/concepts/memory-limit
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
+- guest-os/system/concepts/guest-os-sizing
 images:
   - path: ../images/vm-memory-heavy-balloon-with-rare-latency-spikes.png
     product: [vsphere]

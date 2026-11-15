@@ -29,7 +29,7 @@ D: "Memory usage dropped, so the application released memory." Or F: sizing on t
 
 ## Notes
 - Paired with 0397 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D8.
-- Kept to the two metrics (Usage and Workload). The sizing fallback is in 0022 option E; F here rests on guest-os-sizing (no guest data, no sizing), not on the VCF Operations sizing engine.
+- Kept to the two metrics (Usage (%) and Utilization (KB)). Broadcom KB 390432 states both fallbacks without VMware Tools running: Memory|Utilization (KB) = Memory|Consumed (KB) (B), and Memory|Usage (%) prefers Memory|Non Zero Active (KB) (A); Q228, settled 2026-11-15, kept the Usage (%) formula and removed VM Workload (%) from virtual-motherboard/usage. The sizing fallback is in 0022 option E; F here rests on guest-os-sizing (no guest data, no sizing), not on the VCF Operations sizing engine.
 - Review fixes 2026-11-15: B moved from Workload (%) to Utilization (KB). The VCF Operations 9.1 metric list (TechDocs, Virtual Machine Metrics, updated 2026-11-12, https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/virtual-machine-metrics.html) has no VM Memory|Workload (%); it lists Mem|Utilization (KB) (`mem|vmMemoryDemand`) as the guest OS memory required or the VM's consumption. The fallback to Consumed is in virtual-motherboard/utilization. Key unchanged: A, B, C.
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 

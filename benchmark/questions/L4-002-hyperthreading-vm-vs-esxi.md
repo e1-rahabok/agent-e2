@@ -28,7 +28,7 @@ Which statements are correct?
 - Answer: B, D, E, F, H.
 - A is false: the VMs are fully busy (Run about 100%); the 62.5% is the charge for the shared core, not idle capacity.
 - B is true: Core Utilization is 100% whether one or both threads run; only the thread-level Utilization tells which.
-- C is false: ESXi records the core gain as 1.25x, not 2x; Usage (MHz) at core level reflects that Hyper-Threading benefit.
+- C is false: ESXi CPU Used gives each thread of a busy pair half the core, so the core's Usage (MHz) is its clock speed (times the frequency ratio), not twice it; the 1.25x core gain shows only in the charge to the two VMs.
 - D is true: ESXi sees the core and its 2 threads; with both threads running the core is fully busy (Usage at core level 100%, Core Utilization 100%).
 - E is true: Run is unaware of Hyper-Threading and counts time only; both VMs run all the time.
 - F is true: Used + Latency = 100%; with both threads running Used is 62.5% and Latency 37.5%.
@@ -41,8 +41,9 @@ Which statements are correct?
 ## Notes
 - Tests: Same name, different meaning (consumer vs provider vantage point).
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
-- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): B one fact; H states the charge without negating G; K (the over-correction) is new. Old K (each thread's Utilization about 100%) removed: it rests on open author question Q220 (Thread Utilization with both threads busy). Key changed from B, D, E, F, H, K to B, D, E, F, H (author approved, 2026-11-14).
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): B one fact; H states the charge without negating G; K (the over-correction) is new. Old K (each thread's Utilization about 100%) removed: it rested on open author question Q220 (Thread Utilization with both threads busy). Q220 settled 2026-11-15: each thread reads 100%; no counter adds the two threads of a core. Key changed from B, D, E, F, H, K to B, D, E, F, H (author approved, 2026-11-14).
 - Paired with 0104 (theory and practical, design.md 3.9).
+- Q225 settled 2026-11-15: VM CPU Used (62.5% per vCPU with both threads busy) and ESXi CPU Used (half the core per thread) are two rules; the reason for C changed from core Usage carrying the 1.25x to core Usage at the clock speed. Key unchanged.
 
 ## Metadata
 ```yaml

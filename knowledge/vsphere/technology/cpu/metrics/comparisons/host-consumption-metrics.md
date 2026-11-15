@@ -8,7 +8,7 @@
 - Example: Thread Utilization about 47-55%, Core Utilization about 70%, Usage (%) flat at 100% (older capped version).
 - Same pattern, different sensitivity.
 - Usage (%) is double Thread Utilization: Usage follows cores, not threads, and includes frequency.
-- Usage flat while Thread Utilization moves: the cap, and Hyper-Threading adds only 1.25x per core.
+- Usage flat while Thread Utilization moves: the cap, and a second thread on a busy core adds nothing to ESXi CPU Usage (ESXi CPU Used splits the core in half).
 - Core Utilization sits in the middle: it counts a core as busy with 1 or 2 threads.
 - High load: Thread Utilization 80% → 90%; Core Utilization approaches 100%, the absolute limit; Usage (%) above 100% (Turbo vs base frequency).
 

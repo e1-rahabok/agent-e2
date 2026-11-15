@@ -84,13 +84,24 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 
 | Rule | Reason |
 |---|---|
-| Include cache | Sizing on in-use only leaves no cache or free memory: the guest pages out. Name the result Needed Memory, not Demand. How much cache to include is open. |
+| Include cache | Sizing on in-use only leaves no cache or free memory: the guest pages out. Name the result Needed Memory, not Demand. How much: the cache Windows ranks high stays in; Free, Reserve and Normal Priority cache are left out, except a buffer of 5% of the memory ([`guest-os/memory/windows-memory`](../../memory/windows-memory.md), section Needed Memory). The image's Cache Page (Exclude) is that reclaimable cache. |
 | Exclude page file | Too conservative: In Use already contains cache. Proactive page-in (memory-mapped files) makes unmet demand impossible to isolate. |
-| Include balloon | Conservative. A ballooned page taken from a free guest page is not demand; one taken from a used page is. The two cannot be told apart, so include it. |
+| Include balloon | No deduction: a cut must not shrink a VM the balloon already squeezes. |
 | No fallback to VM metrics | Inaccurate for the guest. |
 | Exclude latency | Memory contention measures speed; sizing measures space. |
 
 - Windows and Linux differ more for memory than for CPU.
+
+## Ballooned memory in sizing
+- This section is the one home of the sizing rule for ballooned memory. The balloon mechanism: [`vsphere/technology/memory/concepts/ballooning`](../../../vsphere/technology/memory/concepts/ballooning.md).
+- Rule: size on Guest OS Needed Memory as VMware Tools reports it, with no deduction for VM Memory Ballooned.
+- The balloon driver allocates its pages inside the Guest OS and pins them (vSphere API 9.1, `mem.vmmemctl`). The Guest OS counts them as in use, neither free nor cache, so Needed Memory, which subtracts Free and the Reserve and Normal Priority cache, already holds them ([`guest-os/memory/windows-memory`](../../memory/windows-memory.md), section Needed Memory).
+- A page the balloon took from Free is not demand: Needed Memory then reads higher than the application needs, by up to the balloon size.
+- A page the balloon took from In Use is demand: the Guest OS paged the data out to make room, and the data still needs memory. A deduction would then read lower than the application needs, by up to the balloon size.
+- The Guest OS counters give the balloon size, not the share of it taken from Free. So the error of inclusion and the error of deduction have the same bound; inclusion errs toward too much memory, deduction toward too little on a VM that is already squeezed.
+- Too much memory costs DIMM; too little costs guest paging and slower work. Sizing takes the cheaper error.
+- One VM can be read by hand: when guest Free fell by about the balloon size while the balloon inflated and guest page-out did not rise, the balloon took free pages, and deducting it is safe for that VM.
+- A balloon is a provider event: host pressure or a limit. The fix for the balloon is on the provider side (the host or the limit), not a smaller Guest OS ([`vsphere/technology/memory/concepts/ballooning`](../../../vsphere/technology/memory/concepts/ballooning.md), section Trigger and requirement).
 
 ## Memory downsizing: which VMs give memory back
 - Contention is excluded from the size, not from the choice of VM. A VM with memory contention above 0 already waits (a limit, or host reclamation); a VM whose guest pages out is already short. Neither gives memory back.
@@ -106,9 +117,29 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 - Microsoft's starting value for one instance: total memory of the OS, minus the thread stack memory (stack size times the calculated max worker threads), minus an allowance for the allocations outside the limit. Microsoft calls the allowance a generic approximation.
 - Windows In Use, the sqlservr.exe working set and VM Active do not show the memory SQL Server needs. In Use and the working set show what the buffer pool grew into. VM Active is a sample of recently touched pages and does not see how SQL Server uses its cache.
 - A cut of the VM memory to the VM Active value removes the cache SQL Server works from: more reads from disk and slower queries. The first change is `max server memory (MB)`, set from the total memory minus what Windows and the other processes need.
-- Finding the size: lower `max server memory (MB)` in steps, watch the SQL Server memory counters and the query times over a full business cycle, and resize the VM after that.
+- Finding the size: lower `max server memory (MB)` in steps, each held over a full business cycle while the SQL Server memory counters and the query times are read, and resize the VM after the last step that held. Method, counters and step rule: section SQL Server max server memory in steps.
 - In a VM, `min server memory (MB)` keeps memory pressure from the host (ballooning) from taking buffer pool memory below what the workload needs. Once SQL Server has used that much, it does not release memory below the value.
 - With the Windows user right Lock pages in memory granted, Microsoft strongly recommends a set `max server memory (MB)`: without it, SQL Server can starve the rest of the system.
+- SQL Server on Linux sets its memory limit with mssql-conf, setting `memory.memorylimitmb` (Microsoft, Monitor memory usage).
+
+## SQL Server max server memory in steps
+- Why steps: the memory SQL Server holds shows what the limit allows, not what the workload needs. Only a lower limit, held over the workload's own cycle, shows whether the cached data was needed.
+- `max server memory (MB)` takes effect at RECONFIGURE, with no restart of SQL Server (Microsoft, Server memory configuration options). A step and its undo are both immediate.
+- Baseline: before the first step, record the counters below over one full business cycle at the current value. Compare each later period with the same period of the baseline (month-end with month-end), because the counters move with the load.
+- Buffer Manager: Page reads/sec: physical database page reads across all databases. A rise after a step means pages that stayed in cache before now come from disk; this is the first counter to read.
+- Buffer Manager: Lazy writes/sec: buffers the lazy writer flushes to make them free. A rise means the smaller buffer pool frees buffers to take in new pages.
+- Buffer Manager: Free list stalls/sec: requests that waited for a free page. A rise means the pool runs out of free buffers.
+- Memory Manager: Memory Grants Pending: processes waiting for workspace memory (sort, hash, index build). A rise means queries wait for memory before they run.
+- Buffer Manager: Page life expectancy: seconds a page stays in the buffer pool without references. It falls with every step, because a smaller pool keeps each page for less time, so a lower level alone is expected. Sudden dips that the baseline did not have show churn: the workload no longer benefits from data already in memory (Microsoft, Monitor memory usage). On a VM with more than one vNUMA node, read Buffer Node: Page life expectancy per node.
+- Query times of the application: the final test. The counters explain a change; the query times decide it.
+- Buffer cache hit ratio is not a step signal: Microsoft states that after a long period of time the ratio moves very little, so a step that raises Page reads/sec can leave it nearly unchanged.
+- Windows Memory: Available Bytes rises by about the size of each step: that memory is what the VM can give back.
+- Step rule: a step holds when, over the full business cycle, Page reads/sec, Lazy writes/sec, Free list stalls/sec and Memory Grants Pending stay at their baseline in the same period, Page life expectancy shows no sudden dips the baseline did not have, and the query times do not lengthen.
+- Step rule: a step that fails any of these is undone at once, without waiting for the end of the cycle. The size is the last value that held; a value between that one and the undone one can be tried in a further cycle.
+- Step size: a choice of method, not a threshold; no Microsoft document gives one. Larger steps take fewer cycles and overshoot further; smaller steps land closer and take more cycles.
+- First step: it can remove at least the low point of Memory Manager: Free Memory (KB) over the baseline cycle. That memory is committed to SQL Server and was unused at every sample of the cycle.
+- Keep `min server memory (MB)` well below the value under test: Microsoft does not recommend setting min and max to the same or nearly the same value.
+- Resizing the VM after the last step: the new `max server memory (MB)`, plus SQL Server memory outside it (thread stacks and the other allocations), plus Windows and the other processes. Then the memory rules of this file apply: Needed Memory, read with SQL Server at its new limit, in the green band.
 
 ## Sizing rules
 | Rule | Reason |
@@ -135,6 +166,7 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 - "Memory contention is excluded from sizing, so ignore it when choosing VMs to downsize" → it is excluded from the size; a VM with contention above 0 already waits and gives nothing back.
 - "Size memory on In Use: that is the demand" → without cache the Guest OS pages and runs slower; size for performance, not only demand.
 - "Size on the average day" → include the peak period and the business cycle; exclude IT load such as backups and scans.
+- "Ballooned memory is a request from ESXi, not from the application, so deduct it before sizing the Guest OS" → the balloon also takes in-use pages, which the guest pages out and still needs. Size on Needed Memory with the balloon in it, so the cut does not shrink a VM the balloon already squeezes.
 
 ## Metadata
 ```yaml
@@ -162,6 +194,7 @@ related:
 - sp5-framework/capacity/rightsizing
 - sp5-framework/capacity/vm-footprint-sizing
 - vsphere/technology/memory/metrics/virtual-motherboard/utilization
+- vsphere/technology/memory/concepts/ballooning
 images:
   - path: ../images/guest-os-sizing-what-to-include-and-exclude.png
     product: [vcf-operations]
@@ -174,12 +207,13 @@ images:
     topic: 'Guest OS sizing'
     image_type: table
 source:
-  document: Knowledge base
+  document: 'Knowledge base; Microsoft Learn, SQL Server documentation (fetched 2026-11-15): Server memory configuration options, Monitor memory usage, SQL Server Buffer Manager object, SQL Server Memory Manager object; vSphere Web Services API 9.1, Memory Counters'
   path: 'Consumer Objects > Capacity: Guest OS > Guest OS Sizing'
 corrections: []
 review_notes:
-- 'Source URL for section ''Applications that manage their own memory'': Microsoft Learn, Server memory configuration options, SQL Server 2022 (ms.date 2025-08-26, updated 2026-10-19), https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/server-memory-server-configuration-options?view=sql-server-ver16. The percentage allowance of the starting value and the recommended share of memory are on that page; no number is repeated here (one place per number: knowledge/catalog).'
-- 'To check (Q193): Section ''Applications that manage their own memory'': lowering max server memory in steps and watching the counters over a business cycle is not on the Microsoft page. SQL Server on Linux uses memory.memorylimitmb: not covered.'
+- 'Source URL for section ''Applications that manage their own memory'': Microsoft Learn, Server memory configuration options, https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/server-memory-server-configuration-options. The percentage allowance of the starting value and the recommended share of memory are on that page; no number is repeated here (one place per number: knowledge/catalog).'
+- 'Source URLs for section ''SQL Server max server memory in steps'': RECONFIGURE with no restart and min and max not at near values, the page above; counters, https://learn.microsoft.com/en-us/sql/relational-databases/performance-monitor/monitor-memory-usage, https://learn.microsoft.com/en-us/sql/relational-databases/performance-monitor/sql-server-buffer-manager-object and https://learn.microsoft.com/en-us/sql/relational-databases/performance-monitor/sql-server-memory-manager-object. The steps, the step rule and the first step are the method of this file, not on those pages.'
+- 'Source URL for section ''Ballooned memory in sizing'': `mem.vmmemctl`, guest memory allocated and pinned by the balloon driver, vSphere Web Services API 9.1, https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html.'
 - 'To check: Section ''VM rightsizing: two jobs'': from another source, section VM Footprint | Guest OS Sizing (screenshot of 2026-11-03 only); check against the full document when it is provided.'
 - 'To check: References not read: https://blogs.vmware.com/management/2020/01/rightsizing-vms-with-vrealize-operations.html and https://blogs.vmware.com/management/2019/09/26212.html'
 status: draft

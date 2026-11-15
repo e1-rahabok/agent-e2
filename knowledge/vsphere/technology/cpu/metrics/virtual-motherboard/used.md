@@ -20,13 +20,10 @@
   - hypervisor work that interrupts the vCPU for other VMs or the system (Overlap): Used is decreased. Kernel work done for this VM (System) is added to VM-level Used.
 - See [`vsphere/technology/cpu/concepts/run-time-vs-run-quality`](../../concepts/run-time-vs-run-quality.md).
 
-## Hyper-Threading examples
-| Scenario | Run | Used |
-|---|---|---|
-| Two VMs share a core, each runs half the time, half of it overlapping | 50% | 40.625% |
-| Both threads busy all the time | 100% | 62.5% |
-
-- See [`vsphere/technology/cpu/concepts/hyper-threading`](../../concepts/hyper-threading.md).
+## Hyper-Threading charge
+- VM CPU Used carries a charge for a shared core: a vCPU is charged less than its Run while the sibling thread runs, and its full Run while the sibling thread is halted.
+- The rate, how it differs from ESXi CPU Used, and the worked examples: [`vsphere/technology/cpu/concepts/hyper-threading`](../../concepts/hyper-threading.md), sections Hyper-Threading accounting: VM CPU Used and ESXi CPU Used; Hyper-Threading accounting: Worked example.
+- The esxtop %USED of a vCPU world is the same charge, per world.
 
 ## Formula
 ```text
@@ -36,7 +33,7 @@ Used (vCPU) = Run - Overlap ± E
 - E combines:
   - Turbo Boost gain. Can be 50% more when other cores in the socket are idle.
   - power-saving loss. Frequency at 40% of nominal: 60% of the CPU time counts as stolen.
-  - SMT loss: 37.5%. ESXi records Hyper-Threading as 1.25x per core, so each thread gets 62.5%.
+  - SMT loss: the charge for a core whose sibling thread runs (section Hyper-Threading charge).
 ![Used vs Run: Overlap removed, System added, adjusted for HT and frequency](../../images/vm-cpu-used-vs-run-overlap-and-system.png)
 
 ## Worlds charged to the VM
@@ -94,6 +91,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/system
 - vsphere/technology/cpu/metrics/virtual-motherboard/overlap
 - vsphere/technology/cpu/troubleshooting/run-vs-used-gap
+- vsphere/tools/esxtop/cpu
 images:
   - path: ../../images/vm-cpu-used-vs-run-overlap-and-system.png
     product: [vsphere]
@@ -103,10 +101,9 @@ images:
 source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > Fair Share Scheduler; CPU Efficiency; CPU > VM > Consumption Metrics > Used | Usage > Used
-corrections:
-- '2026-11-02: the CPU Used metric is buggy. The row ''VM Used HT penalty 37.5% vs ESXi Used 50%'' was removed (section: Notes).'
+corrections: []
 review_notes:
-- Sections Fair Share Scheduler, Hyper-Threading examples, and the last misconception: from CPU > Architecture.
+- Sections Fair Share Scheduler, Hyper-Threading charge, and the last misconception: from CPU > Architecture.
 - 'Sections Formula, Worlds charged to the VM, Unit, Use cases: from CPU > VM.'
 status: draft
 ```

@@ -41,7 +41,7 @@ Which statements are correct?
 
 ## Notes
 - Microsoft, Server memory configuration options: subtract the memory the OS, allocations outside `max server memory`, and other applications need from total physical memory; the default `max server memory` is 2,147,483,647 MB. https://learn.microsoft.com/sql/database-engine/configure-windows/server-memory-server-configuration-options
-- Option G follows guest-os-sizing; its step-down method is not on the Microsoft page and has an open review note there (field experience to confirm).
+- Option G follows guest-os-sizing, section SQL Server max server memory in steps (Q193, settled 2026-11-15): the counters (Page reads/sec, Lazy writes/sec, Free list stalls/sec, Memory Grants Pending, Page life expectancy) and RECONFIGURE without a restart are from Microsoft Learn (Monitor memory usage; Buffer Manager and Memory Manager objects; Server memory configuration options); the steps and the step rule are the method of the file, with no step size from any source. Key unchanged: C, D, E, F, G, H.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
 
 ## Metadata

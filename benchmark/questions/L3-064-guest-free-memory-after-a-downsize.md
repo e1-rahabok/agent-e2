@@ -29,6 +29,7 @@ A: "Free memory dropped after the downsize, so the VM is now short: undo it."
 ## Notes
 - Paired with 0401 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D11.
 - No option sets a paging threshold: windows-memory gives none (judge paging by change and by the application's history).
+- F rests on the formula of VCF Operations VM Memory Usage (%) (virtual-motherboard/usage). VCF Operations 9.1 disables that metric by default (Q228, settled 2026-11-15); the formula, and so F, holds once it is enabled, and Guest|Needed Memory over Mem|Total Capacity gives the same ratio. Key unchanged: B, E, F.
 - Review fixes 2026-11-15: the option stating the expected fall of free memory was dropped, since it was the negation of the misconception (T2); the over-correction is now that contention at 0 proves the size (one fact, not the negation of B). Key A, C, F, G → B, E, F (relettered).
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
