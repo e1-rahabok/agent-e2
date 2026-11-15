@@ -7,7 +7,7 @@ Never index this folder: it contains answer keys.
 
 ```text
 benchmark/
-├── questions/L<level>-<nn>-<slug>.md                 # one question per file, one flat folder
+├── questions/L<level>-<nnn>-<slug>.md                # one question per file, one flat folder
 ├── questions/<id>/                                   # the question's attachments: screenshots, logs, diagrams (only when it has any)
 ├── runner/                                       # Benchmark runner: run.py, run_all.py, preflight.py, health.py, summarize.py, report.py, governor.py, config.yaml
 ├── models.md                                     # candidate models, frontier reference
@@ -22,9 +22,9 @@ benchmark/
   - `product`: every product the question touches (values from [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml));
   - `technology`: every area it touches (cpu, memory, storage, network, system): [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.5.
 - Counts of every tag over the run set: `python3 project/tools/coverage.py`. The set has no target size: it changes as questions are added, rewritten and retired ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3).
-- File name: `L<level>-<nn>-<slug>.md`, numbered from 01 within each level, in id order. The last number of a level is its count.
+- File name: `L<level>-<nnn>-<slug>.md`, three digits, numbered from 001 within each level, in id order. The last number of a level is its count.
 - The id is a 4-digit running number in the metadata only (`id: "0007"`). It never changes and is never reused. The runner and the results use it; people do not need it. A new question takes the next free id, counting the archived questions too.
-- A question that changes level: edit `level:`, then run `python3 project/tools/renumber_questions.py`. It renumbers the files so each level runs from 01 without gaps, and updates the question links in the documents listed in `DOCS` of [project/tools/link_refs.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/link_refs.py). The id, the results and the attachments stay.
+- A question that changes level: edit `level:`, then run `python3 project/tools/renumber_questions.py`. It renumbers the files so each level runs from 001 without gaps, and updates the question links in the documents listed in `DOCS` of [project/tools/link_refs.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/link_refs.py). The id, the results and the attachments stay.
 - Attachments live in a folder named by the id: [benchmark/questions/0007](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/0007).
 - In documents, link a question by its title: `[title](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/<file>)`.
 - Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it, on vSphere 9.1 and the Guest OS layer. Cost and price questions are out of scope.

@@ -1,4 +1,4 @@
-"""Renumber benchmark question files: L<level>-<nn>-<slug>.md, nn from 01 per level, in id order.
+"""Renumber benchmark question files: L<level>-<nnn>-<slug>.md, nnn from 001 per level, in id order.
 
 Run after a question changes level (edit its `level:` first):
     python3 project/tools/renumber_questions.py
@@ -35,7 +35,7 @@ def plan():
     out, count = {}, {}
     for level, qid, f, slug, title in rows:
         count[level] = count.get(level, 0) + 1
-        out[f] = f'L{level // 100}-{count[level]:02d}-{slug}.md'
+        out[f] = f'L{level // 100}-{count[level]:03d}-{slug}.md'
     return out
 
 

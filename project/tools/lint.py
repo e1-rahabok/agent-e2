@@ -159,7 +159,7 @@ def main():
         else: seen_ids[qid] = f
         if 'pair' in (fm or {}): pairs[qid] = (f, str((fm or {}).get('pair') or ''))  # paired questions (benchmark/design.md, section 3.9)
         lv = (fm or {}).get('level')
-        mm = re.match(r'L(\d)-(\d{2,3})-', os.path.basename(f))
+        mm = re.match(r'L(\d)-(\d{3})-', os.path.basename(f))
         if not mm or not isinstance(lv, int) or int(mm.group(1)) != lv // 100:
             bad(f, f'file name must start with L{(lv or 0) // 100}-<nn>- (benchmark/README.md); run project/tools/renumber_questions.py')
         else: level_numbers.setdefault(lv, []).append(int(mm.group(2)))
@@ -251,7 +251,7 @@ def main():
         elif pairs.get(other, (None, None))[1] != qid: bad(f, f'pair "{other}" must point back to "{qid}"')
     for lv, ns in level_numbers.items():
         if sorted(ns) != list(range(1, len(ns) + 1)):
-            bad('benchmark/questions', f'level {lv} file numbers must run 01..{len(ns):02d} without gaps; run project/tools/renumber_questions.py')
+            bad('benchmark/questions', f'level {lv} file numbers must run 001..{len(ns):03d} without gaps; run project/tools/renumber_questions.py')
     sys.path.insert(0, 'project/tools')
     from link_refs import DOCS as LINKED_DOCS, others, bare_ids
     for f in others():

@@ -283,7 +283,7 @@ class StopAndResumeTest(unittest.TestCase):
         import json
         import tempfile
         with tempfile.TemporaryDirectory() as out:
-            r = self.run_py('--models', 'x/one,x/two', '--modes', 'agent-e2', '--runs', '1', '--questions', 'L1-01',
+            r = self.run_py('--models', 'x/one,x/two', '--modes', 'agent-e2', '--runs', '1', '--questions', 'L1-001',
                             '--out', out, '--max-minutes', '0')
             self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
             self.assertIn('--resume', r.stdout)
@@ -569,7 +569,7 @@ class RoundMockTest(unittest.TestCase):
             os.makedirs(os.path.join(out, '20261101-old'))
             open(os.path.join(out, '20261101-old', 'config.json'), 'w').write('{}')
             p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'run_all.py'), '--out', out, '--archive-dir', arch,
-                                '--skip-preflight', '--child-args', '--mock --runs 1 --questions L1-01,L1-02'],
+                                '--skip-preflight', '--child-args', '--mock --runs 1 --questions L1-001,L1-002'],
                                capture_output=True, text=True, env=dict(os.environ, AI_GATEWAY_API_KEY='x'), timeout=300)
             self.assertEqual(p.returncode, X.OK, p.stdout + p.stderr)
             names = sorted(n for n in os.listdir(out))
@@ -592,7 +592,7 @@ class SummarizeTest(unittest.TestCase):
             run = os.path.join(os.path.dirname(__file__), 'run.py')
             for m in ('x/one', 'x/two'):
                 subprocess.run([sys.executable, run, '--mock', '--models', m, '--modes', 'baseline,agent-e2', '--runs', '1',
-                                '--questions', 'L1-01,L1-02,L2-01', '--out', out], capture_output=True, text=True, timeout=300, check=True)
+                                '--questions', 'L1-001,L1-002,L2-001', '--out', out], capture_output=True, text=True, timeout=300, check=True)
             folders = [os.path.join(out, n) for n in sorted(os.listdir(out))]
             text = S.build(folders)
             self.assertIn('## Final score', text)
