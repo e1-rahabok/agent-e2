@@ -8,6 +8,7 @@
 - Used (%) maps to vSphere Client Usage (%); Utilization (%) maps to Utilization (%).
 - PCPU = hardware execution context: a core with SMT off, a thread with SMT on. Not a socket. 10 cores × 2 threads = 20 PCPUs.
 - CORE UTIL (%) appears only when Hyper-Threading is active. In batch mode it is repeated for each PCPU of the core: PCPU 0 and PCPU 1 both show core 0's value.
+- PCPU UTIL (%) is per PCPU and CORE UTIL (%) per core, each at most 100%. No line adds the two threads of a core: with both threads busy, each PCPU UTIL reads 100% and CORE UTIL 100% ([`vsphere/technology/cpu/concepts/hyper-threading`](../../technology/cpu/concepts/hyper-threading.md), section Thread Utilization).
 - Each line ends with per-NUMA-node averages and AVG for the whole host: spots an overloaded NUMA node.
 ![Used (%) above 100% while Utilization stays at 100%](images/esxtop-cpu-used-above-100-while-utilization-at-100.png)
 
@@ -34,7 +35,8 @@
 %USED = %RUN + %SYS - %OVRLP
 100% = %RUN + %RDY + %CSTP + %WAIT      (per vCPU world)
 ```
-- On a Hyper-Threading host a world's %USED falls below its %RUN while the sibling thread is busy: with both threads busy all the time, %USED is 62.5% of %RUN ([`vsphere/technology/cpu/metrics/virtual-motherboard/used`](../../technology/cpu/metrics/virtual-motherboard/used.md)).
+- On a Hyper-Threading host a world's %USED falls below its %RUN while the sibling thread runs: %USED carries the same Hyper-Threading charge as VM CPU Used ([`vsphere/technology/cpu/concepts/hyper-threading`](../../technology/cpu/concepts/hyper-threading.md), section Hyper-Threading accounting: VM CPU Used and ESXi CPU Used).
+- PCPU USED (%) follows ESXi CPU Used, not VM CPU Used: with both threads of a core busy, the %USED of the two vCPU worlds adds to more than the PCPU USED of the two threads. The rates are in the same section of [`vsphere/technology/cpu/concepts/hyper-threading`](../../technology/cpu/concepts/hyper-threading.md).
 - A clock below nominal lowers %USED below %RUN; Turbo raises %USED above %RUN.
 - %WAIT includes %IDLE. %WAIT - %IDLE (= %VMWAIT) of the vCPU worlds estimates guest IO wait. Expand the VM with e and read the worlds named vcpu. Estimate only: a vCPU also waits for events other than IO.
 - A world's percentages are of one physical core. A resource pool at 30% %USED on a 2-way host uses 30% of one core, not of the host.
@@ -107,6 +109,7 @@ current frequency = %A/MPERF x nominal frequency
 ## Misconceptions
 - "%RDY 300% is impossible" → summed over vCPUs.
 - "%A/MPERF per VM" → per physical CPU only.
+- "PCPU USED of a busy thread pair equals the %USED of the vCPU worlds on it" → the worlds carry the Hyper-Threading charge of VM CPU Used (1.25x per core) and PCPU USED does not, so the worlds add to more.
 
 ## Metadata
 ```yaml
@@ -150,13 +153,13 @@ images:
     metric: ['esxtop %A/MPERF', 'esxtop %UTIL']
     image_type: screenshot
 source:
-  document: Knowledge base
-  path: Provider Objects > esxtop > CPU
-corrections: []
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Broadcom KB 335065
+  path: Provider Objects > esxtop > CPU; vSphere Monitoring and Performance > Performance Monitoring Utilities (resxtop and esxtop) > CPU Panel, CPU Power Panel (pp. 2150-2155); KB 335065 (CPU usage increase after update to ESXi 7.0.3 or later), Cause
+corrections:
+- 'Section ''State counters'': the vSphere 9.1 documentation, CPU Panel, %RUN (p. 2154), says %RUN can be twice as large as %USED on a Hyper-Threading host. Hyper-Threading alone brings a world''s %USED to 62.5% of %RUN at nominal clock (Broadcom KB 335065: a flat 25% throughput benefit for the core); twice needs a clock below nominal as well.'
+- 'Section ''State counters'': the vSphere 9.1 documentation, CPU Panel, PCPU USED(%) (p. 2153), says PCPU USED equals the total sum of %USED of the worlds that ran on the PCPU. With both threads of a core busy, each PCPU shows half of the core (the same row says so) while each world is charged 62.5%, so the worlds add to more.'
+- 'Section ''Summary stats'': the vSphere 9.1 documentation, CPU Panel (p. 2154), still lists HTQ; the field is not shown since ESXi 7.0.'
 review_notes:
-- 'Sections ''Summary lines'', ''State counters'', ''Power'': load average meaning, CORE UTIL batch behaviour, %MLMTD inside %RDY, the two formulas, %RUN vs %USED with Hyper-Threading, %WAIT - %IDLE as guest IO wait estimate, per-core percentages, %A/MPERF formula and CPPC from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Performance Monitoring Utilities: resxtop and esxtop > CPU Panel, CPU Power Panel (pp. 2150-2155).'
-- 'The 9.1 documentation still lists HTQ in the CPU panel; the field is not shown since ESXi 7.0 and not on ESXi 9.1; the documentation is out of date.'
-- 'To check: Section ''State counters'': world %USED at 62.5% of %RUN with both threads busy (the VM CPU Used and Hyper-Threading files) against the vSphere 9.1 CPU panel text (p. 2153), which says only that each busy PCPU of a Hyper-Threading pair accounts for half of the CPU usage (PCPU USED); same open item as the Hyper-Threading penalty figures in hyper-threading.'
 - 'To check: Section ''Summary stats'': what the CPU column shows (always blank in tests) and whether AMLMT shows when a limit is applied; unconfirmed.'
 status: draft
 ```

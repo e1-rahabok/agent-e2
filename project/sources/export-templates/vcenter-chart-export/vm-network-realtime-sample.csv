@@ -1,0 +1,4 @@
+﻿"Time","Data receive rate for sun05-webmin01","Data receive rate for vmnic3","Data receive rate for 4000","Data receive rate for vmnic0","Data receive rate for vmnic1","Data receive rate for vmnic2","Data transmit rate for vmnic0","Data transmit rate for 4000","Data transmit rate for vmnic1","Data transmit rate for vmnic2","Data transmit rate for vmnic3","Data transmit rate for sun05-webmin01","Usage for vmnic2","Usage for vmnic1","Usage for vmnic3","Usage for sun05-webmin01","Usage for 4000","Usage for vmnic0"
+"2026-11-15T09:41:20.000Z",1,0,1,0,0,0,0,1,0,1,0,1,2,0,0,2,2,0
+"2026-11-15T09:41:40.000Z",0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,1,1,0
+"2026-11-15T09:42:00.000Z",1,0,1,0,0,1,0,1,0,1,0,1,2,0,0,2,2,0

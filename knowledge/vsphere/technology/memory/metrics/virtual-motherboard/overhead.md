@@ -6,10 +6,12 @@
 - Rises with more vCPUs and more configured memory.
 - Operationally negligible.
 - Not visible to the Guest OS. Excluded from Consumed and from configured memory.
-- Under a limit, Consumed sits just below the limit plus overhead (example: 2 GB limit shows as 2.12 GB).
+- A VM memory limit does not cap Overhead: ESXi bounds Overhead with a separate overhead limit, which DRS sets ([`vsphere/technology/memory/concepts/memory-overhead`](../../concepts/memory-overhead.md)).
+- Under a VM limit, VCF Operations Memory|Effective limit reads the configured limit plus Overhead ([`vsphere/technology/memory/concepts/memory-limit`](../../concepts/memory-limit.md), section Signs in the counters).
 
 ## Misconceptions
 - "Overhead explains a large memory gap" → it is negligible.
+- "A VM memory limit covers the VM overhead" → the limit caps Consumed only; Overhead sits on top of it, under its own overhead limit.
 
 ## Metadata
 ```yaml
@@ -35,9 +37,10 @@ related:
 - vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
 - vsphere/technology/memory/metrics/virtual-motherboard/entitlement
 - vsphere/technology/memory/metrics/virtual-motherboard/consumed
+- vsphere/technology/memory/concepts/memory-limit
 source:
-  document: Knowledge base
-  path: Memory > VM > Consumption Metrics; Limit
+  document: Knowledge base; vSphere 9.1 documentation (PDF built 2026-11-02)
+  path: Memory > VM > Consumption Metrics; Limit; Resource Management, Virtual Machine Memory (pp. 1833-1834), DRS Overhead Memory Management for VMs (p. 1902)
 corrections: []
 review_notes: []
 status: draft

@@ -187,6 +187,8 @@ def prepare(client, model, question, images, cfg, trace, retriever, kind, prompt
             p = prompts['chat_final']
         _step(trace, 'ask', '', ('allowed: ' + ', '.join(reasons)) if reasons else 'no: nothing missing, no premise')
     system = p['kb'] + ANSWER_RULES + (OPEN_SHAPE if kind != 'choice' else '')
+    if kind != 'choice' and cfg.get('term_map', True) and terms.label_hits(question, case):
+        system += terms.LABEL_ORDER   # the teaching order of a product label, inside the answer shape (Q208)
     up_front = primer.build(retriever.docs, cfg.get('primer') or {})
     if up_front:
         system += '\n\n' + up_front

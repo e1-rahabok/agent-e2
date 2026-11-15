@@ -42,7 +42,7 @@
 - "3:1 CPU gives buffer for spikes and HA" → not wrong but misleading: allocation alone ignores utilization and VM size; buffer and HA are in usable capacity, not in the ratio.
 - "Tier 3 can run 4:1 CPU" → 4:1 per thread (8:1 per core) is above the highest class ratio, Bronze 3:1; and a ratio is a planning input tied to the VM price, not a capacity verdict; the running cluster is judged by consumption, performance and risk.
 - "4:1 overcommit means the same capacity on every host" → say whether it is per core or per physical thread; with Hyper-Threading the two differ by 2x.
-- "A vCPU is worth the core's GHz" → with both threads busy, a thread gets about 62.5% of the core; sell threads, not GHz.
+- "A vCPU is worth the core's GHz" → with both threads busy, a vCPU is charged about 62.5% of the core; sell threads, not GHz.
 - "Reservations can be overcommitted like allocation" → a reservation is a guarantee: admission control refuses what cannot be reserved.
 
 ## Metadata

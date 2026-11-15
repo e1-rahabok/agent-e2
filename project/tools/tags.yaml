@@ -18,8 +18,8 @@ avoid_in_cpu_files: ['\bneeds?\b', '\bneeded\b', '\bwants?\b', '\bwish(es)?\b', 
 allow_in_cpu_files: ['Guest OS (CPU )?Needed( Memory)?', 'VM (CPU|Memory) Needed', 'Needed Memory']
 # Benchmark questions (benchmark/README.md, section Metadata tags).
 question_status: [draft, awaiting-input, reviewed, retired, deferred]
-# The 12 misconception types of KNOWLEDGE-ENGINEERING.md, section Misconceptions and Level 400. A question lists the ones it tests.
-misconception_type: [same-name-other-object, layer-confusion, consumption-as-contention, average-hides-worst, rollup-and-interval, unit-and-normalization, frequency-and-hyper-threading, provider-vs-consumer, cumulative-vs-current, threshold-transplanted, reclamation-as-contention, tool-confusion]
+# The 13 misconception types of KNOWLEDGE-ENGINEERING.md, section Misconceptions and Level 400. A question lists the ones it tests.
+misconception_type: [same-name-other-object, layer-confusion, consumption-as-contention, average-hides-worst, rollup-and-interval, unit-and-normalization, frequency-and-hyper-threading, provider-vs-consumer, cumulative-vs-current, threshold-transplanted, reclamation-as-contention, tool-confusion, label-read-as-model]
 # Question tags for the coverage count (benchmark/design.md, section 3.7). A list each.
 question_object: [vm, esxi, cluster, resource-pool, datastore, network, guest-os]
 question_tool: [vcenter, vcf-operations, esxtop, guest-os-tools, none]

@@ -48,7 +48,7 @@ B: 4,000 of 20,000 ms puts the VM in Ready a fifth of the time. Or E: the 5-minu
 
 ## Notes
 - Paired with the theory question 0105 (theory and practical; design.md, section 3.9).
-- vCenter rollups of summation counters are sums (knowledge base, vCenter statistics and aggregation; Broadcom KB 306576 (legacy 2002181), Converting between CPU summation and CPU % ready values: Past Day 300 seconds, ready % = summation / (interval in seconds x 1000) x 100, per vCPU after dividing by the vCPU count, https://knowledge.broadcom.com/external/article?legacyId=2002181). Not affected by the open question on VCF Operations 5-minute ms values (the 0104 base): this question reads vCenter only.
+- vCenter rollups of summation counters are sums (knowledge base, vCenter statistics and aggregation; Broadcom KB 306576 (legacy 2002181), Converting between CPU summation and CPU % ready values: Past Day 300 seconds, ready % = summation / (interval in seconds x 1000) x 100, per vCPU after dividing by the vCPU count, https://knowledge.broadcom.com/external/article?legacyId=2002181). Not affected by Q224 (settled 2026-11-15: a VCF Operations 5-minute ms value averages the 15 samples, base 20,000 ms per vCPU): this question reads vCenter only. The vCenter rollup lengths moved from aggregation to collection-interval (section Base of a millisecond value) the same day.
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C2). Counts only after author approval.
 - Review 2026-11-15: options reworded away from 0105 (B, E, F, H, I); a false screen reading (F) added; the freeze is 45 minutes old, so both charts hold it. Key unchanged: A, C, D, G.
 
@@ -68,6 +68,7 @@ knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
   - vsphere/tools/vsphere-client/vcenter-statistics
   - sp5-framework/observability/aggregation
+  - sp5-framework/observability/collection-interval
 knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/ready
 attachments:
   - 0369/vcenter-vm-ready-real-time.png

@@ -4,7 +4,7 @@ Not indexed.
 How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md). The agent: [harness/AGENT.md](harness/AGENT.md). How the claim is proved: [benchmark/design.md](benchmark/design.md). Which model: [benchmark/models.md](benchmark/models.md).
 
 ## 1. Mission
-- Agent E2 is built by Iwan 'E1' Rahabok to make his expertise and experience in VCF performance and capacity management available.
+- Agent E2 is built by Iwan 'E1' Rahabok to make his expertise in VCF performance and capacity management available.
 - A proof that Agent E2 works is the benchmark result show it scored higher than frontier models from leading players (Google, OpenAI, Anthropic).
 - It achieves this with four parts working as one brain:
   - The Agent
@@ -115,7 +115,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 | Data stays on site | No customer data leaves the customer network. Agent E2 answers without Internet access. A call out carries only public knowledge requests (a URL the user gives, an update download), never customer data. Updates also arrive as an offline bundle. |
 | One tested system | The app calls `harness/` for retrieval, tools, prompt and verifier. Prompt and settings are versioned in the repository; an edited prompt is an untested prompt. |
 | Vision | Hard requirement (author, 2026-11-14). Administrators upload screenshots, often several per question, and every current foundation model family reads images. Agent E2 reads the pixels of every uploaded image; there is no text-only mode and no text-only model. |
-| Model | Open weights with a commercial licence, vision (above), at least 32K context. Hardware: as little as passes the release gate; one GPU is the stretch target, two to four GPUs are acceptable. Chosen by the benchmark. |
+| Model | Open weights with a commercial licence, vision (above), at least 32K context. Hardware: as little as passes the release gate; one GPU is the stretch target, multiple server class GPUs are acceptable. Chosen by the benchmark. |
 | Reproducibility | Every answer stores question, answer, cited ids, tool trace, index version, prompt version, model, settings. |
 | Accuracy | Release gate in section 1, measured on the shipped configuration. |
 | Feedback | Rate and flag every answer, with a cause (knowledge gap, wrong fact, retrieval miss, model error). |
@@ -136,7 +136,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 - So the value is the text twin of each screen: which tool and screen, which object, which counters with unit, interval and rollup, how to read it, and its misconceptions.
 - Where it helps:
   - an uploaded screenshot (release 1.0) is matched to its screen file, which says what the screen shows and how to read it;
-  - tool confusion, one of the 12 misconception types: the same counter name reads differently in esxtop, vCenter and VCF Operations.
+  - tool confusion, one of the 13 misconception types: the same counter name reads differently in esxtop, vCenter and VCF Operations.
 - The image itself helps only when the agent fetches it for a vision model at answer time; each costs about 1,500 prompt tokens.
 - Why not every screen:
   - most of the hundreds of screens are configuration, not performance or capacity;

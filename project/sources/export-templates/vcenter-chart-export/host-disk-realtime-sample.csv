@@ -1,0 +1,4 @@
+﻿"Time","counter.disk.read.label for Local NVMe Disk (<device-A: Samsung SSD 960 EVO 250GB>)","counter.disk.read.label for Local NVMe Disk (<device-B: CT250P2SSD8>)","counter.disk.read.label for sun05-esxi47.acepod.com","counter.disk.write.label for Local NVMe Disk (<device-B: CT250P2SSD8>)","counter.disk.write.label for sun05-esxi47.acepod.com","counter.disk.write.label for Local NVMe Disk (<device-A: Samsung SSD 960 EVO 250GB>)","counter.disk.usage.label for sun05-esxi47.acepod.com"
+"2026-11-15T09:39:20.000Z",207,0,207,0,134,134,341
+"2026-11-15T09:39:40.000Z",4988,0,4988,0,43,43,5032
+"2026-11-15T09:40:00.000Z",118,0,118,0,18,18,136

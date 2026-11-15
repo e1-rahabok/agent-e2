@@ -49,7 +49,7 @@ Which statements about the four columns, the two disks and the two engineers are
 - I false: the vCenter virtual disk latency starts at the virtual disk; the wait in Linux before it is not in it.
 - J false: a request counts from the moment it enters the request queue until it finishes, whether it waits or is served.
 - K true: only about 1.6 requests wait in Linux; a larger queue only holds more requests in front of a slow device.
-- L false: the default device queue depth of vmw_pvscsi is 64, and only about 30 requests are at the virtual disk. No request waits for a free slot.
+- L false: the default device queue depth of vmw_pvscsi on kernel 5.14 is 254 (cmd_per_lun), and only about 30 requests are at the virtual disk. No request waits for a free slot.
 - M false: await rising with the I/O rate flat is the sign of saturation; spare capacity shows as the I/O rate rising with await flat. For sdb, nothing to tune unless the database needs a response time below 4 ms.
 - N true: read device, kernel and queue latency of DS-ARCH in esxtop, the array load and the schedule of the backups; ask whether the archive workload needs better than 38 ms.
 - O false: 4.0 ms against 3.8 ms, so Linux adds about 0.2 ms; 8,000 x 0.0038 = 30.4 of the 32 requests are at the virtual disk, in service, and only about 1.6 are in Linux. Not a backlog.
@@ -59,7 +59,7 @@ Which statements about the four columns, the two disks and the two engineers are
 - Why one answer: the arithmetic ties the columns, and the vCenter latency shows how much of await is below the guest.
 - Debatable risk: that the vCenter virtual disk latency starts at the virtual disk and excludes the wait in Linux is read from the counter definitions and the knowledge file; the vSphere API reference was not read for this. The numbers are chosen so that the arithmetic is exact.
 - Prepared with author question Q194 (the reading of the guest disk queue).
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). The prompt now states that vmw_pvscsi runs with its default queue depths, so option L is decidable (64 per device, Broadcom KB 343323). Review 2026-11-14: options M and O turned into near-miss false options that test the same facts (the signature of spare capacity; requests in service on sdb), so fewer options are true.
+- Converted from judged to multiple choice (Q199 F, 2026-11-14). The prompt now states that vmw_pvscsi runs with its default queue depths, so option L is decidable. Review 2026-11-15 (Q195): the Linux vmw_pvscsi default cmd_per_lun is 254 (PVSCSI_DEFAULT_QUEUE_DEPTH in drivers/scsi/vmw_pvscsi.c, kernel 5.0 and later); the 64 per device of Broadcom KB 343323 is the Windows driver default. L stays false under either value, because about 30 requests are at the virtual disk. Key unchanged. Review 2026-11-14: options M and O turned into near-miss false options that test the same facts (the signature of spare capacity; requests in service on sdb), so fewer options are true.
 
 ## Metadata
 ```yaml

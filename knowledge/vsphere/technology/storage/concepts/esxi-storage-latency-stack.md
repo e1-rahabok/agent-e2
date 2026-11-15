@@ -5,12 +5,12 @@
 - The kernel cannot see between the HBA and the device: no fabric topology, no hop count.
 
 ## Counters
-| Counter | Meaning | Healthy value |
+| Counter | Meaning | Reading |
 |---|---|---|
-| GAVG (Guest Average) | Total latency seen from the VMM. Guest means VM, not Guest OS. | - |
-| KAVG (Kernel Average) | Time in the VMkernel. Derived from GAVG and DAVG. | Within 0.5 ms. |
+| GAVG (Guest Average) | Total latency seen from the VMM. Guest means VM, not Guest OS. | KAVG plus DAVG. |
+| KAVG (Kernel Average) | Time in the VMkernel. Derived from GAVG and DAVG. | Near 0 on a healthy host. Higher: commands queue; read QAVG. |
 | QAVG (Queue Average) | Time in kernel queues. Part of KAVG. | Correlates with KAVG when KAVG is healthy. |
-| DAVG (Device Average) | From the ESXi HBA to the array and back. | Well within 5 ms; lower with SSD. |
+| DAVG (Device Average) | From the ESXi HBA to the array and back. | Lower with SSD. Compare with the latency the array reports. |
 
 ```text
 GAVG = KAVG + DAVG
@@ -19,6 +19,7 @@ GAVG = KAVG + DAVG
 - High QAVG: check queue depths at each level of the stack.
 - High DAVG: the fabric or the array (front-end ports, CPU, cache, back-end ports, spindles). Array reports low latency: the fabric or HBA configuration.
 - The bulk of latency should come from the device.
+- The KAVG and DAVG levels that decide the next step are catalog rows of the flow [`vsphere/technology/storage/troubleshooting/host-storage-latency`](../troubleshooting/host-storage-latency.md), step 1.
 
 ## NFS
 - An NFS datastore has no SCSI device and no HBA. In esxtop it is an {NFS} pseudo-device: [`vsphere/tools/esxtop/storage`](../../../tools/esxtop/storage.md).
@@ -47,6 +48,8 @@ DAVG (NFS) = network latency + remote NAS processing time
 - "Guest latency is measured inside Windows" → it starts at the VMM.
 - "QAVG cannot exceed KAVG" → QAVG includes kernel IO.
 - "NFS has no DAVG" → it has; for NFS, DAVG is network latency plus NAS processing time.
+- "DAVG, KAVG and GAVG are fine below 10 ms (Broadcom KB 344099)" → the KB gives an upper bound for sustained latency on any array. A KAVG of several ms means each command waits most of that time in a VMkernel queue (QAVG); on a flash array a DAVG near 10 ms is many times its normal service time. Read KAVG against QAVG, and DAVG against the latency the array reports.
+- "KAVG is fine up to 2 ms" → the VMkernel stack itself adds a fraction of a millisecond; KAVG above that is queueing, read in QAVG. Behind a flash array with a DAVG below 1 ms, 2 ms of KAVG more than triples GAVG.
 
 ## Metadata
 ```yaml
@@ -63,9 +66,9 @@ object:
 - HostSystem
 internal_derive: []
 related:
-- vsphere/technology/storage/metrics/host/disk
-- vsphere/technology/storage/concepts/esxi-storage-io-path
 - vsphere/technology/storage/troubleshooting/host-storage-latency
+- vsphere/technology/storage/concepts/esxi-storage-io-path
+- vsphere/technology/storage/metrics/host/disk
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 images:
   - path: ../images/esxi-storage-kernel-latency-vs-device-latency.png
@@ -74,10 +77,11 @@ images:
     metric: ['ESXi Disk Kernel Latency', 'ESXi Disk Device Latency']
     image_type: timeline
 source:
-  document: Knowledge base
+  document: Knowledge base; Broadcom KB 344099, Using esxtop to identify storage performance issues for ESXi (legacy 1008205)
   path: Storage > ESXi > Disk or Device > Contention Metrics
 corrections: []
 review_notes:
 - 'To check: what DAVG measures for vSAN when data is local; unconfirmed.'
+- 'Source URL, Broadcom KB 344099: https://knowledge.broadcom.com/external/article?legacyId=1008205'
 status: draft
 ```

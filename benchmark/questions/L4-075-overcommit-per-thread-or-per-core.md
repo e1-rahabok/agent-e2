@@ -29,7 +29,7 @@ C: treating a hardware thread as a full core. Or F: reading the ratio as content
 
 ## Notes
 - Drafted 2026-11-12.
-- Hyper-Threading: ESXi accounts a core with both threads busy as 1.25 times one thread alone (each thread 62.5%); the real gain per application varies (knowledge base, hyper-threading).
+- Hyper-Threading: ESXi charges the vCPUs on a core with both threads busy 1.25 times one thread alone (each vCPU 62.5%; ESXi CPU Used still gives each thread half the core, Q225); the real gain per application varies (knowledge base, hyper-threading).
 
 ## Metadata
 ```yaml

@@ -1,0 +1,9 @@
+11:29:07am up 218 days 21:52, 850 worlds, 3 VMs, 7 vCPUs; CPU load average: 0.04, 0.04, 0.04
+disk device screen onDEVICE                                PATH/WORLD/PARTITION DQLEN WQLEN ACTV QUED %USD  LOAD   CMDS/s  READS/s WRITES/s MBREAD/s MBWRTN/s DAVG/cmd KAVG/cmd GAVG/cmd QAVG/cmd 
+t10.NVMe____CT250P2SSD8_____________           -            1023     -    0    0    0  0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00 
+t10.NVMe____Samsung_SSD_960_EVO_250G           -            1023     -    0    0    0  0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00 
+{NFS}nfs-synology-datastore1                   -               -     -    0    -    -     -     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00        - 11:29:07am up 218 days 21:52, 850 worlds, 3 VMs, 7 vCPUs; CPU load average: 0.04, 0.04, 0.04
+DEVICE                                PATH/WORLD/PARTITION DQLEN WQLEN ACTV QUED %USD  LOAD   CMDS/s  READS/s WRITES/s MBREAD/s MBWRTN/s DAVG/cmd KAVG/cmd GAVG/cmd QAVG/cmd 
+t10.NVMe____CT250P2SSD8_____________           -            1023     -    0    0    0  0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00 
+t10.NVMe____Samsung_SSD_960_EVO_250G           -            1023     -    0    0    0  0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00 
+{NFS}nfs-synology-datastore1                   -               -     -    0    -    -     -     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00        - 

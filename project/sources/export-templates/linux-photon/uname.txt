@@ -1,0 +1,3 @@
+Linux vcf-m02-ops01.acepod.com 6.1.176-4.ph5 #1-photon SMP Mon Jul 13 09:34:08 UTC 2026 x86_64 GNU/Linux
+VMware Photon OS 5.0
+PHOTON_BUILD_NUMBER=b9d98344d

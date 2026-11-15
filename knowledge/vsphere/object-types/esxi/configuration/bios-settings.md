@@ -46,7 +46,7 @@
   - Open Adaptive: typically best for energy efficiency, server-side Java, and workloads sensitive to idle memory latency,
   - Closed Page: typically best for I/O-intensive workloads, OLTP, and HPC.
 ### AMD processors
-- AMD EPYC NUMA settings: see [`vsphere/technology/cpu/concepts/numa`](../../../technology/cpu/concepts/numa.md).
+- AMD EPYC NUMA settings: [`vsphere/technology/cpu/configuration/numa-settings`](../../../technology/cpu/configuration/numa-settings.md), section AMD EPYC.
 
 ## C-states for Intel Granite Rapids
 - Disable deep C-states (C6) for latency-sensitive workloads.

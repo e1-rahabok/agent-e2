@@ -21,7 +21,7 @@
 | Factor | Driver | Effect | In the accounting |
 |---|---|---|---|
 | Frequency | Clock speed | All else equal, 2 GHz completes 2x the cycles of 1 GHz. | Yes. Hence metrics in MHz. |
-| Efficiency | Hyper-Threading | A core running 2 threads completes 1.25x the cycles. Each thread gets 0.625x. Translated into MHz. | Yes. The 1.25x and 0.625x values are hardcoded. |
+| Efficiency | Hyper-Threading | A core running 2 threads completes 1.25x the cycles. Each vCPU is charged 0.625x (VM CPU Used); ESXi CPU Used gives each thread 0.5x. Translated into MHz. | Yes. The 1.25x and 0.625x values are hardcoded. |
 | Efficacy | Core architecture | More work per cycle at the same frequency. | No. |
 
 - Higher throughput lowers utilization: the faster a task completes, the shorter the runtime it occupies.

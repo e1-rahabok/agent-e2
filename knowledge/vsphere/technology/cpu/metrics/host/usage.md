@@ -3,12 +3,14 @@
 ## Hyper-Threading
 - When both threads of a core run, ESXi sees the core as fully busy.
 
-| ESXi metric (core level) | Value |
+| ESXi metric (core level) | Value, both threads busy, nominal clock |
 |---|---|
 | Usage (%) | 100% |
-| Usage (MHz) | Reflects the Hyper-Threading benefit |
+| Usage (MHz) | The core's clock speed: no Hyper-Threading gain |
 | Core Utilization | 100% |
-| Thread Utilization | 100% |
+| Thread Utilization | 100% on each thread |
+
+- No Hyper-Threading gain: ESXi CPU Used gives each thread of a busy pair half the core; the 1.25x is in VM CPU Used only ([`vsphere/technology/cpu/concepts/hyper-threading`](../../concepts/hyper-threading.md), section Hyper-Threading accounting: VM CPU Used and ESXi CPU Used).
 
 ## Cap
 - ESXi CPU Usage is no longer capped at 100%, in vCenter or VCF Operations. On a busy host with Turbo it exceeds 100% of nominal capacity.
@@ -22,10 +24,10 @@
 ```text
 ESXi Usage = sum over physical cores (not sum of VMs + kernel)
 ```
-- Physical perspective. Based on Core Utilization, adjusted for frequency and Hyper-Threading.
+- Physical perspective. Based on Core Utilization, adjusted for frequency. Hyper-Threading adds no gain: a core with one or two busy threads counts once.
 - Usage relates to Utilization as VM Usage relates to VM Run. A physical thread has no Overlap; System does not apply.
 - Volatile: Turbo pushes it up, power saving pulls it down.
-- High-load example: Usage (%) stayed above 100% because it is measured against base frequency. Less volatile than Thread Utilization: Hyper-Threading adds only 1.25x.
+- High-load example: Usage (%) stayed above 100% because it is measured against base frequency. Less volatile than Thread Utilization: a second thread on a busy core doubles that core's Thread Utilization and leaves its Usage unchanged.
 - Low-load example: Core Utilization 48%, Usage lower. The kernel clocked cores down to save power.
 
 ## Names and units
@@ -47,6 +49,7 @@ ESXi Usage = sum over physical cores (not sum of VMs + kernel)
 - "A flat 100% line means the host is at its limit" → on older releases the value was capped.
 - "ESXi Usage = sum of VM Usage + kernel" → it is summed over physical cores.
 - "Usage below Core Utilization means an error" → power saving clocks cores down at low load.
+- "ESXi CPU Usage of a core with both threads busy is 125%" → ESXi CPU Used gives each thread of the pair half the core; the 1.25x is in VM CPU Used and VM CPU Usage only.
 
 ## Metadata
 ```yaml
@@ -76,10 +79,9 @@ related:
 - vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics
 - vsphere/technology/cpu/metrics/host/peak-core-usage
 source:
-  document: Knowledge base
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > ESXi > Used | Usage; Usage; Usage and 100%; Consumed
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Broadcom KB 335065; Broadcom KB 431027
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > ESXi > Used | Usage; Usage; Usage and 100%; Consumed; vSphere Monitoring and Performance > resxtop and esxtop > CPU Panel, PCPU USED(%) (p. 2153); KB 335065, Cause; KB 431027, Cause (Hyperthreading accounting)
 corrections:
-- '2026-11-02: Hyper-Threading values (section: Hyper-Threading) are not in the uploaded document.'
 - 'Section Cap: the cap is removed in vCenter (Broadcom KB 417702, KB 431027) and in VCF Operations since Aria Operations 8.18; the uploaded document shows the older capped behaviour.'
 review_notes:
 - 'Sections Formula, Names and units, Cap by tool: from CPU > ESXi.'

@@ -26,7 +26,7 @@ A or B (VM-level counters), or D (VM counters added up). Or F, the over-correcti
 - Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Choose the most accurate counter to rightsize a VM."
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Hint: the VM is virtual hardware. What you size is the OS running on it."
 - Option E rewritten 2026-11-14 (was "Guest OS Memory Used. In some cases, add the cache.": vague) and option F added, the over-correction (design.md 3.9; project/question-pairing-2026-11-14.md). Key unchanged: E (author approved, 2026-11-14).
-- Review 2026-11-15: F was "Guest OS memory in use, without any of its cache", the negation of E; it now adds the page file (guest-os-sizing, Exclude page file). The reason for D no longer says it mixes layers (all four are VM counters). No option rests on whether ballooned memory belongs in Guest OS sizing: ballooning.md and guest-os-sizing.md disagree, raised as an author question.
+- Review 2026-11-15: F was "Guest OS memory in use, without any of its cache", the negation of E; it now adds the page file (guest-os-sizing, Exclude page file). The reason for D no longer says it mixes layers (all four are VM counters). No option rests on whether ballooned memory belongs in Guest OS sizing; settled 2026-11-15 (Q227): include it, no deduction (guest-os-sizing, section Ballooned memory in sizing). D stays false: its base is VM Active, not Needed Memory. Key unchanged: E.
 - Paired with 0079 (theory and practical; design.md, section 3.9).
 
 ## Metadata

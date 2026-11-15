@@ -4,6 +4,158 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q236 · Terms · Better names for five product labels
+
+- Files: [glossary](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md); [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (Product label and better model); [vocabulary.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/vocabulary.md).
+- Question: accept the better names proposed with Q208?
+- Answer (author, 2026-11-15):
+  - Total Capacity (GHz) → Total Base Capacity (GHz). "Base" stresses the nominal frequency. Throughput is activity, not capability.
+  - VM CPU Latency: label kept. Not a throughput loss: it includes the Hyper-Threading effect.
+  - ESXi Memory Usage (%): label kept. It maps closest to Consumed.
+  - VM Memory Consumed: label kept. "Claim" reads as reclamation, so it misleads.
+  - Capacity Remaining (%) → 3-Day Forecast Capacity Remaining (%).
+- Applied: glossary, KNOWLEDGE-ENGINEERING.md, cpu-measurement-levels (Total Capacity is capacity at base clock, not throughput), unit test. Two rows in Words to avoid: throughput for a capacity figure; claimed for held memory. Left open: ESXi CPU Usage (%) (Q236 in the open file).
+
+### Q208 · Knowledge design · Product label and better model
+
+- Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (Product label and better model); [glossary](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md); [user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml); [harness/terms.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/terms.py); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml).
+- Question: accept parts A-E of the product-label design, and the first list of labels.
+- Answer (2026-11-15, design calls; built):
+  - A: each label has a glossary entry named by the label, with `Product label:` (verbatim), `Invites:` (the decision it invites), `Better name:` and `File:`. `Invites:` was added because the answer needs it.
+  - B: no generator. A term-map row names the entry (`label:`) and holds only the user's match words; harness/terms.py builds the note from the glossary. One home, no sync check. Lint: one row per label, a pattern that matches, no note on a label row.
+  - C: the teaching order only when the question, or the model's reading of a screenshot, names a listed label; inside the answer's length and shape. Multiple-choice answers get the note only.
+  - D: misconception type `label-read-as-model` (13 types).
+  - E and the list: CPU Usage (MHz), ESXi CPU Usage (%), Total Capacity (GHz), VM CPU Latency, ESXi Memory Usage (%), VM Memory Consumed, VM Memory Usage (%), Capacity Remaining (%). Contention (VCF Operations) is out: since 8.18 it measures what its label says. The six new better names wait for your OK: [Q236](author-questions.md#q236--terms--better-names-for-six-product-labels).
+  - 5 unit tests (ProductLabelTest). Retrieval check: unchanged within one question.
+
+### Q166 · ARCHITECTURE.md, section Flow questions · Code evaluates flow branches
+
+- Files: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (sections 4.3, 6); [project/knowledge-rules/flows.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/flows.md) (Steps as data); [VM CPU Contention or Latency is high](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md).
+- Question: executable flow steps (approved for 1.0, 2026-11-12): which flow first, the step format, what to do with a value the case lacks, and where flow-test numbers live.
+- Answer (2026-11-15, design calls; the author asked Claude to settle what it can):
+  - First flow: VM CPU Contention or Latency is high (steps 1, 3, 4, 6 compare numbers). VM slow follows as the router; it has one numeric step.
+  - Format: the numbered step stays the text the model reads; a `steps` list in the flow's metadata holds metric, object, test (a catalog row or a comparison of two case values, never a typed number) and the next step per outcome. Lint will match each entry to its step.
+  - Missing value: in a conversation the agent asks (one round); in a single-turn answer code stops and the model states both branches and what to read.
+  - Flow-test numbers: a `flow` section in thresholds-performance.yaml, built with Q195 (KAVG, DAVG). Other numbers join when a flow step that uses them is built. vMotion stun time is already in the knowledge base (under 200 ms; vm/vmotion), so it needs no new source.
+  - The build stays open: plan M3a.
+
+### Q220 · CPU > Hyper-Threading · Thread Utilization with both threads busy: 100% or 200%?
+
+- Files: [Hyper-Threading](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/hyper-threading.md) (Thread Utilization); [Core Utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md).
+- Question: core-utilization.md said esxtop shows 200% for a core with both threads busy. Sum of two threads, or another counter?
+- Answer (2026-11-15, settled from vendor documents):
+  - No counter adds the two threads of a core. Both threads busy: each PCPU UTIL(%) reads 100%, CORE UTIL(%) reads 100%.
+  - A 200% in esxtop is a group value: a 2-vCPU VM's %RUN adds its vCPU worlds.
+  - The 200% line is removed. Sources: vSphere 9.1 documentation, esxtop CPU panel (pp. 2153, 2155); API 9.1 cpu.utilization and cpu.coreUtilization.
+
+### Q225 · CPU > Hyper-Threading > Used · A thread with a busy sibling: Used at 62.5% of Run, or half?
+
+- Files: [Hyper-Threading](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/hyper-threading.md) (new section Hyper-Threading accounting); [esxtop CPU](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/cpu.md); [VM CPU Used](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/used.md).
+- Question: 62.5% (the knowledge base) or half (vSphere 9.1, PCPU USED)?
+- Answer (2026-11-15, settled from vendor documents): (A), two counters, two rules.
+  - VM CPU Used, VM CPU Usage and world %USED: a vCPU whose sibling runs is charged 62.5% of the core, a flat 1.25x per core (Broadcom KB 335065). Sibling halted: the full core.
+  - ESXi CPU Used (PCPU USED): each busy thread of a pair is charged half the core (vSphere 9.1, esxtop CPU panel, p. 2153).
+  - So on a busy core the two vCPUs are charged 125% of a core whose ESXi CPU Used is 100%.
+  - Two 9.1 esxtop lines are kept as corrections ("%RUN can be twice %USED"; PCPU USED as the sum of world %USED). The open item "37.5% VM, 50% ESXi" is closed.
+  - For you, not blocking: the image cpu-metrics-time-taken-vs-work-done-vm-and-esxi.png shows ESXi thread 625 MHz and core 1,250 MHz; the ESXi rows should read 500 and 1,000 MHz (review note in hyper-threading).
+
+### Q221 · Memory > Capacity · Memory Demand: kernel Consumed or kernel reservation?
+
+- Files: [Demand (capacity)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md); [ESXi memory utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/utilization.md); [Memory capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-capacity.md).
+- Question: three forms of host memory Demand in three files. Which is the capacity model, which the VCF Operations formula?
+- Answer (2026-11-15, settled from vendor documents):
+  - Capacity model (home: sp5 capacity demand): Demand = Max (Utilization, Reservation) per VM, summed at the host. The hypervisor counts by its reservation.
+  - VCF Operations formula (home: host utilization): Utilization = Machine Demand + ESX System Usage (the kernel reservation, not kernel Consumed). The capacity pages call it Demand (Broadcom KB 439253).
+  - Consumed + Ballooned + Compressed + Swapped is the VM's footprint, not demand (vm-footprint-sizing).
+  - Open as a review note: the per-VM term of Machine Demand is not published; one lab check on a 9.1 host.
+
+### Q227 · Guest OS > Sizing · Ballooned memory in Guest OS sizing: include or exclude?
+
+- Files: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md) (new section Ballooned memory in sizing); [Ballooning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md).
+- Question: include (A), exclude (B) or split (C)?
+- Answer (2026-11-15, expert call): (A), include, no deduction.
+  - The balloon pins its pages inside the guest (API 9.1 `mem.vmmemctl`), so Needed Memory already holds them.
+  - The guest shows the balloon size, not how much came from Free. Both errors have the same bound; inclusion errs toward too much memory, deduction toward too little on a VM already squeezed.
+  - Your image in guest-os-sizing already marks Ballooned as included. ballooning.md lost its "exclude" line and points to the rule.
+  - Also fixed: the text's "how much cache to include is open" now points to Needed Memory (Windows keeps high-priority cache; your image's "Exclude cache" is the reclaimable cache).
+
+### Q228 · Memory > VM > Usage (%) · VCF Operations 9.1: VM Memory Usage (%) and Workload (%)
+
+- Files: [VM Memory Usage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/usage.md); [VM Memory Utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/utilization.md).
+- Question: the 9.1 metric list shows Usage (%) disabled by default and no VM Workload (%). Keep, rewrite, or other?
+- Answer (2026-11-15, settled from vendor documents): (A) for Usage (%), (B) for Workload (%).
+  - Usage (%) keeps its formula (Guest Needed Memory / Total Capacity, Active without guest data; Broadcom KB 390432) and now says it is disabled by default in 9.1. Guest|Needed Memory over Mem|Total Capacity gives the same ratio and is collected by default.
+  - VM Workload (%) leaves the files.
+  - Questions 0394-0397 and 0400 hold; keys unchanged. Open as a review note: 9.1 publishes no formula for Usage (%); the capture of 0395 checks it.
+
+### Q193 · Guest OS sizing · Lowering SQL Server max server memory in steps
+
+- Files: [SQL Server memory in a VM](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/memory/sql-server-memory.md) (new file, from guest-os-sizing; section Lowering max server memory in steps); question [0269](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-089-sql-server-holds-its-memory.md).
+- Question: which counters, and how large a step?
+- Answer (2026-11-15, settled from Microsoft documentation):
+  - Counters: Page reads/sec first; Lazy writes/sec, Free list stalls/sec, Memory Grants Pending; Page life expectancy (only sudden dips count); the application's query times decide. Buffer cache hit ratio is not a signal.
+  - Step rule: a step holds when, over a full business cycle, the counters stay at the baseline of the same period and query times do not lengthen. A failed step is undone at once; the last value that held is the size.
+  - Step size: a method choice, no source gives one. The first step can remove at least the low point of Memory Manager Free Memory.
+  - `max server memory` takes effect at RECONFIGURE, no restart (Microsoft Learn, Server memory configuration options).
+
+### Q224 · Observability > Collection interval · VCF Operations 5-minute ms values: 100% at 20,000 or 300,000 ms per vCPU?
+
+- Files: [Collection interval](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/collection-interval.md) (new section Base of a millisecond value); question [0104](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-048-run-above-used-more-vcpus.md).
+- Question: the knowledge base said 20,000 ms; 0104 said 1,200,000 ms for 4 vCPUs.
+- Answer (2026-11-15, settled from vendor documents): 20,000 ms per vCPU. The knowledge base was right.
+  - VCF Operations stores the average of the 15 20-second values (Broadcom KB 315941; KB 444403 for 9.x). A 4-vCPU VM peaks at 80,000 ms.
+  - 1,200,000 ms is the vCenter Past Day base, which sums the samples. Both give the same %.
+  - Proof in the knowledge base: the vcpu-states chart of a 4-vCPU VM adds to 80,003 ms, and its values are multiples of 1/15 ms.
+  - 0104's export rescaled (every ms value divided by 15); its stem no longer gives the base; key unchanged. Old export archived.
+
+### Q198 · CPU > NUMA settings · NPS-1 default or the setting that matches the silicon?
+
+- Files: [NUMA settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md) (AMD EPYC); [CPU topology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-topology.md) (NUMA).
+- Question: NPS-1 (A), the setting that matches the silicon (B), or B for monster VMs (C)?
+- Answer (2026-11-15, settled from vendor documents): (A).
+  - Performance Best Practices for vSphere 9.1 (rev 20260624) and AMD's own vSphere guide for EPYC 9005 (PID 58474) both give NPS-1, CCX as NUMA off, for mixed or unknown VM sizes and for VMs above half a socket. Broadcom KB 432801 says to deactivate CCX as NUMA.
+  - EPYC 9005 has one central I/O die: NPS-4 cuts each node to 3 of 12 channels. (C) is backwards: AMD names NPS-1 for monster VMs.
+  - The note's "NPS4 is optimal on 9005" is now a misconception line.
+  - EPYC 9006 (two I/O dies on the largest parts): keep NPS-1, test NPS-2. No vendor document gives the ESX setting yet; review note.
+
+### Q195 · ESXi storage I/O path · Where does a Paravirtual SCSI queue limit show?
+
+- Files: [ESXi storage I/O path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-io-path.md); [latency stack](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md); [host storage latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/troubleshooting/host-storage-latency.md); [thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (section flow).
+- Question: where a PVSCSI queue limit shows; what Disk.SchedNumReqOutstanding limits; which KAVG and DAVG values to keep.
+- Answer (2026-11-15, settled from vendor documents):
+  - The knowledge file holds. Above the PVSCSI device queue depth, a request waits in the Guest OS (Guest OS latency minus GAVG), not in KAVG or QAVG. Above DQLEN or DSNRO it waits in the VMkernel (QUED, QAVG). Performance Best Practices 9.1, pp. 60, 87.
+  - DSNRO: per device; limits the outstanding I/O of all virtual disks on the host to one device together; applies only when more than one virtual disk issues I/O to it (KB 344706). Default 32 (vSphere 6.5 docs; no 9.1 page; review note).
+  - KAVG above 0.5 ms and DAVG above 5 ms (knowledge base) are now two rows of a new `flow` section, used by host-storage-latency step 1. KB 344099's 10 ms and the source note's 2 ms are misconception lines; the 9.1 documentation values stay as reading guidance.
+  - Also found: Linux `vmw_pvscsi` defaults to 254 per device (kernel 5.0 and later); 64 per device is the Windows default. Files and question 0360's reasoning updated; key unchanged.
+
+### Q201 · Memory > Reservation · 'Not available to VMs': admission or physical pages
+
+- Files: [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) (Memory metrics); [ESXi memory reservation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/reservation.md); question [0024](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-011-memory-reservation-behaviour.md).
+- Question: which sense should option D of 0024 test?
+- Answer (2026-11-15, expert call): (B), the page sense, false.
+  - Admission sense (true): admission control counts the full kernel reservation, used or not, so it cannot go to VM reservations (API 9.1 `mem.unreserved`).
+  - Page sense (false): pages are granted on demand; the unconsumed part is free memory VMs can use (vSphere 9.1, Resource Management, pp. 1833-1834).
+  - Option D now says the reservation is set aside as physical pages at boot. Key A, B unchanged. Both senses are written once in overhead.md.
+
+### Q202 · Memory > Overhead · Kernel memory reservation with vSAN and NSX
+
+- Files: [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md); question [0024](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-011-memory-reservation-behaviour.md), option E.
+- Question: is the kernel reservation below kernel use on a busy vSAN and NSX host? Scope the "stays steady" line.
+- Answer (2026-11-15, settled from vendor documents):
+  - The reservation is a minimum set by configuration; it does not follow use. Both lines hold once scoped.
+  - vSAN and NSX kernel modules count in host/system. NSX agents run in host/vim/vmvisor groups and vSAN services in host/opt, outside the kernel reservation (KB 419794, 447622). So use can pass the reservation there.
+  - On every host the knowledge base measured, the memory reservation sat above use ("too high").
+  - Option E of 0024 now says the reservation is a cap (false). Key unchanged.
+
+### Q205 · Memory > Swap and compression > Example · Gap between Consumed and the effective limit
+
+- Files: [Memory limit](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-limit.md); [Swap and compression](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/swap-and-compression.md); [VM Memory Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/overhead.md); question [0141](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-056-does-a-limit-cause-ballooning.md).
+- Question: does Consumed stay under the limit or under the effective limit? Is Effective limit = limit + overhead?
+- Answer (2026-11-15, settled from vendor documents):
+  - A limit caps Consumed at the configured limit. Overhead has its own limit (vSphere 9.1, pp. 1833-1834, 1902; KB 382249).
+  - Effective limit = limit + VM overhead: shown by the 8 GB chart in the knowledge base (Consumed 2.6 MB under the limit, Effective limit 97 MB above it).
+  - VM Memory Overhead's wrong line is replaced. 0141 option A said "just above 2 GB" against data at or below 2 GB; now "at or just under 2 GB". Key unchanged.
+
 ### Q207 · Benchmark > Field set · Real questions from you
 
 - Files: [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) (step 9: 20 real questions); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 7.5, held-out set); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (section 4.6, coverage boundary).
@@ -194,7 +346,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 ### Q210 · Terms · Neuro-symbolic expert system, agent, case, reading set, reading plan
 
 - Files: [project/terms.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/terms.md); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (status and name).
-- Question: the new design needs five repository terms. Accept, or give your word: (A) neuro-symbolic expert system: what Agent E2 is (code holds the procedure and the map and decides; the model reads and writes; Kautz's Symbolic[Neural]); (B) agent now means the expert's procedure as code (was: the model plus the tool loop); (C) case: the agent's structured reading of one question (your word in [Q166](author-questions.md#q166--architecturemd-section-flow-questions--code-evaluates-flow-branches), case state; the benchmark keeps question); (D) reading set: the files and sections the model reads for one question; (E) reading plan: the code that builds it. Not proposed: finite state machine as the name; the stage order is a small one, but the value is the plan over the knowledge base's map.
+- Question: the new design needs five repository terms. Accept, or give your word: (A) neuro-symbolic expert system: what Agent E2 is (code holds the procedure and the map and decides; the model reads and writes; Kautz's Symbolic[Neural]); (B) agent now means the expert's procedure as code (was: the model plus the tool loop); (C) case: the agent's structured reading of one question (your word in [Q166](#q166--architecturemd-section-flow-questions--code-evaluates-flow-branches), case state; the benchmark keeps question); (D) reading set: the files and sections the model reads for one question; (E) reading plan: the code that builds it. Not proposed: finite state machine as the name; the stage order is a small one, but the value is the plan over the knowledge base's map.
 - Written as now: all five in project/terms.md as proposals; used in harness/AGENT.md, ARCHITECTURE.md, README and MISSION.md.
 - Answer: Author (2026-11-14): agree. Applied: project/terms.md (the five terms no longer proposals), harness/AGENT.md.
 
@@ -221,7 +373,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 - Search 1: "Capacity is counted in physical threads"
 - Question: vSphere and VCF Operations label the GHz figure Total Capacity, so every model without the knowledge base reads capacity as GHz (question [0006](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-005-esxi-cpu-capacity-threads-not-hertz.md): Opus 0%). The fix calls it vSphere's GHz total, a throughput reference. Should the knowledge base also name the product label explicitly ("vSphere's Total Capacity (GHz), a throughput figure, not capacity")?
 - Written as now: capacity = physical threads; every GHz use of the word capacity reworded as throughput (draft).
-- Answer: Author (2026-11-14): do not change the product label. The product UI is reality; reality is not always correct. Agent E2 knows both: vSphere Total Capacity means GHz in the real world, GHz is not capacity, and CPU Usage reads better as CPU Throughput. Applied: cpu-measurement-levels (section vSphere's number: label, what it measures, why the product uses it), cpu-frequency (label kept), glossary (Base frequency, CPU Throughput), vocabulary (Words to avoid). The general design: KNOWLEDGE-ENGINEERING.md, section Product label and better model ([Q208](author-questions.md#q208--knowledge-design--product-label-and-better-model)).
+- Answer: Author (2026-11-14): do not change the product label. The product UI is reality; reality is not always correct. Agent E2 knows both: vSphere Total Capacity means GHz in the real world, GHz is not capacity, and CPU Usage reads better as CPU Throughput. Applied: cpu-measurement-levels (section vSphere's number: label, what it measures, why the product uses it), cpu-frequency (label kept), glossary (Base frequency, CPU Throughput), vocabulary (Words to avoid). The general design: KNOWLEDGE-ENGINEERING.md, section Product label and better model ([Q208](#q208--knowledge-design--product-label-and-better-model)).
 
 ### Q206 · Benchmark > Retrieval check · Restart it now
 

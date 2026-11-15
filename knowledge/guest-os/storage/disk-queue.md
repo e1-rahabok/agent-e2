@@ -22,14 +22,14 @@
 - Requests at the virtual disk equal the I/O rate times the vCenter virtual disk latency. Compare with VM outstanding IO.
 - First test, in time rather than in requests: compare the Guest OS time per I/O (Avg. Disk sec/Transfer, await) with the vCenter virtual disk latency for the same period. When the two are close, almost all of the time per I/O is spent at or below the virtual disk (ESXi queues, the storage path, the array), and the Guest OS adds little.
 - The guest queue minus the requests at the virtual disk is the concurrency spent above the virtual disk: Guest OS queues, the driver and the completion path. A remainder of a few requests is within the difference between two tools that sample and average separately; it is not a count of requests blocked in the guest.
-- A remainder that is large, with the requests at the virtual disk at the queue depth of the adapter (Paravirtual SCSI default: 64 per device, 254 per adapter), means requests wait in the guest for a free slot.
+- A remainder that is large, with the requests at the virtual disk at the queue depth of the adapter (Paravirtual SCSI default: 64 per device and 254 per adapter in Windows; 254 per device in Linux), means requests wait in the guest for a free slot.
 - VM disk latency stays good while requests wait in the guest, because it starts at the virtual disk. The application still feels the delay.
 - No universal threshold; varies by application.
 
 ## Observed values
 - 3,000 VMs, 3 months: about 70% below 10; about 10% above 100.
 - Some values are extreme (spikes above 1,000). Guest queues are rarer than latency spikes.
-- A spike far above the adapter queue depth is mostly requests waiting in the guest: at a queue of 1,000 and the default device queue depth of 64, at most 64 requests are at the virtual disk.
+- A spike far above the adapter queue depth is mostly requests waiting in the guest: at a queue of 1,000 and the Windows default device queue depth of 64, at most 64 requests are at the virtual disk.
 ![Guest OS disk queue timeline for one VM: regular spikes, last above 1,000](images/guest-os-disk-queue-spikes-timeline.png)
 - 20-second peak about 200-250 while the 5-minute average stays above 125: volatile, not sustained.
 ![Guest disk queue distribution across 3,000 VMs](images/guest-os-disk-queue-distribution-across-vms.png)

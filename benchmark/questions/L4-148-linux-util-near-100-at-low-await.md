@@ -45,7 +45,7 @@ B: %util near 100% means a saturated disk, so move it to faster storage. Or E: a
 
 ## Notes
 - Paired with the theory question 0360 (theory and practical; design.md, section 3.9).
-- No option rests on the Paravirtual SCSI queue depth (open question Q195).
+- No option rests on the Paravirtual SCSI queue depth.
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C24 (origin: synthetic). Counts only after author approval.
 - Review 2026-11-15: the await condition is relative (within 15%), since an absolute 0.5 ms fails at sub-millisecond await; options reworded away from 0360; K (a false screen reading) added. Key unchanged: A, C, D, G.
 

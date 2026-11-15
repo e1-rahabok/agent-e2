@@ -50,7 +50,7 @@ D: "The same counter cannot read so differently on the same day: one tool is wro
 
 ## Notes
 - Paired with 0394 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D2.
-- Kept to the difference between the tools; the fallback without guest data is pair D8 (0396, 0397). No option rests on memory Demand (open author question Q221).
+- Kept to the difference between the tools; the fallback without guest data is pair D8 (0396, 0397). No option rests on memory Demand (Q221, settled 2026-11-15).
 - VCF Operations 9.1 metric list (TechDocs, Virtual Machine Metrics, updated 2026-11-12): https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/virtual-machine-metrics.html. Guest|Needed Memory, Mem|Total Capacity (KB) and Mem|Contention (%) are enabled; Memory|Usage (%) is disabled by default and has no description there, so the condition checks the formula on the screen.
 - Review fixes 2026-11-15: options reworded away from 0394 and turned into screen readings (A, B, F true; C false); Contention 0 at every point. Key A, B, E, G → A, B, F, H.
 - The key holds whenever the condition of `## Input to supply` holds.

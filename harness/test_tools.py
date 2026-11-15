@@ -120,10 +120,19 @@ class CatalogTest(unittest.TestCase):
         self.assertIn('- Alert, orange: VM CPU contention (VirtualMachine)', f)
         self.assertIn('- Capacity decision: Cluster Consumption', CAT.facts_for(['vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms']))
 
+    def test_flow_tests_come_with_their_flow(self):
+        # A flow row is shown with its flow file, labelled with the step that compares it (thresholds-performance.yaml, flow).
+        f = CAT.facts_for(['vsphere/technology/storage/troubleshooting/host-storage-latency'])
+        self.assertIn('- Flow test, step 1: ESXi Disk Kernel Latency (KAVG) > 0.5 ms', f)
+        self.assertIn('- Flow test, step 1: ESXi Disk Device Latency (DAVG) > 5 ms', f)
+        self.assertNotIn('Flow test', CAT.facts_for(['vsphere/object-types/vm/vm-alerts']))
+        r = CAT.thresholds(name='ESXi Disk Kernel Latency (KAVG)')['thresholds'][0]
+        self.assertEqual((r['use'], r['step'], r['source']), ('flow', 1, 'knowledge-base'))
+
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
-        self.assertEqual(uses, {'decision', 'rule'})
-        self.assertEqual(CAT.stats()['thresholds'], 38)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q162)
+        self.assertEqual(uses, {'decision', 'rule', 'flow'})
+        self.assertEqual(CAT.stats()['thresholds'], 40)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q162); 2 flow tests (Q195)
         self.assertEqual(CAT.stats()['symptoms'], 40)
         self.assertEqual(CAT.stats()['alerts'], 33)  # one alert per object type: ESXi, resource pool, cluster contention split; ESXi drops virtual and physical (2026-11-12)
         self.assertEqual(CAT.stats()['bands'], 20)  # + tiered DRAM consumed, active memory (Q179, 2026-11-12)
@@ -490,6 +499,63 @@ class TermMapTest(unittest.TestCase):
         self.assertNotIn('Terms in this question', ctx)
 
 
+class ProductLabelTest(unittest.TestCase):
+    """Product label and better model (KNOWLEDGE-ENGINEERING.md; Q208): glossary pair, term-map row, teaching order."""
+    Q = 'The cluster shows Total Capacity of 200 GHz. How many more 4-vCPU VMs fit?'
+
+    def test_glossary_entry_carries_the_pair(self):
+        e = {g['term']: g for g in kb.glossary(DOCS)}['Total Capacity (GHz)']
+        self.assertIn('Total Capacity', e['label'])
+        self.assertTrue(e['invites'])
+        self.assertEqual(e['better'][0], 'Total Base Capacity (GHz)')
+        self.assertIn('physical threads', e['better'][1])
+        self.assertEqual(e['file'], 'vsphere/technology/cpu/concepts/cpu-measurement-levels')
+
+    def test_label_row_note_comes_from_the_glossary(self):
+        import terms, yaml
+        raw = {r['id']: r for r in yaml.safe_load(open(terms.PATH))['rows']}
+        hit = [h for h in terms.match(self.Q) if h.get('label') == 'Total Capacity (GHz)']
+        self.assertEqual(len(hit), 1)
+        self.assertNotIn('note', raw[hit[0]['id']])              # one home: the glossary entry
+        self.assertIn('Total Base Capacity (GHz)', hit[0]['note'])
+        self.assertIn('Invites:', hit[0]['note'])
+        self.assertEqual(hit[0]['files'][0], 'vsphere/technology/cpu/concepts/cpu-measurement-levels')   # the entry's File first
+        self.assertIn('Total Base Capacity (GHz)', terms.block(terms.match(self.Q)))
+
+    def test_every_label_entry_has_one_row_that_fires_on_its_term(self):
+        import terms
+        labels = terms.labels()
+        self.assertGreaterEqual(len(labels), 7)
+        for term in labels:
+            rows = [h for h in terms.match(term) if h.get('label') == term]
+            self.assertEqual(len(rows), 1, term)
+
+    def test_case_names_a_label_from_a_screenshot(self):
+        import terms
+        case = {'metrics': [{'name': 'Latency', 'object': 'VM CPU', 'unit': '%', 'tool': 'vCenter'}]}
+        hits = terms.case_labels(case, terms.match('What does this chart show?'))
+        self.assertEqual([h['label'] for h in hits], ['VM CPU Latency'])
+        self.assertEqual(terms.case_labels(case, hits), [])       # already matched: not twice
+
+    def _system(self, question, kind):
+        class Recorder(MockClient):
+            def chat(self, model, msgs, deterministic=False, **kw):
+                if not deterministic:
+                    self.system = msgs[0]['content']
+                return super().chat(model, msgs, deterministic=deterministic, **kw)
+        rec = Recorder()
+        modes.answer('agent-e2', rec, 'mock', question, [], dict(ModesTest.CFG, verify=False, gap_followup=False),
+                     Retriever(DOCS, CHUNKS), kind)
+        return rec.system
+
+    def test_teaching_order_only_when_a_label_is_named_and_in_open_answers(self):
+        import terms
+        self.assertIn(terms.LABEL_ORDER, self._system(self.Q, 'open'))
+        self.assertNotIn(terms.LABEL_ORDER, self._system('Why is VM CPU Ready high?', 'open'))
+        self.assertNotIn(terms.LABEL_ORDER, self._system(self.Q + '\n\nA. 50\nB. 25\nC. Unsure', 'choice'))
+        self.assertIn('Inside the usual length', terms.LABEL_ORDER)   # narrowed (Q208): no extra answer section
+
+
 class ClarifyTest(unittest.TestCase):
     """One clarifying round (harness/clarify.py, modes.converse)."""
 
@@ -791,6 +857,8 @@ class EmbeddingCacheTest(unittest.TestCase):
 
     def test_parallel_processes_leave_a_valid_cache(self):
         import multiprocessing
+        if 'fork' not in multiprocessing.get_all_start_methods():
+            self.skipTest('no fork start method on this platform (Windows)')
         ctx = multiprocessing.get_context('fork')
         procs = [ctx.Process(target=_embed_worker, args=(self.dir, 300)) for _ in range(6)]
         for p in procs:

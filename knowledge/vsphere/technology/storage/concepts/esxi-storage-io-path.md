@@ -19,14 +19,27 @@
 ## Queues on the path
 | Queue | Limit | Where the wait shows |
 |---|---|---|
-| Guest queue (Storport in Windows, block layer in Linux) | Paravirtual SCSI queue depth: 64 per device and 254 per adapter by default | In the Guest OS counters. ESXi latency does not include it. |
+| Guest queue (Storport in Windows, block layer in Linux) | Paravirtual SCSI queue depth, per device and per adapter | In the Guest OS counters. ESXi latency does not include it. |
 | Paravirtual SCSI ring | 8 pages by default | In the Guest OS: the driver waits for a free entry. |
+| VMkernel queue of a device shared by several virtual disks | Disk.SchedNumReqOutstanding (DSNRO) | QUED, QAVG and KAVG in esxtop. |
 | VMkernel device queue | Device queue depth (esxtop DQLEN) | QUED, QAVG and KAVG in esxtop. |
 | Adapter queue | Adapter queue depth (esxtop AQLEN) | In esxtop, as the sum of the commands of its devices. |
 | Device and array | Set by the hardware | DAVG in esxtop. |
 
-- Each limit holds the requests above it. A request that waits for a free slot of the Paravirtual SCSI device waits in the Guest OS, before the virtual device takes it. A request that waits for a free slot of the device queue waits in the VMkernel.
-- Raising a limit above a smaller limit below it moves the wait down the path. It does not shorten the total time.
+- Each limit holds the requests above it. Raising a limit above a smaller limit below it moves the wait down the path. It does not shorten the total time.
+- A request above the Paravirtual SCSI device queue depth stays in the Guest OS storage stack: the guest driver does not write it into the ring, so the VMM sees no command. Its wait adds to the Guest OS latency and queue length, not to GAVG, KAVG or QAVG.
+- Performance Best Practices for vSphere 9.1 places that wait in the guest: the queue depth of the guest SCSI driver limits the bandwidth a VM can push (p. 60), and guest operating systems queue by disk controller (p. 87).
+- A request above the device queue depth (DQLEN), or above DSNRO on a device that several virtual disks share, waits in the VMkernel: esxtop counts it in QUED and its wait in QAVG, inside KAVG and GAVG.
+- A Paravirtual SCSI depth above DQLEN or DSNRO lets one virtual disk fill the VMkernel queue, so raising it can raise QAVG; DQLEN or DSNRO still holds the commands.
+- The Paravirtual SCSI defaults differ by guest driver: [`guest-os/storage/windows-storage-io-path`](../../../../guest-os/storage/windows-storage-io-path.md), [`guest-os/storage/linux-storage-io-path`](../../../../guest-os/storage/linux-storage-io-path.md).
+
+## Disk.SchedNumReqOutstanding (DSNRO)
+- Per device since vSphere 5.5; the host-wide option is deprecated. esxcli storage core device list shows it as No of outstanding IOs with competing worlds; esxcli storage core device set -d <device> -O <value> sets it (Broadcom KB 344706).
+- DSNRO limits the commands all virtual disks on one host have outstanding to one device together, when more than one virtual disk issues I/O to it (Broadcom KB 344706).
+- With one VM and one virtual disk active on the device, DSNRO does not apply: DQLEN and the adapter queue depth limit the commands.
+- Default 32 commands; range 1 to the maximum queue depth of the device (Broadcom KB 344706).
+- DSNRO is a host setting: every host that sees the device needs the same value.
+- Raise DSNRO only on the storage vendor's advice: more commands reach the array at once (Broadcom KB 344706). Performance Best Practices for vSphere 9.1 names two uses: evening out the bandwidth of the VMs on one VMFS volume (p. 44), and NVMe with the High Performance Plug-in (p. 43).
 
 ## esxtop figures for a device
 - DQLEN is the current queue depth of the device. ACTV is the number of commands active in the VMkernel. QUED is the number of commands queued in the VMkernel. %USD is the share of the queue depth used by active commands. LOAD is the active plus the queued commands, divided by the queue depth.
@@ -34,7 +47,7 @@
 - DAVG is the average device latency per command. KAVG is the average VMkernel latency per command. QAVG is the average queue latency per command. GAVG is DAVG plus KAVG.
 - The queue depth sets a ceiling on the throughput of a device: the commands active at one time divided by the device latency. At a DQLEN of 64 and a DAVG of 4 ms the ceiling is 16,000 commands per second.
 - Little's Law holds at each layer: the commands active at the device equal CMDS/s x DAVG, and the commands queued in the VMkernel equal CMDS/s x QAVG.
-- The meaning and healthy values of DAVG, KAVG and QAVG, and the NFS case: [`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](esxi-storage-latency-stack.md).
+- The meaning and reading of DAVG, KAVG and QAVG, and the NFS case: [`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](esxi-storage-latency-stack.md).
 
 ## Locating the delay with three measurements
 - The latency measured inside the Guest OS (Windows Avg. Disk sec/Transfer, Linux await), GAVG for the virtual disk, and the split of GAVG into KAVG and DAVG, put the time in one of four places.
@@ -49,7 +62,8 @@
 
 ## Misconceptions
 - "High KAVG means ESXi is slow" → KAVG is mostly QAVG, the wait in the device queue. The cause is the queue depth, not the VMkernel code.
-- "A VM that exceeds the Paravirtual SCSI queue depth shows a high KAVG" → it waits in the Guest OS, before the virtual device. ESXi latency stays low.
+- "High KAVG and QAVG with low DAVG mean the VM exceeds its Paravirtual SCSI queue depth" → a request above the Paravirtual SCSI depth waits in the Guest OS, before the virtual device, and adds nothing to KAVG or QAVG. A high QAVG means a VMkernel limit holds the commands: DQLEN, DSNRO on a device that several virtual disks share, or an IOPS limit on a virtual disk.
+- "Raising DSNRO speeds up a VM that is alone on its LUN" → with one VM and one virtual disk active on the device, DSNRO does not apply; DQLEN and the adapter queue depth limit the commands.
 - "Raising the Paravirtual SCSI queue depth speeds up a VM whose device queue is full" → the commands move from the guest queue to the VMkernel queue. The device still takes the same number at once.
 - "GAVG is everything the application waits for" → GAVG starts at the virtual device. The wait in the guest queue is outside it.
 - "There is one queue depth" → the guest device and adapter, the VMkernel device and the adapter each have their own.
@@ -79,17 +93,17 @@ related:
 - guest-os/storage/windows-storage-io-path
 - guest-os/storage/linux-storage-io-path
 source:
-  document: vSphere Monitoring and Performance 9.1, esxtop storage device, storage adapter and virtual machine storage panels (Broadcom TechDocs, last updated 2026-11-09); Broadcom KB 344099, Using esxtop to identify storage performance issues for ESXi (legacy 1008205); Broadcom KB 343323 (legacy 2053145)
-  path: Using esxtop or resxtop in interactive mode > Storage device panel
+  document: vSphere Monitoring and Performance 9.1, esxtop storage device, storage adapter and virtual machine storage panels (Broadcom TechDocs, last updated 2026-11-09); Performance Best Practices for VMware vSphere 9.1 (revision 20260624); Broadcom KB 344099, Using esxtop to identify storage performance issues for ESXi (legacy 1008205); Broadcom KB 343323 (legacy 2053145); Broadcom KB 344706, Setting the Maximum Outstanding Disk Requests for virtual machines (legacy 1268)
+  path: 'Using esxtop or resxtop in interactive mode > Storage device panel (DQLEN, QUED, QAVG). Performance Best Practices: ESX Storage Considerations > NVMe Recommendations (p. 43), General ESX Storage Recommendations (p. 44); Guest Operating System Storage Considerations (p. 60); vSAN Configuration and Use (p. 87)'
 corrections: []
 review_notes:
 - 'To check: Section ''Path of one write command'': the names and order of the layers below the Guest OS (virtual device layer, VMFS, the VMkernel storage core, the Pluggable Storage Architecture and the High Performance Plug-in), against the vSphere Storage documentation.'
-- 'To check: Section ''Queues on the path'': that a command that exceeds the Paravirtual SCSI queue depth waits in the Guest OS and not in the VMkernel. It follows from how a driver queue depth works and from the Microsoft list of where a Windows request can wait; no vendor page states it. The working source file names the Paravirtual SCSI queue depth as a cause of a high KAVG or QAVG (Q195).'
-- 'To check: Section ''Queues on the path'': the option Disk.SchedNumReqOutstanding, named in the working source as a limit that queues requests in the VMkernel. No Broadcom page was read for its default, its scope or its relation to the device queue depth, so the file does not state them.'
+- 'To check: Section ''Disk.SchedNumReqOutstanding (DSNRO)'': the default of 32 against the vSphere 9.1 Storage documentation or the ESXCLI 9.1 reference (https://developer.broadcom.com/xapis/esxcli-command-reference/9.1.0/namespace/esxcli_storage.html). Read in the vSphere 6.5 Troubleshooting page Change the Outstanding IO Requests Setting (example output No of outstanding IOs with competing worlds: 32), which now redirects to TechDocs; Broadcom KB 344706 gives no default.'
+- 'To check: Section ''Disk.SchedNumReqOutstanding (DSNRO)'': how the collective limit of Broadcom KB 344706 (all virtual disks on the host together) relates to the per-world WQLEN of the esxtop storage device panel. Neither page states it.'
 - 'To check: the working source states that ESX does not copy the data payload: the controller reads the guest pages by their host address. Not read in a vendor document, and not stated here. NFS, vSAN and other paths can differ.'
 - 'To check: Section ''Locating the delay with three measurements'': the split by subtraction is a derivation from Little''s Law, not a vendor procedure. The vCenter and esxtop pages give one-line definitions only; the vSphere API reference definitions of totalLatency, kernelLatency, queueLatency and virtualDisk.totalReadLatency were not read.'
-- 'To check: the thresholds differ by source: Broadcom KB 344099 gives 10 ms for sustained DAVG, KAVG and GAVG, a VMware blog gives 2 ms for KAVG, the existing latency stack file gives 0.5 ms for KAVG. The values belong in the threshold catalog, not here.'
 - 'Source URL, esxtop storage device panel: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-monitoring-and-performance/performance-monitoring-utilities-resxtop-and-esxtop/using-esxtop-or-resxtop-in-interactive-mode/storage-device-panel.html'
 - 'Source URL, Broadcom KB 344099: https://knowledge.broadcom.com/external/article?legacyId=1008205'
+- 'Source URL, Broadcom KB 344706: https://knowledge.broadcom.com/external/article/344706/setting-the-maximum-outstanding-disk-req.html'
 status: draft
 ```
