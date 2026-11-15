@@ -1,6 +1,6 @@
 # Export templates: headers, units, formats
 
-Work in progress (2026-11-15). Collected so far: Windows (typeperf, systeminfo, Win32_PageFileUsage) and vCenter chart exports (host CPU; VM CPU in % and MHz; VM memory, real-time). Not yet collected: VCF Operations, esxtop, Linux, and the other vCenter objects. The gaps are listed at the end.
+Work in progress (2026-11-15). Collected so far: Windows (typeperf, systeminfo, Win32_PageFileUsage) and vCenter real-time, last-day and last-week exports for host and VM (see vcenter-chart-export/README.md). Not yet collected: VCF Operations, esxtop, Linux, and the remaining vCenter objects.
 
 ## Windows typeperf
 
@@ -20,17 +20,17 @@ Work in progress (2026-11-15). Collected so far: Windows (typeperf, systeminfo, 
 ## vCenter chart export (CSV)
 
 - Folder: [vcenter-chart-export/](vcenter-chart-export/), with the exports and the README (menu path and versions).
-- Header: `"Time"` followed by one column per object, named `<Measurement> for <object>`. Examples: `Usage for sun05-webmin01`, `Readiness for 1`, `Usage in MHz for 0`, `Granted for sun05-webmin01`.
+- Header: `"Time"` followed by one column per object, named `<Measurement> for <object>`. Examples: `Usage for sun05-webmin01`, `Readiness for 1`, `Usage in MHz for 0`, `Granted for sun05-webmin01`, `Read latency for scsi0:0`, `Data receive rate for vmnic3`, `Read latency for <datastore>`. The disk labels are raw keys: `counter.disk.read.label for ...`.
 - Object names: VMs in the host CPU export appear as numeric object IDs, not names. Other objects (the host, the VM itself) appear by name.
 - Time stamp: `"2026-11-15T09:05:40.000Z"`, ISO 8601 in UTC with milliseconds. The screen shows local time (UTC+8 on this client).
-- Interval: 20 seconds in real-time (about 180 rows per hour). Past day and Past week exports are not yet collected.
+- Interval: 20 seconds in real-time (about 180 rows per hour); last day is a 5-minute rollup (288 rows), last week a 30-minute rollup (336 rows). Only the VM CPU % view has both.
 - Delimiter `,`; header and time stamp quoted; values not quoted; UTF-8 with a byte-order mark.
 - Units: not in the file. The legend shows them: % for Usage and Readiness, MHz for Usage in MHz, KB for memory counters (Active, Ballooned memory, Consumed, Granted).
 - Screen versus export: the legend's Rollup and Units columns are not in the file. The unit must come from the chart legend or from the view name.
 
 ## Not collected yet (and why)
 
-- vCenter: the other objects (datastore, host memory, host disk, VM disk, VM network), and the Past day and Past week exports. Each needs its own chart and export in the browser.
+- vCenter: the remaining objects (other datastores, host network and storage adapters, the other VMs), and the Past day and Past week views of the other charts. Each needs its own chart and export in the browser.
 - VCF Operations metric names and List export: needs the metric picker in the logged-in browser.
 - esxtop batch CSV and the panel screens: the session is in the Terminal panel tab `c1`; keys cannot be typed into it from here.
 - Linux: sun05-webmin01 is Ubuntu Linux (64-bit) and powered on, but no login was made to it, so `top`, `sar`, `iostat` and the other Linux outputs are not collected.
