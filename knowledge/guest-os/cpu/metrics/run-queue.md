@@ -1,5 +1,4 @@
-# Guest OS CPU Run Queue (Windows Processor Queue Length)
-
+# Guest OS CPU Run Queue 
 ## Layer
 - Guest OS layer: Windows or Linux, running on the VM. The VM is a virtual motherboard; it cannot see inside the Guest OS.
 - VMware Tools collects this counter inside the Guest OS and vCenter and VCF Operations store it on the VirtualMachine object. That is a data path, not ownership: the counter belongs to the Guest OS.
