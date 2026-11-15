@@ -10,8 +10,7 @@
 | Core Utilization | 100% |
 | Thread Utilization | 100% on each thread |
 
-- ESXi CPU Usage carries no Hyper-Threading gain, because ESXi CPU Used charges each thread of a busy pair half of the core. The 1.25x is in VM CPU Used and VM CPU Usage only: [`vsphere/technology/cpu/concepts/hyper-threading`](../../concepts/hyper-threading.md), section Hyper-Threading accounting: VM CPU Used and ESXi CPU Used.
-- So a second busy thread on a core leaves ESXi CPU Usage unchanged, while the VMs on that core are charged 25% more.
+- No Hyper-Threading gain: ESXi CPU Used gives each thread of a busy pair half the core; the 1.25x is in VM CPU Used only ([`vsphere/technology/cpu/concepts/hyper-threading`](../../concepts/hyper-threading.md), section Hyper-Threading accounting: VM CPU Used and ESXi CPU Used).
 
 ## Cap
 - ESXi CPU Usage is no longer capped at 100%, in vCenter or VCF Operations. On a busy host with Turbo it exceeds 100% of nominal capacity.

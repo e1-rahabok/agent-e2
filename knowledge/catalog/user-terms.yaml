@@ -8,6 +8,7 @@ meta:
     means: Knowledge-base terms added to the search query.
     note: 'One line for the model: the misconception the user''s words carry, and what to read instead.'
     files: Knowledge files pulled into the context when the row matches, most important first.
+    label: 'Optional: the glossary term of a product label (knowledge/glossary.md, lines Product label, Invites, Better name). The row has no note: harness/terms.py builds it from that entry and puts the entry''s File first, so the correction has one home (Q208). One row per label entry; a match pattern must match the term (lint).'
     premise: 'Optional, true when the words usually carry a wrong premise (an odd question): the note is marked so the model names the premise first (harness/clarify.py).'
   review_notes:
   - 'Question understanding before search. Seeded from knowledge/glossary.md (Also called, Not to confuse with), project/vocabulary.md (Words to avoid) and the Misconceptions sections. Each note restates its file; the file is the source.'
@@ -28,10 +29,10 @@ rows:
   note: 'High CPU usage is consumption, not contention. A VM can be busy and healthy; slowness shows in CPU Ready, Co-stop and the Guest OS run queue.'
   files: [vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics, vsphere/technology/cpu/metrics/virtual-motherboard/usage]
 - id: host-cpu-usage
-  match: ['(esxi?|host)\b[^.?\n]{0,25}\bcpu (usage|utili[sz]ation)', 'cpu (usage|utili[sz]ation)\b[^.?\n]{0,25}\b(esxi?|host)\b']
+  label: ESXi CPU Usage (%)
+  match: ['(esxi?|host)\b[^.?\n]{0,25}\bcpu (usage|utili[sz]ation)', 'cpu (usage|utili[sz]ation)\b[^.?\n]{0,25}\b(esxi?|host)\b', 'consumed cpu ?\(%\)']
   means: ESXi CPU Usage Utilization Core Utilization Hyper-Threading frequency
-  note: 'ESXi CPU Usage counts frequency and Hyper-Threading (both threads busy = core 100%); Utilization is per thread at static frequency; Core Utilization is per core. They differ by design.'
-  files: [vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics, vsphere/technology/cpu/metrics/host/usage, vsphere/technology/cpu/metrics/host/utilization]
+  files: [vsphere/technology/cpu/metrics/host/usage, vsphere/technology/cpu/metrics/host/utilization]
 - id: steal-time
   match: ['steal(ed)? time', '%st\b', '\bcpu steal']
   means: VM CPU Ready Co-stop
@@ -43,10 +44,9 @@ rows:
   note: 'Guest OS iowait is idle time with IO outstanding. VM CPU Wait includes idle time, so it is not a wait problem by itself; read Other Wait and VM disk latency.'
   files: [vsphere/technology/cpu/metrics/virtual-motherboard/other-wait, vsphere/technology/cpu/metrics/virtual-motherboard/wait]
 - id: cpu-latency
-  match: ['cpu latency']
+  label: VM CPU Latency
+  match: ['cpu latency', '%lat_c']
   means: VM CPU Latency Ready frequency Hyper-Threading
-  note: 'VM CPU Latency also rises with lower frequency and Hyper-Threading, with no wait. CPU Ready is the wait for a physical CPU.'
-  files: [vsphere/technology/cpu/metrics/virtual-motherboard/latency]
 - id: add-vcpu
   premise: true
   match: ['(add|more|increase|give it|bump)( more)? (v ?cpus?|cores?|processors?|cpu)\b', '(upsize|scale up) the (vm|cpu)']
@@ -60,15 +60,15 @@ rows:
   note: 'Whether a VM needs memory is a Guest OS question (paging, free memory, application cache), not a VM memory counter.'
   files: [guest-os/system/concepts/guest-os-sizing, vsphere/architecture/vm-vs-guest-os]
 - id: host-memory-usage
+  label: ESXi Memory Usage (%)
   premise: true
   match: ['(esxi?|host|cluster)\b[^.?\n]{0,25}\bmemory (usage|utili[sz]ation|consumed)', 'memory (usage|utili[sz]ation|consumed)\b[^.?\n]{0,25}\b(esxi?|host|cluster)\b']
   means: ESXi Memory Consumed Ballooned Swapped contention
-  note: 'High ESXi Memory Consumed is normal: memory works as a cache. Pressure shows in ballooning, compression, swapping and VM Memory Contention.'
-  files: [vsphere/technology/memory/metrics/comparisons/host-memory-metrics, vsphere/technology/memory/metrics/host/consumed]
+  files: [vsphere/technology/memory/metrics/host/consumed, vsphere/technology/memory/metrics/comparisons/host-memory-metrics]
 - id: vm-memory-usage
+  label: VM Memory Usage (%)
   match: ['(vm|virtual machine)\b[^.?\n]{0,20}\bmemory (usage|utili[sz]ation)', 'memory (usage|utili[sz]ation)\b[^.?\n]{0,20}\b(vm|virtual machine)\b']
   means: VM Memory Usage Consumed Active Guest OS
-  note: 'VM memory counters are the virtual motherboard view. Whether the Guest OS has enough memory is read inside the Guest OS.'
   files: [vsphere/technology/memory/metrics/comparisons/vm-memory-metrics, vsphere/architecture/vm-vs-guest-os]
 - id: active-memory
   match: ['active memory', 'memory active']
@@ -230,3 +230,23 @@ rows:
   means: Cluster Risk leading indicator contention capacity Time Remaining
   note: 'Ambiguous: "cluster risk" can mean (a) Cluster Risk (%), how close the hosts are to contention (worst host: utilization, saturation, reservation, allocation, monster VM); (b) capacity runway, Time Remaining against a projection; (c) availability risk, surviving a host failure. Ask which only when the question does not tell and the answers differ; otherwise answer the likely one and name it. Utilization and allocation alone miss saturation, reservation, monster VMs and the worst host.'
   files: [vsphere/object-types/cluster/models/cluster-risk, sp5-framework/capacity/forecasting]
+- id: total-capacity-ghz
+  label: Total Capacity (GHz)
+  match: ['total capacity\b[^.?\n]{0,20}\b[gm]hz', '\b[gm]hz\b[^.?\n]{0,20}\btotal capacity', 'cpu capacity\b[^.?\n]{0,15}\b(in )?[gm]hz', '\b[gm]hz (of )?(cpu )?capacity']
+  means: base frequency physical threads
+  files: [vsphere/technology/cpu/concepts/cpu-frequency]
+- id: cpu-usage-mhz
+  label: CPU Usage (MHz)
+  match: ['usage ?\(mhz\)', 'usage in mhz', '\busagemhz\b', 'used ?\(mhz\)']
+  means: Run frequency throughput
+  files: [vsphere/technology/cpu/metrics/virtual-motherboard/usage]
+- id: vm-memory-consumed
+  label: VM Memory Consumed
+  match: ['(vm|virtual machine)s?\b[^.?\n]{0,25}\b(memory|ram)\b[^.?\n]{0,15}\bconsumed', '\bconsumed (memory|ram)\b[^.?\n]{0,25}\b(vm|virtual machine)']
+  means: Guest OS In Use Guest OS sizing
+  files: [vsphere/technology/memory/concepts/guest-os-vs-vm-memory]
+- id: capacity-remaining
+  label: Capacity Remaining (%)
+  match: ['capacity remaining']
+  means: projection usable capacity Time Remaining
+  files: [sp5-framework/capacity/forecasting]

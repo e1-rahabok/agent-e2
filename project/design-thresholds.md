@@ -26,7 +26,7 @@ Not indexed.
 ### 3.1 Files
 | File | Content |
 |---|---|
-| [`knowledge/catalog/thresholds-performance.yaml`](../knowledge/catalog/thresholds-performance.yaml) | `kpi`: 31 lines (2026-11-11: `sla` and `sli` removed), green, yellow, orange, red, zero for 5m, 20s and 2s (2026-11-12: green and zero added), entered by hand, with `group`, `kb`, `excluded_when_green` (2026-11-10: one place; 20 rows that served no use case went back to prose; 2 capacity rows moved) |
+| [`knowledge/catalog/thresholds-performance.yaml`](../knowledge/catalog/thresholds-performance.yaml) | `kpi`: 31 lines (2026-11-11: `sla` and `sli` removed), green, yellow, orange, red, zero for 5m, 20s and 2s (2026-11-12: green and zero added), entered by hand, with `group`, `kb`, `excluded_when_green` (2026-11-10: one place; 20 rows that served no use case went back to prose; 2 capacity rows moved); `flow`: 2 flow tests (KAVG, DAVG; host-storage-latency step 1; 2026-11-15, Q195) |
 | [`knowledge/catalog/thresholds-capacity.yaml`](../knowledge/catalog/thresholds-capacity.yaml) | `models`: 18 rows with a grey (wastage) band. `decisions`: 6 close-for-business rows. `rules`: 12 planning and sizing rows (2026-11-10: 7 vendor and default rows went back to prose) |
 | [`knowledge/catalog/thresholds-alerts.yaml`](../knowledge/catalog/thresholds-alerts.yaml) | `symptoms`: 40, one test each; `alerts`: 33 definitions, one object type each (2026-11-12; were 24 with object lists, and before that 20 rows with a free-text `condition`), each with `criticality`, `pillar`, `match`, symptom `sets` (self or children with a population) and `wait_cycles` |
 | Knowledge files | No colour-band table: the file holds the reasons; Agent E2 shows the catalog values with it. Alert files hold no values (2026-11-12): one file per object type, each alert explained under a heading with its catalog name. Capacity flow steps still carry their numbers (marked by `quote` in the row) until they move |
@@ -36,7 +36,7 @@ Not indexed.
 - Rows are joined by the metric's English name; no key.
 
 ### 3.2 How Agent E2 uses them
-1. Start-up: [`harness/catalog.py`](../harness/catalog.py) loads the three files into an in-memory SQLite catalog: tables `thresholds` (one-value tests with `use`: alert, decision, rule; plus `criticality`, `class`, `pillar`, `interval`, `instance`), `kpi`, and `bands` (capacity model rows).
+1. Start-up: [`harness/catalog.py`](../harness/catalog.py) loads the three files into an in-memory SQLite catalog: tables `thresholds` (one-value tests with `use`: alert, decision, rule, flow; plus `criticality`, `class`, `pillar`, `interval`, `instance`), `kpi`, and `bands` (capacity model rows).
 2. Term map ([`harness/terms.py`](../harness/terms.py), [`knowledge/catalog/user-terms.yaml`](../knowledge/catalog/user-terms.yaml)): the user's words pull the metric's knowledge files into the context. No threshold is fetched here.
 3. Agent E2's reading set: `Catalog.facts_for(ids)` adds up to 20 "Catalog facts (exact)" lines for the files in the reading set: counters, rule rows, and the KPI levels of a KPI file (all three intervals, "no value" where empty).
 4. The agent's code calls `Catalog.lookup` with each metric name of the case (harness/AGENT.md, stage 1; the model calls no tool since 2026-11-14). It scores every counter, esxtop field, metric file and threshold row against the name (word overlap, `_score`) and returns the 8 best of each, with the KPI levels of each matched band.

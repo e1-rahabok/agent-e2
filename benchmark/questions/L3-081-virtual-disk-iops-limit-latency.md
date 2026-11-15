@@ -35,7 +35,7 @@ C: the latency is high, so the array is slow. Or J, the overshoot: a wait the VM
 
 ## Notes
 - Theory half of pair D6 with 0425 (practical; design.md, section 3.9). Different limit and IO size from 0425.
-- No option rests on the Paravirtual SCSI queue depth or Disk.SchedNumReqOutstanding (open question Q195).
+- No option rests on the Paravirtual SCSI queue depth or Disk.SchedNumReqOutstanding.
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item D6 (origin: synthetic). Counts only after author approval.
 - Review 2026-11-15: D replaced (it was close to 0425 G); J is the over-correction now. Key unchanged: A, B, E.
 

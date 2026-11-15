@@ -39,6 +39,7 @@
 | Configuration | NPTH | Number of paths. Should match the design. |
 
 - See [`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../../technology/storage/concepts/esxi-storage-latency-stack.md) for GAVG, KAVG, QAVG, DAVG.
+- The queue limits behind DQLEN, WQLEN and QUED (the device queue depth, Disk.SchedNumReqOutstanding, the Paravirtual SCSI queue depth in the guest): [`vsphere/technology/storage/concepts/esxi-storage-io-path`](../../technology/storage/concepts/esxi-storage-io-path.md), section Queues on the path.
 
 ## Disk Device
 | Group | Counters | Meaning |
@@ -47,7 +48,7 @@
 | Queue | LOAD | (active + kernel-queued commands) / queue depth. Above 1: check QUED. |
 | Queue | QUED | Commands queued in the kernel. Keep well below queue depth. |
 | Queue | %USD | ACTV / QLEN (WQLEN for worlds, DQLEN for devices). 100%: queue full; outstanding IO and latency rise. |
-| Queue | DQLEN, WQLEN | Device queue length (adapter equivalent: AQLEN); per-world maximum active commands. |
+| Queue | DQLEN, WQLEN | Device queue length (adapter equivalent: AQLEN); per-world maximum active commands on the device, shown when the device is expanded to worlds (e). |
 | Queue | ACTV | IO in flight. Expected small. |
 | Contention, consumption, PAE and split | Same as Disk Adapter | 12 latency, 5 consumption, 4 PAE/split counters. |
 | Configuration | Path, world, partition (one at a time; e shows one device) | Path names such as vmhba0:C0:T0:L0; per-world statistics; partition ID. |
@@ -78,6 +79,7 @@
 ## Misconceptions
 - "DAVG/cmd low, so writes are fine" → check DAVG/wr.
 - "High KAVG with VAAI is a problem" → expected with offloads.
+- "QUED above 0 means the array is slow" → QUED counts commands held in the VMkernel because the device queue (DQLEN) or Disk.SchedNumReqOutstanding is full; the array time is DAVG.
 
 ## Metadata
 ```yaml
@@ -98,6 +100,7 @@ object:
 metric_class: contention
 internal_derive:
 - vsphere/technology/storage/concepts/esxi-storage-latency-stack
+- vsphere/technology/storage/concepts/esxi-storage-io-path
 same_name: []
 same_meaning: []
 related:

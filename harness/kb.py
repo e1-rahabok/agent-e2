@@ -94,16 +94,19 @@ def load(root=ROOT):
     return docs, chunks
 
 
-GLOSSARY_FIELDS = ('Also called', 'Not to confuse with', 'File')
+GLOSSARY_FIELDS = ('Also called', 'Not to confuse with', 'File', 'Product label', 'Invites', 'Better name')
 GLOSSARY_ENTRY = re.compile(r'^- \*\*(.+?)\*\*: (.*)$')
+LABEL_FIELDS = ('Product label', 'Invites', 'Better name')   # a product label entry has all three (KNOWLEDGE-ENGINEERING.md, Q208)
 
 
 def glossary(docs):
-    """Entries of knowledge/glossary.md: one dict per entry (term, meaning, also, confusable, file, area).
+    """Entries of knowledge/glossary.md: one dict per entry (term, meaning, also, confusable, file, area,
+    label, invites, better).
 
     An entry is '- **Term**: meaning' with optional sub-bullets '  - Also called: a, b',
     '  - Not to confuse with Other term: difference.' and '  - File: `id`', under '### Area' headings
-    (project/knowledge-rules/terminology.md).
+    (project/knowledge-rules/terminology.md). A product label entry adds '  - Product label: the label as shown (where)',
+    '  - Invites: the decision the label invites' and '  - Better name: Name: the better model'; better is (name, model).
     """
     g = docs.get('glossary')
     out = []
@@ -117,7 +120,8 @@ def glossary(docs):
         if area:
             m = GLOSSARY_ENTRY.match(line)
             if m:
-                out.append({'term': m.group(1), 'meaning': m.group(2), 'area': area, 'also': [], 'confusable': None, 'file': ''})
+                out.append({'term': m.group(1), 'meaning': m.group(2), 'area': area, 'also': [], 'confusable': None, 'file': '',
+                            'label': '', 'invites': '', 'better': None})
                 continue
             if not out or out[-1]['area'] != area or not line.startswith('  - '):
                 continue
@@ -128,6 +132,13 @@ def glossary(docs):
                 out[-1]['confusable'] = (field[len('Not to confuse with '):].strip(), value.strip().rstrip('.'))
             elif field == 'File':
                 out[-1]['file'] = value.strip().strip('`')
+            elif field == 'Product label':
+                out[-1]['label'] = value.strip()
+            elif field == 'Invites':
+                out[-1]['invites'] = value.strip()
+            elif field == 'Better name':
+                name, _, model = value.partition(': ')
+                out[-1]['better'] = (name.strip(), model.strip())
     return out
 
 

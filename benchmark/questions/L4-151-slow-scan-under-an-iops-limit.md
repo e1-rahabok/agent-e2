@@ -49,7 +49,7 @@ E or F: the latency is high, so the array is slow. Or C: 250 reads per second is
 
 ## Notes
 - Practical half of pair D6 with 0424 (theory; design.md, section 3.9).
-- No option rests on the Paravirtual SCSI queue depth or Disk.SchedNumReqOutstanding (open question Q195).
+- No option rests on the Paravirtual SCSI queue depth or Disk.SchedNumReqOutstanding.
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item D6 (origin: synthetic). Counts only after author approval.
 - Review 2026-11-15: H names the setting as the product shows it; I (a false screen reading) added. Key unchanged: A, B, D, H.
 

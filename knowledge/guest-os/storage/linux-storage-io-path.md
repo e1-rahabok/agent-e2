@@ -46,7 +46,7 @@
 ## Waiting inside Linux in a VM
 - The driver for the Paravirtual SCSI adapter is vmw_pvscsi, under the SCSI disk driver. Below it are the virtual adapter, the VMkernel and the physical storage.
 - await in Linux covers the queue in Linux, the virtual adapter, the VMkernel and the storage. The vCenter virtual disk latency starts at the virtual disk, so the time a request waits in Linux before it is issued to the virtual disk is not in it.
-- The Paravirtual SCSI adapter default queue depth is 64 for a device and 254 for an adapter. The ring has 8 pages by default. The module options are cmd_per_lun and ring_pages, set for example with options vmw_pvscsi cmd_per_lun=254 ring_pages=32 in a file under /etc/modprobe.d/, or on the kernel command line. The values in use are in /sys/module/vmw_pvscsi/parameters/.
+- The vmw_pvscsi defaults (kernel 5.0 and later): cmd_per_lun 254 per device; ring_pages 8 for an adapter with up to 16 targets, 32 above; the adapter queue is 32 commands per ring page (256 at 8 pages), and cmd_per_lun is capped at it. The 64 per device and 254 per adapter of Broadcom KB 343323 are the Windows driver defaults. The module options are cmd_per_lun and ring_pages, set for example with options vmw_pvscsi cmd_per_lun=254 ring_pages=32 in a file under /etc/modprobe.d/, or on the kernel command line. The values in use are in /sys/module/vmw_pvscsi/parameters/.
 - Requests at the virtual disk: the I/O rate times the vCenter virtual disk latency, over the same interval. This follows from Little's Law.
 - Requests held inside Linux before the virtual disk: aqu-sz minus the requests at the virtual disk. A remainder near zero means aqu-sz shows requests the device serves in parallel. A large remainder, with the requests at the virtual disk at the queue depth, means requests wait for a free slot.
 
@@ -80,15 +80,16 @@ related:
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 - vsphere/technology/storage/concepts/guest-os-vs-vm-storage
 source:
-  document: Linux kernel documentation, I/O statistics fields (admin-guide/iostats, development tree 7.4.0-rc2); sysstat iostat(1) manual page (man-pages July 2025); Broadcom KB 343323, Large-scale workloads with intensive I/O patterns might require queue depths significantly greater than Paravirtual SCSI default values
+  document: Linux kernel source, drivers/scsi/vmw_pvscsi.c; Linux kernel documentation, I/O statistics fields (admin-guide/iostats, development tree 7.4.0-rc2); sysstat iostat(1) manual page (man-pages July 2025); Broadcom KB 343323, Large-scale workloads with intensive I/O patterns might require queue depths significantly greater than Paravirtual SCSI default values
   path: Fields 9 to 11 (kernel documentation); aqu-sz, await, %util (iostat); Resolution (Broadcom KB)
 corrections: []
 review_notes:
 - 'To check: Section ''Stack from application to driver'' and the blk-mq detail (software queue per CPU, hardware dispatch queue, scheduler names): against the kernel block layer documentation, docs.kernel.org/block.'
 - 'To check: Section ''Collection point of the queue statistics'': the point at which a request starts to count in the in-flight statistics on blk-mq (request creation or dispatch) differs by kernel version; the kernel documentation says it counts from the moment the request is given to the request queue.'
-- 'To check: Section ''Waiting inside Linux in a VM'': the vmw_pvscsi default of cmd_per_lun and ring_pages (the Broadcom KB states 64 and 254 as the adapter defaults and 8 ring pages, not the module defaults); that the vCenter virtual disk latency starts at the virtual disk; the subtraction is a derivation from Little''s Law, not a vendor procedure.'
+- 'To check: Section ''Waiting inside Linux in a VM'': that the vCenter virtual disk latency starts at the virtual disk; the subtraction is a derivation from Little''s Law, not a vendor procedure.'
 - 'Source URL, kernel documentation: https://www.kernel.org/doc/html/latest/admin-guide/iostats.html'
 - 'Source URL, iostat: https://man7.org/linux/man-pages/man1/iostat.1.html'
+- 'Source URL, vmw_pvscsi defaults (PVSCSI_DEFAULT_QUEUE_DEPTH 254, ring pages): Linux kernel drivers/scsi/vmw_pvscsi.c, https://github.com/torvalds/linux/blob/master/drivers/scsi/vmw_pvscsi.c'
 - 'Source URL, Broadcom KB 343323 (legacy 2053145, no Updated On date shown): https://knowledge.broadcom.com/external/article?legacyId=2053145'
 status: draft
 ```

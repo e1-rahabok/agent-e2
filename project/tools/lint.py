@@ -325,7 +325,7 @@ def check_terminology(docs, bad):
                     bad(g, f'section "{area}": an entry reads "- **Term**: meaning": {line[:50]}')
                 if line.startswith('  - '):
                     field, sep, value = line[4:].partition(': ')
-                    if not sep or not (field in ('Also called', 'File') or field.startswith('Not to confuse with ')):
+                    if not sep or not (field in ('Also called', 'File') + _kb.LABEL_FIELDS or field.startswith('Not to confuse with ')):
                         bad(g, f'section "{area}": entry lines are {", ".join(_kb.GLOSSARY_FIELDS)}: {line[:50]}')
                     elif field.startswith('Not to confuse with ') and len(field.split()) > 10:
                         bad(g, f'section "{area}": "Not to confuse with Other term: difference" (other term up to 6 words): {line[:50]}')
@@ -335,6 +335,9 @@ def check_terminology(docs, bad):
             if t.lower() in seen: bad(g, f'term "{t}" has two entries')
             seen.add(t.lower())
             if e['file'] and e['file'] not in docs: bad(g, f'term "{t}": File {e["file"]} is not a knowledge id')
+            if e['label'] or e['invites'] or e['better']:  # a product label entry (KNOWLEDGE-ENGINEERING.md, Product label and better model)
+                if not (e['label'] and e['invites'] and e['better'] and all(e['better']) and e['file']):
+                    bad(g, f'term "{t}": a product label entry has Product label, Invites, "Better name: Name: better model" and File')
     import primer as _primer  # up-front misconceptions: one home, the marked line of a file (Q211)
     for i, d in docs.items():
         b = d.meta.get('up_front')
@@ -434,7 +437,7 @@ CATALOG = 'knowledge/catalog'
 THRESHOLD_SOURCES = ['knowledge-base', 'vsphere-9.1-docs', 'performance-best-practices-9.1', 'microsoft']
 # Threshold files and their sections, named by use. A section name is the use the Harness shows with each value.
 THRESHOLD_SECTIONS = {
-    'thresholds-performance.yaml': ('kpi',),
+    'thresholds-performance.yaml': ('kpi', 'flow'),
     'thresholds-capacity.yaml': ('models', 'decisions', 'rules'),
     'thresholds-alerts.yaml': ('symptoms', 'alerts'),
 }
@@ -444,6 +447,8 @@ ROW_CLASSES = CLASSES + ('all', 'production', 'non-production')
 OPERATORS = ['>', '>=', '<', '<=', '=', 'range']
 # Alerts fire on one object type, so the recommended alerts live with the object type (2026-11-12).
 ALERT_FILE = re.compile(r'vsphere/object-types/([a-z-]+)/\1-alerts|guest-os/guest-os-alerts')
+FLOW_CHECKS = re.compile(r'^## Checks, in order\s*$', re.M)
+FLOW_STEP = re.compile(r'^(\d+)\.\s', re.M)
 ALERT_VALUE = re.compile(r'\d+(?:[.,]\d+)?\s?(?:%|ms|GHz|MHz|MB|GB|IOPS|minutes?|cycles?)(?![a-z])')
 
 
@@ -546,6 +551,18 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                 checked = section == 'misconceptions' or any(n in section for n in names)
                 if checked and ALERT_VALUE.search(text):
                     bad(f'knowledge/{kb_id}.md', f'section "{section}": alert value "{ALERT_VALUE.search(text).group(0)}" in prose: values live only in catalog/thresholds-alerts.yaml')
+    def check_flow_row(path, w, r):
+        """A flow test: one number that one numbered step of its kb flow file compares a reading with."""
+        if not str(r.get('id', '')).startswith('flow-'): bad(path, f'{w}: id must start with flow-')
+        if r.get('unit') in (None, ''): bad(path, f'{w}: unit missing')
+        if r.get('operator') == 'range': bad(path, f'{w}: a flow test is one comparison, not a range')
+        if not isinstance(r.get('step'), int) or isinstance(r.get('step'), bool):
+            bad(path, f'{w}: step must be the number of a step in the kb flow file'); return
+        if r.get('kb') in bodies:
+            m = FLOW_CHECKS.search(bodies[r['kb']])
+            steps = FLOW_STEP.findall(bodies[r['kb']][m.end():].split('\n## ', 1)[0]) if m else []
+            if not steps: bad(path, f'{w}: kb {r["kb"]} has no "## Checks, in order": a flow row names a flow file')
+            elif str(r['step']) not in steps: bad(path, f'{w}: no step {r["step"]} in {r["kb"]}')
     def kb_ok(path, where, ref):
         if ref and ref not in ids and not ref.startswith('catalog/'):
             bad(path, f'{where}: kb "{ref}" does not exist')
@@ -620,16 +637,32 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                     if r.get('layer') and r['layer'] not in allowed['layer']: bad(path, f'{w}: layer "{r["layer"]}" not allowed')
                     if 'class' in r and r['class'] not in ROW_CLASSES: bad(path, f'{w}: class must be one of {", ".join(ROW_CLASSES)}')
                     if 'criticality' in r: bad(path, f'{w}: criticality belongs to alert rows')
+                    if section == 'flow':
+                        check_flow_row(path, w, r)
+                    elif 'step' in r: bad(path, f'{w}: step belongs to flow rows')
                     if r.get('kb') in bodies and r.get('quote') and r['quote'] not in bodies[r['kb']]:
                         bad(path, f'{w}: quote no longer in {r["kb"]}: update the row or the file')
         elif name == 'user-terms.yaml':
+            import terms as _terms  # product label rows take their note from the glossary (Q208)
+            labels, labelled = _terms.labels(), {}
             seen = set()
             for n, r in enumerate(rows):
                 w = f'row {n + 1} ({r.get("id")})'
-                for k in ('id', 'match', 'means', 'note', 'files'):
+                for k in ('id', 'match', 'means') + (() if r.get('label') else ('note', 'files')):
                     if not r.get(k): bad(path, f'{w}: {k} missing')
                 if r.get('id') in seen: bad(path, f'{w}: duplicate id')
                 seen.add(r.get('id'))
+                if r.get('label'):
+                    lb = r['label']
+                    if r.get('note'): bad(path, f'{w}: a label row has no note: its note comes from the glossary entry "{lb}" (one home)')
+                    if lb not in labels: bad(path, f'{w}: label "{lb}" is not a glossary entry with a Product label line')
+                    if lb in labelled: bad(path, f'{w}: label "{lb}" already has row {labelled[lb]}: one row per label')
+                    labelled.setdefault(lb, r.get('id'))
+                    try:
+                        if not any(re.search(p, lb, re.I) for p in r.get('match') or []):
+                            bad(path, f'{w}: no match pattern matches the label term "{lb}", so a question that names it gets no note')
+                    except re.error:
+                        pass  # reported below
                 for pat in (r.get('match') or []) + ([r['unless']] if r.get('unless') else []):
                     try:
                         re.compile(pat)
@@ -637,6 +670,9 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                         bad(path, f'{w}: bad pattern {pat!r}: {e}')
                 for fid in r.get('files') or []:
                     kb_ok(path, w, fid)
+            for lb in labels:
+                if lb not in labelled:
+                    bad('knowledge/glossary.md', f'term "{lb}": a product label entry needs a term-map row (label: {lb}) in {path}, so its note reaches the model')
         elif name == 'objects.yaml':
             types = set()
             for o in data.get('objects') or []:

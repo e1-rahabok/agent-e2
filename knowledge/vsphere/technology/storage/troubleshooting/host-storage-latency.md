@@ -18,9 +18,9 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Split GAVG into KAVG and DAVG (HostSystem) ([`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../concepts/esxi-storage-latency-stack.md)). KAVG above 0.5 ms → step 2. DAVG high → step 3.
+1. Split GAVG into KAVG and DAVG (HostSystem) ([`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../concepts/esxi-storage-latency-stack.md)). KAVG above its flow test (catalog row flow-esxi-disk-kernel-latency) → step 2. DAVG above its flow test (flow-esxi-disk-device-latency) → step 3.
 2. Kernel queue (HostSystem). QAVG and the queue depths at each level of the stack. → step 4.
-3. Device (HostSystem). Healthy DAVG is well within 5 ms. DAVG high: check the array. Array latency low: the fabric or HBA configuration. → step 4.
+3. Device (HostSystem). DAVG high: check the array. Array latency low: the fabric or HBA configuration. → step 4.
 4. Per adapter and path (HostSystem) ([`vsphere/technology/storage/metrics/host/adapter-and-path`](../metrics/host/adapter-and-path.md)). Read and write latency separately. Use the 95th or 99th percentile, not the maximum. → step 5.
 5. Read vs write (HostSystem). Write-only latency is expected when reads hit cache. → step 6.
 6. NVMe memory-tier device (HostSystem). High latency at near-zero IO is a wake-up from a power-saving state: the cause, not a reason to discard the reading. The VMs that read then did wait; their NVMe Wait shows how much. → step 7.
