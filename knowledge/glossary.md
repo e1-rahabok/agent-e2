@@ -77,14 +77,14 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
 - **Total Capacity (GHz)**: Cores × base frequency, for an ESXi host or a cluster: no Turbo, no Hyper-Threading.
   - Product label: Total Capacity, GHz (vSphere Client host and cluster CPU; VCF Operations)
   - Invites: the CPU capacity of the host, so vCPUs are sized and bought in GHz.
-  - Better name: Nominal CPU Throughput: work per second at base clock, not space. Capacity is the count of physical threads: 16 cores with Hyper-Threading = 32 threads, at any clock.
+  - Better name: Total Base Capacity (GHz): capacity at base (nominal) frequency, no Turbo, no Hyper-Threading; not the throughput the host delivers, which is activity. Capacity is the count of physical threads: 16 cores with Hyper-Threading = 32 threads, at any clock.
   - File: [`vsphere/technology/cpu/concepts/cpu-measurement-levels`](vsphere/technology/cpu/concepts/cpu-measurement-levels.md)
 - **Usage Disparity**: Spread of usage across the vCPUs of one VM.
   - Also called: vCPU imbalance, Imbalance vCPU Usage (avoid)
 - **VM CPU Latency**: Overlap, Co-stop and Ready without Max Limited, plus the Hyper-Threading and power-saving effects.
   - Product label: Latency (%) (vSphere Client, VM CPU); %LAT_C (esxtop)
   - Invites: the VM waits for CPU, so it has CPU contention.
-  - Better name: CPU Throughput Loss: throughput lost against a whole core at nominal frequency, by waiting or by running slower. It rises with no wait and leaves out a limit; the wait is in Ready and Co-stop.
+  - Better name: VM CPU Latency (label kept): not a throughput loss, because it includes the Hyper-Threading effect; it counts time lost against a whole core at nominal frequency, by waiting or by running slower. It rises with no wait and leaves out a limit; the wait is in Ready and Co-stop.
   - File: [`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](vsphere/technology/cpu/metrics/virtual-motherboard/latency.md)
 - **VM CPU Used**: Run scaled by frequency and Hyper-Threading, plus System, minus Overlap.
   - Also called: %USED (esxtop)
@@ -101,7 +101,7 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
 - **ESXi Memory Usage (%)**: ESXi Memory Consumed / Total Capacity: pages held by VMs, VM overhead, the kernel, vSAN and NSX.
   - Product label: Usage (%) (vSphere Client and VCF Operations, host and cluster memory)
   - Invites: the host is short of memory near 95%.
-  - Better name: ESXi Memory Claimed (%): pages claimed, much of it cache; near 100% is normal. Pressure shows in ballooning, compression, swapping and VM Memory Contention.
+  - Better name: ESXi Memory Usage (%) (label kept): it maps closest to Consumed; pages held, much of it cache; near 100% is normal. Pressure shows in ballooning, compression, swapping and VM Memory Contention.
   - File: [`vsphere/technology/memory/metrics/host/usage`](vsphere/technology/memory/metrics/host/usage.md)
 - **ESXi pages**: Pages ESXi manages on DIMM, host cache or tiered NVMe.
   - Also called: machine pages, machine memory
@@ -118,7 +118,7 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
 - **VM Memory Consumed**: Granted minus sharing savings: the ESXi pages mapped to the VM, without overhead and swapped pages.
   - Product label: Consumed (vSphere Client, VM memory)
   - Invites: what the Guest OS uses now, so a VM near its configured memory needs more.
-  - Better name: VM Memory Claimed: ESXi pages the VM holds from first touch until ESXi reclaims them, guest cache and freed pages included; it does not drop when the Guest OS frees memory. Guest OS need is read inside the Guest OS.
+  - Better name: VM Memory Consumed (label kept; "claimed" would suggest reclamation): ESXi pages the VM holds from first touch until ESXi reclaims them, guest cache and freed pages included; it does not drop when the Guest OS frees memory. Guest OS need is read inside the Guest OS.
   - File: [`vsphere/technology/memory/metrics/virtual-motherboard/consumed`](vsphere/technology/memory/metrics/virtual-motherboard/consumed.md)
 - **VM Memory Usage (%)**: vCenter: from Active. VCF Operations: Guest OS Needed Memory / VM memory, falling back to Active without Guest OS data. Disabled by default in VCF Operations 9.1; Guest|Needed Memory over Mem|Total Capacity gives the same ratio.
   - Product label: Usage (%) (vSphere Client and VCF Operations, VM memory)
@@ -166,7 +166,7 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
 - **Capacity Remaining (%)**: VCF Operations: usable capacity minus the highest projected utilization in the next 3 days, for the most constrained resource.
   - Product label: Capacity Remaining (%), Capacity Remaining Percentage (%) (VCF Operations, cluster and other containers)
   - Invites: the capacity free now, so the next peak fits.
-  - Better name: 3-Day Forecast Remaining (%): the tightest point of a 3-day projection, against usable capacity. A month-end peak beyond the 3 days shows only in Time Remaining.
+  - Better name: 3-Day Forecast Capacity Remaining (%): the tightest point of a 3-day projection, against usable capacity. A month-end peak beyond the 3 days shows only in Time Remaining.
   - File: [`vcf-operations/features/capacity-forecast`](vcf-operations/features/capacity-forecast.md)
 - **Close for Business**: The cluster decision: 1 = closed (no new VM, no VM upsize), 0 = open, decided from Cluster Consumption (%), Cluster Performance (%) and Cluster Risk (%).
   - Also called: Closed cluster, Stop provisioning
@@ -258,6 +258,6 @@ review_notes:
   - "To check: column 'Not to confuse with': each pair against the file in its File column."
   - "To check: the entries added 2026-11-11 to carry a pair (ESXi CPU Demand, ESXi CPU Usage, VM CPU Used, Guest OS In Use, VM Memory Usage (%), Disk (device), Cluster Risk (%), Compliance, Property)."
   - "To check: each term and its preferred name in section 'CPU', from Run Quality onward."
-  - "To check: the product label entries (Q208, 2026-11-15): each Product label against the vSphere Client 9.1 and VCF Operations 9.1.1 screens, and each Better name that is a proposed new term (Q208): CPU Throughput (% of nominal), Nominal CPU Throughput, CPU Throughput Loss, ESXi Memory Claimed (%), VM Memory Claimed, 3-Day Forecast Remaining (%)."
+  - "To check: the product label entries (Q208, 2026-11-15): each Product label against the vSphere Client 9.1 and VCF Operations 9.1.1 screens, and the Better name CPU Throughput (% of nominal), a proposed new term (Q236). Total Base Capacity (GHz) and 3-Day Forecast Capacity Remaining (%) are the author's names (Q236)."
 status: reviewed
 ```

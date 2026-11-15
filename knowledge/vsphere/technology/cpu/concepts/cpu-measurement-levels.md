@@ -58,7 +58,7 @@
 
 ## vSphere's number
 - The product label: vSphere shows the host and cluster CPU figure as Total Capacity, in GHz: base frequency × cores. No Turbo, no Hyper-Threading. VCF Operations uses the same label. Read a screen by this label: it is what the operator sees.
-- What it measures: throughput at base clock, not capacity. GHz is work per second. Capacity is space, counted in physical threads where a vCPU can run (section CPU capacity: Rules). Two hosts with the same Total Capacity (GHz) can hold different numbers of vCPUs.
+- What it measures: the capacity at base (nominal) clock, better named Total Base Capacity (GHz). It is a capability, not throughput: throughput is the work actually done (Usage). Space for vCPUs is counted in physical threads where a vCPU can run (section CPU capacity: Rules). Two hosts with the same Total Capacity (GHz) can hold different numbers of vCPUs.
 - Why the product uses it: one GHz number fits a summary screen and adds up across hosts and VMs. The thread model needs Hyper-Threading and frequency explained, which a UI label cannot do.
 - Conservative: suits mission-critical clusters. Other workloads can be packed more.
 - Sum of VM CPU Usage can exceed Total Capacity: Total Capacity is nominal, and Usage counts Turbo.
@@ -95,7 +95,7 @@
 - "Use Usage or Demand for capacity" → they include frequency. Capacity uses static counters (Run, Utilization).
 - "Usage (%) near 100% means no headroom" → nominal speed is not the upper limit. Check contention counters.
 - "Faster CPU = more capacity" → more speed, not more space.
-- "Total Capacity (GHz) is the host's CPU capacity" or "capacity = cores × GHz, with or without Turbo and Hyper-Threading" → Total Capacity is the product's label for throughput at base clock. Capacity is the count of physical threads: 16 cores with Hyper-Threading = 32 threads, at any clock speed.
+- "Total Capacity (GHz) is the host's CPU capacity" or "capacity = cores × GHz, with or without Turbo and Hyper-Threading" → Total Capacity is the capacity at base clock only (Total Base Capacity). Capacity is the count of physical threads: 16 cores with Hyper-Threading = 32 threads, at any clock speed.
 - "Host CPU capacity depends on Turbo and the power policy" → those change throughput. The thread count is fixed by the hardware and the Hyper-Threading setting.
 - "Sum of VM Usage above Total Capacity is impossible" → Total Capacity is nominal; Turbo exceeds it.
 

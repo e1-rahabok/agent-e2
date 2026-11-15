@@ -190,16 +190,16 @@ This is the one definition of the levels; the benchmark uses it ([`benchmark/des
 | Product label, as the UI shows it | Total Capacity, GHz (vSphere host and cluster, VCF Operations) | Usage (MHz) |
 | What the product computes | cores × base frequency | productive cycles, scaled by frequency |
 | The decision the label invites (the Level 300 reading) | "this is how much the host can hold" | "this is how busy the CPU is" |
-| The better model | GHz is work per second; capacity is space, counted in physical threads | completed work, not busy time |
-| The better name | Nominal CPU Throughput | CPU Throughput |
+| The better model | GHz at base clock, no Turbo or Hyper-Threading; space for vCPUs is counted in physical threads | completed work, not busy time |
+| The better name | Total Base Capacity (GHz) | CPU Throughput |
 | Why the product is simpler | one number that adds up across hosts and VMs | one counter for charts and billing |
 
 - Test for a label: the label invites a decision that its computed model does not support, and the knowledge base holds the better model. A label that names what it computes stays a plain metric, whatever else is misread about it.
 - Rules:
-  - Never reword a label. Quote it as the product shows it, then correct the model behind it. Wrong: "vSphere's GHz total". Right: "Total Capacity (GHz) is throughput at base clock; capacity is threads" ([`project/knowledge-rules/vocabulary.md`](project/knowledge-rules/vocabulary.md), Words to avoid).
+  - Never reword a label. Quote it as the product shows it, then correct the model behind it. Wrong: "vSphere's GHz total". Right: "Total Capacity (GHz) is the capacity at base clock; space for vCPUs is threads" ([`project/knowledge-rules/vocabulary.md`](project/knowledge-rules/vocabulary.md), Words to avoid).
   - Tone: "the product uses a simpler model", never "the product is wrong".
   - The better name is Agent E2's vocabulary ([`knowledge/glossary.md`](knowledge/glossary.md)). A benchmark prompt uses only the label (fairness F1); a key point grades the model, never the better name, which a frontier model cannot know.
-  - A better name reuses Agent E2's existing words where one fits (CPU Throughput, Active, Guest OS Needed Memory), so the names form one family: Usage (MHz) is CPU Throughput, Total Capacity (GHz) is Nominal CPU Throughput, ESXi Usage (%) is the first over the second.
+  - A better name reuses Agent E2's existing words where one fits (CPU Throughput, Active, Guest OS Needed Memory), so the names form one family: Usage (MHz) is CPU Throughput, Total Capacity (GHz) is Total Base Capacity (GHz). A label that already names its model well stays as the better name (author, Q236): VM CPU Latency, ESXi Memory Usage (%), VM Memory Consumed. Throughput is activity, not capability, so no capacity figure is named a throughput.
 - Teaching order, the order the author uses in consulting: (1) name the label as the operator sees it; (2) say what it computes; (3) name the decision it invites and why that decision fails; (4) give the better model and its name; (5) what to read instead.
   - Applied only when the question or the case names a listed label (a term-map row with `label` matches), and inside the answer's length and shape, never added to them. An operator reads a short answer: 250 words with the conclusion first leave no room for five extra steps.
   - The conclusion carries steps 1, 3 and 4; the mechanism, step 2; what to check next, step 5. The text is `LABEL_ORDER` in [`harness/terms.py`](harness/terms.py), added to the rules of an open answer ([`harness/AGENT.md`](harness/AGENT.md), section 4.5). A multiple-choice answer gets the note, not the order.
@@ -216,12 +216,12 @@ This is the one definition of the levels; the benchmark uses it ([`benchmark/des
 |---|---|---|
 | CPU Usage (MHz) | how busy the CPU is | CPU Throughput |
 | ESXi CPU Usage (%) | the host is full at 100% | CPU Throughput (% of nominal) |
-| Total Capacity (GHz) | the host's CPU capacity | Nominal CPU Throughput |
-| VM CPU Latency | the VM waits for CPU | CPU Throughput Loss |
-| ESXi Memory Usage (%) | the host is short of memory | ESXi Memory Claimed (%) |
-| VM Memory Consumed | what the Guest OS uses now | VM Memory Claimed |
+| Total Capacity (GHz) | the host's CPU capacity | Total Base Capacity (GHz) |
+| VM CPU Latency | the VM waits for CPU | VM CPU Latency (kept) |
+| ESXi Memory Usage (%) | the host is short of memory | ESXi Memory Usage (%) (kept) |
+| VM Memory Consumed | what the Guest OS uses now | VM Memory Consumed (kept) |
 | VM Memory Usage (%) | the VM needs more memory | Active (%) or Guest OS Needed Memory (%), by tool |
-| Capacity Remaining (%) | the capacity free now | 3-Day Forecast Remaining (%) |
+| Capacity Remaining (%) | the capacity free now | 3-Day Forecast Capacity Remaining (%) |
 
 - Out of the list: Contention (VCF Operations). Since Aria Operations 8.18 it is Overlap + Co-stop + Ready + Other Wait (below 1%): time the vCPU did not get, which is what the label says ([`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/contention.md)). Its wrong reading, a cluster overloaded when a limit causes it, is about cause and stays a misconception of its file. Its mapping to CPU Latency before 8.18 is outside the releases covered.
 
