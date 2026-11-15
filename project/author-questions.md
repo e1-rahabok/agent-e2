@@ -59,7 +59,7 @@ Each entry:
   - A. Keep 0.8 as the field figure for a busy cluster, and state the assumption (sibling busy about half the time).
   - B. A range, 0.625 to 1.0 × All-Core Turbo, by how busy the sibling threads are.
 - Recommended: B, unless your field data supports 0.8.
-- Answer:
+- Answer: A. You're confusing Turbo with HyperThreading. 
 
 ### Q240 · Capacity > Models · Memory row of Cluster Consumption and Cluster Risk
 
