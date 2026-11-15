@@ -80,7 +80,7 @@ reservation is guaranteed; utilization may be < reservation
 | After use | — | Once the VM asks for memory and is served, the physical RAM stays reserved, even if the VM is idle for days. The page is effectively locked. |
 
 - Before the VM asks for memory, ESXi does not back the reservation with physical RAM.
-- Lab check (9.1, one 8 GiB VM): setting the reservation to 8 GiB while the VM consumed 5.5 GiB, and later removing it, left VM Consumed, Granted, Entitlement and Overhead consumed flat ([VM memory metrics compared](../technology/memory/metrics/comparisons/vm-memory-metrics.md), section VM reservation across counters).
+- Lab check (9.1, one VM): setting a reservation above the VM's Consumed, and later removing it, left VM Consumed, Granted, Entitlement and Overhead consumed flat ([VM memory metrics compared](../technology/memory/metrics/comparisons/vm-memory-metrics.md), section VM reservation across counters).
 
 ## Limit
 - Not visible to the Guest OS.

@@ -11,7 +11,7 @@
 - Total reservation does not follow VM activity: on a 9.1 lab host it stayed at about 362,000 MB (354 GiB) while Reservation consumed rose from 373 MB to 9,385 MB. Read as the memory reserved by VMs, it would be far too high.
 - Total reservation equals Reservation consumed plus Reservation available on every sample of that host, to within 1 MB.
 - Reservation consumed counts VMs only. It excludes the kernel reservation (System Resource Reservation, [overhead](../../../../architecture/overhead.md), section Memory metrics) and kernel use: on the lab host it read 373 MB, below both the 4.2 GB kernel reservation and VMkernel consumed (704 MB).
-- Reservation consumed follows a VM's reservation as set. Test on the lab host (20-second real-time samples): raising one 8 GB VM's reservation from 0 to 8 GB raised Reservation consumed by exactly 8,192 MB and lowered Reservation available by the same amount, to within 4 MB. That VM had consumed only 5.5 GiB (Granted 6.06 GiB), so the counter cannot be counting touched pages: it counts the reservation.
+- Reservation consumed follows a VM's reservation as set. Test on the lab host (20-second real-time samples): raising one VM's reservation by several GB raised Reservation consumed by exactly the amount of the change, to the MB, and lowered Reservation available by the same amount, to within 4 MB. That VM had consumed less than its new reservation (Granted too), so the counter cannot be counting touched pages: it counts the reservation.
 - The name misleads: Reservation consumed is the part of the reservable capacity that VM reservations have taken, whether or not the VMs use it. Use VM Memory Consumed and Active for use.
 - The counters of the same chart that did not move in that test: Consumed, Granted, VMkernel consumed and Overhead consumed ([ESXi memory metrics compared](../comparisons/host-memory-metrics.md), section VM reservation across counters).
 - The vCenter chart mixes units: MB for Total reservation and Reservation consumed, KB for Reservation available, Consumed, Granted and VMkernel consumed. Convert before comparing: 373 MB against a VMkernel consumed of 720,980 KB (704 MB).
@@ -24,7 +24,7 @@
 
 ## Misconceptions
 - "Reserved = used" → a reservation is a guarantee, not use. Check VM Memory Consumed and Active for use.
-- "Reservation consumed measures the memory the reserving VMs actually use" → it counts the reservation as set: a VM with an 8 GiB reservation and 5.5 GiB consumed adds 8 GiB.
+- "Reservation consumed measures the memory the reserving VMs actually use" → it counts the reservation as set: a VM that has consumed less than its reservation still adds the whole reservation.
 - "Total reservation is the memory reserved by powered-on VMs" → it is the host's reservable capacity (Reservation consumed plus Reservation available). Reservation consumed is the VM part.
 - "Reservation consumed includes the kernel reservation" → it counts VMs only. The kernel reservation is System Resource Reservation.
 - "A reservation takes its memory away from other VMs from power-on" → untouched reserved pages can serve other VMs; only admission control counts the full amount at power-on.
@@ -58,7 +58,7 @@ source:
   path: Memory > ESXi > Overview; Consumption Metrics > Reservation
 corrections: []
 review_notes:
-- 'Section ''Counter scope'': a second lab test (2026-11-15: one 8 GB VM with 5.5 GB consumed, reservation 0 to 8 GB) settled that Reservation consumed counts the reservation as set; the earlier step of 820 MB on a 1 GB VM does not fit that reading and is open (Q231). API 9.1 (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html) defines reservedCapacity as the reservation used by powered-on VMs and vSphere services and totalCapacity as that reservation used and available; the match of these to the UI labels Reservation consumed and Total reservation is by unit and definition.'
+- 'Section ''Counter scope'': a second lab test (2026-11-15: one VM that had consumed less than the new reservation) settled that Reservation consumed counts the reservation as set; the earlier step of 820 MB on a 1 GB VM does not fit that reading and is open (Q231). API 9.1 (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html) defines reservedCapacity as the reservation used by powered-on VMs and vSphere services and totalCapacity as that reservation used and available; the match of these to the UI labels Reservation consumed and Total reservation is by unit and definition.'
 - 'Section ''Three reservation counters'': check the 9.1 wording that the VMkernel can allocate the unused portion of a reservation to other VMs until the VM consumes it (stated in vSphere 8.0 Resource Management; no 9.1 page found yet). https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management.html'
 status: draft
 ```

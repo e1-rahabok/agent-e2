@@ -33,7 +33,7 @@
 ![Host Usage, Machine Demand, Utilization, Consumed across hosts](../../images/esxi-memory-usage-demand-utilization-consumed-across-hosts.png)
 
 ## VM reservation across counters
-- Test on a 9.1 lab host, vCenter Advanced Performance, 20-second samples: a running VM's reservation was raised twice (+820 MB, then +8 GB). Only the reservation counters moved.
+- Test on a 9.1 lab host, vCenter Advanced Performance, 20-second samples: the reservation of a running VM was raised twice (a small VM, then a larger one). Only the reservation counters moved.
 
 | Counter (vCenter) | Unit | Moves with a VM reservation | Reading |
 |---|---|---|---|
