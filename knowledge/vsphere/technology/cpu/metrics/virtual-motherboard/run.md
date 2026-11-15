@@ -13,7 +13,7 @@
 - Run is binary: it counts whether the vCPU runs, not how much work it completes.
 - Run does not see CPU frequency or Hyper-Threading.
 - Run is one of 4 states: Run + Ready + Co-stop + Wait = 100%, per vCPU.
-- vCenter: 20,000 ms = 100% per vCPU. The VM value in ms is the sum over its vCPUs.
+- vCenter real time and VCF Operations (any 5-minute point): 20,000 ms = 100% per vCPU; vCenter Past Day and longer charts sum the samples ([`sp5-framework/observability/collection-interval`](../../../../../sp5-framework/observability/collection-interval.md), section Base of a millisecond value). The VM value in ms is the sum over its vCPUs.
 - Use Run for capacity (Run Time). Use throughput in MHz for performance (Run Quality).
 - See [`vsphere/technology/cpu/concepts/vcpu-states`](../../concepts/vcpu-states.md) and [`vsphere/technology/cpu/concepts/run-time-vs-run-quality`](../../concepts/run-time-vs-run-quality.md).
 
