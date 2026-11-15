@@ -64,6 +64,7 @@
 - Balanced does not mean lower performance for every workload. Most workloads suit it.
 
 ## Likely vCPU speed on a busy cluster
+- Considering both Turbo and Hyperthreading, what is the likely CPU speed you get most of the time? 
 - Scenario: many cores busy, most running 2 threads, Balanced policy, OS Controlled BIOS.
 - Starting point: All-Core Turbo, not base and not Single-Core Turbo.
 - Hyper-Threading delivers 1.25x per core in total: a vCPU is charged 62.5% of the core while its sibling thread runs, and the full core while the sibling is halted ([`vsphere/technology/cpu/concepts/hyper-threading`](hyper-threading.md), section Hyper-Threading accounting: VM CPU Used and ESXi CPU Used).
