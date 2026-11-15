@@ -26,7 +26,7 @@ Each entry:
 - Now: your answer of 2026-11-15 settled five names (resolved file). One is left: ESXi CPU Usage (%) → CPU Throughput (% of nominal). It is activity (work done against the base clock), so it fits your rule that throughput is activity.
 - Question: accept, keep the label as it is, or give your name?
 - Recommended: accept. It pairs with CPU Throughput, your Q203 name for Usage (MHz).
-- Answer:
+- Answer: Accepted
 
 ### Q237 · Catalog > KPI · Interval of three cluster KPI rows
 
@@ -37,7 +37,7 @@ Each entry:
   - B. 5m on purpose: the cluster reads a 5-minute value; cluster-performance states why.
   - C. Other.
 - Recommended: A. Same metric source and same levels as the ESXi rows; under 5m the agent compares a 20-second peak with a 5-minute band.
-- Answer:
+- Answer: A
 
 ### Q238 · Capacity > Overhead · Static memory for ESXi, vSAN and NSX
 
