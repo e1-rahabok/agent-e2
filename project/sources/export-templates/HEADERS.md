@@ -32,8 +32,8 @@ Work in progress (2026-11-15). Collected so far: Windows (typeperf, systeminfo, 
 
 - vCenter: the remaining objects (other datastores, host network and storage adapters, the other VMs), and the Past day and Past week views of the other charts. Each needs its own chart and export in the browser.
 - VCF Operations metric names and List export: needs the metric picker in the logged-in browser.
-- esxtop batch CSV and the panel screens: the session is in the Terminal panel tab `c1`; keys cannot be typed into it from here.
-- Linux: sun05-webmin01 is Ubuntu Linux (64-bit) and powered on, but no login was made to it, so `top`, `sar`, `iostat` and the other Linux outputs are not collected.
+- sun05-webmin01 (Ubuntu): no login was made to it; the Linux outputs below come from the VCF Operations appliance instead (Photon OS). The vCenter appliance's root login was refused with the stored vCenter password, so it was not used.
+- VCF Operations UI: the metric picker labels and the List export are not captured. A headless login works, and the Inventory tree loads; the VM's metric page is the next step.
 
 ## VCF Operations (metric keys)
 
@@ -42,3 +42,16 @@ Work in progress (2026-11-15). Collected so far: Windows (typeperf, systeminfo, 
 - Version: VCF Operations 9.1.1.0 (as the API reports it).
 - Not found: VM Decompression Rate; an exact Network Peak Transmitted Packet Dropped.
 - Not collected yet: the List export, the metric picker labels, time stamp and delimiter of the VCF Operations CSV export (need an export from the UI).
+
+## esxtop (batch and panels)
+
+- Folder: [esxtop/](esxtop/), with [README.md](esxtop/README.md): batch header, one data row, six panels, from ESXi 9.0.2 Update 0 (build 25148076).
+- Delimiter `,`; every field in double quotes. First field `(PDH-CSV 4.0) (UTC)(0)`.
+- Column names: `\<host>\<Group>\<Counter>` (for example `\sun05-esxi47.acepod.com\Memory\Memory Overcommit (1 Minute Avg)`); per-world columns carry the world name in parentheses.
+- Time stamp in each data row: `"MM/DD/YYYY HH:MM:SS"` in UTC, quoted. Values quoted, two decimals in the sample.
+- Open: the header has 12,608 fields and the data row 12,708; not resolved.
+
+## Linux (Photon OS)
+
+- Folder: [linux-photon/](linux-photon/), with [README.md](linux-photon/README.md): top, sar, iostat, free, ip -s link, swap counters, kernel version. From the VCF Operations appliance, Photon OS 5.0, kernel 6.1.176-4.ph5.
+- `/proc/pressure/memory` is not present on this kernel; recorded as missing.

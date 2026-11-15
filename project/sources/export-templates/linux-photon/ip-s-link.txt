@@ -1,0 +1,16 @@
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback xx:xx:xx:xx:xx:xx brd xx:xx:xx:xx:xx:xx
+    RX:    bytes   packets errors dropped  missed   mcast           
+    741528429886 559447725      0       0       0       0 
+    TX:    bytes   packets errors dropped carrier collsns           
+    741528429886 559447725      0       0       0       0 
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+    link/ether xx:xx:xx:xx:xx:xx brd xx:xx:xx:xx:xx:xx
+    RX:   bytes  packets errors dropped  missed   mcast           
+    25423420915 84667764      0    1661       0   49684 
+    TX:   bytes  packets errors dropped carrier collsns           
+    45903921460 57281361      0       0       0       0 
+    altname eno1
+    altname enp11s0
+    altname ens192
+    altname enx005056833b05
