@@ -1,7 +1,7 @@
-# Live test: the system on a local model
+# Live test
 
-The plan to deploy the system as a customer would, on one GPU with no Internet, and prove that it works there. Not indexed.
-Why it matters: the benchmark reaches models through a gateway; the mission is a local model. The gaps the gateway leaves open are in [models.md](models.md), section What the gateway does not prove. Design: [../MISSION.md](../MISSION.md), section 5. Architecture: [../ARCHITECTURE.md](../ARCHITECTURE.md), section Local deployment.
+Author and VMware Professionals to submit real world questions, and provide human judgement. It's a manual test, just like asking the same questions to human expert.
+The gaps the gateway leaves open are in [models.md](models.md), section What the gateway does not prove. Design: [../MISSION.md](../MISSION.md), section 5. Architecture: [../ARCHITECTURE.md](../ARCHITECTURE.md), section Local deployment.
 
 ## 1. What it proves
 | Claim | Proof |
