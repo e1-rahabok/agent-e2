@@ -24,25 +24,14 @@ The complex Linux kernel subsystem—comprising VFS, filesystem layers, `bio` co
 
 There are only **three physical hardware locations** where the data payload exists during an `O_DIRECT` write:
 
-```
-+-------------------------------------------------------+
-| SPACE 1: Host System Memory (RAM)                     |
-| [ Process Buffer / Page-Locked RAM via get_user_pages]|
-+-------------------------------------------------------+
-                           |
-                           |  Physical Hop #1: PCIe Bus DMA Read
-                           v
-+-------------------------------------------------------+
-| SPACE 2: Storage Controller Memory                    |
-| [ Onboard NVMe Controller DRAM / SRAM Cache Buffer ]  |
-+-------------------------------------------------------+
-                           |
-                           |  Physical Hop #2: Flash Controller Flush
-                           v
-+-------------------------------------------------------+
-| SPACE 3: Physical Storage Media                       |
-| [ Non-Volatile NAND Flash Cells / Platter Domains ]   |
-+-------------------------------------------------------+
+```mermaid
+flowchart TD
+    S1["SPACE 1: Host system memory (RAM)<br/>Process buffer, pinned via get_user_pages"]
+    S2["SPACE 2: Storage controller memory<br/>Onboard NVMe controller DRAM or SRAM cache"]
+    S3["SPACE 3: Physical storage media<br/>Non-volatile NAND flash cells or platter domains"]
+
+    S1 -->|"Physical hop 1: PCIe bus DMA read"| S2
+    S2 -->|"Physical hop 2: flash controller flush"| S3
 ```
 
 ### Space 1: Host System RAM (User Process Memory)
@@ -70,19 +59,21 @@ There are only **three physical hardware locations** where the data payload exis
 
 While the data payload sits undisturbed in host DRAM waiting for hardware DMA, the CPU executes kernel code through the Linux storage stack to prepare command descriptors and manage queues.
 
-```
-[ User Space ]
-  └── 1. Application (PostgreSQL / MySQL) -> Issues io_uring_enter() / pwrite() (O_DIRECT)
-[ Kernel Space ]
-  ├── 2. System Call Interface           -> sys_pwrite64() / io_uring kernel handler
-  ├── 3. Virtual Filesystem (VFS)        -> vfs_write() checks file permissions & offsets
-  ├── 4. Filesystem Layer (ext4 / xfs)    -> Translates file offset to Logical Block Number (LBN)
-  ├── 5. Generic Block Layer             -> submit_bio() constructs `struct bio` & vector
-  ├── 6. Multi-Queue Layer (blk-mq)      -> Maps bio to `struct request` in blk_mq_ctx / blk_mq_hw_ctx
-  │                                         * Linux tracks in-flight queue metrics HERE! *
-  ├── 7. I/O Scheduler (none / kyber)     -> (Optional) Merges or reorders requests
-  └── 8. Low-Level Driver (nvme.ko)      -> Maps request to NVMe Submission Queue Entry (SQE)
-                                            & writes MMIO Doorbell register
+```mermaid
+flowchart TD
+    subgraph User["User space"]
+        A1["1. Application (PostgreSQL / MySQL)<br/>io_uring_enter() or pwrite() with O_DIRECT"]
+    end
+    subgraph Kernel["Kernel space"]
+        A2["2. System call interface<br/>sys_pwrite64() or io_uring handler"]
+        A3["3. VFS<br/>vfs_write() checks permissions and offsets"]
+        A4["4. Filesystem (ext4 / xfs)<br/>Translates file offset to logical block number"]
+        A5["5. Generic block layer<br/>submit_bio() builds struct bio and vector"]
+        A6["6. Multi-queue layer (blk-mq)<br/>Maps bio to struct request, in-flight metrics tracked here"]
+        A7["7. I/O scheduler (none / kyber)<br/>Optional merge or reorder"]
+        A8["8. Low-level driver (nvme.ko)<br/>Maps request to NVMe SQE, writes MMIO doorbell"]
+    end
+    A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7 --> A8
 ```
 
 ### Component Breakdown: Program vs. Space Context
@@ -108,30 +99,15 @@ On Linux systems, performance utilities such as `iostat`, `sar`, and `prometheus
 
 Metrics are tracked at the **Generic Block Layer (`blk-mq`)**, specifically when a request enters `blk_account_io_start()` and completes via `blk_account_io_done()`.
 
-```
-                  +-----------------------------------+
-                  |  blk_account_io_start()           |  <-- Entry: Request counted as in-flight
-                  +-----------------------------------+
-                                    |
-                                    v
-                  +-----------------------------------+
-                  |  blk-mq Software Queues           |
-                  +-----------------------------------+
-                                    |
-                                    v
-                  +-----------------------------------+
-                  |  Hardware Dispatch Queues         |
-                  +-----------------------------------+
-                                    |
-                                    v
-                  +-----------------------------------+
-                  |  Physical NVMe/SATA Device        |
-                  +-----------------------------------+
-                                    |
-                                    v
-                  +-----------------------------------+
-                  |  blk_account_io_done()            |  <-- Exit: Request removed from in-flight
-                  +-----------------------------------+
+```mermaid
+flowchart TD
+    A["blk_account_io_start()<br/>Entry: request counted as in-flight"]
+    B["blk-mq software queues"]
+    C["Hardware dispatch queues"]
+    D["Physical NVMe or SATA device"]
+    E["blk_account_io_done()<br/>Exit: request removed from in-flight"]
+
+    A --> B --> C --> D --> E
 ```
 
 ### Key `/proc/diskstats` Counters
@@ -168,4 +144,3 @@ Just as in Windows, Linux `aqu-sz` **does not distinguish** between requests wai
 $$\text{aqu-sz} = \text{Requests in } \texttt{blk-mq} \text{ Software Queues} + \text{Requests active in Hardware Submission/Execution Queues}$$
 
 On modern NVMe drives using high queue depths (e.g., 32 parallel hardware queues), an `aqu-sz` of `32` indicates full parallel processing in hardware without any queue starvation or software blocking.
-```
