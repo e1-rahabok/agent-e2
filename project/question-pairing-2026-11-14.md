@@ -241,6 +241,7 @@ Medium
 | D11 | after a memory downsize, guest Free falls by design; too far shows as sustained page-out or contention | rightsizing, guest-os-sizing | undo the downsize / paging never matters / restore on Free alone | T300, P400 | VCF Operations VM 4 weeks across 32 → 16 GB: Guest Free, Needed, Usage, page-in/out, Contention | m |
 | D12 | Linux `st` reports Ready only with the steal clock enabled | guest-os-vs-vm-cpu | st 0 means never frozen / Linux never reports steal / add vCPUs | T300, P400 | Linux VM, default advanced settings, host contention: `top` with 0.0 st; vCenter Readiness 10%+ same window. Needs a vSphere source (only KB 434983, written for Tanzu) | m |
 | D13 | host Memory Latency averages its VMs: one waiting VM hides | host/latency | host 0.3% so no VM waits / rises only when all wait / close the ticket | T300, P400 | host Latency (%) Past day 0.5% or less; one VM at 5%+ for 30 min (limit below its working set) | m |
+| D14 | a VM memory reservation moves no VM counter (Consumed, Granted, Entitlement, Overhead); it shows in the host reservation counters and in the VM's settings and task log | vm-memory-metrics, host-memory-metrics, host/reservation | Consumed should jump to the reservation / the change failed / reserve every VM at no cost | T300 (0441), P400 (0442) | vSphere Client VM chart export and task list (author's lab, 2026-11-15) | added 2026-11-15, both halves written and running |
 - Deferred: knowledge gap or open author question. vSphere Client "Guest memory" label (consumed.md vs the vSphere API); Reclaimable Idle vs Idleness Indicator (idle-vm review notes); VCF Operations "Total" packet metrics (labels); ESXi Memory Utilization (Q215, Q221); cluster Consumed vs the sum of hosts (review note); VM Used above the vCPU sum (system.md note); Other Wait on an idle VM (needs a field screenshot).
 - Not proposed (cap reached): host Ready as a sum (0016 + 0115); Latency vs Contention (four questions); 20-second peaks (0089 + 0356).
 
@@ -291,6 +292,7 @@ One change set. Each writer reads this whole plan, writes only its own files and
 - 98 existing questions rewritten (69 synthetic, 29 the author's); 49 keys changed letters, some only relettered.
 - Changed from the plan: D1 held for Q224; 0184 unpaired from 0062 (0062 tests another fact); 0145 keeps no over-correction (a setting question; the candidate repeated 0146 G); 0140 stays paired with 0291 (0291's options hold whichever way Q214 is answered); 0104 keeps its base (Q224).
 - Independent review: seven agents decided every option from the knowledge files before reading the key; every key letter matched; the options that could not be decided and the give-aways between pair halves were fixed (project/plan.md, decision of 2026-11-15).
+- Added 2026-11-15 (author asked): pair D14, 0441 (theory, Level 300) and 0442 (practical, Level 400: the author's VM chart export and the reconfigure task list). Run set 228. 82 pairs: 35 with both halves running.
 - Author questions raised: Q223-Q228 ([project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md)).
 
 ### Screenshots to capture (47)
