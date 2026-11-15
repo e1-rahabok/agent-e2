@@ -100,13 +100,16 @@
 ## Memory metrics
 - Roll-ups are Latest and stat type Absolute: memory is space.
 - Allocation maximum = limit. Allocation minimum = reservation. Shares: internal; do not change.
-- Consumed: actual use; can be below reservation. Mapped: meaning unclear, no operational use. Also Overhead, Share Saved, Shared, Swapped, Touched, Zero.
+- Consumed: actual use; can be below reservation. Mapped: no operational use of its own; at host group level it equals ESXi Memory Granted ([ESXi Memory Granted](../technology/memory/metrics/host/granted.md)). Also Overhead, Share Saved, Shared, Swapped, Touched, Zero.
 - 607 hosts with vSAN and NSX, 650-1,450 GB consumed: kernel overhead falls below 10% once consumed exceeds 800 GB; absolute values plateau in about 5 levels (likely vSAN configuration).
 ![ESXi hypervisor memory overhead (GB) vs ESXi Consumed (GB): values cluster in 5 levels](images/esxi-hypervisor-memory-overhead-vs-consumed-scatter-levels.png)
-- Kernel reservation: Memory | ESX System Usage (KB), a legacy name. Across 500+ hosts: 6-88 GB; a 12 TB host with vSAN and NSX: 300 GB.
+- Kernel reservation: the host/system Resource memory allocation minimum in vCenter. The host page Configure > System > System Resource Reservation shows it (Memory 4.21 GB on a 9.1 lab host, against 4.17 to 4.18 GiB in the counter). It is a reservation, not consumption: the same host's host/system group consumed 2.2 GB.
+- VCF Operations shows the kernel reservation as Memory | ESX System Usage (`mem|host_systemUsage`), a metric VCF Operations computes. vCenter has no counter of that name. Across 500+ hosts: 6-88 GB; a 12 TB host with vSAN and NSX: 300 GB.
+- host/vim has an allocation minimum of 0: the management agents (hostd, vpxa, envoy, healthd and others) hold no reservation. They consume memory, 0.45 GB on the lab host.
+- Reservation consumed (VMs only) does not contain the kernel reservation, and a VM reservation is not in Consumed, Granted or VMkernel consumed ([ESXi memory metrics compared](../technology/memory/metrics/comparisons/host-memory-metrics.md), section VM reservation across counters).
 - Reservation stays steady even when kernel use drops 90% (40 GB to single digits), and when all VMs are gone.
 - Actual use: stack Resource Memory Consumed per group; system dwarfs the others.
-- Memory | VMkernel consumed covers host/system only, not vSAN.
+- Memory | VMkernel consumed is vCenter `mem.sysUsage`: host memory used by the VMkernel for core functionality, without VMs and vSphere services (API 9.1). It is smaller than the host/system group: 0.70 GB against 2.2 GB of Resource memory consumed on the 9.1 lab host. It is use, not the kernel reservation (4.2 GB there), and it does not cover vSAN.
 ![Kernel memory overhead relative to consumed, 607 hosts](images/esxi-hypervisor-memory-overhead-relative-to-consumed-across-hosts.png)
 
 ## Recommended static values
@@ -153,7 +156,9 @@
 - Counting snapshots, HA spare hosts or vSAN FTT as virtualization overhead → wrong. They are optional capabilities.
 - Area C in [`vsphere/architecture/vm-vs-guest-os`](vm-vs-guest-os.md) (work invisible to the guest) is not the same as overhead.
 - "Use kernel reservation as overhead" → unstable, and too low or too high depending on the stack.
-- "Memory | VMkernel consumed = all hypervisor memory" → system group only.
+- "Memory | VMkernel consumed = all hypervisor memory" → it is the VMkernel's own use, less than the system group and without the management agents (host/vim).
+- "System Resource Reservation is memory the kernel consumes" → it is a reservation (host/system allocation minimum), above the group's consumption on the lab host.
+- "ESX System Usage is a vCenter counter" → it is a VCF Operations metric. In vCenter, read the kernel reservation as host/system Resource memory allocation minimum, and kernel use as VMkernel consumed.
 - "Overcommit is never safe" → overcommit is allowed in most environments. The risk is saturation, which happens when VMs use their full allocations at the same time.
 - "Host average CPU looks fine, so there is no saturation risk" → saturation risk depends on how many VMs can use their full allocation at once, not only on the average.
 
@@ -250,7 +255,9 @@ corrections:
 - '2026-11-02: The item that enables memory overcommit at ESXi level is the VM swap file (.vswp). Uploaded document names it ''VM memory snapshot''.'
 - '2026-11-02: Four buffer types listed. Uploaded document says ''at least 3''.'
 review_notes:
-- '[from former vsphere/architecture/overhead] Section ''Memory metrics'': ESX System Usage = kernel reservation.'
+- 'Section ''Memory metrics'': the formula of the VCF Operations metric mem|host_systemUsage (ESX System Usage) is not published; the reading as the kernel reservation rests on the author''s answer. https://techdocs.broadcom.com (VCF Operations 9.1, Host System metrics); https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html'
+- 'Section ''Memory metrics'': VMkernel consumed (mem.sysUsage) read 0.70 GB while host/system Resource memory consumed read 2.2 GB on a 9.1 lab host; which part of the group the counter covers is unknown. The kernel reservation of 4.21 GB on the page and 4.17 to 4.18 GiB in the counter differ by under 1%: the page rounding or sample time, not checked.'
+- 'Section ''Memory metrics'' (Q202): on the lab host the kernel reservation (4.17 GiB) was above the host/system consumption (2.1 GiB), which does not settle the case with vSAN and NSX.'
 - '[from former vsphere/architecture/overhead] Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'To check: Old file vsphere/cpu/counters/esxi/cpu.usage.average.md states ''sustained values above ~80-85%'' with no source. This source gives 80% (PCPU ceiling) and 90% (warning) for esxtop. Decide whether to replace the old threshold.'
 status: draft
