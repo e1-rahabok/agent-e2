@@ -99,13 +99,13 @@ def rewrite_relative(path, text):
 
 def bare_ids(path):
     found = []
-    _prose(open(path).read(), lambda t: found.extend(m.group(1) for m in BARE_ID.finditer(t) if _rel(path, m.group(1))) or t)
+    _prose(open(path, encoding='utf-8').read(), lambda t: found.extend(m.group(1) for m in BARE_ID.finditer(t) if _rel(path, m.group(1))) or t)
     return found
 
 
 def unlinked(path):
     found = []
-    _prose(open(path).read(), lambda t: found.extend(m.group(1) for m in TICK.finditer(t) if target(m.group(1))) or t)
+    _prose(open(path, encoding='utf-8').read(), lambda t: found.extend(m.group(1) for m in TICK.finditer(t) if target(m.group(1))) or t)
     return found
 
 

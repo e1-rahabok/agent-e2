@@ -857,6 +857,8 @@ class EmbeddingCacheTest(unittest.TestCase):
 
     def test_parallel_processes_leave_a_valid_cache(self):
         import multiprocessing
+        if 'fork' not in multiprocessing.get_all_start_methods():
+            self.skipTest('no fork start method on this platform (Windows)')
         ctx = multiprocessing.get_context('fork')
         procs = [ctx.Process(target=_embed_worker, args=(self.dir, 300)) for _ in range(6)]
         for p in procs:
