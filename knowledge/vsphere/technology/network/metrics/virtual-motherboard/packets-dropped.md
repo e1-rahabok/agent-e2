@@ -5,6 +5,7 @@
 - Received packets are dropped before reaching the Guest OS. Transmitted packets are dropped after leaving the Guest OS. So values do not match Guest OS counters.
 - ESXi drops packets not destined for the guest or violating security settings.
 - TCP retransmits dropped packets: the application sees higher latency.
+- Relevance for operations: performance KPI and alerting on transmit drops: the peak transmit dropped % is a row of the VM Performance KPI and drives the VM dropped packets alert ([`vsphere/object-types/vm/vm-performance`](../../../../object-types/vm/vm-performance.md), [`vsphere/object-types/vm/vm-alerts`](../../../../object-types/vm/vm-alerts.md)). Receive drops serve troubleshooting only, because their cause is often in the Guest OS ([`vsphere/technology/network/vnic-rx-drops`](../../vnic-rx-drops.md)).
 
 ## Formula (VCF Operations)
 ```text
@@ -14,7 +15,8 @@ Packets Dropped (%) = dropped / (dropped + delivered) × 100
 ```
 
 ## Behaviour
-- Receive drops are far higher than transmit drops: 3,938 VMs, 1 month, about 35 million data points. Receive drops are left out of the VM KPI for this reason.
+- Receive drops are far higher than transmit drops: 3,938 VMs, 1 month, about 35 million data points.
+- Receive drops are left out of the VM KPI: they include packets not destined for the VM and drops in a full guest receive ring, whose cause and fix are in the Guest OS ([`vsphere/technology/network/concepts/packet-drop-accounting`](../../concepts/packet-drop-accounting.md)).
 - Drops are short and spiky: the 99th percentile was 35x smaller than the maximum.
 ![VM network dropped: 99th percentile vs maximum, list view](../../images/vm-network-dropped-99th-percentile-vs-max-list-view.png)
 - Packets Dropped (%) can jump above 95% for under 15 minutes. Driven by low throughput and high receive drops.
@@ -31,8 +33,8 @@ Packets Dropped (%) = dropped / (dropped + delivered) × 100
 ![Transmit drop profile per VM](../../images/vm-network-transmit-dropped-profile.png)
 
 ## Known causes
-- False positive transmit drops: NSX firewall rejects outgoing packets (Broadcom KB 322462).
-- VMXNET3 packet loss in very high traffic bursts, even VM freezes: not enough receive and transmit buffer, or speed-constrained receive traffic (KB 2039495). A full receive ring is counted here (droppedRx, %DRPRX) and by the guest; the cause and the fix (a larger ring, guest CPU) are in the Guest OS, so the Guest OS owner fixes it. Which layer counts which drop: [`vsphere/technology/network/concepts/packet-drop-accounting`](../../concepts/packet-drop-accounting.md).
+- Transmit drops from the NSX Distributed Firewall: outgoing traffic that matches no allow rule meets the default rule set to Reject, and the filter on the VM's port counts the packets as dropped. The firewall works as designed (Broadcom KB 322462); the drop is not a network fault.
+- VMXNET3 packet loss in very high traffic bursts, even VM freezes: not enough receive and transmit buffer, or speed-constrained receive traffic (Broadcom KB 324556, legacy 2039495). A full receive ring is counted here (droppedRx, %DRPRX) and by the guest; the cause and the fix (a larger ring, guest CPU) are in the Guest OS, so the Guest OS owner fixes it. Which layer counts which drop: [`vsphere/technology/network/concepts/packet-drop-accounting`](../../concepts/packet-drop-accounting.md).
 
 ## Misconceptions
 - "Packets Dropped (%) at 95% means an outage" → short spikes at low throughput, driven by receive drops.
@@ -94,11 +96,9 @@ images:
     metric: ['VM Network Transmit Packets Dropped']
     image_type: distribution
 source:
-  document: Knowledge base
+  document: Knowledge base; Broadcom KB 322462 (TX packet drops reported for virtual machines on NSX segments); Broadcom KB 324556 (Packet loss in the guest OS using VMXNET3 in ESXi, legacy 2039495)
   path: Network > VM > Contention Metrics
-corrections:
-- 'Section ''Known causes'': VMXNET3 ring-buffer drops are guest-os layer, fixed in the guest (2026-11-06).'
-review_notes:
-- 'To check: KBs not read (https://knowledge.broadcom.com/external/article?articleNumber=322462 and https://kb.vmware.com/s/article/2039495).'
+corrections: []
+review_notes: []
 status: draft
 ```

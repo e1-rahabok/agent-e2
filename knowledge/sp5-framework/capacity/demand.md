@@ -51,6 +51,7 @@
 - Accounting:
   - relative utilization, against usable capacity: exclude the HA host;
   - keep the hypervisor overhead of the other hosts: it is part of the load.
+- Colour bands of a running cluster: Cluster Consumption (%), against usable capacity, with its rows in `catalog/thresholds-capacity` ([`vsphere/object-types/cluster/models/cluster-consumption`](../../vsphere/object-types/cluster/models/cluster-consumption.md)).
 
 
 ## Contention
@@ -96,7 +97,7 @@ Demand = Max (Utilization, Reservation)
 - VM memory Consumed plus ballooned, compressed and swapped pages is the VM's footprint on ESXi, not this Demand: Consumed holds every page the VM touched, mostly inactive ([`sp5-framework/capacity/vm-footprint-sizing`](vm-footprint-sizing.md), section Memory).
 - A reservation not yet consumed affects capacity, not performance.
 - Example: a VM using 4 GHz with a 5 GHz reservation counts as 5 GHz: the extra 1 GHz is guaranteed to it.
-- Compute per VM, then sum at the ESXi host. A sum of utilization and a sum of reservation taken separately gives a different, wrong number.
+- Compute per VM, then sum at the ESXi host. The higher of two separate sums (all utilization, all reservation) is lower than the sum of the per-VM values whenever one VM runs below its reservation and another above it: the unused reservation of the first is hidden by the extra load of the second.
 - Powered-on VMs only. Powered-off VMs can be started any time, but counting them gives an over-conservative capacity.
 - Restaurant: two floors, the first full of diners, the second empty but booked and paid for a wedding. Is it full? For a wedding guest, no; for anyone else, yes. Can the diners be served well? Yes: the second floor is empty, staff serve the first. Capacity is full while performance is fine.
 - Who holds a reservation not yet consumed:
@@ -199,9 +200,6 @@ source:
   document: Knowledge base
   path: 'Capacity Management > Capacity Model (Workload Level; Workload Type; VM Price; 4 Dimensions of Capacity: Utilization, Performance, Reservation | Share, Allocation, Invisible Demand, Limitation)'
 corrections: []
-review_notes:
-- 'To check: Section ''Consumption'': the 80-100% zone has no numbers yet; Cluster Consumption (%) uses different bands (CPU green 0-55) (Q116).'
-- 'Section ''Reservation and share'': the resource-pool advice quotes Frank Denneman, frankdenneman.nl, vSphere 7 DRS Scalable Shares deep dive (2020-05-27). Paraphrased, not copied.'
-- 'To check: Section ''Demand'': "a sum of utilization and a sum of reservation taken separately gives a different number" explains why computes per VM first; the explanation has no source yet.'
+review_notes: []
 status: draft
 ```

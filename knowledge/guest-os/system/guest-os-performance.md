@@ -8,6 +8,7 @@
 - One 0-100% score for the operating system inside a VM. 100 is perfect. It answers: is the Guest OS getting the CPU, disk and memory it needs?
 - VM Performance (%) scores the virtual motherboard; this KPI scores what runs on it ([`vsphere/object-types/vm/vm-performance`](../../vsphere/object-types/vm/vm-performance.md)). Their average is the VM Guest OS KPI, one score per VM for the application team.
 - Not a built-in VCF Operations metric. Scored on every powered-on VM with VMware Tools; without VMware Tools there is no score.
+- Relevance for operations: performance monitoring and reporting for the application team, and the first reading of the Guest OS flows ([`guest-os/system/troubleshooting/ms-windows-slow`](troubleshooting/ms-windows-slow.md), [`guest-os/system/troubleshooting/linux-os-slow`](troubleshooting/linux-os-slow.md)); not capacity, which sizes from Guest OS counters ([`guest-os/system/concepts/guest-os-sizing`](concepts/guest-os-sizing.md)).
 
 ## Sub-metrics
 | Group | Sub-metric | Source | Unit | Scores 100 at | Catalog row (KPI) |

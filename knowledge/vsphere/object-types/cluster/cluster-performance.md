@@ -42,7 +42,7 @@
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out. It is never counted as 0, because 0 means perfect. With no sub-metric data, the KPI is not published.
 
 ## Threshold reasons
-- Co-stop, Overlap and Other Wait have the same VM impact as Ready, but practically lower values. The same range would inflate the score.
+- Co-stop has the same VM impact as Ready, but practically lower values: the same range would inflate the score, so the Co-stop rows have tighter limits. Overlap and Other Wait are not used (section Not used).
 - Dropped and error packets are rare. Take the worst host, not a sum (a sum becomes an average). Low threshold, as many hosts have 25 Gb NICs.
 
 ## Not used
@@ -61,7 +61,7 @@
 
 ### vMotion Count
 - The vMotion counter counts migrations. It does not measure the downtime of each one.
-- In a healthy environment each vMotion stuns the VM for less than 0.2 seconds, which the Guest OS does not notice.
+- Healthy stun time and downtime of a vMotion: [`vsphere/object-types/vm/vmotion`](../vm/vmotion.md).
 - Monitor vMotion separately, with the other broad infrastructure capabilities: NSX Edge, vSAN resync, the physical network.
 - For vMotion, track the maximum stun time across all vMotions in the whole environment. A rising maximum is a leading indicator of performance degradation.
 
@@ -91,6 +91,7 @@ object:
 metric_class: contention
 internal_derive:
 - sp5-framework/performance/performance-kpi-design
+- vsphere/object-types/vm/vmotion
 same_name: []
 same_meaning: []
 related:
@@ -104,6 +105,6 @@ source:
   path: Provider Objects > Performance > Cluster Performance (%)
 corrections: []
 review_notes:
-- 'To check: Sections ''Design'', ''Threshold reasons'' and ''Not used'': written from older material that is outdated in places; check against sections Thresholds and How each sub-metric is calculated. Rows that conflict with them were removed (disk latency, balloon reason).'
+- 'To check: Section ''Sub-metric formulas'': the catalog `kpi` rows of both memory wait rows and of the 90th percentile disk latency row carry the 5-minute interval, while their sources are 20-second peaks (`mem|20_sec_peak_host_contentionPct`, `virtualDisk|20_sec_peak_totalLatency_average`); the ESXi Performance rows with the same limits carry 20 seconds. NVMe wait may be the reason for the memory rows (catalog/thresholds-performance, section kpi).'
 status: draft
 ```

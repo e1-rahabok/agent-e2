@@ -39,8 +39,8 @@ flowchart TD
   - Raise memory shares or reservation to reduce swapping. In a resource pool, make sure the pool has enough for all its VMs.
   - Reduce assigned memory (right-size). Less to reclaim, lower risk.
   - Remove the VM limit.
-  - Unswap the swapped pages. Not possible via API; possible with a manual command (article by Duncan Epping and Valentin Bondzio).
-  - Reboot the VM in regular maintenance. This removes the swap file and future swap-in waits on those pages. A page can be swapped out again later.
+  - Unswap the swapped pages. Not possible via API; possible with a manual command on the host, described in a third-party article, not in a vendor document.
+  - Power-cycle the VM (power off, then on) in regular maintenance: power-off deletes the swap file and the future swap-in waits on those pages (vSphere 9.1 documentation, Delete Swap Files, p. 1876). A restart of the Guest OS keeps the VM running and its swap file. A page can be swapped out again later.
 
 ## Misconceptions
 - "Balloon is in Latency" → Latency excludes balloon.
@@ -73,10 +73,10 @@ related:
 - vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
 - sp5-framework/performance/performance-management
 source:
-  document: Knowledge base
-  path: Memory > VM > Contention Metrics > Latency
+  document: Knowledge base; vSphere 9.1 documentation (PDF built 2026-11-02)
+  path: Memory > VM > Contention Metrics > Latency; Resource Management, Delete Swap Files (p. 1876)
 corrections: []
 review_notes:
-- 'To check: unswap article third-party, not read (https://www.yellow-bricks.com/2016/06/02/memory-pages-swapped-can-unswap/).'
+- 'To check: Section ''Interpretation'': the unswap command, from a third-party article not read (https://www.yellow-bricks.com/2016/06/02/memory-pages-swapped-can-unswap/); no vendor document found.'
 status: draft
 ```

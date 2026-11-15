@@ -80,6 +80,6 @@ source:
   path: 'Reports > Functional Considerations (the reports as a set; Overall Design: Executive Report, Operations Management)'
 corrections: []
 review_notes:
-- 'To check: Report names: whether VCF Operations 9.1 still ships them (VCF Operations 9.1 documentation).'
+- 'To check: Section ''Operations management reports'': the report names against the reports in VCF Operations 9.1; VCF Operations 9.1 documentation, Reports, or a live instance.'
 status: draft
 ```

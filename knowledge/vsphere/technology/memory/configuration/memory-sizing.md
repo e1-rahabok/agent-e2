@@ -4,7 +4,7 @@
 - Allocate enough memory to hold the working set of the applications that run in the VM.
 - Under-allocation causes thrashing.
 - Thrashing can dramatically impact performance.
-- The source says it is very important not to under-allocate memory.
+- Performance Best Practices for vSphere 9.1 says it is very important not to under-allocate memory.
 
 ## Over-allocation
 - The performance impact of over-allocating memory is far less than the impact of under-allocating it.
@@ -16,7 +16,7 @@
 
 ## Misconceptions
 - "Over-allocation is harmless because ballooning reclaims it" → ballooning reclaims the cache memory the guest uses. The overhead of the over-allocated memory stays. See [`vsphere/technology/memory/concepts/memory-overhead`](../concepts/memory-overhead.md).
-- "Under-allocation is as safe as over-allocation" → the source calls under-allocation the more damaging error, because of thrashing.
+- "Under-allocation is as safe as over-allocation" → Performance Best Practices for vSphere 9.1 calls under-allocation the more damaging error, because of thrashing.
 
 ## Metadata
 ```yaml
@@ -42,8 +42,6 @@ source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX Memory Considerations > Memory Sizing (p. 33)
 corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Page 33 unchanged.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+review_notes: []
 status: draft
 ```

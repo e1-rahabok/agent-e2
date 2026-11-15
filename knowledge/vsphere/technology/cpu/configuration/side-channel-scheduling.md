@@ -1,11 +1,10 @@
 # Side-channel vulnerabilities and the ESX scheduler
 
-> Not in the 9.1 document. Content below is from the 9.0 document. Verify before use.
-
 ## Vulnerability classes
 - Side-channel vulnerabilities include Spectre, Meltdown, Foreshadow, L1TF, and others.
 - Some mitigations have a significant performance impact.
-- The source does not cover the topic in full. Use the VMware KB articles it names.
+- Performance Best Practices for vSphere 9.1 and the vSphere 9.1 documentation have no side-channel section; Performance Best Practices for vSphere 9.0 had one. The current guidance for the ESX scheduler is Broadcom KB 317621 (legacy 55806), which covers ESXi 5.5 to 9.x.
+- vSphere 9.1 cluster configuration has an ESX advanced setting to allow warnings about unmitigated hyperthreading vulnerabilities (vSphere 9.1 documentation, p. 856).
 
 ## Mitigation layers
 | Layer | Performance effect | Notes |
@@ -18,11 +17,11 @@
 ## L1TF (CVE-2018-3646) and the ESX scheduler
 - L1TF can leak information between VMs, or between a VM and ESX, when Hyper-Threading is active.
 - Sequential-context attack vector:
-  - addressed by updates that apply automatically (KB 55806),
+  - addressed by updates that apply automatically (Broadcom KB 317621, legacy 55806),
   - no significant performance impact.
 - Concurrent-context attack vector:
   - the updates can address it, but they do not do so by default,
-  - addressing it requires activating the ESX Side-Channel-Aware Scheduler,
+  - addressing it requires activating the ESX Side-Channel-Aware Scheduler, which is not enabled by default in any release the KB covers, 9.x included,
   - possible significant performance impact,
   - possible limitations on running certain VMs.
 
@@ -36,10 +35,14 @@
   - never schedules threads from different VMs on the same core at the same time,
   - lower performance penalty than SCAv1 in nearly all cases.
 
-## Guest OS mitigations (p. 55)
+## Configuration
+- `VMkernel.Boot.hyperthreadingMitigation`: default FALSE. TRUE enables the Side-Channel-Aware Scheduler after a reboot (Broadcom KB 317621).
+- `VMkernel.Boot.hyperthreadingMitigationIntraVM`: default TRUE, which gives SCAv1 when the scheduler is enabled. FALSE gives SCAv2, from ESXi 6.7 Update 2.
+
+## Guest OS mitigations
 - Some side-channel mitigations take place inside the guest OS.
 - These mitigations address serious security vulnerabilities, but can affect performance.
-- Lower the performance impact by choosing recent CPUs that mitigate some vulnerabilities in hardware.
+- Lower the performance impact by choosing recent CPUs that mitigate some vulnerabilities in hardware (Performance Best Practices for vSphere 9.0, p. 55).
 
 ## Tool
 - HTAware Mitigation Tool (KB 56931):
@@ -49,7 +52,7 @@
 
 ## Misconceptions
 - "Side-channel mitigation has no performance cost" → some mitigations have significant impact. Hardware mitigations on newer CPUs usually have little or none.
-- "Hyper-Threading is safe by default" → with L1TF, the concurrent-context vector is not addressed by default. Hyper-Threading is in use when the risk applies.
+- "Hyper-Threading is safe by default" → with L1TF, the concurrent-context vector is not addressed by default: the Side-Channel-Aware Scheduler is off until `VMkernel.Boot.hyperthreadingMitigation` is set to TRUE (Broadcom KB 317621).
 
 ## Metadata
 ```yaml
@@ -71,13 +74,10 @@ related:
 - vsphere/technology/cpu/concepts/hyper-threading
 - vsphere/technology/cpu/concepts/hardware-assisted-virtualization
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: 'Not in the 9.1 document. Previously in 9.0: CPU Hardware Considerations > Side-Channel Vulnerabilities (pp. 11-12); ESX CPU Considerations > Side-Channel Vulnerability Mitigation in ESX (pp. 25-26); Guest OS CPU Considerations (p. 55)'
+  document: Broadcom KB 317621 (legacy 55806); Performance Best Practices for VMware vSphere 9.0 (revision 20250731); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: 'KB 317621 (VMware response to L1 Terminal Fault - VMM, CVE-2018-3646), Environment and Resolution. Performance Best Practices 9.0 (no such section in 9.1, revision 20260624): CPU Hardware Considerations > Side-Channel Vulnerabilities (pp. 11-12); ESX CPU Considerations > Side-Channel Vulnerability Mitigation in ESX (pp. 25-26); Guest OS CPU Considerations (p. 55). vSphere 9.1, cluster quickstart, ESX Advanced Settings (p. 856)'
 corrections: []
 review_notes:
-- 'To check: whole file: content is from the 9.0 document; the 9.1 table of contents has no side-channel section (checked CPU hardware pp. 11-13, ESX pp. 25-32, guest OS pp. 55-57). Verify against KB 55806 and current VMware security documentation before use.'
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices'
-- 'To check: default scheduler behaviour in vSphere 9.x against KB 55806; only the 9.0 source was read.'
-- 'To check: KB 52245, 54951, 55636, 56931, named by the source for details; not read.'
+- 'To check: Sections ''Mitigation layers'', ''Guest OS mitigations'' and ''Tool'': from Performance Best Practices for vSphere 9.0 (pp. 11-12, 25-26, 55), with no 9.1 counterpart; check the HTAware Mitigation Tool for 9.x (Broadcom KB 56931, legacy id) and KB 52245, 54951, 55636 (knowledge.broadcom.com).'
 status: draft
 ```

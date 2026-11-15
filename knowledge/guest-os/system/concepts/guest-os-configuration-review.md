@@ -23,7 +23,7 @@
 - **Applications**
   - Know what runs inside. A VM or host name saying webserver does not prove a web server runs.
   - Discover key processes and their connections (Telegraf, service discovery). Shared, overcommitted resources are easier to run when the workload is known; monitoring and troubleshooting need it; some ISVs require it for licensing.
-  - A JVM heap or database memory allocation too large for the Guest OS: unless another application runs, memory beyond what the application can address is wasted.
+  - A JVM heap or database memory limit must match the Guest OS memory. A limit larger than the memory the Guest OS can give it makes the Guest OS page once the application fills it. Guest OS memory beyond the limit, the OS and the other processes is never used by the application: wasted, unless another application runs.
 - **Settings**
   - Too many setting options in the corporate standard.
   - Screen saver off: irrelevant on a server OS.
@@ -31,7 +31,7 @@
 ## Misconceptions
 - "The Guest OS type in vCenter says Windows Server 2016, so that is what runs" → it is the value set at creation. Compare with the type VMware Tools reports.
 - "The VM is named web01, so it runs a web server" → discover the processes and connections.
-- "Give the JVM more heap than the Guest OS has free, for headroom" → memory the application cannot use is wasted, and the Guest OS starts paging.
+- "Give the JVM more heap than the Guest OS has free, for headroom" → once the heap fills past the memory the Guest OS can back, the Guest OS pages it out, and the application waits on disk.
 - "One more agent costs little" → agents add up on every VM; count their total footprint.
 
 ## Metadata
@@ -62,7 +62,6 @@ source:
   document: Knowledge base
   path: 'Configuration Management > Review List > Consumer Objects > Guest OS'
 corrections: []
-review_notes:
-- 'To check: Section ''Applications'', JVM: the misconception statement ''the Guest OS starts paging''; no source yet.'
+review_notes: []
 status: draft
 ```

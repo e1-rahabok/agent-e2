@@ -7,9 +7,9 @@ Utilization (KB) = Guest Needed Memory (KB)
                  + Memory Total Capacity (KB) - Guest Physically Usable Memory (KB)
 ```
 - Can exceed 100%.
+- Relevance for operations: capacity. It is the VM term of ESXi Memory Utilization, the host memory demand of VCF Operations ([`vsphere/technology/memory/metrics/host/utilization`](../host/utilization.md), section Formula).
 
 ## Use
-- For operations: capacity. It is the VM term of ESXi Memory Utilization, the host memory demand of VCF Operations ([`vsphere/technology/memory/metrics/host/utilization`](../host/utilization.md), section Formula).
 - VCF Operations 9.1 collects Mem|Utilization (KB) (`mem|vmMemoryDemand`) by default and describes it as the guest OS memory required, or the VM's consumption (Virtual Machine metrics).
 - Not a performance counter: a high value says the VM's memory is spoken for, not that the VM waits.
 
@@ -58,6 +58,6 @@ source:
 corrections:
 - 'Section ''Formula'': Broadcom KB 439253 writes the last term as Total Capacity - Guest Physically Free. The term is Guest Physically Usable Memory: KB 390432 writes Guest|Physically (cut off), and Total Capacity minus free memory would count the used memory a second time on top of Needed Memory.'
 review_notes:
-- 'Section ''Formula'' and ''Use'': https://knowledge.broadcom.com/external/article/439253, https://knowledge.broadcom.com/external/article/390432 and VCF Operations 9.1 Virtual Machine Metrics, https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/virtual-machine-metrics.html.'
+- 'To check: Section ''Formula'': which Linux counters VMware Tools sends to VCF Operations for the guest paging term (Guest Page In Rate, Guest Page Size), and whether Linux swap-in is among them; VCF Operations 9.1 Virtual Machine metrics, Guest group, https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/virtual-machine-metrics.html.'
 status: draft
 ```

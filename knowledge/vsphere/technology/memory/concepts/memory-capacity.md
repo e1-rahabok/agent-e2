@@ -16,6 +16,7 @@
 - Capacity model of the method: Demand = Max (Utilization, Reservation), per VM, summed at the host, with the kernel counted by its reservation. Home: [`sp5-framework/capacity/demand`](../../../../sp5-framework/capacity/demand.md), section Demand.
 - VCF Operations formula of the host: ESXi Memory Utilization = Machine Demand + ESX System Usage (the kernel reservation). Home: [`vsphere/technology/memory/metrics/host/utilization`](../metrics/host/utilization.md), section Formula. It applies the capacity model of the method, and the VCF Operations capacity pages show it as memory Demand.
 - VCF Operations formula of the VM, the input of the host formula: VM Memory Utilization, from Guest OS Needed Memory, falling back to Consumed without guest data. Home: [`vsphere/technology/memory/metrics/virtual-motherboard/utilization`](../metrics/virtual-motherboard/utilization.md).
+- The capacity counter of a host: ESXi Memory Utilization; ESXi Memory Consumed only on a host that runs with no ballooning by design. Home: [`vsphere/technology/memory/metrics/host/utilization`](../metrics/host/utilization.md), section Reason.
 - Consumed plus ballooned, compressed and swapped pages is the VM's footprint on ESXi, not its demand. Home: [`sp5-framework/capacity/vm-footprint-sizing`](../../../../sp5-framework/capacity/vm-footprint-sizing.md), section Memory. Consumed is mostly inactive pages, so a demand built on it overstates the need.
 - Do not mix Guest OS and VM metrics in one sum: the Guest OS counts its cache and free pages, ESXi counts the pages the VM touched.
 - Guest OS metrics are more accurate and smaller than VM metrics, but unaware of ESXi memory management.
@@ -86,7 +87,6 @@ source:
   path: Provider Objects > Capacity > Memory; Storage; Implementation
 corrections: []
 review_notes:
-- 'Section ''VCF Operations metrics (cluster)'': cluster Memory|Workload (%) and usable capacity from VCF Operations 9.1, https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/cluster-compute-resource-metrics.html and https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/calculated-metrics/capacity-metrics.html.'
 - 'To check: Section ''VCF Operations metrics (ESXi)'': host Memory|Workload (%) is not in the VCF Operations 9.1 Host System metric list (TechDocs, updated 2026-11-12); check in a 9.1 instance whether the host shows it and whether it divides by Total Capacity or by Usable Memory (`mem|host_usable`), https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/host-system-metrics.html.'
 status: draft
 ```

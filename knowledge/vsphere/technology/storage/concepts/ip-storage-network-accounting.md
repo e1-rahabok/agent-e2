@@ -67,11 +67,9 @@ related:
 - vsphere/technology/network/metrics/host/throughput
 - vsphere/tools/esxtop/units-vs-vsphere-client
 source:
-  document: 'Technical note: Storage and Network Accounting for iSCSI over 10 GbE (Google Doc, read 2026-11-04)'
-  path: https://docs.google.com/document/d/1E7Or6rsJZ_P1MUZZfL1X3RSXPxhR2lW2fSp3wcaqnGo/edit
+  document: Knowledge base
+  path: Storage > Architecture > IP storage accounting (iSCSI over 10 GbE)
 corrections: []
-review_notes:
-- 'To check: Section ''Principle'': NFS and NVMe/TCP named as IP storage; the note covers iSCSI only.'
-- 'To check: Sections ''Worked example'' (write reverses the pattern) and ''Consequences'' (1,500-byte MTU needs several frames): inferred from the note.'
+review_notes: []
 status: draft
 ```

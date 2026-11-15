@@ -86,13 +86,10 @@ images:
     topic: 'vSphere folder tree: business unit, department, application, tier, VM'
     image_type: diagram
 source:
-  document: Knowledge base; VCF 9.1, Add Business Application (Broadcom TechDocs, last updated 2026-11-12); VCF Operations 9.0, Custom Object Groups Workspace to Create a New Group (Broadcom TechDocs, last updated 2026-11-09)
+  document: Knowledge base; VCF 9.1, Add Business Application (Broadcom TechDocs, last updated 2026-11-12); VCF 9.1, Custom Object Groups Workspace to Create a New Group (Broadcom TechDocs, last updated 2026-11-12)
   path: 'Proactive Operations > Business Applications (The Crown Jewel, vSphere Folder Structure, Objects Design)'
 corrections: []
 review_notes:
-- 'Section ''Objects in VCF Operations'': the custom group criteria types, operators, Preview and the include and exclude lists are from the VCF Operations 9.0 page; check for a 9.1 page. https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/infrastructure-operations/inventory-management/configuring-objects/object-discovery/managing-custom-object-groups/custom-groups-workspace/custom-groups-workspace-create-new-group.html'
-- 'To check: Section ''Objects in VCF Operations'': that one custom group rule spans several vCenter adapter instances; not stated in one sentence on the custom group pages.'
-- 'Section ''Objects in VCF Operations'': the inventory path is read from the source screenshot (Inventory > Container > Entire Enterprise > Entire Enterprise Applications > Internet Banking, MS Active Directory, Shop Floor Control). Screenshot not copied.'
-- 'To check: Section ''Business application dashboard'': the KPI link is not in the source, which says detailed KPI, actual counters that define a VM KPI.'
+- 'To check: Section ''Objects in VCF Operations'': that one custom group rule matches VMs of several vCenter adapter instances; the VCF 9.1 custom group page does not mention adapter instances; a live VCF Operations 9.1 instance.'
 status: draft
 ```

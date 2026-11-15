@@ -42,6 +42,7 @@
 - The teaming and failover health check does not run on LAG ports: LACP checks them.
 - Not in host profiles; not with the ESXi dump collector; LACP PDUs are not mirrored by port mirroring.
 - Up to 64 LAGs per distributed switch and 32 per host; the usable number of ports per LAG is set by the physical switch.
+- LACP timeout: the LAG sends LACP PDUs every 30 seconds (slow, the default) or every second (fast), and brings the session down when the remote PDUs stop for the timeout. Fast: `esxcli network vswitch dvs vmware lacp timeout set --vds <switch> --lag-id <id> --timeout 1`.
 
 ## Reading the team
 - esxtop network panel: TEAM-PNIC on a VM or VMkernel row is the uplink that port uses now ([`vsphere/tools/esxtop/network`](../../../tools/esxtop/network.md)). Sum MbTX/s of the ports on each vmnic to see which ports load it.
@@ -82,9 +83,9 @@ related:
 source:
   document: VMware vSphere 9.1 documentation (PDF, project/sources/vmware-vsphere-9-1.pdf)
   path: vSphere Networking > What is Teaming and Failover Policy; Load Balancing Algorithms Available for Virtual Switches; LACP Support on a vSphere Distributed Switch; Limitations of the LACP Support (pp. 1142-1162)
-corrections: []
+corrections:
+- "Section 'Load balancing algorithms', source MAC hash: the vSphere 9.1 documentation (p. 1160, Table 146) lists a more even distribution than the virtual port method, because the switch calculates an uplink for every packet. The same table says a VM keeps its uplink because its MAC address is static, so the hash gives one uplink per vNIC MAC, and the distribution is per vNIC, as with the virtual port method."
 review_notes:
-- "To check: Section 'Load balancing algorithms', source MAC hash: the 9.1 documentation says the switch calculates an uplink for every packet, yet the uplink is fixed by the static MAC; read as one uplink per vNIC MAC."
-- "To check: Section 'Load balancing algorithms', LACP: the LAG hash options (source and destination IP, TCP/UDP port, VLAN, MAC) and the LACP timeout values are not written; vSphere 9.1 documentation, Change the load balancing mode of the LAG."
+- "To check: Section 'Load balancing algorithms', LACP: the LAG load balancing modes; the vSphere 9.1 documentation (p. 1149) says only that they are the algorithms LACP defines; a live vSphere Client 9.1 screen of a LAG."
 status: draft
 ```

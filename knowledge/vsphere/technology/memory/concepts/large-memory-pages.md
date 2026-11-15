@@ -1,8 +1,8 @@
 # Large memory pages (2 MB)
 
 ## Definition
-- ESX provides 4 KB pages and 2 MB pages.
-- The source calls 2 MB pages "large pages". It does not cover 1 GB pages.
+- ESX provides 4 KB pages and 2 MB pages, and 1 GB pages for VMs that opt in (section 1 GB pages).
+- vSphere 9.1 calls 2 MB and 1 GB pages large pages (vSphere 9.1 documentation, p. 1837). Performance Best Practices for vSphere 9.1 uses large pages for 2 MB pages only and leaves 1 GB pages out of its scope.
 
 ## ESX behaviour
 - ESX backs guest memory with 2 MB ESXi pages (vendor term: machine pages) whenever possible.
@@ -11,7 +11,7 @@
 ## Guest OS large pages
 - The full benefit requires the guest OS and applications to use large pages as well.
 - Guest OS and application configuration: see the guest OS documentation.
-- The source says an OS or application that benefits from large pages on native hardware can achieve a similar improvement on a VM backed by 2 MB machine pages.
+- Performance Best Practices for vSphere 9.1 says an OS or application that benefits from large pages on native hardware can achieve a similar improvement on a VM backed by 2 MB ESXi pages.
 
 ## Effect
 - Large pages significantly reduce TLB misses.
@@ -56,13 +56,9 @@ related:
 - vsphere/technology/memory/concepts/memory-overhead
 - vsphere/technology/cpu/concepts/hardware-assisted-virtualization
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Memory Considerations > 2MB Large Memory Pages (pp. 37-38); Guest Operating System Memory Considerations (p. 59)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624); vSphere 9.1 documentation (PDF built 2026-11-02)
+  path: ESX Memory Considerations > 2MB Large Memory Pages (pp. 37-38); Guest Operating System Memory Considerations (p. 59); Resource Management, Support for Large Page Sizes, Backing Guest vRAM with 1 GB Pages, Memory Tiering VM profiles (pp. 1837, 1846, 1947-1948)
 corrections: []
-review_notes:
-- 'Section ''1 GB pages'': from the vSphere 9.1 documentation, vSphere Resource Management > Support for Large Page Sizes, Backing Guest vRAM with 1 GB Pages, Memory Tiering VM profiles (pp. 1837, 1846, 1947-1948).'
-- Checked against 9.1 (revision 20260624). Pages 37-38 unchanged. Guest page reference now p. 59.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Source uses 'large pages' only for 2 MB pages. It says 1 GB pages exist on some CPUs but are out of its scope.
+review_notes: []
 status: draft
 ```

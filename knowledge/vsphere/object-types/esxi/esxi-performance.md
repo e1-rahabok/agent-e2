@@ -75,8 +75,6 @@ source:
   document: Knowledge base
   path: 'ESXi Performance (%): the Cluster Performance design applied to the VMs of one host'
 corrections: []
-review_notes:
-- 'To check: Section Thresholds, interval: the Cluster Performance memory rows carry interval 5m in the catalog; every VM sub-metric here is a 20-second peak, including mem|20_sec_peak_host_contentionPct.'
-- 'To check: Section Misconceptions: derived from the design text.'
+review_notes: []
 status: draft
 ```

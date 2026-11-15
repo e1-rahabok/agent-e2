@@ -4,9 +4,10 @@
 - vSphere Client shows physical NICs only, not virtual network traffic.
 - Metrics exist per vmnic and per host. Host ≈ sum of vmnics; small variance.
 - vCenter and VCF Operations have no metrics for standard switches and their port groups. Look at each parent host; a dashboard can cycle through hosts.
+- Relevance for operations: capacity (vmnic throughput per direction against the link speed) and performance troubleshooting (packet rate and packet size). Not alerted: a network has no clear 100% ([`vsphere/object-types/esxi/esxi-alerts`](../../../../object-types/esxi/esxi-alerts.md), section Not alerted).
 
 ## Counters
-- Kilobytes per second (KBps, 1 KB = 1,024 bytes): Data receive rate, Data transmit rate, Usage. The chart title can say Mbps; the counters are KBps ([`vcenter-statistics`](../../../../tools/vsphere-client/vcenter-statistics.md), section Units). Duplicate metrics exist; the reason is unclear.
+- Kilobytes per second (KBps, 1 KB = 1,024 bytes): Data receive rate, Data transmit rate, Usage. The chart title can say Mbps; the counters are KBps ([`vsphere/tools/vsphere-client/vcenter-statistics`](../../../../tools/vsphere-client/vcenter-statistics.md), section Units). Duplicate metrics exist; the reason is unclear.
 - Usage rate = receive + transmit. With full duplex it can exceed the physical link speed.
 - Packets per second: receive, transmit.
 - List all vmnics in a table to find which one to plot.

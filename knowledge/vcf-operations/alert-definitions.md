@@ -51,12 +51,9 @@ related:
 - sp5-framework/outputs/alerts-and-insights
 - sp5-framework/observability/collection-interval
 source:
-  document: Knowledge base
-  path: 'Proactive Operations > Alert > Alerts Planning > Design > Threshold Design (Wait Cycle, Conditions); Recommendation | Remediation'
+  document: Knowledge base; VCF Operations API 9.1.1 (Broadcom developer portal), data structure alert-condition
+  path: 'Proactive Operations > Alert > Alerts Planning > Design > Threshold Design (Wait Cycle, Conditions); Recommendation | Remediation. API 9.1.1 alert-condition: waitCycles and cancelCycles (consecutive cycles before a symptom is triggered or cancelled), severity (required), https://developer.broadcom.com/xapis/vcf-operations-api/9.1.1/data-structures/alert-condition/'
 corrections: []
-review_notes:
-- 'Section ''Parts of an alert definition'': the steps, Defined On Self and Any or All are read from the source screenshot of the Edit Alert Definition page (Pod object). Screenshot not copied.'
-- 'To check: Section ''Wait cycle'': collection every 5 minutes and wait cycle counted in collection cycles (VCF Operations 9.1 documentation on symptom definitions).'
-- 'To check: Section ''Symptom and condition'': a condition''s wait cycle, cancel cycle and severity are the fields waitCycles, cancelCycles and severity of the data structure alert-condition, VCF Operations API 9.1.1 (https://developer.broadcom.com/xapis/vcf-operations-api/9.1.1/data-structures/alert-condition/).'
+review_notes: []
 status: draft
 ```

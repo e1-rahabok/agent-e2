@@ -1,8 +1,12 @@
 # VM CPU Usage
 
+## Meaning
+- Productive cycles of the VM's vCPUs plus the load charged at VM level, scaled by frequency and Hyper-Threading. Usage (MHz) reads better as CPU Throughput (section Throughput).
+- Relevance for operations: performance (throughput) and chargeback. Not capacity, because Turbo and Hyper-Threading move it: Run is the capacity counter. A VM alert in the threshold catalog uses Usage (MHz) as a gate.
+
 ## Hyper-Threading
 - Scenario: two vCPUs run on the two threads of the same physical core at the same time.
-- VM Usage is HT-aware. When both threads run, the VM is charged a 37.5% penalty, so it shows about 62.5%.
+- VM Usage is HT-aware. When both threads run, the VM is charged a 37.5% penalty, so it shows about 62.5% (Broadcom KB 335065; [`vsphere/technology/cpu/concepts/hyper-threading`](../../concepts/hyper-threading.md), section Hyper-Threading accounting: VM CPU Used and ESXi CPU Used).
 - The VM cannot see the core or its two threads. ESXi can.
 - The host view of the same core: see [`vsphere/technology/cpu/metrics/host/usage`](../host/usage.md).
 
@@ -51,7 +55,7 @@ Usage (%) = (sum of Usage (MHz) of each vCPU + VM-level load) / VM static CPU sp
 - "Use Usage for capacity" → it includes frequency. Use Run for capacity.
 - "Usage (%) above 90%, so add vCPUs" → check Run. Turbo inflates Usage.
 - "Usage (MHz) cannot exceed the VM capacity" → Turbo pushes it above.
-- "Linux, VM and ESXi CPU Usage share a name, so they mean the same" → no. Metrics with the same name on different objects differ in formula and meaning. Check the same_name links before answering.
+- "Linux, VM and ESXi CPU Usage share a name, so they mean the same" → no. VM CPU Usage is per VM and carries the Hyper-Threading charge (62.5% per vCPU on a busy core); ESXi CPU Usage is per core against the base clock, one or two busy threads counting once; Linux CPU usage is busy time seen by the guest kernel, which does not see Hyper-Threading or frequency.
 
 ## Metadata
 ```yaml
@@ -97,14 +101,10 @@ images:
     image_type: scatter
     sample: '1,102 VMs'
 source:
-  document: Knowledge base
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > Guest OS vs VM; ESXi ≠ VM + Kernel; CPU Throughput; Impacts on VM; CPU > VM > Consumption Metrics > Used | Usage > Usage
-corrections:
-- '2026-11-02: Hyper-Threading scenario (section: Hyper-Threading) rewritten; the uploaded document sentence is truncated.'
+  document: Knowledge base; Broadcom KB 335065
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > Guest OS vs VM; ESXi ≠ VM + Kernel; CPU Throughput; Impacts on VM; CPU > VM > Consumption Metrics > Used | Usage > Usage; KB 335065, Cause
+corrections: []
 review_notes:
-- 'To check: the 37.5% Hyper-Threading penalty; not found in Performance Best Practices for VMware vSphere 9.1.'
-- Sections Throughput, Masked degradation, and the last misconception: from CPU > Architecture.
-- 'Sections Formula, Turbo example, Usage vs Run at scale: from CPU > VM.'
-- 'To check: whether VM CPU Usage (%) contains VMX load, the gap between Usage (%) and Usage (MHz).'
+- 'To check: Section ''Formula'': whether VM CPU Usage (%) includes the VMX load, which would explain the gap between Usage (%) and Usage (MHz); the vSphere Web Services API 9.1 descriptions of cpu.usage and cpu.usagemhz do not say (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html). Needs a lab comparison on a 9.1 host.'
 status: draft
 ```

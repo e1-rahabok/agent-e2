@@ -12,8 +12,8 @@
 ## Usable capacity: a capacity term
 - Capacity subtracts HA, buffer and hypervisor overhead from total capacity. What remains is usable capacity, and capacity is measured against it.
 - Reservation is not subtracted from supply: it is demand, read in its own model against the capacity that can be reserved (CPU at the base clock, memory at DRAM). Subtracting it from supply as well counts it twice ([`sp5-framework/capacity/demand`](../capacity/demand.md), section Demand).
-- Performance ignores all four. It measures what happens, against total capacity. These factors can cause a performance problem, but they are not inputs to a performance metric.
-- No other pillar has a usable part: no usable performance, usable availability or usable compliance.
+- Performance ignores HA, buffer, hypervisor overhead and reservation. It measures what happens, against total capacity. These factors can cause a performance problem, but they are not inputs to a performance metric.
+- No other pillar has a usable part: no usable performance, usable availability or usable security.
 ![Performance management spans 0-100% of total capacity; capacity management spans 0-100% of usable capacity, which sits between the hypervisor overhead below and the buffer above, beside High Availability](images/performance-vs-capacity-total-vs-usable-range-diagram.png)
 
 ## Absolute vs relative
@@ -150,11 +150,7 @@ images:
 source:
   document: Knowledge base
   path: 'Performance Management (intro); Performance | Capacity > Utilization vs Demand; Contention vs Consumption; Pattern Difference'
-corrections:
-- 'Section ''Absolute vs relative'': utilization alone means nothing; 0% can be bad, 100% can be good.'
-- 'Section ''Cluster: performance vs capacity'': highest-host utilization belongs to Cluster Risk (%), not cluster performance.'
-- 'Section ''Pattern difference'': the drop starts where the allocation ratio passes 1, on the hottest host first; only allocation can be overcommitted.'
-- 'Section ''Four points on the utilization scale'', point A: utilization cannot pass physical capacity; demand can.'
+corrections: []
 review_notes: []
 status: draft
 ```

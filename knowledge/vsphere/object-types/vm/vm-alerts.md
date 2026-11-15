@@ -119,10 +119,7 @@ related:
 source:
   document: Knowledge base
   path: 'Proactive Operations > Alert > VM Alerts; CPU Alerts > Contention Alerts > VM Contention; Consumption Alerts > VM Consumption; Memory Alerts > Contention Alerts > VM Contention; Storage Alerts > Contention Alerts > VM Contention; Network Alerts > Contention Alerts'
-corrections:
-- 'Section ''VM CPU contention'': the source''s red and orange also test VM CPU Contention above 8%. Dropped: Contention is never below Ready (VCF Operations 8.18 formula), so it adds nothing next to Ready. The source''s orange keeps the red Peak vCPU Ready (32%); halved to 16%, as red is 2x orange on every value of the set (Q140, Q144).'
-- 'Section ''VM dropped packets'': the source condition ends with "and", a second condition missing. The VM CPU Usage gate of the other VM contention alerts added (Q147).'
-- 'Section ''Memory contention: mixed causes'': the source example (51% contention from 5 MB limited, 1 MB swapped, 2 MB compressed) dropped: contention is time, not memory size, so the MB values cannot add up to it (Q145).'
+corrections: []
 review_notes: []
 status: draft
 ```

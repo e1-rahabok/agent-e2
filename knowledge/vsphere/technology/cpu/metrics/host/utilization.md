@@ -3,6 +3,7 @@
 ## Meaning
 - Static-frequency CPU utilization, from the host vantage point.
 - The VM equivalent is called Run. See [`vsphere/technology/cpu/metrics/virtual-motherboard/run`](../virtual-motherboard/run.md).
+- Relevance for operations: capacity. Read per thread (Thread Utilization), it is the ESXi capacity reading (section The capacity reading); the host CPU alert symptoms in the threshold catalog also test it.
 
 ## Vantage points
 - Different vantage points: provider (ESXi) and consumer (VM).
@@ -20,6 +21,7 @@
 - So with Hyper-Threading on, Thread Utilization is the ESXi utilization for capacity management: the share of threads in use.
 - Core Utilization overstates used capacity: it counts a core as fully used when one of its two threads runs, while the other thread can still take work.
 - Usage (%) is not a capacity reading either: it includes frequency (Turbo), which is speed.
+- Broadcom KB 431027 names `cpu.utilization` for capacity planning, because it is time-based; `cpu.usage` reflects physical core saturation and Turbo.
 - Example: Usage 100%, Core Utilization 70%, Thread Utilization 40%. For capacity the host is at 40%: about 60% of the threads are idle.
 
 ## Thread Utilization
@@ -62,12 +64,9 @@ related:
 - vsphere/technology/cpu/concepts/hyper-threading
 - vsphere/technology/cpu/metrics/host/imbalance
 source:
-  document: Knowledge base
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > ESXi ≠ VM + Kernel; CPU > ESXi > Thread Utilization
-corrections:
-- 'Section ''The capacity reading'' and Misconceptions: Thread Utilization is the ESXi utilization for capacity management (quiz key of CPU Q1).'
-review_notes:
-- Sections Mechanism and Misconceptions: from CPU > Architecture.
-- 'Section Thread Utilization: from CPU > ESXi.'
+  document: Knowledge base; Broadcom KB 431027
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > ESXi ≠ VM + Kernel; CPU > ESXi > Thread Utilization; KB 431027, Resolution
+corrections: []
+review_notes: []
 status: draft
 ```

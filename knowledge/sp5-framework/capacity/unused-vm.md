@@ -115,7 +115,6 @@ source:
   document: Knowledge base
   path: 'Capacity Management > Reclamation > Unused VM (Configuration; Utilization; Other Signs; Annual Stocktake)'
 corrections: []
-review_notes:
-- 'Section ''Signs'': several signs read inside the Guest OS (login, process, logs, paging). Kept in operations-management, not guest-os/, because the file spans layers and products.'
+review_notes: []
 status: draft
 ```

@@ -4,6 +4,7 @@
 - Per-vCPU instance: excludes System time.
 - VM aggregate: includes System time.
 - Pattern: same name, same object, different formula.
+- Relevance for operations: chargeback and the work done (section Use cases). Not capacity, because frequency and Hyper-Threading move it: Run is the capacity counter.
 
 ## Reason
 - System time is charged at VM level. It does not exist at vCPU level.
@@ -102,8 +103,6 @@ source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > Fair Share Scheduler; CPU Efficiency; CPU > VM > Consumption Metrics > Used | Usage > Used
 corrections: []
-review_notes:
-- Sections Fair Share Scheduler, Hyper-Threading charge, and the last misconception: from CPU > Architecture.
-- 'Sections Formula, Worlds charged to the VM, Unit, Use cases: from CPU > VM.'
+review_notes: []
 status: draft
 ```

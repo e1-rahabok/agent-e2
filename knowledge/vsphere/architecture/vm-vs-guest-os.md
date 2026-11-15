@@ -14,7 +14,7 @@
   - system calls per second.
 - A VM introduces its own metrics and properties.
 - Resources consumed by the Guest OS ≠ resources consumed by the VM. Power management and CPU SMT add to the difference.
-- See [`vsphere/architecture/vm-vs-guest-os`](vm-vs-guest-os.md) for what each layer can and cannot see.
+- What each layer can and cannot see: section The four areas.
 
 ## Two realms
 - VM (virtual motherboard) and Guest OS are 2 different realms. Each has its own kernel and its own metrics.
@@ -29,7 +29,7 @@
 | State | Meaning |
 |---|---|
 | Powered off | BIOS not running. |
-| Frozen | System clock paused. Occurs during the actual downtime of vMotion (not stun time, not copy time). About 0.2 s when healthy. |
+| Frozen | System clock paused. Occurs during the actual downtime of vMotion (not stun time, not copy time). Healthy values: [`vsphere/object-types/vm/vmotion`](../object-types/vm/vmotion.md). |
 
 - If the BIOS is running, the VM is 100% available, even if Windows or Linux has not booted.
 
@@ -89,6 +89,7 @@ flowchart TB
   - Result: VM-level disk IOPS under-reports demand.
 - B: Guest OS CPU utilization roughly translates into VM CPU Run.
   - The two are calculated independently, likely sampled at different times, with different rollup techniques.
+- C: work the hypervisor does for this VM outside the guest. Not virtualization overhead in the strict sense: disk snapshot work is in C, yet a snapshot is an optional capability, not overhead ([`vsphere/architecture/overhead`](overhead.md)).
 - C: VMware Tools adds new metrics inside Windows/Linux for some visibility.
   - Tools does not modify existing Windows/Linux metrics. Those remain unaware of virtualization.
 - D: The guest experiences frozen time or slowness, but cannot identify or account for it.
@@ -106,10 +107,10 @@ flowchart TB
 
 ## Misconceptions
 - "Guest OS crashed, so the VM is down" → wrong. The VM is available while BIOS runs; the Guest OS is unavailable.
-- Asking for VM process or thread counts → wrong layer. Those are Guest OS metrics.
+- "Show me the process and thread count of this VM" → wrong layer. Processes and threads are Guest OS metrics; the VM is a virtual motherboard with no processes of its own.
 - "Demand is not affected by Hyper-Threading because the Guest OS cannot see threads" → mixes realms. Demand is a VM-realm kernel counter; the VMkernel sees threads.
-- "VM disk IOPS and latency are normal, so storage is not the problem" while the guest disk queue is high → incomplete. The IO may still be queued in area A.
-- Equating the plain-English demand/usage above with the vSphere Demand/Usage metrics → wrong.
+- "VM disk IOPS and latency are normal, so storage is not the problem" → incomplete when the guest disk queue is high: the IO may still be queued in area A, which the hypervisor does not see.
+- "Guest OS demand = A + B is the same as VM CPU Demand" → wrong. Demand and usage in the four areas are plain-English words; the vSphere Demand and Usage metrics have their own formulas and purposes.
 - "A counter stored on the VM object is a VM metric; the VM includes its Guest OS" → no. A VM is the virtual motherboard; the Guest OS is a separate layer above it. A counter belongs to the layer that produces it, not to the object that stores it.
 
 ## Metadata
@@ -145,8 +146,7 @@ related:
 source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM?; The World of Metrics > Metrics Nuances > Virtualization Impact > Visibility (from former vsphere/architecture/vm-vs-guest-os)
-corrections:
-- '2026-11-02: Layer C is work done outside the guest that the guest cannot see. It is not ''overhead'' in the strict sense. Disk snapshot is not overhead (see vsphere/architecture/overhead). Uploaded document labels layer C ''hypervisor overhead''.'
+corrections: []
 review_notes: []
 status: draft
 ```

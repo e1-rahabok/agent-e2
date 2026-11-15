@@ -1,4 +1,5 @@
-# Guest OS CPU Run Queue 
+# Guest OS CPU Run Queue
+
 ## Layer
 - Guest OS layer: Windows or Linux, running on the VM. The VM is a virtual motherboard; it cannot see inside the Guest OS.
 - VMware Tools collects this counter inside the Guest OS and vCenter and VCF Operations store it on the VirtualMachine object. That is a data path, not ownership: the counter belongs to the Guest OS.
@@ -8,10 +9,11 @@
 - The primary Guest OS CPU performance counter: whether the CPU keeps up with demand.
 - An 8-vCPU VM runs 8 threads in parallel; more demand queues. Include the queue in Guest OS sizing.
 - VMware Tools counter: guest.processor.queue. Windows source: Win32_PerfFormattedData_PerfOS_System ProcessorQueueLength (WMI).
+- Relevance for operations: Guest OS performance (the KPI row Peak vCPU run queue length), alerting (Guest OS alert symptoms in the threshold catalog) and Guest OS sizing.
 - The guest counter is the value at the moment of each 20-second sample, not an average. VCF Operations builds two metrics from those samples, in the next section.
 
 ## Scale in VCF Operations
-- Two metrics on the VM object: Guest|CPU Queue (5-minute value, the mean of the 15 samples of 20 seconds) and Guest|Peak vCPU Queue within collection cycle (the highest of the same 15; key `guest|20_sec_peak_cpu_queue`). The names say CPU and vCPU; but they measure per vCPU, not total at VM level. 
+- Two metrics on the VM object: Guest|CPU Queue (5-minute value, the mean of the 15 samples of 20 seconds) and Guest|Peak vCPU Queue within collection cycle (the highest of the same 15; key `guest|20_sec_peak_cpu_queue`). The names say CPU and vCPU; both measure per vCPU, not the total at VM level.
 - Both are the guest's total queue divided by the VM's vCPU count: the average queue per vCPU. The total on the VM is the value times the vCPU count. An 8-vCPU VM with 24 threads in the queue shows 3. Windows PerfMon (System \ Processor Queue Length) and Linux `vmstat` show the total.
 - You can mathematically prove that the metric is per vCPU, not at the VM level. Export multiple VMs with different vCPU size. For each VM, export thousands of data points. The guest reports a whole number of threads, so every peak value is a whole multiple of 1/vCPU count (8 vCPUs: steps of 0.125) and every 5-minute value a whole multiple of 1/(15 × vCPU count). A raw total would show whole numbers. A cycle that lost samples (a gap in the 20-second collection) shows a finer step for that cycle only.
 - The peak is never below the 5-minute value and never above 15 times it. The ratio reaches 15 only when one sample holds all the queue and the other 14 are zero; the median is about 5.
@@ -97,7 +99,6 @@ source:
   path: MS Windows > CPU > Run Queue
 corrections: []
 review_notes:
-- 'Section Scale in VCF Operations: derived from exports of two VMs (6 and 8 vCPUs). Check the wording of the metric definitions in the VCF Operations 9.1 documentation (techdocs.broadcom.com, Guest OS metrics) and keep the vCPU count test as the way to verify.'
-- 'Section Observed values: the 3,385-VM and 800-VM charts do not say whether the queue is a total or per vCPU; check the scale.'
+- 'To check: Section ''Observed values'': whether the 3,385-VM and 800-VM charts show the per vCPU value of VCF Operations or a total; the charts do not say.'
 status: draft
 ```

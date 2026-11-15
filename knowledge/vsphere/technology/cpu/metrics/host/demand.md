@@ -1,12 +1,10 @@
 # ESXi CPU Demand
 
 ## Meaning
-- A sum-of-consumers metric at the provider. Providers have 2 kinds of counters:
-  - Provider metric: exists only at the provider. Example: ESXi physical network.
-  - Sum of consumer metric: aggregates the consumers. Example: sum of VM network at ESXi.
-- ESXi Demand is the second kind: the sum over the VMs.
+- ESXi CPU Demand is a sum-of-consumers metric at the provider: the sum over the VMs, not a provider metric of its own ([`vsphere/architecture/provider-consumer`](../../../../architecture/provider-consumer.md)).
 - Not the sum of VM worlds plus VMkernel worlds.
-- An internal metric of the CPU scheduler: the ideal total demand had there been no contention at all.
+- An internal metric of the CPU scheduler: the ideal total demand had there been no contention at all. vSphere Web Services API 9.1 defines `cpu.demand`, for VirtualMachine and HostSystem, as the CPU a VM would use with no CPU contention or CPU limit; it names no reservation.
+- Relevance for operations: capacity, in its VCF Operations form, which follows the capacity model (section vCenter vs VCF Operations). Not a performance signal: Demand above Usage can be reservation alone, so read VM CPU Ready and Co-stop. The legacy CPU Active metrics duplicate it ([`vsphere/technology/cpu/metrics/host/cpu-utilization-for-resources`](cpu-utilization-for-resources.md)).
 
 ## vCenter vs VCF Operations
 Same name, two formulas. vCenter looks from the administration view (what the scheduler wants now); VCF Operations from the operations view (what the host must be able to deliver). The split dates back to vRealize Operations; it is not a 9.x change.
@@ -68,6 +66,7 @@ related:
 - vsphere/technology/cpu/concepts/hyper-threading
 - vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics
 - vsphere/technology/cpu/metrics/host/reserved-capacity
+- vsphere/technology/cpu/metrics/host/cpu-utilization-for-resources
 images:
   - path: ../../images/esxi-cpu-demand-usage-without-vm.png
     product: [vsphere]
@@ -80,10 +79,9 @@ images:
     metric: ['ESXi CPU Demand']
     image_type: timeline
 source:
-  document: Knowledge base
-  path: The World of Metrics > Metrics Nuances > Virtualization Impact; CPU > ESXi > Demand
-corrections:
-- "2026-11-02 correction ('provider metric') refined by Q009 (2026-11-03): ESXi Demand is a sum-of-consumer metric held at the provider."
+  document: Knowledge base; vSphere Web Services API 9.1 reference, CPU Counters
+  path: The World of Metrics > Metrics Nuances > Virtualization Impact; CPU > ESXi > Demand; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html, demand
+corrections: []
 review_notes: []
 status: draft
 ```

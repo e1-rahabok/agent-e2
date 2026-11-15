@@ -4,6 +4,7 @@
 - vCenter has 6 VM CPU contention counters: Latency (%), Max Limited (ms), Overlap (ms), Readiness (%), Ready (ms), Co-stop (ms).
 - Wait counters mix contention and consumption: Swap Wait (ms), Idle (ms), Wait (ms).
 - VCF Operations adds Contention (%) and Other Wait (VM Wait).
+- Relevance for operations: performance: Ready, Co-stop and Overlap for the VM KPI, Contention or Latency for troubleshooting (section Choice); Guest OS sizing includes them all (section Context).
 ![vCenter VM CPU contention counters](../../images/vcenter-vm-cpu-contention-counters-table.png)
 ![vCenter VM CPU wait counters](../../images/vcenter-vm-cpu-wait-counters-table.png)
 
@@ -85,7 +86,6 @@ source:
   document: Knowledge base
   path: CPU > VM > Contention Metrics; Wait Metrics
 corrections: []
-review_notes:
-- 'To check: Section ''States per metric'': table assembled from Ready, Co-stop, Overlap, Contention and Latency sections and diagrams.'
+review_notes: []
 status: draft
 ```

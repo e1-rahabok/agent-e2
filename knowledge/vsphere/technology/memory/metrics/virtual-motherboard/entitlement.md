@@ -6,7 +6,7 @@
 - A value of VMkernel memory management, not an operations counter. vCenter shows it among the VM memory counters, so administrators meet it and misuse it.
 - Relevance for operations: none for capacity, sizing or alerting. Do not size, alert or report on it.
 - Troubleshooting use: a value below the VM's configured memory. Alone it is not a fault: on a host without memory pressure it follows the VM's estimated demand, and a lab VM at rest showed a value below its configured memory with nothing reclaimed. Read it with Ballooned, Swapped, Compressed and Latency.
-- It does not follow a reservation: setting and removing a reservation left it where it was ([VM memory metrics compared](../comparisons/vm-memory-metrics.md), section VM reservation across counters).
+- It does not follow a reservation: setting and removing a reservation left it where it was ([`vsphere/technology/memory/metrics/comparisons/vm-memory-metrics`](../comparisons/vm-memory-metrics.md), section VM reservation across counters).
 
 ## Misconceptions
 - "Entitlement is what the VM uses" → it is a scheduler value.
@@ -45,7 +45,6 @@ source:
   path: Memory > VM > Consumption Metrics
 corrections: []
 review_notes:
-- 'To check: Section ''Meaning'': the limit behaviour; unconfirmed.'
-- 'To check: whether Entitlement excludes memory above a limit (the VM is not entitled beyond its limit).'
+- 'To check: Section ''Meaning'': whether VM Memory Entitlement stays at or below a memory limit; API 9.1 (`mem.mementitlement`) names the limit as an input, no value checked.'
 status: draft
 ```

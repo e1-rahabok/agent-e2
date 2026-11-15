@@ -9,7 +9,7 @@ flowchart TD
   S1[1. Run low, Idle + Other Wait near 100%?] -->|yes| E1[Idle accounting: not a wait]
   S1 -->|no| S2[2. Several VMs affected?]
   S2 --> S3[3. Snapshots?]
-  S3 --> S4[4. Known accounting issue KB 85393]
+  S3 --> S4[4. Known accounting issue KB 338438]
   S4 --> E4[Actions, then a support request]
 ```
 
@@ -17,7 +17,7 @@ flowchart TD
 1. Idle and Run (VirtualMachine) ([`vsphere/technology/cpu/metrics/virtual-motherboard/idle`](../metrics/virtual-motherboard/idle.md)). When Run is low, Idle and Other Wait add up to about 100%: the VM is idle, not waiting. → stop. Otherwise → step 2.
 2. Breadth (VirtualMachine). Several VMs affected: find what they share (host, datastore, versions). → step 3.
 3. Configuration (VirtualMachine). Snapshots on the VM ([`vsphere/technology/storage/concepts/snapshot-impact`](../../storage/concepts/snapshot-impact.md)). → step 4.
-4. Known bug (VirtualMachine, HostSystem). Broadcom KB 85393: a known accounting issue inflates Other Wait and esxtop %VMWait. Compare the ESXi, virtual hardware and VMware Tools builds with the fixed builds.
+4. Known bug (VirtualMachine, HostSystem). Broadcom KB 338438 (legacy 85393): on ESXi 7.0 Update 2 and later, halted vCPU time is not always counted as Idle, so idle VMs show raised Other Wait and esxtop %VMWAIT; fixed in ESXi 8.0 Update 3j. Compare the ESXi build with the fixed build ([`vsphere/technology/cpu/metrics/virtual-motherboard/other-wait`](../metrics/virtual-motherboard/other-wait.md), section Known issue).
 
 ## Order rationale
 - Idle first: a low Run makes Other Wait large by accounting, with no wait at all.
@@ -58,8 +58,8 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/wait
 - sp5-framework/performance/performance-management
 source:
-  document: Knowledge base
-  path: CPU > VM > Wait Metrics > Other Wait
+  document: Knowledge base; Broadcom KB 338438
+  path: CPU > VM > Wait Metrics > Other Wait; KB 338438 (legacy 85393), Symptoms, Cause, Resolution
 corrections: []
 review_notes: []
 status: draft

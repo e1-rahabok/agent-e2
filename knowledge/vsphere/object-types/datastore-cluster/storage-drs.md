@@ -50,12 +50,10 @@ related:
 - vsphere/object-types/datastore/datastore-alerts
 - vsphere/technology/storage/datastore-space-headroom
 source:
-  document: VMware vSphere 9.1 Resource Management (TechDocs, web edition)
-  path: Creating a Datastore Cluster > Initial Placement and Ongoing Balancing; Storage Migration Recommendations; Setting the Aggressiveness Level for Storage DRS
+  document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Storage DRS FAQ (Broadcom KB 2149938)
+  path: vSphere Resource Management > Creating a Datastore Cluster > Initial Placement and Ongoing Balancing, Storage Migration Recommendations, Activate Storage DRS, Setting the Aggressiveness Level for Storage DRS, Set Storage DRS Runtime Rules (pp. 1927-1929); KB 2149938 for the defaults (80%, 5 points), the threshold per datastore, the soft constraint, thin and thick disks and host connectivity
 corrections: []
 review_notes:
-- 'Sections Invocation and Recommendations: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/creating-a-datastore-cluster/initial-placement.html and https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/creating-a-datastore-cluster/storage-migration-recommendations.html.'
-- 'Section ''Space thresholds'': defaults 80% and 5 points, threshold per datastore, soft constraint, thin and thick disks, host connectivity: Broadcom KB Storage DRS FAQ, https://knowledge.broadcom.com/external/article?legacyId=2149938; minimum difference: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/creating-a-datastore-cluster/setting-the-aggressiveness-level-for-storage-drs.html.'
-- 'To check: Section ''Space thresholds'': destination must stay under the threshold after the move, and moves stop once the source is under the threshold; not stated in the 9.1 documentation; third-party source: https://frankdenneman.ai/2011-09-13-sdrs-out-of-space-avoidance/.'
+- 'To check: Section ''Space thresholds'': that a destination must stay under the space utilization threshold after the move, and that moves stop once each source is under the threshold; the vSphere 9.1 documentation (pp. 1927-1929) says only that Storage DRS balances space use across the datastore cluster when a datastore exceeds the threshold (Storage DRS FAQ, KB 2149938).'
 status: draft
 ```

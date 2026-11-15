@@ -7,11 +7,12 @@
 ## Contention
 | Counter | Meaning |
 |---|---|
-| %DRPTX | Dropped transmit packets (%). High: the physical NIC or uplink switch cannot cope. |
+| %DRPTX | Dropped transmit packets (%). High: the physical NIC cannot send fast enough, or an NSX Distributed Firewall rule drops the VM's packets. |
 | %DRPRX | Dropped receive packets (%). High: the host or VM lacks CPU to process packets, or the ring buffer is too small. |
 
 - Expect at most 0.x%. On dedicated networks (vSAN, vMotion), 0% on every host at all times.
-- Receive drops shown at the vSwitch port happen between the virtual switch and the guest driver. More Rx buffers in the virtual NIC driver reduce them (Broadcom KB 312565).
+- Receive drops shown at the vSwitch port happen between the virtual switch and the guest driver. More Rx buffers in the virtual NIC driver reduce them; when the VM is short of CPU (Guest OS CPU, VM CPU Ready), larger buffers only delay them (Broadcom KB 312565).
+- A frame that the top-of-rack switch drops after the vmnic sent it is not in %DRPTX. Which layer counts which drop: [`vsphere/technology/network/concepts/packet-drop-accounting`](../../technology/network/concepts/packet-drop-accounting.md).
 
 ## Consumption
 | Counter | Meaning |
@@ -84,11 +85,10 @@ related:
 - vsphere/tools/esxtop/units-vs-vsphere-client
 - vsphere/technology/network/concepts/nic-teaming
 source:
-  document: Knowledge base
-  path: Provider Objects > esxtop > Network
-corrections: []
-review_notes:
-- 'The 9.1 documentation still lists DTYP (H = hub, S = switch) in the network panel; the field is not shown on ESXi 9.1; the documentation is out of date.'
-- 'To check: KB not read: https://knowledge.broadcom.com/external/article/312565/the-output-of-esxtop-show-dropped-receiv.html'
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Broadcom KB 312565 (all ESXi versions)
+  path: Provider Objects > esxtop > Network; vSphere Monitoring and Performance > esxtop Network Panel (p. 2164)
+corrections:
+- 'Section ''Configuration'': the vSphere 9.1 documentation, esxtop Network Panel (p. 2164), still lists DTYP (H = hub, S = switch); ESXi 9.1 does not show the field.'
+review_notes: []
 status: draft
 ```

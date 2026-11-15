@@ -26,7 +26,7 @@
 - From vSphere 6.5, changing corespersocket no longer changes the vNUMA topology.
 - corespersocket only changes how vCPUs are presented to the guest OS. This can matter for software licensing.
 - vNUMA determines its topology from the underlying ESX host.
-- Example from the source:
+- Example in Performance Best Practices for vSphere 9.1 (p. 57):
   - host: dual socket, 16 cores per socket,
   - VM: four sockets, four cores per socket (16 vCPUs), corespersocket = 4.
   - Before vSphere 6.5: vNUMA created four NUMA nodes.
@@ -38,7 +38,7 @@
 - Size wide VMs to fit within one physical NUMA node where possible. A VM that fits one node is presented to the guest as one node, a uniform (UMA) machine, even when it spans two L3 domains: for example 64 vCPUs in a 128-core node ([`sp5-framework/capacity/vm-size`](../../../../sp5-framework/capacity/vm-size.md), Example: AMD EPYC 9996 in NPS2).
 - Memory must split evenly across the VM's virtual nodes, so configure it as a multiple of the number of virtual nodes. A VM spread over every node of an NPS4 host (4 nodes per socket) takes memory divisible by 4; over SNC3, by 3; over NPS2, by 2. An uneven split gives the guest unequal nodes and uneven memory latency.
 - Memory per node: keep the VM's memory within the memory of the nodes it uses. A VM in one NPS2 node of an AMD EPYC 9996 has at most half of the socket's memory as local memory; above that ESXi fetches the rest from the other IOD's node.
-- Example from the source: a host with six cores per NUMA node suits VMs of no more than six vCPUs.
+- Example in Performance Best Practices for vSphere 9.1 (p. 57): a host with six cores per NUMA node suits VMs of no more than six vCPUs.
 - If a VM must be larger than one node, size it to split evenly across as few physical NUMA nodes as possible.
 - A VM vCPU count above the physical core count uses hyper-threads. This can create contention. See [`vsphere/technology/cpu/concepts/hyper-threading`](hyper-threading.md).
 
@@ -73,14 +73,11 @@ related:
 - vsphere/technology/cpu/concepts/numa
 - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 source:
-  document: Knowledge base (vSphere NUMA Architecture and Sizing Guide, vSphere 9.1); Performance Best Practices for VMware vSphere 9.1 (revision 20260624); vSphere 9.1 Resource Management, Virtual NUMA Controls and Using Virtual NUMA (Broadcom TechDocs, last updated 2026-11-09)
-  path: Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (p. 57); Using NUMA Systems with ESXi > Virtual NUMA Controls (option numa.autosize.once)
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); vSphere 9.1 Resource Management, Virtual NUMA Controls and Using Virtual NUMA (Broadcom TechDocs, last updated 2026-11-09)
+  path: Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (p. 57); vSphere 9.1, vSphere Resource Management > Using NUMA Systems with ESX > Using Virtual NUMA (p. 1939), Virtual Topology in ESX (pp. 1939-1940), Virtual NUMA Controls (option numa.autosize.once, pp. 1940, 1945)
 corrections: []
 review_notes:
-- 'To check (lab, Q216 in project/author-questions.md): whether 9.1 rebuilds the topology at every power cycle (sizing guide) or keeps it unless the vCPU count changes (https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/using-numa-systems-with-esxi/using-virtual-numa.html); whether numa.autosize.once (vSphere 9.1 p. 1945) is honored.'
-- 'Source URL for the vCPU count sentence: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/using-numa-systems-with-esxi/using-virtual-numa.html'
-- Checked against 9.1 (revision 20260624). Page 57 unchanged. Page reference updated.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: KB 81383, the ''Virtual Machine vCPU and vNUMA Rightsizing'' blog and the Virtual Machine Compute Optimizer tool, referenced by the source; not read.'
+- 'To check: Sections ''Topology initialization'' and ''Misconceptions'': the text says 9.1 rebuilds the topology at every power cycle; the vSphere 9.1 documentation, Using Virtual NUMA (p. 1939), says the topology does not change once initialized unless the vCPU count changes, and lists numa.autosize.once (pp. 1940, 1945). Lab checks in Q216 (project/author-questions.md).'
+- 'To check: Section ''Topology initialization'': the vCenter cluster advanced setting VPXD_PersistVnuma; not in the vSphere 9.1 documentation PDF; vSphere 9.1 Resource Management, Using Virtual NUMA (https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/using-numa-systems-with-esxi/using-virtual-numa.html).'
 status: draft
 ```

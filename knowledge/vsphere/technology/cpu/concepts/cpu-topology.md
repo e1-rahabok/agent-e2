@@ -35,7 +35,7 @@
 - A node boundary at a die boundary (an IOD, a compute tile with its own memory controllers) keeps the memory of a thread behind its own controllers: a remote access crosses a die-to-die link.
 - A node boundary inside one IOD (NPS4 on EPYC 9005) removes no die-to-die hop: every CCD reaches every memory controller through the same IOD, so a local access saves only part of the path across that die.
 - The BIOS setting for a general-purpose cluster, NPS-1 for AMD EPYC, and when to depart from it: [`vsphere/technology/cpu/configuration/numa-settings`](../configuration/numa-settings.md), section AMD EPYC.
-- Broadcom KB 314059 shows a NUMA effect: NUMA nodes heavily load-imbalanced.
+- NUMA nodes can run load-imbalanced when the scheduler groups VMs that communicate often: [`vsphere/technology/cpu/concepts/numa`](numa.md), section Scheduler mechanics (Broadcom KB 314059).
 
 ## Cache latency
 - Intel Xeon 6 test: local L3 cache latency 33 ns.
@@ -79,8 +79,7 @@ source:
   path: 'CPU > Architecture > CPU vs vCPU > System on a Chip; NUMA'
 corrections: []
 review_notes:
-- 'To check: Section ''NUMA'': the EPYC 9006 row (8 CCDs of 32 cores, two IODs per socket, 16 channels) against an AMD document; read so far in press reports of the launch (ServeTheHome, 2026-09-25: two IODs on the high-end parts; StorageReview, 2026-09-26: EPYC 9996, 256 cores, 16 channels). AMD Documentation Hub: https://docs.amd.com'
-- 'To check: Section ''NUMA'': Broadcom KB not read (https://knowledge.broadcom.com/external/article/314059/numa-nodes-are-heavily-load-imbalanced-c.html).'
-- 'To check: Section ''NUMA'': SAP source not read (https://help.sap.com/docs/SUPPORT_CONTENT/virtualization/4181102237.html).'
+- 'To check: Section ''NUMA'': the EPYC 9006 row (8 CCDs of 32 cores, two IODs per socket, 16 channels); so far only in press reports of the launch (2026-09-25, 2026-09-26); AMD Documentation Hub, https://docs.amd.com.'
+- 'To check: Section ''NUMA'': the SAP recommendation to enable Sub-NUMA Clustering; https://help.sap.com/docs/SUPPORT_CONTENT/virtualization/4181102237.html.'
 status: draft
 ```

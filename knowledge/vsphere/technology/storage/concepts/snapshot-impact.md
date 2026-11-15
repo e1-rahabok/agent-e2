@@ -57,6 +57,6 @@ source:
   path: Storage > VM > Performance Metrics > Consumption metrics > Datastore
 corrections: []
 review_notes:
-- 'To check: best-practice blog not read (https://blogs.vmware.com/performance/2021/06/performance-best-practices-for-vmware-snapshots.html). Snapshot file docs linked by are vSphere 7.0.'
+- 'To check: Section ''IO'': the read amplification of redo-log snapshots and the vSAN ESA native snapshots (no delta chain) against the vSphere 9.1 and vSAN 9.1 documentation; the performance blog https://blogs.vmware.com/performance/2021/06/performance-best-practices-for-vmware-snapshots.html is written for vSphere 7.0.'
 status: draft
 ```

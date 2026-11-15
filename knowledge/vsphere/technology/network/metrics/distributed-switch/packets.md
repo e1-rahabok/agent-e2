@@ -7,6 +7,7 @@
   - each link aggregation group (LAG) of uplinks.
 - Each scope splits by direction (transmit, receive) and traffic type (all packets, multicast, broadcast).
 - The distributed port group object has no vCenter performance counters. Port-level counts live on the switch object, per DVPort.
+- Relevance for operations: capacity and performance troubleshooting: traffic per DVPort and per LAG, and the multicast and broadcast share of it. Statistics level 3, through the API only.
 
 ## Counters (vCenter 9.1 API)
 | Scope | Transmit | Receive |
@@ -59,7 +60,6 @@ source:
   path: https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv; README section Object types without metrics; vSphere Networking > What is VLAN Policy, How to Use VLANs to Isolate Network Traffic (pp. 1166, 1188); vSphere Security > Consider VLANs to Protect Your Environment (p. 1571)
 corrections: []
 review_notes:
-- 'Whole file: counter names, scopes, level, rollup, stat type and summaries from the vCenter 9.1.0 API export. The distributed port group returned no counters (same README).'
-- 'To check: Section ''Meaning'' (what a DVPort connects to), the first two lines of ''Interpretation'' and the third misconception: inferred from the counter scopes, not from a document. The VLAN line of ''Interpretation'' follows the vSphere 9.1 documentation (a VLAN is a logical broadcast domain; broadcast traffic stays within the VLAN).'
+- 'To check: Section ''Interpretation'' (first line) and the third misconception: that a high multicast or broadcast share explains receive drops, and that the switch-scope packet count includes VM-to-VM traffic inside one host; inferred from the counter scopes; a live API reading of net.throughput.pktsTx against the vmnic packet counts of the same host.'
 status: draft
 ```

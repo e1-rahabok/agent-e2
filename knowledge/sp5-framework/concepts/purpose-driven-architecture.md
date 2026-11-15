@@ -52,7 +52,7 @@
 - VCF appliances (vCenter, NSX Edge) and other infrastructure appliances are workload in the technical sense: VMs on a vSphere cluster.
 - Operationally they are not workload: no business user owns them; the infrastructure team does. They are internal, so they have a KPI and no SLA. An SLA is always between two parties.
 - Product-side work: compatibility, patch and upgrade; configuration maximums; templates; users and roles; certificates; licenses; log analysis.
-- Pillars across both sides: availability, performance, security, compliance, capacity, configuration, inventory.
+- The pillars apply on both sides: availability, performance, security (compliance included) and capacity, with configuration and inventory under them ([`sp5-framework/concepts/overview`](overview.md), section The five pillars).
 - The two sides depend on each other and are managed together. Example: an expired vCenter certificate (product) stops vCenter; DRS stops balancing while vCenter is down, so VM contention can rise (platform). vSphere HA keeps working without vCenter.
 ![Platform (VCF as an IaaS platform of the customer): workloads (business; IT, VCF and non-VCF appliances) above the virtual infrastructure. Product (VCF as a software product of Broadcom): compatibility, patch, upgrade, configuration maximums, template, users and roles, certificate, license, log analysis. A dependency arrow joins them; pillars across: availability, performance, security, compliance, capacity, configuration, inventory](images/vcf-platform-vs-product-pillars-diagram.png)
 - Two layers: consumer and provider.
@@ -63,8 +63,6 @@
 ## Misconceptions
 - "Plan first, then design, then work out how to operate it" → Day 2 drives Day 0, which drives Day 1. The class of service and the operations model fix the hardware and cluster design.
 - "Automate first; automation is the transformation" → automation is a feature of the architecture. Automating operations that are not governed speeds up the problem.
-- "Tier health is the worst member" → work in a tier runs in parallel; tier health is the average of its members.
-- "Tier performance can leave out the spare node, since N+1 covers it" → the spare counts for availability only. For performance every member serves requests and is averaged.
 - "A larger cluster is always more efficient" → a cap on VMs affected by one cluster failure caps the cluster size.
 - "The application team needs the latest VCF version" → the VCF version is a product-side decision. The application team sees the platform side: its VMs and their service level.
 - "vCenter and NSX Edge VMs get the same SLA as customer VMs" → they are internal: KPI only. An SLA needs two parties.
@@ -95,6 +93,7 @@ object:
 internal_derive:
 - sp5-framework/concepts/iaas-business
 related:
+- sp5-framework/concepts/overview
 - sp5-framework/performance/business-application-kpi
 - sp5-framework/capacity/host-spec-from-class-of-service
 - sp5-framework/outputs/alerts-and-insights
@@ -110,16 +109,12 @@ images:
   - path: images/vcf-platform-vs-product-pillars-diagram.png
     product: [vsphere, vsan, nsx]
     object: [VirtualMachine, VCenterServer, HostSystem]
-    topic: 'Two sides of VCF: IaaS platform of the customer and software product of Broadcom, across seven pillars'
+    topic: 'Two sides of VCF: IaaS platform of the customer and software product of Broadcom, across the pillars, configuration and inventory'
     image_type: diagram
 source:
-  document: Knowledge base
-  path: 'Your Private Cloud > Purpose-Driven Architecture (Begin with The End in Mind: The Crown Jewel, Day 0 | Day 1 | Day 2; Automate | Operate; The 2 Sides of VCF)'
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: 'Your Private Cloud > Purpose-Driven Architecture (Begin with The End in Mind: The Crown Jewel, Day 0 | Day 1 | Day 2; Automate | Operate; The 2 Sides of VCF). vSphere 9.1: if vCenter is not available, vSphere DRS does not work (p. 180); the vSphere HA primary host on ESXi monitors VMs and hosts (How vSphere HA Works, p. 1962); vCenter runs in a vSphere HA cluster with restart priority high (p. 200)'
 corrections: []
-review_notes:
-- 'To check: Section ''Goals from what is sold'', DaaS: the reason (same software on every desktop moves together); no source yet.'
-- 'To check: Section ''Day 2 → Day 0 → Day 1'', Example 2: does not say whether 32-node clusters with 1,000-2,000 VMs are a counter-example to the cap (Q087 d).'
-- 'To check: Section ''Two sides of VCF'', certificate example (DRS needs vCenter, vSphere HA does not) (vSphere 9.1 availability documentation).'
-- 'Not copied: the application tier diagram (three-tier vs microservices pods) and the maturity diagram; their content is in the text.'
+review_notes: []
 status: draft
 ```

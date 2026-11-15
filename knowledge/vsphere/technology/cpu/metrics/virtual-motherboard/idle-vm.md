@@ -5,6 +5,7 @@
 - Idleness Indicator: is the VM idle over the last 24 hours. Rolling: computed every 5 minutes, each value over the last 24 hours of data.
 - Reclaimable Idle: 1 (true) when the VM met the idle definition on every day of the idle window. A daily metric.
 - List an idle VM only when both are true.
+- Relevance for operations: capacity reclamation and value: the list of idle VMs to reclaim.
 - Principles behind the definition (absolute MHz, CPU only, per day): [`sp5-framework/capacity/reclamation`](../../../../../sp5-framework/capacity/reclamation.md), section Idle VM.
 
 ## Policy defaults
@@ -59,8 +60,7 @@ source:
   path: 'Capacity Management > Reclamation > Idle VM'
 corrections: []
 review_notes:
-- 'To check: Section ''Policy defaults'': values from screenshot of the VCF Operations policy (Idle VMs: 7 days, 100 MHz, 100% of the time, exclude VMs provisioned in the last 30 days) against the VCF Operations 9.1 documentation; the screenshot is not copied.'
-- 'To check: Section ''Policy defaults'': "any 5-minute period above 100 MHz makes the day not idle" as the reading of 100% of the time with 5-minute collection.'
-- 'To check: metric keys of Idleness Indicator and Reclaimable Idle; no source yet (VCF Operations 9.1 metric reference; plan, M1 VCF Operations).'
+- 'To check: Section ''Policy defaults'': the defaults (7 days, 100 MHz, 100% of the time, exclude VMs provisioned in the last 30 days) and the reading that one 5-minute period above the MHz threshold makes the day not idle; VCF Operations 9.1 documentation, policy settings for idle VMs (techdocs.broadcom.com).'
+- 'To check: Section ''Meaning'': metric keys of Idleness Indicator and Reclaimable Idle; VCF Operations 9.1 metric reference (techdocs.broadcom.com).'
 status: draft
 ```

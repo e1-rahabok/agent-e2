@@ -17,7 +17,7 @@
 |---|---|---|
 | VM vCPU | Consumer | When it does not get the runtime it demands, the gap is accounted. Hence Ready and Co-stop. |
 | ESXi thread | Provider | Physical thread of a core. Never experiences contention. It runs or it does not. |
-| ESXi thread | Provider | Threads run in parallel. Each gets its own 100%. Two busy threads show 200% in esxtop. Not wrong, but read the core instead. |
+| ESXi thread | Provider | Threads run in parallel. Each gets its own 100%. No counter adds the two threads of a core: read the core for the core's work. |
 | ESXi core | Provider | The core does the actual work, not the thread. A core registers 100%, not 50%, when only one of its threads runs. |
 
 ## Two meanings of thread
@@ -40,10 +40,10 @@
 | VM vCPU | Run + Ready + Co-stop + Swap Wait + Other Wait + Idle = 100%. | Nominal speed is far too low as 100%. |
 | VM vCPU | 20,000 ms = 100%, per vCPU. A 2-vCPU VM sums to 40,000 ms. | Complement with contention counters. |
 | Physical core | Utilized + not utilized = 100%. | Not applicable. Do not manage at physical core level. |
-| Physical core | Utilization (%) per thread. Reports 200% when 2 threads are utilized. | Manage at ESXi level: the average of all cores. |
+| Physical core | Utilization (%) per thread: each busy thread reads 100%; no counter adds the two. | Manage at ESXi level: the average of all cores. |
 | Physical core | Core Utilization (%). Reports 100% with 1 or 2 threads running. | - |
 | ESXi (all sockets) | ESXi Utilization (%) = average of thread utilization. | Unit is GHz, not %. Nominal speed is too low as 100%. |
-| ESXi (all sockets) | - | ESXi Usage (GHz) = average of thread Usage. Complement with contention counters. |
+| ESXi (all sockets) | - | ESXi Usage (MHz) = sum over the physical cores. Complement with contention counters. |
 
 ## Rules
 - Capacity uses static counters. That is why % works as the unit.
@@ -63,7 +63,7 @@
 - Conservative: suits mission-critical clusters. Other workloads can be packed more.
 - Sum of VM CPU Usage can exceed Total Capacity: Total Capacity is nominal, and Usage counts Turbo.
 - A GHz figure with Turbo or a Hyper-Threading factor added is still throughput. It changes with load and power policy; the thread count of a host does not.
-- The counter CPU Usage (MHz) reads better as CPU Throughput: cycles completed ([`knowledge/glossary.md`](../../../../glossary.md), CPU Throughput).
+- The counter CPU Usage (MHz) reads better as CPU Throughput: cycles completed ([`glossary`](../../../../glossary.md), entry CPU Usage (MHz)).
 
 ## CPU capacity: Example
 ![ESXi 1: 20 cores at 1 GHz; ESXi 2: 10 cores at 2 GHz](../images/esxi-cpu-capacity-20-cores-1-ghz-vs-10-cores-2-ghz.png)
@@ -83,14 +83,15 @@
 |---|---|---|
 | Total capacity | Physical threads in the host | Core and thread utilization. Not GHz. |
 | Hypervisor overhead | Threads assigned manually | Already in ESXi counters |
-| Consumption | Sum of running VM vCPUs | Core and thread utilization; max(Usage, Reservation) per running VM. Usage tends to over-report. |
+| Consumption | Sum of running VM vCPUs | Core and thread utilization; Max (Utilization, Reservation) per running VM. Usage over-reports: it includes Turbo. |
 | Performance | Not applicable | Ready + Co-stop (Swap Wait and Other Wait are not CPU causes) |
 
 - Do not add VM CPU contention to consumption; track performance explicitly.
+- The Demand model's Max (Utilization, Reservation) per VM is the capacity model of [`sp5-framework/capacity/demand`](../../../../sp5-framework/capacity/demand.md), section Demand.
 
 ## Misconceptions
 - "ESXi CPU = sum of VM CPU + kernel CPU" → different vantage points. The sum does not hold.
-- "esxtop shows 200% on a core, so the core does 2x the work" → each thread reports its own 100%. Read Core Utilization.
+- "esxtop shows 200%, so a core does 2x the work" → no esxtop field adds the two threads of a core: each thread and the core stop at 100%. A 200% is a group value, such as the %RUN of a 2-vCPU VM. Read Core Utilization.
 - "Core Utilization 50% when one of two threads runs" → the core registers 100%.
 - "Use Usage or Demand for capacity" → they include frequency. Capacity uses static counters (Run, Utilization).
 - "Usage (%) near 100% means no headroom" → nominal speed is not the upper limit. Check contention counters.
@@ -179,6 +180,6 @@ source:
   path: CPU > Architecture > Architecture intro; ESXi ≠ VM + Kernel; Provider Objects > Capacity > CPU (from former vsphere/technology/cpu/concepts/cpu-measurement-levels)
 corrections: []
 review_notes:
-- 'To check: Section ''Capacity vs performance'': the infographic says ''ESXi Usage (GHz) = Average (thread Usage)''; an average of GHz values is unusual, a sum is expected.'
+- 'To redraw: Section ''Capacity vs performance'': the image cpu-capacity-vs-performance-metrics-at-vcpu-core-socket-level.png says ESXi Usage (GHz) = Average (thread Usage) and Utilization reports 200% when 2 threads run; the text now reads a sum over the physical cores (vsphere/technology/cpu/metrics/host/usage, section Formula) and no counter adds two threads (vSphere 9.1 documentation, esxtop CPU panel, pp. 2153, 2155).'
 status: draft
 ```

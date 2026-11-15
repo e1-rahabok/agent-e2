@@ -2,6 +2,7 @@
 
 ## Meaning
 - What it measures, from this object's vantage point.
+- Relevance for operations: its use (capacity, sizing, performance troubleshooting, alerting, reporting), or none with the reason (writing.md).
 
 ## Formula
 ```text

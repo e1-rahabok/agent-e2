@@ -3,6 +3,7 @@
 ## Meaning
 - Amount of VM memory subjected to sharing. Not the savings.
 - VM view: counts the input. 3 VM pages shared into 1 ESXi page count as 3.
+- Relevance for operations: none for capacity or performance: the input of page sharing, not the savings. Host savings are ESXi Shared - Shared Common ([`vsphere/technology/memory/metrics/host/shared`](../host/shared.md)).
 
 ## Two types
 | Type | Facts |

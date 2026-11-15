@@ -4,7 +4,7 @@
 - Performance monitoring and troubleshooting use the KPI only. No performance SLA, no SLI, no SLO.
 - The SLA is a business contract between two parties ([`sp5-framework/concepts/sla-metrics`](../concepts/sla-metrics.md)). It is not an operations metric.
 - A contract counts pass or fail against one agreed line, monthly. Operations need to know how bad, now, and on which object. The KPI gives both: a 0-100 score per object, at 20-second resolution, read daily.
-- A performance SLA is rarely defined with a number. Customers who say they have one, probed for the metric, state the wrong one or none (section Misconceptions).
+- A performance SLA is rarely defined with a number. How to probe a customer's claim of one: [`sp5-framework/concepts/sla-metrics`](../concepts/sla-metrics.md), section Customer claims of an SLA.
 
 ## Two steps of maturity
 | Step | How it works |
@@ -30,7 +30,7 @@
 - Reference:
   - KPI: reality, the absolute value: how bad. A score of 75% for one 5-minute interval on a development VM is acceptable; it is not a contract with a penalty.
   - SLA: relative to an agreed number, near 100%.
-- Target and actual, and how a daily actual is read: [`sp5-framework/performance/performance-kpi-design`](performance-kpi-design.md), section Reading a KPI over time.
+- KPI baseline (not a target) and actual, and how a daily actual is read: [`sp5-framework/performance/performance-kpi-design`](performance-kpi-design.md), sections KPI definition and Reading a KPI over time.
 - Cadence: KPI daily, in a technical meeting; a month is far too late. SLA monthly, in a business meeting.
 - Timing: KPI is a leading indicator, 5-minute window, 20-second accuracy, more metrics and events: the start of troubleshooting, before a complaint. An SLA is lagging, 30 days back.
 - Period: KPI is based on day, not date: a rolling window (last 1 hour), like live operations. An SLA uses a fixed calendar month.
@@ -51,7 +51,6 @@
 
 ## Misconceptions
 - "Our performance SLA is met, so there is no performance problem" → ask which metric, object, target and window. Usually there is none, or it is on the wrong object. Read the KPI.
-- "Our SLA is Cluster Availability" → the application team cares about its VMs and pods, not the cluster. A cluster number hides the VM that was down.
 - "Track an SLI or SLO as the leading indicator" → the KPI is the leading indicator: 20-second accuracy, colour levels, alerts on it.
 - "Cluster performance KPI includes host utilization" → it includes only the contention of the running VMs.
 
@@ -87,10 +86,7 @@ images: []
 source:
   document: Knowledge base
   path: 'Performance Management > Key Performance Indicator > KPIs as a Stepping Stone; KPI | SLA > Differences; KPIs in IaaS'
-corrections:
-- 'Section ''KPI vs SLA'', Scope: Part 1 combines VM and Guest OS in one KPI; outdated. Two KPIs; the VM GOS KPI is their average, for the application team.'
-- 'Section ''KPI means performance'': a KPI is a baseline, not a target.'
-- 'Sections ''Two steps of maturity'', ''KPI vs SLA'': KPI timing confirmed; both teams track the KPI.'
+corrections: []
 review_notes: []
 status: draft
 ```

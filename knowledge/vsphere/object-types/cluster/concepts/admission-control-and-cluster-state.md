@@ -10,7 +10,8 @@
 - Per-VM overhead memory counts as reserved, on top of the memory reservation.
 - A VM with no reservation passes CPU and memory admission control; its overhead memory is still checked.
 - CPU admission control ignores CPU affinity. A pinned VM can be admitted and still not receive its full reservation.
-- vCenter stores `clusterServices.failover` on the cluster (level 1, rollup latest). Its counter summary: vSphere HA number of failures that can be tolerated. Low priority. Misconception: when the hosts of the cluster are not identical, failures to tolerate counted in hosts does not equal capacity lost: losing the largest host costs more.
+- vCenter stores `clusterServices.failover` on the cluster (level 1, rollup latest). Its counter summary: vSphere HA number of failures that can be tolerated. Low priority.
+- HA sizes the failover reserve on the largest hosts: the slot policy assumes the largest host fails first, and the cluster resources percentage in auto mode with memory tiering reserves the DRAM of the n largest hosts, n being the failures to tolerate (vSphere 9.1 documentation, pp. 1970, 1972, 1978).
 - With DPM, capacity of hosts in standby counts as available; DRS recommends powering them on when a VM cannot be admitted without them.
 
 ## HA performance degradation threshold
@@ -59,6 +60,7 @@
 - Leave headroom for per-VM memory virtualization overhead and for migration overhead, both reserved on top of the VMs' reservations.
 
 ## Misconceptions
+- "With one host failure to tolerate, HA reserves 1/N of the cluster" → with hosts of different sizes, the slot policy and the tier-aware percentage policy reserve for the loss of the largest hosts, so the reserve is more than 1/N of the capacity. Size the reserve from the largest hosts.
 - "The host is at 30% CPU, so the VM will power on" → admission control counts reservations, not usage: a host at low usage can refuse a power-on.
 - "Yellow cluster means VMs are starving" → running VMs still have their reservations; resource pool reservations cannot all be met.
 - "Add a host to fix a red cluster" → red is an inconsistency in the tree; fix the reservations.
@@ -97,12 +99,8 @@ related:
 - vsphere/technology/memory/concepts/memory-overhead
 source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
-  path: vSphere Resource Management > Admission Control in vSphere, Resource Allocation Settings Suggestions, Potential Issues with CPU Affinity, Resource Pool Admission Control, Expandable Reservations Examples, DRS Cluster Validity, DRS Troubleshooting > Cluster Problems (pp. 1825-1826, 1831, 1891-1892, 1908-1911, 1950)
+  path: vSphere Resource Management > Admission Control in vSphere, Resource Allocation Settings Suggestions, Potential Issues with CPU Affinity, Resource Pool Admission Control, Expandable Reservations Examples, DRS Cluster Validity, DRS Troubleshooting > Cluster Problems (pp. 1825-1826, 1831, 1891-1892, 1908-1911, 1950); vSphere Availability > vSphere HA Admission Control, Cluster Resources Percentage, Slot Policy, Performance degradation VMs tolerate (pp. 1970-1972, 1978, 1988)
 corrections: []
-review_notes:
-- 'Section Admission control: host and DRS admission control always on, HA restart rule and slot policy from the vSphere 9.1 documentation (Admission Control; vSphere HA Admission Control; Cluster Resources Percentage; Slot Size Calculation) (Q110 a, b).'
-- 'To check: Section ''Admission control'': the example (losing the largest host costs more).'
-- 'Section ''Admission control'': the failover counter, level and summary from the vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
-- 'Section ''HA performance degradation threshold'': default, 0% behaviour, reduction formula and DRS requirement from vSphere 9.1 Availability, vSphere HA Admission Control, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control.html; check the UI label in vSphere Client 9.1.'
+review_notes: []
 status: draft
 ```

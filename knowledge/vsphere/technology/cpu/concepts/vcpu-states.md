@@ -62,7 +62,7 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 |---|---|
 | Run | Measures how long the vCPU runs. Unit: ms, not GHz. |
 | Run | Does not measure how fast it runs (frequency) or how efficiently (Hyper-Threading). |
-| Ready | Caused by ESXi: no physical thread available. |
+| Ready | No physical thread available for the vCPU: host load, or VM-side causes such as low shares, a limit or vMotion ([`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../metrics/virtual-motherboard/ready.md), section Mechanism). |
 | Ready | Usually reduced by making the VM smaller: it fits free threads more easily. Default shares are per vCPU, so each vCPU keeps its share. |
 | Co-stop | Caused by the VM: its vCPUs drift apart. |
 | Co-stop | Reduced by making the VM smaller, especially relative to the NUMA boundary. |
@@ -75,7 +75,7 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 - Ready, Co-stop and Wait do not register slowdown from Hyper-Threading.
 - A vCPU is not placed in Ready when its sibling thread is busy. Both threads execute at the same time.
 - Contention for shared core resources happens in hardware. The ESXi scheduler does not see it.
-- The counter for this throughput loss is CPU Latency.
+- CPU Latency is the counter that includes this Hyper-Threading effect: it counts time lost against a whole core at nominal frequency ([`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](../metrics/virtual-motherboard/latency.md)).
 
 ## OS comparison
 | Physical OS process state | ESXi vCPU state |
@@ -105,9 +105,7 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 - Use the % versions. They are normalized by the number of vCPUs. Avoid the ms versions.
 
 ## Ready and Co-stop relative to Run
-- Ready 5% with Run 95%: low.
-- Ready 2% with Run 10%: very high. Ready is 20% of Run (2 / 10).
-- Reason: Ready is runtime demanded and not given. Compare it with runtime given.
+- Read Ready against Run: 2% Ready on 10% Run is very high, 5% on 95% low ([`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../metrics/virtual-motherboard/ready.md), section Read against Run).
 
 ## State across multiple vCPUs
 ![Two vCPUs over periods A to G](../images/multi-vcpu-vm-state-timeline-two-vcpus.png)
@@ -195,6 +193,6 @@ source:
   path: CPU > Architecture > State of a VM vCPU; OS Comparison; State Across Time; State Across Multiple vCPU
 corrections: []
 review_notes:
-- 'To check: Section ''State diagram'': the meaning given for the three arrows without a label in state diagram (Wait to Run, Wait to Co-stop, Run to Co-stop).'
+- 'To check: Section ''State diagram'': the meaning given for the three arrows without a label in the image vcpu-state-diagram-new-ready-run-costop-wait-zombie.png (Wait to Run, Wait to Co-stop, Run to Co-stop); the source of the diagram.'
 status: draft
 ```

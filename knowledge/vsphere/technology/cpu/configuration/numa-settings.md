@@ -3,23 +3,20 @@
 ## Controls
 | Control | Scope | Effect |
 |---|---|---|
-| `maxPerMachineNode` | VM | Limits vCPUs placed per NUMA node. Splits a VM that would fit in one node across nodes. |
+| `numa.vcpu.maxPerMachineNode` | VM | Limits vCPUs placed per NUMA node. Splits a VM that would fit in one node across nodes. |
 | `numa.vcpu.preferHT` | VM | On hyper-threaded systems, a VM with vCPUs > cores per node and < logical processors per node uses logical processors with local memory, instead of full cores with remote memory. |
 | `numa.nodeAffinity` | VM | Manual NUMA placement. Overrides the default behaviour. |
 
-- `maxPerMachineNode` use case: some memory-bandwidth-bottlenecked workloads gain aggregate memory bandwidth when a VM is split across NUMA nodes.
-- `maxPerMachineNode` impacts vNUMA. Consider vNUMA when setting it.
+- `numa.vcpu.maxPerMachineNode` use case: some memory-bandwidth-bottlenecked workloads gain aggregate memory bandwidth when a VM is split across NUMA nodes.
+- `numa.vcpu.maxPerMachineNode` impacts vNUMA. Consider vNUMA when setting it. Performance Best Practices for vSphere 9.1 writes the short name maxPerMachineNode; the vSphere 9.1 documentation lists the full option name (Virtual NUMA Controls, p. 1945).
 
 ## Sizing guidance
-- Size a VM to stay within one physical NUMA node.
-- If a VM must be larger than one node, size it to split evenly across as few nodes as possible.
-- Example in Performance Best Practices for vSphere 9.1 (p. 57): six cores per NUMA node means a VM of six vCPUs or fewer fits one node.
-- vCPU counts above the physical core count use hyper-threads. See [`vsphere/technology/cpu/concepts/hyper-threading`](../concepts/hyper-threading.md).
+- Size a VM to stay within one physical NUMA node; a VM larger than one node splits evenly across as few nodes as possible. The rules, with memory per node and the vendor example: [`vsphere/technology/cpu/concepts/virtual-numa`](../concepts/virtual-numa.md), section Sizing.
 
 ## Snoop modes
-- 9.1 document (p. 30): no mode list. The best mode depends on the workload and the hardware.
+- Performance Best Practices for vSphere 9.1 (p. 30) gives no mode list: the best mode depends on the workload and the hardware.
 - Follow the server manufacturer's guidance.
-- 9.0 document (p. 28) listed five modes. Kept for reference. Verify before use:
+- Performance Best Practices for vSphere 9.0 (p. 28) listed five modes, which the 9.1 edition dropped:
   - Early Snoop (ES),
   - Home Snoop (HS),
   - Home snoop with Directory and Opportunistic Snoop Broadcast (HS with DIS + OSB),
@@ -40,7 +37,7 @@
   - NPS-2: each CPU is two NUMA nodes,
   - NPS-4: each CPU is four NUMA nodes.
 - CCX as NUMA Domain (LLC as NUMA Node in AMD documents):
-  - activated: each Core Cache Complex (CCX) is a NUMA domain,
+  - activated: each Core Complex (CCX), a group of cores sharing one L3 cache on a Core Complex Die (CCD), is a NUMA domain,
   - deactivated: CPUs are presented as set by NPS.
 - The CCX setting does not change the memory channel interleave policy. NPS controls that.
 - General-purpose cluster: NPS-1 with CCX as NUMA Domain deactivated, the BIOS defaults. Performance Best Practices for vSphere 9.1 says that from vSphere 7.0 Update 2 they give the best performance in nearly all cases; AMD's vSphere tuning guide for EPYC 9005 gives them for VMs of mixed or unknown sizes and for VMs above half the cores of a socket.
@@ -84,13 +81,10 @@ related:
 - vsphere/technology/cpu/concepts/virtual-numa
 - vsphere/object-types/esxi/configuration/bios-settings
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624); Tuning Guide for AMD EPYC 9005 Processors on vSphere (AMD PID 58474, v1.0, October 2024); Broadcom KB 432801, Guidance for AMD EPYC BIOS and NUMA Configuration on VMware ESXi
-  path: 'Performance Best Practices: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 29-31; AMD EPYC Processor NUMA Settings, pp. 30-31); Hardware BIOS Settings > General BIOS Settings (p. 21); Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (p. 57). AMD 58474: 3.3.2.3 NUMA Configuration (pp. 6-7); Chapter 4 (p. 9)'
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Tuning Guide for AMD EPYC 9005 Processors on vSphere (AMD PID 58474, v1.0, October 2024); Broadcom KB 432801, Guidance for AMD EPYC BIOS and NUMA Configuration on VMware ESXi
+  path: 'vSphere 9.1, vSphere Resource Management > Using NUMA Systems with ESX > Specifying NUMA Controls, Virtual NUMA Controls (pp. 1940-1945). Performance Best Practices: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 29-31; AMD EPYC Processor NUMA Settings, pp. 30-31); Hardware BIOS Settings > General BIOS Settings (p. 21); Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (p. 57). AMD 58474: 3.3.2.3 NUMA Configuration (pp. 6-7); Chapter 4 (p. 9)'
 corrections: []
 review_notes:
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: the ''Using NUMA Systems with ESX'' section of the vSphere Resource Management guide, referenced by Performance Best Practices; not read.'
 - 'To check: Section ''AMD EPYC'': a newer revision of AMD PID 58474 and an AMD vSphere tuning guide for EPYC 9006 (NPS setting under ESX, the two-IOD layout of the EPYC 9996), on the AMD Documentation Hub (https://docs.amd.com). On 2026-11-15 the amd.com URL of 58474 returned 404; v1.0 was read from a server vendor copy (https://www.xfusion.com/wp-content/uploads/2025/11/AMD-EPYC-9005-tg-vmware-vsphere.pdf).'
-- 'Source URL, Broadcom KB 432801: https://knowledge.broadcom.com/external/article/432801/guidance-for-amd-epyc-bios-and-numa-conf.html'
 status: draft
 ```

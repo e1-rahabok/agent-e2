@@ -4,9 +4,11 @@
 - One of 4 ESXi storage metric groups: Datastore, Disk, Storage adapter, Storage path.
 - Disk = device (LUN). More metrics than adapter or path: includes capacity.
 - No breakdown per VM.
+- Relevance for operations: performance troubleshooting: the split into device, kernel and queue latency decides where a host's storage latency sits ([`vsphere/technology/storage/troubleshooting/host-storage-latency`](../../troubleshooting/host-storage-latency.md), step 1); Bus Resets and Commands Aborted belong at 0. Maximum Queue Depth is configuration, for the review of queue depths.
 
 ## Contention counters
 - Device, kernel, queue and guest latency, each as read, write and command. See [`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../../concepts/esxi-storage-latency-stack.md).
+- Highest Disk Latency (disk.maxTotalLatency): the highest total latency (kernel latency plus device latency) among the disks the host uses, rolled up as Latest (vSphere 9.1 documentation, Hosts > Disk, p. 2063).
 - Bus Resets and Commands Aborted: always 0 in the observations so far.
 - Maximum Queue Depth: a setting, more property than metric.
 
@@ -58,11 +60,10 @@ images:
     topic: 'Memory tiering'
     image_type: timeline
 source:
-  document: Knowledge base
-  path: Storage > ESXi > Disk or Device
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: Storage > ESXi > Disk or Device; vSphere Monitoring and Performance > Hosts > Disk, Highest Disk Latency (p. 2063)
 corrections: []
 review_notes:
-- 'To check: Section ''Memory tiering devices'': NVMe power-state facts against vendor documents.'
-- 'To check: whether host Highest Latency is guest, kernel or device latency.'
+- 'To check: Section ''Memory tiering devices'': the NVMe power states (PS3, PS4, ASPM L1.2), the 5-10 seconds of idle before PS4 and the 50-100 ms wake-up, against the NVMe base specification or the device vendor''s documentation.'
 status: draft
 ```

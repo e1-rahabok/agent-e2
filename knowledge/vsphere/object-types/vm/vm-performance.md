@@ -38,7 +38,7 @@
 ## Not used
 | Area | Metric | Reason |
 |---|---|---|
-| CPU | Other Wait | Too many CPU metrics inflate CPU weight. A rare bug gives false positives. |
+| CPU | Other Wait | Too many CPU metrics inflate CPU weight. Idle VMs on ESXi 7.0 Update 2 and later, before 8.0 Update 3j, show raised Other Wait by accounting (Broadcom KB 338438): false positives ([`vsphere/technology/cpu/metrics/virtual-motherboard/other-wait`](../../technology/cpu/metrics/virtual-motherboard/other-wait.md), section Known issue). |
 | Memory | Consumed, Active, Granted | Do not indicate performance problems. |
 | Storage | Outstanding IO | A function of IOPS and latency: duplicate. |
 | Storage | Snapshot latency | Covered by CPU Other Wait. |
@@ -93,6 +93,7 @@ layer:
 metric_class: contention
 internal_derive:
 - sp5-framework/performance/performance-kpi-design
+- vsphere/technology/cpu/metrics/virtual-motherboard/other-wait
 same_name: []
 same_meaning: []
 related:
@@ -107,7 +108,7 @@ source:
   path: 'Consumer Objects > Performance: VM & Guest OS > VM Performance (%); Metrics Not Used'
 corrections: []
 review_notes:
-- 'To check: Section ''Sub-metrics'': the denominator of mem|balloonPct (configured memory or Guest OS used memory); the earlier text divided Ballooned by Guest OS used memory too.'
-- 'To check: Section ''Not used'': VM DRS Score formula (vSphere 7 blog), not read (https://blogs.vmware.com/vsphere/2020/05/vsphere-7-a-closer-look-at-the-vm-drs-score.html).'
+- 'To check: Section ''Sub-metrics'': the denominator of `mem|balloonPct` (configured memory or Guest OS used memory); VCF Operations 9.1 metric definitions, Virtual Machine metrics.'
+- 'To check: Section ''Not used'': the VM DRS Score formula (Performance Goodness × 0.8 / CPU Demand) and its inputs; the vSphere 9.1 documentation (p. 1896) defines the score only as VM happiness, a measure of execution efficiency, and the vSphere 7 blog page cited before no longer serves the article.'
 status: draft
 ```

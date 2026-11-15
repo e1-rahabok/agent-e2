@@ -32,15 +32,15 @@ flowchart TD
 Order: availability, performance, security, capacity; within each pillar the what before the why ([`sp5-framework/concepts/health-check`](../../../sp5-framework/concepts/health-check.md)).
 1. Availability (VirtualMachine). Future, after 1.0: VM down, restarted by HA, unresponsive; mostly from logs and events. State what was not checked. → step 2.
 2. Performance: VM Performance (%) (VirtualMachine). Combines the VM contention metrics into one KPI with colour bands. Start here at scale ([`vsphere/object-types/vm/vm-performance`](vm-performance.md)). Green → step 7. Yellow or worse → step 3, and read only the resources whose sub-metric fails.
-3. CPU contention (VirtualMachine). Ready and Co-stop are the main counters; Overlap and Other Wait usually read much lower ([`vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics`](../../technology/cpu/metrics/comparisons/vm-contention-metrics.md)). Read Ready against Run: 2% Ready on 10% Run is bad; 2% Ready on 98% Run is fine ([`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../../technology/cpu/metrics/virtual-motherboard/ready.md)). Co-stop: [`vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`](../../technology/cpu/metrics/virtual-motherboard/co-stop.md). Contention (VCF Operations) includes limit time ([`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](../../technology/cpu/metrics/virtual-motherboard/contention.md)). Latency includes Hyper-Threading and frequency effects: not a pure wait ([`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](../../technology/cpu/metrics/virtual-motherboard/latency.md)). High → [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](../../technology/cpu/troubleshooting/vm-cpu-contention-high.md). → step 4.
-4. Memory contention (VirtualMachine). Latency is the only true memory contention counter ([`vsphere/technology/memory/metrics/virtual-motherboard/latency`](../../technology/memory/metrics/virtual-motherboard/latency.md)). Then, in order: swap-in, decompression, host cache, balloon. Ballooned, swapped and compressed memory are past reclamation, not current waiting ([`vsphere/technology/memory/metrics/comparisons/vm-memory-metrics`](../../technology/memory/metrics/comparisons/vm-memory-metrics.md)). High → [`vsphere/technology/memory/vm-memory-latency-high`](../../technology/memory/vm-memory-latency-high.md). → step 5.
-5. Storage contention (VirtualMachine). Disk latency per virtual disk, read and write separately ([`vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`](../../technology/storage/metrics/virtual-motherboard/disk-latency.md)). Outstanding IO: queued IO adds latency at any load ([`vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io`](../../technology/storage/metrics/virtual-motherboard/outstanding-io.md)). Bus resets and commands aborted should stay at 0. High → [`vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`](../../technology/storage/troubleshooting/vm-storage-performance-checks.md). → step 6.
-6. Network contention (VirtualMachine). Dropped packets are the only network contention metric of a VM; vSphere has no network latency or retransmit counter ([`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`](../../technology/network/metrics/virtual-motherboard/packets-dropped.md)). Receive drops → [`vsphere/technology/network/vnic-rx-drops`](../../technology/network/vnic-rx-drops.md). → step 7.
+3. CPU contention (VirtualMachine). Ready and Co-stop are the main counters; Overlap and Other Wait usually read much lower ([`vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics`](../../technology/cpu/metrics/comparisons/vm-contention-metrics.md)). Read Ready against Run: 2% Ready on 10% Run is bad; 2% Ready on 98% Run is fine ([`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../../technology/cpu/metrics/virtual-motherboard/ready.md)). Co-stop: [`vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`](../../technology/cpu/metrics/virtual-motherboard/co-stop.md). Contention (VCF Operations) includes limit time ([`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](../../technology/cpu/metrics/virtual-motherboard/contention.md)). Latency includes Hyper-Threading and frequency effects: not a pure wait ([`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](../../technology/cpu/metrics/virtual-motherboard/latency.md)). Peak CPU Ready among any vCPU (%), Peak CPU Co-stop among any vCPU (%) or Peak CPU Overlap (%) not green on its `kpi` row in `catalog/thresholds-performance` → [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](../../technology/cpu/troubleshooting/vm-cpu-contention-high.md). → step 4.
+4. Memory contention (VirtualMachine). Latency is the only true memory contention counter ([`vsphere/technology/memory/metrics/virtual-motherboard/latency`](../../technology/memory/metrics/virtual-motherboard/latency.md)). Then, in order: swap-in, decompression, host cache, balloon. Ballooned, swapped and compressed memory are past reclamation, not current waiting ([`vsphere/technology/memory/metrics/comparisons/vm-memory-metrics`](../../technology/memory/metrics/comparisons/vm-memory-metrics.md)). Peak RAM Contention (%) not green on its `kpi` row → [`vsphere/technology/memory/vm-memory-latency-high`](../../technology/memory/vm-memory-latency-high.md). → step 5.
+5. Storage contention (VirtualMachine). Disk latency per virtual disk, read and write separately ([`vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`](../../technology/storage/metrics/virtual-motherboard/disk-latency.md)). Outstanding IO: queued IO adds latency at any load ([`vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io`](../../technology/storage/metrics/virtual-motherboard/outstanding-io.md)). Bus resets and commands aborted should stay at 0. Peak read/write latency among vDisks (ms) not green on its `kpi` row → [`vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`](../../technology/storage/troubleshooting/vm-storage-performance-checks.md). → step 6.
+6. Network contention (VirtualMachine). Dropped packets are the only network contention metric of a VM; vSphere has no network latency or retransmit counter ([`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`](../../technology/network/metrics/virtual-motherboard/packets-dropped.md)). Transmit drops: Peak network TX dropped packets (%) against its `kpi` row. Receive drops, which the KPI leaves out → [`vsphere/technology/network/vnic-rx-drops`](../../technology/network/vnic-rx-drops.md). → step 7.
 7. Consumption (VirtualMachine). CPU Run and Usage, memory Consumed, disk IOPS and throughput, network throughput ([`vsphere/technology/cpu/metrics/comparisons/consumption-metrics`](../../technology/cpu/metrics/comparisons/consumption-metrics.md)). Very high consumption can cause the contention of steps 3-6; with no contention, it explains the load. The same order as [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 5. → step 8.
 8. Configuration (VirtualMachine). [`vsphere/object-types/vm/configuration/vm-configuration-review`](configuration/vm-configuration-review.md). Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Limits, shares and reservations explain contention the host does not cause ([`vsphere/architecture/resource-controls`](../../architecture/resource-controls.md)). vMotion stun time: [`vsphere/object-types/vm/vmotion`](vmotion.md). → step 9.
 9. Efficiency (VirtualMachine). Consumption sizes the VM:
    - CPU: Run, Usage, Demand. Usage includes Turbo; compare with Run before upsizing ([`vsphere/technology/cpu/metrics/comparisons/consumption-metrics`](../../technology/cpu/metrics/comparisons/consumption-metrics.md)). Oversized: [`vsphere/technology/cpu/decision-tree/oversized-vm-downsizing`](../../technology/cpu/decision-tree/oversized-vm-downsizing.md).
-   - Memory: Consumed is the main counter; size the VM from Guest OS metrics, not VM metrics ([`vsphere/technology/memory/metrics/virtual-motherboard/consumed`](../../technology/memory/metrics/virtual-motherboard/consumed.md)).
+   - Memory: VM Memory Consumed is the VM's footprint on ESXi, not the Guest OS need ([`vsphere/technology/memory/metrics/virtual-motherboard/consumed`](../../technology/memory/metrics/virtual-motherboard/consumed.md)); size the VM's memory from Guest OS metrics ([`guest-os/system/concepts/guest-os-sizing`](../../../guest-os/system/concepts/guest-os-sizing.md)).
    - Storage: IOPS and throughput ([`vsphere/technology/storage/metrics/virtual-motherboard/iops`](../../technology/storage/metrics/virtual-motherboard/iops.md)). Network: throughput ([`vsphere/technology/network/metrics/virtual-motherboard/throughput`](../../technology/network/metrics/virtual-motherboard/throughput.md)).
    - Idle VM: [`vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm`](../../technology/cpu/metrics/virtual-motherboard/idle-vm.md).
 - Not checked in 1.0: security and compliance (future phase).
@@ -92,6 +92,25 @@ internal_derive:
 - vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
 - vsphere/technology/network/metrics/vm-network-metrics
 - vsphere/object-types/vm/vm-performance
+- sp5-framework/concepts/health-check
+- vsphere/technology/cpu/metrics/virtual-motherboard/ready
+- vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
+- vsphere/technology/cpu/metrics/virtual-motherboard/contention
+- vsphere/technology/cpu/metrics/virtual-motherboard/latency
+- vsphere/technology/memory/metrics/virtual-motherboard/latency
+- vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
+- vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io
+- vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
+- vsphere/technology/cpu/metrics/comparisons/consumption-metrics
+- sp5-framework/performance/vm-slow
+- vsphere/architecture/resource-controls
+- vsphere/object-types/vm/vmotion
+- vsphere/technology/cpu/decision-tree/oversized-vm-downsizing
+- vsphere/technology/memory/metrics/virtual-motherboard/consumed
+- guest-os/system/concepts/guest-os-sizing
+- vsphere/technology/storage/metrics/virtual-motherboard/iops
+- vsphere/technology/network/metrics/virtual-motherboard/throughput
+- vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm
 related:
 - sp5-framework/concepts/health-check
 - sp5-framework/performance/vm-slow
@@ -102,9 +121,7 @@ related:
 source:
   document: Knowledge base; vSphere 9.1 documentation
   path: Linked files in each section
-corrections:
-- 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; availability, security and compliance are future, after 1.0.'
-review_notes:
-- 'To check: Section ''Checks, in order'': the order inside performance (CPU, memory, storage, network), a synthesis of the linked files; the order of the pillars follows health-risk-efficiency (Q062).'
+corrections: []
+review_notes: []
 status: draft
 ```

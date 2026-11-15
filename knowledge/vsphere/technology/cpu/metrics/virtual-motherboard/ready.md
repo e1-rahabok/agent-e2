@@ -2,6 +2,7 @@
 
 ## Meaning
 - Ready applies to a consumer (the VM). A physical core or thread is always ready, so Ready does not apply to ESXi.
+- Relevance for operations: performance: the main counter of the VM KPI (peak among vCPUs) and of VM CPU alert symptoms in the threshold catalog; Guest OS sizing includes it (section Guest OS sizing).
 
 ## Values above 100%
 - VM CPU Ready can exceed 100%. Many VM-level values in esxtop exceed 100%.
@@ -23,6 +24,7 @@
 ## Read against Run
 - Ready 5% with Run 95%: low.
 - Ready 2% with Run 10%: very high. Ready is 20% of Run.
+- Reason: Ready is runtime demanded and not given; compare it with the runtime given.
 
 ## Units
 - vCenter and VCF Operations Ready (ms) is not normalized by vCPU count. A 4-vCPU VM totals 80,000 ms of Run + Ready + Co-stop + Wait per 20-second sample.
@@ -112,8 +114,6 @@ source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture > State of a VM vCPU; State Across Time; State Across Multiple vCPU; CPU > VM > Contention Metrics > Ready; Best Practice; Ready | Readiness
 corrections: []
-review_notes:
-- Sections Mechanism, Read against Run, Units, and the last 2 misconceptions: from CPU > Architecture.
-- 'Sections Limit, Floor and size, Guest OS sizing, Ready (ms) vs Readiness (%), Observed values: from CPU > VM.'
+review_notes: []
 status: draft
 ```

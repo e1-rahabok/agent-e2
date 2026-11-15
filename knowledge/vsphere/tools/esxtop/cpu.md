@@ -160,6 +160,6 @@ corrections:
 - 'Section ''State counters'': the vSphere 9.1 documentation, CPU Panel, PCPU USED(%) (p. 2153), says PCPU USED equals the total sum of %USED of the worlds that ran on the PCPU. With both threads of a core busy, each PCPU shows half of the core (the same row says so) while each world is charged 62.5%, so the worlds add to more.'
 - 'Section ''Summary stats'': the vSphere 9.1 documentation, CPU Panel (p. 2154), still lists HTQ; the field is not shown since ESXi 7.0.'
 review_notes:
-- 'To check: Section ''Summary stats'': what the CPU column shows (always blank in tests) and whether AMLMT shows when a limit is applied; unconfirmed.'
+- 'To check: Sections ''Summary stats'' and ''Allocation'': what the CPU column shows (always blank in tests) and whether AMLMT shows when a limit is applied; a live esxtop reading of a VM with a CPU limit.'
 status: draft
 ```

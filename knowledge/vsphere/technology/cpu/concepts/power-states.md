@@ -140,11 +140,10 @@ images:
     topic: 'CPU power states'
     image_type: screenshot
 source:
-  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Host Power Management in VMware vSphere 7.0 (2021, no newer standalone version)
   path: CPU > Architecture > Power States; BIOS Level; ESXi Level; High Performance vs Balance; Impact on Oversized VM. Performance Best Practices 9.1, C States in General (p. 22), Host Power Management in ESX (p. 31). vSphere 9.1, vSphere Resource Management > Configure Custom Policy Parameters for the ESX Host Power Management (pp. 1831-1832)
 corrections: []
 review_notes:
-- "Section 'Oversized VM': chart from 'Host Power Management in VMware vSphere 7.0' (2021), p. 24: https://www.vmware.com/docs/hpm-vsphere7-perf. No newer standalone version found on 2026-11-02."
-- 'To check: the 9.0 TechDocs page on host power management policies and a VMworld 2017 session (Extreme Performance Series); not read.'
+- 'To check: Section ''Oversized VM and C-states'': the frequency curves come from Host Power Management in VMware vSphere 7.0 (2021), p. 24 (https://www.vmware.com/docs/hpm-vsphere7-perf), the newest standalone version; repeat the High Performance and Balanced comparison on a 9.1 host with Intel HWP (vSphere 9.1 documentation, pp. 1831-1832).'
 status: draft
 ```

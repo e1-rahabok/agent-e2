@@ -22,7 +22,7 @@
 
 ## Scale 0-100%
 - 100% is the best achievable, not a theoretical perfect: disk latency is never 0, so 100.00% does not occur.
-- 0% is the worst tolerated, not the slowest possible. With 40 ms as the tolerance, 40 ms scores 0% and 400 ms also scores 0%: no negative.
+- 0% is the worst tolerated, not the slowest possible. A value at the zero limit and a value ten times worse both score 0%: no negative.
 - A KPI is not a contract: it does not aim for 100%; a KPI of 75% is good.
 - Four equal bands: green 75-100, yellow 50-75, orange 25-50, red 0-25. Four splits evenly (three gives 33.33 and 66.67), and yellow gives a leading indicator.
 - Equal bands keep metric thresholds easy to set. Green at 95-100 would force unequal bands and harder thresholds.
@@ -47,10 +47,10 @@
 
 ## Setting thresholds
 - Scientifically, a VM does not care what stops it (Ready, Co-stop or Overlap), so all would share one threshold. Practically, healthy production shows different scales per metric. Take the lower of the two: the goal is proactive monitoring.
-- Match the thresholds to the weights, which double per band (1, 2, 4, 8 at the band limits, 16 at 0): each range limit doubles. Example: VM disk latency 20, 40, 80, 160 ms.
+- Match the thresholds to the weights, which double per band (1, 2, 4, 8 at the band limits, 16 at 0): each range limit doubles. Example: the limits of Peak read/write latency among vDisks (ms) in `catalog/thresholds-performance` double from each colour to the next.
 - A KPI or model colour is severity: how bad, not by when. A worse KPI usually means more urgency, but there is no fixed link: KPI red is not a red alert and does not mean act today. The daily health check reads red first, then orange, then how often a value enters red and its trend.
 - The colour depends on where the metric is shown. The same metric can carry different colour thresholds in an alert, a NOC live screen, a daily report and a dashboard, as each channel has its own urgency ([`sp5-framework/outputs/system-engagement`](../outputs/system-engagement.md)).
-- Four bands need five numbers per metric: where it scores 100, and where green, yellow and orange end, and where it scores 0. Vendor guidance with three zones (good, potential issue, impact) is not enough: convert it, do not copy it. Example: NVMe read latency, Broadcom's good below 200 µs and impact above 400 µs become 100, 200, 400 and 800 µs, with red from 400.
+- Four bands need five numbers per metric: where it scores 100, and where green, yellow and orange end, and where it scores 0. Vendor guidance with three zones (good, potential issue, impact) is not enough: convert it, do not copy it. Example: NVMe read latency, Broadcom's good below 200 µs and impact above 400 µs become five limits, 0, 100, 200, 400 and 800 µs: good spans green and yellow, potential issue is orange, impact is red from 400 µs, and the score reaches 0 at 800 µs.
 - Score the what, never filter it by the why. A reading is not discarded because its cause looks harmless (a device waking from a power-saving state): the consumer waited all the same. The cause belongs to troubleshooting.
 - A metric that cannot be quantified into its bands ([grey], green, yellow, orange, red) is not used. Real-world data is not reliable because it is real: check its quality first, then collect enough of it to rule out outliers.
 - Single-value green: green = 0 means one dropped packet already scores yellow. Anything above 0 red: set green, yellow and orange to 0.

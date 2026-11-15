@@ -15,7 +15,7 @@ Below is what is technically possible. This is the technical ceiling, counted in
 | 3:1 | Above, divided by 3 |
 
 - Hypervisor includes kernel modules of vSAN and NSX.
-- 1:1: mind the Hyper-Threading throughput penalty and NUMA, as the VM vCPU will be sharing physical cores
+- 1:1: a VM as large as the host's threads puts vCPUs on both threads of a core, so it pays the Hyper-Threading penalty, and it spans NUMA nodes.
 - 2:1: two large VMs on one host each demand whole cores, and both get the 37.5% Hyper-Threading penalty.
 - 3:1 is the highest CPU overcommit of any class (Bronze); higher ratios are not used.
 - These effects follow from overcommit on shared resources, not from a defect in vSphere.
@@ -90,7 +90,7 @@ source:
   path: 'Noisy Neighbour > Maximum VM size; Class of Service'
 corrections: []
 review_notes:
-- 'To check: Section ''Size per class'', Intel: compute tile as L3 domain and NUMA node only with SNC on, against the Intel Xeon 6 documentation.'
-- 'To check: Section ''Example: AMD EPYC 9996'': the CPU figures (8 CCDs of 32 cores, 2 IODs, 16 channels) against the AMD product specification.'
+- 'To check: Section ''Size per class'': an Intel Xeon compute tile is its own L3 domain and NUMA node only with SNC on; Intel Xeon 6 processor documentation.'
+- 'To check: Section ''Example: AMD EPYC 9996 in NPS2'': 8 CCDs of 32 cores, 2 IODs, 16 DDR5 channels; AMD EPYC product specification (amd.com).'
 status: draft
 ```

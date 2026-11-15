@@ -16,9 +16,9 @@
   1. VM CPU contention alert also fired → follow its remediation.
   2. VM CPU consumption alert also fired → follow its remediation.
   3. Neither → find why the application creates so many threads. Check two things on the VM:
-     - Multi-threaded application: many threads may contend for a software lock (mutex, semaphore). These queued threads cannot move to idle vCPUs, because they depend on a resource held by a thread on another vCPU. This is a bottleneck problem, not a shortage of vCPUs. Per-vCPU CPU time then shows idle vCPUs despite Guest OS suffering from a long queue. A thread blocked on the lock is in Wait state and not in the queue; the queue counter holds the threads that are Ready ([`guest-os/cpu/metrics/run-queue`](cpu/metrics/run-queue.md), section Cases).
+     - Multi-threaded application with a software lock (mutex, semaphore): the threads take turns on the lock, so more vCPUs do not help. This is a bottleneck problem, not a shortage of vCPUs: per-vCPU CPU time shows idle vCPUs while the Guest OS queue is long. The queue counter holds Ready threads only; a thread blocked on the lock is in Wait state. A long queue beside idle vCPUs points at Ready threads that cannot use those vCPUs, such as processor affinity or work bound to one vCPU ([`guest-os/cpu/metrics/run-queue`](cpu/metrics/run-queue.md), section Cases).
      - Privileged Time high and User Time low: the kernel (drivers, interrupts) uses the CPU, not the application: a driver or kernel-locking issue.
-     Then Compare with the other software of the same business application, and with the same software in other applications. For commercial software, ask the vendor. Without an answer, exclude the application from this alert.
+     Then compare with the other software of the same business application, and with the same software in other applications. For commercial software, ask the vendor. Without an answer, exclude the application from this alert.
 
 ## Guest OS disk queue
 - Guest OS disk queue, 20-second peak: the queue itself ([`guest-os/storage/disk-queue`](storage/disk-queue.md)).
@@ -80,9 +80,6 @@ source:
   path: 'Proactive Operations > Alert > Application Team > Guest OS Alerts (CPU Contention, Disk Contention Alert, Other Contention Alerts, Consumption)'
 corrections: []
 review_notes:
-- 'Section ''Guest OS CPU run queue'': the source thanks Darren Farrer for the collaboration on the remediation.'
-- 'Section ''Guest OS CPU run queue'': the source gives the optional orange as Peak vCPU Queue above 10 with Net Run above 75%, half the red queue value; written as the 2x rule.'
-- 'Section ''Consumption: daily checks, no alert'': the source says no alert is defined; the alert count table in Alerts Planning shows Guest OS Disk consumption 1. Parked after 1.0 (Q142).'
-- 'Section ''Guest OS disk queue'': the source says CPU Usage above 1 GHz without naming the object; written as VM CPU Usage, as in the VM alerts.'
+- 'To check: Section ''Consumption: daily checks, no alert'': whether the VCF Operations 9.1 shipped alert set has a Guest OS disk space alert (after release 1.0); VCF Operations 9.1 alert definitions in a live instance.'
 status: draft
 ```

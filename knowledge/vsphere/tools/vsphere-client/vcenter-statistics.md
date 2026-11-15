@@ -58,7 +58,8 @@
 
 - Levels apply to the history (1 Day to 1 Year). The Real-time chart of a powered-on VM or a connected host reads the host's 20-second samples and offers every counter the host collects, whatever the level: at level 1, Co-stop and Ready per vCPU show in Real-time and are missing from 1 Day onward.
 - Contention counters stored at the default level 1: VM CPU Ready, disk maxTotalLatency (Highest Latency, Latest rollup), balloon, swap-in and swap-out rates.
-- Storage latency per device (kernelLatency, deviceLatency, queueLatency, totalReadLatency, totalWriteLatency) needs level 2 or higher. The chart tables list these at level 3.
+- Storage latency per device (kernelLatency, deviceLatency, queueLatency, totalReadLatency, totalWriteLatency) is reported per device instance. The vSphere API 9.1 gives these counters collection level 1 or 2 and per-device level 3, so their history exists only from level 3, the level the chart tables list. The level 2 row of the documentation (all disk metrics except numberRead and numberWrite) does not store them per device.
+- ESXi and VM CPU Demand (`cpu.demand`) is a level 2 counter in the vSphere API 9.1: at the default level 1 it has a Real-time chart and no history.
 - At level 1 the VM CPU Ready history is one value for the whole VM: the sum of its vCPUs in ms, not the average. Divide by the number of vCPUs for the mean per vCPU. One vCPU that waited a lot and several that each waited a little give the same value. Ready per vCPU is stored only from level 3.
 - Per-device GPU counters on the host (utilization, memory used, temperature) are level 4 in the chart tables. Cluster and resource pool GPU counters are level 1 in the vCenter 9.1 API. See [`vsphere/technology/gpu/gpu-monitoring`](../../technology/gpu/gpu-monitoring.md).
 - Levels 3 and 4 raise vCenter load significantly. If vpxd cannot write statistics to the database fast enough, its memory grows until it runs out of memory and crashes. After raising a level, watch the vpxd process size.
@@ -141,15 +142,11 @@ related:
 - vsphere/tools/esxtop/units-vs-vsphere-client
 - vsphere/tools/vsphere-client/performance-guidance
 source:
-  document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); vSphere Web Services API 9.1.1 reference, Network Counters; Broadcom KB 447068; Broadcom KB 445815
+  document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); vSphere Web Services API 9.1.1 reference, Network Counters; Broadcom KB 447068; Broadcom KB 445815; Broadcom KB 387750; vSphere Web Services API 9.1 reference, CPU and disk counters
   path: vSphere Monitoring and Performance > Monitoring Inventory Objects with Performance Charts > Data Counters, Data Collection Intervals, Statistics Levels, Performance Chart Types; Troubleshoot and Enhance Performance > Empty Performance Charts; Hosts > GPU charts; Clusters, Hosts and Virtual Machines > Network (Mbps) and Network Rate (Mbps) (pp. 2025-2031, 2041, 2065-2067, 2078-2082, 2106-2108, 2123-2124)
-corrections: []
+corrections:
+- 'Section ''Collection intervals'': the vSphere 9.1 documentation (p. 2030, Table 330, 1 Week row) says the 12 data points collected every 2 hours roll up into the 1 Month range. Two hours of 30-minute points are 4 points; the table uses 4. The 1 Day row (6 points every 30 minutes) and the 1 Month row (12 points every 24 hours) agree with the arithmetic.'
 review_notes:
-- 'Section ''Statistics levels'': VM CPU Ready is the sum over the vCPUs: Broadcom KB 387750, https://knowledge.broadcom.com/external/article/387750.'
-- 'Sections ''Level 1 counters per object'', ''Units'' (API units), ''Chart behaviour'' (distributed switch) and the GPU line in ''Statistics levels'': from the vCenter 9.1.0 API export (build 25370922), https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv. The chart-unit conversions are from the vSphere 9.1 chart tables (catalog/vcenter-counters).'
-- 'Section ''Collection intervals'': the document says 1 Week rolls up 12 points of 1 Day every 2 hours (text under 1 Week) and 6 points every 30 minutes (text under 1 Day). The table uses the arithmetic: 6 x 5 min = 30 min; 4 x 30 min = 2 h; 12 x 2 h = 1 day.'
-- 'To check: Section ''Rollup type'': the Summation example (20,000 ms per vCPU per 20-second sample = 100%) and the burst dilution factors are arithmetic, not from the document.'
-- 'Section ''Statistics levels'': the level 1 contention list is derived from the level 1 table and the chart tables (VM CPU Ready: level 1). The document is inconsistent on disk latency: the level 2 row says all disk metrics except numberRead and numberWrite; the chart tables list deviceLatency, totalReadLatency and totalWriteLatency at level 3.'
-- 'Section ''Units'': whether the stacked Overview charts titled Network (Mbps) (cluster Hosts view, host Virtual Machines view) plot megabits or kilobytes per second: the vSphere 9.1 documentation lists Mbps for these two charts and KBps for the single-object charts under the same title (pp. 2041, 2078, 2082, 2106); check on a vSphere Client 9.1. API units: https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/network_counters.html. Charts and CSV export in KBps: https://knowledge.broadcom.com/external/article/447068 and https://knowledge.broadcom.com/external/article/445815.'
+- 'To check: Section ''Units'': whether the two stacked Overview charts titled Network (Mbps) (cluster Hosts view, host Virtual Machines view) plot megabits or kilobytes per second; the vSphere 9.1 documentation lists Mbps for these two charts and KBps for the single-object charts under the same title (pp. 2041, 2078, 2082, 2106); a vSphere Client 9.1 screen.'
 status: draft
 ```

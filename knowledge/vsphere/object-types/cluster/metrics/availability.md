@@ -6,6 +6,8 @@
 | Operational availability (%) | Primary. Reflects operations maturity. A host can have perfect hardware but be in maintenance mode, quarantine or disconnected. |
 | Hardware availability (%) | Redundant components (power, NICs, fans, memory) let a host keep running through component failures. Causes: manufacturing batch, heat, wear (finite SSD writes). |
 
+- Relevance for operations: availability reporting of the infrastructure and operations maturity (hosts left in maintenance, disconnected or quarantined); not a performance or capacity counter.
+
 ## ESXi operational availability (%)
 | State | Score |
 |---|---|
@@ -21,7 +23,8 @@
 ## Restarts: sys.uptime
 - vCenter stores `sys.uptime` on every VM and ESXi host at level 1: seconds since the last start, rollup latest.
 - Uptime falls back toward 0 at every restart. A drop between two samples marks a reboot or power cycle, even when the object was down for less than one sample.
-- The VM counter restarts with the VM (power cycle, reset, HA restart). A Guest OS reboot without a VM power cycle is a Guest OS event. See [`vsphere/object-types/cluster/metrics/vm-operations`](vm-operations.md).
+- The VM counter restarts with the VM (power cycle, reset, HA restart). A Guest OS reboot without a VM power cycle is a Guest OS event; a restart of the Guest OS requested through vSphere is counted in `vmop.numRebootGuest` ([`vsphere/object-types/cluster/metrics/vm-operations`](vm-operations.md)).
+- The Guest OS has its own uptime counter on the VM: `sys.osUptime`, seconds since the last Guest OS boot, statistics level 4, so it keeps no history at the default level. `sys.uptime` counts since the last system startup (vSphere API 9.1, system counters).
 
 ## Cluster availability
 - Not the average of hosts: HA matters.
@@ -45,7 +48,8 @@
 | Count of clusters below 100% | Best with hundreds of clusters. |
 
 ## Misconceptions
-- "Cluster availability = average host availability" → HA changes it.
+- "Cluster availability = average host availability" → HA changes it: with N+1, one host down still leaves the cluster able to run every VM, so operational availability ignores the worst host and averages the rest.
+- "VM uptime fell to 0, so the VM was powered off" → `sys.uptime` also restarts at a reset or an HA restart; a Guest OS reboot alone does not reset it. Check the VM events and `vmop` counts for which one happened.
 
 ## Metadata
 ```yaml
@@ -84,10 +88,9 @@ images:
     metric: ['Cluster Operational Availability']
     image_type: diagram
 source:
-  document: Knowledge base
+  document: Knowledge base; vSphere Web Services API 9.1 reference, system counters (sys.uptime, sys.osUptime)
   path: Provider Objects > Other Metrics > Availability
 corrections: []
-review_notes:
-- 'To check: Section ''Restarts: sys.uptime'': whether a Guest OS reboot without a VM power cycle resets the VM counter. Counter, level, rollup and summary from the vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
+review_notes: []
 status: draft
 ```

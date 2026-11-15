@@ -3,7 +3,7 @@
 ## Receive drop: full guest receive ring
 - Causes:
   - a microburst larger than the guest's receive ring buffer;
-  - the guest does not empty the ring in time: CPU busy inside the guest, or the vCPU waiting on the hypervisor (Ready, Co-stop).
+  - the guest does not empty the ring in time: CPU busy inside the guest, or the vCPU waiting on the hypervisor (Ready, Co-stop) (Broadcom KB 312565).
 - When the ring has no free descriptor, the hypervisor cannot copy the frame into guest memory. The new frame is discarded: tail drop, not first in first out.
 - The hypervisor-to-vNIC path is Layer 2, memory-mapped rings. It knows nothing of TCP state.
 
@@ -15,7 +15,7 @@
 | Guest OS | Yes | VMXNET3 shares the drop with the guest through shared memory |
 
 - Linux: `ethtool -S <interface>` shows the ring-full count per receive queue as `pkts rx OOB` (device counter `pktsRxOutOfBuf`). `rx_dropped` (`ip -s link`) leaves it out: it counts only frames the driver itself dropped (receive errors, failed buffer allocation).
-- Windows: confirm the drop at the host (vsish `rxSummary`, running out of buffers). The Windows counter that carries the ring-full count is in `review_notes`.
+- Windows: confirm the drop at the host (vsish `rxSummary`, running out of buffers). No Windows counter is confirmed to carry the ring-full count.
 - So the drop is visible to the hypervisor and to the guest. It is caused and fixed in the guest (larger ring, CPU), which is why the Guest OS owner fixes it.
 
 ## Drop by an NSX Distributed Firewall rule
@@ -78,13 +78,11 @@ related:
 - vsphere/tools/esxtop/network
 - sp5-framework/concepts/realms-and-layers
 source:
-  document: Packet Lifecycle and Metric Accounting in Virtualized Networks (2026-11-07); Broadcom KB 449113 (ESXi 8.x, NSX 4.x)
+  document: Knowledge base; Broadcom KB 449113 (ESXi 8.x, NSX 4.x); Broadcom KB 312565 (dropped receive packets at the virtual switch port, all ESXi versions)
   path: Scenario 1 (RX, guest buffer exhaustion); Scenario 2 (TX, top-of-rack congestion); KB 449113, Packet drops observed on VMXNET3 vNIC due to Distributed Firewall policy
-corrections:
-- '2026-11-07: a full VMXNET3 receive ring is counted by the hypervisor (port, %DRPRX, droppedRx) and the guest. Corrects the reason given in Q070 (not visible to the hypervisor); the conclusion, fixed in the guest, stands.'
-- '2026-11-14: the source names the Linux counter rx_out_of_buffer (a Mellanox mlx5 name). The vmxnet3 driver shows the ring-full count as "pkts rx OOB" (pktsRxOutOfBuf) in ethtool -S, and rx_dropped leaves it out (https://github.com/torvalds/linux/blob/master/drivers/net/vmxnet3/vmxnet3_ethtool.c).'
+corrections: []
 review_notes:
-- 'Section ''Drop by an NSX Distributed Firewall rule'': Broadcom KB 449113 is written for ESXi 8.x and NSX 4.x; check that it holds for vSphere 9.1 and NSX in VCF 9.1, https://knowledge.broadcom.com/external/article/449113.'
-- 'To check: which Windows VMXNET3 counter carries the ring-full count (Packets Received Discarded, ifHCInDiscards, or none); Broadcom KB 324556 and KB 437897 name only the host view (vsish rxSummary, running out of buffers).'
+- 'To check: Section ''Drop by an NSX Distributed Firewall rule'': Broadcom KB 449113 lists ESXi 8.x and NSX 4.x only (read 2026-11-15); check on vSphere 9.1 with NSX in VCF 9.1, https://knowledge.broadcom.com/external/article/449113.'
+- 'To check: Section ''VMXNET3 on ESXi'': which Windows VMXNET3 counter carries the ring-full count (Packets Received Discarded, ifHCInDiscards, or none); Broadcom KB 324556 and KB 437897 name only the host view (vsish rxSummary, running out of buffers); a lab VM with a forced ring-full drop.'
 status: draft
 ```

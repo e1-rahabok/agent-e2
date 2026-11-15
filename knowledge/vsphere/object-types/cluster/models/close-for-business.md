@@ -92,6 +92,7 @@ source:
   document: Knowledge base
   path: 'Capacity Management > Capacity Model > Cluster Closure; Logic'
 corrections: []
-review_notes: []
+review_notes:
+- 'To check after 1.0: Section ''The rule'': the management pack that publishes Close for Business closes at the display band edges (25, 50, 75) and applies the production Risk setting to every cluster; until the pack follows the closure thresholds of this file, a published value can differ from this rule (plan, After 1.0, pack fixes).'
 status: draft
 ```

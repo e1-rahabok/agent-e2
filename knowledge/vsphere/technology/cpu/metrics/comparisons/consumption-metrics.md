@@ -3,13 +3,15 @@
 ## The choices
 - VM: 5 consumption metrics: Run, Used, Usage, Usage (MHz), Demand.
 - ESXi: 7 consumption metrics: Core Utilization, Utilization, Used, Usage, Usage (MHz), Consumed, Demand.
+- Relevance for operations: by counter, VM Run and ESXi Thread Utilization for capacity and sizing; VM and ESXi Usage (MHz) for throughput, VM Used and Usage for chargeback; ESXi Demand in its VCF Operations form for capacity; VM Demand and the scheduler counters (Entitlement, Demand-to-entitlement ratio) none.
 
 ## Source of each
 - ESXi provides Run (ms), Used (ms), Demand (MHz).
 - vCenter adds Usage (MHz) and Usage (%).
 
 ## Reservation
-- CPU reservation is on demand. It is not included in Run, Used, Demand or Usage.
+- CPU reservation is on demand. It is not included in VM Run, Used, Demand or Usage, nor in the vCenter ESXi counters.
+- One exception: ESXi CPU Demand in VCF Operations counts, per running VM, the higher of demand and reservation, and adds the kernel's reservation ([`vsphere/technology/cpu/metrics/host/demand`](../host/demand.md), section vCenter vs VCF Operations).
 
 ## VM consumption counters (vCenter)
 | Counter | Unit | Source | Instance |
@@ -25,6 +27,10 @@
 - Reservation and allocation are properties, not metrics.
 - VM CPU reservation is set in MHz or GHz, not in vCPUs. Moving the VM to a host with a different frequency requires a manual adjustment.
 ![vCenter VM CPU consumption counters](../../images/vcenter-vm-cpu-consumption-counters-table.png)
+
+## Misconceptions
+- "A VM's CPU reservation shows in its Run, Used, Demand or Usage" → a CPU reservation acts only under contention and is in none of them. Only ESXi CPU Demand in VCF Operations counts reservations.
+- "The per-vCPU values of Used or Usage add up to the VM value" → the VM value also holds System time and other charges not tied to a vCPU, so the VM value is higher.
 
 ## Metadata
 ```yaml
@@ -73,7 +79,6 @@ source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > VM > Consumption Metrics
 corrections: []
-review_notes:
-- 'Section ''VM consumption counters (vCenter)'': from CPU > VM.'
+review_notes: []
 status: draft
 ```

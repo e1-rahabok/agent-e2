@@ -11,7 +11,7 @@
 - Frequency:
   - daily for monitoring. What happened more than 24 hours ago rarely matters for troubleshooting, so the views show the last 8-24 hours;
   - ad hoc for troubleshooting, the same day as the issue or the next day at most.
-- The dashboards of the suite share one design, so they read as one set. The VM Performance dashboard is the reference; read it first.
+- The dashboards of the suite share one design, so they read as one set. The VM Performance dashboard is the reference; read it first ([`vcf-operations/dashboards/vm-performance-dashboard`](../../vcf-operations/dashboards/vm-performance-dashboard.md)).
 
 ## Consumer vs provider troubleshooting
 - Consumer: one VM, container or application. Other consumers have no problem, or are independent.
@@ -69,6 +69,7 @@ internal_derive:
 - sp5-framework/outputs/dashboard-design
 - sp5-framework/performance/vm-slow
 related:
+- vcf-operations/dashboards/vm-performance-dashboard
 - vcf-operations/features/peak-20-second-metrics
 - vsphere/object-types/vm/vm-performance
 - sp5-framework/concepts/class-of-service
@@ -77,8 +78,6 @@ source:
   document: Knowledge base
   path: 'Overall Design Approach > Overall Design: Performance Dashboards'
 corrections: []
-review_notes:
-- 'To check: Section ''Consumer vs provider troubleshooting'': the link to vm-slow is not in the source.'
-- 'Section ''Goals and users'': the source says which pods are affected; written as which VMs, as the question is about VMs.'
+review_notes: []
 status: draft
 ```

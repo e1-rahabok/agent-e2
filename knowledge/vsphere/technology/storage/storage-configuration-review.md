@@ -7,7 +7,7 @@
 ## Architecture variants
 - Too many variants: VMFS over FC, VMFS over iSCSI, NFS, vSAN, vVols, physical RDM, virtual RDM.
 - Each has its fit, and each needs its own expertise in performance, security, availability and upgrade. Every extra variant costs skills to keep current and raises the risk of overlooking something.
-- vVols are deprecated in VCF 9.
+- vVols are deprecated from VCF 9.0 and will be removed in a future major release; vSphere 9.1 still supports them (vSphere 9.1 documentation, p. 1488; Broadcom KB 401070).
 
 ## Datastore
 - Version: outdated VMFS or NFS versions.
@@ -25,7 +25,7 @@
 - NFS: current security for authentication.
 - vVols: inventory matches expectation.
 - Physical array: firmware compatible with the ESXi version.
-- Queue depth: mismatches along the stack. Calibrate from the VM down to the array ([`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](concepts/esxi-storage-latency-stack.md)).
+- Queue depth: mismatches along the stack. Calibrate from the VM down to the array ([`vsphere/technology/storage/concepts/esxi-storage-io-path`](concepts/esxi-storage-io-path.md), section Queues on the path).
 - VAAI: configured per practice.
 - vSAN Max: no VMs in the storage cluster. It is meant as an array (simple, more than two controllers); running VMs on it adds a server dimension, like running VMs on your array.
 
@@ -35,7 +35,7 @@
 - "The array is fast, so queue depth does not matter" → a mismatch anywhere in the stack queues IO in the kernel.
 - "Gold at the array means Gold in vSphere" → priority must match at every layer.
 - "vSAN Max can host a few VMs too" → it is the array; VMs on it add a server dimension.
-- "Plan new designs on vVols" → vVols are deprecated in VCF 9.
+- "Plan new designs on vVols" → vVols are deprecated from VCF 9.0 and will be removed in a future major release.
 
 ## Metadata
 ```yaml
@@ -61,13 +61,13 @@ internal_derive:
 related:
 - vsphere/object-types/vm/configuration/vm-configuration-review
 - vsphere/object-types/esxi/configuration/esxi-configuration-review
+- vsphere/technology/storage/concepts/esxi-storage-io-path
 - vsphere/technology/storage/concepts/esxi-storage-latency-stack
 - vsphere/technology/storage/concepts/storage-layers
 source:
-  document: Knowledge base
-  path: 'Configuration Management > Review List > Storage (Datastore, Others)'
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Broadcom KB 401070
+  path: 'Configuration Management > Review List > Storage (Datastore, Others); vSphere Storage > Working with Virtual Volumes (p. 1488)'
 corrections: []
-review_notes:
-- 'To check: whether vSphere 9.1 still supports vVols (vSphere 9.1 release notes). vVols deprecated in VCF 9.0: Broadcom KB 401070 (https://knowledge.broadcom.com/external/article/401070); Protection and Recovery 9.1 release notes (https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-91-release-notes.html) say 9.1 is its last release supporting vVols.'
+review_notes: []
 status: draft
 ```

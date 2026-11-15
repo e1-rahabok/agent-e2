@@ -5,6 +5,7 @@
 - Example: the VMM layer tries to do something and is blocked.
 - Part of Wait. Contention for the guest: the guest experiences a freeze.
 - Called VM Wait in parts of VCF Operations and in older documents. Earlier named IO Wait by mistake.
+- Relevance for operations: performance troubleshooting only, when a VM is slow and the other CPU counters do not explain it ([`vsphere/technology/cpu/troubleshooting/vm-other-wait-high`](../../troubleshooting/vm-other-wait-high.md)). Not in the VM KPI, because idle VMs can show it without waiting (section Known issue).
 
 ## Formula (VCF Operations)
 ```text
@@ -24,12 +25,13 @@ Other Wait = Wait - Idle - Swap Wait
 - A VM with sustained Other Wait around 15% had low Run, Usage and Demand. The only correlated metric was Idle: the two add up to about 100% when Run is low.
 
 ## Known issue
-- An accounting issue wrongly inflates Other Wait and esxtop %VMWait (Broadcom KB 85393).
+- Broadcom KB 338438 (legacy 85393): on ESXi 7.0 Update 2 and later, time when vCPUs halt is not always attributed to Idle, so idle VMs show raised esxtop %VMWAIT. VCF Operations shows it as the wait that excludes Idle and Swap Wait (Other Wait), and its alert on a long wait for IO can fire.
+- The KB calls it a cosmetic accounting issue with no performance impact. Fixed in ESXi 8.0 Update 3j.
 
 ## Misconceptions
 - "Other Wait means storage latency" → no correlation was found with disk latency or outstanding IO.
 - "Other Wait correlates with Ready" → no correlation found.
-- "High Other Wait is always real" → check KB 85393 first.
+- "High Other Wait is always real" → on ESXi 7.0 Update 2 and later before 8.0 Update 3j, idle VMs show it by accounting (Broadcom KB 338438). Check the ESXi build and whether Run is low.
 
 ## Metadata
 ```yaml
@@ -58,10 +60,9 @@ related:
 - vsphere/technology/cpu/troubleshooting/vm-other-wait-high
 - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
 source:
-  document: Knowledge base
-  path: CPU > VM > Wait Metrics > Other Wait
+  document: Knowledge base; Broadcom KB 338438
+  path: CPU > VM > Wait Metrics > Other Wait; KB 338438 (legacy 85393, Increased %VMWAIT for idle VMs after upgrading to ESXi 7.0 U2 or later)
 corrections: []
-review_notes:
-- 'To check: KB 85393 (legacy id) not read (https://knowledge.broadcom.com/external/article?legacyId=85393).'
+review_notes: []
 status: draft
 ```

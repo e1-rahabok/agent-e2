@@ -4,6 +4,7 @@
 - The VM's IO at the datastore level. Covers VMFS and NFS, not RDM.
 - Already aggregated at VM level: no per-virtual-disk breakdown.
 - Includes snapshot IO: snapshots live at datastore level.
+- Relevance for operations: performance troubleshooting: set against VM Virtual Disk it shows snapshot IO (higher read IOPS) and RDM IO (left out). The VM disk latency that the VM Performance KPI and the VM alerts read is the virtual disk latency, not this one ([`vsphere/object-types/vm/vm-performance`](../../../../object-types/vm/vm-performance.md)).
 
 ## Counters
 - Latency: the only contention counter here. No outstanding IO.

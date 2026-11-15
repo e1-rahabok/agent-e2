@@ -19,7 +19,7 @@ flowchart TD
 
 ## Checks, in order
 1. Split GAVG into KAVG and DAVG (HostSystem) ([`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../concepts/esxi-storage-latency-stack.md)). KAVG above its flow test (catalog row flow-esxi-disk-kernel-latency) → step 2. DAVG above its flow test (flow-esxi-disk-device-latency) → step 3.
-2. Kernel queue (HostSystem). QAVG and the queue depths at each level of the stack. → step 4.
+2. Kernel queue (HostSystem). QAVG and the queue depths at each level of the stack ([`vsphere/technology/storage/concepts/esxi-storage-io-path`](../concepts/esxi-storage-io-path.md), section Queues on the path). High QAVG with normal DAVG on the disks of one VM can be an IOPS limit on its virtual disks ([`vsphere/technology/storage/metrics/virtual-motherboard/iops`](../metrics/virtual-motherboard/iops.md), section IOPS limit). → step 4.
 3. Device (HostSystem). DAVG high: check the array. Array latency low: the fabric or HBA configuration. → step 4.
 4. Per adapter and path (HostSystem) ([`vsphere/technology/storage/metrics/host/adapter-and-path`](../metrics/host/adapter-and-path.md)). Read and write latency separately. Use the 95th or 99th percentile, not the maximum. → step 5.
 5. Read vs write (HostSystem). Write-only latency is expected when reads hit cache. → step 6.
@@ -57,7 +57,9 @@ object:
 - HostSystem
 internal_derive:
 - vsphere/technology/storage/concepts/esxi-storage-latency-stack
+- vsphere/technology/storage/concepts/esxi-storage-io-path
 - vsphere/technology/storage/metrics/host/adapter-and-path
+- vsphere/technology/storage/metrics/virtual-motherboard/iops
 - sp5-framework/performance/vm-slow
 related:
 - vsphere/technology/storage/metrics/host/disk
@@ -69,7 +71,6 @@ source:
   document: Knowledge base
   path: Storage > ESXi > Disk or Device; Storage Adapter & Path
 corrections: []
-review_notes:
-- 'The vSphere 9.1 documentation gives other values: kernelLatency best 0-1 ms and a problem above 4 ms; deviceLatency above 15 ms; queueLatency must be 0 (vSphere Monitoring and Performance > Solutions for Disk Performance Problems, p. 2121). Kept in vsphere/tools/vsphere-client/performance-guidance.'
+review_notes: []
 status: draft
 ```

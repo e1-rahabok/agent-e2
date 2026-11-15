@@ -4,6 +4,7 @@
 - Does not always indicate a performance problem.
 - Affected by CPU frequency, which goes up or down.
 - At lower frequency the VM runs slower but is not waiting to be served. Equivalent to running on an older CPU.
+- Relevance for operations: performance troubleshooting of CPU-sensitive VMs. Not a KPI and not an alert counter, because Hyper-Threading and frequency move it (section Use).
 
 ## Contrast with other Latency metrics
 - Memory Latency and Disk Latency do indicate a performance problem. They are primary counters for how well the VM is served.
@@ -17,7 +18,7 @@
 
 ## Hyper-Threading
 - Ready, Co-stop and Wait do not register Hyper-Threading contention. Contention for shared core resources happens in hardware, not in the scheduler.
-- CPU Latency is the counter for throughput lost when the sibling thread runs.
+- CPU Latency counts the Hyper-Threading effect: it measures time lost against a whole core at nominal frequency, so a vCPU whose sibling thread runs adds to it with no wait.
 - Hyper-Threading changes CPU Latency by 0% to 37.5%.
 
 ## Latency components
@@ -45,7 +46,7 @@ Used + Latency = 100%
 - ESXi 6.5 and older: VMs with Latency Sensitivity = High showed guest idle time as %LAT_C. Fixed in ESXi 6.7.
 
 ## Misconceptions
-- "CPU Latency rose, so the VM has CPU contention" → check whether CPU frequency changed. Waiting shows in unmet-demand metrics (Ready, Co-Stop). See [`vsphere/architecture/vm-vs-guest-os`](../../../../architecture/vm-vs-guest-os.md), area D. Memory Latency and Disk Latency, by contrast, do mean the VM waits.
+- "CPU Latency rose, so the VM has CPU contention" → VM CPU Latency also rises with no wait: a busy sibling thread (up to 37.5%) or a frequency below nominal. Waiting shows in VM CPU Ready and Co-stop; read those and the frequency.
 - "Steal Time inside Linux equals VM CPU Latency" → different formulas.
 - "Latency is the best KPI metric" → too volatile. Use Ready.
 - "Latency 0% means no contention" → limits are excluded. Check Ready.
@@ -91,8 +92,6 @@ source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > Architecture intro; State of a VM vCPU; CPU > VM > Contention Metrics > Latency
 corrections: []
-review_notes:
-- Sections Hyper-Threading: from CPU > Architecture.
-- 'Sections Latency components, Hyper-Threading, Use, Historical issue: from CPU > VM. Latency diagram adapted from a Valentin Bondzio diagram.'
+review_notes: []
 status: draft
 ```

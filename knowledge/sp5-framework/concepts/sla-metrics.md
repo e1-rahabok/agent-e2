@@ -22,12 +22,12 @@
 | SLA | Question | Measures |
 |---|---|---|
 | Availability | Is it up? | Downtime of the VM or Guest OS |
-| Compliance | Is it secure? | Unsecured time |
+| Security (compliance) | Is it secure? | Unsecured time |
 | Service | Is the human and portal service delivered? | Response, provisioning, support |
 
-- Performance has no SLA in this knowledge base. Fast is defined by the KPI: it shows how bad, at 20-second resolution, daily; a contract can only count pass or fail, monthly.
+- Performance has no SLA: fast is defined by the KPI ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md), section KPI only).
 - Availability is largely a given: whatever the agreed number, a down VM is restored at once.
-- The Compliance SLA is also called Security SLA (preferred term: `knowledge/glossary.md`). Customers and providers assume 100%; promising 100% without a contract number leads to disappointment.
+- Customers and providers assume a Security SLA of 100%; promising 100% without a contract number leads to disappointment.
 
 ## VM and Guest OS scope
 - VM and Guest OS are two objects with a permanent 1:1 relationship. An IaaS provider often covers both. If the Guest OS is in scope, Windows or Linux is in the SLA.
@@ -74,7 +74,8 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
 
 - Supporting offers that justify a higher class: application-level backup and self-service file restore; application-level HA monitoring, boot order, VM-host affinity; lower RPO and RTO with a yearly real DR test; longer and larger snapshots; patch deferral and custom patch sets; deferral of VMware Tools and VM hardware updates.
 
-## Compliance SLA
+## Security SLA
+- Named Security SLA, not Compliance SLA: security covers activity (undesirable activity that is a potential risk) as well as settings compared against a secured configuration.
 - Percentage of compliance against an agreed security policy or benchmark.
 - Compliance is binary: compliant or not.
 - The SLA is a formal contract between two entities: do not put 100% in it; the contract value is 99.95%. The internal KSI is 100%: a non-compliant setting can be a door for an attack.
@@ -174,7 +175,6 @@ source:
   document: Knowledge base
   path: 'Your Private Cloud > Service Level Agreement (The 4 SLAs of IaaS, VM vs Guest OS, Availability SLA, Performance SLA, Compliance SLA, Service SLA, The Metrics of SLAs, The Time Window, The 2 Sides of an SLA, SLA Calculation, Performance Quantification, Penalty Quantification, The Benchmark to Rule Them All)'
 corrections: []
-review_notes:
-- 'To check: Section ''Availability SLA'', Operational Availability formula: derived from the definition; has a Formula heading with no formula.'
+review_notes: []
 status: draft
 ```

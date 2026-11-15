@@ -82,13 +82,9 @@ related:
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 - vsphere/technology/storage/concepts/guest-os-vs-vm-storage
 source:
-  document: Microsoft Learn, Using Storage-related Parameters and Performance Counters (Windows Server 2012 R2 archive page); Broadcom KB 343323, Large-scale workloads with intensive I/O patterns might require queue depths significantly greater than Paravirtual SCSI default values
+  document: Knowledge base; Microsoft Learn, Using Storage-related Parameters and Performance Counters (Windows Server 2012 R2 archive page); Broadcom KB 343323, Large-scale workloads with intensive I/O patterns might require queue depths significantly greater than Paravirtual SCSI default values
   path: Logical disks and physical disks; Queue lengths (Microsoft). Resolution (Broadcom KB)
 corrections: []
-review_notes:
-- 'To check: Section ''Stack from application to adapter driver'': the layer order and the role of each driver, against the Windows driver documentation on learn.microsoft.com (storage drivers, Storport, partition manager).'
-- 'To check: Section ''Waiting inside Windows in a VM'': that the vCenter virtual disk latency starts at the virtual disk (read the counter definition in the vSphere API reference, developer.broadcom.com), and the subtraction of requests at the virtual disk from Avg. Disk Queue Length, which is a derivation from Little''s Law, not a vendor procedure.'
-- 'Source URL, Microsoft: https://learn.microsoft.com/previous-versions/dn567651(v=vs.85)'
-- 'Source URL, Broadcom KB 343323 (legacy 2053145, no Updated On date shown): https://knowledge.broadcom.com/external/article?legacyId=2053145'
+review_notes: []
 status: draft
 ```

@@ -32,12 +32,12 @@ flowchart TD
    - Paging alone is not a shortage: binaries, memory-mapped files and prefetch cause page-in. Low Free with high Standby is normal.
    - → step 5.
 5. Disk (Guest OS). Current and average disk queue length ([`guest-os/storage/disk-queue`](../../storage/disk-queue.md)).
-   - Avg. Disk sec/Transfer high and the VM's virtual disk latency low → the IO waits inside Windows (filter driver, antivirus, application) before it reaches the VM; both high → the wait is below Windows. A queue at low IOPS means a long time per IO (queue = IOPS × latency).
+   - Avg. Disk sec/Transfer high and the VM's virtual disk latency low → the IO waits inside Windows (filter driver, antivirus, application) before it reaches the VM. A queue at low IOPS means a long time per IO (queue = IOPS × latency).
    - High queue with high VM disk latency → the wait is below Windows: the VM and its storage.
    - → step 6.
-6. Network (Guest OS). Receive discards on the VMXNET3 adapter: the guest's receive ring is full, caused and fixed inside Windows ([`vsphere/technology/network/vnic-rx-drops`](../../../vsphere/technology/network/vnic-rx-drops.md)). → step 7.
+6. Network (Guest OS). VM receive drops on the VMXNET3 vNIC (VM Network Packets Dropped, receive; at the host, vsish `rxSummary`, running out of buffers): the guest's receive ring is full, caused and fixed inside Windows (ring size, the CPU that drains the ring). No Windows counter is confirmed to carry the ring-full count ([`vsphere/technology/network/concepts/packet-drop-accounting`](../../../vsphere/technology/network/concepts/packet-drop-accounting.md); flow [`vsphere/technology/network/vnic-rx-drops`](../../../vsphere/technology/network/vnic-rx-drops.md)). → step 7.
 7. Verdict.
-   - A wait found inside Windows (queue, paging, disk queue with low VM IOPS, ring full) → the cause is in the Guest OS or the application: Guest OS sizing ([`guest-os/system/concepts/guest-os-sizing`](../concepts/guest-os-sizing.md)) and configuration ([`guest-os/system/concepts/guest-os-configuration-review`](../concepts/guest-os-configuration-review.md)). Still confirm the VM has no contention in the window: a VM wait makes Windows queues worse.
+   - A wait found inside Windows (queue, paging, disk wait with low VM disk latency, ring full) → the cause is in the Guest OS or the application: Guest OS sizing ([`guest-os/system/concepts/guest-os-sizing`](../concepts/guest-os-sizing.md)) and configuration ([`guest-os/system/concepts/guest-os-configuration-review`](../concepts/guest-os-configuration-review.md)). Still confirm the VM has no contention in the window: a VM wait makes Windows queues worse.
    - No wait inside Windows, or the signs point down (every vCPU busy, disk queue with high VM latency) → the VM: [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 2, with the window from step 1.
 
 ## Order rationale
@@ -99,6 +99,6 @@ source:
   path: n/a
 corrections: []
 review_notes:
-- 'To check: the whole order of checks, from field practice (Q060, 2026-11-11: the application team first quantifies the slowness in Guest OS counters).'
+- 'To check: Section ''Checks, in order'': the order of steps 2 to 6 (CPU, memory, disk, network) against field practice; step 1 (quantify in Guest OS counters first) is settled.'
 status: draft
 ```

@@ -5,6 +5,7 @@
 - Cluster Performance shows actual contention happening now ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md)). Cluster Risk shows potential contention.
 - Higher is worse: 0 is no risk, 100 is maximum risk. Cluster Consumption reads the same way; Cluster Performance is higher-is-better.
 - Every sub-metric takes the worst ESXi host. One full host hurts its VMs while the cluster average looks fine. Many clusters have 8 hosts or fewer, so the worst warns early. Different sub-metrics can come from different hosts: fine for monitoring, not for troubleshooting.
+- A risk model, not a KPI: a KPI scores performance only. Users also call it the Cluster Risk KPI.
 - Not a built-in VCF Operations metric. 12 sub-metrics.
 
 ## Thresholds
@@ -41,6 +42,7 @@ Per host, then the worst host is kept.
 
 ## CPU overcommit: per thread
 - The CPU overcommit ratio is per thread, because the CPU executes per thread. With Hyper-Threading, 4 vCPUs per thread is 8 per core.
+- A Bronze cluster run at its planned 3:1 per thread reads 3 on this row, the start of red, by design: the planning ratio is set by the price of the class, while Cluster Risk reads the running cluster, so Bronze scores a higher risk than Gold ([`sp5-framework/capacity/class-of-service-planning`](../../../../sp5-framework/capacity/class-of-service-planning.md)).
 
 ## Monster VM
 | Resource | A VM is a monster when it has more than | Example |
@@ -57,13 +59,13 @@ Per host, then the worst host is kept.
 ## Scoring
 - The sub-metrics are scored and combined as for every KPI and model ([`sp5-framework/performance/performance-kpi-design`](../../../../sp5-framework/performance/performance-kpi-design.md), section Scoring), where 100 is best. The published value is flipped: Cluster Risk = 100 − weighted average.
 - Bands are the mirror of the performance KPIs: green 0-25, yellow 25-50, orange 50-75, red 75-100. An alert or widget on Cluster Risk must treat high as bad: red from 75.
-- Worked example: two hosts of 32 cores, 512 GB DRAM; host 1 at 90% thread and 100% core utilization, host 2 at 30% and 60%. Thread utilization 90% enters at the start of red (25, weight 8). Imbalance of host 1 is 57.6 running threads / 32 running cores = 1.8, halfway through red (12.5, weight 11.31). Cluster Risk ≈ 67.9.
+- Worked example: two hosts of 32 cores, 512 GB DRAM; host 1 at 90% thread and 100% core utilization, host 2 at 30% and 60%. Thread utilization 90% enters at the start of red (25, weight 8). Imbalance of host 1 is 57.6 running threads / 32 running cores = 1.8, halfway through red (12.5, weight 11.31). Ballooned, swapped + zipped and the two monster VM ratios are green (100, weight 1 each); the excluded rows are green and left out; no memory tiering. Weighted average (25 × 8 + 12.5 × 11.31 + 4 × 100) ÷ (8 + 11.31 + 4) = 31.80; Cluster Risk ≈ 68.2.
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out; never counted as 0, because 0 means no risk.
 
 ## Sub-metric weight in Cluster Risk
 - The weight of a sub-metric rises as its score falls. When the score is already high, a sub-metric that gets worse but is still better than the ones driving the score pulls the weighted average up, so Cluster Risk goes down.
 - An Excluded row that leaves green enters at weight 2 at once: the same effect.
-- Example: Cluster Risk 67.9; new idle VMs raise the CPU overcommit ratio from 0.5 to 1.125. The row enters yellow and Cluster Risk falls to 64.5. Only from about 2.7 does it raise Cluster Risk above 67.9.
+- Example: Cluster Risk 68.2 (worked example in section Scoring); new idle VMs raise the CPU overcommit ratio from 0.5 to 1.125. The row enters yellow (71.88, weight 2.18) and Cluster Risk falls to 64.8. Only from about 2.7 does it raise Cluster Risk above 68.2.
 - Read the sub-metrics before acting on a falling Cluster Risk. A cluster just above orange (50) can drop to yellow after VMs are deployed.
 - It happens only when Cluster Risk is already high. When the other sub-metrics are green, a worse sub-metric always raises it.
 
@@ -101,6 +103,8 @@ object:
 metric_class: context
 internal_derive:
 - sp5-framework/concepts/modelling
+- sp5-framework/capacity/class-of-service-planning
+- sp5-framework/performance/performance-kpi-design
 - sp5-framework/capacity/overcommit
 - vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
 - vsphere/technology/memory/concepts/memory-tiering
@@ -118,6 +122,6 @@ source:
   path: Provider Objects > Other Metrics > Cluster Risk (%); Monster VM
 corrections: []
 review_notes:
-- 'Section ''Thresholds'', Allocation rows: a Bronze cluster built to the Part 1 plan shows red overcommit rows, as intended: the planning ratio is tied to price, Cluster Risk reads the running cluster, and Bronze is expected to score higher than Gold. CPU overcommit is per thread.'
+- 'To check after 1.0: Section ''CPU overcommit: per thread'': the management pack that publishes Cluster Risk counts the CPU overcommit row per physical core, not per thread; until its fix, a published ratio reads up to 2x the per-thread value on Hyper-Threading hosts (plan, After 1.0, pack fixes).'
 status: draft
 ```

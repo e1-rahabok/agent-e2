@@ -10,8 +10,8 @@
 | Day 0: planning | All five | - | - |
 | Day 1: design and build | Availability, performance, security, capacity | Value | - |
 | Day 2: monitoring | All five | - | - |
-| Day 2: troubleshooting | Availability, performance | - | Security (forensic investigation), compliance (drift against the desired configuration), capacity, cost |
-| Day 2: optimizing | Performance, capacity, value | Availability | Security (compliance) |
+| Day 2: troubleshooting | Availability, performance | - | Security (forensic investigation; compliance is drift detection), capacity, value |
+| Day 2: optimizing | Performance, capacity, value | Availability | Security, compliance included |
 
 - A major technology upgrade needs planning and redesign: the cycle starts again.
 
@@ -38,11 +38,8 @@
 - The check is short, a few minutes when there is no problem, so it runs twice a day: start and end of the day. A problem it finds turns into troubleshooting, which takes as long as the problem needs.
 
 ## Day-to-day order
-1. Availability: a system that is down has no performance problem.
-2. Performance: a system so slow it is as good as down.
-3. Security: third, not first, in day-to-day operations.
-4. Capacity: will it be enough; efficiency is read here.
-- Configuration is checked as a drill-down under each of the four: a configuration issue can cause any of them.
+- The day-to-day order is the order of the health check: availability, performance, security, capacity, with configuration and known bugs as the drill-down under each. The reasons: [`sp5-framework/concepts/health-check`](health-check.md), section Order of checks.
+- Security comes third, not first, in day-to-day operations: a system that is down, or so slow it is as good as down, is the more urgent problem.
 - Assess all four on both sides of VCF, platform and product ([`sp5-framework/concepts/purpose-driven-architecture`](purpose-driven-architecture.md)).
 
 ## A 24-hour day
@@ -85,12 +82,11 @@
 ## Daily SOP per pillar
 - The daily SOP looks ahead, using history and business context.
 - Availability:
-  - soft errors, which usually need each vendor's logs (vSphere Proactive HA reads hardware health);
+  - soft errors, which usually need each vendor's logs (vSphere Proactive HA reads the host health that a hardware vendor's provider reports to vCenter, and works only in a DRS cluster);
   - backups done. Example: snapshots taken on 1,549 VMs and removed on 1,518 means 31 backups likely failed to consolidate their snapshot.
 - Performance: insight analysis over the environment; mission-critical VM performance for the next day, from the pattern of the last week and the expected load agreed with the business owner.
-- Compliance: non-compliance remediated.
-- Security: signs of attack, such as firewall rules loosened or administrator accounts used.
-- Configuration: misconfigurations that can cause issues; urgent patches after validation.
+- Security: signs of attack, such as firewall rules loosened or administrator accounts used; non-compliance remediated.
+- Configuration, the drill-down under every pillar: misconfigurations that can cause issues; urgent patches after validation.
 - Capacity:
   - VM provisioning, ideally automated through the day; check that the aggregate load does not overwhelm the shared environment;
   - snapshot deletion by policy: older than one day, with agreed exclusions honoured;
@@ -152,6 +148,7 @@ internal_derive:
 - sp5-framework/concepts/monitoring-vs-troubleshooting
 - sp5-framework/concepts/purpose-driven-architecture
 related:
+- sp5-framework/concepts/health-check
 - sp5-framework/concepts/overview
 - sp5-framework/concepts/health-risk-efficiency
 - sp5-framework/capacity/rightsizing
@@ -168,14 +165,9 @@ images:
     topic: 'Alerts, NOC live screen, daily, weekly and monthly checks over 24 hours'
     image_type: timeline
 source:
-  document: Knowledge base
-  path: 'Your Private Cloud > SP5 Framework: Process (Proactive Operations, Day-to-day Operations, Real Time, Daily, Optimize, VM Life Cycle); SP5 Framework: Pillars (pillar per phase table)'
-corrections:
-- 'Daily check length: about 5 minutes when there is no problem; a problem makes it longer.'
-- 'Sections ''Dual track'' and ''Day-to-day order'': reactive starts after an alert, an incident or a complaint; proactive is insight, typically anomaly detection, which gives false positives without business context; configuration is a drill-down; known bugs are configuration. The example in brackets (month-end batch, planned migration) is not from the source.'
-review_notes:
-- 'Section ''Daily SOP per pillar'', 31 backups: subtraction (1,549 - 1,518).'
-- 'To check: Section ''Daily SOP per pillar'', Proactive HA reading hardware health: vSphere Proactive HA uses hardware vendor health providers; no source yet.'
-- 'Not copied: day-to-day operations cadence image (text in A 24-hour day), day-to-day order image (text in Day-to-day order).'
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: 'Your Private Cloud > SP5 Framework: Process (Proactive Operations, Day-to-day Operations, Real Time, Daily, Optimize, VM Life Cycle); SP5 Framework: Pillars (pillar per phase table). vSphere 9.1: Proactive HA Failures (p. 1964), Configure Proactive HA (p. 1987: a provider notifies vCenter of a host health degradation), health update provider privileges (p. 1784: hardware vendors notify vCenter of Proactive HA events)'
+corrections: []
+review_notes: []
 status: draft
 ```

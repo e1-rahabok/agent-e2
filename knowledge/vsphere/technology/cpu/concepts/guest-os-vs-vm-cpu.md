@@ -140,6 +140,6 @@ source:
   path: CPU > Architecture > Guest OS vs VM
 corrections: []
 review_notes:
-- 'To check: Section ''Blind spots per layer'': how often ESXi updates the guest on per-core frequency; unconfirmed.'
+- 'To check: Section ''Blind spots per layer'': how often the VMM passes the per-core frequency to the guest; not in the vSphere 9.1 documentation; needs a lab test or a Broadcom KB.'
 status: draft
 ```

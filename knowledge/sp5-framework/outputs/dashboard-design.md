@@ -101,8 +101,6 @@ source:
   document: Knowledge base
   path: 'Overall Design Approach > Design Consideration (Design Methodology, Clean Layout, Past vs Present, Summary List Detail, Interaction)'
 corrections: []
-review_notes:
-- 'Section ''Layout'': the source shows example dashboards by Brock Peterson and Dale Hassinger; third-party screenshots not copied.'
-- 'Not copied: the layout sketches, the widget screenshots (Scoreboard, distribution, View List), the PowerPoint flow and the 4x4 heat map screenshot; their content is in the text.'
+review_notes: []
 status: draft
 ```

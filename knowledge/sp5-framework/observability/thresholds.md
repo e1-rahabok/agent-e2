@@ -28,7 +28,8 @@ threshold(VM layer) < threshold(Guest OS layer) < threshold(application layer)
 ## Interval rule
 - A threshold is valid only for the sample interval it was set on. The same workload reads higher at a short interval than at a long one: averaging over a longer window flattens peaks.
 - Order for the same metric: 2-second (esxtop) ≥ 20-second (real-time) ≥ 5-minute ≥ 1-day values.
-- Example: VM disk latency 10,370 ms at the 20-second peak vs 257 ms as the 300-second average. See [`vcf-operations/features/peak-20-second-metrics`](../../vcf-operations/features/peak-20-second-metrics.md).
+- Bound for one instance: a 5-minute value is the average of 15 samples of 20 seconds ([`sp5-framework/observability/collection-interval`](collection-interval.md)), so it is at least one fifteenth of its highest sample. The 20-second peak of one instance is therefore at most 15 times its 5-minute average, reached when the other 14 samples are 0.
+- A VCF Operations peak metric can exceed that bound because it also takes the worst instance (any virtual disk, read or write, any vCPU) while the 5-minute average is the VM value ([`vcf-operations/features/peak-20-second-metrics`](../../vcf-operations/features/peak-20-second-metrics.md)). So a peak far above 15 times the average mixes the interval rule with the instance rule below.
 - So a threshold set on 20-second peaks must be higher than one set on 5-minute averages for the same tolerance. Example: VM Compressed + Swapped (5-minute samples) has a lower band than VM Memory Contention (20-second peaks), although it is the less serious signal. See [`vsphere/object-types/vm/vm-performance`](../../vsphere/object-types/vm/vm-performance.md).
 - A threshold without its interval is incomplete.
 
@@ -57,8 +58,9 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 ## Misconceptions
 - "The band from the 20-second chart applies to the 1-week chart" → the interval differs; longer intervals read lower.
 - "VM CPU Ready is low, so no vCPU waits" → the VM value averages the vCPUs; check the worst vCPU.
-- Using an application-layer threshold (e.g. 15 ms) directly as a VM-layer alert → too high.
-- Treating "consistently" as a 5-minute average → many alerts, few complaints.
+- "SQL Server tolerates 15 ms, so alert on VM disk latency at 15 ms" → that value holds at the application layer, which adds its own latency and queueing; the VM-layer threshold must be lower.
+- "Consistently above X means the 5-minute average is above X" → a 5-minute window on disk latency gives many alerts and few complaints; state the time window the value must stay in the band.
+- "The 20-second peak is 40 times the 5-minute average, so one value is wrong" → the peak metric takes the worst instance as well as the shortest interval; for one instance the gap is at most 15 times.
 
 ## Metadata
 ```yaml
@@ -78,6 +80,8 @@ product:
 internal_derive: []
 related:
 - sp5-framework/observability/metrics-as-accounting
+- sp5-framework/observability/collection-interval
+- vcf-operations/features/peak-20-second-metrics
 - vsphere/architecture/vm-vs-guest-os
 source:
   document: Knowledge base

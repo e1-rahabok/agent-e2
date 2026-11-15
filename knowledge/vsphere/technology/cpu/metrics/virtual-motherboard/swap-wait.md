@@ -3,6 +3,7 @@
 ## Meaning
 - Time the vCPU waits for a memory page to come in from ESXi swap.
 - Part of Wait. Contention for the guest: the guest experiences a freeze.
+- Relevance for operations: performance troubleshooting, as a symptom of ESXi swapping read with VM memory contention; Guest OS sizing includes it (section Mechanism).
 
 ## Mechanism
 - CPU is the fastest resource. It waits when data must come from memory, and the page is in ESXi swap.
@@ -47,7 +48,6 @@ source:
   document: Knowledge base
   path: CPU > VM > Wait Metrics
 corrections: []
-review_notes:
-- 'Section ''vs Memory Latency'': from Memory > VM > Latency.'
+review_notes: []
 status: draft
 ```

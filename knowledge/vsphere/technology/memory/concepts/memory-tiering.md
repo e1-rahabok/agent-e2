@@ -22,7 +22,7 @@
 
 ## Touching a page on NVMe
 - The CPU cannot read or write NVMe directly. A page on tier 1 is fetched back to DRAM when it becomes active; the vCPU that touched it waits for the fetch.
-- So a guest write to a cold page waits too: the page comes back from NVMe before the write lands. It shows as NVMe read bandwidth, not write bandwidth.
+- So a guest write to a cold page waits too: an access to a page on NVMe raises a page fault, and the page is fetched to DRAM before the access completes (vSphere 9.1 documentation, pp. 1848, 1872). The fetch shows as NVMe read bandwidth, which counts pages fetched from NVMe when they become active; NVMe write bandwidth counts cold pages moved down (p. 1848).
 - NVMe write bandwidth is demotion: cold pages moved down in the background, off the vCPU's path. It costs device endurance and device time: under heavy writes the device's garbage collection can raise read latency.
 - One fetch costs about 1,000x a DRAM access: about 100-200 µs against about 100 ns. Many fetches at a healthy latency still slow a VM; one fetch at a high latency on an idle device does not.
 - Compared with host swapping (including swap to host cache):
@@ -90,7 +90,7 @@
 - Cluster Performance: memory wait = memory latency + NVMe wait, per VM ([`vsphere/object-types/cluster/cluster-performance`](../../../object-types/cluster/cluster-performance.md)).
 - Cluster Risk: active memory 50/62.5/75/100% of DRAM; NVMe read latency 100/200/400/800 µs ([`vsphere/object-types/cluster/models/cluster-risk`](../../../object-types/cluster/models/cluster-risk.md)).
 
-## Performance thresholds (from the source)
+## Performance thresholds (documentation)
 - Active memory, as % of host DRAM:
   - 50% or lower: green, recommended;
   - 50-75%: test and monitor the workloads; some run fine;
@@ -144,7 +144,7 @@ memstats -r vmtier-stats -u mb -s name:memSize:active:tier1Target:tier1Consumed
 
 ## Misconceptions
 - "Tiered memory performs like DRAM" → infrequently accessed data sits on the NVMe tier.
-- "Any SSD works for memory tiering" → the source specifies a high-performance NVMe device with the write rate and endurance above.
+- "Any SSD works for memory tiering" → Performance Best Practices for vSphere 9.1 (p. 14) specifies a high-performance NVMe device with the write rate and endurance above.
 - "Active memory at 75% of DRAM is the limit" → 75% is the point where some workloads begin to suffer. The ideal is 50%.
 - "High consumed memory on a tiered host is a problem" → consumed may exceed DRAM by design; active memory against DRAM decides performance.
 - "Disable tiering for a VM and it gets DRAM" → only with a full memory reservation; otherwise it can be swapped.
@@ -183,24 +183,13 @@ related:
 - vsphere/technology/memory/configuration/host-level-swapping
 - vsphere/technology/storage/metrics/host/disk
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 documentation (PDF built 2026-11-02); Memory Tiering Performance, VMware Cloud Foundation 9.0 (performance study, July 2025)
-  path: 'Memory Hardware Considerations > Memory Tiering Hardware (p. 14); ESX Memory Considerations > Memory Tiering (p. 38); vSphere Resource Management > Memory Tiering over NVMe; vSphere Availability > Memory Tiering and HA Admission Control; performance study > Using and monitoring Memory Tiering; Storage > ESXi > Disk or Device > Memory Tiering'
-corrections:
-- 'Section ''Capacity management'': overcommit against DRAM only; consumed covers both tiers; whether %LAT_M includes NVMe page faults is unknown (2026-11-07).'
-- 'Sections ''Definition'' (tier numbering), ''Mechanism'' (swap comparison), ''Capacity management'', ''Interactions'' (DRAM on arrival, DRS), ''Monitoring counters'' (chart path, memstats, zero tier 1): 2026-11-07. Tier numbering corrected: DRAM = tier 0, NVMe = tier 1, as in the counters.'
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 documentation (PDF built 2026-11-02); Memory Tiering Performance, VMware Cloud Foundation 9.0 (performance study, July 2025)
+  path: 'Memory Hardware Considerations > Memory Tiering Hardware (p. 14); ESX Memory Considerations > Memory Tiering (p. 38); vSphere Resource Management > Memory Tiering over NVMe: Capacity Planning Considerations, Virtual Machine Profiles, Configuration Parameters, Assessing Customer Workloads, Considerations and Best Practices, NVMe Failure Scenarios, Troubleshooting, NVMe Device Health Monitoring (pp. 1844-1849, 1868-1873, 1957-1959); vSphere Availability > Memory Tiering and HA Admission Control (pp. 1969-1971); Monitoring and Performance > Hosts > Memory (MB), Memory Rate, Memory Bandwidth, Memory Latency; View Memory Tiering Device Information (pp. 2038, 2070, 2074-2076, 2145); performance study > Using and monitoring Memory Tiering (pp. 34-39, https://www.vmware.com/docs/memtier-vcf9-perf); Storage > ESXi > Disk or Device > Memory Tiering'
+corrections: []
 review_notes:
-- Checked against 9.1 (revision 20260624). Pages 14 and 38 read. Setup changes and CPU headroom bullet added (p. 38).
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Sections ''Performance thresholds'', ''Touching a page on NVMe'' (hot page window) and the vMotion and active memory lines: Memory Tiering Performance, VMware Cloud Foundation 9.0, performance study (July 2025), https://www.vmware.com/docs/memtier-vcf9-perf, section Using and monitoring Memory Tiering (pp. 34-39), read 2026-11-12.'
-- 'Section ''HA admission control'': vSphere 9.1 documentation (PDF in project/sources), vSphere Availability > Memory Tiering and HA Admission Control (pp. 1969-1971); also yellow-bricks.com, 2026-09-22.'
-- 'Section ''Mechanism'', the fixed 80%: yellow-bricks.com, Memory Tiering Considerations and frequently asked questions (2026-07-16).'
-- 'To check: Section ''Touching a page on NVMe'': a write to a tier-1 page waits for the fetch, and the 1,000x figure, are inferences from the architecture (NVMe is not byte-addressable); no Broadcom page states them.'
-- 'To check: Section ''Interactions'': whether the host memory states and host-wide reclamation count tier 1 as free memory; not stated in the 9.1 documentation (vSphere Resource Management > Memory Reclamation).'
-- 'To check: whether VM memory contention (%LAT_M) counts time waiting for tier-1 fetches; not stated in any source read (2026-11-12).'
-- 'Section ''Operations'': from Storage > ESXi. The 25% figure is field practice, not a vendor value.'
-- 'Sections ''Mechanism'' (from the 80% line on), ''Sizing (documentation)'', ''VMs kept in DRAM'', ''Interactions'' and the bandwidth, latency and SMART lines in ''Monitoring counters'': from the vSphere 9.1 documentation, vSphere Resource Management > Memory Tiering over NVMe, Capacity Planning Considerations, Virtual Machine Profiles, Configuration Parameters, Assessing Customer Workloads, Memory Tiering Considerations and Best Practices, NVMe Failure Scenarios, Troubleshooting > The Reservable Memory is Lower than Expected, NVMe Device Health Monitoring (pp. 1844-1849, 1868-1873, 1957-1959).'
-- 'Section ''Interactions'': the reason given for not combining overcommit with tiering paraphrases the documentation (potential performance impact).'
-- 'Section ''Monitoring counters'': from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Hosts > Memory (MB), Memory Rate (MBps), Memory Bandwidth (MBps), Memory Latency (ns); View Memory Tiering Device Information (pp. 2038, 2070, 2074-2076, 2145).'
-- 'To check: Section ''Monitoring counters'': tier in rate as the performance signal; an inference, not stated in the documentation.'
+- 'To check: Section ''Mechanism'': that the 80% tiering point is fixed and not a setting; vSphere 9.1 documentation (p. 1869) gives around 80% and names no setting; the fixed value comes from a blog (yellow-bricks.com, Memory Tiering Considerations and frequently asked questions, 2026-07-16).'
+- 'To check: Section ''Interactions'': whether the host memory states and host-wide reclamation count tier 1 as free memory; vSphere 9.1 documentation, Resource Management > Memory Reclamation (p. 1839), does not say.'
+- 'To check: Section ''Capacity management'': whether VM memory contention (%LAT_M) counts time waiting for tier-1 fetches; neither the vSphere 9.1 documentation nor Performance Best Practices for vSphere 9.1 says.'
+- 'To check: Section ''Monitoring counters'': that Tier in rate (p. 2071) and NVMe read bandwidth (p. 1848) count the same fetches; compare both on a tiered 9.1 host.'
 status: draft
 ```

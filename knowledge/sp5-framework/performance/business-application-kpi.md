@@ -31,6 +31,7 @@
 ## Misconceptions
 - "Business applications are the application team's job; infrastructure measures clusters" → the infrastructure layer must prove, per application, that it serves it. A cluster KPI cannot say that.
 - "The tier is as slow as its worst VM" → members work in parallel; the tier is the average. The worst rule applies across tiers, not inside one.
+- "Tier performance can leave out the spare member, since N+1 covers it" → the spare counts for availability only. For performance every member serves its share of requests and is averaged.
 - "Average the tiers into one application score" → tiers are in sequence; one slow tier makes the application slow. Take the worst tier.
 - "The database tier is healthy: the average of both nodes is green" → the passive node serves nothing and is idle; count the active node only.
 - "Transaction monitoring covers it" → it covers few applications and has no infrastructure context; the infrastructure KPI works for all of them.
@@ -64,11 +65,7 @@ related:
 source:
   document: Knowledge base
   path: 'Your Private Cloud > Purpose-Driven Architecture > Begin with The End in Mind: The Crown Jewel'
-corrections:
-- 'Section ''KPI structure'': across tiers the application takes the worst tier; active/passive counts the active node only.'
-- 'Section ''VCF Operations gaps'': VCF Operations cannot tell active from passive.'
-- 'Section ''Infrastructure team''s role'': not measuring business applications at the infrastructure layer is a Level 300 mistake.'
-review_notes:
-- 'To check: Section ''KPI structure'': the reasons (the passive node pulls the average up; the convoy) and the workaround (read the active node, exclude the passive by hand); not in the source.'
+corrections: []
+review_notes: []
 status: draft
 ```

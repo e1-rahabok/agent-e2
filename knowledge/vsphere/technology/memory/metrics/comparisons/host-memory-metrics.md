@@ -5,15 +5,17 @@
 - A cluster of 8 hosts can have more than 800 ESXi memory metrics.
 
 ## Groups
-| Group | Counters | Use |
+| Group | Counters | Relevance for operations |
 |---|---|---|
-| Performance | Latency (normalized average of VMs) | Use max VM Memory Contention instead. |
-| Past contention | Swap (5 counters), Compressed, Host cache | Capacity more than performance. |
-| Capacity warning | Balloon, State, Low Free Threshold | Leading indicators. |
-| Utilization | Consumed, Granted, Shared, Shared Common, Utilization | Consumed is the main capacity counter. |
-| Reservation | Total reservation (capacity), Reservation consumed, Reservation available | Reservations cannot be overcommitted. |
-| Other | Zero, Overhead, Heap (kernel heap, small and constant) | - |
+| Performance | Latency (normalized average of VMs) | None: an average. Use max VM Memory Contention instead. |
+| Past contention | Swap (5 counters), Compressed, Host cache | Capacity context more than performance. |
+| Capacity warning | Balloon, State, Low Free Threshold | Capacity and alerting: leading indicators. |
+| Utilization | Consumed, Granted, Shared, Shared Common, Utilization | Capacity: Utilization; Consumed only on hosts run without ballooning. |
+| Reservation | Total reservation (capacity), Reservation consumed, Reservation available | Capacity: admission of reservations, which cannot be overcommitted. |
+| Other | Zero, Overhead, Heap (kernel heap, small and constant) | None: kernel bookkeeping. |
 | Internal | Active (kernel memory allocation), Persistent Memory, VMFS pointer block cache | Not for operations. The cache capacity miss ratio may be of interest. |
+
+- The capacity counter choice, Utilization or Consumed: [`vsphere/technology/memory/metrics/host/utilization`](../host/utilization.md), section Reason.
 
 - Besides Latency, all memory metrics are capacity metrics.
 ![Virtual view (sum of VMs) vs physical view (kernel + VM pages) of an ESXi host](../../images/esxi-memory-virtual-view-vs-physical-view.png)
@@ -47,8 +49,8 @@
 
 - Reason: Consumed, Granted and VMkernel consumed count pages in use. A reservation change by itself does not change the pages the host holds, so a VM reservation is in none of them.
 - A VM reservation therefore shows only in the reservation counters. A host can hold large reservations and show a low Consumed.
-- Operational use: Reservation available is the figure that decides whether a new reservation or power-on fits (admission control). Total reservation is a constant of the host: nothing to alert or trend on. Reservation consumed is the sum of the running VMs' reservations: a planning figure, not a measure of use.
-- The kernel reservation (System Resource Reservation, about 4.2 GB on the lab host) is in none of these seven counters; it is host/system Resource memory allocation minimum ([overhead](../../../../architecture/overhead.md), section Memory metrics).
+- Operational use of the three reservation counters: [`vsphere/technology/memory/metrics/host/reservation`](../host/reservation.md), section Counters.
+- The kernel reservation (System Resource Reservation, about 4.2 GB on the lab host) is in none of these seven counters; it is host/system Resource memory allocation minimum ([`vsphere/architecture/overhead`](../../../../architecture/overhead.md), section Memory metrics).
 
 ## Misconceptions
 - "Use host Latency for performance" → it is an average. Use the worst VM.
@@ -102,6 +104,6 @@ source:
   path: Memory > ESXi > Overview; Consumption Metrics > Analysis
 corrections: []
 review_notes:
-- 'To check: VMFS pointer block cache: the 9.1 equivalent of the vSphere 8.0 documentation linked by (https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-storage/GUID-FD9634FD-65E4-4EC8-BE9A-8BA0F68DD387.html).'
+- 'To check: Section ''Groups'': VMFS pointer block cache: the 9.1 equivalent of the vSphere 8.0 documentation linked by (https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-storage/GUID-FD9634FD-65E4-4EC8-BE9A-8BA0F68DD387.html).'
 status: draft
 ```

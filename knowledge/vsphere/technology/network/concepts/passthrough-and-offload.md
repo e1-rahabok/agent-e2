@@ -16,7 +16,7 @@
   - NSX network virtualization.
 - Typical VMs and workloads do not require DirectPath I/O.
 - Candidates: workloads that are very networking intensive (especially high packet rates) and do not use the core virtualization features in the list above.
-- Source for supported configurations: DirectPath I/O section of vSphere Networking. Not read.
+- Supported configurations: the DirectPath I/O section of vSphere Networking.
 
 ## SR-IOV
 - Single Root I/O Virtualization: a mode of direct guest access to hardware devices.
@@ -25,7 +25,7 @@
 - Beneficial for workloads with very high packet rates or very low latency requirements.
 - Not compatible with the same list as DirectPath I/O: vMotion, physical NIC sharing, snapshots, suspend and resume, Fault Tolerance, NetIOC, memory overcommit, VMsafe, NSX network virtualization.
 - Difference from DirectPath I/O: SR-IOV allows a single physical device to be shared among multiple guests.
-- Supported configurations: see the SR-IOV section of vSphere Networking. Not read.
+- Supported configurations: the section What is Single Root I/O Virtualization (SR-IOV) of vSphere Networking.
 
 ## Data processing units (DPUs, SmartNICs)
 - Improve networking performance and reduce CPU load.
@@ -39,8 +39,14 @@
 - Both MUX and UPTv2 provide accelerated networking services for VLAN and overlay networking, checksum offload, TCP Segmentation Offload (TSO), and Receive Side Scaling (RSS).
 - Configuring a data path mode requires NSX Manager. Some configuration options do not require an NSX license.
 
+## Enhanced Data Path (EDP)
+- EDP is a networking stack mode of ESX for higher network performance. It requires the full VCF package.
+- EDP is active by default on new installations of VCF 9.1; an upgrade from an earlier version keeps its earlier setting.
+- NIC support: the Broadcom Compatibility Guide, IO Devices, ESXi 9.1, feature EDP Dedicated or EDP Standard.
+
 ## Misconceptions
-- "DirectPath I/O is a general performance upgrade" → the source says typical VMs do not require it. It removes vMotion, snapshots, FT and NetIOC.
+- "DirectPath I/O is a general performance upgrade" → Performance Best Practices for vSphere 9.1 says typical VMs do not require it. It removes vMotion, snapshots, FT and NetIOC.
+- "An upgrade to VCF 9.1 turns on Enhanced Data Path" → EDP is on by default only on new installations; an upgrade keeps its earlier setting.
 - "SR-IOV gives the same limits as DirectPath I/O" → the list of incompatible features is the same, but SR-IOV allows one device to be shared among guests.
 - "UPTv2 works without a memory reservation" → it requires full memory reservation and pinning.
 
@@ -66,11 +72,8 @@ related:
 - vsphere/technology/network/configuration/splitrx-mode
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Networking Considerations > Data Processing Units (DPUs, or SmartNICs) (p. 48); DirectPath I/O (p. 48); Single Root I/O Virtualization (SR-IOV) (p. 49)
+  path: ESX Networking Considerations > Enhanced Data Path (EDP) (p. 46); Data Processing Units (DPUs, or SmartNICs) (p. 48); DirectPath I/O (p. 48); Single Root I/O Virtualization (SR-IOV) (p. 49)
 corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 48-49 unchanged. Page references updated.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: Enhanced Data Path (9.1 p. 46), and the DPU configuration references named by the source (NSX Manager; ''What is VMware vSphere Distributed Services Engine'' in ESX Installation and Setup); not read.'
+review_notes: []
 status: draft
 ```

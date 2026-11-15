@@ -53,7 +53,7 @@
   - Design redundancy, so an unplanned failure within the design allowance raises a non-critical alert. With N+1, one host down is not a red alert.
   - Treat soft errors as insight: they are non-critical events that warn early.
 - Performance:
-  - Do not reduce reactive work with lower thresholds: that creates noise. Track early-warning metrics as insight.
+  - Do not reduce reactive work with lower thresholds: that creates alert storms ([`sp5-framework/outputs/alerts-and-insights`](alerts-and-insights.md), section Causes of alert storms). Track early-warning metrics as insight.
   - Consumption alerts: red only. The orange level belongs to the daily dashboard.
   - Contention alerts: suppress at low utilization, where the application likely feels no impact. CPU usage is the proxy for application activity.
   - Sustained high utilization, above all when trending up: daily check.
@@ -128,12 +128,11 @@
 - A complete yet short recommendation, or a sound remediation, is hard to build: the root cause usually sits far from the triggered alert, in many combinations.
 - IT systems have poor observability. A slow browser on a fast, lightly used laptop is hard to troubleshoot; a private cloud is harder. Products expose few meaningful metrics, often without an API, and some metrics are unreliable.
 - A good recommendation is clear, lists its assumptions and gives the reason.
-- Root cause analysis today is mostly elimination and requires human knowledge of the architecture. Example: troubleshooting VKS requires knowledge of Kubernetes, vSphere and the VKS implementation.
+- Root cause analysis today is mostly elimination and requires human knowledge of the architecture. Example: troubleshooting VKS (vSphere Kubernetes Service) requires knowledge of Kubernetes, vSphere and the VKS implementation.
 - Elimination is the method because a lower layer does not carry the identity of the upper layer: ESXi SCSI commands cannot be traced to a VM.
 
 ## Misconceptions
 - "Alert on everything so nothing is missed" → an alert nobody must act on today is noise. Use the daily dashboard.
-- "Lower thresholds catch problems earlier" → they create noise. Early warning comes from insight metrics.
 - "Orange consumption alerts give early warning" → consumption alerts are red only; orange belongs to the daily dashboard.
 - "High CPU Ready with idle CPU is urgent" → suppress contention alerts at low utilization; the application may feel nothing.
 - "One host down in an N+1 cluster is red" → it is within the design allowance; non-critical.
@@ -191,8 +190,6 @@ source:
   document: Knowledge base
   path: 'Proactive Operations > Alert > Alerts Planning (Target Persona, Class of Service, What to Alert, What not to Alert, Design: Alert Definition, Threshold Design, Wait Cycle, Recommendation | Remediation); Application Team; VM Alerts; CPU Alerts > Contention Alerts'
 corrections: []
-review_notes:
-- 'To check: Section ''Recommendation vs remediation'': VKS (vSphere Kubernetes Service) as the current name for the source''s Tanzu and K8.'
-- 'To check: Section ''Threshold design'': the wait-time link to the VCF Operations setting (not in the source).'
+review_notes: []
 status: draft
 ```

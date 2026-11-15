@@ -3,6 +3,7 @@
 ## Meaning
 - VM pages that have ESXi pages mapped to them. The consumer (VM) view.
 - Excludes ballooned, swapped, compressed and host-cache pages.
+- Relevance for operations: none for capacity or performance: the VM view of mapped pages, zero and shared pages included, blind to limits and savings. Its use is to explain Consumed: sharing savings = Granted - Consumed.
 
 ## Formula
 ```text

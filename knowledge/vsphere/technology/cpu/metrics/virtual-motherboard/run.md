@@ -3,7 +3,8 @@
 ## Meaning
 - Static-frequency CPU utilization, from the VM vantage point.
 - The ESXi equivalent is called Utilization. See [`vsphere/technology/cpu/metrics/host/utilization`](../host/utilization.md).
-- Source: ESXi provides Run in ms.
+- Source: ESXi provides Run in ms. vSphere Web Services API 9.1 defines `cpu.run` as time the VM is scheduled to run.
+- Relevance for operations: capacity and Guest OS sizing, because frequency and Hyper-Threading do not move it (section Outside Run's accounting). Remove Overlap first (Net Run).
 
 ## Reservation
 - CPU reservation is on demand. It is not included in Run.
@@ -80,11 +81,9 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/overlap
 - vsphere/technology/cpu/troubleshooting/run-vs-used-gap
 source:
-  document: Knowledge base
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > State of a VM vCPU; 2 Metrics Not 1; CPU Efficiency; CPU > VM > Consumption Metrics > Run | Net Run
+  document: Knowledge base; vSphere Web Services API 9.1 reference, CPU Counters
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > State of a VM vCPU; 2 Metrics Not 1; CPU Efficiency; CPU > VM > Consumption Metrics > Run | Net Run; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html, run
 corrections: []
-review_notes:
-- Sections Mechanism, Run vs Guest OS, Run vs Used, and the last 2 misconceptions: from CPU > Architecture.
-- 'Sections Outside Run''s accounting, Instance, Use: from CPU > VM.'
+review_notes: []
 status: draft
 ```

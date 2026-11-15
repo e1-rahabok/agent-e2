@@ -4,6 +4,11 @@
 - At VM level, performance is essentially the only use case.
 - Capacity: use Guest OS metrics. VM capacity metrics feed host capacity and the VM's memory footprint (for example, for migration).
 - Some metrics exist for kernel memory management, not for operations.
+- Relevance for operations, by group:
+  - Latency: performance; the only wait counter, the memory input of the VM KPI as VCF Operations VM Memory Contention.
+  - Swap, Compression, Host cache, Balloon: performance troubleshooting and capacity context; past reclamation, not a wait.
+  - Consumed: capacity, the VM's footprint on ESXi. Granted, Shared, Zero pages: none; they explain Consumed.
+  - Entitlement, Active, Active write, Overhead: kernel memory management; none for operations, except Active on a memory-tiered host (the capacity constraint against DRAM) and Overhead for the admission of large reservations.
 
 ## Performance checks, in order
 1. Page-fault latency (Latency): the only counter that tracks actual performance.
@@ -38,9 +43,9 @@
 | Shared | VM | Pages pointing to the same ESXi page. Many are zero pages. |
 | Compressed | VM and ESXi | Output of compression. Mutually exclusive with Swapped. |
 | Swapped | VM and ESXi | Pages in the swap file. |
-| Ballooned | VM | Reclaimed by the balloon driver and not requested back. The bigger it is, the higher the chance a page is needed later. |
+| Ballooned | VM | Held by the balloon driver while the Balloon Target holds. The bigger it is, the higher the chance the guest needs the data later. |
 | Free | VM | Never touched since power-on. Drops toward 0 as the guest pages in and out. |
-| Overhead | ESXi | Virtualization data structures. Negligible. |
+| Overhead | ESXi | Virtualization data structures. Small in use; reserved at power-on. |
 | Entitlement | ESXi | Set by the ESXi scheduler. A kernel value. |
 | Consumed | ESXi | Granted - sharing savings, capped by limit. |
 
@@ -50,8 +55,8 @@
 - Test on a 9.1 lab VM, vCenter Advanced Performance, 20-second samples: the memory reservation was set to a value above the VM's Consumed and Granted, and 16 minutes later removed. Both changes were Reconfigure virtual machine tasks that completed in under a second.
 - None of the VM counters moved at either change: Consumed, Granted, Overhead consumed, Ballooned memory and Entitlement kept their level and their ordinary sample-to-sample noise. Ballooned memory stayed 0.
 - The reservation was above Consumed and Granted: a reservation does not make ESXi back the pages. Consumed rises only as the guest touches memory.
-- Entitlement did not rise to the reservation ([VM Memory Entitlement](../virtual-motherboard/entitlement.md)).
-- The reservation shows in the host counters Reservation consumed and Reservation available, which moved by the amount of the change ([ESXi memory metrics compared](host-memory-metrics.md), section VM reservation across counters).
+- Entitlement did not rise to the reservation ([`vsphere/technology/memory/metrics/virtual-motherboard/entitlement`](../virtual-motherboard/entitlement.md)).
+- The reservation shows in the host counters Reservation consumed and Reservation available, which moved by the amount of the change ([`vsphere/technology/memory/metrics/comparisons/host-memory-metrics`](host-memory-metrics.md), section VM reservation across counters).
 - To see a reservation on a VM, read its configuration (Edit Settings, or the task and event log). None of the memory counters on the lab VM chart carried it. The vSphere Client records each change as a task event that names the old and the new value: `config.memoryAllocation.reservation: <old> -> <new>` (MB).
 
 ## Demand

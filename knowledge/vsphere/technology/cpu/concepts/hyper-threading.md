@@ -310,9 +310,7 @@ source:
 corrections:
 - 'Section ''Hyper-Threading accounting: VM CPU Used and ESXi CPU Used'': differs from two lines of the vSphere 9.1 esxtop CPU panel text (PCPU USED(%), %RUN); both entries are in the corrections of vsphere/tools/esxtop/cpu.'
 review_notes:
-- Checked against 9.1 (revision 20260624). Page 28 unchanged. Page references updated.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: Section ''Time base'': what the sibling thread shows when a thread running alone reaches 20,000 ms Used; not tested.'
+- 'To check: Section ''Time base'': what the sibling thread shows (Idle, Used) when a thread running alone reaches 20,000 ms Used; a lab test on a 9.1 host, esxtop CPU panel per PCPU.'
 - 'To redraw: Section ''Time taken vs distance travelled'': the image shows ESXi Thread Usage 625 MHz and ESXi Core Usage 1,250 MHz; ESXi CPU Used gives each thread of a busy pair half the core (vSphere 9.1 documentation, esxtop CPU panel, PCPU USED(%), p. 2153), so the ESXi rows read 500 MHz and 1,000 MHz. Redraw the ESXi rows, or label them as the charge in VM CPU Used.'
 status: draft
 ```

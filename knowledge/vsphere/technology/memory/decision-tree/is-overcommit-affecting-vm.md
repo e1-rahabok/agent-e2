@@ -59,9 +59,6 @@ source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX Memory Considerations > Memory Overcommit Techniques > steps a-d (p. 34)
 corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Page 34 unchanged. Menu paths unchanged in 9.1.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Menu paths are unchanged in the 9.1 document (p. 34).
+review_notes: []
 status: draft
 ```

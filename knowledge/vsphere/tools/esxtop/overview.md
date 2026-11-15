@@ -69,10 +69,9 @@ images:
     topic: 'esxtop panels'
     image_type: diagram
 source:
-  document: Knowledge base
-  path: Provider Objects > esxtop > Overview
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: Provider Objects > esxtop > Overview; vSphere Monitoring and Performance > Performance Monitoring Utilities (resxtop and esxtop) > Using the resxtop Utility, Interactive Mode, Batch Mode, Replay Mode (pp. 2148-2166)
 corrections: []
-review_notes:
-- 'Section ''Collection modes'': from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Performance Monitoring Utilities: resxtop and esxtop > Using the resxtop Utility, Interactive Mode, Batch Mode, Replay Mode (pp. 2148-2166).'
+review_notes: []
 status: draft
 ```

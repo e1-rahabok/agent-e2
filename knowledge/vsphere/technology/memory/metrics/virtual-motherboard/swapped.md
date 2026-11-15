@@ -3,11 +3,12 @@
 ## Meaning
 - Memory of the VM swapped out at host level.
 - The ESXi equivalent is called Swap Used. Different names for different vantage points.
+- Relevance for operations: performance troubleshooting and capacity context: pages the VM waits for when it touches them. The wait shows in VM Memory Latency.
 
 ## Behaviour
-- Pages that do not compress below 2 KB are swapped. Compressed and Swapped are mutually exclusive per page. Both grow while ESXi reclaims; afterwards they can move apart: when the guest reads swapped pages back while ESXi compresses others, for example under a limit, Swapped falls as Compressed rises ([`vsphere/technology/memory/concepts/swap-and-compression`](../../concepts/swap-and-compression.md), section Example: limit, swap and compress in opposite directions).
+- Pages that do not compress to 2 KB or smaller are swapped. Compressed and Swapped are mutually exclusive per page. Both grow while ESXi reclaims; afterwards they can move apart: when the guest reads swapped pages back while ESXi compresses others, for example under a limit, Swapped falls as Compressed rises ([`vsphere/technology/memory/concepts/swap-and-compression`](../../concepts/swap-and-compression.md), section Example: limit, swap and compress in opposite directions).
 - ESXi swaps pages at random: it cannot see guest free memory.
-- Swapped is not Swap in - Swap out: both run in parallel on different pages.
+- VM Memory Swapped is not Swap Out minus Swap In: Swapped is what sits in the swap file now, while Swap Out and Swap In count transfers since the counters started on this host, so a vMotion arrival or a counter reset breaks the difference.
 - vMotion can make Swapped larger than swap out minus swap in: a VM that arrives with memory already swapped brings those pages with it.
 - Swapped pages stay out until the guest requests them.
 - A limit causes ballooning first, then compression and swapping, for what the balloon cannot take. See [`vsphere/technology/memory/concepts/memory-limit`](../../concepts/memory-limit.md).
@@ -21,7 +22,6 @@
 
 ## Misconceptions
 - "Swapped > 0, so the host cannot satisfy the VM's memory" → not always. The pages taken can be guest cache. Check Latency.
-- See [`vsphere/technology/memory/concepts/swap-and-compression`](../../concepts/swap-and-compression.md).
 
 ## Metadata
 ```yaml
@@ -38,7 +38,7 @@ object:
 - VirtualMachine
 layer:
 - virtual-motherboard
-metric_class: contention
+metric_class: consumption
 internal_derive:
 - vsphere/technology/memory/concepts/host-memory-states
 same_name: []
@@ -52,12 +52,10 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-out-rate
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-target
 source:
-  document: Knowledge base
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > VM > Swap + Compress
-corrections: []
-review_notes:
-- 'The vSphere 9.1 documentation (vSphere Monitoring and Performance > Virtual Machines > Memory (MB), p. 2105) defines Swapped = swapout - swapin. The documentation is wrong here: Swapped is the VM''s current swapped memory. Keep until the documentation is fixed.'
-- 'To check: metric_class: set to contention.'
-- 'Sections Behaviour: from Memory > VM.'
+  document: Knowledge base; vSphere 9.1 documentation (PDF built 2026-11-02)
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > VM > Swap + Compress; Monitoring and Performance, Virtual Machines, Memory (MB), Swapped (p. 2105); Memory Compression (p. 1841)
+corrections:
+- 'Section ''Behaviour'': vSphere 9.1 documentation, Monitoring and Performance > Virtual Machines > Memory (MB) (p. 2105), defines Swapped = swapout - swapin. Swapped is the VM''s current swapped memory, not that difference; kept until the documentation is fixed.'
+review_notes: []
 status: draft
 ```

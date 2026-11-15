@@ -3,6 +3,7 @@
 ## Meaning
 - Includes idle time.
 - Most VMs do not run at 100%, so CPU Wait is naturally high.
+- Relevance for operations: none as a total, because it mixes idle time with waits. Read its sub-metrics: Swap Wait and Other Wait for performance, Idle for sizing (section Sub-metrics).
 
 ## The name Wait
 - From the kernel scheduler's vantage point, an idle vCPU is waiting to be used.
@@ -65,9 +66,6 @@ source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > State of a VM vCPU; CPU > VM > Wait Metrics
 corrections: []
-review_notes:
-- 'To check: metric_class: set to context; groups Wait separately from contention and consumption.'
-- Sections Mechanism and the last misconception: from CPU > Architecture.
-- 'Section Sub-metrics: from CPU > VM. The IO wait and memory wait cases in vsphere/technology/cpu/concepts/vcpu-states map to Other Wait and Swap Wait.'
+review_notes: []
 status: draft
 ```

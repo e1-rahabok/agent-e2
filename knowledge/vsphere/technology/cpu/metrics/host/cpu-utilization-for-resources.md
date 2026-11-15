@@ -3,6 +3,7 @@
 ## Meaning
 - 17 legacy metrics in the System group, named "CPU Utilization for Resources" in VCF Operations and rescpu.* in vSphere Client.
 - "For resources" means from the resource scheduler's allocation buckets. A resource is any node in the allocation hierarchy that can have shares, reservations or limits, not only a VM.
+- Relevance for operations: none. Each metric duplicates a counter that serves better (table Replacements); do not chart, alert or report on them.
 
 ## Replacements
 | Legacy metric (VCF Operations) | vSphere Client | Use instead |
@@ -19,7 +20,7 @@
 - The 15-minute version has no use case: roll up the 5-minute values.
 
 ## Misconceptions
-- "CPU Active is a different signal from Demand" → they are the same.
+- "CPU Active is a different signal from Demand" → they are the same. Read ESXi CPU Demand ([`vsphere/technology/cpu/metrics/host/demand`](demand.md)).
 
 ## Metadata
 ```yaml

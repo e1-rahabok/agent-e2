@@ -92,9 +92,7 @@ related:
 source:
   document: Knowledge base
   path: 'Proactive Operations > Alert > CPU Alerts (Infrastructure Contention, Infrastructure Consumption); Memory Alerts (Infrastructure Contention, Infrastructure Consumption); Network Alerts > Contention Alerts'
-corrections:
-- 'Section ''ESXi memory contention'': the source gives the per-VM values without a population; written as the CPU alert, a share of the host''s VMs (above 25%), because the values sit below the VM alert''s for the same reason (Q145).'
-review_notes:
-- 'Section ''ESXi CPU contention'': no wait cycle stated; the threshold design rule gives 5 minutes for contention (sp5-framework/outputs/alert-design).'
+corrections: []
+review_notes: []
 status: draft
 ```

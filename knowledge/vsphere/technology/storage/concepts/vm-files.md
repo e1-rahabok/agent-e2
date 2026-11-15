@@ -23,7 +23,7 @@
 
 - A snapshot protects VMDK, memory and configuration.
 - Snapshots do not apply to a physical-mode RDM: its snapshots happen in the storage system, transparent to ESXi. A virtual-mode RDM supports VM snapshots (vSphere 9.1 documentation, Raw Device Mapping).
-- A VM can have up to 64 disks, across datastores.
+- A VM can have up to 256 SCSI virtual disks on a recent virtual hardware version (4 SCSI controllers, 64 disks per Paravirtual SCSI controller), across datastores (vSphere 9.1 documentation, virtual machine hardware features, pp. 956-958).
 - Storing .vswp on local host storage saves vSAN space. Trade-off: vMotion must copy the swap file.
 
 ## Single thin VMDK on vSAN
@@ -94,10 +94,10 @@ images:
     topic: 'VM disk space'
     image_type: diagram
 source:
-  document: Knowledge base
-  path: Storage > VM > Capacity Metrics > VM Files; Single VMDK; All VM Files; vSphere Client UI
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: Storage > VM > Capacity Metrics > VM Files; Single VMDK; All VM Files; vSphere Client UI; vSphere 9.1 documentation, virtual machine hardware features (pp. 956-958), Raw Device Mapping
 corrections: []
 review_notes:
-- 'To check: the VMX swap file size on a running VM (not observed).'
+- 'To check: Section ''File categories'': the VMX swap file size; a live datastore browser view of a running VM.'
 status: draft
 ```

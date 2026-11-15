@@ -7,7 +7,7 @@
 | Single-Core Turbo | Marketing figure. Single-thread benchmarks use it. | AMD EPYC 9000 series: 7%-64% above base. Intel Xeon Platinum 8593Q: 77% above base. |
 | All-Core Turbo | The speed that matters for a loaded host. | AMD publishes All-Core Boost. Intel no longer does. AMD EPYC 9000 series: 1%-48% above base. |
 
-- Intel does not expose All-Core Turbo via API. So it cannot be used in throughput figures such as vSphere's Total Capacity (GHz).
+- Intel does not expose All-Core Turbo via API. Total Capacity (GHz) counts base frequency only: it is the capacity at base clock (Total Base Capacity), not a throughput figure ([`vsphere/technology/cpu/concepts/cpu-measurement-levels`](cpu-measurement-levels.md), section vSphere's number).
 - Intel Turbo Boost raises clock speed dynamically, with no installation or configuration.
 - Intel Turbo Boost inputs: the heat the system tolerates and the number of active cores. It boosts to the maximum safe level.
 
@@ -40,7 +40,7 @@
 | Turbo / base ratio | 1.0x | about 1.7x-2.2x |
 
 ## Turbo
-- Turbo is large enough that every throughput figure (Usage, Demand, vSphere's Total Capacity in GHz) must account for it.
+- Turbo is large enough that every throughput figure (Usage, Demand) must account for it. Total Capacity (GHz) leaves Turbo out, because it counts base frequency.
 - Within a core: the frequency cannot be predicted. It depends on the instructions and on what other cores do.
 - Within a socket: which cores run faster cannot be predicted. A 20-core socket runs at more than one frequency in practice.
 - Example, Intel Xeon Platinum 8260 (base 2.4 GHz):
@@ -52,7 +52,7 @@
   - at 3.1 GHz all-core Turbo: the full 165 W budget.
   - heavy instructions such as AVX-512: 3.1 GHz cannot be held within 165 W. The CPU lowers the frequency to stay under the limit.
 - Example, Intel Xeon 6520P (base 2.4 GHz): 3.4 GHz, 42% above base.
-- Turbo Boost is on by default and switched in the BIOS. ESXi has no on-off switch for it: on Intel processors, Power.MaxFreqPct below 100% keeps the cores at or below base clock, which turns Turbo off. The power management policy decides how much Turbo is used ([`power-states`](power-states.md)).
+- Turbo Boost is on by default and switched in the BIOS. ESXi has no on-off switch for it: on Intel processors, Power.MaxFreqPct below 100% keeps the cores at or below base clock, which turns Turbo off. The power management policy decides how much Turbo is used ([`vsphere/technology/cpu/concepts/power-states`](power-states.md)).
 - Turbo can still engage with the BIOS set to static high performance. Field observation: esxtop %A/MPERF showed all cores at 129%.
 
 ## All-Core Turbo
@@ -66,7 +66,8 @@
 ## Likely vCPU speed on a busy cluster
 - Scenario: many cores busy, most running 2 threads, Balanced policy, OS Controlled BIOS.
 - Starting point: All-Core Turbo, not base and not Single-Core Turbo.
-- Hyper-Threading delivers 1.25x per core in total. Each vCPU on a shared core realistically gets 80% (1 / 1.25) of All-Core Turbo.
+- Hyper-Threading delivers 1.25x per core in total: a vCPU is charged 62.5% of the core while its sibling thread runs, and the full core while the sibling is halted ([`vsphere/technology/cpu/concepts/hyper-threading`](hyper-threading.md), section Hyper-Threading accounting: VM CPU Used and ESXi CPU Used).
+- On a busy cluster, where siblings run part of the time, a vCPU realistically gets about 80% of All-Core Turbo.
 - Formula: likely vCPU speed = All-Core Turbo × 0.8.
 - Example: base 2.0 GHz, All-Core Turbo 3.0 GHz, Single-Core Turbo 4.0 GHz → about 2.4 GHz, as reported by VM CPU Usage (MHz).
 - Base 2.0 GHz understates it. 3.0 GHz ignores Hyper-Threading: VM CPU Usage is Hyper-Threading aware. 4.0 GHz does not apply while most cores are busy.
@@ -80,7 +81,7 @@
 ![Core Utilization vs actual usage with 20% All-Core Turbo](../images/esxi-cpu-core-utilization-vs-actual-usage-with-turbo.png)
 - Example with All-Core Turbo at 20% above base.
 - The table shows actual values.
-- Older releases capped the reported Usage (%) at 100%, hiding actual usage above it. Current vCenter and VCF Operations no longer cap it (Broadcom KB 417702, KB 431027).
+- Older releases capped the reported Usage (%) at 100%, hiding actual usage above it. vCenter no longer caps it from vSphere 8.0 Update 3 (Broadcom KB 417702), VCF Operations from Aria Operations 8.18 ([`vsphere/technology/cpu/metrics/host/usage`](../metrics/host/usage.md), section Cap).
 
 | Core Utilization | Actual usage | Analysis |
 |---|---|---|
@@ -130,7 +131,7 @@
 ## Misconceptions
 - "Base frequency × cores is the most work the host can do" → the CPU runs above base most of the time. Base understates throughput.
 - "Turbo raises host capacity" → Turbo raises throughput. Capacity is counted in threads and does not change with frequency.
-- "Turbo can be turned off in ESXi" → no direct setting. Use the power policy or BIOS.
+- "Turbo can be turned off in ESXi" → ESXi has no on-off switch. On Intel processors the Custom policy's Power.MaxFreqPct below 100% keeps cores at or below base clock; otherwise turn Turbo off in the BIOS.
 - "BIOS static high performance means no Turbo" → Turbo was observed at 129% (%A/MPERF).
 - "All cores run at the same frequency" → frequency is per core and changes with load.
 - "A busy vCPU runs at base speed" → it runs near All-Core Turbo; with Hyper-Threading, about 80% of it.
@@ -205,13 +206,12 @@ images:
   - VM CPU Usage
   image_type: diagram
 source:
-  document: Knowledge base
-  path: CPU > Architecture > CPU Frequency; Total Capacity; Turbo; All Cores Turbo; Impacts on ESXi; CPU > Architecture > Impacts on VM (from former vsphere/technology/cpu/concepts/cpu-frequency)
+  document: Knowledge base; Host Power Management in VMware vSphere 7.0 (2021, no newer standalone version); Broadcom KB 417702
+  path: CPU > Architecture > CPU Frequency; Total Capacity; Turbo; All Cores Turbo; Impacts on ESXi; CPU > Architecture > Impacts on VM (from former vsphere/technology/cpu/concepts/cpu-frequency); Host Power Management in VMware vSphere 7.0, pp. 12 and 24 (https://www.vmware.com/docs/hpm-vsphere7-perf); KB 417702, Cause
 corrections: []
 review_notes:
-- 'Section ''Turbo'': whitepaper ''Host Power Management in VMware vSphere 7.0'' (2021), pp. 12 and 24: https://www.vmware.com/docs/hpm-vsphere7-perf. A search on 2026-11-02 found no newer standalone version; vSphere 8 and 9 cover host power management inside Performance Best Practices.'
-- 'To check: Section ''Turbo'': %A/MPERF as the esxtop ratio of actual to nominal frequency (APERF/MPERF registers).'
-- 'To check: Section ''Three speeds'': figures for AMD EPYC 9000 series and Intel Xeon Platinum 8593Q against vendor pages.'
-- 'To check: Section ''Likely vCPU speed on a busy cluster'': relationship between the 62.5% charge per thread when both threads run (`vsphere/technology/cpu/metrics/virtual-motherboard/used` and `usage`) and the 80% tenant-facing likely speed; not yet written.'
+- 'To check: Section ''Turbo'': %A/MPERF as the esxtop ratio of actual to nominal frequency (APERF/MPERF registers); not in the vSphere 9.1 documentation esxtop CPU panel (pp. 2153-2155).'
+- 'To check: Section ''Three speeds'': figures for AMD EPYC 9000 series and Intel Xeon Platinum 8593Q; AMD and Intel product pages (amd.com, intel.com).'
+- 'To check: Section ''Likely vCPU speed on a busy cluster'': the 0.8 factor. A vCPU whose sibling runs gets 0.625 of the core and one whose sibling is halted 1.0 (Broadcom KB 335065), so 0.8 holds when the sibling runs about half the time; needs the field basis for a busy cluster.'
 status: draft
 ```

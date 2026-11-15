@@ -7,7 +7,7 @@ Any metric can be viewed from three perspectives. Full understanding requires al
 - Variants exist (GPU, APU). Components become distributed and virtual.
 - Metric behaviour changes when a component becomes distributed or virtual.
 - Best suited to infrastructure metrics.
-- Technology values used in this knowledge base: CPU, memory, storage, network, system.
+- Technology values used in this knowledge base: CPU, GPU, memory, storage, network, system.
 - System: the box as a whole, such as the OS, the BIOS, or a whole device. Example: overall chassis availability (%) of a physical storage array.
 
 ## 2. Pillars of operations
@@ -15,7 +15,7 @@ Any metric can be viewed from three perspectives. Full understanding requires al
 
 | Pillar | Example metrics it creates |
 |---|---|
-| Availability | Not given in the source. |
+| Availability | Actual Availability (%), Operational Availability (%) ([`sp5-framework/concepts/sla-metrics`](../concepts/sla-metrics.md)) |
 | Performance | KPI (%) |
 | Security | PCI-DSS Compliance Score (%) |
 | Capacity | Time Remaining, Recommended Size |
@@ -34,7 +34,7 @@ Any metric can be viewed from three perspectives. Full understanding requires al
 - Derived metrics map best to the product/object perspective, then the pillar perspective.
 
 ## Analysis order per resource
-- Look at contention metrics first, then consumption metrics.
+- Look at contention metrics first, then consumption metrics: contention is what the consumer feels, and consumption explains it or rules out the provider ([`sp5-framework/observability/triple-see-method`](triple-see-method.md)).
 
 ## Metadata
 ```yaml
@@ -59,13 +59,12 @@ product:
 internal_derive: []
 related:
 - sp5-framework/observability/resource-nature
+- sp5-framework/observability/triple-see-method
+- sp5-framework/concepts/sla-metrics
 source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Documentation Challenge
-corrections:
-- '2026-11-02: Contention first, then consumption, is an analysis rule (not only document layout).'
-- '2026-11-02: Pillars are availability, performance, security, capacity, value (section: 2. Pillars of operations). Uploaded document lists capacity, cost, performance, compliance.'
-- '2026-11-02: Technology includes system: OS, BIOS, or whole device (section: 1. Technology).'
+corrections: []
 review_notes: []
 status: draft
 ```

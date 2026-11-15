@@ -3,6 +3,7 @@
 ## Meaning
 - Time a vCPU is paused because it is too far ahead of a sibling vCPU of the same VM.
 - Contention metric. Unit: ms (summation over the sample period).
+- Relevance for operations: performance: part of the VM KPI (peak among vCPUs) and of VM CPU Contention; sizing: a sign that the VM is wider than the host or NUMA node serves well.
 
 ## Mechanism
 - The kernel can run some vCPUs of a VM when it does not have physical threads for all of them.
@@ -34,7 +35,7 @@
 ![Distribution of the highest Co-stop per VM across 2,429 VMs](../../images/vm-cpu-costop-highest-value-distribution-across-vms.png)
 
 ## Misconceptions
-- "Co-stop is caused by ESXi, like Ready" → Co-stop is caused by the VM's own vCPUs drifting apart. Reduce VM size.
+- "Co-stop is caused by ESXi, like Ready" → Co-stop is the VM's own vCPUs drifting apart: it rises with the vCPU count and the NUMA span, and a sibling's Ready often starts it. Reduce VM size, and read the siblings' Ready.
 - "Co-stopped vCPUs had no physical thread" → threads can be free. The vCPU is held back to stay in step.
 - "Co-stop applies to a 1-vCPU VM" → always 0.
 

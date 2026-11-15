@@ -23,7 +23,7 @@
 - A report to be presented keeps to strategic conversation. The lack of drill-down keeps the focus on the big picture. For detail, use a dashboard and drill down to answer questions live.
 
 ## Reports per pillar
-- Inventory: the big picture.
+- Inventory: the big picture. Inventory and configuration on dashboards: [`sp5-framework/outputs/inventory-and-configuration-dashboards`](inventory-and-configuration-dashboards.md).
 - Availability: overall availability only. Individual ESXi host availability does not belong in a report.
 - Performance: not for monitoring or troubleshooting. It proves that performance was good, so it shows overall performance; individual VM performance does not belong in a report.
 - Compliance: reporting for compliance, not remediation.
@@ -76,6 +76,7 @@ internal_derive:
 - sp5-framework/outputs/system-engagement
 related:
 - sp5-framework/outputs/report-design
+- sp5-framework/outputs/inventory-and-configuration-dashboards
 - vcf-operations/report-suite
 - sp5-framework/outputs/it-leaders-dashboards
 - sp5-framework/capacity/reclamation
@@ -83,7 +84,6 @@ source:
   document: Knowledge base
   path: 'Reports > Report | Dashboard (Suitability); Target Audience (Auditor, Capacity Planning Team, Finance Department, Tenant, Consultant)'
 corrections: []
-review_notes:
-- 'Section ''Report audience'': the source points to a Role-based Contents chapter for IT senior management; linked to sp5-framework/outputs/it-leaders-dashboards instead.'
+review_notes: []
 status: draft
 ```

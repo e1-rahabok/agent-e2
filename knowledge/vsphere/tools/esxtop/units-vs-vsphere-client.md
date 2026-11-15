@@ -38,6 +38,6 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; vSphere Monitoring and Performance > Clusters, Hosts and Virtual Machines > Network (Mbps) and Network Rate (Mbps) (pp. 2041, 2078-2082, 2106-2108); esxtop Network Panel (p. 2164)
 corrections: []
 review_notes:
-- 'Section ''Meaning'': whether esxtop counts a megabit as 1,000,000 or 1,048,576 bits (a 5% difference in the conversion). The vSphere 9.1 documentation (Network Panel, p. 2164) defines MbTX/s only as megabits transmitted per second; check against a measured stream or a Broadcom KB.'
+- 'To check: Section ''Meaning'': whether esxtop counts a megabit as 1,000,000 or 1,048,576 bits (a 5% difference in the conversion); the vSphere 9.1 documentation (Network Panel, p. 2164) defines MbTX/s only as megabits transmitted per second; a measured steady stream read in both tools.'
 status: draft
 ```

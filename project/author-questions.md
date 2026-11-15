@@ -28,7 +28,83 @@ Each entry:
 - Recommended: accept. It pairs with CPU Throughput, your Q203 name for Usage (MHz).
 - Answer:
 
+### Q237 · Catalog > KPI · Interval of three cluster KPI rows
+
+- Files: [thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (`kpi`, ClusterComputeResource); [cluster-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/cluster-performance.md); [esxi-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/esxi-performance.md).
+- Now: three cluster rows carry their levels under `5m`: Worst memory wait among all VMs [0, 1, 2, 4, 8], 90th percentile memory wait among VMs [0, 0.5, 1, 2, 4], 90th percentile read/write latency among VM virtual disks [0, 20, 40, 60, 80]. Their ESXi twins carry the same levels under `20s`, and performance-kpi-design reads VM stats at their 20-second peak (`mem|20_sec_peak_host_contentionPct`, `virtualDisk|20_sec_peak_totalLatency_average`).
+- Question: which interval do the three cluster rows use?
+  - A. 20s, as the ESXi rows: move the levels.
+  - B. 5m on purpose: the cluster reads a 5-minute value; cluster-performance states why.
+  - C. Other.
+- Recommended: A. Same metric source and same levels as the ESXi rows; under 5m the agent compares a 20-second peak with a 5-minute band.
+- Answer:
+
+### Q238 · Capacity > Overhead · Static memory for ESXi, vSAN and NSX
+
+- Files: [overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) (section Recommended static values).
+- Now: the table gives 64 GB of host memory for ESXi + vSAN + NSX and about 20 GB for ESXi only. Broadcom KB 420935 (ESXi 8.x and 9.x, https://knowledge.broadcom.com/external/article/420935), as read on 2026-11-15, sets aside host RAM by socket count: 64-256 GB for 2 sockets (default 128 GB), 128-384 GB for 4, 256-768 GB for 8; its examples give 64 GB per TB of installed memory.
+- Question: which value does usable capacity subtract?
+  - A. Keep 64 GB: your field value for the full stack.
+  - B. The KB default (128 GB on 2 sockets).
+  - C. Both: the KB by host size, with 64 GB as the field value for a given host size.
+- Recommended: C. The KB scales with installed memory; one static number fits one host size.
+- Answer:
+
+### Q239 · CPU > Frequency · Likely vCPU speed on a busy cluster
+
+- Files: [cpu-frequency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md) (section Likely vCPU speed on a busy cluster).
+- Search: "likely vCPU speed = All-Core Turbo × 0.8".
+- Now: the formula uses 0.8. Your Q225 answer and Broadcom KB 335065 give 0.625 of the core to a vCPU whose sibling thread runs and 1.0 when the sibling is halted, so 0.8 holds when the sibling runs about half the time. The file also says most cores run 2 threads on a busy cluster, which points below 0.8.
+- Question:
+  - A. Keep 0.8 as the field figure for a busy cluster, and state the assumption (sibling busy about half the time).
+  - B. A range, 0.625 to 1.0 × All-Core Turbo, by how busy the sibling threads are.
+- Recommended: B, unless your field data supports 0.8.
+- Answer:
+
+### Q240 · Capacity > Models · Memory row of Cluster Consumption and Cluster Risk
+
+- Files: [cluster-consumption](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [cluster-risk](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md); [ESXi Memory Utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/utilization.md) (section Reason).
+- Now: this review settled the capacity counter of a host from Q221 and Q178: capacity reads ESXi Memory Utilization; Consumed is the capacity counter only on a host that runs with no ballooning by design, because Consumed holds guest cache. The two cluster models read `mem|consumed_average` as their utilization row, with ballooned, compressed, swapped and the NVMe tier as saturation rows (Q178 d).
+- Question: keep Consumed in the models?
+  - A. Keep Consumed and say why: the models assume a performance-first cluster that should not balloon, and the saturation rows catch the overflow.
+  - B. Switch the utilization row to ESXi Memory Utilization (`mem|total_need`).
+  - C. Consumed for classes that must not balloon, Utilization for the others.
+- Recommended: A for 1.0 (the models describe the pack as built); B or C with the pack fixes after 1.0.
+- Answer:
+
 ## Future release
+
+### Q241 · CPU > VM Demand · Demand under a limit (lab check)
+
+- Files: [VM CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/demand.md) (section Not unmet demand, two misconceptions).
+- Now: the file's lab test shows VM CPU Demand equal to Usage under a limit, so Demand is not unmet demand. The vSphere Web Services API 9.1 defines `cpu.demand` as the CPU a VM would use with no CPU contention or CPU limit, which says the opposite.
+- Question: repeat the limit test on a 9.1 host (a VM with a CPU limit below its load; read Demand, Usage, Ready, Max Limited)?
+  - A. Demand stays at Usage: keep the text and record a correction against the API definition.
+  - B. Demand rises above Usage: follow the API and rewrite the section and the misconceptions.
+- Recommended: run the test; until then the text stays with a review note.
+- Answer:
+
+### Q242 · Storage > esxtop · QAVG above KAVG
+
+- Files: [ESXi storage latency stack](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md) (section Counters, one misconception).
+- Now: "QAVG can exceed KAVG: QAVG covers VM IO and kernel IO; KAVG covers VM IO only", and the misconception "QAVG cannot exceed KAVG" → QAVG includes kernel IO. The ESXi disk queue note in project/sources gives KAVG = QAVG + VMkernel processing, so QAVG would never exceed KAVG.
+- Question:
+  - A. Keep the line: you have seen QAVG above KAVG in esxtop.
+  - B. Follow the source note: KAVG includes QAVG; drop the misconception.
+- Recommended: A only with field evidence, else B.
+- Answer:
+
+### Q243 · CPU > Used · "CPU Used is buggy"
+
+- Files: [ESXi CPU Used](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/used.md), [VM CPU Used](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/used.md).
+- Search: "CPU Used is buggy".
+- Now: both files say "CPU Used is buggy. Do not build conclusions on it alone." No bug is named, so the model cannot say what is wrong or what to read instead.
+- Question:
+  - A. Name the mechanism: the two Hyper-Threading rules (VM CPU Used 62.5% per vCPU with a busy sibling, ESXi CPU Used 50% per thread; Q225) and Turbo make it hard to read; read Run and Ready with it.
+  - B. A specific defect: give the KB or the case.
+  - C. Delete the line.
+- Recommended: A.
+- Answer:
 
 ### Q222 · SP5 > Availability · Does a host in maintenance mode lower availability?
 

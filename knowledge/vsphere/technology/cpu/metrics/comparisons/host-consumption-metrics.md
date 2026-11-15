@@ -2,6 +2,8 @@
 
 ## The set
 - vSphere Client: 6 ESXi CPU consumption counters: Core Utilization (%), Demand (MHz), Usage (%), Usage (MHz), Used (ms), Utilization (%). Plus 1 for reservation.
+- The legacy rescpu metrics (CPU Utilization for Resources) duplicate Demand and Usage; avoid them ([`vsphere/technology/cpu/metrics/host/cpu-utilization-for-resources`](../host/cpu-utilization-for-resources.md)).
+- Relevance for operations: by counter, Thread Utilization and Core Utilization for capacity headroom; Usage (MHz) for throughput; Usage (%), Used and Demand not for capacity, because frequency or the scheduler's view moves them (section Purpose decides).
 ![vCenter ESXi CPU consumption counters](../../images/vcenter-esxi-cpu-consumption-counters-table.png)
 
 ## Same host, three answers
@@ -79,6 +81,7 @@ related:
 - vsphere/technology/cpu/metrics/host/used
 - vsphere/technology/cpu/metrics/host/demand
 - vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
+- vsphere/technology/cpu/metrics/host/cpu-utilization-for-resources
 images:
   - path: ../../images/vcenter-esxi-cpu-consumption-counters-table.png
     product: [vsphere]

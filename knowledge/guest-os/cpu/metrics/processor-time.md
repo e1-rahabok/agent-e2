@@ -3,6 +3,7 @@
 ## Layer
 - Guest OS layer: Windows or Linux, running on the VM. The VM is a virtual motherboard; it cannot see inside the Guest OS.
 - VMware Tools collects this counter inside the Guest OS and vCenter and VCF Operations store it on the VirtualMachine object. That is a data path, not ownership: the counter belongs to the Guest OS.
+- Relevance for operations: Guest OS performance troubleshooting: kernel and driver work (Privileged, DPC, Interrupt Time) and power states. Not a VM capacity counter: Windows does not account the time its vCPU is frozen ([`vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu`](../../../vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu.md), section Windows vs Linux accounting of the freeze).
 
 ## Time-based
 | Counter | Meaning |

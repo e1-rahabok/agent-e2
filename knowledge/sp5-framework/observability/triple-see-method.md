@@ -4,17 +4,17 @@
 
 - Thousands of metrics across a VCF private cloud are mastered by seeing what they have in common: every metric is one of three types.
 - The Triple See Method: see contention, consumption and context, and verify them as one set before concluding.
-- Designed for Broadcom VCF. Purpose-built.
+- Designed for Broadcom VCF.
 - The three types are peers, each with its own purpose, and each maps to pillars of The SP5 Framework ([`sp5-framework/concepts/overview`](../concepts/overview.md)).
 
 ## Three types of metric
 
 
-| Type | Measures | Primary pillar |
+| Type | Measures | Read by |
 |---|---|---|
 | Contention | Something bad | Performance; availability for errors and drops |
-| Consumption | Something good, if the load is useful | Capacity, value, sustainability |
-| Context | An account of inventory or configuration | Configuration, compliance, inventory |
+| Consumption | Something good, if the load is useful | Capacity and value, sustainability included |
+| Context | An account of inventory or configuration | Security (compliance); configuration and inventory under every pillar |
 
 - The knowledge base tags each metric file with its type: `metric_class: contention | consumption | context`.
 
@@ -56,7 +56,7 @@
 - Layer the troubleshooting metrics, events and properties so a Level 1 team can use them quickly: a primary metric is 0-100%, usually a hybrid of several metrics; secondary metrics aim for 0-100% too.
 - A metric that cannot be colour coded, such as VM Disk IOPS, is hard for Level 1: its meaning depends on context.
 - Example: Capacity Remaining (%) is primary; CPU utilization, memory usable capacity and CPU allocation are secondary.
-- Example: VM Performance (%) is primary ([`vsphere/object-types/vm/vm-performance`](../../vsphere/object-types/vm/vm-performance.md)); peak vCPU Ready among the vCPUs, peak read/write latency among the virtual disks and Guest OS CPU context switch are secondary.
+- Example: VM Performance (%) is primary ([`vsphere/object-types/vm/vm-performance`](../../vsphere/object-types/vm/vm-performance.md)); peak vCPU Ready among the vCPUs and peak read/write latency among the virtual disks are secondary. Guest OS counters such as CPU context switch are not secondary to it: the Guest OS is a separate realm with its own KPI, Guest OS Performance (%).
 
 ## Misconceptions
 

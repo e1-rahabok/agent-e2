@@ -28,7 +28,8 @@ meta:
   review_notes:
   - 'To check: kpi cells still null: green, yellow, orange, red, zero to enter by hand for each of 5m, 20s and 2s (Q152).'
   - 'To check: flow rows flow-esxi-disk-kernel-latency and flow-esxi-disk-device-latency: the knowledge base gives no sample interval (esxtop or the vCenter 20-second real-time chart); interval stays empty until a source states it.'
-  - 'To check: cluster memory wait rows: green and zero limits set from memory latency only (zero 8 and 4), before NVMe wait is scored; 90th percentile disk latency rows: interval 5m here, while the KPI design reads VM stats at their 20-second peak.'
+  - 'To check: cluster memory wait rows: green and zero limits set from memory latency only (zero 8 and 4), before NVMe wait is scored.'
+  - 'To check: interval of three cluster rows: Worst memory wait among all VMs, 90th percentile memory wait among VMs and 90th percentile read/write latency among VM virtual disks carry their levels under 5m, while their ESXi twins (same levels) and the KPI design (sp5-framework/performance/performance-kpi-design) read VM stats at their 20-second peak; move the levels to 20s, or keep 5m and state why in cluster-performance.'
   status: reviewed
 kpi:
 - {object: Guest OS, metric: "Peak vCPU run queue length (count)", group: "Guest OS contention", direction: above, 5m: null, 20s: [0, 2, 4, 8, 16], 2s: null, kb: guest-os/system/guest-os-performance}

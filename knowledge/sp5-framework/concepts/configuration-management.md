@@ -3,7 +3,7 @@
 ## Purpose
 - Configuration management prevents issues caused by wrong settings: the actual value must match the intended value, and the hardware and software configuration must match the documented architecture.
 - Quantify it to track it over time: 100% when every configuration rule is met, 0% when none is.
-- Wrong configuration hits six areas: availability, performance, capacity, cost, security, compliance. Choose each trade-off with all six in mind.
+- Wrong configuration hits all five pillars: availability, performance, security (compliance included), capacity and value (cost). Choose each trade-off with all five in mind.
 - Configuration is a means to an end, not a pillar: [`sp5-framework/concepts/overview`](overview.md).
 
 ## Approach
@@ -40,7 +40,7 @@
   - availability first: if it is down, nothing else matters. Hardware gets it from redundant components; software from clustering, with two load balancers in front of the nodes;
   - performance: up is not fast;
   - security and audit: fast is not secure;
-  - then capacity, cost and sustainability.
+  - then capacity, and value (cost and sustainability).
 
 ## Four types of check
 - Two families: a value check compares one item with a desired value; multi-object checks compare items with each other (consistency, compatibility, variance).

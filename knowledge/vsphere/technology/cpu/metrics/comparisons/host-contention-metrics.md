@@ -4,6 +4,7 @@
 - vSphere Client host-level counters: Co-stop, Ready, Latency, Readiness, Wait, Swap wait, Idle.
 - They are aggregates of the VMs. The host itself has no contention.
 - Co-stop and Ready exclude contention faced by non-VM worlds.
+- Relevance for operations: a lagging host summary for reporting. Performance KPIs, alerts and troubleshooting read the VM counters, because the host value averages them (section Lagging, not leading).
 ![vCenter ESXi CPU contention counters](../../images/vcenter-esxi-cpu-contention-counters-table.png)
 
 ## Lagging, not leading

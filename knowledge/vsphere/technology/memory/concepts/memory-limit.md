@@ -13,7 +13,7 @@
 - The memory scheduler gives the VM a memory target that cannot exceed the limit. A VM whose Consumed is above its target is reclaimed in this order:
   1. Balloon, when the driver runs. The scheduler sets the Balloon Target to the excess. The guest picks the pages: free pages first, then clean cache, then guest swap. See [`vsphere/technology/memory/concepts/ballooning`](ballooning.md).
   2. Compression, when the driver is missing, switched off, not running yet, at its ceiling or too slow. ESXi picks pages without asking the guest.
-  3. Host swapping, for pages that do not compress below 2 KB. See [`vsphere/technology/memory/concepts/swap-and-compression`](swap-and-compression.md).
+  3. Host swapping, for pages that do not compress to 2 KB or smaller. See [`vsphere/technology/memory/concepts/swap-and-compression`](swap-and-compression.md).
 - Page sharing runs whatever the limit. The limit does not trigger it.
 - The balloon ceiling is 65% of configured memory by default (Mem.CtlMaxPercent on the host; `sched.mem.maxmemctl`, in MB, per VM). Everything above the ceiling goes by compression and swap.
 - Example: 8 GB VM, 2 GB limit, all pages touched. 6 GB must leave. The balloon takes at most 5.2 GB (65%); at least 0.8 GB is compressed or swapped. Ballooned heavy, Compressed and Swapped small but above 0, is the normal picture.
@@ -75,7 +75,6 @@ source:
   path: Memory > VM > Contention Metrics > Balloon; vSphere Monitoring and Performance, Solutions for Memory Performance Problems (p. 2037); Resource Management, Mem.CtlMaxPercent (p. 600); Resource Management, Virtual Machine Memory (pp. 1833-1834) and DRS Overhead Memory Management for VMs (p. 1902); KB 382249, MEM overcommit avg (https://knowledge.broadcom.com/external/article/382249); Mem|Effective Limit, key mem|effective_limit (https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/virtual-machine-metrics.html)
 corrections: []
 review_notes:
-- 'Section ''Enforcement order'': the order balloon, compression, swap under a limit, and that the Balloon Target is the excess above the limit. Vendor text found: the memory performance table of vSphere 9.1 (p. 2037) and Broadcom KB 326270; no vendor text states the Balloon Target formula. Check against https://knowledge.broadcom.com/external/article/326270.'
-- 'To check: whether VMkernel lowers the balloon ceiling when the guest reports little free memory. No vendor text found.'
+- 'To check: Section ''Enforcement order'': whether the VMkernel lowers the balloon ceiling below its setting when the guest reports little free memory; vSphere 9.1 documentation, Memory Balloon Driver (pp. 1839-1840), does not say.'
 status: draft
 ```

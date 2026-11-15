@@ -42,7 +42,7 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 7. Plain sentences; grammar and elegance do not matter. Drop stories and personal asides; keep a one-line analogy only when it explains a mechanism a user may ask about.
 8. Leave `## Metadata` to Claude: review notes, corrections and links are kept consistent there.
 9. Titles and headings are noun phrases: no question, command or claim. Headings at most 9 words, titles at most 8 (lint).
-10. After editing: commit, or tell Claude which files changed. Claude runs lint, updates the glossary, term map, threshold catalog and links, notes the source in the metadata, runs the retrieval check (paused by the author since 2026-11-12) and merges.
+10. After editing: commit, or tell Claude which files changed. Claude runs lint, updates the glossary, term map, threshold catalog and links, notes the source in the metadata, runs the retrieval check (reactivated 2026-11-13, Q206) and merges.
 
 ## Format choices
 - Each format choice serves both readers:
@@ -77,7 +77,7 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 - Write from the current release: vSphere 9.1, VCF 9.1.1 (the Versions section of [`CLAUDE.md`](../../CLAUDE.md) holds the current list).
 - Before writing from a vendor document, check that it is the current version and read its revision date; record version and revision in `source.document`.
 - A file written from an older version gets a `review_notes` line naming the newer version, and is re-checked before `status: reviewed`.
-- The author's book is cited as "Private Cloud Management by Iwan Rahabok (https://isvara.io/download)" in `source.document`, with the heading path in `source.path`. The working files in [`project/sources/`](../sources) (Part 1, 2, 3) are not named in `knowledge/`, and their page numbers are not used: Agent E2 knows the book, not its parts.
+- The author's material ([`project/sources/`](../sources) and https://isvara.io) is never named in `knowledge/`: `source.document` is `Knowledge base`, plus any vendor document with its version ([metadata.md](metadata.md); KNOWLEDGE-ENGINEERING.md, section 2). Its page numbers are not used.
 - Theory and practice: theoretical advice covers the technology itself (Windows, Linux, Kubernetes), not only what VMware Tools or VCF Operations collects; practical advice states what each product can and cannot do (for example, which Guest OS counters VMware Tools collects).
 - Oldest release covered: no knowledge about outdated releases; Linux starts at 5.0. Keep the knowledge base compact.
-- [`project/sources/`](../sources) is read-only.
+- [`project/sources/`](../sources) holds the source documents: the author adds them; Claude may edit them (author, 2026-11-14).

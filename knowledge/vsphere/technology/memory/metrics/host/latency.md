@@ -3,6 +3,8 @@
 ## Meaning
 - A normalized average of the Memory Latency of the running VMs.
 - An average hides the VM that suffers. Use the maximum VM Memory Contention across the host's VMs instead.
+- VM Memory Latency is the share of time a vCPU waits for a page fault: swap-in and decompression, not the balloon ([`vsphere/technology/memory/metrics/virtual-motherboard/latency`](../virtual-motherboard/latency.md)).
+- Relevance for operations: none for alerting or troubleshooting, because an average across VMs hides the VM that waits. Read the maximum VM Memory Contention of the host's VMs.
 
 ## Misconceptions
 - "Host memory latency is low, so no VM waits" → check the worst VM.

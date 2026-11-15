@@ -6,6 +6,8 @@
 | Shared | Sum of VM and kernel pages pointing to a shared page. 3 VMs with 2 MB identical memory each: 6 MB. |
 | Shared Common | Sum of the shared pages themselves. |
 
+- Relevance for operations: capacity reporting of page-sharing savings (Shared - Shared Common). None for performance.
+
 ## Formula
 ```text
 Host memory savings from sharing = Shared - Shared Common
@@ -56,7 +58,6 @@ source:
   path: Memory > ESXi > Consumption Metrics > Shared
 corrections: []
 review_notes:
-- 'To check: Section ''Behaviour'': the reason Shared Common exceeds half of Shared; large pages is a guess.'
-- 'To check: why Shared Common exceeds half of Shared (large pages broken into 4 KB pages is a guess).'
+- 'To check: Section ''Behaviour'': why Shared Common exceeds half of Shared; large pages broken into 4 KB pages is a guess.'
 status: draft
 ```

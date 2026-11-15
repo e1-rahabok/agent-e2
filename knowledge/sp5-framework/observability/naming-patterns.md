@@ -45,12 +45,15 @@ The patterns below classify the ways names mislead.
 - pattern: same-name-different-behaviour
 - Processor Queue Length: counts only threads waiting. Excludes threads currently running.
 - Current Disk Queue Length: includes IOs being processed, not only IOs waiting.
-- misconception: treating both "queue" counters as the same kind of count.
 
 ### Windows "Task Manager"
 - pattern: incorrect-name
 - The Windows kernel has no "task" concept. The closest Windows concept is a Job: a group of processes managed as one.
 - What runs on top of the kernel are processes. "Process Manager" would match the concept.
+
+## Misconceptions
+- "Processor Queue Length and Current Disk Queue Length count the same thing: work waiting" → Processor Queue Length counts only threads waiting, not the running ones; Current Disk Queue Length also counts IOs being processed. A disk queue above 0 can be IOs in service, not waiting.
+- "Two tools show the same metric name, so the values match" → a name does not fix the formula: the same name can differ by object, by level inside the object, and by capping. Check which naming pattern applies (section Pattern catalogue) and read the file of each metric.
 
 ## Metadata
 ```yaml
@@ -78,8 +81,7 @@ related:
 source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity
-corrections:
-- '2026-11-02: Windows queue counters. Processor Queue Length excludes running threads; Current Disk Queue Length includes IOs being processed. Uploaded document states the disk part reversed.'
+corrections: []
 review_notes: []
 status: draft
 ```

@@ -4,9 +4,7 @@
 
 - VMs. Not ESXi hosts, datastores or vSAN: their size rarely changes once bought.
 - Kubernetes nodes are sized as part of the Kubernetes cluster design, not one by one.
-- "VM rightsizing" is a misleading term: it usually means the Guest OS, not the virtual motherboard. Two jobs, two names:
-  - Guest OS sizing: internal, from Guest OS counters; includes the guest queue, excludes VM overhead ([`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md)).
-  - VM footprint: external, from vSphere counters; the total load the VM puts on the infrastructure; includes VM overhead, excludes the guest queue ([`sp5-framework/capacity/vm-footprint-sizing`](vm-footprint-sizing.md)).
+- "VM rightsizing" is a misleading term: it usually means the Guest OS, not the virtual motherboard. Two jobs, two names: Guest OS sizing, from Guest OS counters ([`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md)), and VM footprint, from vSphere counters ([`sp5-framework/capacity/vm-footprint-sizing`](vm-footprint-sizing.md)). What each includes and excludes, with use cases: [`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md), section VM rightsizing: two jobs.
 - This file covers why VMs are oversized in a private cloud, what that costs the company, and how to get a downsize accepted and proven.
 
 ## Causes of oversizing
@@ -35,9 +33,9 @@
 ![Cost of an oversized VM: longer boot time, longer vMotion time, risk of NUMA effect, higher Co-stop and Ready time, longer snapshot time, process ping-pong, higher chance of CPU Overlap](images/vm-oversized-cost-diagram.png)
 
 - More CPU, memory and disk do not make a VM faster; they add overhead.
-- Higher frequency with fewer vCPUs: fewer active threads let ESXi boost the active cores. Check CPU Usage (MHz) per vCPU.
+- Higher frequency with fewer vCPUs: fewer active cores let the processor raise the clock of the busy ones (Turbo). Check CPU Usage (MHz) per vCPU.
 - Lower Co-stop and Ready: idle vCPUs halt and are de-scheduled, but extra vCPUs still add Ready, Co-stop when siblings skew, timer interrupts and lost cache locality.
-- Higher chance of CPU Overlap: more vCPUs, more interrupts and IO serviced on their time.
+- Higher VM CPU Overlap: Overlap is summed over the vCPUs, and each running vCPU can be interrupted for kernel IO work done on its time ([`vsphere/technology/cpu/metrics/virtual-motherboard/overlap`](../../vsphere/technology/cpu/metrics/virtual-motherboard/overlap.md)).
 - Process ping-pong: the guest scheduler moves threads across vCPUs; each move costs a context switch and cache warm-up ([`vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity`](../../vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity.md)).
 - Faster snapshots, especially with memory.
 - Faster vMotion: Windows and Linux use memory as cache; more memory, more to copy.
@@ -55,6 +53,8 @@
 | Memory | Utilization near 100% is normal: most pages are cache. Check page faults for excess |
 | Disk | Rightsize the file system: a Windows or Linux partition change |
 | Disk | Use fewer RDMs; with array thin provisioning, check unmap for wastage |
+
+- The Guest OS counters and formulas behind these rules: [`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md).
 
 - One VM vs the fleet: the aim of high utilization is for each VM at its busy time. A group of hundreds of right-sized monster VMs still averages about 40%, because at any moment some are busy and others idle (section Monster VMs Capacity Management).
 
@@ -95,6 +95,7 @@
 | Application-aware | Exclude Java VMs, databases and Kubernetes nodes from the standard formula: they manage their own memory or run containers. Work with the DBA or Kubernetes SRE |
 | Open | A public dashboard any owner can use: transparency builds trust |
 
+- Java VMs and databases: size from the application's own memory limit first ([`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md), section Applications that manage their own memory).
 - Hardware sizes: no fixed vCPU count. Above the host's L3 domain a VM pays a cache cost; above the cores of its NUMA node it reads remote memory ([`sp5-framework/capacity/vm-size`](vm-size.md)). The Hyper-Threading penalty depends on whether the sibling thread is busy (host load, or more vCPUs than the NUMA node has cores), not on VM size against a CCD.
 
 ## Monster VMs Capacity Management
@@ -115,7 +116,7 @@
 
 ## Prevent oversizing
 
-- Progressive pricing (SP5 Framework, Cost and Price Management): the price per vCPU rises with VM size.
+- Progressive pricing: the price per vCPU rises with VM size ([`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md), section Planning example: hardware follows price).
 - Without chargeback: approval chain grows with VM size; a longer form for monster VMs.
 - Every VM has a life span, renewed by an annual confirmation ([`sp5-framework/capacity/unused-vm`](unused-vm.md), section Annual stocktake).
 - Start small (minimal size for every VM, upsize later) has costs:
@@ -145,7 +146,7 @@
 ## Misconceptions
 
 - "Rightsize this VM" → name the job first: Guest OS sizing (does the guest have enough?) or VM footprint (what does it cost the infrastructure?). Different counters, different answers.
-- "Size on CPU Usage" → Turbo inflates it 25% in this example, pushing the VM across NUMA nodes.
+- "Size on CPU Usage" → VM CPU Usage counts cycles at the actual clock, so Turbo raises it above the base-clock capacity it is compared with; sizing on it adds vCPUs the work does not need and can push the VM across NUMA nodes. Size the Guest OS from Guest OS counters.
 - "20-second data shows the CPU peak" → bursts of 1-3 seconds average out; a 20-second reading of 50% can hide 80%+ bursts.
 - "Downsize everything that looks oversized in one program" → a few VMs that suffer discredit the program; go VM by VM, with proof.
 - "Saving money convinces the owner" → owners paid already; show performance.
@@ -205,9 +206,6 @@ source:
   document: Knowledge base
   path: 'Part 3: Consumer Objects > Capacity: Guest OS > Benefits. Part 1: Capacity Management > Rightsizing (Challenges; Micro Burst; Oversized Guest OS; Cost of Oversized; Optimization; Best Practices; The Big Picture; Progressive Pricing; Start Small?; Before vs After), pages 121-127.'
 corrections: []
-review_notes:
-- 'To check: Section ''Cost of an oversized VM'': the Overlap reason ("more interrupts and IO serviced on their time") explains image; no source yet.'
-- 'Section ''Prevent oversizing'': the CPU Hot Add and vNUMA link is from Performance Best Practices (idle-and-unused-vcpus), not this chapter.'
-- 'Part 1, VM Footprint | Guest OS Sizing repeats the Part 3 text already in guest-os/system/concepts/guest-os-sizing; nothing added.'
+review_notes: []
 status: draft
 ```
