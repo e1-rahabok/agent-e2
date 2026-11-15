@@ -10,7 +10,7 @@
 - Swapped is not Swap in - Swap out: both run in parallel on different pages.
 - vMotion can make Swapped larger than swap out minus swap in: a VM that arrives with memory already swapped brings those pages with it.
 - Swapped pages stay out until the guest requests them.
-- A limit causes swapping and compression.
+- A limit causes ballooning first, then compression and swapping, for what the balloon cannot take. See [`vsphere/technology/memory/concepts/memory-limit`](../../concepts/memory-limit.md).
 
 ## Non-zero value
 - Compressed or Swapped happens for one of two reasons:

@@ -15,18 +15,16 @@
 - Ballooned pages are removed from Granted: not functionally used.
 - Guest OS memory counters still include them. Exclude them when working out Guest OS utilization.
 - A flat Ballooned value for weeks: the guest never requested those pages again.
-- A limit does not cause ballooning directly. The 4 memory layers act at different levels:
-  - Process and Guest OS layer: the Guest OS uses more memory. The user can be the balloon driver or any other process.
-  - VM layer: that use makes Consumed grow.
-  - ESXi layer: when Consumed tries to grow beyond the limit, ESXi compresses or swaps.
-- So under a limit, the direct result is Compressed or Swapped. Balloon is not.
-- Example: 8 GB CentOS VM running MySQL with a 2 GB limit was heavily ballooned. The balloon maximum is Mem.CtlMaxPercent, default 65% of configured memory.
+- A limit causes ballooning, also on a host with free memory. A limit lowers the VM's memory target. ESXi reclaims what is above it with the balloon first, then compression, then host swap. See [`vsphere/technology/memory/concepts/memory-limit`](../../concepts/memory-limit.md).
+- The 4 memory layers explain why Consumed grows under a limit: the Guest OS uses more memory, the VM layer makes that Consumed, and ESXi reclaims when Consumed would pass the limit. They do not stop the balloon: the balloon is how ESXi takes memory back when the driver runs.
+- Compressed and Swapped join when the balloon cannot take enough: driver missing, switched off or too slow, or at its ceiling (Mem.CtlMaxPercent, default 65% of configured memory).
+- Example: 8 GB CentOS VM running MySQL with a 2 GB limit was heavily ballooned. 6 GB must leave; the balloon takes at most 5.2 GB.
 - See [`vsphere/technology/memory/concepts/ballooning`](../../concepts/ballooning.md).
 
 ## Misconceptions
 - "Ballooned > 0, so the host is under memory pressure now" → not necessarily. Ballooned, Compressed and Swapped are past tense: memory reclaimed earlier. VM memory contention decides whether the VM waits now.
 - "Ballooning means VMs are contending for RAM" → check Contention.
-- "A limit causes ballooning" → not directly. A limit causes Compressed or Swapped when Consumed tries to grow beyond it.
+- "A limit cannot cause ballooning, only Compressed or Swapped" → the balloon is first when the driver runs. Compression and swap take over when the balloon cannot reclaim enough.
 
 ## Metadata
 ```yaml
@@ -57,6 +55,7 @@ related:
 - vsphere/technology/memory/concepts/memory-layers
 - vsphere/technology/memory/concepts/ballooning
 - vsphere/technology/memory/metrics/virtual-motherboard/balloon-target
+- vsphere/technology/memory/concepts/memory-limit
 source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; Memory > Architecture > Virtual Memory; Relationship; Memory > VM > Contention Metrics > Balloon; Consumption Metrics > Ballooned
