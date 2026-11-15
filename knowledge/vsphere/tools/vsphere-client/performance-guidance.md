@@ -46,7 +46,7 @@
 | totalReadLatency, totalWriteLatency | GAVG | kernelLatency + deviceLatency. |
 
 - The knowledge base uses lower values: the flow tests of [`vsphere/technology/storage/troubleshooting/host-storage-latency`](../../technology/storage/troubleshooting/host-storage-latency.md), step 1.
-- The documentation's device remedy names spindles: the 15 ms value comes from spinning-disk arrays. Flash arrays run far lower; compare with the array's own baseline.
+- The documentation's device remedy names spindles (move the VMDK to a volume with more spindles, add disks to the LUN): the 15 ms guidance dates from spinning-disk arrays. Flash arrays run far lower; compare with the array's own baseline.
 - Documentation actions: more VM memory for guest caching (less IO); antivirus on-demand scans off for VMDK and VMEM files; array-side statistics; Storage vMotion to spread IO-heavy VMs; spread busy LUNs across adapters; adequate HBA and RAID controller queue depth (Disk.SchedNumReqOutstanding); multipathing when IO exceeds one HBA; preallocated virtual disks.
 
 ## Storage space
@@ -56,10 +56,10 @@
 
 ## Network
 - Dropped packets indicate a network bottleneck. Check droppedTx and droppedRx in vCenter, or %DRPTX and %DRPRX in esxtop.
-- Drops at the virtual switch port: increase the vNIC driver ring buffers. See [`vsphere/technology/network/vnic-rx-drops`](../../technology/network/vnic-rx-drops.md).
+- Drops at the virtual switch port: the documentation says to increase the vNIC driver ring buffers. Check the CPU of the vCPU that drains the ring first (Guest OS CPU, VM CPU Ready, Co-stop): when that vCPU is starved, a larger ring only delays the drops (Broadcom KB 312565). Order of checks: [`vsphere/technology/network/vnic-rx-drops`](../../technology/network/vnic-rx-drops.md).
 - No drops but a slow receive rate: host or VM CPU cannot keep up with the packet rate.
 - Small packets: more packets per byte, so more CPU per byte. Large packets: fewer packets and less CPU, but possibly higher latency.
-- vSphere has no network latency counter. The documentation points to external tools. See [`vsphere/technology/network/concepts/network-observability`](../../technology/network/concepts/network-observability.md).
+- vSphere has no network latency counter. The documentation points to VMware AppSpeed, a discontinued product, or a third-party application: an external tool. See [`vsphere/technology/network/concepts/network-observability`](../../technology/network/concepts/network-observability.md).
 - Documentation checks: VMs per physical NIC; VMs on the same host that talk to each other on the same virtual switch (no physical hop); separate physical NICs per traffic type (VM, iSCSI, vMotion); physical NIC speed and duplex as expected (a 1 Gbps NIC reset to 100 Mbps by an older switch; half duplex); vmxnet3; TCP Segmentation Offload and jumbo frames.
 
 ## Misconceptions
@@ -104,10 +104,6 @@ source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
   path: vSphere Monitoring and Performance > Overview Performance Charts > Chart Analysis sections (Clusters, Hosts, Resource Pools, Virtual Machines); Troubleshoot and Enhance Performance (pp. 2033-2123)
 corrections: []
-review_notes:
-- 'To check: Section ''Storage latency'': the 15 ms value comes from spinning-disk arrays (inferred from the remedy text, more spindles).'
-- 'Section ''CPU'': the documentation gives VM CPU Ready above 20% with Usage above 90% in the VM chart analysis and in Solutions for Consistently High CPU Usage.'
-- 'To check: Section ''Network'': AppSpeed is a discontinued product, so the file says external tools; the documentation names VMware AppSpeed for network latency.'
-- 'Omitted as irrelevant or outdated: defragment guest file systems, MemTrimRate=0, separate page-file disk, Fault Tolerance and Memory Mode (PMem) advice.'
+review_notes: []
 status: draft
 ```

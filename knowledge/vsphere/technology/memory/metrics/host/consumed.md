@@ -2,6 +2,7 @@
 
 ## Meaning
 - Includes memory consumed by ESXi itself.
+- Relevance for operations: capacity reporting and the VM footprint for migration. It is the capacity counter only on a host that runs with no ballooning by design; otherwise ESXi Memory Utilization is ([`vsphere/technology/memory/metrics/host/utilization`](utilization.md), section Reason). Not a performance counter: near 100% is normal.
 
 ## Scope
 - ESXi pages, summed at host level: VMs plus the kernel's own memory plus VM overhead.
@@ -19,11 +20,11 @@ VCF Operations Usage (%) = Consumed / Total Capacity
 - Compression: the compression cache (the zipped pages held in DRAM) is inside ESXi Memory Consumed, because cache pages are ESXi pages in use, not free. Only the memory compression freed leaves ESXi Memory Consumed.
 - Example: a 4 KB page compressed to 1 KB keeps 1 KB in ESXi Memory Consumed and frees 3 KB.
 - Includes actual kernel use, not kernel reservation.
-- Excludes VM reservations as such: raising a running VM's reservation by several GB left host Consumed flat on a 9.1 lab host ([ESXi memory metrics compared](../comparisons/host-memory-metrics.md), section VM reservation across counters).
+- Excludes VM reservations as such: raising a running VM's reservation by several GB left host Consumed flat on a 9.1 lab host ([`vsphere/technology/memory/metrics/comparisons/host-memory-metrics`](../comparisons/host-memory-metrics.md), section VM reservation across counters).
 - Sits above the Resource memory consumed counter of the host group: 12.45 GB against 11.88 GB on that host, a gap of about 0.5 GB.
 
 ## Behaviour
-- The primary ESXi utilization counter, but full of cache and inactive pages. Near 100% in an overcommitted host is the goal, not a problem.
+- The primary vCenter counter of host memory use (ESXi Memory Usage (%) is Consumed over Total Capacity), but full of cache and inactive pages. Near 100% in an overcommitted host is the goal, not a problem.
 - Drops when balloon or swap out rises.
 - ESXi Memory Consumed falling while ESXi Memory Compressed rises shows the compression saving plus any swap out. The compressed result stays inside Consumed.
 - Includes non-VM consumers: kernel, vSAN, NSX. Can exceed the memory allocated to all running VMs.
@@ -36,7 +37,7 @@ VCF Operations Usage (%) = Consumed / Total Capacity
 ![ESXi Consumed = VM consumed + kernel](../../images/esxi-memory-consumed-equals-vm-consumed-plus-kernel.png)
 
 ## Misconceptions
-- Summing VM Consumed and expecting ESXi Consumed.
+- "The sum of VM Memory Consumed equals ESXi Memory Consumed" → ESXi Memory Consumed adds the kernel, vSAN, NSX and VM overhead, so the sum of the VMs is lower.
 - "Host Consumed near 100% is a problem" → memory is cache. Check balloon, swap-in and VM contention.
 - "Host with no VMs should show 0 Consumed" → kernel, vSAN and NSX consume memory.
 - "Consumed does not include compressed memory" → it includes the compressed result in DRAM; it excludes only what compression freed.
@@ -85,14 +86,10 @@ images:
     metric: ['ESXi Memory Consumed']
     image_type: screenshot
 source:
-  document: Knowledge base
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Virtual Memory; Relationship; Memory > ESXi > Consumption Metrics > Consumed
+  document: Knowledge base; vSphere Web Services API 9.1; vSphere 9.1 documentation (PDF built 2026-11-02)
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Virtual Memory; Relationship; Memory > ESXi > Consumption Metrics > Consumed; API 9.1 memory counters, consumed = total host memory minus free host memory (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html); esxtop Memory panel, CNSM excludes the memory saved by compression
 corrections: []
 review_notes:
-- 'Section ''Scope'': the gap of about 0.5 GB between host Consumed and the host group Resource memory consumed (9.1 lab host, 2026-11-15) has no explanation yet; not VM overhead, which read 0.'
-- 'ESX System Usage: the formula of the VCF Operations metric mem|host_systemUsage is not published; the reading as the kernel reservation (host/system allocation minimum) rests on the author''s answer. https://techdocs.broadcom.com (VCF Operations 9.1, Host System metrics)'
-- 'Section ''Scope'': from Memory > Architecture.'
-- 'Sections Formula, Behaviour: from Memory > ESXi.'
-- 'Section ''Formula'' (compression): Consumed = total host memory minus free host memory, from the vSphere Web Services API 9.1, https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html; esxtop CNSM excludes the memory saved by compression (vSphere 9.1 documentation, esxtop Memory panel).'
+- 'To check: Section ''Scope'': the gap of about 0.5 GB between host Consumed and the host group Resource memory consumed on a 9.1 lab host has no explanation yet (not VM overhead, which read 0); compare the two counters on another 9.1 host.'
 status: draft
 ```

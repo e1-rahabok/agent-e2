@@ -4,6 +4,7 @@
 - How many threads run per running core.
 - Use it together with Core Utilization.
 - Not a built-in VCF Operations metric.
+- Relevance for operations: performance: whether vCPUs share cores while other cores idle, read with Core Utilization. Not capacity: the score says how threads are spread, not how many are free.
 
 ## Formula
 ```text

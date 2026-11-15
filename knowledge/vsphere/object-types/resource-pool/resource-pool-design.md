@@ -14,7 +14,7 @@
 
 ## Reading a pool limit in the data
 - A pool at its CPU limit shows pool CPU usage flat at one value sample after sample, near a round number, while its hosts have spare CPU. A pool that is not capped varies with its load.
-- Its VMs show Ready on every host they run on, while VMs of other pools on the same hosts show little or none: the wait follows the pool, not the host. Ready includes time held back by a limit; vCenter shows it as Max Limited.
+- Its VMs show Ready on every host they run on, while VMs of other pools on the same hosts show little or none: the wait follows the pool, not the host. Ready includes time held back by a limit; vCenter shows it as Max Limited; esxtop counts %MLMTD inside %RDY.
 - A limit on one pool caps only that pool and its descendants. It cannot raise Ready in a sibling pool: it frees CPU for the siblings. When the pool that a change was meant for runs below the limit and another pool sits flat at it, check which pool holds the limit: the change may have hit the wrong pool.
 - More hosts or more vCPUs do not help a pool at its limit: the VMs share the same cap.
 
@@ -61,12 +61,10 @@ related:
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 - vsphere/object-types/cluster/concepts/drs-overview
 source:
-  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: 'VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 77); DRS Cluster Sizing and Resource Settings (p. 78); Configuration Management > Review List > Resource Pool'
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: 'VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 77); DRS Cluster Sizing and Resource Settings (p. 78); Configuration Management > Review List > Resource Pool; vSphere 9.1 Create a Resource Pool, scalable shares (pp. 1889-1890); Edit Cluster Settings, Scalable Shares (p. 1900); esxtop CPU panel, %MLMTD included in %RDY (p. 2154)'
 corrections: []
 review_notes:
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: Section ''Reading a pool limit in the data'': a pool limit applies across the cluster and Ready includes limit time (Max Limited), against vSphere 9.1 Resource Management, Resource Pool Attributes, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management.html.'
-- 'To check: Section Siblings and Scalable Shares: default off and the 4, 2, 1 multiplier, against vSphere 9.1 documentation, DRS Scalable Shares (Q110 c).'
+- 'To check: Section ''Siblings and Scalable Shares'': the 4, 2, 1 multiplier of High, Normal and Low on the sum of the VM shares; neither the vSphere 9.1 documentation (pp. 1889-1890, 1900) nor Performance Best Practices 9.1 (p. 77) states it (vSphere 9.1 Resource Management, Scalable Shares).'
 status: draft
 ```

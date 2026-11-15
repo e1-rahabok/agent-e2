@@ -2,7 +2,7 @@
 
 ## Purpose
 - Reduces the power consumption of powered-on ESX hosts.
-- Different from Distributed Power Management (DPM). DPM powers off hosts that are not in use. See the source, p. 82.
+- Different from Distributed Power Management (DPM). DPM powers off hosts that are not in use (Performance Best Practices for vSphere 9.1, p. 80; [`vsphere/object-types/cluster/concepts/dpm`](../../../object-types/cluster/concepts/dpm.md)).
 - Host power management and DPM can be used together for best power saving.
 
 ## Policies
@@ -13,7 +13,8 @@
 | Low Power | Reduces power aggressively | Risk of reduced performance |
 | Custom | Starts as Balanced. Individual parameters can be changed. | Depends on the parameters chosen. |
 
-- Custom parameters: see "Configure Custom Policy Parameters for the ESX Host Power Management" in the vSphere Resource Management guide.
+- Custom parameters: vSphere 9.1 documentation, vSphere Resource Management > Configure Custom Policy Parameters for the ESX Host Power Management (p. 1832).
+- With Intel HWP enabled, the policies give hints to the hardware for the same energy and performance trade-offs (vSphere 9.1 documentation, Host Power Management Policies in ESX, p. 1831).
 
 ## Latency-sensitive workloads
 - The Balanced policy can slightly reduce performance of latency-sensitive workloads.
@@ -43,7 +44,7 @@
 - C1E:
   - a hardware-managed state. ESX puts the CPU into C1. The CPU hardware can deepen the state to C1E on its own criteria.
   - Typically reduces power consumption with little or no performance impact.
-  - Exception: a few multithreaded workloads highly sensitive to I/O latency (the source names financial platforms, and media and entertainment). C-states including C1E can reduce their performance. Deactivating them in the BIOS can improve performance.
+  - Exception: a few multithreaded workloads highly sensitive to I/O latency (Performance Best Practices for vSphere 9.1 names financial platforms, and media and entertainment). C-states including C1E can reduce their performance. Deactivating them in the BIOS can improve performance.
 - Deeper C-states (typically C3 and/or C6):
   - managed by software. They give further power savings.
   - For the best performance per watt, activate all C-states in the BIOS.
@@ -54,7 +55,7 @@
 - Intel Granite Rapids C-state recommendations by workload: see [`vsphere/object-types/esxi/configuration/bios-settings`](../../../object-types/esxi/configuration/bios-settings.md).
 
 ## Misconceptions
-- "Deactivate C-states for better performance everywhere" → the source names only a few latency-sensitive multithreaded workloads that gain from it. Activating all C-states gives the best performance per watt.
+- "Deactivate C-states for better performance everywhere" → Performance Best Practices for vSphere 9.1 names only a few latency-sensitive multithreaded workloads that gain from it. Activating all C-states gives the best performance per watt.
 - "Balanced always lowers performance" → typically it has little or no effect. On systems with idle CPUs it can raise performance through Turbo Boost.
 - "Low Power is a safe default" → Low Power reduces power aggressively, at the risk of reduced performance.
 
@@ -81,12 +82,9 @@ related:
 - vsphere/technology/cpu/concepts/power-states
 - vsphere/technology/cpu/concepts/cpu-frequency
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX CPU Considerations > Host Power Management in ESX (pp. 31-32); Power Management BIOS Settings (pp. 22-23); Intel Hardware P-States (p. 12)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: ESX CPU Considerations > Host Power Management in ESX (pp. 31-32); Power Management BIOS Settings (pp. 22-23); Intel Hardware P-States (p. 12); VMware Distributed Power Management (DPM) (p. 80). vSphere 9.1, vSphere Resource Management > Host Power Management Policies in ESX, Table 304 CPU Power Management Policies (p. 1831), Configure Custom Policy Parameters (p. 1832)
 corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 31-32 read. Verification path changed to Overview tab. ACPI CPPC and Intel HWP added (pp. 12, 32).
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: Host Power Management Policies in the vSphere Resource Management guide, referenced by the source for Custom policy details; not read. Running Network Latency Sensitive Workloads (p. 49) is network, not CPU.'
+review_notes: []
 status: draft
 ```

@@ -21,8 +21,8 @@
   - VM Performance (%): [`vsphere/object-types/vm/vm-performance`](../vsphere/object-types/vm/vm-performance.md);
   - Cluster Risk (%): [`vsphere/object-types/cluster/models/cluster-risk`](../vsphere/object-types/cluster/models/cluster-risk.md);
   - 20-second peaks, how VCF Operations shows a counter: [`vcf-operations/features/peak-20-second-metrics`](features/peak-20-second-metrics.md).
-- This folder holds VCF Operations itself: this file, [`vcf-operations/alert-definitions`](alert-definitions.md) (how alert definitions are built, bottom up), the report suite, `features/` (product features as implemented, such as [`vcf-operations/features/real-time-metrics`](features/real-time-metrics.md)) and `dashboards/` (the shipped dashboard suites).
-- How to design dashboards, reports and alerts is method: [`sp5-framework/outputs/dashboard-design`](../sp5-framework/outputs/dashboard-design.md), [`sp5-framework/outputs/report-design`](../sp5-framework/outputs/report-design.md), [`sp5-framework/outputs/system-engagement`](../sp5-framework/outputs/system-engagement.md).
+- This folder holds VCF Operations itself: this file, [`vcf-operations/alert-definitions`](alert-definitions.md) (how alert definitions are built, bottom up), the report suite, `features/` (product features as implemented, such as [`vcf-operations/features/real-time-metrics`](features/real-time-metrics.md)) and `dashboards/` (dashboards as shipped or built in the product: [`vcf-operations/dashboards/vm-performance-dashboard`](dashboards/vm-performance-dashboard.md), [`vcf-operations/dashboards/business-applications`](dashboards/business-applications.md)).
+- How to design dashboards, reports and alerts is method: [`sp5-framework/outputs/dashboard-design`](../sp5-framework/outputs/dashboard-design.md), [`sp5-framework/outputs/report-design`](../sp5-framework/outputs/report-design.md), [`sp5-framework/outputs/system-engagement`](../sp5-framework/outputs/system-engagement.md). Dashboard families: [`sp5-framework/outputs/performance-dashboards`](../sp5-framework/outputs/performance-dashboards.md), [`sp5-framework/outputs/capacity-dashboards`](../sp5-framework/outputs/capacity-dashboards.md), [`sp5-framework/outputs/inventory-and-configuration-dashboards`](../sp5-framework/outputs/inventory-and-configuration-dashboards.md), [`sp5-framework/outputs/it-leaders-dashboards`](../sp5-framework/outputs/it-leaders-dashboards.md).
 - Later: its own sizing, health and performance troubleshooting.
 - Alert architecture across products (top down): [`sp5-framework/outputs/alert-design`](../sp5-framework/outputs/alert-design.md). The recommended alerts live with the object type they fire on, such as [`vsphere/object-types/vm/vm-alerts`](../vsphere/object-types/vm/vm-alerts.md); their values are in the threshold catalog.
 
@@ -54,7 +54,6 @@ source:
   document: Knowledge base
   path: Conversation on VCF Operations and vCenter roles
 corrections: []
-review_notes:
-- 'Section ''vCenter vs VCF Operations'': short history and rolled-up peaks follow vsphere/tools/vsphere-client/vcenter-statistics.'
+review_notes: []
 status: draft
 ```

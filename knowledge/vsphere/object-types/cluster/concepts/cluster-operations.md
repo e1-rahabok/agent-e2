@@ -17,7 +17,7 @@
 | Affinity | Configuration | Affinity and anti-affinity rules must match plan; easily overlooked across hundreds of clusters. |
 | Resource pool | Capacity, performance, configuration | Shares, limits and reservations at pool level must be compatible with the child VMs. VMs must not be siblings of resource pools. Cascading pools complicate. |
 | DPM | Capacity | Changes total capacity. |
-| DPM | Performance | Considers ESXi utilization only, not VM contention. |
+| DPM | Performance | Weighs VM demand against host capacity (memory demand from granted memory), not VM contention ([`vsphere/object-types/cluster/concepts/dpm`](dpm.md)). |
 | Stretched cluster | Configuration | VMs should access local-site storage. |
 | Stretched cluster | Capacity | Sites may be intentionally unbalanced (primary and DR). |
 | Stretched cluster | Performance | Horseshoe traffic between VMs on the same site; ping-pong traffic between VMs on different sites. |
@@ -35,7 +35,7 @@
 | Utilization, inter-host | See [`vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`](../../../technology/cpu/metrics/cluster/inter-host-imbalance.md). |
 | Utilization, intra-host | Report at cluster level as the highest among hosts. |
 | Overcommit | Running VM vCPU : ESXi usable threads differs between hosts. High overcommit is fine at low utilization. CPU is riskier than memory: more volatile. |
-| Monster VM | Concentration of monster VMs on one host raises contention risk. A monster VM has more than 50% of the host's physical cores (not threads), or more than 40% of its DRAM or 256 GB, whichever is smaller. Two such VMs rarely get runtime at once, since vSAN, NSX and VMkernel also demand CPU time. Definition: [`vsphere/object-types/cluster/models/cluster-risk`](../models/cluster-risk.md), section Monster VM. |
+| Monster VM | Concentration of monster VMs on one host raises contention risk: two such VMs rarely get runtime at once, since vSAN, NSX and VMkernel also demand CPU time. Definition: [`vsphere/object-types/cluster/models/cluster-risk`](../models/cluster-risk.md), section Monster VM. |
 
 ## Misconceptions
 - "Cluster utilization = average of hosts tells the story" → imbalance hides behind the average.
@@ -60,7 +60,9 @@ product:
 - vsan
 object:
 - ClusterComputeResource
-internal_derive: []
+internal_derive:
+- vsphere/object-types/cluster/models/cluster-risk
+- vsphere/object-types/cluster/concepts/dpm
 related:
 - vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
 - vsphere/object-types/cluster/metrics/vm-operations

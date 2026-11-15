@@ -3,6 +3,7 @@
 ## Meaning
 - Dropped packet counts that vCenter keeps on the distributed switch object, at the switch, per distributed port (DVPort) and per link aggregation group (LAG), each for transmit and receive.
 - Dropped packets are the only network contention signal vSphere has for VM traffic: there is no network latency or retransmit counter for a VM or a port. The host counts retransmits of its own VMkernel TCP traffic: [`vsphere/technology/network/metrics/host/errors`](../host/errors.md).
+- Relevance for operations: performance troubleshooting: these counters locate the DVPort or LAG that drops, at statistics level 3 and through the API. The distributed port group dropped packets alert is defined in VCF Operations on the port group, whose metrics VCF Operations aggregates over all hosts; vCenter keeps no port group counter ([`vsphere/object-types/distributed-port-group/distributed-port-group-alerts`](../../../../object-types/distributed-port-group/distributed-port-group-alerts.md)).
 
 ## Counters (vCenter 9.1 API)
 | Scope | Transmit | Receive |
@@ -49,10 +50,8 @@ related:
 - vsphere/tools/vsphere-client/vcenter-statistics
 source:
   document: Repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922)
-  path: https:/github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv
+  path: https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv
 corrections: []
-review_notes:
-- 'Whole file: counter names, scopes, level and rollup from the vCenter 9.1.0 API export.'
-- 'To check: Section ''Interpretation'': port, vNIC and uplink each have their own dropped packet counter; how to use them to find the component that caused a drop is not settled.'
+review_notes: []
 status: draft
 ```

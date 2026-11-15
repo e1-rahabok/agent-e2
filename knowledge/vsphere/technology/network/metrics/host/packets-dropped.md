@@ -1,9 +1,10 @@
 # ESXi Network Packets Dropped
 
 ## Meaning
-- Packets dropped before reaching the ESXi kernel, at the physical NIC.
+- Packets the host's physical NICs (vmnic) dropped: on receive, before they reach the ESXi kernel; on transmit, before they leave on the wire. A frame that a physical switch drops later is not counted here ([`vsphere/technology/network/concepts/packet-drop-accounting`](../../concepts/packet-drop-accounting.md), section Transmit drop).
 - Per Broadcom KB 341594, often a combination of counters in the driver private statistics (nicinfo.sh.txt in the log bundle).
 - Host value is about the sum of vmnic instances.
+- Relevance for operations: alerting and performance troubleshooting: transmit drops on the vmnics drive the ESXi physical network dropped packets alert ([`vsphere/object-types/esxi/esxi-alerts`](../../../../object-types/esxi/esxi-alerts.md)); any drop pattern goes to the network team.
 
 ## Observations
 - Transmit: 319 hosts over 3 months: minimal. One host had 362 dropped transmit packets (average 0.6 Gbps, peak 8.38 Gbps). 99th percentile: 0.

@@ -30,7 +30,7 @@ flowchart TD
 ## Checks, in order
 Order: availability, performance, security, capacity; within each pillar the what before the why ([`sp5-framework/concepts/health-check`](../../../sp5-framework/concepts/health-check.md)).
 1. Availability (HostSystem). Future, after 1.0: host not responding, disconnected, PSOD and soft errors come mostly from logs and events. State what was not checked. → step 2.
-2. Performance: ESXi Performance (%) (HostSystem). One score from the 8 VM contention sub-metrics (worst VM and 90th percentile of Ready, Co-stop, memory latency, disk latency) and the host's bad network packets. See [`vsphere/object-types/esxi/esxi-performance`](esxi-performance.md). Green → step 4. Yellow or worse → step 3.
+2. Performance: ESXi Performance (%) (HostSystem). One score from the 8 VM contention sub-metrics (worst VM and 90th percentile of Ready, Co-stop, memory latency, disk latency) and the host's bad network packets, each against its `kpi` row in `catalog/thresholds-performance` (rows with esxi-performance as `kb`). See [`vsphere/object-types/esxi/esxi-performance`](esxi-performance.md). Green → step 4. Yellow or worse → step 3.
 3. Which sub-metric fails (HostSystem, VirtualMachine). Open the sub-metric that drives the score down:
    - CPU Ready or Co-stop → [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](../../technology/cpu/troubleshooting/vm-cpu-contention-high.md).
    - Memory latency → [`vsphere/technology/memory/vm-memory-latency-high`](../../technology/memory/vm-memory-latency-high.md). Host memory Latency is an average of VMs: use the worst VM ([`vsphere/technology/memory/metrics/host/latency`](../../technology/memory/metrics/host/latency.md)).
@@ -38,7 +38,7 @@ Order: availability, performance, security, capacity; within each pillar the wha
    - Bad network packets → [`vsphere/technology/network/metrics/host/packets-dropped`](../../technology/network/metrics/host/packets-dropped.md) and [`vsphere/technology/network/metrics/host/errors`](../../technology/network/metrics/host/errors.md).
    - → step 4.
 4. Performance, consumption: CPU (HostSystem). Core Utilization and Thread Utilization are primary; complement with Usage (MHz) ([`vsphere/technology/cpu/metrics/host/core-utilization`](../../technology/cpu/metrics/host/core-utilization.md), [`vsphere/technology/cpu/metrics/host/utilization`](../../technology/cpu/metrics/host/utilization.md)). Usage and Demand can exceed 100% (Turbo; Demand sums VM demand): not an overload signal on their own ([`vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics`](../../technology/cpu/metrics/comparisons/host-consumption-metrics.md)). Hot cores and NUMA nodes: Peak Core Usage and Imbalance ([`vsphere/technology/cpu/metrics/host/peak-core-usage`](../../technology/cpu/metrics/host/peak-core-usage.md)). → step 5.
-5. Performance, consumption: memory (HostSystem). Consumed is the main capacity counter; it holds guest cache, so high Consumed alone is not a problem ([`vsphere/technology/memory/metrics/host/consumed`](../../technology/memory/metrics/host/consumed.md)). Leading warnings: Balloon and State. Past contention: Swap and Compressed ([`vsphere/technology/memory/metrics/comparisons/host-memory-metrics`](../../technology/memory/metrics/comparisons/host-memory-metrics.md)). Memory tiering hosts: active memory against DRAM, NVMe latency ([`vsphere/technology/memory/concepts/memory-tiering`](../../technology/memory/concepts/memory-tiering.md)). → step 6.
+5. Performance, consumption: memory (HostSystem). Capacity reads ESXi Memory Utilization; ESXi Memory Consumed is the capacity counter only on a host that runs with no ballooning by design ([`vsphere/technology/memory/metrics/host/utilization`](../../technology/memory/metrics/host/utilization.md), section Reason). Consumed holds guest cache, so high Consumed alone is not a problem ([`vsphere/technology/memory/metrics/host/consumed`](../../technology/memory/metrics/host/consumed.md)). Leading warnings: Balloon and State. Past contention: Swap and Compressed ([`vsphere/technology/memory/metrics/comparisons/host-memory-metrics`](../../technology/memory/metrics/comparisons/host-memory-metrics.md)). Memory tiering hosts: active memory against DRAM, NVMe latency ([`vsphere/technology/memory/concepts/memory-tiering`](../../technology/memory/concepts/memory-tiering.md)). → step 6.
 6. Performance, consumption: storage, network and GPU (HostSystem). Device, adapter and path throughput and IOPS ([`vsphere/technology/storage/metrics/host/disk`](../../technology/storage/metrics/host/disk.md), [`vsphere/technology/storage/metrics/host/adapter-and-path`](../../technology/storage/metrics/host/adapter-and-path.md)). Network throughput per vmnic ([`vsphere/technology/network/metrics/host/throughput`](../../technology/network/metrics/host/throughput.md)). GPU utilization, memory and temperature are statistics level 4 counters: no history at the default level ([`vsphere/technology/gpu/gpu-monitoring`](../../technology/gpu/gpu-monitoring.md)). → step 7.
 7. Configuration (HostSystem). [`vsphere/object-types/esxi/configuration/esxi-configuration-review`](configuration/esxi-configuration-review.md). Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Power management and BIOS settings change what utilization means ([`vsphere/technology/cpu/configuration/host-power-management`](../../technology/cpu/configuration/host-power-management.md), [`vsphere/object-types/esxi/configuration/bios-settings`](configuration/bios-settings.md)). Hypervisor overhead (vSAN, NSX, kernel): [`vsphere/architecture/overhead`](../../architecture/overhead.md). → step 8.
 8. Capacity (HostSystem). Two host-level signals only: the memory state as the leading warning ([`vsphere/technology/memory/metrics/host/state`](../../technology/memory/metrics/host/state.md)) and a hot host against its cluster ([`vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`](../../technology/cpu/metrics/cluster/inter-host-imbalance.md)). CPU headroom of this host: [`vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom`](../../technology/cpu/decision-tree/host-cpu-capacity-headroom.md). Then hand over to the cluster: a host is sized as part of its cluster ([`vsphere/object-types/cluster/cluster-health-check`](../cluster/cluster-health-check.md), step 5).
@@ -58,11 +58,11 @@ Order: availability, performance, security, capacity; within each pillar the wha
 - ESXi Performance green with high utilization → the host works hard and serves its VMs; a capacity question, not a performance one.
 
 ## Documentation guidance (esxtop)
-- Performance Best Practices for vSphere 9.1 gives these esxtop readings:
+- Performance Best Practices for vSphere 9.1 (pp. 27-28) gives these esxtop readings:
   - esxtop CPU panel, first line (load average): a value equal to or greater than 1 means the system is overloaded.
   - esxtop PCPU line (usage of physical CPUs): 80% is a reasonable ceiling.
   - esxtop PCPU line: 90% should be a warning.
-  - The source notes that organizations set their own standards for the target load percentage.
+  - The same document notes that organizations set their own standards for the target load percentage.
 - These levels describe a host in normal operation. They say nothing about the loss of a host: in a cluster of N identical hosts with one failure to tolerate, the N - 1 hosts left carry the whole load, so each runs at N / (N - 1) times its normal utilization. A host just under 80% in a small cluster lands above 90% after a failure. The check belongs to the cluster (step 8), not to the host.
 - Knowledge base reading: these are utilization levels, so they are capacity signals. Confirm a performance problem with the contention of the host's VMs (step 2). Load average 1.00 means all PCPUs fully used. See [`vsphere/tools/esxtop/cpu`](../../tools/esxtop/cpu.md).
 
@@ -106,6 +106,26 @@ internal_derive:
 - vsphere/technology/memory/vm-memory-latency-high
 - vsphere/technology/storage/troubleshooting/host-storage-latency
 - vsphere/object-types/esxi/configuration/esxi-configuration-review
+- sp5-framework/concepts/health-check
+- vsphere/technology/memory/metrics/host/latency
+- vsphere/technology/network/metrics/host/packets-dropped
+- vsphere/technology/network/metrics/host/errors
+- vsphere/technology/cpu/metrics/host/core-utilization
+- vsphere/technology/cpu/metrics/host/utilization
+- vsphere/technology/cpu/metrics/host/peak-core-usage
+- vsphere/technology/memory/metrics/host/consumed
+- vsphere/technology/memory/metrics/host/utilization
+- vsphere/technology/memory/concepts/memory-tiering
+- vsphere/technology/storage/metrics/host/disk
+- vsphere/technology/storage/metrics/host/adapter-and-path
+- vsphere/technology/network/metrics/host/throughput
+- vsphere/technology/gpu/gpu-monitoring
+- vsphere/technology/cpu/configuration/host-power-management
+- vsphere/object-types/esxi/configuration/bios-settings
+- vsphere/architecture/overhead
+- vsphere/technology/memory/metrics/host/state
+- vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
+- vsphere/object-types/cluster/cluster-health-check
 related:
 - sp5-framework/concepts/health-check
 - vsphere/object-types/vm/vm-health-check
@@ -116,9 +136,7 @@ related:
 source:
   document: Knowledge base; vSphere 9.1 documentation; Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: Linked files in each step; section 'Documentation guidance (esxtop)' from ESX CPU Considerations (pp. 27-28)
-corrections:
-- 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; ESXi has a KPI (ESXi Performance); availability, security and compliance are future, after 1.0. VCF always includes VCF Operations: no vCenter-only fallback.'
-review_notes:
-- 'To check: Section ''Interpretation'': derived from the Principle section.'
+corrections: []
+review_notes: []
 status: draft
 ```

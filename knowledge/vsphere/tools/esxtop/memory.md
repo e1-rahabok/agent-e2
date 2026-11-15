@@ -110,11 +110,11 @@ images:
     topic: 'esxtop memory'
     image_type: screenshot
 source:
-  document: Knowledge base
-  path: Provider Objects > esxtop > Memory
-corrections: []
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: Provider Objects > esxtop > Memory; vSphere Monitoring and Performance > esxtop Memory Panel (pp. 2155-2157)
+corrections:
+- 'Section ''Summary lines (host)'': the vSphere 9.1 documentation, esxtop Memory Panel (p. 2156), lists four memory states (high, soft, hard, low). ESXi has a fifth, clear, between high and soft: vsphere/technology/memory/concepts/host-memory-states.'
 review_notes:
-- 'To check: Section ''NUMA'': how esxtop prints more than one home node in NHN (list format), against vSphere 9.1 Monitoring and Performance, esxtop Memory Panel, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-monitoring-and-performance.html.'
-- 'To check: Sections ''Summary lines'', ''Consumption'': Clear state added in ESXi 6.0; the esxtop section of the documentation lists only 4 states (high, soft, hard, low), and the file keeps the 5 states of vsphere/technology/memory/concepts/host-memory-states. State values, shared = common + saving, Consumed = GRANT - SHRDSVD and the CNSM definition from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > esxtop > Memory Panel (pp. 2155-2157).'
+- 'To check: Section ''NUMA'': how esxtop prints more than one home node in NHN; the vSphere 9.1 documentation (p. 2157) says only that a dash shows when the VM has no home node; a live esxtop reading of a wide VM.'
 status: draft
 ```

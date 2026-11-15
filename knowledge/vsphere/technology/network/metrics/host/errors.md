@@ -5,6 +5,7 @@
 - Unknown: ESXi cannot decode the packet, so does not know its type. Disabled by default in VCF Operations; enable it.
 - Expect error, unknown and dropped packets to be 0 at all times.
 - Fleet view in VCF Operations: vSphere \ ESXi Bad Network Packets.
+- Relevance for operations: availability and performance troubleshooting: any error or unknown protocol frame points at hardware, cabling or the physical switch port. Reviewed across the fleet; not in the alert set ([`vsphere/object-types/esxi/esxi-alerts`](../../../../object-types/esxi/esxi-alerts.md)).
 ![vCenter ESXi network error counters](../../images/vcenter-esxi-network-error-counters-table.png)
 
 ## Host TCP retransmits
@@ -18,7 +19,7 @@
 watch esxcli network nic stats get -n vmnic#
 ```
 - Counters are cumulative: the problem may be in the past.
-- vCenter shows totals (Total receive errors and Total transmit errors: see `review_notes`).
+- vCenter shows only a receive and a transmit error total per vmnic, not the breakdown in the table below.
 
 | esxcli counter | Meaning |
 |---|---|
@@ -73,11 +74,11 @@ images:
     metric: ['ESXi Network Error Packets', 'ESXi Network Unknown Protocol Frames']
     image_type: table
 source:
-  document: Knowledge base; Broadcom KB 341594 (ESXi 8.x and 9.x)
+  document: Knowledge base; Broadcom KB 341594 (ESXi 8.x and 9.x); Broadcom KB 424515 (net-stats tcptx rexmit); Broadcom KB 419500 (Performance for Support, tcpTxRetransmitRate); Broadcom KB 415001 (vSAN 8.x and 9.x)
   path: Network > ESXi > Contention Metrics > Error Metrics; esxcli; KB 341594, Troubleshooting and understanding physical NIC receive or transmit dropped, missed and error counters in ESXi
 corrections: []
 review_notes:
-- 'To check: whether the vCenter error counters are esxcli Total receive errors and Total transmit errors.'
-- 'Section ''Host TCP retransmits'': Broadcom KB 424515 (net-stats tcptx rexmit), KB 419500 (Performance for Support, tcpTxRetransmitRate), KB 415001 (vSAN 8.x and 9.x). To check: the chart name in the vSAN 9.x TechDocs.'
+- 'To check: Section ''Detail with esxcli'': whether the vCenter receive and transmit error counters of a vmnic equal the esxcli Total receive errors and Total transmit errors; a live host with errors.'
+- 'To check: Section ''Host TCP retransmits'': the name of the vSAN Performance for Support chart that shows tcpTxRetransmitRate in vSAN 9.1; vSAN 9.1 documentation on techdocs.broadcom.com.'
 status: draft
 ```

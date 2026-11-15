@@ -3,11 +3,12 @@
 ## Scope
 - This host's view only. For a shared datastore, values differ from the datastore object, which spans all hosts.
 - Performance, plus unmap activity (space reclamation). Capacity is covered at the datastore object.
+- Relevance for operations: performance troubleshooting (this host's share of a datastore's IO and latency; Maximum Queue Depth against the design) and capacity (Unmap IO and Unmap Size show that space reclamation works). The view across all hosts of a shared datastore is not here.
 
 ## Counters
 - IOPS, throughput and latency, each read and write: 6 counters.
 - Block size: derive as throughput / IOPS.
-- Datastore latency observed by VMs: much higher than the datastore latency in one observed example. Only the kernel sits between them; the gap is unexplained.
+- Datastore latency observed by VMs: much higher than the datastore latency in one observed example. The VMkernel queues sit between the two readings ([`vsphere/technology/storage/concepts/esxi-storage-io-path`](../../concepts/esxi-storage-io-path.md), section Queues on the path); the example did not measure them.
 - Highest latency: a normalized average of read and write, so it can be lower.
 - Outstanding IO: derive from latency and IOPS. Latency is more insightful: little IO in the queue can still mean high latency.
 - Queue depth per datastore (likely the backing LUN). Check settings are as expected and consistent; list them per cluster.
@@ -22,10 +23,10 @@
 - VCF Operations: the 20-second values are summed per 20 seconds, then averaged over the 5-minute cycle.
 - Per host and datastore only: a datastore total across hosts is not available. Sum the hosts that mount it.
 - Unmap starts from two places: the VMFS datastore (deleted or migrated VMs, consolidated snapshots) and the Guest OS (files deleted on a thin virtual disk).
-- VMFS6 sends unmap automatically, in the background, at a constant rate. Default priority Low: 25-50 MB/s; Medium 50-100 MB/s; High above 100 MB/s; None deactivates it. Granularity equals the VMFS block size (1 MB): free regions smaller than that are not reclaimed.
+- VMFS6 sends unmap automatically, in the background, at a constant rate. Default priority Low: 25-50 MB/s; Medium 50-100 MB/s; High above 100 MB/s; None deactivates it. The vSphere Client offers only Low and None; Medium and High need esxcli. Granularity equals the VMFS block size (1 MB): free regions smaller than that are not reclaimed.
 - Fixed method: a set rate instead of a priority, at least 10 MB/s (`esxcli storage vmfs reclaim config set -l <datastore> -m fixed -b <MB/s>`); `esxcli storage vmfs reclaim config get -l <datastore>` shows the current setting.
 - VMFS frees the space at once; the array frees its blocks only as the throttled unmap reaches it, so array free space lags (Broadcom KB 452963). To catch up at once: `esxcli storage vmfs unmap --volume-label=<datastore>`.
-- A host sending unmap regularly is normal on thin-provisioned arrays. Unmap Size near 0 for weeks on a thin datastore with deletions: check that space reclamation is on.
+- A host sending unmap regularly is normal on thin-provisioned arrays. Unmap Size near 0 for weeks on a thin datastore with deletions: check that space reclamation is on, and that a file on the datastore is open. A VMFS6 datastore releases blocks only while at least one of its files is open, for example the files of a powered-on VM (vSphere 9.1 documentation, p. 1535).
 - Space left to reclaim in a VM: compare Guest OS used space with virtual disk used space ([`sp5-framework/capacity/reclamation`](../../../../../sp5-framework/capacity/reclamation.md), section TRIM and unmap).
 
 ## Misconceptions
@@ -68,15 +69,11 @@ images:
     metric: ['Datastore Latency', 'VM Disk Latency']
     image_type: timeline
 source:
-  document: Knowledge base
-  path: Storage > ESXi > Datastore; Capacity Management > Reclamation > TRIM and Unmap
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: Storage > ESXi > Datastore; Capacity Management > Reclamation > TRIM and Unmap; vSphere Monitoring and Performance > Datastores and Datastore Clusters > Maximum Queue Depth per Host (p. 2051); vSphere Storage > Storage Space Reclamation in vSphere (pp. 1535-1537)
 corrections: []
 review_notes:
-- 'To check: Section ''Counters'': the gap between Datastore latency observed by VMs and datastore latency is not explained yet.'
-- 'Section ''Counters'': Maximum Queue Depth definition and its change under Storage I/O Control from the vSphere 9.1 documentation (vSphere Monitoring and Performance > Datastores and Datastore Clusters > Maximum Queue Depth per Host, p. 2050).'
-- 'Section ''Unmap'': Unmap IO and Unmap Size from Part 1 (TRIM and Unmap). Automatic unmap on VMFS6, priority rates and 1 MB granularity from the vSphere 9.1 documentation (vSphere Storage > Storage Space Reclamation in vSphere, pp. 1533-1534).'
-- 'To check: Section ''Unmap'': vCenter counter keys, likely datastore.unmapIOs and datastore.unmapSize (summation); add to the catalog after checking (vSphere 9.1 API reference).'
-- 'To check: Section ''Unmap'': the check for Unmap Size near 0; not in the sources.'
-- 'To check: Section ''Unmap'': "sum the hosts that mount it" as the reading of sentence "You can track both operations on each datastore, but you can''t aggregate them per datastore" (Q124).'
+- 'To check: Section ''Counters'': the gap between Datastore latency observed by VMs and datastore latency, layer by layer (QAVG and KAVG of the same host and period); see also vsphere/technology/storage/metrics/datastore/storage-io-control, section Includes / excludes.'
+- 'To check: Section ''Unmap'': the vCenter counter keys (likely datastore.unmapIOs and datastore.unmapSize, summation) and the datastore total as the sum of the hosts that mount it; open question Q124; vSphere 9.1 API reference, https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/.'
 status: draft
 ```

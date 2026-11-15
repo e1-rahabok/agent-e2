@@ -34,7 +34,7 @@
 - **Snapshot**: removed within one day of the change request. A forgotten snapshot grows and slows the VM: [`vsphere/technology/storage/concepts/snapshot-impact`](../../../technology/storage/concepts/snapshot-impact.md).
 - **Disaster recovery**: vSphere Replication settings drift when owners do not report changes. Check that every VM protected by Site Recovery is still meant to be protected; review the recovery plan: how often it runs, when it last ran.
 - **Fault Tolerance**: only on the VMs meant to have it; it brings its own complexity.
-- **vVols**: per design practice. vVols are deprecated in VCF 9.
+- **vVols**: per design practice. vVols are deprecated from VCF 9.0, still supported in vSphere 9.1, and to be removed in a future major release ([`vsphere/technology/storage/storage-configuration-review`](../../../technology/storage/storage-configuration-review.md)).
 - **Shared disks**: VMs sharing a VMDK or RDM.
 - **Guest partition to virtual disk**: 1:1 is simplest. Logical volumes across disks in Windows or Linux add complexity.
 - **VM to datastore**: avoid VMs spanning datastores. M:N mapping complicates troubleshooting and capacity planning.
@@ -73,17 +73,16 @@ internal_derive:
 - sp5-framework/concepts/configuration-management
 related:
 - guest-os/system/concepts/guest-os-configuration-review
+- vsphere/technology/storage/storage-configuration-review
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 - vsphere/technology/cpu/concepts/virtual-numa
 - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 - vsphere/technology/storage/concepts/snapshot-impact
 - vsphere/technology/storage/storage-configuration-review
 source:
-  document: Knowledge base
+  document: Knowledge base; Broadcom KB 401070 (vVols deprecation); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number), p. 1488
   path: 'Configuration Management > Review List > Consumer Objects > Tools; VM; Compute-related; Storage-related Configuration'
 corrections: []
-review_notes:
-- 'Section ''Storage'', vVols deprecated: Broadcom KB 401070 (https://knowledge.broadcom.com/external/article/401070), VCF 9.0 vSphere product support notes; Protection and Recovery 9.1 release notes call 9.1 its last release supporting vVols.'
-- 'To check: Misconceptions 1 and 2: examples derived from rules.'
+review_notes: []
 status: draft
 ```

@@ -4,16 +4,16 @@
 - RSS schedules network packets from a single NIC in parallel on multiple CPUs by creating multiple hardware queues.
 - Gain: higher packet processing rates and overall throughput.
 - Cost: additional CPU utilization, incurred only when the traffic requires it.
-- The source notes that with large numbers of CPU threads in recent CPUs, the additional CPU use might not be a concern.
+- Performance Best Practices for vSphere 9.1 notes that with the large number of CPU threads in recent CPUs, the additional CPU use might not be a concern.
 - Use case: environments where a single MAC address gets large amounts of traffic, such as network-intensive virtual appliances.
 - Some configurations have RSS deactivated by default, because of the potential for increased CPU overhead.
 - Activation per NIC type (9.1 pp. 50-51):
   - Broadcom BCM5741x, BCM5750x, BCM5760x: the bnxtnet driver supports DRSS and NetQueue RSS by default. RSS is supported in pktHandle mode and EDP mode.
-  - Intel 82599, X450, X550, X557, E610, X710, XL710, XXV710, E810, E830, E835: enable with the ixgben driver module parameter `RSS`.
+  - Intel 82599, X450, X550, X557, E610, X710, XL710, XXV710, E810, E830, E835: enable with `esxcli system module parameters set -a -m ixgben -p RSS="1"`; one comma-separated 1 per NIC, for example RSS="1,1,1" for three NICs.
   - Marvell FastLinQ 45xxx and 41xxx: the qedentv driver supports DRSS and NetQueue RSS by default. RSS is supported with and without EDP.
   - NVIDIA (previously Mellanox) ConnectX-4 through ConnectX-9: the nmlx5_core driver supports DRSS and NetQueue RSS by default.
+  - The driver parameters: `esxcli system module parameters list -m <driver>` (bnxtnet, qedentv, nmlx5_core). Verify them against the NIC driver release before use.
 - For each VM that uses the feature, once RSS is enabled (by default or by command), add `ethernetX.pNicFeatures = "4"` to the VMX file, where X is the virtual NIC number.
-- Exact driver commands are in the source. They are not copied here. Verify against the NIC driver release before use.
 
 ## Virtual network interrupt coalescing
 - Coalescing reduces the number of interrupts, which can reduce CPU utilization.
@@ -30,14 +30,14 @@
 | Disabled | `disabled` | More interrupts (and higher CPU utilization). Typically lower network latency. |
 
 - Static: a larger queue size can reduce context switches between the VM and the VMkernel, which can reduce CPU use in the VM and in the VMkernel.
-- Regardless of queue size, ESX waits no longer than 4 milliseconds before sending or receiving packets. Other events, such as virtual machine interrupts or packet transmission, can trigger earlier delivery.
+- Regardless of queue size, ESX waits no longer than 4 milliseconds before it interrupts the VM or transmits the packets. Other events, such as the VM being idle, trigger the interrupt or the transmission earlier, so packets are rarely delayed the full 4 milliseconds.
 - Change in vSphere Client: right-click the VM, Edit Settings, VM Options tab, expand Advanced, Edit Configuration. Set `ethernetX.coalescingScheme` or `ethernetX.coalescingParams`.
 - Change takes effect after the VM restarts, or after the vNIC is disconnected and reconnected.
 
 ## Misconceptions
 - "Coalescing is always good" → it can add latency, and disabling it raises CPU use.
-- "RSS is free" → it adds CPU use. The source says it is acceptable with recent CPUs, but it is deactivated by default in some configurations.
-- "Coalescing latency is always microseconds" → the source gives a few hundred microseconds up to a few milliseconds.
+- "RSS is free" → it adds CPU use. Performance Best Practices for vSphere 9.1 says it is acceptable with recent CPUs, but it is deactivated by default in some configurations.
+- "Coalescing latency is always microseconds" → Performance Best Practices for vSphere 9.1 gives a few hundred microseconds up to a few milliseconds.
 
 ## Metadata
 ```yaml
@@ -61,11 +61,8 @@ related:
 - vsphere/technology/cpu/configuration/host-wide-dense-mode
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Networking Considerations > Receive Side Scaling (RSS) (p. 50); Virtual Network Interrupt Coalescing (p. 51)
+  path: ESX Networking Considerations > Receive Side Scaling (RSS) (pp. 50-51); Virtual Network Interrupt Coalescing (p. 51)
 corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). RSS NIC list changed in 9.1 (pp. 50-51). Coalescing unchanged.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: exact driver and module commands for RSS against the NIC driver release before use; they are in the source (p. 48), not copied here.'
+review_notes: []
 status: draft
 ```

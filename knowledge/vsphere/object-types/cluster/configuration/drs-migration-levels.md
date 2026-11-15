@@ -22,16 +22,16 @@
 - DRS scans the cluster every minute for load-balancing recommendations.
 - DRS also weighs host network saturation in initial placement.
 - A VM that becomes incompatible with its current host (HA agent error, lost storage path, NSX component down) triggers DRS migrations to compatible hosts. Since vCenter 8.0 Update 3 the default of CompatCheckTransientFailureTimeSeconds is -1: DRS no longer moves a VM out only because of incompatibility with its current host. Earlier default: 600 seconds of tolerance.
-- Since vSphere 7.0, the Cluster DRS Score replaces the cluster load balance metric as the indicator of cluster balance and health.
+- Since vSphere 7.0, the Cluster DRS Score replaces the cluster load balance metric. It indicates cluster health, not load balance (Performance Best Practices 9.1, p. 76).
 - Higher values are better. The exact value matters less than the range.
-- Score above 80%: the source indicates no performance impact.
+- Score above 80%: no performance impact, per Performance Best Practices 9.1 (p. 79).
 - Score below 80%: potential performance degradation in one or more cluster workloads.
 - Lower score: higher potential performance impact on the workloads.
 - Ways to raise the score:
   - relax rules,
   - adjust the migration threshold,
   - reduce resource demands on the cluster.
-- Causes of a low score that the source lists:
+- Causes of a low score that Performance Best Practices 9.1 lists (p. 79):
   - migrations filtered out by affinity or anti-affinity rules,
   - migrations filtered out by VM-host incompatibilities,
   - cost estimate for potential migrations, based on the costs of previous migrations, exceeds the expected benefit of the migrations,
@@ -39,11 +39,12 @@
   - the cluster does not have enough usable resources to meet VM demands.
 
 ## Predictive DRS
-- Predictive DRS can receive predictions from VMware vRealize Operations and use them for vMotion decisions.
-- Requires vRealize Operations 6.4 or later, per the source.
+- Predictive DRS adds forecast demand to the real-time metrics DRS balances on, so DRS can move VMs, and DPM can wake standby hosts, before a predictable rise in load.
+- Two settings: the Predictive DRS check box in the cluster's DRS settings, and Predictive DRS configured in the operations product that supplies the forecasts (vSphere 9.1 documentation, p. 1899).
+- The vSphere 9.1 documentation (p. 1899) and Performance Best Practices 9.1 (pp. 79, 81) name the forecast provider vRealize Operations, version 6.4 or later: the former name of VCF Operations.
 
 ## Misconceptions
-- "A Cluster DRS Score of 85% and one of 95% differ in performance" → the source says the range matters, not the exact value. Scores above 80% indicate no performance impact.
+- "A Cluster DRS Score of 85% and one of 95% differ in performance" → the range matters, not the exact value (Performance Best Practices 9.1, p. 79): both sit in the range that indicates no performance impact.
 - "DRS Level 3 reacts to every spike" → Level 3 is tuned for mostly stable workloads. Bursty or dynamic workloads are served by Level 4 or 5.
 
 ## Metadata
@@ -68,13 +69,10 @@ related:
 - vsphere/object-types/resource-pool/resource-pool-design
 - vsphere/object-types/cluster/concepts/dpm
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: VMware Distributed Resource Scheduler (DRS) > DRS Performance Tuning (pp. 78-79); Cluster DRS Score (p. 79)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); vSphere Web Services API 9.1 reference, cluster services counters
+  path: VMware Distributed Resource Scheduler (DRS) > DRS Performance Tuning (pp. 78-79); Cluster DRS Score (p. 79); vSphere 9.1 Resource Management > Admission Control and Initial Placement (p. 1894), DRS Migration Threshold > DRS Score (p. 1896), Edit Cluster Settings, Predictive DRS (p. 1899), VM migrations initiated by DRS due to incompatibility (pp. 1954-1955)
 corrections: []
 review_notes:
-- 'Section ''Cluster DRS Score'': counter names, level and rollup from the vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
-- 'Section ''Cluster DRS Score'': VM happiness, weighted average, one-minute scan, network-aware placement and the compatibility-check option from the vSphere 9.1 documentation, vSphere Resource Management > Admission Control and Initial Placement, DRS Migration Threshold > DRS Score, VM migrations initiated by DRS due to incompatibility (pp. 1894, 1896, 1954-1955).'
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: Predictive DRS: the source requires VMware vRealize Operations 6.4 or later, an old product version; whether the feature applies to vSphere 9.0 and VCF Operations.'
+- 'To check: Section ''Predictive DRS'': whether VCF Operations 9.1 still offers the forecast provider for Predictive DRS (the vCenter cloud account option Provide data to vSphere Predictive DRS in earlier releases); the vSphere 9.1 documentation and Performance Best Practices 9.1 still name vRealize Operations 6.4 or later (VCF Operations 9.1 documentation, vCenter cloud account settings).'
 status: draft
 ```

@@ -74,7 +74,7 @@
 - Non-business work is hard to detect without per-process allow lists, and even those miss software that runs through Windows or Linux system services.
 - Defined on CPU only. Network and disk activity take CPU cycles (packets processed, data copied to RAM), so CPU idleness implies the rest.
 - Threshold is absolute, in MHz, not relative to VM size: idle is absolute; oversized is relative.
-- Default: 100 MHz. On a 2 GHz host that is 5% of a 1-vCPU VM and 0.25% of a 20-vCPU VM.
+- The policy default is catalog row `idle-vm-cpu`. Example at 100 MHz on a 2 GHz host: 5% of a 1-vCPU VM, 0.25% of a 20-vCPU VM.
 - Evaluate every day, not over the whole window. A VM used 2 hours a week is 98.8% idle over the week (166 of 168 hours) but is not idle.
 - The VM must be idle every day for N days. VCF Operations implements it with two metrics ([`vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm`](../../vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm.md)).
 - Window: a short window catches a decommissioned VM fast; a long window protects a month-end VM (payroll can be idle 29 days). With a 1-month window, a retired VM waits a month to be flagged.
@@ -102,7 +102,7 @@
 ## TRIM and unmap
 
 - When the Guest OS deletes a file, it does not zero the blocks; it leaves them. Faster, and recoverable. The thin virtual disk keeps its size, and the array keeps the blocks too.
-- TRIM (ATA) and unmap (SCSI) pass the free blocks down so that the virtual disk and the array can release them.
+- The space reclamation command passes the free blocks down so that the virtual disk and the array can release them: TRIM on ATA, UNMAP on SCSI, Deallocate (Dataset Management) on NVMe. ESX accepts it from a VMFS datastore and from the Guest OS.
 - Applies only to thin-provisioned disks.
 - Estimate the space to reclaim per VM: Guest OS used space against virtual disk used space.
 - ESXi metrics: [`vsphere/technology/storage/metrics/host/datastore`](../../vsphere/technology/storage/metrics/host/datastore.md), section Unmap.
@@ -160,10 +160,9 @@ images:
     topic: 'Power-off as a brake'
     image_type: diagram
 source:
-  document: Knowledge base
-  path: 'Capacity Management > Reclamation (Reclamation Approach; Focus on Monster VMs; Powered Off VM; Powered Off as Brake; 2 Sides of a Running VM; Idle VM; TRIM and Unmap)'
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02)
+  path: 'Capacity Management > Reclamation (Reclamation Approach; Focus on Monster VMs; Powered Off VM; Powered Off as Brake; 2 Sides of a Running VM; Idle VM; TRIM and Unmap). vSphere 9.1, vSphere Storage > Storage Space Reclamation in vSphere (p. 1534): SCSI unmap or NVMe dataset management deallocate, from a VMFS datastore or a guest operating system'
 corrections: []
-review_notes:
-- 'To check: Section ''TRIM and unmap'': TRIM (ATA) and unmap (SCSI) naming; no source yet.'
+review_notes: []
 status: draft
 ```

@@ -4,13 +4,15 @@
 - The only CPU reservation metric for ESXi. Unit: MHz.
 - Memory has 3 reservation counters. CPU has 1.
 - The reservable total is capped at base (nominal) clock speed × cores, not Turbo: ESXi guarantees only the frequency it can always deliver.
+- Relevance for operations: capacity: how much of the host's base-clock capacity the VMs have reserved. Not performance: a CPU reservation acts only under contention.
 
 ## One reservation counter
 - CPU reservation is transient. When a VM is not running, its reserved CPU can be used by other VMs.
 - Memory reservation is sticky: memory is a form of storage.
 
 ## Includes / excludes
-- excludes: hypervisor (kernel) reservation.
+- Includes: the CPU reservations of the VMs. vSphere Web Services API 9.1 defines `cpu.reservedCapacity` as total CPU capacity reserved by virtual machines.
+- Excludes: the hypervisor (kernel) reservation, the System Resource Reservation that ESXi CPU Demand in VCF Operations adds ([`vsphere/technology/cpu/metrics/host/demand`](demand.md), section vCenter vs VCF Operations).
 
 ## Misconceptions
 - "Reserved CPU is unavailable to other VMs" → unused reserved CPU is used by other VMs.
@@ -40,10 +42,9 @@ related:
 - vsphere/technology/cpu/metrics/host/demand
 - vsphere/architecture/resource-controls
 source:
-  document: Knowledge base
-  path: CPU > ESXi > Consumption Metrics > Reservation
-corrections:
-- 'Sections Meaning, Misconceptions: CPU reservation capped at base clock speed × cores, and applies only under contention (quiz CPU Q8 key options A and B).'
+  document: Knowledge base; vSphere Web Services API 9.1 reference, CPU Counters
+  path: CPU > ESXi > Consumption Metrics > Reservation; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html, reservedCapacity
+corrections: []
 review_notes: []
 status: draft
 ```

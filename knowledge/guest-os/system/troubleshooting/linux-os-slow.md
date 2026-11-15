@@ -30,7 +30,7 @@ flowchart TD
 4. Memory (Guest OS).
    - Swap-in and swap-out (`si`, `so` in vmstat) together with a high disk queue → likely a memory performance problem.
    - Pressure stall information: `/proc/pressure/memory` gives the share of time tasks stalled on memory (reclaim, swap-in, refault). Unlike Windows, Linux with pressure stall information measures this wait; VMware Tools does not collect it, so VCF Operations does not show it.
-   - Low free memory alone is normal: Linux uses free memory as page cache. Read MemAvailable, not MemFree.
+   - Low free memory alone is normal: Linux uses free memory as page cache. Read MemAvailable, not MemFree: MemAvailable estimates the memory available for new applications without swapping, counting the page cache that can be reclaimed.
    - → step 5.
 5. Disk (Guest OS). Queue size (`aqu-sz`) and wait per request (`r_await`, `w_await`) in iostat; `/proc/pressure/io` ([`guest-os/storage/disk-queue`](../../storage/disk-queue.md)).
    - Wait high in Linux, VM disk latency low → the IO waits inside Linux (queue, IO scheduler, filesystem): it never reached the VM.
@@ -95,11 +95,11 @@ related:
 - guest-os/system/guest-os-performance
 source:
   document: Knowledge base synthesis of the files in internal_derive; Linux man-pages 6.19, proc_loadavg(5) (2026-02-08); Linux kernel source, kernel/sched/loadavg.c and include/linux/sched/loadavg.h; Linux kernel documentation (pressure stall information)
-  path: 'Step 2, load average: proc_loadavg(5) DESCRIPTION (jobs in the run queue, state R, or waiting for disk I/O, state D, averaged over 1, 5 and 15 minutes); loadavg.c header comment (exponentially decaying average of nr_running + nr_uninterruptible); loadavg.h LOAD_FREQ (5-second intervals)'
+  path: 'Step 2, load average: proc_loadavg(5) DESCRIPTION (jobs in the run queue, state R, or waiting for disk I/O, state D, averaged over 1, 5 and 15 minutes), https://man7.org/linux/man-pages/man5/proc_loadavg.5.html; loadavg.c header comment (exponentially decaying average of nr_running + nr_uninterruptible); loadavg.h LOAD_FREQ (5-second intervals). Steps 2 and 4, pressure stall information: https://docs.kernel.org/accounting/psi.html (some = share of time at least one task stalled; 10, 60 and 300 second averages). Step 4, MemAvailable: https://docs.kernel.org/filesystems/proc.html (/proc/meminfo)'
 corrections: []
 review_notes:
-- 'To check: the whole order of checks, from field practice (Q060, 2026-11-11: the application team first quantifies the slowness in Guest OS counters).'
-- 'To check: Steps 2, 4, 5: the Linux counters (vmstat, iostat, mpstat, MemAvailable); no source yet; pressure stall information against https://docs.kernel.org/accounting/psi.html (Q172).'
-- 'Step 2, load average: https://man7.org/linux/man-pages/man5/proc_loadavg.5.html; https://github.com/torvalds/linux/blob/master/kernel/sched/loadavg.c; https://github.com/torvalds/linux/blob/master/include/linux/sched/loadavg.h.'
+- 'To check: Section ''Checks, in order'': the order of steps 2 to 6 (CPU, memory, disk, network) against field practice; step 1 (quantify in Guest OS counters first) is settled.'
+- 'To check: Section ''Checks, in order'', steps 2 to 5: the vmstat fields (r, si, so, cs), the iostat fields (aqu-sz, r_await, w_await) and mpstat per-vCPU time; procps and sysstat man pages.'
+- 'To check: Section ''Checks, in order'', step 4: which events count as a memory stall in /proc/pressure/memory (reclaim, swap-in, refault); kernel/sched/psi.c, as https://docs.kernel.org/accounting/psi.html does not list them.'
 status: draft
 ```

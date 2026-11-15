@@ -80,7 +80,7 @@ reservation is guaranteed; utilization may be < reservation
 | After use | — | Once the VM asks for memory and is served, the physical RAM stays reserved, even if the VM is idle for days. The page is effectively locked. |
 
 - Before the VM asks for memory, ESXi does not back the reservation with physical RAM.
-- Lab check (9.1, one VM): setting a reservation above the VM's Consumed, and later removing it, left VM Consumed, Granted, Entitlement and Overhead consumed flat ([VM memory metrics compared](../technology/memory/metrics/comparisons/vm-memory-metrics.md), section VM reservation across counters).
+- Lab check (9.1, one VM): setting a reservation above the VM's Consumed, and later removing it, left VM Consumed, Granted, Entitlement and Overhead consumed flat ([`vsphere/technology/memory/metrics/comparisons/vm-memory-metrics`](../technology/memory/metrics/comparisons/vm-memory-metrics.md), section VM reservation across counters).
 
 ## Limit
 - Not visible to the Guest OS.
@@ -91,7 +91,8 @@ reservation is guaranteed; utilization may be < reservation
 ## Entitlement
 - What the VM is entitled to. A dynamic value determined by the hypervisor.
 - Changes every second.
-- Determined by the VM's own limit, shares and reservation, and by the shares and allocations of other VMs on the same host.
+- Determined by the VM's estimated demand and its own limit, shares and reservation, against the shares and allocations of the other VMs on the same host (vSphere Web Services API 9.1, `mem.mementitlement`).
+- A memory reservation acts as a floor only under overcommit: on a host with free memory, a reservation above the VM's demand left VM Memory Entitlement where it was ([`vsphere/technology/memory/metrics/virtual-motherboard/entitlement`](../technology/memory/metrics/virtual-motherboard/entitlement.md)).
 - A VM cannot use more than ESXi entitles it.
 ```text
 Usage <= Entitlement   (at any point in time)
@@ -116,7 +117,7 @@ Usage <= Entitlement   (at any point in time)
 ## Misconceptions
 - "CPU reservation shows up in CPU usage" → wrong. CPU reservation is on demand and not in utilization metrics.
 - "High Memory Consumed means the VM is actively using that memory" → not necessarily. Touched pages stay in Consumed, a touched reservation included, even when the VM is idle.
-- Using a limit instead of right-sizing → unpredictable; the guest cannot see the limit.
+- "A limit does the same as a smaller configured size" → the Guest OS cannot see the limit and fills its configured memory; ESXi then balloons, compresses and swaps to hold the limit ([`vsphere/technology/memory/concepts/memory-limit`](../technology/memory/concepts/memory-limit.md)). Right-size instead.
 - "Shares guarantee CPU" → shares act only under contention, and only on what reservations leave. A reservation is the guarantee.
 - "2,000 shares means the same priority on every cluster" → shares are relative to siblings; the same number is another share elsewhere.
 - "There is no network limit on a VM" → Network I/O Control gives each VM network adapter a limit, a reservation and shares; traffic shaping caps the port group.
@@ -150,14 +151,9 @@ related:
 - vsphere/object-types/resource-pool/resource-pool-design
 - vsphere/technology/network/concepts/netioc
 source:
-  document: Knowledge base
-  path: The World of Metrics > Metrics Nuances > Virtualization Impact > Resource Management
-corrections:
-- 'Sections Reservation: CPU vs memory: CPU reservation capped at base clock speed × cores, and applies only under contention (quiz CPU Q8 key options A and B).'
-- '2026-11-02: Shares apply at two scheduler levels: cluster and host.'
-- '2026-11-02: Metric-type table, CPU row: Utilization in thread and Hertz, Reservation in Hertz, Allocation in vCPU. Uploaded document leaves CPU Reservation and Allocation cells unlabelled.'
-review_notes:
-- 'Section ''Memory entitlement under overcommit'' is from the vSphere 9.1 documentation, vSphere Resource Management > CPU Virtualization, How ESX Hosts Allocate Memory, Memory Tax for Idle Virtual Machines, Edit Settings (pp. 1825-1827, 1838-1839).'
-- 'To check: Section ''Two scheduler levels'', Cluster row: cluster-level shares scope (siblings under the same parent resource pool).'
+  document: Knowledge base; vSphere 9.1 documentation (PDF built 2026-11-02); vSphere Web Services API 9.1
+  path: The World of Metrics > Metrics Nuances > Virtualization Impact > Resource Management; Resource Management, CPU Virtualization, How ESX Hosts Allocate Memory, Memory Tax for Idle Virtual Machines, Edit Settings (pp. 1825-1827, 1838-1839); resource pool shares and siblings (pp. 1825, 1887); API 9.1 memory counters, mementitlement
+corrections: []
+review_notes: []
 status: draft
 ```

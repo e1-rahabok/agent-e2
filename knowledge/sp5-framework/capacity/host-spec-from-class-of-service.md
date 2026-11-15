@@ -48,7 +48,7 @@ Host RAM (GB)  = VMs per host × memory per VM + hypervisor memory
 - "Buy as much RAM as the host takes; memory is cheap" → RAM is sold with vCPUs. Beyond the VMs the CPU can hold × their memory need + the hypervisor share, it cannot be sold.
 - "Gold hosts take the most RAM" → Gold sells the fewest vCPUs per host, so it takes the least RAM.
 - "Bronze overcommits the most, so Bronze hosts need the most RAM" → Bronze fills on CPU utilization long before its allocation; sized on allocation, a Bronze host overbuys RAM.
-- "4:1 overcommit means the same capacity on every host" → say whether it is per core or per physical thread; with Hyper-Threading the two differ by 2x.
+- "4:1 overcommit means the same capacity on every host" → per core and per physical thread differ by 2x with Hyper-Threading; the plan counts threads ([`sp5-framework/capacity/overcommit`](overcommit.md), section Per resource).
 - "All cores of the host can be sold" → vSAN, NSX, replication and kernel IO work take a share of every host; subtract it first.
 - "A 64-core host maximizes the licence" → VCF 9 counts cores, with a 16-core minimum per CPU; core count above 16 per CPU has no licence sweet spot.
 
@@ -80,10 +80,9 @@ related:
 - sp5-framework/concepts/iaas-business
 - vsphere/architecture/overhead
 source:
-  document: Knowledge base
-  path: 'Your Private Cloud > Purpose-Driven Architecture > Begin with The End in Mind > Day 0 | Day 1 | Day 2; Service Level Agreement > Price & SLA; Planning Template'
+  document: Knowledge base; Broadcom KB 313548, core counting for VCF licensing (no update date shown, read 2026-11-15)
+  path: 'Your Private Cloud > Purpose-Driven Architecture > Begin with The End in Mind > Day 0 | Day 1 | Day 2; Service Level Agreement > Price & SLA; Planning Template. KB 313548, Key Licensing Rule: a minimum of 16 physical cores for each CPU'
 corrections: []
-review_notes:
-- 'Section ''Reading the example'', licensing: per-core licensing with a 16-core minimum per CPU, Broadcom KB 313548 (https://knowledge.broadcom.com/external/article/313548) and the VCF 9.0 Licensing Model page (https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview/licensing-model.html).'
+review_notes: []
 status: draft
 ```

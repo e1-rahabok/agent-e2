@@ -6,6 +6,7 @@
 - 90% for core, not 100%: sustained 100% for 300 s is too late, and NUMA keeps some cores busy while others idle.
 - 80% for thread, not lower: lower would include hosts that still have many idle threads.
 - Focus is imbalance at high utilization. Imbalance at low utilization is not operationally important.
+- Relevance for operations: performance and capacity of the cluster: whether DRS can still balance the high hosts, or VMs must move to another cluster (table Values).
 ![High and low hosts in a cluster](../../images/cluster-cpu-imbalance-count-of-high-vs-low-utilization-hosts.png)
 
 ## Formula
@@ -18,7 +19,7 @@ Imbalance = High hosts / Low hosts
 | Colour | Meaning | Value |
 |---|---|---|
 | Red (worst) | 1 or more high hosts, no low host to move VMs to. Moving VMs to another cluster may be required. | 100, 200, 300, ... (raised to avoid overlap with pink) |
-| Pink (bad) | More high hosts than low hosts. Maybe not enough capacity to balance. | Between 1 and 63 (decimal) |
+| Pink (bad) | More high hosts than low hosts. Maybe not enough capacity to balance. | Above 1, up to 95 (decimal) |
 | Orange (bad) | High hosts = low hosts. | 1 |
 | Yellow (warning) | Fewer high hosts than low hosts. | Between 0 and 1 |
 | Green (good) | Utilized and balanced. | 0 |
@@ -89,6 +90,6 @@ source:
   path: Provider Objects > Overview > Inter-Host Imbalance
 corrections: []
 review_notes:
-- 'To check: Section ''Definitions'': whether Inter-Host Imbalance is a built-in VCF Operations metric or a super metric; unconfirmed.'
+- 'To check: Section ''Definitions'': whether Inter-Host Imbalance is a built-in VCF Operations metric or a super metric; VCF Operations 9.1 metric reference for clusters (techdocs.broadcom.com).'
 status: draft
 ```

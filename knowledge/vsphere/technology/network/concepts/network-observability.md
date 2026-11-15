@@ -75,10 +75,6 @@ flowchart LR
 
 - Reading the diagram: 100 packets arriving at a VM count as 100 RX at the driver, 100 ingress at the firewall, 100 incoming on a dashboard. The traffic in the other direction is TX, egress and outgoing.
 
-### Book diagrams (superseded)
-- The two book diagrams below show the earlier view that a VM has no ingress traffic. That view is wrong: use the table above.
-![Superseded book diagram: ingress and egress vs receive and transmit](../images/network-ingress-egress-vs-receive-transmit.png)
-![Superseded book diagram: distributed switch direction from physical switch to VM](../images/distributed-switch-ingress-egress-direction-physical-switch-to-vm.png)
 
 ## vCenter counters on switches and port groups
 - The distributed switch has API counters at level 3: packets (all, multicast, broadcast) and drops, at switch, distributed port (DVPort) and LAG scope. See [`vsphere/technology/network/metrics/distributed-switch/packets`](../metrics/distributed-switch/packets.md) and [`vsphere/technology/network/metrics/distributed-switch/packets-dropped`](../metrics/distributed-switch/packets-dropped.md).
@@ -152,21 +148,10 @@ images:
     object: [VirtualMachine]
     topic: 'NSX Edge traffic flow'
     image_type: diagram
-  - path: ../images/network-ingress-egress-vs-receive-transmit.png
-    product: [vsphere]
-    object: [VirtualMachine, HostSystem]
-    topic: 'Network direction'
-    image_type: diagram
-  - path: ../images/distributed-switch-ingress-egress-direction-physical-switch-to-vm.png
-    product: [vsphere]
-    object: [VirtualMachine, VmwareDistributedVirtualSwitch]
-    topic: 'Network direction'
-    image_type: diagram
 source:
-  document: Knowledge base
-  path: Network > Architecture > Architecture intro; Network Observability
+  document: Knowledge base; Repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922)
+  path: Network > Architecture > Architecture intro; Network Observability; vCenter counters on switches and port groups from https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv and its README (distributed port group returns no counters)
 corrections: []
-review_notes:
-- 'Section ''vCenter counters on switches and port groups'': from the vCenter 9.1.0 API export in repository e1-rahabok/Observability-vSphere and its README (distributed port group returns no counters), https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
+review_notes: []
 status: draft
 ```

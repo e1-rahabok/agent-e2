@@ -2,6 +2,7 @@
 
 ## Meaning
 - The highest CPU Usage among the physical cores of the host.
+- Relevance for operations: performance: a hot core that the host average hides. Not capacity: one busy core says nothing about free threads.
 
 ## Reason
 - ESXi-level utilization is an average. A host with 72 cores has 144 threads. One hot core is invisible in the average.

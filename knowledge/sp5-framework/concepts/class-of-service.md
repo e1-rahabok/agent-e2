@@ -11,9 +11,9 @@
   - Availability: measurable. Half the downtime window, twice the price.
   - Performance: utilization does not exist before the VM runs, so the overcommit ratio stands in. Twice the vCPUs on a cluster, each pays half: the cost is shared by all.
   - Compliance: the same for every class. A weak class is a jump box into the rest.
-- The class sets price (overcommit ratio and quality of service), capacity (overcommit ratio, maximum VM size) and the availability and compliance SLAs. Performance per class follows from the overcommit and is read with the KPI; it has no SLA ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
+- The class sets price (overcommit ratio and quality of service), capacity (overcommit ratio, maximum VM size) and the availability and security SLAs. Performance per class follows from the overcommit and is read with the KPI; it has no SLA ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 - Capacity settings per class (reservation, allocation per thread, expected utilization) and the relative value per class: [`sp5-framework/capacity/class-of-service-planning`](../capacity/class-of-service-planning.md). This file holds price and SLA numbers.
-- Overcommit ratios here are vCPU : physical thread and VM memory : physical memory (N:1). CPU overcommit per class: Gold 1:1, Silver 2:1, Bronze 3:1 per physical thread, never higher; per core with Hyper-Threading that is 2:1, 4:1 and 6:1 ([`sp5-framework/capacity/host-spec-from-class-of-service`](../capacity/host-spec-from-class-of-service.md)).
+- Overcommit ratios here are vCPU : physical thread and VM memory : DRAM (N:1). The ratio per class, CPU and memory, and its per-core equivalent with Hyper-Threading: [`sp5-framework/capacity/class-of-service-planning`](../capacity/class-of-service-planning.md), section Example implementation.
 
 ## Generic guideline
 | Tier | Price | CPU overcommit | Performance penalty |
@@ -69,8 +69,7 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
 - Bronze at CPU 3:1 per thread and memory 1.4:1: 0.5 × 1/3 + 0.5 × 1/1.4 = 52% of Gold.
 - The guideline price (0.50x, 0.33x) follows CPU alone; with memory in the price, the lower memory overcommit keeps Silver and Bronze dearer.
 - Gold: CPU 1:1, memory 1:1, all flash. Free: no overcommit stated, magnetic storage; may be left out entirely (business decision).
-- Average VM profile for Silver and Bronze: 1 vCPU to 4 GB RAM, a common ratio. Measure the real ratio in VCF Operations.
-- Host for Silver: [`sp5-framework/capacity/host-spec-from-class-of-service`](../capacity/host-spec-from-class-of-service.md).
+- Typical VM per class and the host each class needs: [`sp5-framework/capacity/host-spec-from-class-of-service`](../capacity/host-spec-from-class-of-service.md).
 - Open question for the business: what performance penalty is fair for a 33% discount?
 - Progressive pricing: a 64-vCPU VM must cost more than 64x a 1-vCPU VM. A straight-line price gives no reason to size small, and rightsizing then happens in production, which is slow and costly.
 
@@ -178,9 +177,6 @@ source:
   document: Knowledge base
   path: 'Your Private Cloud > Service Level Agreement (Class of Service, Price/Performance, Free Tier, Recommended SLA, Penalty Quantification, Sample Offering, Price & SLA, Size Limit, Service, Availability, Compute & Storage, Mix and Match)'
 corrections: []
-review_notes:
-- 'To check: Section ''Planning example'', price formula: derived from 67% and 33% figures.'
-- 'To check: Section ''Mixing compute and storage classes'', 28 pairs: count of 6-cluster diagram (each Tier 1 or Tier 3 cluster to 4 datastores, each Tier 2 cluster to 6).'
-- 'Not copied: class of service input diagram (text in Price/performance), mix-and-match diagrams (text), size limit image (table), generic tables (text).'
+review_notes: []
 status: draft
 ```

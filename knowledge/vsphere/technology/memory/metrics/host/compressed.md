@@ -5,6 +5,7 @@
 - The compression cache sits inside ESXi Memory Consumed, because cache pages are ESXi pages in use. The memory compression freed is outside ESXi Memory Consumed.
 - Each VM's compression cache is capped by Mem.MemZipMaxPct, default 10% of the VM's memory. Compressed pages beyond the cap are swapped.
 - Pages can stay compressed for a long time when nothing requests them. Example: about 5 GB compressed for about 1 year, with balloon at 0 (no current pressure).
+- Relevance for operations: capacity context: memory compressed in the past, by host pressure or a limit. Not current pressure and not a wait: decompression on access counts in VM Memory Latency.
 ![Compressed flat at about 5 GB for a year](../../images/esxi-memory-compressed-flat-for-1-year.png)
 
 ## Counters per tool
@@ -36,7 +37,7 @@ product:
 - vsphere
 object:
 - HostSystem
-metric_class: context
+metric_class: consumption
 internal_derive:
 - vsphere/technology/memory/concepts/swap-and-compression
 - vsphere/technology/memory/concepts/host-memory-states
@@ -55,11 +56,10 @@ images:
     image_type: timeline
     sample: '1 host, 1 year'
 source:
-  document: Knowledge base
-  path: Memory > ESXi > Overview; Swap + Compress
+  document: Knowledge base; vSphere 9.1 documentation (PDF built 2026-11-02); vSphere Web Services API 9.1
+  path: Memory > ESXi > Overview; Swap + Compress; Memory Compression; esxtop Memory panel (CNSM, CACHESZ, CACHEUSD); API 9.1 memory counters (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html)
 corrections: []
 review_notes:
-- 'Sections ''Meaning'' and ''Counters per tool'': from the vSphere 9.1 documentation (Memory Compression; esxtop Memory panel: CNSM, CACHESZ, CACHEUSD) and https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html.'
 - 'To check: Section ''Counters per tool'': host Compressed equals the sum of esxtop CACHEUSD; compare on a host that is compressing.'
 status: draft
 ```

@@ -80,16 +80,9 @@ related:
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 - vsphere/technology/storage/concepts/guest-os-vs-vm-storage
 source:
-  document: Linux kernel source, drivers/scsi/vmw_pvscsi.c; Linux kernel documentation, I/O statistics fields (admin-guide/iostats, development tree 7.4.0-rc2); sysstat iostat(1) manual page (man-pages July 2025); Broadcom KB 343323, Large-scale workloads with intensive I/O patterns might require queue depths significantly greater than Paravirtual SCSI default values
+  document: Knowledge base; Linux kernel source, drivers/scsi/vmw_pvscsi.c; Linux kernel documentation, I/O statistics fields (admin-guide/iostats, development tree 7.4.0-rc2); sysstat iostat(1) manual page (man-pages July 2025); Broadcom KB 343323, Large-scale workloads with intensive I/O patterns might require queue depths significantly greater than Paravirtual SCSI default values
   path: Fields 9 to 11 (kernel documentation); aqu-sz, await, %util (iostat); Resolution (Broadcom KB)
 corrections: []
-review_notes:
-- 'To check: Section ''Stack from application to driver'' and the blk-mq detail (software queue per CPU, hardware dispatch queue, scheduler names): against the kernel block layer documentation, docs.kernel.org/block.'
-- 'To check: Section ''Collection point of the queue statistics'': the point at which a request starts to count in the in-flight statistics on blk-mq (request creation or dispatch) differs by kernel version; the kernel documentation says it counts from the moment the request is given to the request queue.'
-- 'To check: Section ''Waiting inside Linux in a VM'': that the vCenter virtual disk latency starts at the virtual disk; the subtraction is a derivation from Little''s Law, not a vendor procedure.'
-- 'Source URL, kernel documentation: https://www.kernel.org/doc/html/latest/admin-guide/iostats.html'
-- 'Source URL, iostat: https://man7.org/linux/man-pages/man1/iostat.1.html'
-- 'Source URL, vmw_pvscsi defaults (PVSCSI_DEFAULT_QUEUE_DEPTH 254, ring pages): Linux kernel drivers/scsi/vmw_pvscsi.c, https://github.com/torvalds/linux/blob/master/drivers/scsi/vmw_pvscsi.c'
-- 'Source URL, Broadcom KB 343323 (legacy 2053145, no Updated On date shown): https://knowledge.broadcom.com/external/article?legacyId=2053145'
+review_notes: []
 status: draft
 ```

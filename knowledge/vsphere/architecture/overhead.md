@@ -102,7 +102,7 @@
 ## Memory metrics
 - Roll-ups are Latest and stat type Absolute: memory is space.
 - Allocation maximum = limit. Allocation minimum = reservation. Shares: internal; do not change.
-- Consumed: actual use; can be below reservation. Mapped: no operational use of its own; at host group level it equals ESXi Memory Granted ([ESXi Memory Granted](../technology/memory/metrics/host/granted.md)). Also Overhead, Share Saved, Shared, Swapped, Touched, Zero.
+- Consumed: actual use; can be below reservation. Mapped: no operational use of its own; at host group level it equals ESXi Memory Granted ([`vsphere/technology/memory/metrics/host/granted`](../technology/memory/metrics/host/granted.md)). Also Overhead, Share Saved, Shared, Swapped, Touched, Zero.
 - 607 hosts with vSAN and NSX, 650-1,450 GB consumed: kernel overhead falls below 10% once consumed exceeds 800 GB; absolute values plateau in about 5 levels (likely vSAN configuration).
 ![ESXi hypervisor memory overhead (GB) vs ESXi Consumed (GB): values cluster in 5 levels](images/esxi-hypervisor-memory-overhead-vs-consumed-scatter-levels.png)
 - Kernel reservation: the host/system Resource memory allocation minimum in vCenter. The host page Configure > System > System Resource Reservation shows it (about 4.2 GB on a 9.1 lab host, 4.17 to 4.18 GiB in the counter). It is a reservation, not consumption: the same host's host/system group consumed 2.2 GB.
@@ -114,7 +114,7 @@
 - On the hosts measured, the kernel memory reservation sat above kernel use: a host without VMs ([`vsphere/technology/memory/metrics/host/consumed`](../technology/memory/metrics/host/consumed.md), section Behaviour) and the 185-host average ([`vsphere/technology/memory/metrics/comparisons/host-memory-metrics`](../technology/memory/metrics/comparisons/host-memory-metrics.md)).
 - VCF Operations shows the kernel reservation as Memory | ESX System Usage (`mem|host_systemUsage`), a metric VCF Operations computes. vCenter has no counter of that name. Across 500+ hosts: 6-88 GB; a 12 TB host with vSAN and NSX: 300 GB.
 - On the ESXi-only lab host, host/vim had an allocation minimum of 0: its management agents (hostd, vpxa, envoy, healthd and others) held no reservation and consumed 0.45 GB.
-- Reservation consumed (VMs only) does not contain the kernel reservation, and a VM reservation is not in Consumed, Granted or VMkernel consumed ([ESXi memory metrics compared](../technology/memory/metrics/comparisons/host-memory-metrics.md), section VM reservation across counters).
+- Reservation consumed (VMs only) does not contain the kernel reservation, and a VM reservation is not in Consumed, Granted or VMkernel consumed ([`vsphere/technology/memory/metrics/comparisons/host-memory-metrics`](../technology/memory/metrics/comparisons/host-memory-metrics.md), section VM reservation across counters).
 - The kernel memory reservation does not follow kernel use: it stayed steady while kernel use dropped 90% (40 GB to single digits), and when all VMs were gone.
 - Actual use: stack Resource Memory Consumed per group; system dwarfs the others.
 - Memory | VMkernel consumed is vCenter `mem.sysUsage`: host memory used by the VMkernel for core functionality, without VMs and vSphere services (API 9.1). It is smaller than the host/system group: 0.70 GB against 2.2 GB of Resource memory consumed on the 9.1 lab host. It is use, not the kernel reservation (4.2 GB there), and it does not cover vSAN.
@@ -153,7 +153,7 @@
 - Latency-sensitive workloads are hit hardest by saturation.
 - Leave some CPU resources for ESX.
 - Commit physical cores fully only where VMs rarely, if ever, use all their allocated CPU at the same time.
-- Remedies named by the source:
+- Remedies named by Performance Best Practices for vSphere 9.1:
   - power off some VMs,
   - migrate VMs to another host. DRS can do this automatically.
 
@@ -161,8 +161,8 @@
 - Moved to [`vsphere/object-types/esxi/esxi-health-check`](../object-types/esxi/esxi-health-check.md), section Documentation guidance (esxtop).
 
 ## Misconceptions
-- Counting snapshots, HA spare hosts or vSAN FTT as virtualization overhead → wrong. They are optional capabilities.
-- Area C in [`vsphere/architecture/vm-vs-guest-os`](vm-vs-guest-os.md) (work invisible to the guest) is not the same as overhead.
+- "Snapshots, HA spare hosts and vSAN FTT are virtualization overhead" → they are optional capabilities that consume resources; overhead is mandatory and brings no capability.
+- "All hypervisor work for a VM outside the guest is overhead" → that work (area C in [`vsphere/architecture/vm-vs-guest-os`](vm-vs-guest-os.md)) includes optional capabilities such as snapshot work, which are not overhead.
 - "Use kernel reservation as overhead" → it does not follow use: hypervisor use can pass it (CPU at high load; NSX agents and vSAN services outside host/system) or stay far below it.
 - "The kernel reservation is memory VMs can never use" → admission control withholds it from VM reservations, used or not; the pages the kernel has not consumed stay free, and VMs can consume them.
 - "The kernel reservation caps kernel memory" → it is a minimum, not a cap: kernel use can pass it, and it covers host/system only.
@@ -261,15 +261,11 @@ images:
 source:
   document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); vSphere Web Services API 9.1; Broadcom KB 419794, 447622 and 404061 (NSX 4.x)
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > Overhead vs Not Overhead; Provider Objects > Capacity > Hypervisor; CPU > Hypervisor; Memory > Hypervisor Metrics (from former vsphere/architecture/overhead); ESX CPU Considerations (pp. 27-28) (from former vsphere/architecture/overhead); API 9.1 memory counters, unreserved (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html); KB 419794, group host/vim/vmvisor/opsagent (https://knowledge.broadcom.com/external/article/419794); KB 447622, group host/vim/vmvisor/nsx-datapath-ctrs (https://knowledge.broadcom.com/external/article/447622); KB 404061, NSX firewall heap vsip-kentries (https://knowledge.broadcom.com/external/article/404061)
-corrections:
-- '2026-11-02: The item that enables memory overcommit at ESXi level is the VM swap file (.vswp). Uploaded document names it ''VM memory snapshot''.'
-- '2026-11-02: Four buffer types listed. Uploaded document says ''at least 3''.'
+corrections: []
 review_notes:
-- 'Section ''Memory metrics'': the formula of the VCF Operations metric mem|host_systemUsage (ESX System Usage) is not published; the reading as the kernel reservation rests on the author''s answer. https://techdocs.broadcom.com (VCF Operations 9.1, Host System metrics); https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html'
-- 'Section ''Memory metrics'': VMkernel consumed (mem.sysUsage) read 0.70 GB while host/system Resource memory consumed read 2.2 GB on a 9.1 lab host; which part of the group the counter covers is unknown. The kernel reservation on the page (about 4.2 GB) and 4.17 to 4.18 GiB in the counter differ by under 1%: the page rounding or sample time, not checked.'
-- 'Section ''Memory metrics'': that the NSX datapath and firewall heaps count in host/system rests on their being VMkernel heaps (KB 404061 shows the vsip-kentries heap in vmkernel.log); no vendor text names their resource group. https://knowledge.broadcom.com/external/article/404061'
-- 'Section ''Recommended static values'': Broadcom KB 420935 (ESXi 8.x, 9.x) advises setting aside host RAM for ESXi overhead by socket count: 64-256 GB for 2 sockets (default 128 GB), 128-384 GB for 4, 256-768 GB for 8; its examples give 64 GB per TB of installed memory. Compare with the 64 GB for ESXi + vSAN + NSX here. https://knowledge.broadcom.com/external/article/420935'
-- '[from former vsphere/architecture/overhead] Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: Old file vsphere/cpu/counters/esxi/cpu.usage.average.md states ''sustained values above ~80-85%'' with no source. This source gives 80% (PCPU ceiling) and 90% (warning) for esxtop. Decide whether to replace the old threshold.'
+- 'To check: Section ''Memory metrics'': the formula of the VCF Operations metric mem|host_systemUsage (ESX System Usage) is not published; check on a 9.1 host that it equals host/system Resource memory allocation minimum (the kernel reservation). VCF Operations 9.1, Host System metrics (https://techdocs.broadcom.com); https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html'
+- 'To check: Section ''Memory metrics'': which part of the host/system group VMkernel consumed (mem.sysUsage) covers; it read less than the group''s Resource memory consumed on a 9.1 lab host. The kernel reservation on the page and in the counter differ by under 1%: page rounding or sample time, not checked.'
+- 'To check: Section ''Memory metrics'': that the NSX datapath and firewall heaps count in host/system rests on their being VMkernel heaps (KB 404061 shows the vsip-kentries heap in vmkernel.log); no vendor text names their resource group. https://knowledge.broadcom.com/external/article/404061'
+- 'To check: Section ''Recommended static values'': Broadcom KB 420935 (ESXi 8.x, 9.x) sets aside host RAM for ESXi overhead by socket count: 64-256 GB for 2 sockets (default 128 GB), 128-384 GB for 4, 256-768 GB for 8; its examples give 64 GB per TB of installed memory. The 64 GB for ESXi + vSAN + NSX here is below the 2-socket default. https://knowledge.broadcom.com/external/article/420935'
 status: draft
 ```

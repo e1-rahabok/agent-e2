@@ -18,13 +18,13 @@
 
 ## Version
 - NetIOC version 3 (NetIOCv3), introduced in vSphere 6.0, allocates bandwidth at the level of the whole distributed switch. NetIOCv2 allocated at the physical adapter level.
-- The source describes NetIOCv3 only.
+- Performance Best Practices for vSphere 9.1 describes NetIOCv3 only.
 - A new vDS in vSphere 9.1 uses NetIOCv3 by default.
 - vDS switches upgraded from earlier versions may not be upgraded to NetIOCv3 automatically.
 
 ## Scope
 - NetIOC controls transmit traffic only. It does not limit receive traffic.
-- Traffic shaping limits the bandwidth of a vNIC. It can be set separately for transmit and receive. See Network Traffic Shaping (p. 46, not read).
+- Traffic shaping sets average bandwidth, peak bandwidth and burst size on switches and port groups. It shapes outbound traffic only on a standard switch and its port groups, and both directions on a distributed switch and its port groups (Performance Best Practices for vSphere 9.1, p. 46). Where traffic shaping and a Network I/O Control limit meet: [`vsphere/architecture/resource-controls`](../../../architecture/resource-controls.md), section Controls per resource.
 - DRS includes NetIOC bandwidth reservations in its load-balancing calculations. See [`vsphere/object-types/cluster/concepts/drs-overview`](../../../object-types/cluster/concepts/drs-overview.md).
 
 ## Shares
@@ -42,7 +42,7 @@
 - If usage is below the limit, the unused bandwidth is available to other consumers on the same physical NIC.
 
 ## Advanced performance options
-- By default, NetIOC scales the number of hardware transmit queues with link speed. Source: one hardware queue on the NIC for each 12.5 Gb/s of link speed.
+- By default, NetIOC scales the number of hardware transmit queues with link speed: one hardware queue on the NIC for each 12.5 Gb/s of link speed.
 - Multiple vNICs or vmknics can spread traffic across multiple hardware transmit queues on one physical NIC.
 - Benefit: can improve performance, especially for small packets and high packet rates.
 
@@ -59,7 +59,8 @@
 - "NetIOC limits receive traffic" → NetIOC controls transmit only.
 - "A reservation can be set to the full adapter capacity" → total reservations are limited to 75% of the adapter capacity.
 - "A share guarantees bandwidth" → shares divide the link only among consumers that want bandwidth. Reservations are the guarantee.
-- "An upgraded vDS uses NetIOCv3" → the source says upgraded switches may not be upgraded automatically.
+- "An upgraded vDS uses NetIOCv3" → a switch upgraded from an earlier version is in some cases not upgraded to NetIOCv3 automatically.
+- "Traffic shaping on a standard switch limits what a VM receives" → a standard switch shapes outbound traffic only; a distributed switch shapes both directions.
 
 ## Metadata
 ```yaml
@@ -84,12 +85,8 @@ related:
 - vsphere/technology/network/concepts/nic-teaming
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Networking Considerations > Network I/O Control (NetIOC) (pp. 47-48)
+  path: ESX Networking Considerations > Network Traffic Shaping (p. 46); Network I/O Control (NetIOC) (pp. 47-48)
 corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Written from 9.1 pages 47-48. New in the 9.1 document.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- New in the 9.1 document. Not in the 9.0 table of contents as a separate section.
-- 'To check: Network Traffic Shaping (p. 46) and Enhanced Data Path (p. 46) in Performance Best Practices for VMware vSphere 9.1; not read.'
+review_notes: []
 status: draft
 ```

@@ -3,7 +3,7 @@
 ## Mechanism
 - Compression and swapping work together. A page that cannot be compressed enough is swapped.
 - Page size: 4 KB. Two compression levels: 4:1 (1 KB) and 2:1 (2 KB).
-- If compression does not get the page below 2 KB, the page is swapped instead: cheaper.
+- If compression does not get the page to 2 KB or smaller, the page is swapped instead (vSphere 9.1 documentation, Memory Compression, p. 1841).
 - So Swapped can be 0 while everything was compressed.
 - A large page (2 MB) is not compressed directly. It is split into 4 KB pages first.
 - Compressed is preferred: unzipping from DRAM is faster than reading from SSD.
@@ -70,13 +70,13 @@
 - A VM at a memory limit is the usual case: ESXi swaps blindly, the guest pages by its own rules. See [`vsphere/technology/memory/concepts/memory-limit`](memory-limit.md).
 
 ## Misconceptions
-- "Swapped = Swap in - Swap out" → in and out run in parallel on different pages.
+- "Swapped = Swap Out - Swap In" → no. Swapped is what sits in the swap file now; Swap Out and Swap In count transfers since the counters started on this host, so a vMotion arrival or a counter reset breaks the difference. Read VM Memory Swapped itself.
 - "Swap out means contention" → only swap in is contention.
 - "Swapped 0 means no reclamation" → pages may all be compressed.
 - "The VM swaps, so the host is short of memory" → with free host memory and no other VM reclaimed, the cause is a limit on the VM or its pool: Consumed flat just under the effective limit.
-
 - "Host-level swapping and guest OS swapping are the same" → they are distinct. Host-level swapping is transparent to the guest.
 - "Memory compression is as costly as swapping" → decompression latency is much smaller than swap-in latency.
+
 ## Metadata
 ```yaml
 id: vsphere/technology/memory/concepts/swap-and-compression
@@ -113,11 +113,9 @@ images:
     metric: ['VM Memory Consumed', 'VM Memory Swapped', 'VM Memory Compressed']
     image_type: timeline
 source:
-  document: Knowledge base; vSphere Web Services API 9.1
-  path: Memory > VM > Swap + Compress; Transition; Example; Quiz; Memory counters, swaptarget (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html)
+  document: Knowledge base; vSphere Web Services API 9.1; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); vSphere 9.1 documentation (PDF built 2026-11-02)
+  path: Memory > VM > Swap + Compress; Transition; Example; Quiz; Memory counters, swaptarget (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html); ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); Resource Management, Using Swap Files, Swap Space and Memory Overcommitment, Memory Compression, Advanced Virtual Machine Attributes (pp. 1841, 1873-1874, 1944)
 corrections: []
-review_notes:
-- 'Overcommit technique content: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Section ''Swap instead of ballooning'': from the vSphere 9.1 documentation, vSphere Resource Management > Using Swap Files, Swap Space and Memory Overcommitment, Memory Compression, Advanced Virtual Machine Attributes (pp. 1841, 1873-1874, 1944).'
+review_notes: []
 status: draft
 ```

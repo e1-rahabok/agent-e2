@@ -21,7 +21,7 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Datastore type (Datastore). vSAN → step 2. VMFS or NFS → step 3. On an array with thin LUNs (thin on thin), read the array's free space too: the datastore can show room the array no longer has.
+1. Datastore type (Datastore). vSAN → step 2. VMFS or NFS → step 3. On an array with thin LUNs (thin on thin), read the array's free space too: the datastore can show room the array no longer has. When a thin LUN has no physical space left, the host pauses the VMs and raises an out-of-space alarm, and a full LUN can go offline or be unmapped from the host (vSphere 9.1 documentation, Monitoring Space Use, p. 1533).
 2. vSAN capacity (Datastore). Used space includes the copies the storage policy keeps: FTT that doubles space doubles used. Keep consumption below 80%: above it vSAN rebalances, and it needs room to rebuild after a host failure or maintenance ([`vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out`](../../object-types/cluster/decision-tree/can-cluster-take-a-host-out.md), step 6). Above 80% → act now. → step 3.
 3. Free space now (Datastore): capacity − used. A datastore is full when used equals capacity. Then a VM whose thin disk or snapshot must grow cannot write; applications fail. Free space is consumed only by something that grows: thin disks, snapshots, swap files at power-on, new VMs. A datastore whose disks are all thick (provisioned close to used) and that holds no snapshot cannot fill by itself, however high its used %. Near 0 with a source that can grow → act now: reclaim (step 8) or expand. Near 0 with only thick disks → watch for new snapshots, swap files and new VMs. Otherwise → step 4.
 4. Snapshots (VirtualMachine): VM Disk Space | Snapshot ([`vsphere/technology/storage/metrics/virtual-motherboard/disk-space-snapshot`](metrics/virtual-motherboard/disk-space-snapshot.md)). A delta grows with every write to the disk under it. A snapshot kept beyond its change window is both a space risk and a performance cost ([`vsphere/technology/storage/concepts/snapshot-impact`](concepts/snapshot-impact.md)). Large or old snapshots → remove after the change is validated. → step 5.
@@ -85,10 +85,10 @@ related:
 - vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out
 - vsphere/technology/storage/metrics/host/datastore
 source:
-  document: Knowledge base synthesis of the files in internal_derive; vSAN 80% from VCF 9.1.x documentation (TechDocs), Planning Capacity in vSAN (updated 2026-11-05)
-  path: https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/vsan-planning-and-deployment/designing-and-sizing-a-virtual-san-cluster/sizing-a-virtual-san-datastore/planning-capacity-in-virtual-san.html
+  document: Knowledge base; VCF 9.1.x documentation (TechDocs), Planning Capacity in vSAN (updated 2026-11-05); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/vsan-planning-and-deployment/designing-and-sizing-a-virtual-san-cluster/sizing-a-virtual-san-datastore/planning-capacity-in-virtual-san.html; vSphere Storage > Monitoring Space Use (p. 1533)
 corrections: []
 review_notes:
-- 'To check: Step 3: what a VM does when its datastore is full (paused with a question, or IO errors in the guest); no 9.1 page read states it.'
+- 'To check: Step 3: what a VM does when its VMFS datastore is full while the LUN still has space (paused with a question, or IO errors in the guest); the vSphere 9.1 documentation (p. 1533) covers only a thin LUN without physical space.'
 status: draft
 ```

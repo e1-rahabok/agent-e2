@@ -4,6 +4,7 @@
 - Actual consumed size of the VMDK files. Excludes other files, such as snapshots.
 - RDM: counted at configured size (like a thick disk), unless the array thin-provisions the LUN.
 - Not aware of vSAN overhead.
+- Relevance for operations: capacity and reclamation: on a thin disk, Virtual Disk Used above the Guest OS used space is unmapped blocks to reclaim ([`sp5-framework/capacity/reclamation`](../../../../../sp5-framework/capacity/reclamation.md), section TRIM and unmap).
 
 ## Related
 - Virtual Disk | Configured Size: the guest view. Excludes vSAN: taken from the consumer layer.

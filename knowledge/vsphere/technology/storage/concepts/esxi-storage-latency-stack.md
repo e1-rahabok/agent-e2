@@ -81,7 +81,6 @@ source:
   path: Storage > ESXi > Disk or Device > Contention Metrics
 corrections: []
 review_notes:
-- 'To check: what DAVG measures for vSAN when data is local; unconfirmed.'
-- 'Source URL, Broadcom KB 344099: https://knowledge.broadcom.com/external/article?legacyId=1008205'
+- 'To check: Section ''Counters'': what DAVG measures on vSAN when the data is on a device of the same host; vSAN 9.1 documentation (vSAN performance service) or a live esxtop reading.'
 status: draft
 ```

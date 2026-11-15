@@ -27,8 +27,8 @@
 
 ## Misconceptions
 - "Page sharing shares pages between all VMs by default" → since vSphere 6.0, the default is sharing within a VM only.
-- "Page sharing saves significant memory in most deployments" → the source says the effect is little in most deployments. Benefit is large in small-page environments such as VDI.
-- "Setting one salt for all VMs is harmless" → the source describes it as a single pool, which recreates the pre-6.0 default. Review the security implications (KB 2080735, 2097593).
+- "Page sharing saves significant memory in most deployments" → Performance Best Practices for vSphere 9.1 says the effect is small in most deployments. Benefit is large in small-page environments such as VDI.
+- "Setting one salt for all VMs is harmless" → Performance Best Practices for vSphere 9.1 describes it as a single pool, which recreates the pre-6.0 default. Review the security implications (KB 2080735, 2097593).
 
 ## Metadata
 ```yaml
@@ -54,8 +54,6 @@ source:
   path: ESX Memory Considerations > Memory Overcommit Techniques > Page Sharing (p. 33); Memory Page Sharing (pp. 34-35)
 corrections: []
 review_notes:
-- Checked against 9.1 (revision 20260624). Pages 33-35 unchanged.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: KB 2080735 and 2097593 on page-sharing security issues, named by the source; not read.'
+- 'To check: Section ''Misconceptions'': the security issues of inter-VM page sharing in KB 2080735 and 2097593, which Performance Best Practices for vSphere 9.1 names (p. 35); not read, and their Broadcom KB numbers not found (https://knowledge.broadcom.com).'
 status: draft
 ```

@@ -20,7 +20,7 @@
 
 ## Gradient
 - A gradient suits widgets where the relative comparison among many objects matters.
-- Example: a heat map of vSAN disk group utilization, to judge imbalance. With a plain gradient, small differences show as different colours and suggest rebalancing, which can move terabytes.
+- Example: a heat map of vSAN disk group utilization (Original Storage Architecture; on Express Storage Architecture, the storage pool of each host), to judge imbalance. With a plain gradient, small differences show as different colours and suggest rebalancing, which can move terabytes.
 - Two fixes:
   - minor imbalance is expected; identical values would be strange. Colour only a significant imbalance;
   - utilization turns red only at 75%.
@@ -56,9 +56,6 @@ source:
   document: Knowledge base
   path: 'Overall Design Approach > Design Consideration > Color as Meaning (Threshold, Gradient, Example Implementation)'
 corrections: []
-review_notes:
-- 'Section ''Colour boundaries'': the Horizon bounds (yellow 2, orange 3, red 4) are read from the source screenshot of the widget colour settings (coloring: above).'
-- 'To check: Section ''Gradient'': vSAN disk groups exist in the vSAN Original Storage Architecture; vSAN ESA uses a storage pool per host. The point about gradients holds either way.'
-- 'Not copied: the gradient heat maps and the compliance dashboard screenshot.'
+review_notes: []
 status: draft
 ```

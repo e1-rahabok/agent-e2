@@ -34,7 +34,7 @@
 
 ## Misconceptions
 - "The 128 GB drive shows 119 GB, so 9 GB is lost" → the vendor counts 1000, Windows counts 1024.
-- "30 MBps in VCF Operations is 30,000 KBps" → VCF Operations uses 1024 for network: about 31,550 KBps.
+- "30.81 MBps in VCF Operations is 30,810 KBps" → VCF Operations uses 1024 for network: 30.81 × 1024 = 31,549 KBps.
 - "KB in VCF Operations means 1,000 bytes" → it means 1,024 bytes, labelled KB, not KiB.
 
 ## Metadata
@@ -60,8 +60,7 @@ related:
 source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
-corrections:
-- '2026-11-02: 1 GiB = 1024 MiB; 1 GB = 1000 MB. Uploaded document says KiB/KB.'
+corrections: []
 review_notes: []
 status: draft
 ```

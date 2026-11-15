@@ -23,7 +23,7 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
 - **Contention (VCF Operations)**: Overlap + Co-stop + Ready + Other Wait (when below 1%). Before Aria Operations 8.18 (July 2024): mapped to CPU Latency.
   - File: [`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](vsphere/technology/cpu/metrics/virtual-motherboard/contention.md)
 - **Core Utilization**: 100% when 1 or 2 threads of a core run.
-  - Not to confuse with Thread Utilization: Core Utilization counts a core as fully used when one of its two threads runs; Thread Utilization counts each thread, at most 100% each, so it shows the idle thread that can still take work.
+  - Not to confuse with Thread Utilization: ESXi Core Utilization counts a core as fully used when one of its two threads runs; ESXi Thread Utilization counts each thread, at most 100% each, so it shows the idle thread that can still take work.
   - File: [`vsphere/technology/cpu/metrics/host/core-utilization`](vsphere/technology/cpu/metrics/host/core-utilization.md)
 - **CPPC**: Collaborative Processor Performance Control (ACPI 5.0+).
   - Also called: Intel HWP
@@ -34,18 +34,20 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
   - File: [`vsphere/technology/cpu/concepts/run-time-vs-run-quality`](vsphere/technology/cpu/concepts/run-time-vs-run-quality.md)
 - **CPU Utilization for Resources**: 17 legacy rescpu.* metrics. Avoid.
   - Also called: rescpu
+  - File: [`vsphere/technology/cpu/metrics/host/cpu-utilization-for-resources`](vsphere/technology/cpu/metrics/host/cpu-utilization-for-resources.md)
 - **Efficacy (CPU)**: Work per cycle from core architecture. Not accounted by any metric.
 - **Efficiency (CPU)**: Hyper-Threading effect on cycles completed. Accounted as 1.25x per core in VM CPU Used and VM CPU Usage: 0.625x per vCPU when the sibling thread runs. ESXi CPU Used gives each thread of a busy pair 0.5x.
-- **ESXi CPU Demand**: Sum over the VMs of the CPU they would use with no contention.
-  - Not to confuse with ESXi CPU Usage: kernel work is in Usage only, so a host with no VMs shows Demand 0 (or flat at the kernel reservation) and Usage above 0.
+- **ESXi CPU Demand**: vCenter: sum over the running VMs of the CPU they would use with no contention. VCF Operations: per VM the higher of that and its CPU reservation (the Demand (capacity) model), plus the kernel's CPU reservation.
+  - Not to confuse with ESXi CPU Usage: kernel work is in ESXi CPU Usage only, so a host with no VMs shows ESXi CPU Demand 0 in vCenter (flat at the kernel reservation in VCF Operations) and ESXi CPU Usage above 0.
   - File: [`vsphere/technology/cpu/metrics/host/demand`](vsphere/technology/cpu/metrics/host/demand.md)
-- **ESXi CPU Imbalance**: Running threads / running cores.
+- **ESXi CPU Imbalance**: Running threads / running cores, per host.
   - Also called: Imbalance Score
+  - File: [`vsphere/technology/cpu/metrics/host/imbalance`](vsphere/technology/cpu/metrics/host/imbalance.md)
 - **ESXi CPU Usage (%)**: Busy time per physical core, scaled by frequency against the base clock: one or both threads busy count once, 100% at the base clock.
   - Product label: Usage (%) (vSphere Client, host CPU chart; VCF Operations); Consumed CPU (%) (vSphere Client host list)
   - Invites: the host is full at 100%, with no headroom left.
   - Better name: CPU Throughput (% of nominal): Turbo takes it above 100%, power saving below Core Utilization. Headroom is read in Thread and Core Utilization, performance in contention counters.
-  - Not to confuse with Thread Utilization: Utilization is busy time per thread at static frequency; Usage moves with Turbo and power saving and counts per core.
+  - Not to confuse with Thread Utilization: ESXi Thread Utilization is busy time per thread at static frequency; ESXi CPU Usage (%) counts per core and moves with Turbo and power saving.
   - File: [`vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics`](vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics.md)
 - **Frozen time**: Time a vCPU is de-scheduled. The Guest OS sees a time jump.
   - Also called: Steal Time (Linux, for Ready)
@@ -86,9 +88,9 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
   - Invites: the VM waits for CPU, so it has CPU contention.
   - Better name: VM CPU Latency (label kept): not a throughput loss, because it includes the Hyper-Threading effect; it counts time lost against a whole core at nominal frequency, by waiting or by running slower. It rises with no wait and leaves out a limit; the wait is in Ready and Co-stop.
   - File: [`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](vsphere/technology/cpu/metrics/virtual-motherboard/latency.md)
-- **VM CPU Used**: Run scaled by frequency and Hyper-Threading, plus System, minus Overlap.
+- **VM CPU Used**: Run minus Overlap, scaled by frequency and Hyper-Threading; at VM level plus System and the VMX, MKS and Helper worlds.
   - Also called: %USED (esxtop)
-  - Not to confuse with VM CPU Run: Run is time only; Used moves with frequency and Hyper-Threading, so it can sit far above or below Run.
+  - Not to confuse with VM CPU Run: VM CPU Run is time only; VM CPU Used moves with frequency, Hyper-Threading and System, so it can sit far above or below Run.
   - File: [`vsphere/technology/cpu/troubleshooting/run-vs-used-gap`](vsphere/technology/cpu/troubleshooting/run-vs-used-gap.md)
 
 ### Memory
@@ -97,7 +99,8 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
   - Also called: Touch (ESXi), Non Zero Active (VCF Operations)
   - File: [`vsphere/technology/memory/metrics/virtual-motherboard/active`](vsphere/technology/memory/metrics/virtual-motherboard/active.md)
 - **Balloon Target**: Memory ESXi asks the balloon driver to reclaim.
-- **Entitlement (memory)**: Host memory the ESXi scheduler allocates to the VM, from its estimated demand and the reservation, limit and shares policies. A kernel value, used in operations only when below configured memory.
+- **Entitlement (memory)**: Host memory the ESXi scheduler allocates to the VM, from its estimated demand and the reservation, limit and shares policies. A VMkernel value, not an operations counter: troubleshooting reads it only when below configured memory, with Ballooned, Swapped, Compressed and Latency.
+  - File: [`vsphere/technology/memory/metrics/virtual-motherboard/entitlement`](vsphere/technology/memory/metrics/virtual-motherboard/entitlement.md)
 - **ESXi Memory Usage (%)**: ESXi Memory Consumed / Total Capacity: pages held by VMs, VM overhead, the kernel, vSAN and NSX.
   - Product label: Usage (%) (vSphere Client and VCF Operations, host and cluster memory)
   - Invites: the host is short of memory near 95%.
@@ -108,23 +111,24 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
 - **Granted**: VM pages with ESXi pages mapped. VM view.
 - **Guest OS In Use**: Windows page class In Use (beside Modified, Cache, Free); Windows can compress part of it.
   - Also called: In Use (Windows)
-  - Not to confuse with VM Memory Consumed: Consumed counts the ESXi pages the VM has touched and does not drop when Windows frees memory; the two have no mapping.
+  - Not to confuse with VM Memory Consumed: Windows In Use is a Guest OS page class; VM Memory Consumed counts the ESXi pages the VM has touched and does not drop when Windows frees memory; the two have no mapping.
   - File: [`vsphere/technology/memory/concepts/guest-os-vs-vm-memory`](vsphere/technology/memory/concepts/guest-os-vs-vm-memory.md)
-- **Guest OS Needed Memory**: VCF Operations guest metric behind VM Memory Usage (%).
-- **Page-fault latency**: VM memory Latency (%), esxtop %LAT_M. VCF Operations: VM Memory Contention.
-  - Also called: Memory Latency
+- **Guest OS Needed Memory**: VCF Operations guest metric behind VM Memory Usage (%) and VM Memory Utilization, the per-VM memory input of capacity Demand.
 - **Swap Target**: Memory ESXi aims to reclaim by compression and swapping.
   - Also called: Compress-swap target
 - **VM Memory Consumed**: Granted minus sharing savings: the ESXi pages mapped to the VM, without overhead and swapped pages.
   - Product label: Consumed (vSphere Client, VM memory)
   - Invites: what the Guest OS uses now, so a VM near its configured memory needs more.
-  - Better name: VM Memory Consumed (label kept; "claimed" would suggest reclamation): ESXi pages the VM holds from first touch until ESXi reclaims them, guest cache and freed pages included; it does not drop when the Guest OS frees memory. Guest OS need is read inside the Guest OS.
+  - Better name: VM Memory Consumed (label kept): ESXi pages the VM holds from first touch until ESXi reclaims them, guest cache and freed pages included; it does not drop when the Guest OS frees memory. Guest OS need is read inside the Guest OS.
   - File: [`vsphere/technology/memory/metrics/virtual-motherboard/consumed`](vsphere/technology/memory/metrics/virtual-motherboard/consumed.md)
+- **VM Memory Latency**: Share of time a vCPU waits for a page fault to complete: mostly swap-in, plus decompression and copy-on-write breaks. The only VM memory speed counter. VCF Operations: VM Memory Contention.
+  - Also called: page-fault latency, Memory Latency (%), esxtop %LAT_M
+  - File: [`vsphere/technology/memory/metrics/virtual-motherboard/latency`](vsphere/technology/memory/metrics/virtual-motherboard/latency.md)
 - **VM Memory Usage (%)**: vCenter: from Active. VCF Operations: Guest OS Needed Memory / VM memory, falling back to Active without Guest OS data. Disabled by default in VCF Operations 9.1; Guest|Needed Memory over Mem|Total Capacity gives the same ratio.
   - Product label: Usage (%) (vSphere Client and VCF Operations, VM memory)
   - Invites: the VM needs more memory; read beside ESXi Memory Usage (%) as the same metric.
   - Better name: Active (%) in vCenter, Guest OS Needed Memory (%) in VCF Operations: a kernel estimate or a Guest OS counter, not VM capacity. Guest OS need is read inside the Guest OS: paging, free memory, cache.
-  - Not to confuse with ESXi Memory Usage (%): ESXi and cluster Usage is Consumed, a capacity reading; VM Usage is not. Read as one metric, they have led customers to buy RAM they did not need.
+  - Not to confuse with ESXi Memory Usage (%): ESXi and cluster Memory Usage (%) is Consumed, a capacity reading; VM Memory Usage (%) is Active (vCenter) or Guest OS Needed Memory (VCF Operations), not a capacity reading. Read as one metric, they have led customers to buy RAM they did not need.
   - File: [`vsphere/technology/memory/metrics/virtual-motherboard/usage`](vsphere/technology/memory/metrics/virtual-motherboard/usage.md)
 - **VM pages**: Pages in the VM address space. Vendor term kept for search.
   - Also called: guest physical pages, guest physical memory
@@ -133,7 +137,7 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
 
 - **Disk (device)**: A physical disk or LUN presented to ESXi. The vSphere Client uses device and disk for the same thing; a LUN is the array's logical volume, which can span RAID groups.
   - Also called: device, LUN
-  - Not to confuse with Virtual disk, datastore: the vSphere Client shows a VM's storage in 3 layers: virtual disk (the VM's own), datastore (the filesystem), disk (the device, shared by every VM on it). Each has its own counters; compare values only within one layer.
+  - Not to confuse with Virtual disk, datastore: the vSphere Client shows a VM's storage in 3 layers: virtual disk (the VM's own), datastore (VMFS, NFS, vSAN or vVol), disk (the device, shared by every VM on it). Each has its own counters; compare values only within one layer.
   - File: [`vsphere/technology/storage/concepts/storage-layers`](vsphere/technology/storage/concepts/storage-layers.md)
 
 ### Performance, SLA and KPI
@@ -141,25 +145,26 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
 - **Actual Availability (%)**: Availability as it happened. Same scope as the Availability SLA: the Guest OS. Usually lower than Operational Availability.
 - **Class of service**: Gold, Silver, Bronze: classes of the data centre infrastructure a VM runs on, each with its own price, overcommit ratio, maximum VM size and availability SLA. Gold is mission critical, Silver standard production and DR, Bronze test and development or non-production.
   - Also called: Tier, standard production (Silver), test and development (Bronze), non-production (Bronze)
-- **Crown jewels**: The critical business applications, strategic to the core business: few VMs, essential to revenue, profit or image. Each gets a KPI at the infrastructure layer.
+- **Crown jewels**: The critical business applications, strategic to the core business: few VMs, essential to revenue, reputation or both. Each gets a KPI at the infrastructure layer.
   - Also called: Mission-critical applications
   - File: [`sp5-framework/performance/business-application-kpi`](sp5-framework/performance/business-application-kpi.md)
-- **KAI**: Key availability indicator: the internal availability target, the availability counterpart of the KPI.
+- **KAI**: Key availability indicator: the internal availability indicator, the availability counterpart of the KPI. Provider objects carry a KPI and a KAI, never an SLA.
   - Also called: availability KPI, uptime KPI
-  - File: [`sp5-framework/performance/kpi-vs-sla`](sp5-framework/performance/kpi-vs-sla.md)
+  - File: [`sp5-framework/performance/performance-kpi-design`](sp5-framework/performance/performance-kpi-design.md)
 - **KPI**: Key performance indicator: an internal baseline for performance only, the P in KPI. Performance monitoring and troubleshooting use the KPI only: no performance SLA, SLI or SLO. One 0-100% score per object: VM, Guest OS, ESXi and Cluster Performance. Availability has KAI; security has KSI.
   - Also called: Key Performance Indicator, performance SLA, SLI, SLO, service level (for performance)
   - Not to confuse with SLA: the KPI is for operations, covers performance, says how bad, is read daily, per object; the SLA is a business contract between two parties, on the consumer's object (VM, pod), read monthly. When a user cites an SLA, ask its metric, object, target and window.
   - File: [`sp5-framework/performance/kpi-vs-sla`](sp5-framework/performance/kpi-vs-sla.md)
-- **KSI**: Key security indicator: the internal security and compliance target.
+- **KSI**: Key security indicator: the internal security and compliance indicator, 100% where the contract (SLA) says 99.95%.
   - Also called: security KPI, compliance KPI
-  - File: [`sp5-framework/performance/kpi-vs-sla`](sp5-framework/performance/kpi-vs-sla.md)
+  - File: [`sp5-framework/performance/performance-kpi-design`](sp5-framework/performance/performance-kpi-design.md)
 - **Noisy neighbour**: A consumer whose demand degrades others on shared capacity (villain and victims).
-  - Also called: Resource management
   - File: [`sp5-framework/performance/noisy-neighbour`](sp5-framework/performance/noisy-neighbour.md)
-- **Operational Availability (%)**: Availability relative to the availability architecture.
-- **Security SLA**: Preferred over compliance SLA, which is correct but narrower: security also covers activity, not only settings. The IT security industry has not defined it well.
+- **Operational Availability (%)**: Availability without the downtime inside the green zone or caused by the customer, accounting for the HA design: the number the Availability SLA reports. Usually higher than Actual Availability.
+  - File: [`sp5-framework/concepts/sla-metrics`](sp5-framework/concepts/sla-metrics.md)
+- **Security SLA**: The contract's security and compliance figure: 99.95% for every class of service; the internal KSI is 100%. The term, not compliance SLA, which is correct but narrower: security also covers activity (attacks, misuse of administrator accounts), not only settings. The IT security industry has not defined it well.
   - Also called: Compliance SLA
+  - File: [`sp5-framework/concepts/sla-metrics`](sp5-framework/concepts/sla-metrics.md)
 
 ### Capacity
 
@@ -179,14 +184,16 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
   - Not to confuse with Time Remaining: Cluster Risk reads the running cluster now (short-term capacity: stop provisioning, no projection); Time Remaining is the long-term runway, days until the forecast crosses usable capacity (buy hardware).
   - File: [`vsphere/object-types/cluster/models/cluster-risk`](vsphere/object-types/cluster/models/cluster-risk.md)
 - **Demand (capacity)**: Per VM, the higher of utilization and reservation.
-  - Not to confuse with CPU Demand (VM and ESXi): the runtime a VM or the VMs of a host demand; capacity demand also counts reservations. A third use: the VCF Operations capacity setting Capacity Buffer (Demand). A fourth: memory Demand on the VCF Operations capacity pages, which is ESXi Memory Utilization, this model applied to memory (Broadcom KB 439253). Not the VM footprint (Consumed plus ballooned, compressed and swapped).
+  - Not to confuse with CPU Demand (VM and ESXi): VM CPU Demand and vCenter ESXi CPU Demand are the runtime the VMs would use with no contention, reservations left out; capacity Demand also counts reservations, and VCF Operations ESXi CPU Demand follows it. Two more uses: the VCF Operations setting Capacity Buffer (Demand); memory Demand on the VCF Operations capacity pages, which is ESXi Memory Utilization, this model applied to memory (Broadcom KB 439253). Not the VM footprint (Consumed plus ballooned, compressed and swapped).
   - File: [`sp5-framework/capacity/demand`](sp5-framework/capacity/demand.md)
 - **Guest OS sizing**: Sizing vCPU and memory from Guest OS counters (inside).
   - Also called: VM rightsizing (inside the guest)
-  - Not to confuse with VM footprint: VM footprint sizes from vSphere counters (outside); two jobs, two formulas.
-  - File: [`sp5-framework/capacity/rightsizing`](sp5-framework/capacity/rightsizing.md)
+  - Not to confuse with VM footprint: Guest OS sizing reads Guest OS counters (inside), guest queue included, VM overhead excluded; VM footprint reads vSphere counters (outside), VM overhead included, guest queue excluded. Two jobs, two formulas.
+  - File: [`guest-os/system/concepts/guest-os-sizing`](guest-os/system/concepts/guest-os-sizing.md)
 - **Model**: How one pillar of one object is quantified into a number and a decision: capacity, availability, security model. Example: Cluster Consumption and Cluster Risk decide, with Cluster Performance, whether a cluster is closed.
   - Not to confuse with KPI: a KPI scores performance only; capacity and risk are scored by models, so Cluster Risk is a model, not a KPI.
+  - File: [`sp5-framework/concepts/modelling`](sp5-framework/concepts/modelling.md)
+- **Saturation**: The part of consumption beyond utilization: ballooned, compressed and swapped memory, and the NVMe tier in use. Consumption = Utilization + Saturation. Not contention: nothing is slow yet.
   - File: [`vsphere/object-types/cluster/models/cluster-consumption`](vsphere/object-types/cluster/models/cluster-consumption.md)
 - **Usable capacity**: Total capacity minus HA, buffer and hypervisor overhead. Performance management is never measured against Usable Capacity numbers.
 
@@ -197,7 +204,7 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
   - File: [`sp5-framework/concepts/overview`](sp5-framework/concepts/overview.md)
 - **Decision tree**: A flow that answers one operational question (can it, should it, how much) and ends in a choice to act, with its reason. Folder `decision-tree/`.
   - Not to confuse with Health check: a decision tree answers one question, usually on one pillar; a health check covers every pillar of one object and may read a decision tree's result as one step.
-  - File: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md)
+  - File: [`sp5-framework/concepts/health-check`](sp5-framework/concepts/health-check.md)
 - **Finding**: Result of troubleshooting or analysis from logs, events, metrics, tasks. Positive feeds insight; negative is an issue.
 - **Framework**: How IT operations are managed: policy, pillars, process, people, platform. The SP5 framework; ITIL and COBIT are other frameworks.
   - File: [`sp5-framework/concepts/overview`](sp5-framework/concepts/overview.md)
@@ -209,20 +216,24 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
 - **Health check**: Check of one object type (VM, host, cluster), never a technology or a single pillar, in the order availability, performance, security, capacity, with configuration as the drill-down. The what; a superset of troubleshooting. A failed step opens a troubleshooting flow.
   - Also called: what to monitor, monitoring checklist, verification, daily check
   - File: [`sp5-framework/concepts/health-check`](sp5-framework/concepts/health-check.md)
-- **Insight**: A top-down finding from alerts, symptoms, context and supporting metrics. Proactive; no ticket, no automatic close.
+- **Insight**: A top-down reading of alerts, symptoms and findings, with their context and supporting metrics. Proactive; no ticket, no automatic close.
   - Not to confuse with Alert: an alert is an urgent issue (red or orange), bottom up, on one object, with a ticket; yellow is not urgent, so it is an insight, read in the daily health check.
   - File: [`sp5-framework/outputs/alerts-and-insights`](sp5-framework/outputs/alerts-and-insights.md)
 - **Issue**: A negative finding, identified by one or more symptoms.
 - **Leading indicator, lagging indicator**: Leading: underlying metric read in insights. Lagging: customer-facing metric used in alerts.
-- **Notification**: How VCF Operations pushes an insight or alert to a person: email, message, on screen at login.
+- **Notification**: How VCF Operations pushes an alert to a person at once, by email or mobile: red alerts only (urgent and important). An orange alert stays in the NOC alert list; an insight is read on a dashboard.
+  - File: [`sp5-framework/outputs/alerts-and-insights`](sp5-framework/outputs/alerts-and-insights.md)
 - **Present health**: Real problems now: availability, performance, security incidents.
   - Also called: Health
   - File: [`sp5-framework/concepts/health-risk-efficiency`](sp5-framework/concepts/health-risk-efficiency.md)
 - **Prevention window**: Time between the operations team knowing of a problem (insight) and customers noticing it (alert).
-- **Primary metric, secondary metric**: Primary: 0-100%, defines performance (the what). Secondary: explains the primary (the why).
+- **Primary metric, secondary metric**: Primary: the what of one use case, usually 0-100% and colour coded (VM Performance (%), Capacity Remaining (%)); read in monitoring. Secondary: the why, the possible causes of the primary value; read in troubleshooting.
+  - File: [`sp5-framework/observability/triple-see-method`](sp5-framework/observability/triple-see-method.md)
 - **Property**: An input set by configuration or capability (configured hosts, maximum VMs), not produced every interval.
   - Not to confuse with Metric: a metric is produced every interval, even when constant (a power state or a VM count is a metric); a property is set by configuration.
   - File: [`sp5-framework/observability/input-types`](sp5-framework/observability/input-types.md)
+- **Realm**: A world with a boundary: its owner controls it, and the layer below cannot see into it. Two levels: business, application and IaaS; the Guest OS against the VM. Each realm has its own KPIs, with SLAs between realms.
+  - File: [`sp5-framework/concepts/realms-and-layers`](sp5-framework/concepts/realms-and-layers.md)
 - **Symptom**: A test on one metric, property or event (VCF Operations). A symptom definition is reusable across alert definitions; a condition is the same test written inside one alert definition. Triggered alone, it is a minor, non-urgent issue, read in the daily health check; when its alert's set of symptoms holds, the issue has become urgent: an alert.
   - Also called: Condition
   - File: [`sp5-framework/outputs/alerts-and-insights`](sp5-framework/outputs/alerts-and-insights.md)
@@ -255,9 +266,7 @@ source:
   path: "n/a"
 corrections: []
 review_notes:
-  - "To check: column 'Not to confuse with': each pair against the file in its File column."
-  - "To check: the entries added 2026-11-11 to carry a pair (ESXi CPU Demand, ESXi CPU Usage, VM CPU Used, Guest OS In Use, VM Memory Usage (%), Disk (device), Cluster Risk (%), Compliance, Property)."
-  - "To check: each term and its preferred name in section 'CPU', from Run Quality onward."
-  - "To check: the product label entries (Q208, 2026-11-15): each Product label against the vSphere Client 9.1 and VCF Operations 9.1.1 screens, and the Better name CPU Throughput (% of nominal), a proposed new term (Q236). Total Base Capacity (GHz) and 3-Day Forecast Capacity Remaining (%) are the author's names (Q236)."
+  - "To check: Sections 'CPU', 'Memory' and 'Capacity': the Product label line of each of the eight label entries, verbatim; vSphere Client 9.1 and VCF Operations 9.1.1 screens (live product), and the chart label tables of the vSphere 9.1 documentation (Overview Performance Charts, p. 2033 onward)."
+  - "To check: Section 'CPU', entry ESXi CPU Usage (%): the Better name CPU Throughput (% of nominal) is a proposal, not settled; open author question Q236."
 status: reviewed
 ```

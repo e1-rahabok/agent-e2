@@ -36,7 +36,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 - The VM profile is unknown at design time: size (vCPU, RAM, disk), intensity (CPU and RAM utilization, disk IOPS, network throughput) and pattern (daily, weekly, monthly, none). Application teams and their vendors do not know it either; some applications are not written yet.
 - So the platform cannot promise to serve every VM well in absolute terms. It promises price/performance per class of service: cheap is not fast, fast is not cheap.
 - Each class of service has its own availability, security and service SLA, written in the contract with numbers. Performance per class follows from overcommit and size limits and is read with the KPI.
-- Class of service parameters (overcommit ratio, maximum VM size): [`sp5-framework/performance/noisy-neighbour`](../performance/noisy-neighbour.md). Host specification per class: [`sp5-framework/capacity/host-spec-from-class-of-service`](../capacity/host-spec-from-class-of-service.md).
+- Class of service parameters: overcommit ratio per class in [`sp5-framework/capacity/class-of-service-planning`](../capacity/class-of-service-planning.md), maximum VM size in [`sp5-framework/capacity/vm-size`](../capacity/vm-size.md), and why both cap the noisy neighbour in [`sp5-framework/performance/noisy-neighbour`](../performance/noisy-neighbour.md). Host specification per class: [`sp5-framework/capacity/host-spec-from-class-of-service`](../capacity/host-spec-from-class-of-service.md).
 - Provisioning has an SLA too, delivered through self-service with workflows and electronic approval.
 
 ## Metrics per pillar
@@ -47,7 +47,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 | Performance | KPI (%) | Absolute: as it happened |
 | Capacity | Capacity Remaining (%) | Relative to usable capacity, not total |
 | Capacity | Time Remaining (days) | Days until projected utilization reaches usable capacity |
-| Compliance | Benchmark compliance (%) | One metric per benchmark, such as PCI-DSS |
+| Security | Benchmark compliance (%) | One metric per benchmark, such as PCI-DSS |
 
 - Performance has no SLA and no SLI: the KPI is enough ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 - Definitions, formulas and the time window of each SLA: [`sp5-framework/concepts/sla-metrics`](sla-metrics.md). Numbers per class: [`sp5-framework/concepts/class-of-service`](class-of-service.md).
@@ -133,6 +133,8 @@ related:
 - sp5-framework/concepts/purpose-driven-architecture
 - sp5-framework/outputs/alerts-and-insights
 - sp5-framework/capacity/host-spec-from-class-of-service
+- sp5-framework/capacity/class-of-service-planning
+- sp5-framework/capacity/vm-size
 - sp5-framework/capacity/supply
 - sp5-framework/capacity/rightsizing
 - sp5-framework/concepts/performance-vs-capacity
@@ -148,9 +150,6 @@ source:
   document: Knowledge base
   path: 'Your Private Cloud > Overview > Complaint-based Operations (The Litmus Test, Common Mistakes); The Business of IaaS (VM as a Service, Capabilities, Key Metrics, The Restaurant Analogy)'
 corrections: []
-review_notes:
-- 'To check: Section ''Three variants of IaaS'', last bullet: contention from the pool limit or tenant overcommit is the tenant''s, and Ready includes limit time; derived from resource pool row and the VM CPU Ready file.'
-- 'To check: Section ''A complete, correct and accurate SLA'', last bullet: the reason, taken from sp5-framework/observability/thresholds; no source yet.'
-- 'Not copied (human reference only): the teams diagram (silos to platform team) is in the text; the restaurant analogy wording is kept out.'
+review_notes: []
 status: draft
 ```

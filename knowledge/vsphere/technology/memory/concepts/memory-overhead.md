@@ -31,7 +31,7 @@ esxcli sched swap system set -d true -n <datastore name>
   - the features activated for the VM.
 - The VMM and virtual device memory are fully reserved when the VM powers on.
 - The exact overhead of a VM is written to its vmware.log at power-on: search for VMMEM.
-- Representative per-VM overhead (documentation): about 4.5% of VM memory for a 256 GB VM, 5.5% for 64 GB, 6% for 16 GB. Smaller VMs carry proportionally more.
+- Representative per-VM overhead (documentation): about 4.5% of VM memory for a 256 GB VM, 5.5% for 64 GB, 6% for 16 GB. Smaller VMs carry proportionally more. This overhead lowers the reservable memory, on tiered and non-tiered hosts alike.
 - The largest VM that powers on with a full reservation is smaller than free host memory: its overhead is reserved too.
 - Hypervisor overhead: about 2% of memory on a 1 TB non-tiered host; about 7.96% on a host with 512 GB DRAM + 512 GB NVMe tiering.
 - Reconfiguration changes overhead. Example: lowering a reservation from 250 GB to 0 adds about 25 MB of overhead for page-table mappings. Since vSphere 8.0 Update 3, DRS raises the VM's overhead limit before a reconfiguration, so the change does not fail on overhead.
@@ -49,8 +49,8 @@ esxcli sched swap system set -d true -n <datastore name>
 - Alternative location: `sched.swap.vmxSwapDir`.
 - Disk space: typically less than 100 MB for a large VM. Less than 300 MB if the VM uses 3D graphics.
 - The VMX swap file retains a small working set. It is not swapped under ordinary use.
-- Extraordinary use can cause swapping. Examples from the source: taking screenshots every second, or collecting a support dump.
-- Deadlock risk: a datastore backed by a VM on the same host. The source does not recommend this configuration.
+- Extraordinary use can cause swapping. Examples from Performance Best Practices for vSphere 9.1: taking screenshots every second, or collecting a support dump.
+- Deadlock risk: a datastore backed by a VM on the same host. Performance Best Practices for vSphere 9.1 does not recommend this configuration.
 - To prevent VMX swap file creation: `sched.swap.vmxSwapEnabled` set to FALSE. The cost is a significantly increased memory reservation.
 - VMX swap is unrelated to swap to host cache and to regular host-level swapping.
 
@@ -83,13 +83,9 @@ related:
 - vsphere/technology/memory/configuration/host-level-swapping
 - vsphere/technology/memory/configuration/memory-sizing
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Memory Considerations > Memory Overhead (pp. 36-37)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624); vSphere 9.1 documentation (PDF built 2026-11-02); vSphere Web Services API 9.1
+  path: ESX Memory Considerations > Memory Overhead (pp. 36-37); Resource Management, Overhead Memory on Virtual Machines, DRS Overhead Memory Management for VMs, Memory Tiering Troubleshooting > The Reservable Memory is Lower than Expected (pp. 1838, 1902-1903, 1958); performance counter mem.overhead (objects, level, unit and summary from the vCenter 9.1.0 counter list)
 corrections: []
-review_notes:
-- 'Section ''Overhead counter'': objects, level, unit and summary from the vCenter 9.1.0 API export in repository e1-rahabok/Observability-vSphere, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
-- 'Section ''Per-VM overhead'': VMMEM, the overhead percentages, hypervisor overhead and the DRS overhead limit from the vSphere 9.1 documentation, vSphere Resource Management > Overhead Memory on Virtual Machines, DRS Overhead Memory Management for VMs, Memory Tiering Troubleshooting > The Reservable Memory is Lower than Expected (pp. 1838, 1902-1903, 1958).'
-- Checked against 9.1 (revision 20260624). Pages 36-37 unchanged.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+review_notes: []
 status: draft
 ```

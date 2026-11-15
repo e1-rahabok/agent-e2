@@ -3,6 +3,7 @@
 ## Meaning
 - How unevenly the vCPUs of one VM are used.
 - Built from per-vCPU usage: Peak among vCPUs, Min among vCPUs, and Max - Min.
+- Relevance for operations: sizing and value: the evidence that convinces the owner of a large VM to downsize ([`vsphere/technology/cpu/decision-tree/oversized-vm-downsizing`](../../decision-tree/oversized-vm-downsizing.md)). Not a performance signal on its own.
 
 ## Purpose
 - To show owners of large VMs how their vCPUs are used, when cost and refund do not convince them to downsize.

@@ -3,6 +3,7 @@
 ## Meaning
 - Indicates a performance problem. A primary counter for how well the VM is served.
 - Contrast: CPU Latency does not always indicate a performance problem. See [`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](../../../cpu/metrics/virtual-motherboard/latency.md).
+- Relevance for operations: performance: the only VM memory wait counter, the memory input of the VM KPI as VCF Operations VM Memory Contention, and the first check of [`vsphere/technology/memory/vm-memory-latency-high`](../../vm-memory-latency-high.md).
 
 ## Unit
 - Percentage of time, not of memory space.
@@ -12,7 +13,7 @@
 - Disk latency is a time per IO in ms. Memory Latency is a share of time in %. Do not compare the two.
 
 ## Mechanism
-- Also called page-fault latency. esxtop: %LAT_M.
+- The name is VM Memory Latency; users also say page-fault latency. esxtop: %LAT_M.
 - Time a vCPU waits for a page fault to complete. Mostly swap wait, plus some decompression and copy-on-write break.
 - The only memory performance counter. Other memory metrics measure space held, which is capacity, not speed.
 - Highly correlated with swap-in rate.
@@ -74,8 +75,6 @@ source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture; Memory > VM > Contention Metrics > Latency; Best Practice
 corrections: []
-review_notes:
-- 'Section ''Unit'': from Memory > Architecture.'
-- 'Sections Mechanism, Observed values: from Memory > VM.'
+review_notes: []
 status: draft
 ```

@@ -65,7 +65,6 @@ source:
   path: 'Proactive Operations > Alert > CPU Alerts (Infrastructure Contention, Infrastructure Consumption); Memory Alerts (Infrastructure Contention, Infrastructure Consumption); Alerts Planning > Design (alert count table)'
 corrections: []
 review_notes:
-- 'To check after 1.0 (VCF Operations alert definitions): the catalog reads the cluster''s VMs as children; in VCF Operations a VM is a descendant of the cluster (through its hosts).'
-- 'To check: Section ''Cluster CPU consumption'': the reason for a share of hosts instead of the average is not stated in the source for consumption.'
+- 'To check after 1.0: Sections ''Cluster CPU contention'' and ''Cluster memory contention'': the catalog reads the cluster''s VMs as children; in VCF Operations a VM is a descendant of the cluster, through its hosts (VCF Operations alert definitions, relation of each alert).'
 status: draft
 ```

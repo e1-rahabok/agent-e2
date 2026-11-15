@@ -5,6 +5,7 @@
 - A common way to initialize memory is to write zeroes. Windows initializes pages with 0.
 - The zero page is the most commonly shared page. Zero and Shared move together.
 - Zero pages count in Granted. Once page sharing collapses them (the Zero counter is part of Shared), they cost almost no physical RAM.
+- Relevance for operations: none for capacity or performance. Zero pages explain a VM Memory Consumed below Guest OS Used.
 - ESX backs VM memory with 2 MB pages and does not share them. A zeroed 4 KB page inside a large page keeps its RAM until the host breaks the large page, from the Clear state (Performance Best Practices for vSphere 9.1, pp. 34, 38; [`vsphere/technology/memory/concepts/host-memory-states`](../../concepts/host-memory-states.md)).
 
 ## Example

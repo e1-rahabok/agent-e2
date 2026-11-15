@@ -4,6 +4,8 @@
 - Count of packets in the sampling window, per direction.
 - Packets transmitted counts only packets sent successfully. Dropped packets are excluded.
 - Includes broadcast and multicast.
+- Per vNIC and per VM; with one vNIC the two values are equal ([`vsphere/technology/network/metrics/vm-network-metrics`](../vm-network-metrics.md), section Instances).
+- Relevance for operations: performance troubleshooting: the packet rate, not the bandwidth, sets the CPU cost of network work, as in network VMs (firewalls, routers) and broadcast storms ([`vsphere/technology/network/vnic-rx-drops`](../../vnic-rx-drops.md), step 3). Not alerted: a packet rate has no clear 100%.
 
 ## Formula
 ```text
@@ -17,6 +19,7 @@ Packets transmitted per second = Total Packets Transmitted / 300   (VCF Operatio
 
 ## Misconceptions
 - "Low Mbps means low network load" → check packets per second.
+- "Packets Transmitted counts every packet the Guest OS sent" → it counts only the packets sent successfully; the dropped ones are in VM Network Packets Dropped ([`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`](packets-dropped.md)).
 
 ## Metadata
 ```yaml

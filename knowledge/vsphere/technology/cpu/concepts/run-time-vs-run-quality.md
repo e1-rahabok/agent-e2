@@ -42,10 +42,7 @@
   - Hyper-Threading: a shared core gives less per thread.
   - hypervisor IO done for a VM consumes CPU on its behalf.
 - The scheduler gives each vCPU a slice of time. It extends the time of a vCPU to keep relative fairness.
-- It charges with Used (ms). Used adjusts Run:
-  - shared physical core: Used goes down. Used is lower than Run (62.5% vs 100% when both threads run all the time). Usage also goes down.
-  - CPU frequency: Used is adjusted for the actual frequency.
-  - hypervisor work that interrupts the vCPU for other VMs or the system (Overlap): Used is decreased. Kernel work done for this VM (System) is added to VM-level Used.
+- It charges each vCPU with VM CPU Used (ms), which adjusts Run for a shared core, frequency, Overlap and System ([`vsphere/technology/cpu/metrics/virtual-motherboard/used`](../metrics/virtual-motherboard/used.md), section Fair Share Scheduler).
 
 ## CPU Throughput
 - Frequency and efficiency have the same final effect: they change the productive cycles attributed to a vCPU thread.
@@ -102,7 +99,6 @@ source:
   path: CPU > Architecture > Fair Share Scheduler; 2 Metrics Not 1; Frequency | Efficiency | Efficacy; CPU Throughput
 corrections: []
 review_notes:
-- 'Section ''Efficacy'': the 30% figure is an estimate for a new vs a 5-year-old Intel Xeon at the same clock speed, not a published measurement.'
-- 'To check: Section ''CPU Throughput'': which counters the name ''CPU Throughput'' covers (Usage (MHz) at minimum); proposed in the glossary.'
+- 'To check: Section ''Efficacy'': the 30% for a new vs a 5-year-old Intel Xeon at the same clock speed is an estimate with no published measurement; compare SPEC CPU results per GHz of two Xeon generations (spec.org).'
 status: draft
 ```

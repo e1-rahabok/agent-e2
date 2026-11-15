@@ -4,7 +4,7 @@
 - The daily health check is the second proactive view, after the NOC live screen. It is read at the start of each day.
 - Level 2 and Level 1 run it at first. As Level 1 gains confidence, they run it at the start of each shift; 24/7 operations have 2-3 shifts, so the dashboard is used several times a day.
 - It aims to reduce alerts by finding the issues underneath them. Reading it needs knowledge of how the private cloud performs and of what happens that day that can affect performance and security.
-- Order of the check and its steps: [`sp5-framework/concepts/health-risk-efficiency`](../concepts/health-risk-efficiency.md) and the object health checks, such as [`vsphere/object-types/cluster/cluster-health-check`](../../vsphere/object-types/cluster/cluster-health-check.md).
+- Order of the check: [`sp5-framework/concepts/health-check`](../concepts/health-check.md), section Order of checks; the verdicts (health, risk, efficiency): [`sp5-framework/concepts/health-risk-efficiency`](../concepts/health-risk-efficiency.md); the steps: the object health checks, such as [`vsphere/object-types/cluster/cluster-health-check`](../../vsphere/object-types/cluster/cluster-health-check.md).
 
 ## Morning routine
 - A list of alerts or complaints does not show the big picture.
@@ -12,7 +12,7 @@
 - It complements alerts in two ways:
   - insight: situations that have not triggered an alert;
   - the overall picture: before troubleshooting one object, rule out a problem with the whole environment.
-- Open two browser windows side by side: the VCF Operations daily dashboard and the log dashboard of VCF Operations for logs.
+- Open two browser windows side by side: the VCF Operations daily dashboard and the log dashboard of VCF Operations Log Management (formerly VCF Operations for logs).
 
 ## vSphere daily log check
 - Much information exists only in logs. A daily log dashboard covers basic hygiene:
@@ -57,11 +57,9 @@ related:
 - vsphere/object-types/vm/vmotion
 - sp5-framework/observability/input-types
 source:
-  document: Knowledge base
-  path: 'Proactive Operations > Daily Health Check (Morning Routine, vSphere Daily Log Check)'
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02)
+  path: 'Proactive Operations > Daily Health Check (Morning Routine, vSphere Daily Log Check). vSphere 9.1, ESX syslog (p. 230): VCF Operations Log Management (formerly VCF Operations for Logs, VMware vRealize Log Insight, and vCenter Log Insight)'
 corrections: []
-review_notes:
-- 'To check: Section ''Morning routine'': the source names Log Insight; in VCF 9 it is VCF Operations for logs.'
-- 'Not copied: the screenshot of the two dashboards side by side (proof screenshot).'
+review_notes: []
 status: draft
 ```

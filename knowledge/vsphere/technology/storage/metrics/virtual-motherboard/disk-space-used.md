@@ -4,6 +4,7 @@
 - Actual consumed size of all VM files + configured size of RDMs. All files in the VM folder(s).
 - Always larger than Virtual Disk Used: includes snapshots, swap, logs and other files.
 - Per-datastore variant: Disk Space | <Datastore Name> | Virtual Machine Used (GB). Only files on that datastore. Same value for a VM on one datastore.
+- Relevance for operations: capacity: the space the VM takes on its datastores today, every file included. A value far above Virtual Disk Used points to snapshots, swap files or files left in the VM folder ([`vsphere/technology/storage/concepts/vm-files`](../../concepts/vm-files.md), section File categories).
 
 ## Formula
 ```text

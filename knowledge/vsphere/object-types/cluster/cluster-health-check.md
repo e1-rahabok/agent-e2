@@ -29,15 +29,15 @@ flowchart TD
 ## Checks, in order
 Order: availability, performance, security, capacity; within each pillar the what before the why ([`sp5-framework/concepts/health-check`](../../../sp5-framework/concepts/health-check.md)).
 1. Availability (ClusterComputeResource). Cluster state green or yellow or red, and HA failover capacity met ([`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](concepts/admission-control-and-cluster-state.md)). Cluster and ESXi availability: [`vsphere/object-types/cluster/metrics/availability`](metrics/availability.md). Flows for an availability failure (host down, HA did not restart VMs) are future, after 1.0: state what failed and stop. Otherwise → step 2.
-2. Performance: Cluster Performance (%) (ClusterComputeResource). Depth from the worst VM, breadth from the 90th percentile, aggregated directly from VMs ([`vsphere/object-types/cluster/cluster-performance`](cluster-performance.md)). Green → step 3. Yellow or worse → [`vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`](troubleshooting/cluster-vm-contention.md); VMs short of CPU or memory in a DRS cluster → [`vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster`](troubleshooting/vm-insufficient-resources-in-drs-cluster.md). Then → step 3.
+2. Performance: Cluster Performance (%) (ClusterComputeResource). Depth from the worst VM, breadth from the 90th percentile, aggregated directly from VMs ([`vsphere/object-types/cluster/cluster-performance`](cluster-performance.md)). Each sub-metric against its `kpi` row in `catalog/thresholds-performance` (rows with cluster-performance as `kb`); the score colour from the scoring rule ([`sp5-framework/performance/performance-kpi-design`](../../../sp5-framework/performance/performance-kpi-design.md), section Scoring). Green → step 3. Yellow or worse → [`vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`](troubleshooting/cluster-vm-contention.md); VMs short of CPU or memory in a DRS cluster → [`vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster`](troubleshooting/vm-insufficient-resources-in-drs-cluster.md). Then → step 3.
 3. Performance, balance (ClusterComputeResource). Imbalance between hosts: a hot host causes contention while cluster totals stay low ([`vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`](../../technology/cpu/metrics/cluster/inter-host-imbalance.md)). DRS Score measures execution efficiency (VM happiness), not contention ([`vsphere/object-types/cluster/configuration/drs-migration-levels`](configuration/drs-migration-levels.md)). → step 4.
 4. Performance, configuration (ClusterComputeResource). Resource pools and limits first: they cause contention that load does not explain. [`vsphere/object-types/cluster/configuration/cluster-configuration-review`](configuration/cluster-configuration-review.md). Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Features that raise operational complexity (HA, DRS, vSAN, resource pools): [`vsphere/object-types/cluster/concepts/cluster-operations`](concepts/cluster-operations.md). VM operations counts (vMotion, power, reconfigure): [`vsphere/object-types/cluster/metrics/vm-operations`](metrics/vm-operations.md). → step 5.
 5. Capacity: Cluster Consumption (%) and Cluster Risk (%) (ClusterComputeResource).
-   - Cluster Consumption: utilization and saturation ([`vsphere/object-types/cluster/models/cluster-consumption`](models/cluster-consumption.md)).
-   - Cluster Risk: highest host, reservation, overcommit, monster VMs; higher is worse ([`vsphere/object-types/cluster/models/cluster-risk`](models/cluster-risk.md)).
+   - Cluster Consumption: utilization and saturation ([`vsphere/object-types/cluster/models/cluster-consumption`](models/cluster-consumption.md)). Bands: `catalog/thresholds-capacity`, section `models`, rows `cluster-consumption-*`.
+   - Cluster Risk: highest host, reservation, overcommit, monster VMs; higher is worse ([`vsphere/object-types/cluster/models/cluster-risk`](models/cluster-risk.md)). Bands: same section, rows `cluster-risk-*`.
    - HA and admission control reserve capacity that utilization does not show ([`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](concepts/admission-control-and-cluster-state.md)). Memory: [`vsphere/technology/memory/metrics/cluster/consumed`](../../technology/memory/metrics/cluster/consumed.md).
    - Capacity across products: [`sp5-framework/capacity/capacity-management`](../../../sp5-framework/capacity/README.md). → step 6.
-6. Closed for new VMs (ClusterComputeResource). The decision from the KPI and the two models: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](decision-tree/can-cluster-take-more-vms.md). Close for Business gives it every period ([`vsphere/object-types/cluster/models/close-for-business`](models/close-for-business.md)). → step 7.
+6. Closed for new VMs (ClusterComputeResource). The decision from the KPI and the two models, against the closure rows `closure-*` in `catalog/thresholds-capacity`, section `decisions`: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](decision-tree/can-cluster-take-more-vms.md). Close for Business gives it every period ([`vsphere/object-types/cluster/models/close-for-business`](models/close-for-business.md)). → step 7.
 7. Capacity, inventory and efficiency (ClusterComputeResource, VirtualMachine). Inventory: hosts, VMs and vCPUs over time, against the plan ([`sp5-framework/concepts/health-risk-efficiency`](../../../sp5-framework/concepts/health-risk-efficiency.md), section Inventory over time). Efficiency: Waste that can be returned: idle, oversized and unused VMs, snapshots, unmapped space ([`sp5-framework/capacity/reclamation`](../../../sp5-framework/capacity/reclamation.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm`](../../technology/cpu/metrics/virtual-motherboard/idle-vm.md), [`vsphere/technology/cpu/decision-tree/oversized-vm-downsizing`](../../technology/cpu/decision-tree/oversized-vm-downsizing.md)).
 - Not checked in 1.0: security and compliance (future phase).
 
@@ -89,6 +89,20 @@ internal_derive:
 - vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
 - vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
 - vsphere/object-types/cluster/configuration/cluster-configuration-review
+- sp5-framework/concepts/health-check
+- vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
+- vsphere/object-types/cluster/metrics/availability
+- sp5-framework/performance/performance-kpi-design
+- vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
+- vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
+- vsphere/object-types/cluster/configuration/drs-migration-levels
+- vsphere/object-types/cluster/concepts/cluster-operations
+- vsphere/object-types/cluster/metrics/vm-operations
+- vsphere/technology/memory/metrics/cluster/consumed
+- sp5-framework/capacity/capacity-management
+- sp5-framework/capacity/reclamation
+- vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm
+- vsphere/technology/cpu/decision-tree/oversized-vm-downsizing
 related:
 - sp5-framework/concepts/health-check
 - vsphere/object-types/vm/vm-health-check
@@ -98,10 +112,7 @@ related:
 source:
   document: Knowledge base; vSphere 9.1 documentation
   path: Linked files in each step
-corrections:
-- 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; KPI is performance only (Cluster Consumption and Cluster Risk are models); availability flows, security and compliance are future, after 1.0.'
-review_notes:
-- 'To check: Section ''Checks, in order'': the placement of steps 5 and 7; the order of the pillars follows health-risk-efficiency (Q062).'
-- 'To check: Sections ''Order rationale'' and ''Interpretation'': written from the linked files.'
+corrections: []
+review_notes: []
 status: draft
 ```

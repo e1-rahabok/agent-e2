@@ -7,6 +7,7 @@
 - Unit: MHz. Source: ESXi. VM level only. vCenter counter: cpu.demand.average.
 - VM realm, not Guest OS realm: the VMkernel computes it and sees physical threads. Its value is affected by Hyper-Threading (it removes the Hyper-Threading charge that Usage applies).
 - Not a contention counter: it does not measure a vCPU being unable to run.
+- Relevance for operations: none: an internal value of the kernel scheduler. Under a limit it stays at Usage, so it is not unmet demand (section Not unmet demand), and Turbo moves it, so it is not a capacity reading. Read Run for sizing and Ready for contention.
 
 ## Not unmet demand
 - Demand is not what Usage would be if the VM got all the runtime it demanded.
@@ -67,9 +68,10 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/contention
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 source:
-  document: Knowledge base
-  path: CPU > VM > Consumption Metrics > Demand
+  document: Knowledge base; vSphere Web Services API 9.1 reference, CPU Counters
+  path: CPU > VM > Consumption Metrics > Demand; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html, demand
 corrections: []
-review_notes: []
+review_notes:
+- 'To check: Section ''Not unmet demand'': vSphere Web Services API 9.1 defines `cpu.demand` as the CPU a VM would use with no CPU contention or CPU limit; the lab test in this section shows Demand equal to Usage under a limit. Repeat the limit test on a 9.1 host (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html).'
 status: draft
 ```

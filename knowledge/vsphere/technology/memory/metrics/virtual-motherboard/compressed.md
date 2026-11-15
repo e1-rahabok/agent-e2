@@ -3,9 +3,10 @@
 ## Meaning
 - VM memory held in compressed form. The output of compression, not the input.
 - Compression saved: ESXi memory reclaimed by compression.
+- Relevance for operations: performance troubleshooting and capacity context: past reclamation by host pressure or a limit. Not a wait: only a decompression on access counts in VM Memory Latency.
 
 ## Behaviour
-- Pages that compress below 2 KB stay compressed (4:1 or 2:1). Others are swapped.
+- Pages that compress to 2 KB or smaller stay compressed (4:1 or 2:1). Others are swapped (vSphere 9.1 documentation, Memory Compression, p. 1841).
 - Compressed and Swapped are mutually exclusive per page. Both grow while ESXi reclaims; afterwards they can move apart: when the guest reads swapped pages back while ESXi compresses others, for example under a limit, Swapped falls as Compressed rises ([`vsphere/technology/memory/concepts/swap-and-compression`](../../concepts/swap-and-compression.md), section Example: limit, swap and compress in opposite directions).
 - Under a limit, pages are compressed to make room for newly requested pages. Example: limit 2 GB, Consumed fell 0.4 GB in 20 minutes; Compressed spiked to 0.6 GB.
 - ESXi compresses pages at random: it cannot see guest free memory.
@@ -39,7 +40,7 @@ object:
 - VirtualMachine
 layer:
 - virtual-motherboard
-metric_class: contention
+metric_class: consumption
 internal_derive:
 - vsphere/technology/memory/concepts/swap-and-compression
 same_name: []
@@ -53,7 +54,6 @@ source:
   document: Knowledge base
   path: Memory > VM > Swap + Compress; Consumption Metrics > Compressed; Consumed > Ballooned
 corrections: []
-review_notes:
-- 'To check: metric_class: set to contention, matching Swapped and Ballooned.'
+review_notes: []
 status: draft
 ```

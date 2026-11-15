@@ -3,7 +3,7 @@
 ## No mapping
 - Guest OS and VM memory metrics do not map to each other.
 - Neither the VMkernel nor the Guest OS has full visibility into the other.
-- The gap is architectural: ESXi sees a guest physical page only when it is first touched (a fault in the second-level page tables). Freeing, reusing and caching inside the Guest OS are ordinary memory writes that never reach ESXi. See [`vsphere/technology/memory/metrics/virtual-motherboard/consumed`](../metrics/virtual-motherboard/consumed.md), section Mechanism.
+- The gap is architectural: ESXi sees a VM page only when it is first touched (a fault in the second-level page tables). Freeing, reusing and caching inside the Guest OS are ordinary memory writes that never reach ESXi. See [`vsphere/technology/memory/metrics/virtual-motherboard/consumed`](../metrics/virtual-motherboard/consumed.md), section Mechanism.
 - The two layers manage memory independently. The Guest OS cannot see the underlying host memory, so Windows and Linux run their given memory as if on a physical server.
 - The only way for ESXi to ask Windows or Linux for memory is the balloon driver: on Windows it ships with VMware Tools; on Linux it is the kernel module vmw_balloon, independent of open-vm-tools. Without it, ESXi cannot tell used from free guest pages and can swap pages the guest uses. See [`vsphere/technology/memory/concepts/ballooning`](ballooning.md).
 - Unlike a Type 2 hypervisor, which runs as an application on top of a host operating system, ESXi reaches the Guest OS through VMware Tools and guest drivers.
@@ -103,7 +103,6 @@ source:
   document: Knowledge base
   path: 'Memory > Architecture > Guest OS vs VM; Example: Guest OS More Accurate; Example: VM More Accurate'
 corrections: []
-review_notes:
-- 'Section ''Example: VM more accurate'': the java.exe example comes from a blog by Manny Sidhu that is no longer available. Image not copied.'
+review_notes: []
 status: draft
 ```

@@ -58,7 +58,7 @@ flowchart TD
 ## Interpretation
 - Three verdicts, read separately: present health, risk (future health) and efficiency. Never one score ([`sp5-framework/concepts/health-risk-efficiency`](health-risk-efficiency.md)).
 - Each failed step names the KPI or model, its band, and the troubleshooting flow it opens.
-- Release 1.0 checks availability, performance and capacity. Security and compliance steps are a future phase: state them as not checked.
+- Release 1.0 checks performance and capacity on every object, and availability on the cluster only (cluster state and HA failover capacity). VM and ESXi availability, the availability flows and every security step (compliance included) are a future phase: state them as not checked.
 
 ## Health checks vs other flows
 - Most questions in VCF operations are not health checks. Three kinds of question are answered by a flow, each with its own `retriever_guide`:
@@ -80,7 +80,6 @@ flowchart TD
 - "The VM is slow: run its health check" → a complaint is reactive. Start the troubleshooting flow ([`sp5-framework/performance/vm-slow`](../performance/vm-slow.md)).
 - "No alert fired, so the object is healthy" → alerts are guard rails for what humans miss; most risk and waste never raise one.
 - "Performance is green, so the object is healthy" → availability, security and capacity are checked separately; up and fast today is not safe or enough tomorrow.
-- "Troubleshoot the capacity problem" → capacity is planned and monitored; only down and slow are troubleshot.
 
 ## Metadata
 ```yaml
@@ -114,7 +113,7 @@ related:
 - vsphere/architecture/vm-vs-guest-os
 - vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
 source:
-  document: Knowledge base synthesis of the files in internal_derive; order of checks from the health check template (2026-11-09)
+  document: Knowledge base
   path: 'Your Private Cloud > SP5 Framework > Health; Monitor | Troubleshoot; Proactive Operations'
 corrections: []
 review_notes: []

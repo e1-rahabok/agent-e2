@@ -1,11 +1,7 @@
 # DRS overview
 
 ## Dependencies
-- vCenter 9.0 and later: Broadcom KB 312147 says deactivating vCLS does not impact DRS or HA.
-- The 9.0 performance document (p. 76) says DRS requires the vCLS VMs and vCenter Server. KB 312147 overrides that statement for 9.0 and later.
-- The 9.1 performance document has no vCLS statement in its DRS pages (76-79). This matches the deprecation.
-- vCenter 9.1: vCLS is deprecated. Third-party sources say it is off by default and cannot be re-enabled.
-- See [`vsphere/object-types/cluster/concepts/vcls`](vcls.md).
+- From vCenter 9.0, DRS and HA do not depend on vCLS, which is deprecated: [`vsphere/object-types/cluster/concepts/vcls`](vcls.md).
 
 ## Cluster health indicators
 - Watch for manual recommendations. Unaddressed manual recommendations can stop DRS from generating new recommendations.
@@ -24,14 +20,14 @@
   - similar CPU families,
   - matching SSE instruction-set capability.
 - Enhanced vMotion Compatibility (EVC) allows vMotion between different CPU generations. See KB 1003212.
-- Other blockers the source lists:
+- Other blockers Performance Best Practices 9.1 lists (p. 76):
   - vMotion network adapters not connected by a 1 Gb/s or faster Ethernet link,
   - misconfigured vMotion gateway,
   - incompatible security policies between source and destination hosts,
   - VM hardware version incompatibility,
   - VM network not available on the destination host.
 - More vMotion-compatible hosts give DRS more options for recommendations.
-- ESX 9.1 supports virtual hardware version 22 (9.1 p. 26). VMs on version 22 run only on ESX 9.0 or later hosts. Pre-9.0 hosts in the cluster limit vMotion choices for DRS and DPM.
+- ESX 9.1 supports virtual hardware version 22 (Performance Best Practices 9.1, p. 26). VMs on version 22 run only on ESX 9.0 or later hosts. Pre-9.0 hosts in the cluster limit vMotion choices for DRS and DPM.
 - Connectivity: every host in a DRS cluster should reach the full set of datastores that the other hosts reach.
 
 ## VM size and memory
@@ -91,11 +87,8 @@ related:
 - vsphere/architecture/resource-controls
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 76); DRS Cluster Configuration Settings (pp. 76-77)
+  path: VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 76); DRS Cluster Configuration Settings (pp. 76-77); DRS Cluster Sizing and Resource Settings (p. 78); virtual hardware version 22 (p. 26)
 corrections: []
-review_notes:
-- 'The vCLS dependency statement is not in the 9.1 DRS section (pp. 76-77). Virtual hardware version 22 constraint from ESX 9.1 p. 26.'
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: vCLS status in 9.1: Broadcom KB 312147 (https://knowledge.broadcom.com/external/article?articleNumber=312147) overrides the 9.0 DRS-requires-vCLS statement for vCenter 9.0 and later.'
+review_notes: []
 status: draft
 ```

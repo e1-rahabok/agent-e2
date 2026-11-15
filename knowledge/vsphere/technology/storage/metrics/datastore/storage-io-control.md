@@ -5,6 +5,7 @@
 - All show 0 when SIOC is deactivated on the datastore.
 - Statistics level 3. Not stored at the default level 1.
 - Storage I/O Control components are deprecated as of VCF 9.0. The counters still appear in the vSphere 9.1 charts. From VCF 9.0 SIOC honours only IOPS limits; it ignores shares and reservations (Broadcom KB 385396).
+- Relevance for operations: performance troubleshooting of a shared datastore, only when SIOC is enabled and statistics level 3 is collected: Normalized Latency and VM observed latency compare the device with what the VMs see, across all hosts. Not for capacity or alerting: the components are deprecated from VCF 9.0 and read 0 when SIOC is off.
 
 | Counter | Chart label | Unit, rollup | Meaning |
 |---|---|---|---|
@@ -63,13 +64,10 @@ related:
 - vsphere/technology/storage/troubleshooting/host-storage-latency
 - vsphere/tools/vsphere-client/vcenter-statistics
 source:
-  document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
-  path: vSphere Monitoring and Performance > Overview Performance Charts > Datastores and Datastore Clusters > Storage I/O Control Normalized Latency, Aggregate IOPs, Activity, Maximum Queue Depth per Host, Virtual Machine Observed Latency per Datastore (pp. 2048-2052)
+  document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Broadcom KB 385396
+  path: vSphere Monitoring and Performance > Overview Performance Charts > Datastores and Datastore Clusters > Storage I/O Control Normalized Latency, Aggregate IOPs, Activity, Maximum Queue Depth per Host, Virtual Machine Observed Latency per Datastore (pp. 2048-2053); vSphere Resource Management > Manage Storage I/O Resources with vSphere (p. 1886)
 corrections: []
 review_notes:
-- 'Section ''Meaning'': SIOC deprecation from the vSphere 9.1 documentation, vSphere Resource Management > Manage Storage I/O Resources with vSphere (p. 1886).'
-- 'Section ''Formula'': the plain-text formula restates the documentation text (IO count as weight, adjusted for IO size). The exact size adjustment is not published.'
-- 'To check: Section ''Reason'': SIOC lowers per-host device queue depth by shares when the congestion threshold is crossed; the documentation says only that queue depth can change over time when congestion is detected at the array.'
-- 'To check: Section ''Includes / excludes'': VM observed latency is higher than Normalized Latency on a congested host, inferred from the two definitions. It may explain the open gap in vsphere/technology/storage/metrics/host/datastore.'
+- 'To check: Section ''Includes / excludes'': VM observed latency is higher than Normalized Latency on a congested host, inferred from the two definitions (vSphere 9.1 documentation, pp. 2049, 2053: Normalized Latency leaves out the hypervisor queues; VM observed latency is the datastore latency the VMs observe). It may explain the gap in vsphere/technology/storage/metrics/host/datastore, section Counters.'
 status: draft
 ```

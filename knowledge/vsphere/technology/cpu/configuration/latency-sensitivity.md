@@ -11,7 +11,7 @@
 
 ## Normal
 - ESX can assign the vCPUs of the VM to any hyper-thread on any physical core of the host.
-- The source says this gives the best overall performance for the VMs on the host in most cases.
+- Performance Best Practices for vSphere 9.1 says this gives the best overall performance for the VMs on the host in most cases.
 
 ## High
 - The scheduler attempts to grant each vCPU of the VM exclusive access to one physical CPU core.
@@ -28,7 +28,7 @@
 - Benefit: the guest OS and applications can use cache locality. This matters for the few guest workloads that can use awareness of the hyper-threading topology.
 - For most workloads: no performance benefit, and possibly reduced performance.
 - Locking vCPUs to specific hyper-threads can stop ESX from scheduling vCPUs on otherwise idle physical cores. This can limit performance.
-- The source recommends High with Hyperthreading only for workloads known to be aware of, and to benefit from, the underlying topology.
+- Performance Best Practices for vSphere 9.1 recommends High with Hyperthreading only for workloads known to be aware of, and to benefit from, the underlying topology.
 
 - Documentation name: virtual Hyper-Threading (vHT). Since vSphere 8.0; off by default; at most 2 threads per virtual core.
 - Without vHT, each vCPU of a High VM gets a dedicated physical core; the partner hyper-thread is held by an idle world.
@@ -64,12 +64,12 @@ CPU reservation, High with vHT    = (numVcpus / numSMT) x cpuFrequency
 ## Other measures for latency-sensitive traffic
 - SR-IOV or DirectPath I/O, to give the VM direct access to the network device. Also tune the interrupt rate for the device in the guest. See [`vsphere/technology/network/concepts/passthrough-and-offload`](../../network/concepts/passthrough-and-offload.md).
 - VMXNET3 is the best choice when direct device access is unavailable or undesirable.
-- Enhanced Data Path (EDP) is an option without the limitations of SR-IOV. See the 9.1 document, p. 46. Not read.
+- Enhanced Data Path (EDP) is an option without the limitations of SR-IOV (Performance Best Practices for vSphere 9.1, p. 46; [`vsphere/technology/network/concepts/passthrough-and-offload`](../../network/concepts/passthrough-and-offload.md)).
 - NFV workloads that depend on high packet throughput (telco, 5G, IoT) might benefit from Enhanced Network Stack (also called EDP Dedicated mode) in VCF (9.1 p. 54).
 
 ## Host power management
 - Power management features in newer server hardware can increase network latency.
-- Preferred: set the ESX host power policy to Maximum performance. See [`vsphere/technology/cpu/configuration/host-power-management`](host-power-management.md).
+- Preferred: set the ESX host power policy to High Performance. See [`vsphere/technology/cpu/configuration/host-power-management`](host-power-management.md).
 - Alternative: deactivate power management in the BIOS.
 - BIOS steps:
   - deactivate C1E and other C-states,
@@ -93,7 +93,7 @@ CPU reservation, High with vHT    = (numVcpus / numSMT) x cpuFrequency
 
 ## Misconceptions
 - "High latency sensitivity is free" → it removes the physical cores from the pool for other VMs and VMkernel worlds.
-- "High with Hyperthreading gives more performance for any VM" → the source says it is not a general-purpose setting, and can reduce performance for most workloads.
+- "High with Hyperthreading gives more performance for any VM" → locking vCPUs to hyper-threads helps only workloads that use the topology, and can stop ESX from using idle cores, so most workloads gain nothing or lose.
 - "A 100% CPU reservation guarantees exclusive cores" → not if no NUMA node has enough non-exclusive cores when the VM powers on.
 - "Demand 100% with Latency Sensitivity High means CPU shortage" → the vCPU is pinned and always scheduled; Usage stays low.
 
@@ -130,15 +130,10 @@ images:
     topic: 'Latency sensitivity'
     image_type: timeline
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: 'Network Considerations > Running Network Latency Sensitive Workloads (pp. 52-54); Consumer Objects > Performance: VM & Guest OS > Latency Sensitivity'
-corrections: []
-review_notes:
-- 'Section ''High with Hyperthreading'': vHT name, defaults, reservation formulas and example from the vSphere 9.1 documentation, vSphere Resource Management > Virtual Hyperthreading support for VMs, vHT Full CPU Reservation, Activate vHT (pp. 1946-1947).'
-- Checked against 9.1 (revision 20260624). Pages 52-54 read. EDP Dedicated mode named in NFV guidance (p. 54). Power policy wording still inconsistent (p. 53 vs p. 31).
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: inconsistent source naming, still present in 9.1: p. 53 says ''Set the ESX host power policy to Maximum performance''; the power policy list on p. 31 names ''High Performance''. Likely the same policy (Performance Best Practices for VMware vSphere 9.1).'
-- 'To check: white paper ''Best Practices for Performance Tuning of Latency-Sensitive Workloads in vSphere VMs'', named by the source and called dated; not read.'
-- 'Section ''Effect on metrics (High)'': from Consumer Objects > Latency Sensitivity.'
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: 'Network Considerations > Running Network Latency Sensitive Workloads (pp. 52-54); Host Power Management in ESX (p. 31); vSphere 9.1, vSphere Resource Management > Virtual Hyperthreading support for VMs, vHT Full CPU Reservation, Activate vHT (pp. 1946-1947), Host Power Management Policies in ESX (p. 1831); Consumer Objects > Performance: VM & Guest OS > Latency Sensitivity'
+corrections:
+- 'Section ''Host power management'': Performance Best Practices for vSphere 9.1 (pp. 45, 53) says to set the ESX host power policy to Maximum performance; no policy has that name. Its own policy list (p. 31) and the vSphere 9.1 documentation (p. 1831) name it High Performance.'
+review_notes: []
 status: draft
 ```

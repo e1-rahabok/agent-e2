@@ -59,7 +59,7 @@
 - When the load ramps faster than hosts return, the VMs on the powered-on hosts contend (VM CPU Ready rises) until enough hosts carry load. The contention repeats every time the ramp repeats.
 - Signature of power-on lag: contention only while the number of powered-on hosts climbs, and normal VM CPU Ready once all hosts are on. A cluster that contends with all hosts powered on is short of capacity instead.
 - Adding hosts does not fix power-on lag: DPM puts the new hosts in standby during the quiet hours as well.
-- Ways to have the hosts on before a known ramp: a Scheduled Task that deactivates DPM before the ramp (this powers on all standby hosts) and activates it after; Predictive DRS with VCF Operations predictions; a higher `MinPoweredOnCpuCapacity`; a more conservative DPM Threshold; or no DPM on a cluster whose users cannot accept the lag.
+- Ways to have the hosts on before a known ramp: a Scheduled Task that deactivates DPM before the ramp (this powers on all standby hosts) and activates it after; Predictive DRS with forecasts from VCF Operations; a higher `MinPoweredOnCpuCapacity`; a more conservative DPM Threshold; or no DPM on a cluster whose users cannot accept the lag.
 - After the change, check that VM CPU Ready stays low across the whole ramp window, not only in the hourly or daily average.
 
 ## Scheduling
@@ -71,8 +71,7 @@
 - Restarting the vCenter Server or the vCenter vpxd service powers on all standby ESX hosts managed by that vCenter Server.
 
 ## Predictive DRS and predictive DPM
-- Needs Predictive DRS on in the cluster's DRS settings, and VCF Operations (formerly vRealize Operations, 6.4 or later) registered with the vCenter as its Predictive DRS data provider.
-- With predictive DRS configured to receive predictions, DPM can bring hosts back from standby before demand increases.
+- With Predictive DRS configured to receive predictions, DPM can bring hosts back from standby before demand increases. What Predictive DRS needs: [`vsphere/object-types/cluster/configuration/drs-migration-levels`](../configuration/drs-migration-levels.md), section Predictive DRS.
 - Example: if demand rises every morning at 9 am, DPM can bring hosts out of standby by 8 am.
 
 ## HA interaction
@@ -105,18 +104,16 @@ object:
 - ClusterComputeResource
 - HostSystem
 - VirtualMachine
-internal_derive: []
+internal_derive:
+- vsphere/object-types/cluster/configuration/drs-migration-levels
 related:
 - vsphere/object-types/cluster/concepts/drs-overview
-- vsphere/object-types/cluster/configuration/drs-migration-levels
 - vsphere/technology/cpu/configuration/host-power-management
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: VMware Distributed Power Management (DPM) (pp. 80-81)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: VMware Distributed Power Management (DPM) (pp. 80-81); vSphere 9.1 Managing Power Resources (pp. 1912-1915)
 corrections: []
 review_notes:
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: Section ''Power-on lag'': reactive power-on and the return sequence of a standby host (vSphere 9.1 Resource Management, Managing Power Resources, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management.html).'
-- 'To check: Predictive DRS and predictive DPM: the source requires VMware vRealize Operations 6.4 or later, an old product version; whether the feature still applies in vSphere 9.0 and VCF Operations.'
+- 'To check: Section ''Power-on lag'': the time a standby host takes to return (wake, boot, reconnect to vCenter, HA agent) before DRS can move VMs onto it; vSphere 9.1 documentation pp. 1912-1915 gives the wake protocols (IPMI, iLO, Wake-on-LAN) but no duration; a lab measurement.'
 status: draft
 ```

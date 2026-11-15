@@ -104,8 +104,6 @@ source:
   path: 'Reports > Technical Considerations (Output, Context, Widgets); Functional Considerations'
 corrections: []
 review_notes:
-- 'Section ''PDF or CSV'', context columns: the source says the folder column groups the VM by cluster; written as folder.'
-- 'To check: Section ''PDF or CSV'': the 50-column limit is from the source (VCF Operations 9.1 documentation).'
-- 'To check: Section ''Misconceptions'', pie chart for performance: the reason (judged against absolute values) is a reading of the source, which says relative distribution makes it less suitable for performance.'
+- 'To check: Section ''PDF or CSV'': the limit of 50 columns in a CSV report; VCF Operations 9.1 documentation, Reports.'
 status: draft
 ```

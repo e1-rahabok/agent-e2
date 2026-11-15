@@ -22,8 +22,6 @@
 | NUMIOFILTERS, IOFILTERCLASS, FAILEDIO, TOTALIO, LATENCY | IO filter counters (replication, caching, QoS, encryption). Not in vSphere Client. FAILEDIO should be 0. Unclear whether LATENCY is filter overhead or total. |
 | ID, GID, VMNAME, VSCSINAME, NDK | VSCSI device ID, resource pool ID, name, VSCSI device name, number of VSCSI devices. |
 
-- Unmap failures: example fixed in ESXi 6.7 patch ESXi670-202008001: the guest did not refresh unmap granularity and hit a limit.
-
 ## Disk Adapter
 | Group | Counters | Meaning |
 |---|---|---|
@@ -114,10 +112,10 @@ images:
     topic: 'esxtop storage'
     image_type: diagram
 source:
-  document: Knowledge base
-  path: Provider Objects > esxtop > Storage
+  document: Knowledge base; Broadcom KB 342563 (Monitoring vSphere Storage APIs - Array Integration using esxtop, legacy 2065193; ESXi 5.1 to 8.0)
+  path: Provider Objects > esxtop > Storage; VAAI counters from KB 342563
 corrections: []
 review_notes:
-- 'To check: VAAI references not read: https://kb.vmware.com/s/article/2065193, https://blogs.vmware.com/vsphere/2012/06/low-level-vaai-behaviour.html, https://www.running-system.com/esxtop-vaai-counters/'
+- 'To check: Section ''VAAI (Device panel)'': that a VAAI offload raises KAVG; Broadcom KB 342563 lists the VAAI counters and says nothing on KAVG; https://blogs.vmware.com/vsphere/2012/06/low-level-vaai-behaviour.html or a live esxtop reading during a clone.'
 status: draft
 ```

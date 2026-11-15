@@ -3,6 +3,7 @@
 ## Control plane
 - Every layer between the Guest OS driver and the physical controller passes a command descriptor and an address translation. The layers below the Guest OS are a control plane: they route and queue commands.
 - A counter at one of these layers counts commands, not bytes. A 4 KB command and a 1 MB command each count as one command while active.
+- On a VMFS datastore on a block device, ESXi copies no payload: the virtual device layer translates the guest memory addresses into host addresses, and the physical controller reads the data by DMA from the host pages that hold the guest pages.
 
 ## Path of one write command
 | Step | Layer | What it does |
@@ -93,17 +94,11 @@ related:
 - guest-os/storage/windows-storage-io-path
 - guest-os/storage/linux-storage-io-path
 source:
-  document: vSphere Monitoring and Performance 9.1, esxtop storage device, storage adapter and virtual machine storage panels (Broadcom TechDocs, last updated 2026-11-09); Performance Best Practices for VMware vSphere 9.1 (revision 20260624); Broadcom KB 344099, Using esxtop to identify storage performance issues for ESXi (legacy 1008205); Broadcom KB 343323 (legacy 2053145); Broadcom KB 344706, Setting the Maximum Outstanding Disk Requests for virtual machines (legacy 1268)
+  document: Knowledge base; vSphere Monitoring and Performance 9.1, esxtop storage device, storage adapter and virtual machine storage panels (Broadcom TechDocs, last updated 2026-11-09); Performance Best Practices for VMware vSphere 9.1 (revision 20260624); Broadcom KB 344099, Using esxtop to identify storage performance issues for ESXi (legacy 1008205); Broadcom KB 343323 (legacy 2053145); Broadcom KB 344706, Setting the Maximum Outstanding Disk Requests for virtual machines (legacy 1268)
   path: 'Using esxtop or resxtop in interactive mode > Storage device panel (DQLEN, QUED, QAVG). Performance Best Practices: ESX Storage Considerations > NVMe Recommendations (p. 43), General ESX Storage Recommendations (p. 44); Guest Operating System Storage Considerations (p. 60); vSAN Configuration and Use (p. 87)'
 corrections: []
 review_notes:
-- 'To check: Section ''Path of one write command'': the names and order of the layers below the Guest OS (virtual device layer, VMFS, the VMkernel storage core, the Pluggable Storage Architecture and the High Performance Plug-in), against the vSphere Storage documentation.'
-- 'To check: Section ''Disk.SchedNumReqOutstanding (DSNRO)'': the default of 32 against the vSphere 9.1 Storage documentation or the ESXCLI 9.1 reference (https://developer.broadcom.com/xapis/esxcli-command-reference/9.1.0/namespace/esxcli_storage.html). Read in the vSphere 6.5 Troubleshooting page Change the Outstanding IO Requests Setting (example output No of outstanding IOs with competing worlds: 32), which now redirects to TechDocs; Broadcom KB 344706 gives no default.'
-- 'To check: Section ''Disk.SchedNumReqOutstanding (DSNRO)'': how the collective limit of Broadcom KB 344706 (all virtual disks on the host together) relates to the per-world WQLEN of the esxtop storage device panel. Neither page states it.'
-- 'To check: the working source states that ESX does not copy the data payload: the controller reads the guest pages by their host address. Not read in a vendor document, and not stated here. NFS, vSAN and other paths can differ.'
-- 'To check: Section ''Locating the delay with three measurements'': the split by subtraction is a derivation from Little''s Law, not a vendor procedure. The vCenter and esxtop pages give one-line definitions only; the vSphere API reference definitions of totalLatency, kernelLatency, queueLatency and virtualDisk.totalReadLatency were not read.'
-- 'Source URL, esxtop storage device panel: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-monitoring-and-performance/performance-monitoring-utilities-resxtop-and-esxtop/using-esxtop-or-resxtop-in-interactive-mode/storage-device-panel.html'
-- 'Source URL, Broadcom KB 344099: https://knowledge.broadcom.com/external/article?legacyId=1008205'
-- 'Source URL, Broadcom KB 344706: https://knowledge.broadcom.com/external/article/344706/setting-the-maximum-outstanding-disk-req.html'
+- 'To check: Section ''Disk.SchedNumReqOutstanding (DSNRO)'': the default of 32; the vSphere 9.1 documentation and Broadcom KB 344706 give none. ESXCLI 9.1 reference, https://developer.broadcom.com/xapis/esxcli-command-reference/9.1.0/namespace/esxcli_storage.html, or a live esxcli storage core device list.'
+- 'To check: Section ''Disk.SchedNumReqOutstanding (DSNRO)'': how the collective limit of Broadcom KB 344706 (all virtual disks on the host together) relates to the per-world WQLEN of the esxtop storage device panel; neither page states it; a live esxtop reading with two VMs on one device.'
 status: draft
 ```

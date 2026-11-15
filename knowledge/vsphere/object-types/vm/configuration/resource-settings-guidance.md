@@ -80,8 +80,6 @@ source:
   document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: 'Virtual Infrastructure Management > General Resource Management (p. 65); Part 1, Configuration Management > Review List > Resource Management, Share, Reservation, Limit, Resource Pool (pp. 138-141)'
 corrections: []
-review_notes:
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: Headroom for memory virtualization overhead and migration overhead: the source defines no percentage; whether gives one.'
+review_notes: []
 status: draft
 ```

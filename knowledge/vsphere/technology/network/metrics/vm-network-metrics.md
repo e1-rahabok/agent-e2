@@ -6,6 +6,7 @@
 - Traffic type: broadcast and multicast packets. Most traffic should be unicast. Broadcast and multicast can explain drops.
 - Utilization: 6 throughput metrics (largely repeats of each other) and packet counts.
 - Each group exists for Transmit (outgoing) and Receive (incoming).
+- Relevance for operations, per group: transmit dropped packets for the VM Performance KPI and the VM dropped packets alert, receive dropped packets for troubleshooting; broadcast and multicast for troubleshooting; throughput and packets for capacity and troubleshooting.
 
 ## Instances
 - Per vNIC and per VM. Most VMs have 1 vNIC: VM and vNIC values are then identical.

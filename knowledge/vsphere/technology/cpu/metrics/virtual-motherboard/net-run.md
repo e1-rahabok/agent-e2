@@ -3,6 +3,7 @@
 ## Meaning
 - Run minus the time the vCPU was interrupted by the kernel.
 - Added to VCF Operations in July 2024.
+- Relevance for operations: Guest OS sizing and capacity: the Run input with the interrupted time removed (section Reason); VM CPU alert symptoms in the threshold catalog test it.
 
 ## Formula
 ```text

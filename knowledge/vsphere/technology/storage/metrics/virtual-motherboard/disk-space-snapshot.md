@@ -6,6 +6,8 @@
 | Disk Space \| Snapshot \| Virtual Machine Used (GB) | Space of all files created by snapshots (VMDK and non-VMDK). Reclaimable by removing the snapshot. |
 | Disk Space \| Snapshot \| Access Time (ms) | Timestamp when the snapshot was taken. Needs formatting. |
 
+- Relevance for operations: capacity and reclamation: finds the VMs whose snapshots hold space that removing the snapshot frees ([`vsphere/technology/storage/datastore-space-headroom`](../../datastore-space-headroom.md), step 4). A snapshot also costs read IO and CPU ([`vsphere/technology/storage/concepts/snapshot-impact`](../../concepts/snapshot-impact.md)).
+
 ## Formula
 ```text
 Sum of file sizes / (1024 × 1024 × 1024), for files whose layoutEx type is snapshotData, snapshotList or snapshotMemory

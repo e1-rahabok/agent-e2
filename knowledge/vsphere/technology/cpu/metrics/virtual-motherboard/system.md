@@ -3,6 +3,7 @@
 ## Meaning
 - CPU time the hypervisor spends on behalf of the VM: privileged instructions and IO commands.
 - Unit: ms. Charged to the VM. Part of the VM's VMX world.
+- Relevance for operations: performance troubleshooting of IO-heavy VMs (NSX Edge, databases), and chargeback, because VM CPU Used and Usage include it.
 
 ## Mechanism
 - IO is processed twice: first by the Guest OS storage subsystem, then by the hypervisor storage subsystem.
@@ -69,11 +70,11 @@ images:
     metric: ['VM CPU System']
     image_type: diagram
 source:
-  document: Knowledge base
-  path: CPU > VM > Consumption Metrics > System
-corrections: []
+  document: Knowledge base; vSphere Web Services API 9.1 reference, CPU Counters
+  path: CPU > VM > Consumption Metrics > System; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html, system
+corrections:
+- 'Section ''Instance'': vSphere Web Services API 9.1 describes `cpu.system` as time spent on system processes on each virtual CPU in the virtual machine. vCenter shows no per-vCPU instance of System, and the kernel charges it at VM level.'
 review_notes:
-- 'To check: Section ''Values'': KB not read (https://kb.vmware.com/s/article/59640).'
-- 'To check: Section ''Values'': the vCenter counter description reads ''amount of time spent on system processes on each virtual CPU in the virtual machine''; it differs from the per-vCPU statement of section Values.'
+- 'To check: Section ''Values'': NSX Edge System time and the effect of adding vCPUs; Broadcom KB 59640 (legacy id), https://knowledge.broadcom.com/external/article?legacyId=59640 returned 404 on 2026-11-15.'
 status: draft
 ```

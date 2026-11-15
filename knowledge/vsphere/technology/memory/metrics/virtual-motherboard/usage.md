@@ -3,6 +3,7 @@
 ## Meaning
 - One label, two formulas. vCenter VM Memory Usage (%) reads Active, an ESXi estimate; VCF Operations VM Memory Usage (%) reads the Guest OS. Formulas: section By tool.
 - Active is a sampled estimate of recently touched pages, made for VMkernel memory management.
+- Relevance for operations: vCenter Usage (%): none for sizing or capacity. VCF Operations Usage (%): Guest OS sizing. Details: section Use.
 
 ## Use
 - For operations, vCenter Usage (%): not for sizing or capacity. Active does not see how the Guest OS uses its cache, so a cut to it removes that cache.
@@ -69,7 +70,6 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > VM > Consumption Metrics > Usage (%)
 corrections: []
 review_notes:
-- 'Section ''Use'': default state and keys from VCF Operations 9.1 Virtual Machine Metrics, https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/virtual-machine-metrics.html; fallback to Non Zero Active, https://knowledge.broadcom.com/external/article/390432.'
 - 'To check: Section ''By tool'': 9.1 publishes no formula for VM Memory|Usage (%). With the metric enabled on a 9.1 instance, check that it equals Guest|Needed Memory / Mem|Total Capacity × 100 with guest data, and Active / configured without.'
 status: draft
 ```

@@ -72,11 +72,10 @@ related:
 source:
   document: VCF Operations 9.1 documentation (TechDocs, VCF 9.1.x), Real-time Data in the Workbench (updated 2026-10-29); Real-Time Metrics Details and Deploy Real-Time Metrics (updated 2026-11-05)
   path: https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/troubleshooting-workbench-home-page/real-time-data-in-troubleshooting-workbench.html; .../configuring-policies/using-the-monitoring-policy-workspace/policy-workspace/real-time-metrics-policy-workspace.html; .../deploying-vcf-operations-for-real-time-data-service.html
-corrections:
-- 'Section ''Purpose and implementations'': designed for programmatic consumption, Prometheus compatibility for scripts.'
+corrections: []
 review_notes:
-- 'To check: Section ''Purpose and implementations'': a Prometheus endpoint or API route for external scripts; the docs show PromQL only in the Custom Query sub-tab (Q129).'
-- 'Docs conflict: the policy page says ESX Top view is for Virtual Machine types; the Workbench page says Host System and VM.'
-- 'To check: The list of the ~21 2-second metrics (VODAP-9.1-Metrics-List-Per-Provider.xlsx, not read).'
+- 'To check: Section ''Purpose and implementations'': a Prometheus endpoint or API route for external scripts (open question Q129); the documentation shows PromQL only in the Custom Query sub-tab; https://developer.broadcom.com/xapis/realtime-metrics-api/latest/.'
+- 'To check: Section ''Enable it'': the object type that carries the ESX Top state; the policy page says Virtual Machine, the Workbench page says Host System and Virtual Machine; a live VCF Operations 9.1 policy.'
+- 'To check: Section ''Purpose and implementations'': the list of the about 21 metrics of the 2-second tier; VODAP-9.1-Metrics-List-Per-Provider.xlsx (Broadcom).'
 status: draft
 ```

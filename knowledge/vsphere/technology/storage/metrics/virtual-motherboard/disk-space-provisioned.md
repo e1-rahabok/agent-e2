@@ -1,18 +1,17 @@
 # VM Disk Space | Provisioned Space for VM (VCF Operations)
 
 ## Meaning
-- Like Virtual Machine Used, but thin disks count at configured size, not actual use.
+- Like Virtual Machine Used ([`vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used`](disk-space-used.md)), but thin disks count at configured size, not actual use.
 - Higher than Used when thin disks are not full.
+- Relevance for operations: capacity risk, not capacity use: summed per datastore it is the space the VMs claim once every thin disk fills. Provisioned ÷ capacity is the datastore's overcommit ratio, and provisioned − used the unwritten thin space ([`vsphere/technology/storage/datastore-space-headroom`](../../datastore-space-headroom.md), step 5).
 
 ## Use
 - At datastore level: total space if every VM grows to full size. For overcommitted datastores.
-- Not a capacity metric: it mixes allocation and utilization.
-
-## Known issue
-- Can report a much higher value: Broadcom KB 83990. Fixed in ESXi 7.0 U2c (7.0.2 P03), PR 2725886.
+- Not a usage metric: it mixes allocation (thin disks at configured size) and utilization (every other file at its actual size).
 
 ## Misconceptions
 - "Provisioned = used" → thin disks count at full size.
+- "Provisioned Space above the datastore capacity means the datastore is full" → the part above used is unwritten thin space. Compare provisioned − used with the datastore's free space ([`vsphere/technology/storage/datastore-space-headroom`](../../datastore-space-headroom.md)).
 
 ## Metadata
 ```yaml
@@ -41,7 +40,6 @@ source:
   document: Knowledge base
   path: Storage > VM > Capacity Metrics > All VM Files
 corrections: []
-review_notes:
-- 'To check: KB not read (https://kb.vmware.com/s/article/83990).'
+review_notes: []
 status: draft
 ```

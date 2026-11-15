@@ -49,7 +49,7 @@ flowchart TD
 7. Fit of the new VMs (ClusterComputeResource, VirtualMachine).
    - Reservations: they must fit unreserved capacity; leave at least 10% unreserved ([`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../concepts/admission-control-and-cluster-state.md)).
    - Overcommit: the CPU and memory overcommit rows of Cluster Risk after the new VMs ([`vsphere/object-types/cluster/models/cluster-risk`](../models/cluster-risk.md)).
-   - Size: a monster VM (more than 50% of a host's physical cores, or more than 40% of its DRAM or 256 GB, whichever is smaller) raises contention risk even at low utilization ([`vsphere/object-types/cluster/models/cluster-risk`](../models/cluster-risk.md), section Monster VM).
+   - Size: a new monster VM raises contention risk even at low utilization; the monster sizes per host: [`vsphere/object-types/cluster/models/cluster-risk`](../models/cluster-risk.md), section Monster VM.
    - Memory: ballooning starts only near 99% host use, so set the normal ceiling from the HA case; with 12 hosts sized for 11, 99% × 11 / 12 = 90.75% ([`vsphere/technology/memory/concepts/host-memory-states`](../../../technology/memory/concepts/host-memory-states.md)).
    - What the new VMs change, at their CPU and memory concurrent peak: Cluster Risk (%) moves most (monster VM, overcommit ratio, the highest ESXi utilization prorated among hosts, reservation); Cluster Consumption (%) moves with ESXi CPU thread utilization and memory consumed; Cluster Performance (%) cannot be modelled reliably, so it is kept unchanged. Not considered: DRS rules (VM-VM anti-affinity, VM-host should or must), HA admission control, vSAN or datastore capacity.
    ![Impact of additional workload, assuming CPU and memory concurrent peak: biggest impact on Risk (%) (monster VM, overcommit ratio, highest ESXi utilization prorated among hosts, reservation); Consumption (%) (ESXi CPU thread utilization, ESXi memory consumed); Contention (%): reliable modelling is not possible, the score is kept unchanged. Not considered: DRS rules, HA admission control, vSAN or datastore capacity](../images/cluster-new-workload-impact-on-risk-consumption-contention-diagram.png)
@@ -140,7 +140,6 @@ source:
   document: Knowledge base; knowledge base synthesis of the files in internal_derive
   path: 'Capacity Management > Capacity Model > Cluster Closure; Logic'
 corrections: []
-review_notes:
-- 'To check: Steps 1, 6 and 7 and the full order of steps: steps 1, 6 and 7 come from the files in internal_derive (architecture review 2026-11-06, section 3.3); steps 2 to 5 and the closure thresholds follow (Cluster Closure, Logic) (Q061).'
+review_notes: []
 status: draft
 ```

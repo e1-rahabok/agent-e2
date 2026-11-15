@@ -72,6 +72,6 @@ source:
 corrections:
 - 'Section ''MTU test with vmkping'': Broadcom KB 313061 calls the 28 bytes "layer 1 and layer 2 overhead". They are the 20-byte IPv4 header and the 8-byte ICMP header, which the MTU includes (Broadcom KB 451658: IP and ICMP headers).'
 review_notes:
-- 'Section ''MTU test with vmkping'': the Broadcom KB articles list ESXi 7.x, 8.x and 9.0, none 9.1; check against the vSphere 9.1 networking documentation. https://knowledge.broadcom.com/external/article/344313, https://knowledge.broadcom.com/external/article/313061, https://knowledge.broadcom.com/external/article/419088, https://knowledge.broadcom.com/external/article/451658, https://knowledge.broadcom.com/external/article/448714'
+- 'To check: Section ''MTU test with vmkping'': the Broadcom KB articles list ESXi 7.x, 8.x and 9.0, none 9.1, and the vSphere 9.1 documentation (What are Jumbo Frames, p. 1216; Using Jumbo Frames with iSCSI and iSER, p. 1343) requires jumbo frame support end to end but does not describe vmkping; the vmkping messages on an ESXi 9.1 host. https://knowledge.broadcom.com/external/article/344313, https://knowledge.broadcom.com/external/article/313061, https://knowledge.broadcom.com/external/article/419088, https://knowledge.broadcom.com/external/article/451658, https://knowledge.broadcom.com/external/article/448714'
 status: draft
 ```

@@ -153,9 +153,8 @@ images:
     image_type: diagram
 source:
   document: Knowledge base; VMware vSphere 9.1 product documentation, vSphere Availability (Broadcom TechDocs, page last updated 2026-11-09)
-  path: 'Provider Objects > Capacity > Key Metrics; Cluster Capacity; Capacity Management > Overview (Private Cloud Capacity; Optimized Capacity); vSphere Availability > Creating and Using vSphere HA Clusters > vSphere HA Admission Control > Cluster Resources Percentage Admission Control'
+  path: 'Provider Objects > Capacity > Key Metrics; Cluster Capacity; Capacity Management > Overview (Private Cloud Capacity; Optimized Capacity); vSphere Availability > Creating and Using vSphere HA Clusters > vSphere HA Admission Control > Cluster Resources Percentage Admission Control (vSphere 9.1 PDF p. 1972: vSphere HA considers only hosts that are connected, not in maintenance mode, and have no vSphere HA errors)'
 corrections: []
-review_notes:
-- 'Section ''Total vs usable after host loss'': the maintenance rows and the HA host rule from vSphere 9.1 Availability, Cluster Resources Percentage Admission Control ("vSphere HA considers only hosts that are connected, not in maintenance mode, and have no vSphere HA errors"), https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html.'
+review_notes: []
 status: draft
 ```

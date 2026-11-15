@@ -1,8 +1,10 @@
 # ESXi Memory Usage
 
 ## Meaning
-- Maps to Consumed: what the VMs have claimed. Related to capacity management.
+- Maps to ESXi Memory Consumed: the pages the host holds for VMs, VM overhead, the kernel, vSAN and NSX ([`vsphere/technology/memory/metrics/host/consumed`](consumed.md)).
 - Memory is a cache, so values near 100% are expected.
+- Memory pressure shows in ballooning, compression, swapping and VM Memory Contention, not in Usage (%).
+- Relevance for operations: capacity reporting. Not a shortage signal and not the capacity demand: VCF Operations plans on ESXi Memory Utilization ([`vsphere/technology/memory/metrics/host/utilization`](utilization.md), section Reason).
 
 ## Formula (VCF Operations)
 ```text
@@ -39,7 +41,6 @@ source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > ESXi > Consumed
 corrections: []
-review_notes:
-- 'Section ''Formula'': from Memory > ESXi.'
+review_notes: []
 status: draft
 ```

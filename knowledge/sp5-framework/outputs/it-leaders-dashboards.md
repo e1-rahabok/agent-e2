@@ -80,7 +80,7 @@
 - "Show capacity remaining for the whole World" → clusters are not interchangeable; show it per cluster and datastore.
 - "VM count growth means demand growth" → without utilization growth, the new VMs are not yet used.
 - "A high overcommit ratio is a problem" → it is efficiency; read it with contention.
-- "CPU capacity counts hyper-threads" → VCF Operations counts physical cores (Total Capacity in GHz = cores × base frequency); plan capacity per physical thread.
+- "CPU capacity counts hyper-threads" → VCF Operations counts physical cores (Total Capacity (GHz) = cores × base frequency: capacity at base clock); plan capacity per physical thread.
 - "Use technical terms on executive dashboards" → use the organisation's business terms.
 
 ## Metadata
@@ -115,9 +115,6 @@ source:
   document: Knowledge base
   path: 'Overall Design Approach > Overall Design: IT Leaders Dashboard (General Requirements, Sample Requirements Analysis: Business Applications, Operations Overview; Sample Dashboards: Capacity Summary, How to Use, Points to Note)'
 corrections: []
-review_notes:
-- 'Section ''Capacity Summary dashboard'': the source refers to an Executive Summary Dashboards page for common design; not in this document.'
-- 'Section ''Sample analysis'': the example names (John and Jill; Sam, Andy and Julia) are left out.'
-- 'Not copied: the general requirements hexagons (their words are in the text) and the Capacity Summary screenshots.'
+review_notes: []
 status: draft
 ```

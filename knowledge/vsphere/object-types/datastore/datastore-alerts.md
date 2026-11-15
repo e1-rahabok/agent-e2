@@ -12,7 +12,7 @@
 - The datastore cluster built from this alert: [`vsphere/object-types/datastore-cluster/datastore-cluster-alerts`](../datastore-cluster/datastore-cluster-alerts.md).
 
 ## Datastore latency: not implemented
-- VMs and datastores are many-to-many: a VM can span datastores and a datastore serves many VMs, so a VM-level condition cannot be set for a datastore.
+- VMs and datastores are many-to-many: a VM can span datastores and a datastore serves many VMs, so a VM-level condition cannot be set for a datastore ([`vsphere/architecture/object-relationships`](../../architecture/object-relationships.md)).
 - Guide if you build one, all of:
   - more than 25% of the VM population has latency above 10 ms;
   - the highest VM latency is above 40 ms;
@@ -49,8 +49,6 @@ source:
   document: Knowledge base
   path: 'Proactive Operations > Alert > Storage Alerts (Contention Alerts: Infrastructure Contention; Consumption Alerts); Alerts Planning > Design (alert count table)'
 corrections: []
-review_notes:
-- 'Section ''Datastore latency: not implemented'': the source says Infrastructure Contention is not yet implemented; its alert count table shows Datastore disk contention 0. Parked after 1.0 (Q142).'
-- 'Section ''Datastore latency: not implemented'': the guide values stay in this file because no alert in the set holds them; a catalog row exists only for an alert in the set.'
+review_notes: []
 status: draft
 ```

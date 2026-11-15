@@ -35,7 +35,7 @@ flowchart TD
 
 ## Misconceptions
 - "Used is far below Run, so the VM needs more vCPUs" → power saving and Hyper-Threading lower Used; more vCPUs do not change either.
-- "CPU Used or Usage is high, so add vCPUs" → read Run first. Turbo raises Used and Usage above Run, and more vCPUs change neither.
+- "CPU Used or Usage is high, so add vCPUs" → read Run first. Turbo raises Used and Usage above Run, and adding vCPUs does not change the frequency; a vCPU shortage shows in Run and the Guest OS run queue.
 
 ## Metadata
 ```yaml

@@ -4,6 +4,7 @@
 - Adapter and path share the latency, IOPS and throughput counters. The path also has Bus Resets and Command Terminations (storagePath.busResets, commandsAborted); the adapter has the queue counters below.
 - Path object names are not friendly names: they can look like devices, but the object is the path.
 - No commands aborted counter at adapter level. Queue counters (queued, outstanding IOs, queue depth, queue latency) exist in the vSphere API at statistics level 2 or higher (vSphere Web Services API 9.1, storage adapter counters); the default adapter chart does not show them.
+- Relevance for operations: performance troubleshooting: read and write latency per adapter and per path locate a bad HBA or path that the host total hides ([`vsphere/technology/storage/troubleshooting/host-storage-latency`](../../troubleshooting/host-storage-latency.md), step 4); IOPS and throughput per adapter show how the load spreads over the HBAs. Not in the alert set.
 
 ## Contention counters
 - Read latency, write latency, highest latency.
@@ -15,7 +16,7 @@
 - Block size: derive with a super metric (throughput / IOPS).
 
 ## Example: 192 hosts
-- Worst write latency in a week: 250 ms on one host, while its 95th percentile was 0.33 ms. The 95th alone does not prove a one-off: check the 99th percentile, or how many samples passed a level, before calling it one ([`aggregation`](../../../../../sp5-framework/observability/aggregation.md), section Techniques).
+- Worst write latency in a week: 250 ms on one host, while its 95th percentile was 0.33 ms. The 95th alone does not prove a one-off: check the 99th percentile, or how many samples passed a level, before calling it one ([`sp5-framework/observability/aggregation`](../../../../../sp5-framework/observability/aggregation.md), section Techniques).
 - The other 191 hosts: maximum 5 ms.
 - Using the 99th percentile instead of the maximum still revealed hosts with real latency problems. Drill down per adapter.
 ![ESXi storage adapter latency: 99th and 95th percentile read and write, sorted by write latency](../../images/esxi-storage-adapter-latency-99th-vs-95th-percentile-sorted.png)
@@ -65,7 +66,6 @@ source:
   path: Storage > ESXi > Storage Adapter & Path
 corrections: []
 review_notes:
-- 'Sections Scope and Contention counters: counter sets, rollup and levels of the adapter and path groups from https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/storage_adapter_counters.html and https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/storage_path_counters.html (API 9.1.1). To check: which of them the vSphere Client 9.1 and VCF Operations 9.1 show.'
-- 'Section Scope: the statistics level of storageAdapter.queued, outstandingIOs, queueDepth and queueLatency, and whether the vSphere Client 9.1 adapter chart offers them; check https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/storage_adapter_counters.html and a 9.1 client.'
+- 'To check: Sections ''Scope'' and ''Contention counters'': which adapter and path counters the vSphere Client 9.1 and VCF Operations 9.1 charts show, and whether the adapter chart offers storageAdapter.queued, outstandingIOs, queueDepth and queueLatency; a live vSphere Client 9.1 screen (the vSphere 9.1 documentation lists the Storage Adapter and Storage Path groups, p. 2029, but no chart counters). Counters: https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/storage_adapter_counters.html, https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/storage_path_counters.html.'
 status: draft
 ```

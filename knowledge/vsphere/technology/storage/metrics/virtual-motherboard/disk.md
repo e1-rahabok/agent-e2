@@ -5,6 +5,7 @@
 - Covers VMFS and RDM, not NFS.
 - The value is this VM's IO only, not the whole device or datastore that other VMs share. It is not split per virtual disk: different layers.
 - With a 1:1 datastore-to-LUN mapping and no extents, values match the datastore level.
+- Relevance for operations: performance troubleshooting at the device layer: the VM's RDM IO, which the datastore level leaves out. Bus Resets and Commands Aborted belong at 0, so any value calls for an investigation.
 
 ## Counters
 - Highest Latency: peak among disks. Roll-up is Latest: the single value at the end of the collection period.

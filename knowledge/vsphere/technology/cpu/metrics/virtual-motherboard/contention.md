@@ -4,12 +4,13 @@
 - Time the vCPU does not get CPU time.
 - A VCF Operations metric. vSphere has no Contention counter. The vSphere counter is CPU Latency (esxtop %LAT_C).
 - Before Aria Operations 8.18 (July 2024) Contention mapped to CPU Latency, which excludes limit. From 8.18 it has its own formula, which includes limit.
+- Relevance for operations: performance troubleshooting and alerting on a VM (VM CPU alert symptoms in the threshold catalog). Not for ESXi or cluster performance, because it includes limits (section Limitation).
 
 ## Formula (from July 2024)
 ```text
 Contention (%) = Overlap + Co-stop + Ready + Other Wait (if less than 1%)
 ```
-- Other Wait is added only when below 1%. The condition prevents false positives: idle VMs can report raised VM Wait after some upgrades (Broadcom KB 338438).
+- Other Wait is added only when below 1%. The condition prevents false positives: idle VMs can report raised VM Wait on ESXi 7.0 Update 2 and later, before 8.0 Update 3j (Broadcom KB 338438).
 ![Contention covers Overlap, Co-stop, Ready including Limit, and Other Wait; Swap Wait belongs to memory contention](../../images/vm-cpu-contention-components-overlap-costop-ready-other-wait.png)
 
 ## Mechanism

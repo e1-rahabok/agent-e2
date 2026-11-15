@@ -5,6 +5,7 @@
 - Also reports 100% when both threads run.
 - To tell the two cases apart, check Thread Utilization.
 - Definition: a core counts as utilized while at least one of its threads is unhalted (vSphere 9.1 documentation, esxtop CORE UTIL(%); vSphere Web Services API 9.1, cpu.coreUtilization: either or both logical CPUs).
+- Relevance for operations: performance and capacity headroom, read with Thread Utilization: how many cores already run work, where a new thread would share a core ([`vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom`](../../decision-tree/host-cpu-capacity-headroom.md)); a host CPU alert symptom in the threshold catalog tests it.
 
 ## Reason
 - The core does the work, not the thread. A core running one thread is fully busy.
@@ -54,8 +55,6 @@ source:
   document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); vSphere Web Services API 9.1 reference, CPU Counters
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture > ESXi ≠ VM + Kernel; Impacts on ESXi; CPU > ESXi > Thread Utilization; vSphere Monitoring and Performance > resxtop and esxtop > CPU Panel, CORE UTIL(%) (p. 2155); https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html, coreUtilization
 corrections: []
-review_notes:
-- Sections Reason: from CPU > Architecture.
-- 'Section Rollup: from CPU > ESXi.'
+review_notes: []
 status: draft
 ```

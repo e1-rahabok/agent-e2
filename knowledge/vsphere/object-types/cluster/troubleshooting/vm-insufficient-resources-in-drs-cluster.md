@@ -21,8 +21,8 @@ flowchart TD
 ## Checks, in order
 1. Cluster state (ClusterComputeResource). Yellow or red: capacity no longer covers all configured reservations; this VM may be one not getting its reservation → fix the cluster state first. See [`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../concepts/admission-control-and-cluster-state.md). Green → step 2.
 2. Limits (VirtualMachine, then every parent ResourcePool up to the cluster). VM demand equal to or above a configured limit → the limit causes the contention; esxtop %MLMTD confirms a CPU limit. Raise or remove the limit. No limit reached → step 3.
-3. Cluster demand vs capacity (ClusterComputeResource). Demand above capacity → the cluster is overloaded; shares decide who gets what, and this VM's shares give others more. Add capacity, or raise this VM's shares or reservation. Capacity sufficient → step 4.
-4. Host statistics (HostSystem where the VM runs). Host oversubscribed while the cluster has room → step 5. Host not oversubscribed → step 6.
+3. Cluster demand vs capacity (ClusterComputeResource). Compare two readings of the cluster statistics, CPU and memory demand against capacity; no threshold applies. Demand above capacity → the cluster is overloaded; shares decide who gets what, and this VM's shares give others more. Add capacity, or raise this VM's shares or reservation. Capacity sufficient → step 4.
+4. Host statistics (HostSystem where the VM runs). Compare the host's demand with its capacity, as in step 3. Host oversubscribed while the cluster has room → step 5. Host not oversubscribed → step 6.
 5. DRS blockers. DRS does not move this VM, or enough other VMs, when:
    - a VM/VM or VM/Host rule requires the current placement;
    - DRS is deactivated (automation overridden) for the VM;
@@ -73,6 +73,8 @@ internal_derive:
 - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 - vsphere/architecture/resource-controls
 - vsphere/object-types/cluster/configuration/drs-migration-levels
+- vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
+- vsphere/technology/memory/vm-memory-latency-high
 related:
 - vsphere/object-types/cluster/concepts/drs-overview
 - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
@@ -80,11 +82,8 @@ related:
 - vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
 source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
-  path: vSphere Resource Management > DRS Troubleshooting Information > Load Imbalance on Cluster, DRS Seldom or Never Performs vMotion Migrations, Virtual Machine Problems > Insufficient CPU or Memory Resources, DRS Does Not Move Any Virtual Machines from a Host (pp. 1950-1955)
+  path: vSphere Resource Management > DRS Troubleshooting Information > Load Imbalance on Cluster, DRS Seldom or Never Performs vMotion Migrations, Virtual Machine Problems > Insufficient CPU or Memory Resources, DRS Does Not Move Any Virtual Machines from a Host (pp. 1950-1955); DRS Migration Threshold > DRS Score (p. 1896)
 corrections: []
-review_notes:
-- 'Whole file: the order of steps 1-5 follows the documentation section Insufficient CPU or Memory Resources (cluster yellow or red, limit too restrictive, cluster overloaded, host overloaded). Step 6 and the symptom metrics link to existing knowledge-base files.'
-- 'Section ''Checks'': the DRS blockers combine the documentation lists for load imbalance, DRS seldom migrating, and DRS not moving VMs from a host.'
-- 'Section ''Misconceptions'': cluster DRS Score as a weighted average of VM DRS Scores is from the documentation (DRS Migration Threshold > DRS Score, p. 1896).'
+review_notes: []
 status: draft
 ```

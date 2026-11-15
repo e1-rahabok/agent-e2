@@ -110,7 +110,7 @@
 - Good or bad is relative to the plan. A plan with no overcommit never runs out of capacity; in another plan the same result is wastage.
 - Monitor example: capacity for a new DaaS project planned for 1 year; after 3 months 25% of users are on it and utilization is already 70%. The plan is off by a wide margin.
 - Optimize supply: newer hardware can give about 2x the capacity at the same cost.
-- Optimize demand at the source: solve the oversized VM before it is provisioned. Progressive pricing makes smaller configurations cheaper per unit, so requesters choose them; reclaiming later is harder.
+- Optimize demand at the source: solve the oversized VM before it is provisioned. Progressive pricing makes smaller configurations cheaper per unit, so requesters choose them. Reclaiming later is harder: a downsize in production takes downtime and proof that performance does not drop (section Six steps).
 
 ## Cadence
 ![Annual cadence: demand management runs reclamation and rightsizing weekly all year, gather and estimate in January to March, check points in June and December, adjustment in August; supply management runs procurement, lead time and onboarding twice a year, with a technology refresh decision before each](images/capacity-management-annual-cadence-demand-and-supply-timeline.png)
@@ -219,7 +219,6 @@ source:
   document: Knowledge base
   path: 'Your Private Cloud > SP5 Framework: Pillars (Capacity); Capacity Management > Capacity Model (planning stage vs operating stage); Capacity Management > Overview ("Good" Advice; Concept; Private Cloud Capacity; Stages; The Planning Stage; Architecture Plan; Example; Optimized Capacity)'
 corrections: []
-review_notes:
-- 'To check: Section ''Four phases'': the reason for preventing oversized VMs before provisioning (reclaiming later is harder); no source yet.'
+review_notes: []
 status: draft
 ```

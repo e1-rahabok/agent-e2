@@ -15,9 +15,7 @@
 | Network | Depends on the component | Depends on the component | Network is both a line and a dot: cables are lines, switches are dots. |
 
 ## CPU
-- CPU runs in nanoseconds. Observability code runs in milliseconds.
-  - Result: CPU-derived values are not 100% exact.
-  - Example: counting threads per thread state in Windows or Linux can vary by ~5%.
+- CPU-derived values are approximations: the CPU runs in nanoseconds and observability code in milliseconds ([`sp5-framework/observability/measurement-precision`](measurement-precision.md), section Observer speed vs CPU speed).
 - The primary speed unit (GHz) is not comparable across hardware generations or architectures.
   - 1 GHz on a newer CPU does more work than 1 GHz on an older CPU.
   - GHz is also not comparable across CPU model variants of the same generation from the same vendor.
@@ -31,7 +29,7 @@
   - 95% memory utilization can be low.
   - 85% CPU utilization can already be high.
 - Memory is a form of storage. Its metrics are mostly about space, not speed.
-  - Consequence: there is VM CPU Demand, but no VM Memory Demand.
+  - Consequence: vCenter has a VM CPU Demand counter, the runtime the vCPUs demand, but no memory counter of that kind. Memory demand in capacity is a model, the higher of utilization and reservation per VM, not a counter ([`sp5-framework/capacity/demand`](../capacity/demand.md)).
   - Same reason there is no "demand" metric for disk space on a laptop.
 
 ## Storage
@@ -47,9 +45,9 @@
 - Network takes more than one shape: line (cable) and dot (switch). This makes network metrics harder than node metrics.
 
 ## Misconceptions
-- Applying one threshold philosophy to all four resources → wrong. The same % means different things per resource.
-- Comparing GHz across CPU generations or models → wrong. Work per GHz differs.
-- Expecting a "memory demand" metric like CPU demand → wrong. Memory is space, not time.
+- "Memory at 95% is as bad as CPU at 95%" → memory is a cache and is expected to run near 100%; 85% CPU utilization can already be high. Read each resource by its contention: VM Memory Latency for memory, VM CPU Ready and Co-stop for CPU.
+- "This host has more GHz, so it does more work" → work per GHz differs across CPU generations and models; compare GHz only within one CPU model.
+- "VM memory demand is a counter, like VM CPU Demand" → memory is space, not time: no memory counter measures demanded runtime. Capacity memory demand is a model, the higher of utilization and reservation per VM.
 
 ## Metadata
 ```yaml
@@ -70,14 +68,14 @@ product:
 internal_derive: []
 related:
 - sp5-framework/observability/measurement-precision
+- sp5-framework/capacity/demand
 - vsphere/architecture/resource-controls
 - vsphere/technology/memory/metrics/virtual-motherboard/usage
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity
-corrections:
-- '2026-11-02: CPU has a space dimension (Yes), measured in vCPU or physical thread. Uploaded document table shows N/A.'
+corrections: []
 review_notes: []
 status: draft
 ```

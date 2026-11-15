@@ -3,6 +3,7 @@
 ## Meaning
 - Includes RDM.
 - The term virtual disk covers both VMDK and RDM, because an RDM appears as a virtual disk when browsing the datastore directory. The RDM file is only a pointer to an external LUN.
+- Relevance for operations: performance (the layer the VM Performance KPI and the VM disk latency alerts read, per virtual disk) and capacity (disk properties, the RDM inventory, multi-writer sharing).
 
 ## Difference from Datastore Virtual Disk
 - Different vantage points. The RDM belongs to the VM, but its data is on an external LUN, not on the datastore.
@@ -76,7 +77,6 @@ source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Storage > VM > Overview > Virtual Disk; Multi-Writer Disk
 corrections: []
-review_notes:
-- 'Sections Scope, Properties, Multi-writer disks: from Storage > VM.'
+review_notes: []
 status: draft
 ```

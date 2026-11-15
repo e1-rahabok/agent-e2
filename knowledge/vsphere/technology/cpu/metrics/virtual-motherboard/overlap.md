@@ -4,6 +4,8 @@
 - Time a running vCPU was interrupted so the kernel could run a system service.
 - The service can be on behalf of the interrupted VM or another VM.
 - Contention metric. Unit: ms, summed over the 20-second sample.
+- vSphere Web Services API 9.1 defines `cpu.overlap` as time the VM was interrupted to perform system services on behalf of itself or other VMs.
+- Relevance for operations: performance: part of the VM KPI (peak among vCPUs) and of VM CPU Contention; Guest OS sizing removes it from Run (Net Run = Run - Overlap).
 
 ## Mechanism
 - While ESXi runs a vCPU, IO processing (for example incoming network packets) can arrive.
@@ -71,8 +73,8 @@ images:
     metric: ['VM CPU Used', 'VM CPU Run', 'VM CPU Overlap', 'VM CPU System']
     image_type: diagram
 source:
-  document: Knowledge base
-  path: CPU > VM > Contention Metrics > Overlap
+  document: Knowledge base; vSphere Web Services API 9.1 reference, CPU Counters
+  path: CPU > VM > Contention Metrics > Overlap; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html, overlap
 corrections: []
 review_notes: []
 status: draft

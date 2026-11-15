@@ -11,7 +11,7 @@
 - 5,000 VMs every 5 minutes over 24 hours is too many trend charts. One score per object makes monitoring at scale possible.
 
 ## One KPI per realm
-- A realm is a layer that its owner controls and the layer below cannot see into. The VM is a virtual motherboard; the Guest OS runs on it. So VM Performance (%) and Guest OS Performance (%) are two KPIs, not one.
+- The VM and the Guest OS are separate realms ([`sp5-framework/concepts/realms-and-layers`](../concepts/realms-and-layers.md)): the VM is a virtual motherboard, and the hypervisor cannot see into the Guest OS that runs on it. So VM Performance (%) and Guest OS Performance (%) are two KPIs, not one.
 - Pros: the direction of troubleshooting is clear; each score is higher (a single number dilutes less).
 - Cons: twice the metrics; application teams see both as infrastructure and ask for one number.
 - For the application team the two are one entity: report the VM GOS KPI, the average of VM Performance (%) and Guest OS Performance (%).
@@ -37,9 +37,9 @@
 ## Reading a KPI over time
 - Two numbers each KPI has:
   - actual: volatile, per object (the VM's score);
-  - target: steady, for many objects. One set of levels and one target for every object of a type: the KPI is never per class of service.
+  - baseline: steady, for many objects. One set of levels and one baseline for every object of a type: the KPI is never per class of service.
   - Daily KPI actual: the 99th percentile of the day's 288 scores counted from the worst (higher is better, so statistically the 1st percentile): the score that 99% of the intervals reach or exceed; the worst 2 intervals (10 minutes) are ignored. The 95th percentile (70 minutes ignored) is too lenient for large organisations. For capacity, the summary over time is part of each model.
-- The class of service shows in the result, not in the target. Gold has less contention by design (less overcommit, more reservation and shares), so a Gold VM tends to score higher than a Silver VM. To check the promise, group the VMs per class and compare each group's KPI: Gold should score above Silver, Silver above Bronze ([`sp5-framework/performance/kpi-vs-sla`](kpi-vs-sla.md), section Two steps of maturity). The promise is relative, contention 1x, 2x, 3x ([`sp5-framework/capacity/class-of-service-planning`](../capacity/class-of-service-planning.md)), not a minimum KPI per class.
+- The class of service shows in the result, not in the baseline. Gold has less contention by design (less overcommit, more reservation and shares), so a Gold VM tends to score higher than a Silver VM. To check the promise, group the VMs per class and compare each group's KPI: Gold should score above Silver, Silver above Bronze ([`sp5-framework/performance/kpi-vs-sla`](kpi-vs-sla.md), section Two steps of maturity). The promise is relative, contention 1x, 2x, 3x ([`sp5-framework/capacity/class-of-service-planning`](../capacity/class-of-service-planning.md)), not a minimum KPI per class.
 - Cadence: daily, in a technical meeting; a month is far too late ([`sp5-framework/performance/kpi-vs-sla`](kpi-vs-sla.md)).
 
 ## Scoring
@@ -100,6 +100,7 @@ related:
 - sp5-framework/performance/performance-management
 - sp5-framework/performance/kpi-vs-sla
 - sp5-framework/concepts/modelling
+- sp5-framework/concepts/realms-and-layers
 - vsphere/object-types/vm/vm-performance
 - guest-os/system/guest-os-performance
 - vsphere/object-types/esxi/esxi-performance

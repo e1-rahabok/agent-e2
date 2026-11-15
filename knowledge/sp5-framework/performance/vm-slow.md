@@ -35,7 +35,7 @@ flowchart TD
    - CPU: Ready and Co-stop, read against Run → [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](../../vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md).
    - Memory: Latency (VCF Operations: Memory Contention) → [`vsphere/technology/memory/vm-memory-latency-high`](../../vsphere/technology/memory/vm-memory-latency-high.md).
    - Storage: disk latency per virtual disk, read and write, with outstanding IO → [`vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`](../../vsphere/technology/storage/troubleshooting/vm-storage-performance-checks.md).
-   - Network: dropped packets → [`vsphere/technology/network/vnic-rx-drops`](../../vsphere/technology/network/vnic-rx-drops.md).
+   - Network: dropped packets. The KPI reads transmit drops; receive drops are left out of the KPI (too many false positives) and have their own flow → [`vsphere/technology/network/vnic-rx-drops`](../../vsphere/technology/network/vnic-rx-drops.md).
    - Contention or not → step 5: consumption tells whether the VM's own demand explains it.
 5. Consumption (VirtualMachine). CPU Run and Usage, memory Consumed, disk IOPS and throughput, network throughput ([`vsphere/technology/cpu/metrics/comparisons/consumption-metrics`](../../vsphere/technology/cpu/metrics/comparisons/consumption-metrics.md)). Very high consumption can cause the contention found in step 4. Guest OS counters are not read here: the Guest OS is a separate realm, read in step 1. → step 6.
 6. Configuration (VirtualMachine), the first why. Always checked, also when contention was found: a setting can cause the contention or the slowness. A CPU or memory limit, shares and reservations ([`vsphere/architecture/resource-controls`](../../vsphere/architecture/resource-controls.md)); VMware Tools, virtual hardware and Guest OS versions; settings that are outdated or incompatible ([`vsphere/object-types/vm/configuration/vm-configuration-review`](../../vsphere/object-types/vm/configuration/vm-configuration-review.md)). → step 7.
@@ -106,11 +106,9 @@ related:
 - vsphere/object-types/vm/vm-health-check
 - vsphere/architecture/vm-vs-guest-os
 source:
-  document: Knowledge base synthesis of the files in internal_derive
+  document: Knowledge base
   path: n/a
-corrections:
-- 'Step 5: every performance flow, this one included, checks configuration; known bugs are mostly configuration.'
-review_notes:
-- 'To check: Steps 2-8, from field practice (Q060).'
+corrections: []
+review_notes: []
 status: draft
 ```

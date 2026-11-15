@@ -68,7 +68,6 @@ source:
   path: 'Overall Design Approach > Overall Design: Inventory Dashboards; Overall Design: Configuration Dashboard'
 corrections: []
 review_notes:
-- 'To check: Section ''The configuration dashboard set'': whether the VCF Operations 9.1 dashboards changed since the source said in future I would enhance them (written as due for enhancement).'
-- 'Section ''Configuration dashboards'': the source question reads "Are the settings consistent when they have and up to date as per our plan?"; written as consistent and up to date with the plan.'
+- 'To check: Section ''The configuration dashboard set'': the configuration dashboards in VCF Operations 9.1 (names, and whether vSphere Network Configuration and vSAN Configuration were enhanced); a live VCF Operations 9.1 instance.'
 status: draft
 ```

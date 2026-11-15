@@ -32,7 +32,7 @@
 ## Practices that are not pillars
 | Practice | Why not a pillar |
 |---|---|
-| Service level management | An SLA is a by-product of managing availability, performance and compliance |
+| Service level management | An SLA is a by-product of managing availability and security; performance has a KPI, no SLA |
 | Service continuity | Part of the architecture: a living design that takes updates without breaking the SLA |
 | Demand management | Part of capacity: just enough supply for demand |
 | Continuity management | Part of availability: snapshots, HA, DR, replication, active/active, backup |
@@ -45,7 +45,7 @@
 
 ## Misconceptions
 - "Adopt ITIL capacity and performance management as one practice" → in VCF they are two disciplines with different teams, metrics and time frames.
-- "Manage the SLA" → manage availability, performance and compliance; the SLA follows.
+- "Manage the SLA" → manage availability and security; the SLA follows. Performance is managed by the KPI ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 - "Alerting is a discipline next to monitoring" → alerts are one way monitoring talks to people, with dashboards and reports.
 - "More tickets closed means better operations" → SP5 aims for fewer incidents, found as insights before they become tickets.
 
@@ -68,14 +68,14 @@ product:
 internal_derive:
 - sp5-framework/concepts/overview
 related:
+- sp5-framework/performance/kpi-vs-sla
 - sp5-framework/outputs/alerts-and-insights
 - sp5-framework/concepts/monitoring-vs-troubleshooting
 - sp5-framework/observability/input-types
 source:
-  document: '"Why a New Framework?" (Word document, deleted after use); PeopleCert ITIL FAQ, ITIL (Version 5) practices (https://www.peoplecert.org/help-and-support/faq-itil)'
+  document: 'Knowledge base; PeopleCert ITIL FAQ, ITIL (Version 5) practices (https://www.peoplecert.org/help-and-support/faq-itil)'
   path: Why a New Framework?; Complexity; Duplication; Clarity
 corrections: []
-review_notes:
-- 'Section ''Practices that are not pillars'': the source gives no reason for service request management and problem management in their own rows; grouped with service desk and incident management.'
+review_notes: []
 status: draft
 ```

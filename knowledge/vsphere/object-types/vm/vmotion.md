@@ -9,7 +9,7 @@
 
 - Units for downtime and stun time: microseconds.
 - Values vary per migration: watch both outliers and averages. Alarm on high values.
-- Source: VCF Operations for logs (Log Insight) metrics vmw_esxi_vmdowntime and vmw_esxi_vmprecopystuntime. Plot the worst value: leading indicator.
+- Source: VCF Operations Log Management (formerly VCF Operations for Logs and Log Insight) metrics vmw_esxi_vmdowntime and vmw_esxi_vmprecopystuntime. Plot the worst value: leading indicator.
 - The stun time table shows the ESXi host, not the VM name.
 
 ## Downtime

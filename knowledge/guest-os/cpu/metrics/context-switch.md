@@ -9,6 +9,7 @@
 - Costly: scheduler work, TLB flushes, cache pollution (L1/L2 reloads).
 - Causes: a thread asking another for data, or preemption by a higher-priority thread. IO tends to require switches.
 - VCF Operations reports the total only (System and Thread objects exist in Windows).
+- Relevance for operations: Guest OS performance troubleshooting, read against a per-application profile (section Values). Not a capacity or sizing counter: it correlates weakly with CPU utilization (section Correlation).
 
 ## Thresholds
 | Range | Per processor |
@@ -71,6 +72,6 @@ source:
   path: MS Windows > CPU > Context Switch
 corrections: []
 review_notes:
-- 'Section ''Thresholds'': colour labels inferred as for the run queue table.'
+- 'To check: Section ''Thresholds'': the colour labels (yellow, orange, red) were inferred from the run queue table, and the bands have no row in the threshold catalog; needs the source of the bands.'
 status: draft
 ```

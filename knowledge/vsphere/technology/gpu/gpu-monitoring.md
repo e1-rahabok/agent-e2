@@ -112,18 +112,13 @@ related:
 - vsphere/object-types/cluster/concepts/drs-overview
 - vsphere/technology/cpu/concepts/numa
 source:
-  document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
-  path: vSphere Monitoring and Performance > Metric Groups, Statistics Levels, Hosts > GPU Compute, GPU Memory, GPU Compute Usage, GPU Memory Allocation, GPU Temperature, Preconfigured vSphere Alarms (pp. 2028-2030, 2065-2067, 2142); vSphere Resource Management > Configure Virtual Graphics, Migrating VMs with vGPUs, Configuring vGPU Size, Capacity Visualization of DirectPath Profiles, DRS Placement of vGPUs (pp. 1880-1884, 1902)
+  document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922); Broadcom KB 439680; Broadcom KB 312021
+  path: vSphere Monitoring and Performance > Metric Groups, Statistics Levels, Hosts > GPU Compute, GPU Memory, GPU Compute Usage, GPU Memory Allocation, GPU Temperature, Preconfigured vSphere Alarms (pp. 2028-2030, 2065-2067, 2142); vSphere Resource Management > Configure Virtual Graphics, Migrating VMs with vGPUs, Configuring vGPU Size, Capacity Visualization of DirectPath Profiles, DRS Placement of vGPUs (pp. 1880-1884, 1902); Memory Tiering, Virtual Machine Profiles (PCI Passthrough VM in DRAM only, p. 1846); cluster and resource pool counters from https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv
 corrections: []
 review_notes:
-- 'Section ''Counters'' (cluster and resource pool table): counters, rollups, levels and summaries from the vCenter 9.1.0 API export in repository e1-rahabok/Observability-vSphere, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
-- 'Section ''Reading the counters'' (gpu.mem.reserved): frame buffer allocated at VM power-on, https://knowledge.broadcom.com/external/article/439680. Section ''vGPU capacity'' (fragmentation): https://knowledge.broadcom.com/external/article/312021.'
-- 'To check: Section ''Reading the counters'': what gpu.mem.used counts on vSphere 8.x (Q168).'
-- 'To check: Section ''Reading the counters'': whether DirectPath I/O GPUs are also excluded from gpu.mem.total; live check on a cluster with one passthrough GPU.'
-- 'To check: Section ''vGPU capacity'': GPU architectures that support MixedSize and the fixed placement positions per profile, against the NVIDIA Virtual GPU Software User Guide, Release 21.0, https://docs.nvidia.com/vgpu/latest/pdf/grid-vgpu-user-guide.pdf.'
-- 'To check: Section ''Reading the counters'': thermal throttling as a clock reduction, and vGPU time slicing as the quality-of-service mechanism; the documentation says only that overheating can cause throttling and reduced performance, and points to the GPU vendor for QoS.'
-- 'To check: Section ''Placement and migration'': breadth-first placement fragments GPU capacity (inferred from the documentation''s remedies: same profile, GPU consolidation, manual migration to open up unused physical GPU capacity), and the pause during GPU state copy (not in the documentation).'
-- 'To check: Section ''vGPU and host memory'': memory of a passthrough or vGPU VM allocated at power-on (not backed on demand like an ordinary reservation), against vSphere 9.1 Resource Management, PCI passthrough memory reservation, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management.html.'
-- 'Section ''vGPU and host memory'': exclusion from memory tiering follows from the documentation listing PCI Passthrough VMs as DRAM-only.'
+- 'To check: Section ''Reading the counters'': whether DirectPath I/O GPUs are also left out of gpu.mem.total; a live reading on a cluster with one passthrough GPU.'
+- 'To check: Section ''Reading the counters'': thermal throttling as a clock reduction; the vSphere 9.1 documentation says only that overheating can cause throttling and reduced performance; NVIDIA Virtual GPU Software User Guide, https://docs.nvidia.com/vgpu/latest/pdf/grid-vgpu-user-guide.pdf.'
+- 'To check: Section ''Placement and migration'': that breadth-first placement fragments GPU capacity (inferred from the remedies the vSphere 9.1 documentation gives: same profile, GPU consolidation, manual migration), and the pause while the GPU state copies (not in the documentation); vSphere 9.1 documentation, Migrating VMs with vGPUs, or a live vMotion of a vGPU VM.'
+- 'To check: Section ''vGPU and host memory'': that the whole memory of a passthrough or vGPU VM is allocated at power-on rather than backed as the guest touches it; the vSphere 9.1 documentation says only that a DirectPath I/O device sets the memory reservation to the VM memory size (p. 1192) and that a vGPU VM gets a full reservation (p. 1881); a live host Consumed reading at power-on.'
 status: draft
 ```

@@ -115,7 +115,6 @@ source:
   path: Memory > Architecture > The 4 Layers; Virtual Memory; Relationship
 corrections: []
 review_notes:
-- 'Section ''Page mapping across layers'': diagram adapted from a Valentin Bondzio diagram.'
 - 'To check: Section ''ESXi memory management'': TPS KB not read (https://knowledge.broadcom.com/external/article/323624/additional-transparent-page-sharing-mana.html).'
 status: draft
 ```

@@ -36,7 +36,7 @@
   - NUMA node size,
   - CPU cache locality,
   - workload implementation.
-- The source recommends testing with the specific workload in the specific environment.
+- Performance Best Practices for vSphere 9.1 recommends testing with the specific workload in the specific environment.
 
 ## CPU Hot Add
 - Enabling CPU Hot Add deactivates vNUMA for that VM, even if no vCPU is ever added; the guest sees a single vNUMA node. Virtual hardware 20 and later: `numa.allowHotadd = TRUE` keeps vNUMA (see [`vsphere/technology/cpu/concepts/virtual-numa`](virtual-numa.md)).
@@ -76,8 +76,6 @@ source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX CPU Considerations (pp. 27-28); Guest Operating System CPU Considerations (p. 57); Virtual NUMA (p. 57)
 corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 27-28 and 57 unchanged. Page references updated.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+review_notes: []
 status: draft
 ```

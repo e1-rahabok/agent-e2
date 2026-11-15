@@ -58,11 +58,9 @@ related:
 - vcf-operations/features/peak-20-second-metrics
 - sp5-framework/capacity/rightsizing
 source:
-  document: Knowledge base
-  path: 'Conversation on the vcf-operations folder: real-time metrics as concept and implementation (esxtop 2-5 s; VCF Operations 9.1 2 s; vCenter and VCF Operations 9.1 20 s, labelled real time but not real time)'
+  document: Knowledge base; Broadcom KB 444403, Understanding "Peak" or "Worst" Performance Metrics in VMware VCF / Aria Operations (VCF Operations 9.x)
+  path: 'Real-time metrics as concept; implementations from vsphere/tools/esxtop/overview (default 5 s, minimum 2 s), vcf-operations/features/real-time-metrics (2-second tier, about 21 metrics, 10x the volume of 20-second data) and vsphere/tools/vsphere-client/vcenter-statistics (Real-time chart, 1 hour). KB 444403: vCenter keeps 20-second data typically 1 hour'
 corrections: []
-review_notes:
-- 'To check: Section ''Purpose'': the use cases, the 150x volume (300 s / 2 s) and the short retention are derived from the intervals; the 10x is from vcf-operations/features/real-time-metrics.'
-- 'To check: Section ''Three implementations'': vCenter keeps 20-second data about an hour (vSphere 9.1 documentation, Data Collection Intervals). esxtop default 5 s, minimum 2 s are from vsphere/tools/esxtop/overview; about 21 metrics from the VCF Operations 9.1 documentation (vcf-operations/features/real-time-metrics).'
+review_notes: []
 status: draft
 ```

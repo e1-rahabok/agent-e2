@@ -3,9 +3,11 @@
 ## Reason
 - VCF Operations stores data every 5 minutes. Good for monitoring, too coarse for troubleshooting.
 - Problems can be microbursts. A 5-minute average hides them.
-- The 20-second peak is 15x sharper. Example: 10,370 ms disk latency at 20-second peak vs 257 ms at 300-second average.
-- The gap can exceed 15x: one or two bursts far above the average, and many sets (a VM with 20 virtual disks has 40 sets × 15 points = 600 values; the peak is the highest).
+- The 20-second sample is 15x shorter than the 5-minute cycle. For one series the peak is at most 15 times the 5-minute average: the average is the mean of the same 15 samples, none below 0, so one sample can hold at most the whole sum.
+- Across instances the gap can exceed 15x: the peak is the highest of many series, while the 5-minute value is the VM-level average. A VM with 20 virtual disks has 40 series (read and write) × 15 points = 600 values; one slow disk sets the peak, while the VM-level average blends it with the other disks.
+- Example: 10,370 ms VM disk latency at the 20-second peak vs 257 ms at the 300-second average, about 40x: only a peak taken across virtual disks can be that far above the average.
 ![20-second peak vs 300-second average disk latency](images/vm-disk-latency-20-second-peak-vs-300-second-average.png)
+- Relevance for operations: performance troubleshooting and the VM and Guest OS KPIs read the peak; contention alerts read the peak (acute) with the 5-minute average (sustained); capacity and trends read the 5-minute average.
 
 ## Design (VCF Operations 8.3 and later)
 - A metric named Peak ... within collection cycle is the highest of the 15 20-second averages in the 5-minute cycle.
@@ -37,9 +39,9 @@
 - Peaks of different metrics can come from different 20-second blocks. High utilization cannot be tied to the contention in the same 5 minutes.
 
 ## Misconceptions
-- "Peak 15x the average is the maximum gap" → it can be far larger.
+- "Peak 15x the average is the maximum gap" → it is the maximum for one series only. A peak taken across vCPUs or virtual disks, read against the VM-level average, can be far larger: about 40x in the disk latency example.
 - "Use the peak for a performance SLA" → performance is managed by the KPI, which reads the 20-second peak; the 5-minute average is for trends and capacity.
-- "The 5-minute value is below the threshold, so there is no problem" → a threshold holds only for its object, its level within the object and its sample interval. A 5-minute average hides 20-second peaks.
+- "The 5-minute value is below the threshold, so there is no problem" → a threshold holds only for its object, its level within the object and its sample interval. A 5-minute average hides 20-second peaks: read the Peak ... within collection cycle metric of the same object (VM CPU Ready: Peak vCPU Ready within collection cycle) against the levels set for 20 seconds.
 
 ## Metadata
 ```yaml
@@ -82,6 +84,6 @@ source:
   path: 'Consumer Objects > Performance: VM & Guest OS > 20-second Peak Metrics; KB 444403 (15 samples of 20 seconds per 5-minute cycle; vCenter keeps 20-second data typically 1 hour; VCF Operations "permanently records that brief spike")'
 corrections: []
 review_notes:
-- 'Section ''Design'': collection-time computation and the peak outliving vCenter''s 20-second samples from Broadcom KB 444403, https://knowledge.broadcom.com/external/article/444403. The KB gives no retention period of its own for peak metrics.'
+- 'To check: Section ''Pairs'': the key of Peak Transmitted Packet Dropped within collection cycle; the VM key list collected from VCF Operations 9.1.1 (project/sources/export-templates/vcf-operations) has no exact key, the closest are net|droppedTxPct_max and net|droppedTx_summation; the VCF Operations 9.1 metric reference.'
 status: draft
 ```

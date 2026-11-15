@@ -28,11 +28,12 @@ flowchart TD
 2. DRS automation level (ClusterComputeResource). Fully automated: DRS runs the evacuation itself. Partially automated or manual: DRS only shows recommendations, so the moves are applied by hand → step 3 either way.
 3. VMs that cannot move (VirtualMachine). Any of:
    - a required VM-Host rule ("must run on"): DRS never violates a required rule, so it does not evacuate those VMs, and the host does not enter maintenance mode;
-   - a VM without shared storage or with a device bound to the host (PCI passthrough, a local datastore);
-   - a VM larger than the free threads or memory of every remaining host: the cluster has room in total, but in no single host.
+   - a VM on a local datastore: DRS does not move a VM whose storage the other hosts do not reach;
+   - a VM with a host device mounted, such as a Fixed DirectPath (PCI passthrough) device, which blocks vMotion (vSphere 9.1 documentation, pp. 993, 1955); an Enhanced DirectPath device can support vMotion when its vendor implements it, and USB passthrough configured for vMotion moves with the VM (pp. 993, 1008-1009);
+   - a VM whose CPU or memory reservation is too large to run on any remaining host (p. 1955): the cluster has room in total, but in no single host.
    Found → no, or power those VMs off for the window, or change the rule to a preferential "should run on" rule. None → step 4.
 4. Remaining capacity (ClusterComputeResource). Spread the load of the cluster over the hosts that remain:
-   - CPU: threads in use on all hosts ÷ threads of the remaining hosts. Keep it below the red band of Cluster Consumption (%) CPU thread utilization (`catalog/thresholds-capacity`).
+   - CPU: threads in use on all hosts ÷ threads of the remaining hosts. Keep it below the red band of the catalog row `cluster-consumption-cluster-wide-esxi-cpu-thread-utilization` (`catalog/thresholds-capacity`).
    - Memory: consumed memory of all hosts ÷ DRAM of the remaining hosts. Ballooning starts only near 99% of a host, so a high value is a risk, not slowness; keep the hosts out of the low memory state ([`vsphere/technology/memory/concepts/host-memory-states`](../../../technology/memory/concepts/host-memory-states.md)).
    - Cluster Performance (%) already orange or red → no: one host fewer adds contention ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md)).
    - Fits → step 5. Does not fit → no; move or power off workload first, or wait for a quieter window.
@@ -65,7 +66,7 @@ flowchart TD
 
 ## Misconceptions
 - "The cluster is at 50%, so any host can go into maintenance" → the remaining hosts carry the whole load: a 4-host cluster at 50% runs its 3 remaining hosts at 67%; and HA, rules and pinned VMs decide too.
-- "DRS will move everything" → it never violates a required VM-Host rule, and it cannot move passthrough or local-storage VMs.
+- "DRS will move everything" → it never violates a required VM-Host rule, and it does not move a VM with a Fixed DirectPath device, a VM on local storage, or a VM whose reservation fits no other host.
 - "Maintenance mode lowers total capacity" → it lowers usable capacity; the host stays in total capacity.
 - "HA still protects the cluster during maintenance" → HA counts only hosts not in maintenance mode; with one host fewer, failover can fall below the design.
 - "Ensure accessibility keeps vSAN data protected" → it keeps objects accessible; they run below their failures to tolerate until the host returns.
@@ -104,13 +105,10 @@ related:
 - vsphere/object-types/cluster/concepts/drs-overview
 - sp5-framework/capacity/capacity-management
 source:
-  document: vSphere 9.1 documentation (TechDocs, updated 2026-11-09), vSphere HA Admission Control; Cluster Resources Percentage Admission Control; Edit Cluster Settings; Using VM-Host Affinity Rules. VCF 9.1.x documentation (TechDocs), Working with Members of the vSAN Cluster in Maintenance Mode; Place a Member of vSAN Cluster in Maintenance Mode (updated 2026-11-09); Planning Capacity in vSAN (updated 2026-11-05)
-  path: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control.html; .../vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html; .../9-1/vsphere-resource-management/using-drs-clusters-to-manage-resources/using-vm-host-affinity-rules.html; https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/working-with-members-of-vsan-cluster-in-maintenance-mode.html; .../vsan-planning-and-deployment/designing-and-sizing-a-virtual-san-cluster/sizing-a-virtual-san-datastore/planning-capacity-in-virtual-san.html
+  document: vSphere 9.1 documentation (TechDocs, updated 2026-11-09), vSphere HA Admission Control; Cluster Resources Percentage Admission Control; Edit Cluster Settings; Using VM-Host Affinity Rules; VMware vSphere 9.1 product documentation (PDF built 2026-11-02), PCI passthrough and DRS troubleshooting pages. VCF 9.1.x documentation (TechDocs), Working with Members of the vSAN Cluster in Maintenance Mode; Place a Member of vSAN Cluster in Maintenance Mode (updated 2026-11-09); Planning Capacity in vSAN (updated 2026-11-05)
+  path: vSphere 9.1 PDF pp. 993-994 (Fixed and Enhanced DirectPath), 1008-1009 (USB passthrough and vMotion), 1955 (Insufficient CPU or Memory Resources); https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control.html; .../vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html; .../9-1/vsphere-resource-management/using-drs-clusters-to-manage-resources/using-vm-host-affinity-rules.html; https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/working-with-members-of-vsan-cluster-in-maintenance-mode.html; .../vsan-planning-and-deployment/designing-and-sizing-a-virtual-san-cluster/sizing-a-virtual-san-datastore/planning-capacity-in-virtual-san.html
 corrections: []
 review_notes:
-- 'To check: Step 3: passthrough and local-storage VMs during maintenance mode; no 9.1 page read states it (vSphere 9.1 Virtual Machine Migration pages).'
-- 'To check: Step 3: a VM larger than the free capacity of every remaining host is reasoning from placement, not a doc statement.'
-- 'To check: Step 4: the projection spreads the measured load over the remaining hosts; the threshold reuses the Cluster Consumption bands (knowledge base), not a vendor number.'
-- 'To check: vSAN operations reserve and host rebuild reserve sizes; the 9.1 planning page gives no percentage (VMware vSAN Design Guide, vSAN Sizer).'
+- 'To check: Section ''Checks, in order'', step 6: the sizes of the vSAN operations reserve and host rebuild reserve; the VCF 9.1 vSAN planning page gives no percentage (VMware vSAN Design Guide, vSAN Sizer).'
 status: draft
 ```

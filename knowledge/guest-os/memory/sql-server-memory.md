@@ -1,7 +1,7 @@
 # SQL Server memory in a VM
 
 ## Memory held by SQL Server
-- SQL Server claims memory for its buffer pool up to `max server memory (MB)` and keeps it, so Windows counts that memory as In Use and the sqlservr.exe working set stays near the limit, whatever the query load.
+- SQL Server takes memory for its buffer pool up to `max server memory (MB)` and keeps it, so Windows counts that memory as In Use and the sqlservr.exe working set stays near the limit, whatever the query load.
 - The default of `max server memory (MB)` is 2,147,483,647 MB, which is no limit. SQL Server then takes nearly all the memory of the VM and leaves Windows little, so Windows Available is low. Microsoft recommends an upper limit in every version.
 - `max server memory (MB)` limits only the buffer pool. Thread stacks, backup buffers, extended stored procedure DLLs and linked server provider allocations sit outside it, so the limit has to leave room for them, for Windows and for the other processes of the VM.
 - Microsoft's starting value for one instance: total memory of the OS, minus the thread stack memory (stack size times the calculated max worker threads), minus an allowance for the allocations outside the limit. Microsoft calls the allowance a generic approximation.
@@ -60,8 +60,6 @@ source:
   document: 'Knowledge base; Microsoft Learn, SQL Server documentation (fetched 2026-11-15): Server memory configuration options, Monitor memory usage, SQL Server Buffer Manager object, SQL Server Memory Manager object'
   path: 'Consumer Objects > Capacity: Guest OS > Guest OS Sizing (section Applications that manage their own memory)'
 corrections: []
-review_notes:
-- 'Source URL for section ''Memory held by SQL Server'': Microsoft Learn, Server memory configuration options, https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/server-memory-server-configuration-options. The percentage allowance of the starting value and the recommended share of memory are on that page; no number is repeated here (one place per number: knowledge/catalog).'
-- 'Source URLs for section ''Lowering max server memory in steps'': RECONFIGURE with no restart and min and max not at near values, the page above; counters, https://learn.microsoft.com/en-us/sql/relational-databases/performance-monitor/monitor-memory-usage, https://learn.microsoft.com/en-us/sql/relational-databases/performance-monitor/sql-server-buffer-manager-object and https://learn.microsoft.com/en-us/sql/relational-databases/performance-monitor/sql-server-memory-manager-object. The steps, the step rule and the first step are the method of this file, not on those pages.'
+review_notes: []
 status: draft
 ```

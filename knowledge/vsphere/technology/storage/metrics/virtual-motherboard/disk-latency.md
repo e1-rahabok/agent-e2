@@ -4,6 +4,7 @@
 - Indicates a performance problem. A primary counter for how well the VM is served.
 - Contrast: CPU Latency does not always indicate a performance problem. See [`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](../../../cpu/metrics/virtual-motherboard/latency.md).
 - Threshold setting by layer: see [`sp5-framework/observability/thresholds`](../../../../../sp5-framework/observability/thresholds.md).
+- Relevance for operations: performance KPI and alerting: the peak virtual disk latency is a row of the VM Performance KPI, and read and write latency drive the VM disk latency alerts ([`vsphere/object-types/vm/vm-performance`](../../../../object-types/vm/vm-performance.md), [`vsphere/object-types/vm/vm-alerts`](../../../../object-types/vm/vm-alerts.md)). Troubleshooting reads it per virtual disk, read and write apart.
 
 ## Mechanism
 - Latency can be high at low IOPS and throughput: each layer in the stack has its own queue (process, Guest OS storage subsystem, VM driver, kernel, array).
@@ -65,8 +66,6 @@ source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Storage > Architecture > VM Layer > Performance; Storage > VM > Performance Metrics > Contention Metrics
 corrections: []
-review_notes:
-- 'Section ''Mechanism'': from Storage > Architecture.'
-- 'Sections Units and levels, Threshold: from Storage > VM.'
+review_notes: []
 status: draft
 ```

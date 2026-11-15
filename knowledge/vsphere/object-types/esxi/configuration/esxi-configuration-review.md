@@ -39,7 +39,7 @@
 ## Advanced settings and management
 - Advanced settings: as few as possible, each per the standard. No CPU affinity.
 - Configuration profiles used correctly.
-- Logs: send to VCF Operations for logs; its VCF-specific fields feed the built-in dashboards and alerts.
+- Logs: send to VCF Operations Log Management (formerly VCF Operations for Logs); its VCF-specific fields feed the built-in dashboards and alerts.
 - Out-of-band management (iLO and equivalents): configured, and secured.
 - Third-party agents installed on ESXi.
 - NTP and DNS configured. Wrong time makes logs misleading. Across objects, the order of log entries shows which event started the chain: the oldest event is the likely root cause.
@@ -107,8 +107,6 @@ source:
   document: Knowledge base
   path: 'Configuration Management > Review List > Compute > ESXi; Management; Storage Related; Network Related; ESXi Consistency'
 corrections: []
-review_notes:
-- 'To check: Section ''Capacity'', 30-vCPU VM spanning NUMA: 32 cores read as 2 sockets × 16 cores per socket.'
-- 'To check: Misconceptions 5 and 6: derived from rules; no source yet.'
+review_notes: []
 status: draft
 ```

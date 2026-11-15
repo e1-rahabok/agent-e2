@@ -27,7 +27,7 @@ flowchart TD
 3. Overcommit at the time of the issue (HostSystem). The vCPUs of the running VMs against the host's physical threads, and Ready across the host's VMs ([`vsphere/technology/cpu/metrics/comparisons/host-contention-metrics`](../metrics/comparisons/host-contention-metrics.md)). Many VMs waiting at once: the host is too busy. → step 5.
 4. VM size and snapshots (VirtualMachine). Co-stop rises with the vCPU count and with a VM wider than its NUMA node: a vCPU waits for its siblings ([`vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`](../metrics/virtual-motherboard/co-stop.md), [`sp5-framework/capacity/vm-size`](../../../../sp5-framework/capacity/vm-size.md), [`vsphere/technology/cpu/configuration/numa-settings`](../configuration/numa-settings.md)). A snapshot also raises Co-stop. → step 5.
 5. Placement (ClusterComputeResource). DRS automation level and migration threshold, and whether this host is busier than its peers ([`vsphere/object-types/cluster/concepts/drs-overview`](../../../object-types/cluster/concepts/drs-overview.md), [`vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`](../metrics/cluster/inter-host-imbalance.md)). A busy host in a cluster with idle hosts: placement, not capacity. → step 7.
-6. Power management and Hyper-Threading (HostSystem). Power policy at maximum performance rules out frequency scaling ([`vsphere/technology/cpu/concepts/power-states`](../concepts/power-states.md)). More vCPUs than physical cores: Hyper-Threading shares a core between two threads ([`vsphere/technology/cpu/concepts/hyper-threading`](../concepts/hyper-threading.md)). → step 7.
+6. Power management and Hyper-Threading (HostSystem). The High Performance power policy rules out frequency scaling ([`vsphere/technology/cpu/concepts/power-states`](../concepts/power-states.md)). More vCPUs than physical cores: Hyper-Threading shares a core between two threads ([`vsphere/technology/cpu/concepts/hyper-threading`](../concepts/hyper-threading.md)). → step 7.
 7. Known bug and log (VirtualMachine, HostSystem): versions against known issues, and events in the window ([`sp5-framework/performance/vm-slow`](../../../../sp5-framework/performance/vm-slow.md), its known bug and log checks).
 
 ## Order rationale
@@ -41,8 +41,8 @@ flowchart TD
 - High Ready with a limit: the VM is held back by design; remove or raise the limit, or accept it.
 - High Ready on many VMs of one host while other hosts idle: placement (DRS), not capacity.
 - High Co-stop on a wide VM: fewer vCPUs, or keep the VM within one NUMA node.
-- CPU Latency high, Contention green, power management at maximum, no overcommit: Hyper-Threading alone. Applications rarely notice: it is transparent, and a faster CPU makes up for it.
-- Frequency-sensitive application: set power management to maximum.
+- CPU Latency high, Contention green, power policy High Performance, no overcommit: Hyper-Threading alone. Applications rarely notice: it is transparent, and a faster CPU makes up for it.
+- Frequency-sensitive application: set the host power policy to High Performance.
 
 ## Misconceptions
 - "CPU Latency above 37.5% means CPU starvation" → Hyper-Threading and frequency alone can cause it; Contention leaves both out.
@@ -88,9 +88,7 @@ related:
 source:
   document: Knowledge base
   path: CPU > VM > Contention Metrics > Latency
-corrections:
-- 'Section ''Checks, in order'': the source tests Contention against 37.5% (the Hyper-Threading share in CPU Latency). That is the CPU Latency logic before Aria Operations 8.18; Contention now leaves out frequency and Hyper-Threading, so step 1 reads its parts against the KPI levels and only CPU Latency leads to Hyper-Threading (Q144).'
-review_notes:
-- 'To check: Sections ''Checks, in order'' steps 2-5 (limits and pool shares, host overcommit, VM size and snapshots, DRS placement) are a synthesis of the linked files, not the source''s flow.'
+corrections: []
+review_notes: []
 status: draft
 ```

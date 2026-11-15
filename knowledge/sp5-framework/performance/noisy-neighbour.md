@@ -32,7 +32,7 @@
   - the higher the overcommit, the less a reservation can guarantee: at 3:1 per physical thread (Bronze, the highest class ratio), at most a third of a thread per vCPU across the environment, on average.
 - Share:
   - the share value is one number set on the VM. By default it scales with the vCPU count (Normal: 1,000 per vCPU), so a larger VM has more shares in total, shared among its vCPUs;
-  - the busy vCPU of a 2-vCPU VM gains from its idle sibling: vCPU 1 of VM 2 gets 2x the share of vCPU 1 of VM 1. A Level 400 point;
+  - the busy vCPU of a 2-vCPU VM gains from its idle sibling: vCPU 1 of VM 2 gets 2x the share of vCPU 1 of VM 1, because the shares belong to the VM, not to each vCPU;
   - shares are charged against CPU Used, not CPU Run. Used includes System time, the hypervisor's work for the VM (network packets, disk commands). A VM with heavy IO uses up its shares and can see CPU Ready.
   - formula of Used (%RUN, %SYS, %OVRLP, frequency and HT factors): [`vsphere/tools/esxtop/cpu`](../../vsphere/tools/esxtop/cpu.md).
 ![VM 1 has one busy vCPU; VM 2 has a busy vCPU 1 and an idle vCPU 2](images/vm-shares-busy-vcpu-vs-idle-vcpu-diagram.png)
@@ -73,11 +73,11 @@
 - With 2 × 10 Gb the risk is far higher: it is the overcommit ratio again.
 - The pool is the group of uplinks assigned to the switch, not one uplink. With Load Based Teaming the distributed switch checks the uplinks every 30 seconds; above 75% load it moves the port (VM or VMkernel) with the highest I/O to another uplink.
 - Configured on the distributed switch, not in the cluster resource allocation. Each VM network adapter has share, reservation and limit.
-- Limit and reservation per VM: not recommended. They complicate operations, more so in a dynamic, large environment. An earlier advice of an 8 Gb/s limit and a 100 Mb/s reservation is withdrawn.
+- Limit and reservation per VM: not recommended. They complicate operations, more so in a dynamic, large environment.
 - Share: the main issue is VM vs VMkernel traffic. All VM traffic gets one share as a group, while each VMkernel traffic type gets its own share, so VM traffic is outnumbered.
 - Example, a distributed switch (not the defaults): virtual machine traffic High (100) as one group; NFS High (100); management, NVMe over TCP, provisioning, vSAN and backup NFC Normal (50 each); Fault Tolerance, iSCSI, vMotion, data protection backup and vSphere Replication Low (25 each). VMkernel traffic totals 475 shares against 100 for all VMs.
 - Between VMkernel types it is hard: replicating a mission-critical VM vs migrating a development VM.
-- Pro tip: customize the share allocation per traffic type for your environment; do not leave it as found. Give VM traffic enough weight against the sum of the VMkernel types, and set shares only for the traffic types the hosts carry.
+- Customize the share allocation per traffic type for the environment; do not leave it as found. Give VM traffic enough weight against the sum of the VMkernel types, and set shares only for the traffic types the hosts carry.
 ![Distributed switch share allocation by traffic type: shares, shares value, reservation and limit for 12 traffic types](../../vsphere/technology/network/images/distributed-switch-network-share-allocation-by-traffic-type.png)
 
 ## Avoiding it
@@ -97,6 +97,7 @@
 - "Set network priority between VMs" → priority starves the lower class; shares give every VM a part.
 - "VM traffic has High shares, so VMs win under contention" → VM traffic is one group; each VMkernel type has its own share and together they outnumber it (475 vs 100 in the example).
 - "The host has 40 Gb usable, so one VM at 10 Gb is harmless" → after VMkernel traffic, 24 VMs share 10 Gb, about 400 Mb/s each.
+- "Give every VM network adapter an 8 Gb/s limit and a 100 Mb/s reservation" → per-VM network limits and reservations complicate operations in a dynamic, large environment; set shares per traffic type on the distributed switch instead.
 
 ## Metadata
 ```yaml
@@ -143,12 +144,9 @@ images:
     topic: 'CPU shares per VM: busy vs idle vCPU'
     image_type: diagram
 source:
-  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
-  path: 'Performance Management > Noisy Neighbour > CPU; Memory; Disk > Storage I/O Control; Network; Solution > Maximum VM Size. vSphere 9.1, vSphere Resource Management > CPU Virtualization in vSphere (p. 1827): with default settings each VM receives an equal share of CPU per virtual CPU'
-corrections:
-- 'Section ''Memory'': overcommit ratio against DRAM only with tiering.'
-- 'Section ''CPU'', Share: the busy vCPU gains from its idle sibling; 2x.'
-- 'Section ''Storage I/O Control'': deprecated features are not practised; follow the official documentation (vSphere 9.1, Manage Storage I/O Resources with vSphere, p. 1886); no disk reservation.'
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Broadcom KB 385396
+  path: 'Performance Management > Noisy Neighbour > CPU; Memory; Disk > Storage I/O Control; Network; Solution > Maximum VM Size. vSphere 9.1, vSphere Resource Management > CPU Virtualization in vSphere (p. 1827): with default settings each VM receives an equal share of CPU per virtual CPU, so a 1-vCPU VM gets half the resources of a 2-vCPU VM; Manage Storage I/O Resources with vSphere (p. 1886): Storage I/O Control components deprecated with VCF 9.0. KB 385396: disk shares ignored from VCF 9.0'
+corrections: []
 review_notes: []
 status: draft
 ```

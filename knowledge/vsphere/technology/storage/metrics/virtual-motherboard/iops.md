@@ -1,7 +1,10 @@
 # VM Disk IOPS
 
-## Under-reporting
-- IO queued inside the Guest OS has not reached the hypervisor. VM-level IOPS does not include it. See [`vsphere/architecture/vm-vs-guest-os`](../../../../architecture/vm-vs-guest-os.md), area A.
+## Requests waiting in the Guest OS
+- A request queued inside the Guest OS has not reached the virtual disk, so the VM counters do not see it yet. See [`vsphere/architecture/vm-vs-guest-os`](../../../../architecture/vm-vs-guest-os.md), area A.
+- VM Disk IOPS counts the request once the Guest OS issues it to the virtual disk. Over an interval in which the guest queue drains, VM Disk IOPS equals the Guest OS transfers per second ([`vsphere/technology/storage/concepts/guest-os-vs-vm-storage`](../../concepts/guest-os-vs-vm-storage.md), section Metric mapping).
+- While the guest queue grows, VM Disk IOPS shows the rate the virtual adapter accepts, not the rate the application asks for. The wait shows in the Guest OS latency, not in the VM latency ([`guest-os/storage/disk-queue`](../../../../../guest-os/storage/disk-queue.md)).
+- Relevance for operations: performance troubleshooting (the VM's own load against a queue elsewhere) and capacity (storage load per VM, for sizing the array). VM Disk IOPS is the activity gate of the VM disk latency alerts, not an alert by itself ([`vsphere/object-types/vm/vm-alerts`](../../../../object-types/vm/vm-alerts.md)).
 
 ## Limits
 - A disk IOPS limit exists.
@@ -60,8 +63,6 @@ source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity; Storage > VM > Performance Metrics > Consumption metrics
 corrections: []
-review_notes:
-- 'Sections Values, IOPS limit: from Storage > VM.'
-- 'To check: Section ''Under-reporting'': a request waiting in a guest queue before the virtual disk is not yet in the VM counters, but once issued and completed it is, so the IOPS over an interval equal the guest transfers per second when the queue drains. See guest-os/storage/disk-queue (reading of the guest queue).'
+review_notes: []
 status: draft
 ```

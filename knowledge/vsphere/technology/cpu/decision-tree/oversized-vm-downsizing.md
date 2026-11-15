@@ -14,7 +14,7 @@
 
 ## Interpretation
 - Example: 104-vCPU VM, Usage (%) never above 40% in 90 days, Demand marginally higher, Idle about 20%.
-- Guest Run Queue low. Reducing vCPUs raises it, which is worse for performance.
+- Guest Run Queue low. A downsize can raise the queue, by an amount the vCPU count alone does not predict (Ready, Co-stop and NUMA move with it): verify after the change ([`guest-os/cpu/metrics/run-queue`](../../../../guest-os/cpu/metrics/run-queue.md), section After a change of the vCPU count).
 - Context Switch high at times.
 - Co-stop max 0.006%, Ready max 0.14%. Downsizing may not lower them, and they are irrelevant here.
 - Refund and performance arguments do not work. The remaining argument: how the vCPUs are used (Usage Disparity).

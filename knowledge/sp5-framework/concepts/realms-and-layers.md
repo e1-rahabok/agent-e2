@@ -1,6 +1,7 @@
 # Realms and layers
 
 ## Three realms of IT
+- A realm is a world with a boundary: its owner controls it, and the layer below cannot see into it. The word is used at two levels: business, application and IaaS; and the Guest OS against the VM ([`vsphere/architecture/vm-vs-guest-os`](../../vsphere/architecture/vm-vs-guest-os.md)).
 - Business, application and IaaS. Each has its own teams, responsibilities and skills.
 - TOGAF mapping: business → business architecture; application → information systems architecture; IaaS → technology architecture.
 - Disputes are usually between the application team and the infrastructure team: both are IT. Business users are the consumers and do not supply technical answers.
@@ -34,7 +35,7 @@ satisfied: t <= T    tolerating: T < t <= 4T    frustrated: t > 4T or HTTP 5xx
 - Buckets hide severity: 50 satisfied + 50 tolerating and 75 satisfied + 25 frustrated both give 0.75, yet in the second case a quarter of users fail completely.
 - Everything above 4T is one bucket, so a tail at 4T + 100 ms and a tail at 60 seconds score the same.
 - It times one server response; client-rendered applications are judged by Core Web Vitals (Largest Contentful Paint, Interaction to Next Paint, Cumulative Layout Shift).
-- Used instead: percentiles (p95, p99), SLOs with error budgets, Core Web Vitals.
+- Used instead in application monitoring: percentiles (p95, p99) and Core Web Vitals.
 - Business-transaction monitoring is outside the IaaS scope of the knowledge base. IaaS performance is read from contention per VM ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 
 ## Troubleshooting by elimination
@@ -82,7 +83,6 @@ satisfied: t <= T    tolerating: T < t <= 4T    frustrated: t > 4T or HTTP 5xx
 - Contention flows upward: Guest OS disk latency reaches the application, and can ripple to the top layer.
 - 100% utilization with 0 contention is maximum performance. Where contention cannot be measured, keep a buffer below 100%: queues tend to form at high utilization.
 - Low utilization can still mean poor performance: many configuration errors cause it.
-- Source of the phrase: Mark Achtemichuk, https://blogs.vmware.com/vsphere/2015/11/vcpu-to-pcpu-ratios-are-they-still-relevant.html.
 ![Each layer from business application to physical resource has a contention and a utilization metric; contention leads to performance, utilization to capacity, contention feeds capacity and the layer above](images/consumer-provider-metric-types-to-operations-pillars-diagram.png)
 
 ## Limits of optimized performance
@@ -153,10 +153,8 @@ images:
 source:
   document: Knowledge base
   path: 'Performance Management > The 3 Realms > The Layers in IT Systems; The Layers in IaaS > IaaS Metric Types; Optimized Performance'
-corrections:
-- 'Section ''Consumer and provider metric types'': driver-layer metrics are guest-os layer, fixed in the guest; the VM KPI covers the vNIC as the hypervisor sees it.'
-- 'Realm means a world with a boundary, not an operations term: used both for business, application, IaaS and for VM vs Guest OS.'
+corrections: []
 review_notes:
-- 'Image troubleshooting-layers-loss-of-context-example-table.png: 5.2 s + 15.1 s = 20.3 s, but the transaction is given as 20.1 s.'
+- 'To check: Section ''Context loss at layer boundaries'': image troubleshooting-layers-loss-of-context-example-table.png gives the transaction as 20.1 s, but its parts add up to 20.3 s (5.2 s + 15.1 s); the image needs a corrected copy.'
 status: draft
 ```

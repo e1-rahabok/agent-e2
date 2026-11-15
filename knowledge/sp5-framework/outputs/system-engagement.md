@@ -54,7 +54,6 @@
 - "Send everyone a weekly report" → nobody can tell whether a report was read, and a report has the least depth. Use a dashboard; add a report where a role needs an offline copy.
 - "One threshold set for every channel" → each channel has its own urgency. A live screen that turns red for a non-urgent issue is ignored after a while.
 - "The NOC screen is a smaller daily health check" → the NOC screen covers the last 5 minutes for Level 1; the daily check covers the next 12 hours for Level 2. Content, size and interaction differ.
-- "Put capacity on the live screen" → capacity changes over days and months. It belongs to the longer-cadence dashboards.
 - "Tables on the NOC screen give the most information" → many numbers seen from a distance give no conclusion; show trends and the current value.
 
 ## Metadata
@@ -87,10 +86,7 @@ images:
 source:
   document: Knowledge base
   path: 'Proactive Operations > System Engagement (with its two Heading 4 sections, the table of alerts, dashboards and reports, and Timeline)'
-corrections:
-- 'Section ''Three dashboard cadences'', time spent on the daily health check: the source table says screen time 10 minutes; written as a few minutes (about 5 minutes when there is no problem).'
-review_notes:
-- 'Section ''Four channels'': the source says four ways and its diagram shows three (alert, dashboard, report); the live screen is the fourth, from the text.'
-- 'Not copied: the hexagon picture of NOC requirements (decorative; its content is in sp5-framework/outputs/noc-live-screen).'
+corrections: []
+review_notes: []
 status: draft
 ```

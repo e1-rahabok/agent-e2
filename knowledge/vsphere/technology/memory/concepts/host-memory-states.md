@@ -112,10 +112,9 @@ images:
     metric: ['ESXi Memory Ballooned', 'ESXi Memory Active', 'ESXi Memory Consumed']
     image_type: timeline
 source:
-  document: Knowledge base
-  path: Memory > ESXi > Contention Metrics > Balloon; states, hysteresis and actions per state from the author's ESXi 9.1 memory reclamation manual (project/sources/esxi_memory_reclamation_manual.md)
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: Memory > ESXi > Contention Metrics > Balloon; host memory states, hysteresis and actions per state; ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34)
 corrections: []
-review_notes:
-- 'Overcommit technique content: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+review_notes: []
 status: draft
 ```

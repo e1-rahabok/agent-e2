@@ -2,6 +2,7 @@
 
 ## Meaning
 - The host-level counterpart of VM Swapped. Different names for different vantage points.
+- Relevance for operations: capacity context and performance troubleshooting: pages the VMs may wait for when they touch them. The wait itself shows in VM Memory Latency.
 
 ## Swap counters at host level
 | Counter | Meaning |
@@ -31,7 +32,7 @@ product:
 - vsphere
 object:
 - HostSystem
-metric_class: contention
+metric_class: consumption
 internal_derive:
 - vsphere/technology/memory/concepts/host-memory-states
 same_name: []
@@ -52,8 +53,6 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > ESXi > Swap + Compress
 corrections: []
 review_notes:
-- 'To check: metric_class: set to contention.'
-- 'Section ''Swap counters at host level'': from Memory > ESXi.'
-- 'To check: whether host Swap In Rate and Swap Out Rate include compression.'
+- 'To check: Section ''Swap counters at host level'': whether host Swap In Rate and Swap Out Rate include compression; vSphere Web Services API 9.1, memory counters.'
 status: draft
 ```

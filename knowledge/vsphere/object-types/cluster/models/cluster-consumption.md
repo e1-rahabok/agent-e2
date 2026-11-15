@@ -6,6 +6,7 @@
 - Cluster-wide, not the worst host. Every sub-metric adds up the hosts of the cluster, so a big host counts more than a small one. Cluster Risk (%) is the opposite: it takes the worst host ([`vsphere/object-types/cluster/models/cluster-risk`](cluster-risk.md)).
 - Why cluster-wide: DRS moves VMs to balance the hosts, so the capacity of the cluster is the sum of its hosts; HA and the buffer are reserved across the cluster, not on any one host.
 - Saturation is not contention. Ballooned, swapped and compressed memory do not mean anything is slow yet. They are real consumption, so they have their own sub-metrics.
+- A capacity model, not a KPI: a KPI scores performance only. Users also call it the Cluster Consumption KPI.
 - Not a built-in VCF Operations metric. One of the three inputs of Close for Business ([`vsphere/object-types/cluster/models/close-for-business`](close-for-business.md)).
 
 ## Sub-metrics
@@ -31,7 +32,11 @@
 ## Scoring
 - The same scoring as every KPI and model ([`sp5-framework/performance/performance-kpi-design`](../../../../sp5-framework/performance/performance-kpi-design.md), section Scoring), then flipped: Cluster Consumption = 100 − weighted average.
 - Bands: green 0-25, yellow 25-50, orange 50-75, red 75-100.
-- Worked example: a host of 64 threads and 512 GB at 40% thread utilization, and a host of 32 threads and 256 GB at 70%; HA and buffer take 20%. Threads in use: 25.6 + 22.4 = 48 of 96 (50% of total; the average of 40% and 70% would be 55%). Against usable (76.8 threads): 62.5%. Memory consumed 486.4 of 614.4 GB usable: 79.17%. Cluster Consumption = 34.53.
+- Worked example, inputs: a host of 64 threads and 512 GB at 40% thread utilization and 60% memory consumed, and a host of 32 threads and 256 GB at 70% and 70%; HA and buffer take 20%; no ballooned, compressed or swapped memory; no memory tiering.
+- Worked example, CPU: threads in use 25.6 + 22.4 = 48 of 96 (50% of total; the average of 40% and 70% would be 55%). Against usable (76.8 threads): 62.5%, in yellow, score 62.5, weight 2.83.
+- Worked example, memory: consumed 307.2 + 179.2 = 486.4 GB of 614.4 GB usable: 79.17%, near the end of yellow, score 52.08, weight 3.78.
+- Worked example, saturation: Ballooned and Zip Swap read 0, green, score 100, weight 1 each; they count, because no green range of this model is excluded.
+- Worked example, result: weighted average (62.5 × 2.83 + 52.08 × 3.78 + 100 + 100) ÷ (2.83 + 3.78 + 1 + 1) = 66.64; Cluster Consumption = 100 − 66.64 = 33.36. The bands of each row: `catalog/thresholds-capacity`, rows `cluster-consumption-*`.
 - A worse sub-metric can lower Cluster Consumption: its weight rises as its score falls, so a row that gets worse but stays below the rows driving the score lowers the weighted average. Same mechanism as Cluster Risk ([`vsphere/object-types/cluster/models/cluster-risk`](cluster-risk.md), section Sub-metric weight in Cluster Risk).
 - Missing data: a row with no data is left out, never counted as 0, because 0 means nothing consumed.
 
@@ -47,8 +52,6 @@
 - CPU usable capacity in threads comes from a ratio in MHz. Exact only when every host has the same clock speed and the same Hyper-Threading setting. Example: host A 32 cores with Hyper-Threading (64 threads), host B 32 cores without (32 threads), each half of the MHz; HA and buffer take 50%: the model counts 48 usable threads, while 32 or 64 remain depending on which host fails.
 - The memory percentage is applied to the NVMe tier too: it assumes HA and the buffer remove the same part of DRAM and tier.
 - Usable capacity 0 has two cases. Hosts run but HA and buffer leave nothing to VMs: Cluster Consumption is 100 and the rows of that resource are not published. No host runs: nothing is consumed and nothing is published.
-- Memory Tiering Consumption is not yet confirmed on a live system.
-- To validate: whether a host in maintenance mode lowers usable capacity twice, once in the VCF Operations percentage and once as a left-out host.
 
 ## Misconceptions
 - "Saturation means VMs are slow" → saturation is consumption; check Cluster Performance (%).
@@ -77,6 +80,7 @@ metric_class: consumption
 internal_derive:
 - sp5-framework/capacity/supply
 - sp5-framework/capacity/demand
+- sp5-framework/performance/performance-kpi-design
 same_name: []
 same_meaning: []
 related:
@@ -90,6 +94,8 @@ source:
   document: Knowledge base
   path: Provider Objects > Other Metrics > Cluster Consumption (%)
 corrections: []
-review_notes: []
+review_notes:
+- 'To check: Section ''Sub-metrics'': the Memory Tiering Consumption row (`mem:NVMe|tier.usage` against `mem:NVMe|memory_tier_size`) on a live host with memory tiering.'
+- 'To check: Section ''Usable capacity'': whether a host in maintenance mode lowers usable capacity twice, once in the VCF Operations usable-capacity percentage and once as a left-out host; a live cluster with one host in maintenance mode.'
 status: draft
 ```

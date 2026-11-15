@@ -40,7 +40,7 @@
 ## CPU: include
 | Item | Reason |
 |---|---|
-| Co-stop, Ready | Runtime the guest demanded. Guest numbers miss it: its time was frozen. Limits are already accounted. Adding or removing vCPUs does not change these waits: the bottleneck is elsewhere. |
+| Co-stop, Ready | Runtime the guest demanded. Guest numbers miss it: its time was frozen. Limits are already accounted. A resize moves these waits with host load and NUMA: verify after it ([`sp5-framework/capacity/rightsizing`](../../../sp5-framework/capacity/rightsizing.md), section Before vs after). |
 | Other Wait, Swap Wait | Same as Ready: the CPU waited for RAM or IO. |
 | Overlap | Runtime the guest demanded. Already inside Run, so not added separately when using Run. |
 | Guest OS CPU run queue | The primary counter that Windows or Linux cannot keep up. |
@@ -68,13 +68,8 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 
 ## Memory
 - Memory is cache. Unused memory is waste: aim high, with a narrow green band.
-- Option 2 is recommended, of two range schemes: wide grey (waste) zone, then a narrow green band near the top.
-- Guest OS memory utilization ranges (option 2):
-
-- Colour bands: `catalog/thresholds-capacity`, rows with this file as `kb`. They are shown with this file; this file holds the reasons.
-
-- Below 75% is grey: waste.
-
+- Two range schemes for Guest OS memory utilization; option 2 is recommended: a wide grey (waste) zone, then a narrow green band near the top. Its colour bands: `catalog/thresholds-capacity`, rows with this file as `kb`, shown with this file; this file holds the reasons.
+- Below the green band is grey: waste.
 - Grey is a fifth range, below green, and exists only in capacity management: unused capacity is waste. Performance has no grey range: there is no wasted performance.
 - Green is 10 points wide. Windows and Linux cache memory, so a high value is normal.
 - Option 1 (not recommended): waste below 50%, risk above 75%.
@@ -180,11 +175,8 @@ images:
     image_type: table
 source:
   document: 'Knowledge base; vSphere Web Services API 9.1, Memory Counters'
-  path: 'Consumer Objects > Capacity: Guest OS > Guest OS Sizing'
+  path: 'Consumer Objects > Capacity: Guest OS > Guest OS Sizing. API 9.1 Memory Counters, mem.vmmemctl (guest memory allocated and pinned by the balloon driver): https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html'
 corrections: []
-review_notes:
-- 'Source URL for section ''Ballooned memory in sizing'': `mem.vmmemctl`, guest memory allocated and pinned by the balloon driver, vSphere Web Services API 9.1, https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html.'
-- 'To check: Section ''VM rightsizing: two jobs'': from another source, section VM Footprint | Guest OS Sizing (screenshot of 2026-11-03 only); check against the full document when it is provided.'
-- 'To check: References not read: https://blogs.vmware.com/management/2020/01/rightsizing-vms-with-vrealize-operations.html and https://blogs.vmware.com/management/2019/09/26212.html'
+review_notes: []
 status: draft
 ```

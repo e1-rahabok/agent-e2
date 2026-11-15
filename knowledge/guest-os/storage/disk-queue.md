@@ -10,6 +10,7 @@
 - Both are Little's Law values: the queue equals the I/O rate times the time per I/O.
 - Windows derives Avg. Disk Queue Length from Disk Transfers/sec × Avg. Disk sec/Transfer. The counter adds no evidence beyond those two: a high value at a given I/O rate is the same fact as a long time per I/O, so read the time per I/O and find where it is spent.
 - The part of the queue that waits in the Guest OS for a free slot of the virtual adapter has not reached the virtual disk. The vCenter virtual disk latency starts at the virtual disk, so it does not include that wait.
+- Relevance for operations: performance KPI and alerting: the 20-second peak disk queue is a row of the Guest OS Performance KPI and drives the Guest OS disk queue alert ([`guest-os/system/guest-os-performance`](../system/guest-os-performance.md), [`guest-os/guest-os-alerts`](../guest-os-alerts.md)). Troubleshooting reads it against the I/O rate and the time per I/O.
 
 | VMware Tools counter | Windows source (WMI) |
 |---|---|
@@ -98,11 +99,9 @@ images:
     metric: ['Guest OS Disk Queue', 'VM Disk Latency']
     image_type: timeline
 source:
-  document: Knowledge base
-  path: MS Windows > Storage
+  document: Knowledge base; Microsoft Learn, Using Storage-related Parameters and Performance Counters (Windows Server 2012 R2 archive page)
+  path: MS Windows > Storage; Queue lengths (Microsoft, https://learn.microsoft.com/previous-versions/dn567651(v=vs.85))
 corrections: []
-review_notes:
-- 'To check: Section ''Interpretation'': the subtraction of the requests at the virtual disk from the guest queue is a derivation from Little''s Law, not a vendor procedure. The Observed values in are read with it; the 3,000 VMs and the spikes above 1,000 were not re-measured.'
-- 'Source URL, Microsoft: https://learn.microsoft.com/previous-versions/dn567651(v=vs.85)'
+review_notes: []
 status: draft
 ```

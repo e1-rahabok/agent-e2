@@ -5,7 +5,7 @@
 - Counters here come from inside the Guest OS (PerfMon, WMI, or VMware Tools). vCenter and VCF Operations store some of them on the VirtualMachine object. That is a data path, not ownership.
 
 ## Nature
-- Poorly documented; even Microsoft sources conflict. Mark Russinovich's description of virtual memory is a reference.
+- Poorly documented; even Microsoft sources conflict. The Sysinternals article series Pushing the Limits of Windows describes virtual memory and is a reference.
 
 ## Categories
 ```text
@@ -133,10 +133,10 @@ images:
     image_type: table
     sample: 'about 3,000 VMs'
 source:
-  document: Knowledge base
+  document: Knowledge base; Microsoft Learn, How to determine the appropriate page file size for 64-bit versions of Windows
   path: MS Windows > Memory
 corrections: []
 review_notes:
-- 'To check: References not read: https://blogs.technet.microsoft.com/markrussinovich/2008/11/17/pushing-the-limits-of-windows-virtual-memory/, http://brandonlive.com/2010/02/21/measuring-memory-usage-in-windows-7/'
+- 'To check: Section ''Categories'': the category definitions against the references not read: https://blogs.technet.microsoft.com/markrussinovich/2008/11/17/pushing-the-limits-of-windows-virtual-memory/, http://brandonlive.com/2010/02/21/measuring-memory-usage-in-windows-7/'
 status: draft
 ```
