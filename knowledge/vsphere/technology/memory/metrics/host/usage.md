@@ -4,7 +4,7 @@
 - Maps to ESXi Memory Consumed: the pages the host holds for VMs, VM overhead, the kernel, vSAN and NSX ([`vsphere/technology/memory/metrics/host/consumed`](consumed.md)).
 - Memory is a cache, so values near 100% are expected.
 - Memory pressure shows in ballooning, compression, swapping and VM Memory Contention, not in Usage (%).
-- Relevance for operations: capacity reporting. Not a shortage signal and not the capacity demand: VCF Operations plans on ESXi Memory Utilization ([`vsphere/technology/memory/metrics/host/utilization`](utilization.md), section Reason).
+- Relevance for operations: capacity reporting: ESXi Memory Consumed as a percentage, the conservative capacity reading. Not a shortage signal: pressure shows in ballooning, compression, swapping and VM Memory Contention ([`vsphere/technology/memory/metrics/host/utilization`](utilization.md), section Reason).
 
 ## Formula (VCF Operations)
 ```text

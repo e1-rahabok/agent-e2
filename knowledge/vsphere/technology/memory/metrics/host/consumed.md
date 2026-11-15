@@ -2,7 +2,7 @@
 
 ## Meaning
 - Includes memory consumed by ESXi itself.
-- Relevance for operations: capacity reporting and the VM footprint for migration. It is the capacity counter only on a host that runs with no ballooning by design; otherwise ESXi Memory Utilization is ([`vsphere/technology/memory/metrics/host/utilization`](utilization.md), section Reason). Not a performance counter: near 100% is normal.
+- Relevance for operations: capacity reporting and the VM footprint for migration. It is the memory utilization row of the method's cluster models: conservative, because it holds guest cache, and in one realm, unlike ESXi Memory Utilization ([`vsphere/technology/memory/metrics/host/utilization`](utilization.md), section Reason). Not a performance counter: near 100% is normal.
 
 ## Scope
 - ESXi pages, summed at host level: VMs plus the kernel's own memory plus VM overhead.

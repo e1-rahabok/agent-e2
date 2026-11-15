@@ -259,13 +259,13 @@ images:
   image_type: scatter
   sample: 607 hosts
 source:
-  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); vSphere Web Services API 9.1; Broadcom KB 419794, 447622 and 404061 (NSX 4.x)
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); vSphere Web Services API 9.1; Broadcom KB 419794, 447622 and 404061 (NSX 4.x); Broadcom KB 420935
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > Overhead vs Not Overhead; Provider Objects > Capacity > Hypervisor; CPU > Hypervisor; Memory > Hypervisor Metrics (from former vsphere/architecture/overhead); ESX CPU Considerations (pp. 27-28) (from former vsphere/architecture/overhead); API 9.1 memory counters, unreserved (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html); KB 419794, group host/vim/vmvisor/opsagent (https://knowledge.broadcom.com/external/article/419794); KB 447622, group host/vim/vmvisor/nsx-datapath-ctrs (https://knowledge.broadcom.com/external/article/447622); KB 404061, NSX firewall heap vsip-kentries (https://knowledge.broadcom.com/external/article/404061)
-corrections: []
+corrections:
+- 'Section ''Recommended static values'': Broadcom KB 420935 (ESXi 8.x, 9.x) sets aside host memory for ESXi by socket count, from 2 sockets up (64-256 GB for 2 sockets, default 128 GB; 128-384 GB for 4; 256-768 GB for 8). Its socket counts are out of date: 4-socket ESXi hosts are gone, 2-socket hosts are rare and most are single socket. The knowledge base keeps 64 GB for ESXi + vSAN + NSX; kept until the KB is updated.'
 review_notes:
 - 'To check: Section ''Memory metrics'': the formula of the VCF Operations metric mem|host_systemUsage (ESX System Usage) is not published; check on a 9.1 host that it equals host/system Resource memory allocation minimum (the kernel reservation). VCF Operations 9.1, Host System metrics (https://techdocs.broadcom.com); https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html'
 - 'To check: Section ''Memory metrics'': which part of the host/system group VMkernel consumed (mem.sysUsage) covers; it read less than the group''s Resource memory consumed on a 9.1 lab host. The kernel reservation on the page and in the counter differ by under 1%: page rounding or sample time, not checked.'
 - 'To check: Section ''Memory metrics'': that the NSX datapath and firewall heaps count in host/system rests on their being VMkernel heaps (KB 404061 shows the vsip-kentries heap in vmkernel.log); no vendor text names their resource group. https://knowledge.broadcom.com/external/article/404061'
-- 'To check: Section ''Recommended static values'': Broadcom KB 420935 (ESXi 8.x, 9.x) sets aside host RAM for ESXi overhead by socket count: 64-256 GB for 2 sockets (default 128 GB), 128-384 GB for 4, 256-768 GB for 8; its examples give 64 GB per TB of installed memory. The 64 GB for ESXi + vSAN + NSX here is below the 2-socket default. https://knowledge.broadcom.com/external/article/420935'
 status: draft
 ```

@@ -36,6 +36,7 @@ Per host, then the worst host is kept.
 - Threads = 2 × cores when Hyper-Threading is available and active, else the cores.
 
 ## DRAM as the memory base
+- Memory reads ESXi Memory Consumed, not ESXi Memory Utilization: Utilization mixes realms, because its VM term comes from Guest OS counters; Consumed stays in one realm and is conservative, and the reclamation it leaves out counts as saturation ([`vsphere/technology/memory/metrics/host/utilization`](../../../technology/memory/metrics/host/utilization.md), section Reason).
 - Every memory % and ratio is against the host's DRAM (the DIMMs). A memory tier such as NVMe is never added.
 - Reason: VMs run in DRAM; NVMe holds only cold pages. A % of DRAM + NVMe looks smaller than the real pressure. There is no use case, in risk or performance, for the expanded capacity.
 - Source: host `mem:DRAM\|memory_tier_total_capacity`; fallback `mem\|host_provisioned`. With neither, the host's memory rows are left out, never scored against a guess.

@@ -21,6 +21,7 @@
 
 - Colour bands: `catalog/thresholds-capacity`, rows with this file as `kb`. No green range is excluded: every row with data counts.
 - Threads in use per host = `cpu|utilization_average` % × threads. Memory: `mem|consumed_average`, `mem|vmmemctl_average`, `mem|compressed_average`, `mem|swapout_average`; NVMe tier `mem:NVMe|tier.usage` against `mem:NVMe|memory_tier_size`.
+- Memory reads ESXi Memory Consumed, not ESXi Memory Utilization: Utilization mixes realms, because its VM term comes from Guest OS counters; Consumed stays in one realm and is conservative, and the reclamation it leaves out counts as saturation ([`vsphere/technology/memory/metrics/host/utilization`](../../../technology/memory/metrics/host/utilization.md), section Reason).
 - DRAM is the host's DRAM only, never DRAM plus a memory tier. DRAM and the NVMe tier are kept apart: each memory row reads one of them.
 - CPU usable capacity is counted in threads, not MHz. Capacity is quantity: how many VMs fit, not how fast they run.
 

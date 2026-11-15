@@ -4,8 +4,8 @@
 - Sum of ballooned memory of the VMs on the host.
 - A leading indicator that the host is under memory pressure. A primary capacity metric.
 - More a capacity warning than a performance metric, assuming no limits.
-- A host that runs with no ballooning by design (performance-first) keeps ESXi Memory Ballooned at 0; there ESXi Memory Consumed is the capacity counter ([`vsphere/technology/memory/metrics/host/utilization`](utilization.md), section Reason).
-- Relevance for operations: capacity, as a leading warning that the host reclaims memory; an alert on a host that runs with no ballooning by design. Not a performance counter: VM waits show in VM Memory Contention.
+- A performance-first class keeps ESXi Memory Ballooned at 0. Most clusters without memory tiering can run with some ballooning: the risk of actual contention from it is operationally negligible ([`vsphere/technology/memory/metrics/host/utilization`](utilization.md), section Reason).
+- Relevance for operations: capacity: a saturation row of the method's cluster models and a leading warning that the host reclaims memory; an alert on a performance-first class. Not a performance counter: VM waits show in VM Memory Contention.
 
 ## Behaviour
 - Ballooning starts at the Soft state: about 99% of host memory used. See [`vsphere/technology/memory/concepts/host-memory-states`](../../concepts/host-memory-states.md).
