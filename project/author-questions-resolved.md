@@ -4,6 +4,18 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q236 · Terms · Better names for five product labels
+
+- Files: [glossary](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md); [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (Product label and better model); [vocabulary.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/vocabulary.md).
+- Question: accept the better names proposed with Q208?
+- Answer (author, 2026-11-15):
+  - Total Capacity (GHz) → Total Base Capacity (GHz). "Base" stresses the nominal frequency. Throughput is activity, not capability.
+  - VM CPU Latency: label kept. Not a throughput loss: it includes the Hyper-Threading effect.
+  - ESXi Memory Usage (%): label kept. It maps closest to Consumed.
+  - VM Memory Consumed: label kept. "Claim" reads as reclamation, so it misleads.
+  - Capacity Remaining (%) → 3-Day Forecast Capacity Remaining (%).
+- Applied: glossary, KNOWLEDGE-ENGINEERING.md, cpu-measurement-levels (Total Capacity is capacity at base clock, not throughput), unit test. Two rows in Words to avoid: throughput for a capacity figure; claimed for held memory. Left open: ESXi CPU Usage (%) (Q236 in the open file).
+
 ### Q208 · Knowledge design · Product label and better model
 
 - Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (Product label and better model); [glossary](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md); [user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml); [harness/terms.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/terms.py); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml).

@@ -507,7 +507,7 @@ class ProductLabelTest(unittest.TestCase):
         e = {g['term']: g for g in kb.glossary(DOCS)}['Total Capacity (GHz)']
         self.assertIn('Total Capacity', e['label'])
         self.assertTrue(e['invites'])
-        self.assertEqual(e['better'][0], 'Nominal CPU Throughput')
+        self.assertEqual(e['better'][0], 'Total Base Capacity (GHz)')
         self.assertIn('physical threads', e['better'][1])
         self.assertEqual(e['file'], 'vsphere/technology/cpu/concepts/cpu-measurement-levels')
 
@@ -517,10 +517,10 @@ class ProductLabelTest(unittest.TestCase):
         hit = [h for h in terms.match(self.Q) if h.get('label') == 'Total Capacity (GHz)']
         self.assertEqual(len(hit), 1)
         self.assertNotIn('note', raw[hit[0]['id']])              # one home: the glossary entry
-        self.assertIn('Nominal CPU Throughput', hit[0]['note'])
+        self.assertIn('Total Base Capacity (GHz)', hit[0]['note'])
         self.assertIn('Invites:', hit[0]['note'])
         self.assertEqual(hit[0]['files'][0], 'vsphere/technology/cpu/concepts/cpu-measurement-levels')   # the entry's File first
-        self.assertIn('Nominal CPU Throughput', terms.block(terms.match(self.Q)))
+        self.assertIn('Total Base Capacity (GHz)', terms.block(terms.match(self.Q)))
 
     def test_every_label_entry_has_one_row_that_fires_on_its_term(self):
         import terms
