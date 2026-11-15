@@ -296,6 +296,8 @@ One change set. Each writer reads this whole plan, writes only its own files and
 - Author questions raised: Q223-Q228 ([project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md)).
 
 ### Screenshots to capture (47)
+- Superseded 2026-11-15: these practical halves become exports (CSV or tool text), not screenshots. Review and change list: [practical-questions-as-exports-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/practical-questions-as-exports-2026-11-15.md).
+
 Each question's `## Input to supply` gives the screen, counters, time range, the condition the key needs, the file names and the masking. After a capture: check the condition, set `status: draft`, re-read the key on the image.
 
 | Question | Title | Level | Tools | Theory half | Screenshots |
