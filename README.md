@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/model-open%20weights%2C%20local-6e7781?labelColor=3d444d" alt="Model: open weights, local">
   <img src="https://img.shields.io/badge/runs-locally%20%28data%20stays%20on%20site%29-6e7781?labelColor=3d444d" alt="Runs locally">
   <img src="https://img.shields.io/badge/knowledge%20files-286-6e7781?labelColor=3d444d" alt="Knowledge files: 286">
-  <img src="https://img.shields.io/badge/benchmark%20questions-196-6e7781?labelColor=3d444d" alt="Benchmark questions: 196">
+  <img src="https://img.shields.io/badge/benchmark%20questions-226-6e7781?labelColor=3d444d" alt="Benchmark questions: 226">
   <img src="https://img.shields.io/badge/target-99%25%20final%20score-6e7781?labelColor=3d444d" alt="Target: 99% final score">
 </p>
 
@@ -97,7 +97,21 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 ## Status
 
 - Goal not achieved yet. Agent E2, the neuro-symbolic expert system, was built on 2026-11-14 and has not run a round. The next round runs two runs per candidate model, Base (the model alone) and Agent E2, and the frontier reference ([`benchmark/RUN.md`](benchmark/RUN.md)).
-- Retrieval check (2026-11-14): Agent E2's reading set holds 82% of the needed files with keyword search (128 of 196 questions complete); hybrid search last measured at 80% (117 of 196) before the structure review ([output](benchmark/results/retrieval-2026-11-14/hybrid.md)).
+- Benchmark questions (2026-11-15): 226 run, and 47 screenshot questions wait for the author's captures (Level 300: 21, Level 400: 26). The run set by area and level:
+
+| Area | Level 100 | Level 200 | Level 300 | Level 400 | Total |
+|---|---|---|---|---|---|
+| CPU | 1 | 2 | 26 | 61 | 90 |
+| Memory | 1 | 5 | 21 | 46 | 73 |
+| Storage | 3 | 5 | 17 | 33 | 58 |
+| Network | 1 | 4 | 9 | 23 | 37 |
+| System (cluster, resource pools, capacity, statistics) | 3 | 6 | 14 | 43 | 66 |
+| Guest OS layer (Windows, Linux) | 1 | 6 | 17 | 31 | 55 |
+| GPU | 0 | 1 | 0 | 0 | 1 |
+| Questions | 8 | 18 | 70 | 130 | 226 |
+
+- A question counts in every area it touches, so the area rows add up to more than 226. Current counts: `python3 project/tools/coverage.py`.
+- Retrieval check (2026-11-15, keyword search): Agent E2's reading set holds 84% of the needed files (146 of 226 questions complete). Hybrid search last measured at 80% (117 of 196) before the structure review of 2026-11-14 ([output](benchmark/results/retrieval-2026-11-14/hybrid.md)).
 - Earlier generations (classic and agentic modes) and their results are archived in [`project/archive/`](project/archive) and not compared.
 - Plan, milestones and decisions: [`project/plan.md`](project/plan.md).
 
