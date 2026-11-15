@@ -70,7 +70,7 @@ Each entry:
   - B. Switch the utilization row to ESXi Memory Utilization (`mem|total_need`).
   - C. Consumed for classes that must not balloon, Utilization for the others.
 - Recommended: A for 1.0 (the models describe the pack as built); B or C with the pack fixes after 1.0.
-- Answer:
+- Answer: A. Utilization is mixing realm as it includes Guest OS counters. Consumed is a conservative counter. Most clusters with no memory tiering should have balloon as the risk of actual contention is operationally negligible.
 
 ## Future release
 
