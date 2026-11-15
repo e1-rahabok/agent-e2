@@ -104,7 +104,6 @@ source:
   document: Knowledge base
   path: Provider Objects > Performance > Cluster Performance (%)
 corrections: []
-review_notes:
-- 'To check: Section ''Sub-metric formulas'': the catalog `kpi` rows of both memory wait rows and of the 90th percentile disk latency row carry the 5-minute interval, while their sources are 20-second peaks (`mem|20_sec_peak_host_contentionPct`, `virtualDisk|20_sec_peak_totalLatency_average`); the ESXi Performance rows with the same limits carry 20 seconds. NVMe wait may be the reason for the memory rows (catalog/thresholds-performance, section kpi).'
+review_notes: []
 status: draft
 ```

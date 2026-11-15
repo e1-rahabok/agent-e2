@@ -4,10 +4,10 @@
 - Includes only memory consumed by VMs.
 - Includes VM overhead.
 - Excludes memory consumed by ESXi itself.
-- Relevance for operations: capacity reporting of the VMs' footprint in the cluster's physical memory. Not the capacity demand (VCF Operations plans on ESXi Memory Utilization, [`vsphere/technology/memory/metrics/host/utilization`](../host/utilization.md)) and not a performance counter.
+- Relevance for operations: capacity: the VMs' footprint in the cluster's physical memory, and the memory utilization row of the method's cluster models, a conservative reading with reclamation counted as saturation ([`vsphere/technology/memory/metrics/host/utilization`](../host/utilization.md), section Reason). Not a performance counter.
 
 ## Misconceptions
-- "Cluster Consumed near the cluster's total memory means the cluster is out of memory" → Consumed holds every page the VMs touched, mostly guest cache and inactive pages. Check host Ballooned and VM Memory Contention, and plan capacity on ESXi Memory Utilization.
+- "Cluster Consumed near the cluster's total memory means the cluster is out of memory" → Consumed holds every page the VMs touched, mostly guest cache and inactive pages. Check the saturation counters (host Ballooned, Compressed, Swapped) and VM Memory Contention.
 
 ## Metadata
 ```yaml

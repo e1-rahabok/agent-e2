@@ -12,16 +12,17 @@ VM term        = Max (VM Memory Utilization, VM memory reservation) + VM overhea
 - ESX System Usage is the kernel reservation, a metric VCF Operations computes (`mem|host_systemUsage`). vCenter has no counter of that name: it holds the kernel reservation as host/system Resource memory allocation minimum, the number on the System Resource Reservation page ([`vsphere/architecture/overhead`](../../../../architecture/overhead.md), section Memory metrics).
 - Equals ESX System Usage on a host with no running VMs.
 - The VCF Operations capacity pages (Time Remaining, Capacity) name this metric Demand: memory Demand there is Utilization, not Consumed (Broadcom KB 439253). The capacity engine projects it against usable capacity.
-- Relevance for operations: capacity. ESXi Memory Utilization is the host memory demand of the VCF Operations capacity engine and of the capacity model of the method (section Reason gives the one exception).
+- Relevance for operations: capacity in VCF Operations: the host memory demand of its capacity engine (Time Remaining, Capacity Remaining). The method's cluster models read ESXi Memory Consumed instead, because ESXi Memory Utilization mixes realms (section Reason).
 
 ## Use
 - Not a performance counter: a high value means the host memory is spoken for, not that a VM waits. Memory waits show in VM Memory Contention.
 
 ## Reason
-- ESXi Memory Consumed is too conservative as capacity demand: it holds every page the VMs touched, mostly guest cache and inactive pages, which ESXi can take back by ballooning at little cost.
+- ESXi Memory Utilization is the Guest OS need of each VM, raised to the VM's reservation. Its VM term, VM Memory Utilization, reads Guest OS counters (Guest OS Needed Memory) through VMware Tools, so it mixes realms: an ESXi capacity figure rests on Guest OS data that the hypervisor neither sees nor controls ([`vsphere/architecture/vm-vs-guest-os`](../../../../architecture/vm-vs-guest-os.md), section Two realms).
+- ESXi Memory Consumed stays in one realm, the ESXi pages the VMs hold, and is conservative: it holds guest cache and inactive pages, which ESXi can take back by ballooning.
+- The method's cluster models (Cluster Consumption, Cluster Risk) therefore read ESXi Memory Consumed, with ballooned, compressed and swapped memory and the NVMe tier counted on top as saturation ([`vsphere/object-types/cluster/models/cluster-consumption`](../../../../object-types/cluster/models/cluster-consumption.md)).
+- Most clusters without memory tiering can run with some ballooning: the risk of actual contention from it is operationally negligible. A performance-first class keeps ESXi Memory Ballooned at 0 ([`vsphere/technology/memory/metrics/host/ballooned`](ballooned.md)).
 - VM Memory Active is too aggressive: a sampled estimate made for VMkernel memory management, not designed for sizing.
-- ESXi Memory Utilization sits between them: the Guest OS need of each VM, raised to the VM's reservation.
-- Exception: on a host that runs with no ballooning by design (a performance-first class that keeps ESXi Memory Ballooned at 0), ESXi Memory Consumed is the capacity counter. Ballooning starts at the Soft state, about 99% of host memory used, and host Consumed is total minus free memory, so the Soft state is a level of Consumed, not of Utilization ([`vsphere/technology/memory/concepts/host-memory-states`](../../concepts/host-memory-states.md)).
 - Uses the kernel reservation, not actual kernel use (VMkernel consumed): a reservation is taken whether consumed or not, the same rule as a VM reservation. Not exact, but it gives a buffer.
 
 ## Observed values
@@ -32,7 +33,8 @@ VM term        = Max (VM Memory Utilization, VM memory reservation) + VM overhea
 - "Utilization = Consumed" → it removes cache and inactive pages via guest metrics.
 - "Host memory Utilization adds what the kernel consumes" → it adds the kernel reservation (ESX System Usage), which is taken whether consumed or not.
 - "The Demand on the capacity pages and Memory Utilization are two different metrics" → the capacity pages show Memory Utilization under the name Demand.
-- "Plan host memory capacity on ESXi Memory Consumed" → Consumed is mostly guest cache and inactive pages that ESXi can balloon back; plan on ESXi Memory Utilization. Consumed is the capacity counter only on a host that runs with no ballooning by design.
+- "ESXi Memory Utilization is the better capacity counter, because VCF Operations plans on it" → it mixes realms: its VM term comes from Guest OS counters through VMware Tools. The method's cluster models read ESXi Memory Consumed, conservative but in one realm, with reclamation counted as saturation.
+- "ESXi Memory Consumed near 100% means the host is out of memory" → Consumed is conservative: it holds guest cache and inactive pages. Read the saturation counters (Ballooned, Compressed, Swapped) and VM Memory Contention.
 
 ## Metadata
 ```yaml
@@ -58,6 +60,8 @@ related:
 - vsphere/technology/memory/metrics/host/consumed
 - vsphere/technology/memory/metrics/virtual-motherboard/utilization
 - vsphere/technology/memory/metrics/comparisons/host-memory-metrics
+- vsphere/object-types/cluster/models/cluster-consumption
+- vsphere/architecture/vm-vs-guest-os
 images:
   - path: ../../images/esxi-memory-utilization-vs-consumed-across-hosts.png
     product: [vcf-operations]

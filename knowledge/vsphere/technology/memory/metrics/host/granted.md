@@ -4,7 +4,7 @@
 - Consumer-level counter: sum of granted memory of the running VMs, plus non-VM user worlds.
 - Excludes kernel space: privileged processes get memory without the granting process.
 - Consumed includes both user and kernel space.
-- Relevance for operations: none for capacity: the VMs' view, which can exceed total capacity. Capacity reads ESXi Memory Utilization, or Consumed on a host run without ballooning.
+- Relevance for operations: none for capacity: the VMs' view, which can exceed total capacity. Capacity reads ESXi Memory Consumed in the method's cluster models and ESXi Memory Utilization in the VCF Operations capacity engine.
 
 ## Behaviour
 - Can exceed total capacity. Example: 1,053 GB granted on a 755 GB host.

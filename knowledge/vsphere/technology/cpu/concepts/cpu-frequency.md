@@ -64,11 +64,11 @@
 - Balanced does not mean lower performance for every workload. Most workloads suit it.
 
 ## Likely vCPU speed on a busy cluster
-- Considering both Turbo and Hyperthreading, what is the likely CPU speed you get most of the time? 
+- The CPU speed a vCPU gets most of the time on a busy cluster, with Turbo and Hyper-Threading both in play.
 - Scenario: many cores busy, most running 2 threads, Balanced policy, OS Controlled BIOS.
 - Starting point: All-Core Turbo, not base and not Single-Core Turbo.
 - Hyper-Threading delivers 1.25x per core in total: a vCPU is charged 62.5% of the core while its sibling thread runs, and the full core while the sibling is halted ([`vsphere/technology/cpu/concepts/hyper-threading`](hyper-threading.md), section Hyper-Threading accounting: VM CPU Used and ESXi CPU Used).
-- On a busy cluster, where siblings run part of the time, a vCPU realistically gets about 80% of All-Core Turbo.
+- On a busy cluster a vCPU realistically gets about 80% of All-Core Turbo: a field figure for the scenario above.
 - Formula: likely vCPU speed = All-Core Turbo × 0.8.
 - Example: base 2.0 GHz, All-Core Turbo 3.0 GHz, Single-Core Turbo 4.0 GHz → about 2.4 GHz, as reported by VM CPU Usage (MHz).
 - Base 2.0 GHz understates it. 3.0 GHz ignores Hyper-Threading: VM CPU Usage is Hyper-Threading aware. 4.0 GHz does not apply while most cores are busy.
@@ -213,6 +213,5 @@ corrections: []
 review_notes:
 - 'To check: Section ''Turbo'': %A/MPERF as the esxtop ratio of actual to nominal frequency (APERF/MPERF registers); not in the vSphere 9.1 documentation esxtop CPU panel (pp. 2153-2155).'
 - 'To check: Section ''Three speeds'': figures for AMD EPYC 9000 series and Intel Xeon Platinum 8593Q; AMD and Intel product pages (amd.com, intel.com).'
-- 'To check: Section ''Likely vCPU speed on a busy cluster'': the 0.8 factor. A vCPU whose sibling runs gets 0.625 of the core and one whose sibling is halted 1.0 (Broadcom KB 335065), so 0.8 holds when the sibling runs about half the time; needs the field basis for a busy cluster.'
 status: draft
 ```
