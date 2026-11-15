@@ -16,7 +16,7 @@
   1. VM CPU contention alert also fired → follow its remediation.
   2. VM CPU consumption alert also fired → follow its remediation.
   3. Neither → find why the application creates so many threads. Check two things on the VM:
-     - Multi-threaded application: many threads may contend for a software lock (mutex, semaphore). The queued threads cannot move to idle vCPUs, because they depend on a resource held by a thread on another vCPU: a bottleneck, not a shortage of vCPUs. Per-vCPU CPU time then shows idle vCPUs next to a long queue. A thread blocked on the lock is in Wait and not in the queue; the queue holds the threads that are Ready ([`guest-os/cpu/metrics/run-queue`](cpu/metrics/run-queue.md), section Cases).
+     - Multi-threaded application: many threads may contend for a software lock (mutex, semaphore). These queued threads cannot move to idle vCPUs, because they depend on a resource held by a thread on another vCPU. This is a bottleneck problem, not a shortage of vCPUs. Per-vCPU CPU time then shows idle vCPUs despite Guest OS suffering from a long queue. A thread blocked on the lock is in Wait state and not in the queue; the queue counter holds the threads that are Ready ([`guest-os/cpu/metrics/run-queue`](cpu/metrics/run-queue.md), section Cases).
      - Privileged Time high and User Time low: the kernel (drivers, interrupts) uses the CPU, not the application: a driver or kernel-locking issue.
      Then Compare with the other software of the same business application, and with the same software in other applications. For commercial software, ask the vendor. Without an answer, exclude the application from this alert.
 
