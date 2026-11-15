@@ -20,13 +20,7 @@ Each entry:
 
 ## Release 1.0
 
-### Q236 · Terms · Better name for ESXi CPU Usage (%)
-
-- Files: [glossary](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (entry ESXi CPU Usage (%)).
-- Now: your answer of 2026-11-15 settled five names (resolved file). One is left: ESXi CPU Usage (%) → CPU Throughput (% of nominal). It is activity (work done against the base clock), so it fits your rule that throughput is activity.
-- Question: accept, keep the label as it is, or give your name?
-- Recommended: accept. It pairs with CPU Throughput, your Q203 name for Usage (MHz).
-- Answer: Accepted
+None open.
 
 ## Future release
 

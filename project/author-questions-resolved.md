@@ -52,7 +52,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 - Answer (author, 2026-11-15): A
 - Applied: [thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml): the three cluster rows carry their levels under 20s; the notes in the catalog and in cluster-performance are gone.
 
-### Q236 · Terms · Better names for five product labels
+### Q236 · Terms · Better names for six product labels
 
 - Files: [glossary](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md); [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (Product label and better model); [vocabulary.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/vocabulary.md).
 - Question: accept the better names proposed with Q208?
@@ -62,7 +62,9 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
   - ESXi Memory Usage (%): label kept. It maps closest to Consumed.
   - VM Memory Consumed: label kept. "Claim" reads as reclamation, so it misleads.
   - Capacity Remaining (%) → 3-Day Forecast Capacity Remaining (%).
+  - ESXi CPU Usage (%) → CPU Throughput (% of nominal): asked again as the sixth name; answer "Accepted" (author, 2026-11-15). It pairs with CPU Throughput, the better name of Usage (MHz).
 - Applied: glossary, KNOWLEDGE-ENGINEERING.md, cpu-measurement-levels (Total Capacity is capacity at base clock, not throughput), unit test. Two rows in Words to avoid: throughput for a capacity figure; claimed for held memory. Left open: ESXi CPU Usage (%) (Q236 in the open file).
+- Applied (sixth name, 2026-11-15): the glossary entry ESXi CPU Usage (%) keeps CPU Throughput (% of nominal) as its Better name; the note that called it a proposal is gone.
 
 ### Q208 · Knowledge design · Product label and better model
 
