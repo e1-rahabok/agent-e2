@@ -1,7 +1,7 @@
 # Overhead
 
 ## Definition
-- In any IT systems, there is always an overhead. Overhead is any part that is not 100% technically mandatory for the running of the system. Many essential features such as observability and high availability will not stop a system from running if they are not in-place.
+- The word "overhead" takes on a different meaning in enterprise-grade system. Many components that are not 100% technically required just to run system become mandatory. These components cover availability, recoverability, security, observability, governance, and IT operations management. It also includes additional copy of the environments for development, test and QA.
 - Virtualization, being a layer in between Operating Systems and physical hardware, logically brings its own unique overhead. 
 - Do not label every additional load as overhead.
 - Overhead: mandatory (cannot be avoided) AND has negative impact (slower performance or more resource required).
