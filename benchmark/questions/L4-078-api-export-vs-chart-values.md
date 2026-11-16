@@ -10,12 +10,12 @@
 
 Which statements are correct?
 
-- A. sql-02's Consumed is about 32 GB.
-- B. The API returns Consumed in MB, the unit the chart shows.
+- A. Read in the API's unit, the Consumed of sql-02 is about 32 GB.
+- B. The API returns Consumed in MB, the unit the chart of sql-02 shows.
 - C. Rewrite the script: a Consumed of 33,554,432 shows that it reads the wrong counter.
-- D. The API reports network usage in kilobits per second.
-- E. The vSphere Client Advanced chart of sql-02 shows network usage in a different unit from the API.
-- F. The 4 ms is the value at the end of the 10:05 interval; an earlier latency spike in that interval is not in it.
+- D. The API reports the network usage of sql-02 in kilobits per second.
+- E. The Advanced chart of sql-02 shows network usage in a different unit from the API.
+- F. The 4 ms is the value at the end of the 10:05 interval; an earlier spike is not in it.
 - G. The 4 ms is the average latency of all the VM's virtual disks over the 5 minutes.
 
 ## Likely wrong answer

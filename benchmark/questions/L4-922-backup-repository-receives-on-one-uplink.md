@@ -23,9 +23,9 @@ Which statements are correct?
 - C. With a hash on destination IP only, every frame for bkrepo-01 maps to one member port.
 - D. A port channel hash that also uses the source IP can spread the 40 streams over the member ports.
 - E. IP hash on esx-31 spreads the backup over all four uplinks both ways, so the vmnic1 row is a counter error.
-- F. A move to Load Based Teaming would spread bkrepo-01's incoming streams over the four uplinks.
+- F. A move to Load Based Teaming can spread bkrepo-01's incoming streams over the four uplinks.
 - G. Since the physical switch picks the receive uplink, esxtop cannot show which uplink receives the backup.
-- H. The teaming policies of the 40 source hosts decide which of esx-31's member ports receives each stream.
+- H. Only the teaming policies of the 40 source hosts decide which of esx-31's member ports receives each stream.
 - I. With IP hash on both sides, each TCP stream to bkrepo-01 is split over the member ports packet by packet.
 - J. A move to Load Based Teaming also means removing the static EtherChannel, which pairs only with IP hash.
 

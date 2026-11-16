@@ -11,12 +11,12 @@
 
 Which statements are correct?
 
-- A. With SR-IOV, the four routers can no longer be moved with vMotion.
+- A. With SR-IOV, vMotion of the four routers is no longer possible.
 - B. With SR-IOV, the nightly snapshot-based backup of the routers keeps working as before.
 - C. SR-IOV, like DirectPath I/O, needs a physical NIC of its own for each router.
 - D. With DirectPath I/O, the NIC given to one router carries no other VM's traffic.
 - E. With SR-IOV, the switch's Network I/O Control shares still divide bandwidth for the routers.
-- F. With the DPU in UPTv2 mode, the routers can still be moved with vMotion.
+- F. With the DPU in UPTv2 mode, vMotion of the routers stays possible.
 - G. UPTv2 runs the routers without a memory reservation, since the DPU does the packet work.
 - H. UPTv2 needs the routers on virtual hardware 20 or later, with a VMXNET3 driver that supports it.
 - I. After the upgrade to VCF 9.1, Enhanced Data Path is already active on these hosts.

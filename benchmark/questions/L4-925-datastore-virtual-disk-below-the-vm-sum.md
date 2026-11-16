@@ -27,7 +27,7 @@ Which statements are correct?
 - F. The VM and datastore values come from different objects, so neither can serve the datastore's capacity review.
 - G. The space each VM takes on DS-ERP01, every file included, is its per-datastore Virtual Machine Used for DS-ERP01.
 - H. DS-ERP01's Virtual Disk Used also includes the swap files and logs of the three VMs on DS-ERP01.
-- I. Moving erp-db-01's Hard disk 2 to DS-ERP01, still thin, raises DS-ERP01's value by 900 GB and leaves erp-db-01's unchanged.
+- I. Moving Hard disk 2 of erp-db-01 to DS-ERP01, still thin, adds 900 GB to DS-ERP01 and nothing to the VM.
 
 ## Likely wrong answer
 "The VMs on the datastore add up to 3,124 GB, so the datastore figure is wrong" (B), and the plan built on it, "size DS-ERP01 for 3,124 GB" (D).

@@ -18,7 +18,7 @@ Which statements are correct?
 - F. The 6 TB stays allocated on the array because the guests of the moved VMs never sent TRIM.
 - G. The Unmap IO on DS-APP02 adds array load like the same number of writes, so it slows the VMs there.
 - H. The Unmap Size of DS-TPL01 read on one host is the datastore's total for all four hosts.
-- I. The provisioned-to-capacity ratio of each datastore also covers the space risk of pool P2.
+- I. The provisioned-to-capacity ratio of each datastore can also cover the space risk of pool P2.
 
 ## Likely wrong answer
 "DS-TPL01 shows 13.6 TB free, so space is not our problem" (B). Or the storage team's reading of the unmap counter: "1,800 unmap commands is IO load on the array" (G).

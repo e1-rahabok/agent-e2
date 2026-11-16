@@ -7,13 +7,13 @@
 
 Which statements are correct?
 
-- A. vCenter keeps a network latency counter for each VM's virtual NIC.
+- A. vCenter keeps a network latency counter for each VM's virtual NIC, beside its drop counters.
 - B. Hand the case to the network team, since vSphere holds no evidence that bears on this delay.
-- C. vCenter counts dropped packets per VM network adapter, in both directions.
+- C. vCenter counts dropped packets per VM network adapter, in the receive and in the transmit direction.
 - D. With no dropped packets on either VM in that window, the network and the hosts added no delay to these calls.
 - E. CPU contention (Ready, Co-stop) on either VM adds delay without a drop: a packet waits until the vCPU runs.
 - F. Virtual interrupt coalescing, on by default, batches packets and adds from a few hundred microseconds to a few milliseconds.
-- G. A VM in the path, such as an NSX Edge or a security agent VM, slows every flow through it when short of CPU, with no drop on the two VMs.
+- G. A VM in the path, such as an NSX Edge or a security agent VM, slows every flow through it when short of CPU.
 - H. Latency is measured where traffic ends: in the application, in the guest, or with the network team's flow and packet tools.
 - I. The distributed port group has its own performance chart in vCenter, with latency for each port.
 - J. Both VMs sit on one distributed port group, so their traffic never leaves the hosts and the physical network is ruled out.
