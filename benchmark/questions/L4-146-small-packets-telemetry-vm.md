@@ -4,6 +4,7 @@
 - lb-web-01 is a VM that runs a software load balancer in front of a web farm, with one VMXNET3 adapter. During a sales campaign, clients get timeouts.
 - The VM's owner points to the bandwidth: the VM uses a few percent of its 10 Gb/s link, so he looks for the cause in the web servers.
 - [The attached vCenter export](0415/lb-web-01-network-real-time.csv) is the Real-time network view of lb-web-01 for the 30 minutes in which the timeouts started.
+- The chart legend (not in the export) gives the units: the rate and Usage columns in KBps; the packet columns as the count in each 20-second sample.
 
 Which statements are correct?
 

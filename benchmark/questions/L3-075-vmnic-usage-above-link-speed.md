@@ -4,6 +4,7 @@
 - The network team's alert on vmnic Usage fired on the ESXi host esx-17, for vmnic2.
 - They say the port is oversubscribed and ask for a second port.
 - [The attached vCenter export](0413/esx-17-network-real-time.csv) is the host's Real-time network view, 15 minutes around the alert.
+- The chart legend (not in the export) gives the unit of the rate and Usage columns: KBps.
 - Output of `esxcli network nic list` on esx-17:
 
 ```text
