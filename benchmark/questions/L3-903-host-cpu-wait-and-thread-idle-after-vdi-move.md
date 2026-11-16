@@ -24,7 +24,7 @@ Which statements are correct?
 - E. PCPU 46 was busy for about half of the sample, since 9,990 ms of Idle is half of 20,000 ms.
 - F. With Hyper-Threading off, a fully idle core would also show at most 10,000 ms of Idle per sample.
 - G. For a wait that matters on a VM, read that VM's Swap Wait and Other Wait, not the host Wait total.
-- H. CPU Active (1 min. average) gives the same value as CPU Demand, so an alert on it adds nothing.
+- H. CPU Active (1 min. average) duplicates CPU Demand, so an alert on it adds no signal of its own.
 - I. Move the desktops to another host to bring host Wait down and give the server VMs back their speed.
 - J. Host Ready rising from 2,100 to 2,700 ms shows that the desktops brought CPU contention to the host.
 

@@ -25,16 +25,16 @@ Which statements are correct?
 
 ## Expected key points
 - Answer: C, D, F, I.
-- A false: Consumed counts the pages the VM has touched; a reservation alone does not back pages, so Consumed rises only as the guest touches memory.
-- B false: Total reservation is the host's reservable capacity (Reservation consumed plus Reservation available). It does not follow the VMs' reservations.
-- C true: a reservation changes no page, so Consumed and Granted keep their level.
-- D true: the host's reservation counters take the change: Reservation consumed rises, and Reservation available falls by the same amount because Total reservation stays the same.
-- E false: Overhead consumed is the memory of the VM's virtualization data structures; a reservation does not change it (flat in the lab test).
-- F true: the reservation is a VM setting, recorded in the VM's configuration and in the reconfigure task event (`config.memoryAllocation.reservation: old -> new`).
-- G false: host Consumed counts pages in use, and the reservation backs none of them; it does not rise by the untouched part either.
-- H false: the flat Consumed is the expected result of a reservation; the task completed, so the change applied. Repeating it changes nothing.
-- I true: Reservation consumed counts each running VM's reservation as set, not the pages the VM has touched, so it takes the whole 12 GB.
-- J false: a memory reservation is held as pages only once used; until the VM touches it, the untouched part can back other VMs' pages. Only admission control counts the full amount.
+- A is wrong: Consumed counts the pages the VM has touched; a reservation alone does not back pages, so Consumed rises only as the guest touches memory.
+- B is wrong: Total reservation is the host's reservable capacity (Reservation consumed plus Reservation available). It does not follow the VMs' reservations.
+- C is correct: a reservation changes no page, so Consumed and Granted keep their level.
+- D is correct: the host's reservation counters take the change: Reservation consumed rises, and Reservation available falls by the same amount because Total reservation stays the same.
+- E is wrong: Overhead consumed is the memory of the VM's virtualization data structures; a reservation does not change it (flat in the lab test).
+- F is correct: the reservation is a VM setting, recorded in the VM's configuration and in the reconfigure task event (`config.memoryAllocation.reservation: old -> new`).
+- G is wrong: host Consumed counts pages in use, and the reservation backs none of them; it does not rise by the untouched part either.
+- H is wrong: the flat Consumed is the expected result of a reservation; the task completed, so the change applied. Repeating it changes nothing.
+- I is correct: Reservation consumed counts each running VM's reservation as set, not the pages the VM has touched, so it takes the whole 12 GB.
+- J is wrong: a memory reservation is held as pages only once used; until the VM touches it, the untouched part can back other VMs' pages. Only admission control counts the full amount.
 
 ## Notes
 - Pair with 0442 (practical: the same fact on a VM chart and the task list). A fact gets two questions at most (design.md, section 3.9).

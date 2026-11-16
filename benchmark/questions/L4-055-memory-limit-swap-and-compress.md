@@ -31,19 +31,19 @@ Why do the reports slow down, and what do you change? Which statements are corre
 
 ## Expected key points
 - Answer: A, C, E, I.
-- A true: Consumed stays flat at 15.66-15.83 GB, just under a limit of about 16 GB (Memory|Effective limit, 16.19 GB, is the limit plus the VM overhead), while the host has over 200 GB free and no other VM is reclaimed: the cause is a limit on the VM or its pool, not the host.
-- B false: with free host memory and no other VM swapped or compressed, the host is not short.
-- C true: in and out run at the same time on different pages; in each run Swapped falls (about 6.12 to 4.86, 4.85 to 3.79 and 3.80 to 2.99 GB) while Compressed rises (about 0.24 to 0.80, 0.80 to 1.28 and 1.28 to 1.65 GB), and Consumed stays flat.
-- D false: Swapped falls because the guest asked for swapped pages (swap-in, the costly part); other pages go out at the same time to stay under the limit.
-- E true: decompression latency is much smaller than swap-in latency; both are waits for the vCPU that touched the page, and they show as the Contention of about 3.2-6.2% in the samples of 01:00 to 02:30.
-- F false: swap-out is not contention by itself; only swap-in, when the guest asks for the page, makes the vCPU wait.
-- G false: the limit moves with the VM; the host was never short.
-- H false: the limit, not the configured size, caps Consumed; more configured memory changes nothing while the limit stays.
-- I true: the limit is the cause; removing it or raising it to the guest's need is the fix.
-- J false: Consumed is flat because the limit caps it; the guest keeps touching pages that ESXi swaps and compresses.
-- K false: outside the runs Contention stays at 0.05% or less, mostly 0; swapped pages the guest does not touch cost no wait. This is the over-correction of A: a limit read as a wait at every moment.
-- L false: the balloon goes first under a limit only when the driver runs; `sched.mem.maxmemctl = 0` switches it off, so ESXi compresses and swaps instead.
-- M false: the configured limit caps Consumed; Memory|Effective limit adds the VM overhead, which the limit does not cap, so the gap is not room to grow.
+- A is correct: Consumed stays flat at 15.66-15.83 GB, just under a limit of about 16 GB (Memory|Effective limit, 16.19 GB, is the limit plus the VM overhead), while the host has over 200 GB free and no other VM is reclaimed: the cause is a limit on the VM or its pool, not the host.
+- B is wrong: with free host memory and no other VM swapped or compressed, the host is not short.
+- C is correct: in and out run at the same time on different pages; in each run Swapped falls (about 6.12 to 4.86, 4.85 to 3.79 and 3.80 to 2.99 GB) while Compressed rises (about 0.24 to 0.80, 0.80 to 1.28 and 1.28 to 1.65 GB), and Consumed stays flat.
+- D is wrong: Swapped falls because the guest asked for swapped pages (swap-in, the costly part); other pages go out at the same time to stay under the limit.
+- E is correct: decompression latency is much smaller than swap-in latency; both are waits for the vCPU that touched the page, and they show as the Contention of about 3.2-6.2% in the samples of 01:00 to 02:30.
+- F is wrong: swap-out is not contention by itself; only swap-in, when the guest asks for the page, makes the vCPU wait.
+- G is wrong: the limit moves with the VM; the host was never short.
+- H is wrong: the limit, not the configured size, caps Consumed; more configured memory changes nothing while the limit stays.
+- I is correct: the limit is the cause; removing it or raising it to the guest's need is the fix.
+- J is wrong: Consumed is flat because the limit caps it; the guest keeps touching pages that ESXi swaps and compresses.
+- K is wrong: outside the runs Contention stays at 0.05% or less, mostly 0; swapped pages the guest does not touch cost no wait. This is the over-correction of A: a limit read as a wait at every moment.
+- L is wrong: the balloon goes first under a limit only when the driver runs; `sched.mem.maxmemctl = 0` switches it off, so ESXi compresses and swaps instead.
+- M is wrong: the configured limit caps Consumed; Memory|Effective limit adds the VM overhead, which the limit does not cap, so the gap is not room to grow.
 
 ## Notes
 - Practical half of 0291 (project/question-pairing-2026-11-14.md, pair A14). CSV from a seeded script (seed 14020261114, 3 days, 30-minute samples); the old 64 GB scenario, a near-copy of the knowledge example in swap-and-compression, is in project/archive/benchmark-questions/attachments.

@@ -2,7 +2,7 @@
 
 ## Prompt
 - An application owner reports that calls from web-03 to db-05 took twice as long between 14:00 and 14:30 yesterday.
-- Both VMs are on the same cluster, different hosts, same distributed port group. Neither VM shows dropped packets in vCenter for that window.
+- Both VMs are on the same cluster, different hosts, same distributed port group. Neither VM shows dropped packets in VCF Operations for that window.
 - The owner asks you to open the VM network latency chart in vCenter for both VMs and the hosts in between.
 
 Which statements are correct?
@@ -12,8 +12,8 @@ Which statements are correct?
 - C. vCenter counts dropped packets per VM network adapter, in both directions.
 - D. With no dropped packets on either VM in that window, the network and the hosts added no delay to these calls.
 - E. CPU contention (Ready, Co-stop) on either VM adds delay without a drop: a packet waits until the vCPU runs.
-- F. Virtual interrupt coalescing on the adapter batches packets and can add a few hundred microseconds to a few milliseconds.
-- G. A VM in the path, such as an NSX Edge or a security agent VM, can slow every flow through it with no drop on the two VMs.
+- F. Virtual interrupt coalescing, on by default, batches packets and adds from a few hundred microseconds to a few milliseconds.
+- G. A VM in the path, such as an NSX Edge or a security agent VM, slows every flow through it when short of CPU, with no drop on the two VMs.
 - H. Latency is measured where traffic ends: in the application, in the guest, or with the network team's flow and packet tools.
 - I. The distributed port group has its own performance chart in vCenter, with latency for each port.
 - J. Both VMs sit on one distributed port group, so their traffic never leaves the hosts and the physical network is ruled out.
@@ -38,11 +38,10 @@ Which statements are correct?
 - K is true: CPU contention of the two VMs and of any VM in the path is the evidence to check for that window; VCF Operations keeps yesterday's Ready and Co-stop, while vCenter at the default statistics level keeps no Co-stop history.
 
 ## Notes
-- Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 - TCP retransmits seen inside the guest belong to a Guest OS question of the set; this one tests what vSphere measures and what it can add.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the negation pair A/B resolved (old B, "no latency, jitter or retransmit counter", dropped; the retransmit fact stays in 0268 only); B is now the over-correction and wrong action. Key changed from B, C, E, F, G, H, K to C, E, F, G, H, K.
 - Review 2026-11-15: C restated as a positive fact about the counter; K names VCF Operations, since vCenter keeps no Co-stop history at the default statistics level. Key unchanged.
+- Audit 2026-11-15: the stem reads yesterday's drops in VCF Operations (at the default level vCenter keeps no VM network drop history, the same rule as K); the hedges "can add" (F) and "can slow" (G), both in correct options, made plain.
 
 ## Metadata
 ```yaml
@@ -67,7 +66,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/metrics/vm-network-metrics
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
+source_path: "Synthetic, 2026-11-12"
 misconception_type: [tool-confusion]
 status: draft
 ```

@@ -26,16 +26,16 @@ Which statements are correct?
 
 ## Expected key points
 - Answer: B, C, D, E, F, G.
-- A false: 19,000 MB was available in Linux; the log names a memory cgroup, so the OOM killer ran inside the service's cgroup.
-- B true: the kernel prints "Memory cgroup out of memory" for a cgroup OOM and "Out of memory" for a system-wide one (mm/oom_kill.c).
-- C true: memory.max is the hard limit of a cgroup; if usage reaches it and cannot be reduced, the OOM killer is invoked in the cgroup (Linux kernel, Control Group v2). systemd writes MemoryMax= to memory.max.
-- D true: the VM and Linux have room already; the limit is on the unit.
-- E true: fix the limit or the demand.
-- F true: memory.events counts max (usage about to pass the limit), oom and oom_kill.
-- G true: a cgroup limit sits inside the Guest OS; neither the VM layer nor the system-wide free memory reads it.
-- H false: that describes `MemoryHigh` (memory.high), which throttles and never invokes the OOM killer; memory.max is the hard limit.
-- I false: total-vm is the process's virtual address space; anon-rss, 4,155,312 kB (about 3.96 GiB), is the resident memory at the 4 GiB limit (systemd reads 4G as 4 GiB).
-- J false: VM Memory Latency reads ESXi page-fault waits, not a limit inside the guest; the service reached its cgroup limit.
+- A is wrong: 19,000 MB was available in Linux; the log names a memory cgroup, so the OOM killer ran inside the service's cgroup.
+- B is correct: the kernel prints "Memory cgroup out of memory" for a cgroup OOM and "Out of memory" for a system-wide one (mm/oom_kill.c).
+- C is correct: memory.max is the hard limit of a cgroup; if usage reaches it and cannot be reduced, the OOM killer is invoked in the cgroup (Linux kernel, Control Group v2). systemd writes MemoryMax= to memory.max.
+- D is correct: the VM and Linux have room already; the limit is on the unit.
+- E is correct: fix the limit or the demand.
+- F is correct: memory.events counts max (usage about to pass the limit), oom and oom_kill.
+- G is correct: a cgroup limit sits inside the Guest OS; neither the VM layer nor the system-wide free memory reads it.
+- H is wrong: that describes `MemoryHigh` (memory.high), which throttles and never invokes the OOM killer; memory.max is the hard limit.
+- I is wrong: total-vm is the process's virtual address space; anon-rss, 4,155,312 kB (about 3.96 GiB), is the resident memory at the 4 GiB limit (systemd reads 4G as 4 GiB).
+- J is wrong: VM Memory Latency reads ESXi page-fault waits, not a limit inside the guest; the service reached its cgroup limit.
 
 ## Notes
 - Outside the knowledge base: keyed from the Linux kernel documentation and the systemd documentation.

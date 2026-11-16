@@ -1,29 +1,33 @@
 # Memory reservation behaviour
 
 ## Prompt
-- Reservation, shares and limit are the 3 resource management controls.
+- Host esx-05 runs ESXi, vSAN and NSX and has 512 GB of memory.
+- Its powered-on VMs reserve 420 GB of memory in total.
 
 Choose the correct statements:
 
-- A. Memory reservation differs from CPU reservation because it is sticky. Once used, the consumed page can stay for days. It does not immediately become available to other VMs.
-- B. Use reservation at VM level sparingly: it directly limits your ability to overcommit. It also affects DRS.
-- C. Only VMs have reservation. A resource pool has no setting of its own and aggregates its member VMs.
+- A. A memory page touched within a reservation stays held for the VM through days of idling.
+- B. Use VM-level reservations sparingly: they lower how far the host can be overcommitted and constrain DRS.
+- C. Memory | VMkernel consumed on esx-05 shows all the memory its hypervisor uses, vSAN and NSX included.
 - D. The kernel reservation is set aside as physical pages at boot: VMs cannot consume that memory, even the part the kernel has not touched.
 - E. With vSAN, NSX and ESXi, the kernel memory reservation is a cap: kernel memory use stays under it, even when ESXi is highly utilized.
+- F. Admission control withholds the whole kernel memory reservation from VM reservations, whether the kernel uses it or not.
 
 ## Likely wrong answer
-D (reservation assumed to block memory before use) or C.
+D (the kernel reservation assumed to block memory before use) or C (VMkernel consumed read as all hypervisor memory).
 
 ## Expected key points
-- Answer: A, B.
-- A: memory is a form of storage; CPU is running instructions.
-- B: correct.
-- C is wrong: plan both reservation and share settings at resource pool level and VM level as one design.
-- D is wrong: reserved memory must be used first before it is held. The part the kernel has not consumed is free memory that VMs can consume; only admission control withholds the full kernel reservation, from VM reservations.
+- Answer: A, B, F.
+- A is correct: memory is a form of storage; once the VM asks for memory and is served, the page stays held for it, even if the VM idles for days. CPU reservation, by contrast, holds nothing back.
+- B is correct: VM reservations are guarantees that admission control counts in full, so they lower how far the host can be overcommitted and can leave DRS no host to move a VM to.
+- C is wrong: VMkernel consumed is the VMkernel's own use for core functions; it leaves out the management agents and the NSX agents (host/vim) and the vSAN services (host/opt), so it is well below all hypervisor memory.
+- D is wrong: in the page sense the kernel reservation is granted on demand, not set aside at boot; the part the kernel has not consumed is free memory that VMs can consume.
 - E is wrong: utilization can exceed reservation. A reservation is a minimum, not a cap, and the kernel reservation covers host/system only; the NSX agents and vSAN services run in host/vim and host/opt, outside it.
+- F is correct: in the admission sense the full kernel reservation counts, used or not, so it is not available for VM reservations (vCenter `mem.unreserved` leaves it out).
 
 ## Notes
-- D and E reworded 2026-11-15 (author questions Q201 and Q202, settled from the knowledge base and vendor documents). Old D ("the amount is not available to VMs, whether or not the kernel actually uses it") was true in the admission sense and false in the page sense; it now states the page sense, which the key marks false. The admission sense (the kernel reservation is not available for VM reservations) is true and not tested here. Old E (reservation "much higher than kernel actual utilization") could read true for memory: on the hosts measured, the kernel memory reservation sat above kernel use. It now states the reservation as a cap, which the key marks false. Key unchanged: A, B. Knowledge: [`vsphere/architecture/overhead`](../../knowledge/vsphere/architecture/overhead.md), section Memory metrics.
+- The kernel reservation has two senses (overhead, section Memory metrics): admission (F, true) and pages (D, false). Only the mechanism separates them.
+- Changed in the 2026-11-15 audit: the stem's definition line replaced by host facts that decide no option; A shortened (it was the longest option and correct); B one fact; C replaced in place (a throwaway: resource pools have no reservation) by the VMkernel-consumed misconception (false, overhead Misconceptions); F added, the admission sense of the kernel reservation (true). Answer A, B -> A, B, F.
 
 ## Metadata
 ```yaml
@@ -46,8 +50,8 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q4 Memory Reservation"
 answer_type: deterministic
 level: 400                      # author 2026-11-05
-answer: [A,B]
-misconception: [C,D]
+answer: [A, B, F]
+misconception: [C, D]
 misconception_type: [provider-vs-consumer]
 status: draft
 ```

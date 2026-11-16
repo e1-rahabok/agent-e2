@@ -20,14 +20,14 @@ B: "A stall on the Windows page file counts as VM Memory Latency." Or C: the gue
 
 ## Expected key points
 - Answer: A, D, G.
-- A true: the page file sits on a partition of a virtual disk; ESXi sees the guest's reads and writes, not what they are for. The Guest OS page file is an ESXi blind spot.
-- B false: VM Memory Latency is the share of time a vCPU waits for a page fault that ESXi resolves (swap-in, decompression). A read from the guest's page file is guest disk IO, not such a fault.
-- C false: VM Swapped is memory ESXi swapped to the VM's swap file; the guest page file is invisible to ESXi.
-- D true: with free host memory and no limit, ESXi reclaims nothing and the VM does not wait on ESXi, while Windows pages inside its own memory.
-- E false: the Guest OS cannot see host memory; Windows runs its configured memory as if on a physical server.
-- F false: over-correction. The VM counters show what ESXi does (reclamation, and the VM's waits on ESXi), so they rule the host in or out.
-- G true: high page-in and page-out with a high disk queue is the Windows sign of a memory performance problem; page-in alone also comes from binaries, mapped files and prefetch.
-- H false: the wrong action. A reservation guarantees host memory behind the VM; it does not change the memory Windows sees, and the host already had memory free. The fix is more configured memory or less memory taken inside the guest.
+- A is correct: the page file sits on a partition of a virtual disk; ESXi sees the guest's reads and writes, not what they are for. The Guest OS page file is an ESXi blind spot.
+- B is wrong: VM Memory Latency is the share of time a vCPU waits for a page fault that ESXi resolves (swap-in, decompression). A read from the guest's page file is guest disk IO, not such a fault.
+- C is wrong: VM Swapped is memory ESXi swapped to the VM's swap file; the guest page file is invisible to ESXi.
+- D is correct: with free host memory and no limit, ESXi reclaims nothing and the VM does not wait on ESXi, while Windows pages inside its own memory.
+- E is wrong: the Guest OS cannot see host memory; Windows runs its configured memory as if on a physical server.
+- F is wrong: over-correction. The VM counters show what ESXi does (reclamation, and the VM's waits on ESXi), so they rule the host in or out.
+- G is correct: high page-in and page-out with a high disk queue is the Windows sign of a memory performance problem; page-in alone also comes from binaries, mapped files and prefetch.
+- H is wrong: the wrong action. A reservation guarantees host memory behind the VM; it does not change the memory Windows sees, and the host already had memory free. The fix is more configured memory or less memory taken inside the guest.
 
 ## Notes
 - Paired with 0265 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item B13.

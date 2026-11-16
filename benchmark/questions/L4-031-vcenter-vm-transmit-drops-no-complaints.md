@@ -9,7 +9,7 @@ Which statements are correct?
 
 - A. TCP in the guest resends the lost packets, so no complaint does not prove there is no impact.
 - B. The drops repeat every 15 minutes: look with the network team for something with that rhythm.
-- C. At full-size frames, the drops of one 15-minute burst are well under 1 MB of data to resend.
+- C. At full-size frames, the drops of one of the 15-minute bursts are well under 1 MB of data to resend.
 - D. Receive packets dropped is 0, so the VM's traffic is lost in neither direction on the path.
 - E. The drops are well under 1% of the packets sent, so the owner is right that they can be ignored.
 

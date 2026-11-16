@@ -34,10 +34,10 @@ Which statements are correct?
 
 - A. Windows lays out its memory in two NUMA nodes, one per socket it shows.
 - B. esxtop shows the VM with one home node and all of its memory local to that node.
-- C. Coreinfo shows that the guest sees a single NUMA node.
-- D. esxtop shows part of the VM's memory on a remote node.
+- C. Coreinfo in the guest shows that Windows sees a single NUMA node for this VM.
+- D. esxtop shows part of this VM's memory sitting on a remote NUMA node of the host.
 - E. Change the socket setting and reboot, so that the memory moves back onto one host CPU.
-- F. Since the memory is already local, the two sockets Windows shows are of no consequence for SQL Server.
+- F. With the memory already local, the two sockets Windows shows mean nothing for SQL Server.
 - G. The home node esxtop shows can change later with no change to the VM's settings.
 
 ## Likely wrong answer
@@ -58,6 +58,7 @@ A: the socket count read as the NUMA layout, and E, the change that follows from
 - Practical half of 0267 (pair: design.md, section 3.9).
 - No option rests on `numa.*` advanced options or on when ESXi rebuilds the vNUMA layout (open question Q216), nor on NMIG (not in the vSphere 9.1 documentation's esxtop memory panel).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C35). Counts only after author approval.
+- Changed in the 2026-11-15 audit: C, D and F reworded to similar lengths; truth unchanged.
 - Converted to exports 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md): Task Manager has no export, so its Sockets label stays in the administrator's words; Coreinfo as literal text, esxtop memory panel as generated text. No option changed.
 
 ## Metadata

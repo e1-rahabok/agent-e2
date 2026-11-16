@@ -27,17 +27,17 @@ Which statements are correct?
 
 ## Expected key points
 - Answer: C, D, E, F, G, H.
-- A false: a smaller buffer pool keeps each page for less time, so Page life expectancy falls with every step and a lower level alone is expected; only sudden dips the baseline did not have show churn. The step is judged on Page reads/sec, Lazy writes/sec, Free list stalls/sec, Memory Grants Pending and the query times.
-- B false: SQL Server grew into what `max server memory` allows, and the default allows nearly all. The setting decides the value, not the need.
-- C true: SQL Server takes memory for its buffer pool up to `max server memory` and keeps it; In Use and the working set show what the buffer pool grew into.
-- D true: `max server memory` takes effect at RECONFIGURE with no restart of SQL Server, so a step and its undo are both immediate.
-- E true: the default (2,147,483,647 MB) is no limit; Windows Available is 3.1 GB.
-- F true: set `max server memory` first, leaving room for Windows, the other processes and allocations outside the buffer pool.
-- G true: each step is held over a full business cycle and compared with a baseline of the same period (Page reads/sec, Lazy writes/sec, Free list stalls/sec, Memory Grants Pending, query times); a failing step is undone at once, and the VM is resized after the last step that held.
-- H true: VM Active, a sample of recently touched pages, does not see how SQL Server uses its cache; a cut to about the Active value removes the cache SQL Server works from.
-- I false: `max server memory` limits only the buffer pool; thread stacks, backup buffers, extended stored procedure DLLs and linked server providers sit outside it.
-- J false: Consumed holds every page the VM has touched, even when idle; it is not demand.
-- K false: with Lock pages in memory granted, Microsoft strongly recommends a set `max server memory`: without it, SQL Server can starve the rest of the system.
+- A is wrong: a smaller buffer pool keeps each page for less time, so Page life expectancy falls with every step and a lower level alone is expected; only sudden dips the baseline did not have show churn. The step is judged on Page reads/sec, Lazy writes/sec, Free list stalls/sec, Memory Grants Pending and the query times.
+- B is wrong: SQL Server grew into what `max server memory` allows, and the default allows nearly all. The setting decides the value, not the need.
+- C is correct: SQL Server takes memory for its buffer pool up to `max server memory` and keeps it; In Use and the working set show what the buffer pool grew into.
+- D is correct: `max server memory` takes effect at RECONFIGURE with no restart of SQL Server, so a step and its undo are both immediate.
+- E is correct: the default (2,147,483,647 MB) is no limit; Windows Available is 3.1 GB.
+- F is correct: set `max server memory` first, leaving room for Windows, the other processes and allocations outside the buffer pool.
+- G is correct: each step is held over a full business cycle and compared with a baseline of the same period (Page reads/sec, Lazy writes/sec, Free list stalls/sec, Memory Grants Pending, query times); a failing step is undone at once, and the VM is resized after the last step that held.
+- H is correct: VM Active, a sample of recently touched pages, does not see how SQL Server uses its cache; a cut to about the Active value removes the cache SQL Server works from.
+- I is wrong: `max server memory` limits only the buffer pool; thread stacks, backup buffers, extended stored procedure DLLs and linked server providers sit outside it.
+- J is wrong: Consumed holds every page the VM has touched, even when idle; it is not demand.
+- K is wrong: with Lock pages in memory granted, Microsoft strongly recommends a set `max server memory`: without it, SQL Server can starve the rest of the system.
 
 ## Notes
 - Microsoft, Server memory configuration options: subtract the memory the OS, allocations outside `max server memory`, and other applications need from total physical memory; the default `max server memory` is 2,147,483,647 MB; the setting takes effect at RECONFIGURE. https://learn.microsoft.com/sql/database-engine/configure-windows/server-memory-server-configuration-options

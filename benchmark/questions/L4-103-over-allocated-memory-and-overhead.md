@@ -31,20 +31,20 @@ Which statements are correct?
 
 ## Expected key points
 - Answer: B, D, E, F, H, I, K, M.
-- A is false: Performance Best Practices for vSphere 9.1 calls under-allocation the more damaging error; the impact of over-allocating is far less, though substantial over-allocation is still to avoid.
-- B is true: since vSphere 7.0 DPM computes memory demand from granted memory, and memory demand is low only if granted memory is low.
-- C is false: no host pressure, no balloon; a VM inside its configured memory on a host with free memory is not ballooned.
-- D is true: the Guest OS needs swap space of at least configured memory minus the memory reservation for ballooning, because the balloon can push the guest to page; with no reservation that is 256 GB per VM.
-- E is true: the allocation target that sets the balloon follows shares and the working set and taxes idle memory (Mem.IdleTax), so idle memory is charged more than active memory.
-- F is true: in a cluster with HA active and at least one VM powered on, DPM keeps at least two hosts powered on, even with HA admission control deactivated.
-- G is false: ESX can reclaim over-allocated memory but not the memory overhead associated with it.
-- H is true: since vSphere 7.0 DRS uses granted memory for the memory demand in vMotion recommendations; over-provisioned memory constrains migration options more than before.
-- I is true: the vendor says a swap file larger than 100 GB can raise the power-on time significantly (reservations shrink it, but they lock host memory).
-- J is false: DRS and DPM read granted memory since vSphere 7.0, not Active.
-- K is true: under-allocation is the more damaging error; a VM that cannot hold its working set thrashes, with a dramatic effect on performance. 64 GB, above the 40 GB working set, is safe for the VM.
-- L is false: the colleague's claim; the overhead, the granted-memory effect on DRS and DPM, and the swap file space remain.
-- M is true: per-VM overhead grows with configured memory; about 4.5% of 256 GB (11.5 GB) against 5.5% of 64 GB (3.5 GB), about 8 GB per VM and about 190 GB for 24 VMs that support no application.
-- N is false: the swap file is created at power-on with its full size, whether or not the host ever swaps.
+- A is wrong: Performance Best Practices for vSphere 9.1 calls under-allocation the more damaging error; the impact of over-allocating is far less, though substantial over-allocation is still to avoid.
+- B is correct: since vSphere 7.0 DPM computes memory demand from granted memory, and memory demand is low only if granted memory is low.
+- C is wrong: no host pressure, no balloon; a VM inside its configured memory on a host with free memory is not ballooned.
+- D is correct: the Guest OS needs swap space of at least configured memory minus the memory reservation for ballooning, because the balloon can push the guest to page; with no reservation that is 256 GB per VM.
+- E is correct: the allocation target that sets the balloon follows shares and the working set and taxes idle memory (Mem.IdleTax), so idle memory is charged more than active memory.
+- F is correct: in a cluster with HA active and at least one VM powered on, DPM keeps at least two hosts powered on, even with HA admission control deactivated.
+- G is wrong: ESX can reclaim over-allocated memory but not the memory overhead associated with it.
+- H is correct: since vSphere 7.0 DRS uses granted memory for the memory demand in vMotion recommendations; over-provisioned memory constrains migration options more than before.
+- I is correct: the vendor says a swap file larger than 100 GB can raise the power-on time significantly (reservations shrink it, but they lock host memory).
+- J is wrong: DRS and DPM read granted memory since vSphere 7.0, not Active.
+- K is correct: under-allocation is the more damaging error; a VM that cannot hold its working set thrashes, with a dramatic effect on performance. 64 GB, above the 40 GB working set, is safe for the VM.
+- L is wrong: the colleague's claim; the overhead, the granted-memory effect on DRS and DPM, and the swap file space remain.
+- M is correct: per-VM overhead grows with configured memory; about 4.5% of 256 GB (11.5 GB) against 5.5% of 64 GB (3.5 GB), about 8 GB per VM and about 190 GB for 24 VMs that support no application.
+- N is wrong: the swap file is created at power-on with its full size, whether or not the host ever swaps.
 
 ## Notes
 - Option I (power-on time of a swap file above 100 GB) rests on the VMware vSphere 9.1 PDF (build of 2026-11-02), Resource Management, Using Swap Files with vSphere (p. 1875): "When you create a large swap file (for example, larger than 100GB), the amount of time it takes for the virtual machine to power on can increase significantly." No knowledge file states it.

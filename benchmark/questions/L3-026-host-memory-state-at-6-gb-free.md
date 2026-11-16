@@ -19,12 +19,12 @@ B: reclamation by compression and swap read from "below minFree". Or E: "once fr
 
 ## Expected key points
 - Answer: A, C.
-- A is true: the states are fractions of minFree: Clear below 300% (about 63 GB here), Soft at 64% (about 13.5 GB), Hard at 32% (about 6.8 GB), Low at 16% (about 3.4 GB). 11 GB is Soft whether free memory is falling (below 13.5 GB) or rising out of Hard (the Hard exit is 48%, about 10.1 GB). In Soft, ESXi inflates balloons.
-- B is false: compression and swapping start in the Hard state, at 32% of minFree, not when free memory passes below minFree.
-- C is true: the Hard state starts at 32% of minFree, about 6.8 GB here.
-- D is false: the guest gives the balloon Free pages first, then Cache, Modified and In Use; pages taken from In Use make the guest page out. This is the over-correction of the Soft-state misconception (ballooning is harmless).
-- E is false: the states have hysteresis. The host leaves Soft upward only above 100% of minFree, about 21.1 GB; at 15 GB it stays in Soft.
-- F is false: ballooning in the Soft state is reclamation, not a wait; the VMs wait only when they touch swapped or compressed pages. Check VM memory contention, then plan capacity.
+- A is correct: the states are fractions of minFree: Clear below 300% (about 63 GB here), Soft at 64% (about 13.5 GB), Hard at 32% (about 6.8 GB), Low at 16% (about 3.4 GB). 11 GB is Soft whether free memory is falling (below 13.5 GB) or rising out of Hard (the Hard exit is 48%, about 10.1 GB). In Soft, ESXi inflates balloons.
+- B is wrong: compression and swapping start in the Hard state, at 32% of minFree, not when free memory passes below minFree.
+- C is correct: the Hard state starts at 32% of minFree, about 6.8 GB here.
+- D is wrong: the guest gives the balloon Free pages first, then Cache, Modified and In Use; pages taken from In Use make the guest page out. This is the over-correction of the Soft-state misconception (ballooning is harmless).
+- E is wrong: the states have hysteresis. The host leaves Soft upward only above 100% of minFree, about 21.1 GB; at 15 GB it stays in Soft.
+- F is wrong: ballooning in the Soft state is reclamation, not a wait; the VMs wait only when they touch swapped or compressed pages. Check VM memory contention, then plan capacity.
 
 ## Notes
 - States as fractions of minFree (clear 300%, soft 64%, hard 32%, low 16%, with hysteresis on the way back up: Soft left above 100%, Hard above 48%): the knowledge base, ESXi memory states; Frank Denneman, frankdenneman.nl/2011/07/26/mem-minfreepct-sliding-scale-function (minFree: a sliding scale, about 899 MB for the first 28 GB plus 1% of the rest, so about 21.1 GB on a 2 TB host: 0.9 + 20.2). Author answer Q188 (ESXi 9.1 memory reclamation manual, project/sources).

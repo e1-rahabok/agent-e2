@@ -7,12 +7,12 @@
 
 Which statements are correct?
 
-- A. The Real-time chart offered Co-stop per vCPU because it reads the host's 20-second samples, whatever the statistics level.
+- A. The Real-time chart offered Co-stop per vCPU because it reads the host's samples, whatever the level.
 - B. Raising the 1 Week interval to level 3 now brings back the Co-stop history of the incident.
 - C. The past-week chart offers no CPU Demand for sql-07 either: Demand is not kept at level 1.
 - D. Raising every interval to level 4 and leaving it there is the safe fix: it costs only database space.
 - E. The newest hour of the past-week chart can still be empty: its points arrive up to an hour late.
-- F. With Ready summed over the vCPUs, the VM's Ready history is of no use for this incident.
+- F. With Ready summed over the vCPUs, the VM's Ready history is of no use at all for this incident.
 
 ## Likely wrong answer
 B: expecting a higher level to fill in the past. Or D: level 4 everywhere, permanently.

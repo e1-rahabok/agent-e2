@@ -32,21 +32,21 @@ Which statements are correct?
 
 ## Expected key points
 - Answer: A, C, E, G, I, J, K, M, N.
-- A is true: when the swap datastore a host specifies cannot hold the swap file, ESXi stores it in the VM's folder; the power-on, an HA restart included, fails only when that folder cannot hold it either.
-- B is false: the misconception; the limit is per host (average 1.75 TB per host against 1.92 TB, about 9% to spare in total), and with one host out the total no longer fits.
-- C is true: with one common location both ends of a vMotion use the same location, so the file is not copied.
-- D is false: vSAN and vVols datastores cannot be specified for host-local swap.
-- E is true: swap to host cache is a separate cache shared by the host's VMs; ESX still creates the regular swap files, in the location the cluster or VM sets, so the SAN space stays used.
-- F is false: the misconception; the file takes its full size from power-on, and vMotion copies it whenever the locations differ. "Empty" only removes the second effect (swapped pages), not the copy.
-- G is true: with all eight hosts configured, 7 x 1.92 TB = 13.44 TB, below 14 TB, so the swap files of all VMs do not fit on the local datastores after a host failure or during maintenance.
-- H is false: the misconception; NVMe latency helps only host-level swapping, which does not happen here; vMotion gets slower (file copy, swapped pages over the network).
-- I is true: vSphere 9.1 documentation: if the swap file location on the destination differs from the source, the swap file is copied to the new location, which can slow vMotion. The copy happens because the locations differ, whether or not pages were swapped.
-- J is true: with host-local swap, size each local swap datastore for the largest set of VMs the host can run, including DRS moves, maintenance mode and HA restarts.
-- K is true: a host with no swap datastore specified stores the swap file with the VM configuration file, so a half-configured cluster keeps some swap files on the SAN; a vMotion between hosts 1-6 and hosts 7 or 8 copies the file too.
-- L is false: the swap file is configured memory minus the memory reservation, not configured memory.
-- M is true: changing the setting does not move a running VM's swap file; it moves at the next power-on or with a vMotion copy, so the SAN frees space gradually.
-- N is true: the documentation: host-local swap can degrade vMotion because pages swapped to the local swap file on the source host must be transferred to the destination host.
-- O is false: swap files should not be on thin-provisioned storage (performance and the risk of running out of space); the empty-file argument fails because the file takes its full size.
+- A is correct: when the swap datastore a host specifies cannot hold the swap file, ESXi stores it in the VM's folder; the power-on, an HA restart included, fails only when that folder cannot hold it either.
+- B is wrong: the misconception; the limit is per host (average 1.75 TB per host against 1.92 TB, about 9% to spare in total), and with one host out the total no longer fits.
+- C is correct: with one common location both ends of a vMotion use the same location, so the file is not copied.
+- D is wrong: vSAN and vVols datastores cannot be specified for host-local swap.
+- E is correct: swap to host cache is a separate cache shared by the host's VMs; ESX still creates the regular swap files, in the location the cluster or VM sets, so the SAN space stays used.
+- F is wrong: the misconception; the file takes its full size from power-on, and vMotion copies it whenever the locations differ. "Empty" only removes the second effect (swapped pages), not the copy.
+- G is correct: with all eight hosts configured, 7 x 1.92 TB = 13.44 TB, below 14 TB, so the swap files of all VMs do not fit on the local datastores after a host failure or during maintenance.
+- H is wrong: the misconception; NVMe latency helps only host-level swapping, which does not happen here; vMotion gets slower (file copy, swapped pages over the network).
+- I is correct: vSphere 9.1 documentation: if the swap file location on the destination differs from the source, the swap file is copied to the new location, which can slow vMotion. The copy happens because the locations differ, whether or not pages were swapped.
+- J is correct: with host-local swap, size each local swap datastore for the largest set of VMs the host can run, including DRS moves, maintenance mode and HA restarts.
+- K is correct: a host with no swap datastore specified stores the swap file with the VM configuration file, so a half-configured cluster keeps some swap files on the SAN; a vMotion between hosts 1-6 and hosts 7 or 8 copies the file too.
+- L is wrong: the swap file is configured memory minus the memory reservation, not configured memory.
+- M is correct: changing the setting does not move a running VM's swap file; it moves at the next power-on or with a vMotion copy, so the SAN frees space gradually.
+- N is correct: the documentation: host-local swap can degrade vMotion because pages swapped to the local swap file on the source host must be transferred to the destination host.
+- O is wrong: swap files should not be on thin-provisioned storage (performance and the risk of running out of space); the empty-file argument fails because the file takes its full size.
 
 ## Notes
 - The stem names the host swap datastores in the plan, because the vSphere 9.1 documentation (Configure Virtual Machine Swapfile Properties for the Host, PDF p. 1875) says the host swap file location cannot be edited while the cluster setting is Virtual machine directory.

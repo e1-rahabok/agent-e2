@@ -23,17 +23,17 @@ Which statements are correct?
 
 ## Expected key points
 - Answer: B, C, D, E.
-- A is false: there is no mapping; the two layers count different things, so no timing fix makes them agree.
-- B is true: the Guest OS cannot see host memory and runs its memory as if on a physical server; ESXi cannot see the guest's lists.
-- C is true: how the guest classifies pages (Standby is Windows' cache list) and its page file are ESXi blind spots; ESXi sees only reads and writes (Active: recently touched; Consumed: touched and still backed).
-- D is true: ESXi maps a VM page at the first touch (a fault in the second-level page tables); later freeing and reuse are ordinary memory writes that never reach ESXi.
-- E is true: the ESXi page stays mapped after the guest frees it, so Consumed does not drop; Consumed is not the guest's utilization.
-- F is false: Consumed is ESXi memory mapped to the VM (Granted minus sharing savings); VMware Tools plays no part in it.
-- G is false: Windows In Use = VM Active is the same mistake on another counter; Active is a sampled estimate for the kernel.
-- H is false: the guest page file is invisible to ESXi; Swapped is memory ESXi itself swapped out.
-- I is false: Consumed is the ESXi view of the VM; it feeds host capacity and the VM's memory footprint (for example for a migration). This is the over-correction of A.
-- J is false: Consumed stays high once the guest has touched its pages, cache included; that is not demand. Whether Windows needs more memory is read from Windows counters.
-- K is false: freed pages are still mapped, so a new process reuses the existing mapping with no EPT violation and no ESXi work; Consumed does not move.
+- A is wrong: there is no mapping; the two layers count different things, so no timing fix makes them agree.
+- B is correct: the Guest OS cannot see host memory and runs its memory as if on a physical server; ESXi cannot see the guest's lists.
+- C is correct: how the guest classifies pages (Standby is Windows' cache list) and its page file are ESXi blind spots; ESXi sees only reads and writes (Active: recently touched; Consumed: touched and still backed).
+- D is correct: ESXi maps a VM page at the first touch (a fault in the second-level page tables); later freeing and reuse are ordinary memory writes that never reach ESXi.
+- E is correct: the ESXi page stays mapped after the guest frees it, so Consumed does not drop; Consumed is not the guest's utilization.
+- F is wrong: Consumed is ESXi memory mapped to the VM (Granted minus sharing savings); VMware Tools plays no part in it.
+- G is wrong: Windows In Use = VM Active is the same mistake on another counter; Active is a sampled estimate for the kernel.
+- H is wrong: the guest page file is invisible to ESXi; Swapped is memory ESXi itself swapped out.
+- I is wrong: Consumed is the ESXi view of the VM; it feeds host capacity and the VM's memory footprint (for example for a migration). This is the over-correction of A.
+- J is wrong: Consumed stays high once the guest has touched its pages, cache included; that is not demand. Whether Windows needs more memory is read from Windows counters.
+- K is wrong: freed pages are still mapped, so a new process reuses the existing mapping with no EPT violation and no ESXi work; Consumed does not move.
 
 ## Notes
 - The only channel for ESXi to ask the Guest OS for memory is the balloon driver (VMware Tools on Windows; the vmw_balloon kernel module on Linux): not needed for the answer.

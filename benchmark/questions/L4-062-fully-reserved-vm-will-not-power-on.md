@@ -24,13 +24,13 @@ Which statements are correct?
 
 ## Expected key points
 - Answer: B.
-- A false: admission control compares reservations with the unreserved memory, so the 30% Consumed plays no part; the VM asks for 480 GB plus its overhead, more than 481 GB, and the result does not change on a retry.
-- B true: the memory of the VMM and the virtual devices is fully reserved at power-on, in addition to the configured memory; overhead grows with the vCPU count and the configured memory: by the documented representative values (4.5% of a 256 GB VM, more for smaller VMs) about 4-5% of configured memory, roughly 20 GB here. The largest VM that powers on with a full reservation is smaller than the unreserved memory.
-- C false: the per-VM overhead is reserved in addition to the configured memory.
-- D false: VMX swap reduces the VMX part of the reservation; the VMM and virtual device memory stay fully reserved at power-on.
-- E false: the overhead depends on the vCPU count and the configured memory; a 480 GB, 64-vCPU VM carries gigabytes of it.
-- F false: the VM has no CPU reservation, and a VM with no reservation passes CPU admission control; the error names memory.
-- G false: 479 GB plus an overhead of several GB is still above the 481 GB unreserved. The fix is to lower the reservation, or the configured memory, by more than the overhead; or free reservations held by other VMs; or use a host with more memory.
+- A is wrong: admission control compares reservations with the unreserved memory, so the 30% Consumed plays no part; the VM asks for 480 GB plus its overhead, more than 481 GB, and the result does not change on a retry.
+- B is correct: the memory of the VMM and the virtual devices is fully reserved at power-on, in addition to the configured memory; overhead grows with the vCPU count and the configured memory: by the documented representative values (4.5% of a 256 GB VM, more for smaller VMs) about 4-5% of configured memory, roughly 20 GB here. The largest VM that powers on with a full reservation is smaller than the unreserved memory.
+- C is wrong: the per-VM overhead is reserved in addition to the configured memory.
+- D is wrong: VMX swap reduces the VMX part of the reservation; the VMM and virtual device memory stay fully reserved at power-on.
+- E is wrong: the overhead depends on the vCPU count and the configured memory; a 480 GB, 64-vCPU VM carries gigabytes of it.
+- F is wrong: the VM has no CPU reservation, and a VM with no reservation passes CPU admission control; the error names memory.
+- G is wrong: 479 GB plus an overhead of several GB is still above the 481 GB unreserved. The fix is to lower the reservation, or the configured memory, by more than the overhead; or free reservations held by other VMs; or use a host with more memory.
 - H is wrong: without a VMX swap file the VMX memory must be reserved too, so the reservation rises significantly; VMX swap is what lowers it.
 
 ## Notes

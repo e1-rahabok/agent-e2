@@ -24,16 +24,16 @@ E: "vCenter is just behind; Consumed will follow Windows down." Or F: "The VM co
 
 ## Expected key points
 - Answer: A, C, D, J.
-- A true: reading. In Use = total - (Modified + Standby + Free), and `Available MBytes` is Standby plus Free, so In Use moves by minus the change of `Available MBytes` plus `Modified Page List Bytes`. That sum is at least 8,492 MB higher in every row from 15:05 than in any row up to 15:00: In Use fell by more than 8 GB, a quarter of 32 GB. `Committed Bytes` and `% Committed Bytes In Use` stay within a few percent, because the restarted JVM commits its heap again at start without touching it; commit is not In Use.
-- B false: reading. `Consumed for jas-prod-03` stays between 32,780,000 and 32,880,000 KB (about 98% of 32 GB) in every row, with no step at 15:05.
-- C true: freeing a page only updates the guest's free list, an ordinary memory write that never reaches ESXi. How Windows classifies its pages (the rise of `Free & Zero Page List Bytes` here) is an ESXi blind spot.
-- D true: ESXi maps a VM page at the guest's first touch and keeps the mapping until it reclaims the page (sharing, balloon, compression, swap). `Ballooned memory`, `Swapped` and `Compressed` are 0 in every row: nothing is reclaimed, so Consumed stays near the configured size, and the restarted application reuses pages already mapped.
-- E false: there is no mapping between In Use and Consumed; the layers manage memory independently, so waiting does not make them agree.
-- F false: the same mistake on another counter. Active is a sampled ESXi estimate of recently touched pages; it has no mapping to In Use.
-- G false: Consumed is not the guest's utilization; it stays high once pages are touched. The fall in In Use shows that Windows released the memory.
-- H false: the wrong action. Consumed near the configured size is the normal state of a VM that has touched its memory; it is not demand.
-- I false: over-correction. Consumed shows the host memory the VM holds: what host capacity and the VM's footprint (for example, for a migration) count.
-- J true: Guest OS sizing reads the guest's own counters, with part of the cache; VM counters describe what ESXi does.
+- A is correct: reading. In Use = total - (Modified + Standby + Free), and `Available MBytes` is Standby plus Free, so In Use moves by minus the change of `Available MBytes` plus `Modified Page List Bytes`. That sum is at least 8,492 MB higher in every row from 15:05 than in any row up to 15:00: In Use fell by more than 8 GB, a quarter of 32 GB. `Committed Bytes` and `% Committed Bytes In Use` stay within a few percent, because the restarted JVM commits its heap again at start without touching it; commit is not In Use.
+- B is wrong: reading. `Consumed for jas-prod-03` stays between 32,780,000 and 32,880,000 KB (about 98% of 32 GB) in every row, with no step at 15:05.
+- C is correct: freeing a page only updates the guest's free list, an ordinary memory write that never reaches ESXi. How Windows classifies its pages (the rise of `Free & Zero Page List Bytes` here) is an ESXi blind spot.
+- D is correct: ESXi maps a VM page at the guest's first touch and keeps the mapping until it reclaims the page (sharing, balloon, compression, swap). `Ballooned memory`, `Swapped` and `Compressed` are 0 in every row: nothing is reclaimed, so Consumed stays near the configured size, and the restarted application reuses pages already mapped.
+- E is wrong: there is no mapping between In Use and Consumed; the layers manage memory independently, so waiting does not make them agree.
+- F is wrong: the same mistake on another counter. Active is a sampled ESXi estimate of recently touched pages; it has no mapping to In Use.
+- G is wrong: Consumed is not the guest's utilization; it stays high once pages are touched. The fall in In Use shows that Windows released the memory.
+- H is wrong: the wrong action. Consumed near the configured size is the normal state of a VM that has touched its memory; it is not demand.
+- I is wrong: over-correction. Consumed shows the host memory the VM holds: what host capacity and the VM's footprint (for example, for a migration) count.
+- J is correct: Guest OS sizing reads the guest's own counters, with part of the cache; VM counters describe what ESXi does.
 
 ## Notes
 - Paired with 0095 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item C4.

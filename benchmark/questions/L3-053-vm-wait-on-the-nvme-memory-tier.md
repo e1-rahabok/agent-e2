@@ -21,15 +21,15 @@ B: the most memory on the NVMe tier read as the most waiting. Or E: a read laten
 
 ## Expected key points
 - Answer: A, C.
-- A true: the CPU cannot read or write NVMe directly; a page on tier 1 is fetched back to DRAM when it becomes active, and the vCPU that touched it waits for the fetch.
-- B false: tier 1 consumed holds cold pages. It is saturation (memory spilled beyond DRAM), not a wait: a VM whose pages on NVMe stay cold reads nothing back.
-- C true: what a VM loses is its NVMe reads times the read latency; the per-VM NVMe read bandwidth shows who pays.
-- D false: NVMe write bandwidth is demotion, cold pages moved down in the background, off the vCPU's path. It costs device endurance and can raise read latency, but no vCPU waits on it.
-- E false: over-correction. Each fetch costs about 1,000 times a DRAM access (about 100-200 µs against about 100 ns); many fetches at a good latency still slow a VM.
-- F false: the host figure is a leading signal for the whole host, not each VM's experience. A VM with high NVMe read bandwidth waits whatever the host average says.
-- G false: the wrong action from B. That VM's pages on NVMe are cold; move or protect the VMs that read from NVMe.
-- H false: the VMs that read while the device woke up waited for each read. The wake-up explains the latency; it does not remove the wait (reads times latency).
-- I false: the CPU cannot write NVMe directly either; any access to a page on NVMe raises a page fault and the page is fetched to DRAM before the write completes (vSphere 9.1 documentation, pp. 1848, 1872). Only demotion writes are off the vCPU's path.
+- A is correct: the CPU cannot read or write NVMe directly; a page on tier 1 is fetched back to DRAM when it becomes active, and the vCPU that touched it waits for the fetch.
+- B is wrong: tier 1 consumed holds cold pages. It is saturation (memory spilled beyond DRAM), not a wait: a VM whose pages on NVMe stay cold reads nothing back.
+- C is correct: what a VM loses is its NVMe reads times the read latency; the per-VM NVMe read bandwidth shows who pays.
+- D is wrong: NVMe write bandwidth is demotion, cold pages moved down in the background, off the vCPU's path. It costs device endurance and can raise read latency, but no vCPU waits on it.
+- E is wrong: over-correction. Each fetch costs about 1,000 times a DRAM access (about 100-200 µs against about 100 ns); many fetches at a good latency still slow a VM.
+- F is wrong: the host figure is a leading signal for the whole host, not each VM's experience. A VM with high NVMe read bandwidth waits whatever the host average says.
+- G is wrong: the wrong action from B. That VM's pages on NVMe are cold; move or protect the VMs that read from NVMe.
+- H is wrong: the VMs that read while the device woke up waited for each read. The wake-up explains the latency; it does not remove the wait (reads times latency).
+- I is wrong: the CPU cannot write NVMe directly either; any access to a page on NVMe raises a page fault and the page is fetched to DRAM before the write completes (vSphere 9.1 documentation, pp. 1848, 1872). Only demotion writes are off the vCPU's path.
 
 ## Notes
 - Paired with 0147 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item B17.

@@ -6,16 +6,16 @@
 
 Which statements are correct?
 
-- A. Task Manager's figure includes time its vCPUs sat frozen in Ready, because Windows cannot see that time.
-- B. In the vCenter export, Run plus Ready comes to nearly 80,000 ms in every row: the four vCPUs had work almost all the time.
+- A. Task Manager's figure includes the time its vCPUs sat frozen in Ready, which Windows cannot see.
+- B. In the vCenter export, Run plus Ready comes to at least 75,000 ms in every row.
 - C. In the vCenter export, Run stays below 64,000 ms in every row: under 80% per vCPU.
 - D. In the vCenter export, Readiness stays below 5%, so the host gives the VM what it asks.
 - E. In the typeperf export, only one of the four processors is busy: the guest runs a single thread.
-- F. The two tools disagree, so one of the counters is collected wrongly.
-- G. Add 4 vCPUs: the guest keeps all four busy.
-- H. Task Manager is of no use on a VM: its CPU figure is simply wrong.
+- F. The two tools disagree this much, so one of the two counters is collected wrongly.
+- G. Add 4 vCPUs to the VM: the guest already keeps all four of its processors busy.
+- H. Task Manager is of no use on a VM: its CPU figure is simply wrong and can be ignored.
 - I. With VMware Tools running, Windows would report the frozen time as steal time.
-- J. The next checks are the VM's shares, the host's overcommit and the Ready of the other VMs.
+- J. Next, check the shares of the VM and its resource pool, the host's overcommit and other VMs' Ready.
 
 ## Likely wrong answer
 G: Task Manager shows the CPU maxed out, so the VM needs more vCPUs. Or F: the tools disagree, so one is wrong.
@@ -31,7 +31,7 @@ G: Task Manager shows the CPU maxed out, so the VM needs more vCPUs. Or F: the t
 - G false: the wrong action. The vCPUs wait for physical threads; more vCPUs on a busy host are harder to schedule and tend to raise Ready and Co-stop.
 - H false: over-correction. Each layer shows its own problems (run queue, processes); read both, each at its own layer.
 - I false: Windows has no steal time; VMware Tools does not change that.
-- J true: with no limit (`Max limited for app-win-07` is 0 in every row), Ready comes from the VM's shares or the host's load; many VMs in Ready at once points to an overcommitted host.
+- J true: with no limit (`Max limited for app-win-07` is 0 in every row), Ready comes from low shares on the VM or its resource pool, or from the host's load; many VMs in Ready at once points to an overcommitted host.
 
 ## Reasoning path
 1. Readiness at a fifth to a third of each sample: the vCPUs wait for physical threads.
@@ -42,6 +42,7 @@ G: Task Manager shows the CPU maxed out, so the VM needs more vCPUs. Or F: the t
 - Paired with the theory question 0266 (theory and practical; design.md, section 3.9).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C1). Counts only after author approval.
 - Review 2026-11-15: stem no longer quotes the value; screen readings added (C true; D, E false); J names the VM's shares as a VM-side check. Key changed from A, B, C, F, I to A, B, C, J (options relettered).
+- Changed in the 2026-11-15 audit: J names the resource pool too; A, B, F, G and H reworded to similar lengths (the correct options were the longest); B states the reading only (at least 75,000 ms, as the export guarantees).
 - Converted to exports 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md): Task Manager has no export, so its figure stays in the owner's words; typeperf carries the per-processor reading. B (the Ready definition, also in 0009, 0376 and 0381) became a reading of Run plus Ready, the partner's fact (Windows busy figure close to Run plus Ready); still true. C, D, E read from the exports; truth unchanged.
 
 ## Metadata

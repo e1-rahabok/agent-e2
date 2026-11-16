@@ -43,13 +43,13 @@ Which statements are correct?
 
 - A. `st` 0.0 shows the vCPUs were never held off a physical thread.
 - B. In the vCenter export, Ready is more than a fifth of Run in every row.
-- C. In the vCenter export, Readiness stays below 2%.
+- C. In the vCenter export, Readiness stays below 2% in every row of the ten minutes.
 - D. vCenter's Readiness must be a collection error, since the guest sees no steal.
-- E. With this VM's default settings the steal clock is off, so the guest has no counter for the frozen time.
+- E. On this VM's default settings the steal clock is off: `st` cannot count the frozen time.
 - F. With `stealclock.enable = "TRUE"` set on this VM, `st` would follow its Ready.
 - G. The us and sy figures in `top` include time the vCPUs were frozen.
 - H. `top` shows `wa` above 10%, so the guest is waiting on storage.
-- I. Add 2 vCPUs to the VM to absorb the wait.
+- I. Add 2 vCPUs to the VM so that it can absorb the wait for physical threads.
 
 ## Likely wrong answer
 A: `st` is 0.0, so the hypervisor takes nothing from this VM. Or D: the tools disagree, so vCenter is wrong.
@@ -76,6 +76,7 @@ A: `st` is 0.0, so the hypervisor takes nothing from this VM. Or D: the tools di
 - Vendor sources for general VMs: Broadcom TechDocs, Tanzu GemFire 10.1, High CPU Steal, section VMware ESXi (steal time needs `stealclock.enable = "TRUE"` except on Photon OS; without it `/proc/stat` steal stays 0), https://techdocs.broadcom.com/us/en/vmware-tanzu/data-solutions/tanzu-gemfire/10-1/gf/managing-checklist-cpu-steal-high.html; Broadcom KB 376609, https://knowledge.broadcom.com/external/article/376609; Broadcom KB 434983 (hardware version 13 or later).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item D12). Counts only after author approval.
 - Review 2026-11-15: kernel 5.14 in the stem (F needs it); B without the range; screen readings C and H (false) added; options reworded away from 0380. Key changed from B, D, E, G to B, E, F, G (options relettered).
+- Changed in the 2026-11-15 audit: C, E and I reworded to similar lengths (E was the longest option and correct).
 - Converted to exports 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md): `top` and `sar` as guest text, vCenter as CSV. B (the Ready definition, over the cap of two: also 0009, 0376, 0368) became a reading of Ready against Run; still true. sar `%guest` 0.00 is a neighbour column only: no option rests on it, because the knowledge base does not state what `%guest` counts yet (guest-os-vs-vm-cpu, Linux metrics).
 
 ## Metadata

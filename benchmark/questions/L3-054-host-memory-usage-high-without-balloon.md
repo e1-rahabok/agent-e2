@@ -21,14 +21,14 @@ E: "The host is above 90%, so its VMs are already waiting for memory: move some 
 
 ## Expected key points
 - Answer: A, C, D.
-- A true: host Memory Usage is Consumed against total capacity: what the VMs and the kernel hold, a capacity counter. In the vCenter export `Usage for esx-p14.example.com` equals `Consumed for esx-p14.example.com` divided by 536,870,912 KB (512 GB) in every row. Memory is a cache, so values near 100% are expected.
-- B false: reading. `Ballooned memory for esx-p14.example.com` is 0 in every row of the week, and every VM's `Memory|Balloon (%) (Max)` is 0.
-- C true: ballooning from host pressure starts in the soft state, at about 99% of host memory in use on hosts of this size; `Usage` stays between 94% and 97% in every row, so free memory stays above that level, and no balloon inflated.
-- D true: reading. Every VM's `Memory|Contention (%) (Max)` over the 7 days is 0: Memory Contention counts the waits on ESXi page faults (swap-in, decompression), and no VM had one. Contention, not Usage, shows a wait.
-- E false: Usage is consumption, not contention. A VM waits only when it touches a page ESXi swapped or compressed; the contention column shows no such wait.
-- F false: ballooning is reclamation inside the guest, not a wait; the guest gives up free and cache pages first. The wait shows in Memory Contention.
-- G false: over-correction. In the hard and low states ESXi compresses and swaps pages, and a VM that touches one waits for it.
-- H false: the wrong action from E. Nothing in the exports shows a VM waiting; the host is using its memory as intended.
+- A is correct: host Memory Usage is Consumed against total capacity: what the VMs and the kernel hold, a capacity counter. In the vCenter export `Usage for esx-p14.example.com` equals `Consumed for esx-p14.example.com` divided by 536,870,912 KB (512 GB) in every row. Memory is a cache, so values near 100% are expected.
+- B is wrong: reading. `Ballooned memory for esx-p14.example.com` is 0 in every row of the week, and every VM's `Memory|Balloon (%) (Max)` is 0.
+- C is correct: ballooning from host pressure starts in the soft state, at about 99% of host memory in use on hosts of this size; `Usage` stays between 94% and 97% in every row, so free memory stays above that level, and no balloon inflated.
+- D is correct: reading. Every VM's `Memory|Contention (%) (Max)` over the 7 days is 0: Memory Contention counts the waits on ESXi page faults (swap-in, decompression), and no VM had one. Contention, not Usage, shows a wait.
+- E is wrong: Usage is consumption, not contention. A VM waits only when it touches a page ESXi swapped or compressed; the contention column shows no such wait.
+- F is wrong: ballooning is reclamation inside the guest, not a wait; the guest gives up free and cache pages first. The wait shows in Memory Contention.
+- G is wrong: over-correction. In the hard and low states ESXi compresses and swaps pages, and a VM that touches one waits for it.
+- H is wrong: the wrong action from E. Nothing in the exports shows a VM waiting; the host is using its memory as intended.
 
 ## Notes
 - Paired with 0144 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item C3.

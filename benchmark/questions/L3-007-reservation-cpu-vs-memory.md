@@ -7,7 +7,7 @@
 Which statements are correct?
 
 - A. While the VM sits at the BIOS, ESXi can give the untouched part of its 16 GB reservation to other VMs.
-- B. CPU usage reads about 6 GHz while the VM sits at the BIOS screen.
+- B. CPU usage reads about 6 GHz, the reserved amount, while the VM sits at the BIOS screen.
 - C. Lower the CPU reservation now: the idle VM keeps 6 GHz of cycles from the other VMs on the host.
 - D. Memory Consumed reads about 24 GB, because the BIOS touches all configured memory at power-on.
 - E. Once the guest has touched its reserved pages and then idles for days, ESXi hands those pages to other VMs.
@@ -43,7 +43,6 @@ task: judge-setting
 knowledge:
   - vsphere/architecture/resource-controls
   - vsphere/technology/memory/metrics/virtual-motherboard/consumed
-  - vsphere/technology/memory/metrics/virtual-motherboard/active
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Resource Management."
