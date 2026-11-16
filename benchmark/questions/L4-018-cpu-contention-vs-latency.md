@@ -16,7 +16,7 @@ Which statements are correct?
 
 - A. Most of db-11's 9% CPU Contention is Ready: its vCPUs waited for a physical thread.
 - B. app-31's 0.8% CPU Contention shows its vCPUs rarely waited to be scheduled.
-- C. In VCF Operations 9.1, CPU Contention counts throughput lost to a busy sibling thread and a slow clock.
+- C. VCF Operations 9.1 CPU Contention counts the loss from a busy sibling thread and a slow clock.
 - D. The two tools disagree on app-31, so one of them reports wrong data.
 - E. CPU Contention counts the time a CPU limit holds a vCPU back.
 - F. Raise app-31's CPU shares above its neighbours' to bring its CPU Latency down.

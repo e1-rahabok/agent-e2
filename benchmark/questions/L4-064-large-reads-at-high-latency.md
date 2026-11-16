@@ -20,22 +20,24 @@ Which statements are correct?
 - C. The array is overloaded: 7 ms on bkp-01 is almost 6 times the 1.2 ms of db-02 on the same datastore.
 - D. Compare latency only at similar IO sizes: compare bkp-01 with its own past nights.
 - E. db-02 is barely affected by the backup: its read latency is 1.2 ms against 1.1 ms on nights without it.
-- F. A throughput limit in MB/s on bkp-01's virtual disks is the vSphere setting that caps the backup's load.
+- F. With Storage I/O Control on, DS-PROD07's Normalized Latency would read about 7 ms for this hour.
 
 ## Likely wrong answer
 C: comparing the latency of large and small IOs as if they were the same work.
 
 ## Expected key points
 - Answer: A, B, D, E.
-- A: block size = throughput ÷ IOPS: 200 MB/s ÷ 400 = 0.5 MB; 24 MB/s ÷ 3,000 = 8 KB.
-- B: the time to move and serve an IO grows with its size. High latency on large IOs is expected, not a fault.
-- D: latency is a per-IO time, so a latency comparison is fair only at similar IO sizes.
-- E: the VM that matters for performance, db-02, sees almost no change: no sign of contention on the array.
-- C is wrong: it compares unlike IOs.
-- F is wrong: vSphere offers an IOPS limit per virtual disk, not a throughput limit; with large blocks, an IOPS limit caps the throughput too.
+- A is correct: block size = throughput ÷ IOPS: 200 MB/s ÷ 400 = 0.5 MB; 24 MB/s ÷ 3,000 = 8 KB.
+- B is correct: the time to move and serve an IO grows with its size; Storage I/O Control's Normalized Latency is size-adjusted for this reason, so large-block workloads do not make a datastore look slower than it is. High latency on large IOs is expected, not a fault.
+- C is wrong: the misconception. It compares unlike IOs.
+- D is correct: latency is a per-IO time, so a latency comparison is fair only at similar IO sizes; the same reason makes Normalized Latency discount large IOs.
+- E is correct: the VM that matters for performance, db-02, sees almost no change: no sign of contention on the array.
+- F is wrong: Normalized Latency is device latency weighted by IO count over all hosts and VMs, and adjusted for IO size. Even unadjusted, 400 reads at 7 ms against 3,000 at 1.2 ms give about 1.9 ms ((400 × 7 + 3,000 × 1.2) ÷ 3,400); the size adjustment lowers it further, and it leaves out kernel queuing.
 
 ## Notes
-- Drafted by Claude 2026-11-12. Counts only after author approval.
+- Synthetic, 2026-11-12. Counts only after author approval.
+- Audit 2026-11-15: F (no throughput limit in vSphere, a third copy after 0424 F and 0183 F) replaced by Storage I/O Control Normalized Latency (IO-count weighted, size-adjusted). Key unchanged: A, B, D, E.
+- Open (knowledge base): no knowledge file states as a mechanism line that per-IO latency grows with IO size; B, C and D rest on the size adjustment of Normalized Latency in storage-io-control.
 
 ## Metadata
 ```yaml
@@ -56,7 +58,7 @@ knowledge:
 knowledge_main: vsphere/technology/storage/metrics/virtual-motherboard/iops
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
+source_path: "Synthetic, 2026-11-12"
 answer: [A, B, D, E]
 misconception: [C]
 misconception_type: [unit-and-normalization]
