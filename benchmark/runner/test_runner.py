@@ -359,6 +359,36 @@ class StopRunOnBadAnswersTest(unittest.TestCase):
         self.assertIn('402', reason)
         self.assertEqual(h.code, X.BUDGET)
 
+    def test_a_burst_of_gateway_errors_stops_with_the_gateway_code_not_the_settings_code(self):
+        # 2026-11-16: 54 answers failed with HTTP 503 in two minutes; the check read them as invalid settings and the runner restarted two runs from zero.
+        h = H.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
+        reason = None
+        for _ in range(30):
+            reason = h.record(self.row(error='HTTP 503: {"error":{"message":"Service temporarily unavailable."}}'))
+        self.assertIn('gateway', reason)
+        self.assertEqual(h.code, X.GATEWAY_DOWN)
+        self.assertNotEqual(h.code, X.UNHEALTHY)
+
+    def test_gateway_errors_do_not_count_against_the_settings(self):
+        h = H.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
+        for i in range(200):
+            e = 'HTTP 503: unavailable' if i % 10 == 0 else ''        # 10% gateway errors: below the gateway limit
+            self.assertIsNone(h.record(self.row(error=e)))
+
+    def test_gateway_error_kinds(self):
+        for e in ('HTTP 503: x', 'HTTP 502: x', 'HTTP 429: rate', 'HTTP 408: t', 'ReadTimeout: x', 'ConnectionError: x', 'Connection reset by peer'):
+            self.assertTrue(H.StopRunOnBadAnswers.is_gateway_error(self.row(error=e)), e)
+        for e in ('', 'HTTP 400: bad request', 'HTTP 404: model', 'HTTP 402: budget'):
+            self.assertFalse(H.StopRunOnBadAnswers.is_gateway_error(self.row(error=e)), e)
+
+    def test_request_errors_still_count_against_the_settings(self):
+        h = H.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
+        reason = None
+        for _ in range(30):
+            reason = h.record(self.row(error='HTTP 400: context too long'))
+        self.assertEqual(h.code, X.UNHEALTHY)
+        self.assertIn('invalid', reason)
+
     def test_each_model_has_its_own_window(self):
         h = H.StopRunOnBadAnswers(min_answers=20)
         for _ in range(30):
@@ -516,7 +546,7 @@ class RoundRecoveryTest(unittest.TestCase):
         self.addCleanup(__import__('shutil').rmtree, d, True)
         open(os.path.join(d, 'child.py'), 'w').write(self.FAKE)
         json.dump(seq, open(os.path.join(d, 'seq.json'), 'w'))
-        env = dict(os.environ, AI_GATEWAY_API_KEY='x', RUN_ALL_CHILD=os.path.join(d, 'child.py'),
+        env = dict(os.environ, AI_GATEWAY_API_KEY='x', RUN_ALL_FAST='1', RUN_ALL_CHILD=os.path.join(d, 'child.py'),
                    FAKE_SEQ=os.path.join(d, 'seq.json'), FAKE_LOG=os.path.join(d, 'log.txt'))
         out = os.path.join(d, 'out')
         os.makedirs(out)
@@ -532,6 +562,23 @@ class RoundRecoveryTest(unittest.TestCase):
         self.assertIn('--resume', calls[1])
         self.assertEqual(p.returncode, X.UNHEALTHY, p.stdout + p.stderr)
         self.assertIn('NOT complete', p.stdout)
+
+    def test_a_gateway_outage_waits_and_resumes_the_same_folder_without_new_settings(self):
+        p, calls, out = self.round_('alibaba/qwen3.8-27b', [X.GATEWAY_DOWN, X.GATEWAY_DOWN, X.STOPPED])
+        self.assertEqual(len(calls), 3, p.stdout + p.stderr)
+        self.assertNotIn('--resume', calls[0])
+        self.assertIn('--resume', calls[1])
+        self.assertIn('--resume', calls[2])
+        self.assertEqual(calls[1][calls[1].index('--resume') + 1], calls[2][calls[2].index('--resume') + 1])   # the same folder
+        self.assertFalse([n for n in os.listdir(out) if 'invalid' in n])      # nothing restarted, nothing archived
+        self.assertEqual(p.returncode, X.STOPPED)
+
+    def test_an_outage_that_never_ends_fails_the_run_after_the_waits_and_keeps_the_answers(self):
+        p, calls, out = self.round_('google/gemma-4-31b-it', [X.GATEWAY_DOWN] * 30)
+        self.assertEqual(len(calls), 13)                                  # the first launch and release.outage_waits (12) resumes
+        self.assertEqual(p.returncode, X.UNHEALTHY)
+        self.assertIn('NOT complete', p.stdout)
+        self.assertFalse([n for n in os.listdir(out) if 'invalid' in n])
 
     def test_invalid_answers_restart_the_run_with_the_next_settings_and_keep_the_folder_as_evidence(self):
         p, calls, out = self.round_('alibaba/qwen3.8-27b', [X.UNHEALTHY, X.STOPPED])
@@ -557,6 +604,52 @@ class RoundRecoveryTest(unittest.TestCase):
         self.assertEqual(p.returncode, X.STOPPED)
         self.assertIn('--resume', p.stdout)
         self.assertTrue(os.path.exists(os.path.join(out, '.round.json')))
+
+
+class ReconcileWithFoldersTest(unittest.TestCase):
+    """A resume starts from the folders: what the state file says can be out of date (a run finished by hand, a key topped up)."""
+
+    def setUp(self):
+        import tempfile
+        self.d = tempfile.mkdtemp()
+        self.addCleanup(__import__('shutil').rmtree, self.d, True)
+        self.cfg = {'runs': 1}
+
+    def folder(self, name, rows):
+        os.makedirs(os.path.join(self.d, name))
+        with open(os.path.join(self.d, name, 'answers.csv'), 'w') as f:
+            f.write('model,mode,question_id,track,run,error\n')
+            for q, e in rows:
+                f.write(f'm,baseline,{q},text,1,{e}\n')
+
+    def entry(self, name, status):
+        return {'model': 'm', 'modes': ['baseline'], 'folder': name, 'status': status, 'retries': 2, 'outage_waits': 3}
+
+    def test_a_finished_folder_is_complete_whatever_the_state_says(self):
+        self.folder('a', [('q1', ''), ('q2', '')])
+        st = {'runs': [self.entry('a', 'invalid')]}
+        RA.reconcile_with_folders(st, self.d, self.cfg, 2)
+        self.assertEqual(st['runs'][0]['status'], 'complete')
+
+    def test_every_stop_but_a_real_settings_failure_becomes_pending(self):
+        for status in ('refused', 'stopped', 'running', 'failed', 'outage', 'pending'):
+            self.folder(status, [('q1', '')])
+            st = {'runs': [self.entry(status, status)]}
+            RA.reconcile_with_folders(st, self.d, self.cfg, 2)
+            self.assertEqual(st['runs'][0]['status'], 'pending', status)
+            self.assertEqual((st['runs'][0]['retries'], st['runs'][0]['outage_waits']), (0, 0))
+
+    def test_a_run_with_unresolved_failures_is_not_complete(self):
+        self.folder('b', [('q1', ''), ('q2', 'HTTP 503: x')])
+        st = {'runs': [self.entry('b', 'stopped')]}
+        RA.reconcile_with_folders(st, self.d, self.cfg, 2)
+        self.assertEqual(st['runs'][0]['status'], 'pending')
+
+    def test_a_run_marked_invalid_for_its_settings_stays_invalid(self):
+        self.folder('c', [('q1', '')])
+        st = {'runs': [self.entry('c', 'invalid')]}
+        RA.reconcile_with_folders(st, self.d, self.cfg, 2)
+        self.assertEqual(st['runs'][0]['status'], 'invalid')
 
 
 class RoundMockTest(unittest.TestCase):

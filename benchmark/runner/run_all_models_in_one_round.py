@@ -46,7 +46,7 @@ PREFLIGHT = '.preflight.json'
 
 def classify(code):
     """What the exit code of one answer_questions_for_one_model.py means for the orchestrator."""
-    return {X.OK: 'complete', X.STOPPED: 'stopped', X.UNHEALTHY: 'invalid', X.BUDGET: 'refused'}.get(code, 'crashed')
+    return {X.OK: 'complete', X.STOPPED: 'stopped', X.UNHEALTHY: 'invalid', X.BUDGET: 'refused', X.GATEWAY_DOWN: 'outage'}.get(code, 'crashed')
 
 
 def unresolved(folder):
@@ -59,6 +59,25 @@ def unresolved(folder):
         k = (r['model'], r['mode'], r['question_id'], r['track'], r['run'])
         (bad if r['error'] else good).add(k)
     return bad - good
+
+
+def reconcile_with_folders(state, out_dir, cfg, n_questions):
+    """A resume starts from what the folders hold, not from what the state file says. A run whose folder has every answer is complete
+    (it may have been finished by hand); a run stopped by the time limit, a refused key, an outage or a crash is pending again.
+    Only a run the health check marked invalid (a real setting problem) stays as it is. Returns the entries that changed."""
+    changed = []
+    for e in state['runs']:
+        folder = os.path.join(out_dir, e['folder'])
+        ok, _ = count_valid(folder)
+        before = e['status']
+        if ok >= total_answers(e, cfg, n_questions) and not unresolved(folder):
+            e['status'], e['note'] = 'complete', ''
+        elif e['status'] in ('refused', 'stopped', 'running', 'failed', 'pending', 'outage'):
+            e['status'] = 'pending'
+        e['retries'], e['outage_waits'] = 0, 0
+        if e['status'] != before:
+            changed.append(e)
+    return changed
 
 
 def total_answers(entry, cfg, n_questions):
@@ -187,7 +206,7 @@ def main():
     def drive(entry):
         """Run one entry to the end, a limit stop, or a failure. Returns nothing: the entry carries the result."""
         folder = os.path.join(a.out, entry['folder'])
-        if entry['status'] in ('complete', 'invalid', 'refused'):
+        if entry['status'] in ('complete', 'invalid'):
             return
         while not stop_all.is_set():
             mins = left()
@@ -216,6 +235,19 @@ def main():
                 return
             if kind == 'stopped':
                 entry['status'] = 'stopped'
+                return
+            if kind == 'outage':
+                # The gateway or a provider failed, not the settings: keep every answer, wait, resume the same folder.
+                waits = entry.get('outage_waits', 0)
+                if waits < rel.get('outage_waits', 12):
+                    entry['outage_waits'] = waits + 1
+                    entry['note'] = f'gateway or provider failing (exit {code}); waiting, then resume {waits + 1}'
+                    print(f'{entry["model"]}: {entry["note"]}', flush=True)
+                    save_state(a.out, state, lock)
+                    wait = 0.05 if os.environ.get('RUN_ALL_FAST') else rel.get('outage_wait_seconds', 180)
+                    stop_all.wait(wait)
+                    continue
+                entry['status'], entry['note'] = 'failed', f'the gateway kept failing after {waits} waits'
                 return
             if kind == 'crashed' and entry['retries'] < rel['retries']:
                 entry['retries'] += 1
@@ -254,9 +286,13 @@ def main():
 
     done = threading.Event()
     threading.Thread(target=report_progress, daemon=True).start()
-    live = [e for e in state['runs'] if e['status'] not in ('complete', 'invalid', 'refused')]
+    if a.resume:
+        for e in reconcile_with_folders(state, a.out, cfg, n_questions):
+            print(f'{e["folder"]}: {e["status"]} (from the folder: the state file said otherwise)', flush=True)
+        save_state(a.out, state, lock)
+    live = [e for e in state['runs'] if e['status'] not in ('complete', 'invalid')]
     for e in live:
-        if e['status'] in ('stopped', 'running', 'failed'):
+        if e['status'] in ('stopped', 'running', 'failed', 'refused', 'outage'):
             e['status'] = 'pending'         # a resume tries again
             e['retries'] = 0
     def safe_drive(entry):

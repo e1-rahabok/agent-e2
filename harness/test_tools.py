@@ -464,6 +464,60 @@ class WindowTest(unittest.TestCase):
         self.assertIn('context_over', [s['action'] for s in trace])
 
 
+class GatewayRetryTest(unittest.TestCase):
+    """GatewayClient keeps retrying a failing call for retry_seconds; the error keeps the provider text; the reply names the provider."""
+
+    class Resp:
+        def __init__(self, status, body=None, text=''):
+            self.status_code, self._body, self.text, self.headers = status, body, text, {}
+
+        def json(self):
+            return self._body
+
+    def client(self, answers, **kw):
+        import unittest.mock as mock
+        import llm
+        c = llm.GatewayClient('http://x', 'k', **kw)
+        it = iter(answers)
+        patch = [mock.patch('llm.requests.post', side_effect=lambda *a, **k: next(it)), mock.patch('llm.time.sleep', lambda s: None)]
+        for p_ in patch:
+            p_.start()
+            self.addCleanup(p_.stop)
+        return c
+
+    OK = {'choices': [{'message': {'content': 'OK'}}], 'usage': {}}
+
+    def test_a_short_outage_is_ridden_out_with_retry_seconds(self):
+        c = self.client([self.Resp(503, text='down')] * 6 + [self.Resp(200, self.OK)], retry_seconds=300)
+        data, _, _ = c._post('/chat/completions', {})
+        self.assertEqual(data['choices'][0]['message']['content'], 'OK')     # 6 failures: the older rule (5 retries) would have given up
+
+    def test_the_older_rule_gives_up_after_its_retries(self):
+        import llm
+        c = self.client([self.Resp(503, text='down')] * 6 + [self.Resp(200, self.OK)])
+        with self.assertRaises(llm.LLMError):
+            c._post('/chat/completions', {})
+
+    def test_an_outage_longer_than_retry_seconds_raises_with_the_full_error_text(self):
+        import llm
+        c = self.client([self.Resp(503, text='x' * 1500 + 'PROVIDER')] * 50, retry_seconds=60)
+        with self.assertRaises(llm.LLMError) as cm:
+            c._post('/chat/completions', {})
+        self.assertIn('HTTP 503', str(cm.exception))
+        self.assertIn('PROVIDER', str(cm.exception))                          # was cut at 300 characters
+
+    def test_a_request_error_is_not_retried(self):
+        import llm
+        c = self.client([self.Resp(400, text='bad')] + [self.Resp(200, self.OK)], retry_seconds=300)
+        with self.assertRaises(llm.LLMError):
+            c._post('/chat/completions', {})
+
+    def test_the_provider_is_read_from_the_message(self):
+        import llm
+        d = {'choices': [{'message': {'content': 'OK', 'provider_metadata': {'gateway': {'routing': {'finalProvider': 'friendli'}}}}}]}
+        self.assertEqual(llm._provider(d, {}), 'friendli')
+
+
 class RelatedTierTest(unittest.TestCase):
     """The last tier of the reading plan follows related links both ways."""
     A = 'guest-os/cpu/metrics/context-switch'

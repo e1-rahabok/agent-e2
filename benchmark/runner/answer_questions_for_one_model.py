@@ -109,7 +109,7 @@ def main():
     sampling = {m: (cfg.get('sampling') or {}).get(m, {'temperature': cfg.get('temperature')}) for m in models_}
     if a.temperature is not None:
         sampling = {m: {'temperature': a.temperature} for m in models_}
-    client = ParamClient(MockClient() if a.mock else GatewayClient(cfg['gateway']), params, sampling)
+    client = ParamClient(MockClient() if a.mock else GatewayClient(cfg['gateway'], retry_seconds=cfg.get('gateway_retry_minutes', 1) * 60), params, sampling)
     if a.primer:
         on = {'rules', 'terms'} if a.primer == 'all' else {x.strip() for x in a.primer.split(',')}
         cfg['primer'] = {b: b in on for b in ('rules', 'terms')}
@@ -215,7 +215,7 @@ def main():
             row['cost_usd'] = _cost(meta.get(m, {}), row['prompt_tokens'], row['completion_tokens'])
             row['error'] = ''
         except LLMError as e:
-            trace, row['error'] = [], str(e)[:300]
+            trace, row['error'] = [], str(e)[:2000]    # the text names the provider that failed
         with lock:
             w.writerow(row)
             fa.flush()
