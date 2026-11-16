@@ -20,7 +20,13 @@ Each entry:
 
 ## Release 1.0
 
+No open question blocks release 1.0.
+
+## Future release
+
 ### Q246 · Storage > Adapter Highest latency · Plain or command-weighted mean of read and write
+
+- Moved to Future release by the author, 2026-11-16. Impact: 0072 is deferred (status `deferred`), key unchanged; its theory half 0406 keeps running (A does not depend on the weighting). The three files keep their lines until this is answered.
 
 - Files: [Storage adapter and path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/adapter-and-path.md), [VM disk latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/virtual-motherboard/disk-latency.md); question [0072](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-025-vcenter-adapter-highest-latency.md).
 - Now: adapter-and-path says Highest latency averages read and write per adapter first; disk-latency says a total latency is a command-weighted average, "not (read latency + write latency) / 2". If the adapter counter is command-weighted, options A, C and E of 0072 flip.
@@ -35,6 +41,8 @@ Each entry:
 
 ### Q248 · Network > Port group drops · Option A of 0345 and the drop formula
 
+- Moved to Future release by the author, 2026-11-16. Impact: 0345 is deferred (status `deferred`), key unchanged; packets-dropped.md is unchanged, with no denominator stated.
+
 - Files: [Distributed switch packets dropped](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/metrics/distributed-switch/packets-dropped.md); question [0345](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-107-port-group-drops-received-or-transmitted.md).
 - Now: the knowledge base does not define the VCF Operations port group drop percentage (dropped / packets, or dropped / (dropped + delivered)). A first reviewer read option A of 0345 as false; an independent blind checker read it as true (the key). The audit reworded A and the stem ("of which ... were dropped") so A is true as keyed; the disagreement is recorded here as the safety rule asks.
 - Research (2026-11-16): VCF Operations 9.1 TechDocs (updated 2026-11-12), Distributed Virtual Port Group Metrics and VMware Distributed Virtual Switch Metrics: one percentage metric, Percentage of Dropped Packets (`network|port_statistics|dropped_pkts_pct`, "Percentage of dropped packets"), no split by direction and no denominator; the rates Egress and Ingress Dropped Packets per second (`dropped_tx_pkts`, `dropped_rx_pkts`), Total Dropped Packets per second, and Total Ingress and Egress Packets per second (`rx_pkts`, `tx_pkts`). The vSphere API has no percentage counter. Host and VM `net|droppedPct` are also undefined. So the vendor gives no formula, and the question's 0.5% is plain arithmetic on its own numbers (0.19 of 38.0 million).
@@ -42,8 +50,6 @@ Each entry:
 - Question: confirm the key of 0345 (A) as now worded, and add a formula?
 - Recommended: confirm A (it uses no vendor metric); add no formula. Add the vendor metric names to the file, say the denominator is not documented, and say a per-direction share is computed from the rate metrics (`dropped_tx_pkts` over `tx_pkts`), not a vendor metric. A lab check (compare `dropped_pkts_pct` with dropped / (rx + tx) and dropped / (rx + tx + dropped)) can come later.
 - Answer:
-
-## Future release
 
 ### Q244 · Cluster > HA admission control · Three vendor facts for the percentage policy
 
