@@ -31,7 +31,7 @@ E and F: the queue is waiting inside Windows, and a queue above 2 per disk is th
 - D true: reading. `Avg. Disk sec/Transfer` (about 0.010 s) is within 15% of `Read latency for scsi0:1` (9-10 ms) in the same minutes, and `Disk Transfers/sec` within 10% of `Average read requests per second for scsi0:1`; the workload is reads only. When the guest time per I/O is close to the vCenter virtual disk latency, the time is spent in ESXi queues, the storage path and the array; Windows adds little.
 - E false: the misconception. The counter counts every request below the partition manager: waiting, in service at the device, and on the way back.
 - F false: the Microsoft guideline of about 2 per disk counts physical spindles; a virtual disk has none.
-- G true: the queue counts requests, not bytes; each request counts as one while active, whatever its size. The export's reads are about 8 KB each (Read rate about 18,500-19,200 KBps over about 2,300-2,400 reads per second).
+- G true: the queue counts requests, not bytes; each request counts as one while active, whatever its size. In the vCenter export `Read rate for scsi0:1` (KBps) is 8 times the read requests per second in every row: 8 KB reads.
 - H false: the wrong action. The time per I/O is spent below the virtual disk; more vCPUs do not shorten it (`Processor(_Total)\% Processor Time` stays below 20%).
 - I true: % Disk Time is the queue x 100, and the queue is transfers x time per transfer; nearly all of that time is below the virtual disk, so halving it about halves the queue.
 - J false: the vCenter virtual disk latency starts at the virtual disk; time waiting in Windows queues, Storport included, is not in it.

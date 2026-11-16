@@ -7,36 +7,35 @@
 
 Which statements are correct?
 
-- A. The peak value comes from the single 20-second sample with the most drops in that cycle.
-- B. The peak value is the share of the VM's transmitted packets lost over the whole 5 minutes.
-- C. Over that 5-minute cycle, about 0.2% of the transmitted packets were dropped.
-- D. The peak metric stores all 15 samples, so its export can place the burst inside the cycle.
-- E. The peak is a calculation artifact with no real loss behind it.
-- F. About 3% of the VM's packets were lost all day: ask the network team to replace the uplink switch.
-- G. The peak and the 5-minute values are VCF Operations metrics, computed from the 20-second vCenter samples.
-- H. A large gap between the peak and the 5-minute value points to a short burst, not sustained loss.
-- I. The exports show transmit drops in several 5-minute cycles.
+- A. The peak value is the share of the VM's transmitted packets lost over the whole 5 minutes.
+- B. Over that 5-minute cycle, about 0.2% of the transmitted packets were dropped.
+- C. The peak metric stores all 15 samples, so its export can place the burst inside the cycle.
+- D. The peak is a calculation artifact of VCF Operations, with no real loss behind it.
+- E. About 3% of the VM's packets were lost all day: ask the network team to replace the uplink switch.
+- F. The peak and the 5-minute values are VCF Operations metrics, built from 20-second samples of vCenter.
+- G. A large gap between the peak and the 5-minute value marks a short burst, not sustained loss.
+- H. The exports show transmit drops in several of the 5-minute cycles of the six hours.
 
 ## Likely wrong answer
-B: about 3% of the traffic was lost over the 5 minutes. Or E: the 5-minute value is the only real one. Or C read as false from the (DEP) Transmitted Packets Dropped column, which is averaged over the 15 samples and reads 15 times lower.
+A: about 3% of the traffic was lost over the 5 minutes. Or D: the 5-minute value is the only real one. Or B read as false from the (DEP) Transmitted Packets Dropped column, which is averaged over the 15 samples and reads 15 times lower.
 
 ## Expected key points
-- Answer: A, C, G, H.
-- A true: a Peak ... within collection cycle metric is the highest of the 15 values of 20 seconds in the 5-minute cycle: the drop rate of the worst 20-second period. The peak export has one non-zero row, between 2.5% and 3.5%.
-- B false: the misconception. The 5-minute share is Total Transmitted Packets Dropped over Total Packets Transmitted of the same row, 0.15-0.25%, about 1/15 of the peak.
-- C true: the reading. In the alert row, Network|Total Transmitted Packets Dropped divided by Network|Total Packets Transmitted is 0.15-0.25%; the peak is 15 times that, as for drops held in one sample of 15. The (DEP) Transmitted Packets Dropped value of that row is the Total divided by 15 (averaged over the 15 samples); used against Total Packets Transmitted it gives about 0.013%, the trap.
-- D false: the metric stores only the peak of the 15 points: one value per 5-minute row, no pattern within the 300 seconds.
-- E false: the over-correction. The peak is a real 20-second drop rate; the 5-minute value hides the burst.
-- F false: the wrong action, on a misread value. The loss was one short burst in one cycle (every other row of the three drop exports is 0), not 3% all day.
-- G true: both are VCF Operations metrics built from the 20-second samples; they are not vSphere counters.
-- H true: comparing the peak (about 3%) with the 5-minute value (about 0.2%) tells a one-off burst from sustained loss.
-- I false: the reading. Every row of the three drop exports except the alert row is 0.
+- Answer: B, F, G.
+- A is wrong: the misconception. A Peak ... within collection cycle metric is the highest of the 15 values of 20 seconds in the 5-minute cycle: the drop rate of the worst 20-second period (one non-zero row, between 2.5% and 3.5%). The 5-minute share is Total Transmitted Packets Dropped over Total Packets Transmitted of the same row, 0.15-0.25%, about 1/15 of the peak.
+- B is correct: the reading. In the alert row, Network|Total Transmitted Packets Dropped divided by Network|Total Packets Transmitted is 0.15-0.25%; the peak is 15 times that, as for drops held in one sample of 15. The (DEP) Transmitted Packets Dropped value of that row is the Total divided by 15 (averaged over the 15 samples); used against Total Packets Transmitted it gives about 0.013%, the wrong reading.
+- C is wrong: the metric stores only the peak of the 15 points: one value per 5-minute row, no pattern within the 300 seconds.
+- D is wrong: the over-correction. The peak is a real 20-second drop rate; the 5-minute value hides the burst.
+- E is wrong: the wrong action, on a misread value. The loss was one short burst in one cycle (every other row of the three drop exports is 0), not 3% all day.
+- F is correct: both are VCF Operations metrics built from the 20-second samples; they are not vSphere counters.
+- G is correct: comparing the peak (about 3%) with the 5-minute value (about 0.2%) tells a one-off burst from sustained loss.
+- H is wrong: the reading. Every row of the three drop exports except the alert row is 0.
 
 ## Notes
 - Paired with the theory question 0313 (theory and practical; design.md, section 3.9).
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C33 (origin: synthetic). Counts only after author approval.
 - Review 2026-11-15: A, D, E reworded away from 0313; I (a false screen reading) added; capture by 33 equal streams and a 20-second Distributed Firewall drop on one; the Total metrics named. Key unchanged: A, C, G, H.
 - Converted to exports 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md): four VCF Operations chart CSVs, six hours, generated by project/tools/exportgen; the (DEP) Transmitted Packets Dropped column is the non-Total distractor (vm-network-metrics, section Avoid the non-Total variant). D and I reworded from screen to export. Key unchanged: A, C, G, H.
+- Changed in the 2026-11-15 audit: old A (the peak comes from the single 20-second sample with the most drops) dropped, because 0089 and 0356 hold the peak definition; letters: old B to I are now A to H. Key changed from A, C, G, H to B, F, G; misconception from B, F to A, E. The generator's relations are unchanged.
 - Metric names: Network|Total Transmitted Packets Dropped (Broadcom KB 393915, https://knowledge.broadcom.com/external/article/393915); Peak Transmitted Packet Dropped within collection cycle (%) = maximum dropped over average transmitted (Broadcom KB 444403).
 
 ## Metadata
@@ -55,6 +54,7 @@ knowledge:
   - vcf-operations/features/peak-20-second-metrics
   - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
   - sp5-framework/observability/collection-interval
+  - vsphere/technology/network/metrics/vm-network-metrics
 knowledge_main: vcf-operations/features/peak-20-second-metrics
 attachments:
   - 0421/ledger-app-03-peak-tx-dropped-pct.csv
@@ -63,8 +63,8 @@ attachments:
   - 0421/ledger-app-03-tx-dropped.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C33"
-answer: [A, C, G, H]
-misconception: [B, F]
+answer: [B, F, G]
+misconception: [A, E]
 misconception_type: [rollup-and-interval]
 pair: "0313"
 status: draft
