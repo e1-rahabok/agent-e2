@@ -9,7 +9,7 @@
 Which statements are correct?
 
 - A. Balanced costs VMs performance, so High Performance belongs on every host in the data center.
-- B. A host power policy changes only the power draw of the cores, not how fast an idle core starts work.
+- B. A deep C-state saves power by lowering an idle core's clock frequency, with every part of the core kept powered.
 - C. Under Balanced, idle cores drop into deep C-states, which take longer to wake after a lull.
 - D. For latency-sensitive work, High Performance gives the full hardware performance that Balanced can slightly reduce.
 - E. With some cores idle, busy cores under Balanced reach higher Turbo Boost frequencies than under High Performance.
@@ -23,13 +23,13 @@ Which statements are correct?
 
 ## Likely wrong answer
 - A: "Balanced slows everything down: set High Performance everywhere."
-- B: "A power setting can't add microseconds; look at the network."
+- B: "A C-state is a lower clock, like a P-state."
 - L: "Turn P-states off to hold the clock steady at base."
 
 ## Expected key points
 - Answer: C, D, E, F, G, H, I.
 - A is false: Balanced typically costs little or nothing, and on hosts with idle cores it can raise performance through Turbo Boost.
-- B is false: a deeper C-state saves more power and takes longer to start running again, which matches spikes on the first messages after a quiet period.
+- B is false: in a C-state an idle core halts, and deeper C-states cut power to parts of the core (C3 flushes the L1 and L2 caches and stops all internal clocks). Lowering the frequency is the job of P-states, not C-states.
 - C is true: Balanced lets ESXi use deep C-states (C2 or deeper) when cores are idle, and a deeper C-state takes longer to start running again.
 - D is true: the Balanced policy can slightly reduce performance of latency-sensitive workloads; High Performance uses no power-saving features.
 - E is true: idle cores leave thermal room, so busy cores boost higher (about 151% of nominal under Balanced against about 130% under High Performance in the whitepaper chart).
@@ -42,6 +42,7 @@ Which statements are correct?
 - L is false: with Use P States off, ESXi runs the cores at the highest available frequency, Turbo included. Only Power.MaxFreqPct below 100% (Intel) or the BIOS takes Turbo away.
 
 ## Notes
+- Changed 2026-11-16 (re-review): B (the policy does not change how fast an idle core starts work) was the near-negation of C; B now tests what a C-state does (power-states, ESXi level and C-states table), still false. F is a Level 200 fact among Level 400 options (re-review note; not changed).
 - Changed in the 2026-11-15 audit: hedges removed from correct options C, E, I and absolutes from wrong options A, B, K (every correct effect carried a hedge, every wrong one an absolute); L added (Use P States off read as base clock); level 300 to 400 (E, J and L need the C-state and Turbo mechanism that the rule "High Performance is fastest" gets wrong).
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): D one fact; old G (Balanced costs most workloads little) negated A and is now the deep C-state fact (worded so that C1E, which the hardware controls, stays possible); J decidable after the power-states fix (Performance Best Practices for vSphere 9.1, p. 22; vSphere 9.1 Custom policy parameters); old L and M (Latency Sensitivity High) removed because they repeat 0112. Key changed from C, D, E, F, G, H, I, M to C, D, E, F, G, H, I.

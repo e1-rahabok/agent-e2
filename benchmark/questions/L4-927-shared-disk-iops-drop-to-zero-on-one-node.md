@@ -1,7 +1,7 @@
 # Shared disk IOPS drop to zero on one cluster node
 
 ## Prompt
-- Two Linux VMs, pg-ha-a and pg-ha-b, run an active/passive database cluster: one node at a time mounts the database file system.
+- Two Linux VMs, pg-ha-a and pg-ha-b, run an active/passive database cluster.
 - They share three VMDKs on datastore DS-PG07, set to multi-writer sharing. Each VM also has its own OS disk. Both VMs were powered on all week.
 - VCF Operations, last 7 days, IOPS of the shared data disk scsi1:0 on each VM:
   - pg-ha-a: 3,000 to 5,000 until Wednesday 03:12, then 0 to the end of the chart.
@@ -37,6 +37,7 @@ Which statements are correct?
 
 ## Notes
 - The knowledge base holds the reporting pattern (passive 0 after a failover, blank before it took over) as an observation from VCF Operations charts. The stem states an active/passive cluster because the observation is of an active/passive pair; an active-active cluster on multi-writer disks is not covered by it.
+- Re-review 2026-11-16: the stem line "one node at a time mounts the database file system" explained the mechanism A, B and H rest on; removed. The cluster type (active/passive) stays as a case fact. Key unchanged: A, B, E.
 
 ## Metadata
 ```yaml
