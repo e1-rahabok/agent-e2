@@ -201,8 +201,10 @@ def plan(retriever, question, cfg, case=None):
     for i in base:
         tiers['mechanism'] += [x['id'] for x in retriever.links(i, 'same_name')]
         tiers['mechanism'] += [x['id'] for x in retriever.links(i, 'internal_derive')][:cfg.get('plan_derive_n', 3)]
-    for h in top[:2] + tiers['named']:
-        tiers['more'] += [x['id'] for x in retriever.links(h, 'related')][:2]
+    for h in top[:2] + tiers['named'] + (tiers['claims'] if cfg.get('plan_related_claims') else []):
+        tiers['more'] += [x['id'] for x in retriever.links(h, 'related')][:cfg.get('plan_related_n', 2)]
+        if cfg.get('plan_related_back'):
+            tiers['more'] += [x['id'] for x in retriever.backlinks(h, 'related')][:cfg.get('plan_related_back')]
     tiers['more'] = second + tiers['more']
     return tiers, matched, hits
 

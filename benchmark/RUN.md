@@ -37,8 +37,9 @@ Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the fro
 | `<date>-claude-opus-5.5` | web | 1,455 | effort medium, 8,000 tokens | about 105 min | about 40 |
 | Total | | 10,185 | | about 2 hours | about 59 (77 with the safety factor) |
 
+- The larger reading set (2026-11-16) adds about 11,000 input tokens to each of the 4,365 Agent E2 answers: about US$ 5 to 10 more on the three candidates. Read the total as about US$ 66 (about 85 with the safety factor); the table rows above are before this change. The preflight prices it for real.
 - The four runs go in parallel, so the round takes as long as the slowest run (Opus, at its starting concurrency of 3; the runner raises it while the provider allows).
-- An Agent E2 answer sends about 17,000 input tokens over its 2 model calls (the case call about 1,500, the answer call about 15,000 with the reading set), against about 400 for Base.
+- An Agent E2 answer sends about 28,500 input tokens over its 2 model calls (the case call about 1,500, the answer call about 27,000 with the reading set: it averaged 20,000 tokens before the related tier of 2026-11-16 and 27,000 after, against the 32,000 budget), against about 400 for Base.
 - Add about 3 minutes for the preflight (under US$ 1) and 1 relaunch: one command lives 2 hours, the runner stops at 110 minutes.
 - The projection is checked again before anything long starts. If it exceeds the credits, `max_cost_usd` (150) or `max_hours` (6) in [`benchmark/runner/config.yaml`](runner/config.yaml), the round does not start.
 

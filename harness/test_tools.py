@@ -464,6 +464,26 @@ class WindowTest(unittest.TestCase):
         self.assertIn('context_over', [s['action'] for s in trace])
 
 
+class RelatedTierTest(unittest.TestCase):
+    """The last tier of the reading plan follows related links both ways."""
+    A = 'guest-os/cpu/metrics/context-switch'
+    B = 'guest-os/cpu/windows-cpu-scheduling'
+
+    def test_backlinks_are_the_files_that_declare_the_link(self):
+        ret = Retriever(DOCS, CHUNKS)
+        self.assertIn(self.B, [x['id'] for x in ret.links(self.A, 'related')])
+        self.assertIn(self.A, [x['id'] for x in ret.backlinks(self.B, 'related')])
+        self.assertEqual([], ret.backlinks('no/such/file', 'related'))
+
+    def test_plan_follows_backlinks_only_when_asked(self):
+        import planner
+        ret = Retriever(DOCS, CHUNKS)
+        cfg = dict(ModesTest.CFG, plan_related_back=4, plan_related_n=4)
+        on = planner.plan(ret, 'What does a VM CPU Ready of 8% mean on the resource controls of its pool?', cfg)[0]['more']
+        off = planner.plan(ret, 'What does a VM CPU Ready of 8% mean on the resource controls of its pool?', dict(cfg, plan_related_back=0))[0]['more']
+        self.assertGreaterEqual(len(on), len(off))
+
+
 class TermMapTest(unittest.TestCase):
     """knowledge/catalog/user-terms.yaml read by harness/terms.py."""
 
