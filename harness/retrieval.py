@@ -181,6 +181,16 @@ class Retriever:
                  'snippet': ' '.join(c.text.split('\n')[1:3])[:240], 'status': c.doc.status}
                 for d, (s, c) in best.items()]
 
+    def backlinks(self, doc_id, link_type='related'):
+        """Files that list doc_id under link_type. A related link is symmetric in meaning, but the files declare it one way."""
+        if not hasattr(self, '_back'):
+            self._back = {}
+            for d in self.docs.values():
+                for t, ids in d.links.items():
+                    for lid in ids:
+                        self._back.setdefault((t, lid), []).append(d.id)
+        return [{'id': i} for i in sorted(self._back.get((link_type, doc_id), []))]
+
     def links(self, doc_id, link_type='all'):
         d = self.docs.get(doc_id)
         if not d:

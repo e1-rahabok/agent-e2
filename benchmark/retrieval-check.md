@@ -9,6 +9,7 @@ Script: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent
 - It caps Agent E2. A model cannot use a file it never sees: if 75% of the needed files reach the reading set, Agent E2 answers from at most those files (plus a gap follow-up), however good the model is.
 - It catches regressions. Every new knowledge file changes word statistics and ranking. A file added for one chapter can push another question's file out of the top results. Without this check, the drop would surface only in the next benchmark, mixed with model noise.
 - It keeps changes honest. Rule (`CLAUDE.md`, Validation): a change to structure or retrieval needs a before and after number. This check gives that number for every change set.
+- The reading plan follows `related` links both ways (`plan_related_back`), from the top search hits, the named files and the files the claims found.
 - Runs on the run set as it is (author, 2026-11-13, Q206), re-baselined when the question set changes.
 
 ## What it does

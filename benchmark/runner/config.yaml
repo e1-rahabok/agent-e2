@@ -54,6 +54,9 @@ plan_section_tokens: 400      # reading plan: files below the whole-file tiers g
 plan_named_whole: 3           # reading plan: named files read whole, strongest names first; the others give their best sections (harness/AGENT.md, 4.2)
 plan_derive_n: 8              # reading plan: internal_derive files taken per named file (the mechanism closure)
 plan_claims_max: 20          # reading plan: one search per claim, at most this many claims
+plan_related_n: 4           # reading plan, last tier: related files a selected file declares, at most this many per file (was 2)
+plan_related_back: 4        # and files that declare a selected file as related (the link is symmetric in meaning), at most this many per file
+plan_related_claims: true   # the related tier also starts from the files the one-search-per-claim tier found, not only the top 2 search hits and the named files
 term_map: true                # user words -> knowledge-base terms, files and notes (knowledge/catalog/user-terms.yaml, harness/terms.py)
 term_map_files: 2             # files pulled in from the matched rows (tier 2)
 case_model: true              # stage 1: the model reads the question into a case (temperature 0); false = the code-only reading
