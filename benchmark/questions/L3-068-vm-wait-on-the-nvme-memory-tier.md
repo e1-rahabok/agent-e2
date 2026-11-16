@@ -34,7 +34,7 @@ A, C
 ## Notes
 - Paired with 0147 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item B17.
 - I added in the 2026-11-15 audit: the write fact is now vendor-sourced in memory-tiering (vSphere 9.1 documentation, pp. 1848, 1872); with 0147 D it is two questions.
-- H reworded in the 2026-11-16 re-review: it now asks whether the touching vCPU waits (memory-tiering, Misconceptions: "the VM that touched the page waited 900 µs"), not whether the VM is slowed, so the Touching a page on NVMe line ("one fetch at a high latency on an idle device does not [slow a VM]") no longer reads against it.
+- H reworded in the 2026-11-16 re-review: it now asks whether the touching vCPU waits (memory-tiering, Misconceptions: "the VM that touched the page waited 900 µs"), not whether the VM is slowed. Q249 answered 2026-11-16: the touching vCPU waits for the full fetch, so H stays false; the Touching a page on NVMe line now agrees. Key A, C unchanged.
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
 ## Metadata

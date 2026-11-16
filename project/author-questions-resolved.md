@@ -4,6 +4,18 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q249 · Memory > Tiering · Two pairs of lines disagree
+
+- Files: [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md); question [0384](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-068-vm-wait-on-the-nvme-memory-tier.md) (option H), coverage gaps left unwritten.
+- Now: section "Touching a page on NVMe" says one fetch at a high latency on an idle device does not slow the VM; a misconception line says otherwise. Section Interactions says a reservation splits between DRAM and NVMe only when the reserved VMs exceed DRAM, and elsewhere that a tiered VM is not kept in DRAM. 0384 H depends on the first pair.
+- Research (2026-11-16): the vSphere 9.1 PDF says nothing about an idle NVMe device or a wake-up delay, so pair 1 is the author's lab fact. Pair 2: p. 1969 (and 1872 of the memory tiering chapter) says a tiered VM's "configured memory reservation is served from NVMe" and its overhead stays in DRAM, and that memory reservations (not pinned memory) "can be split between DRAM and the NVMe tiers" when the reserved VMs' consumed memory exceeds DRAM. That is an example, not a condition.
+- Question: which line of each pair holds on 9.1?
+  - Pair 1: A. "one fetch ... does not slow the VM"; B. "the VM that touched the page waited 900 µs".
+  - Pair 2: A. a reservation splits only when the reserved VMs exceed DRAM; B. a tiered VM's reservation can be served from NVMe in any case.
+- Recommended: pair 1 B (the touching vCPU waits for the fetch; reword the first line to "delays the vCPU once; a few fetches cost little, not nothing"); pair 2 B (drop "only when": keep the vendor example as an example). 0384 H stays false; key A, C unchanged.
+- Answer (author, 2026-11-16): follow Claude's recommendation: pair 1 B, pair 2 B. Every Tier 1 access traps into the VMkernel and stalls the touching vCPU for the full fetch (an idle-device wake-up included); one 900 µs stall adds little to a batch workload but is never zero. A reservation is an admission and reclamation floor, not a Tier 0 lock: cold reserved pages demote to Tier 1 once host DRAM passes about 80%, whatever the total of the reservations.
+- Applied: [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md): section Touching a page on NVMe reworded (one fetch delays the vCPU once; a few cost little, not nothing); section Interactions drops "only when" and keeps the vendor example as an example; new Misconceptions line on the reservation. 0384: H stays false, key A, C unchanged, note updated.
+
 ### Q251 · Benchmark levels · Relabels that conflict with the pairing plan or your earlier labels
 
 - Files: question files below; [project/question-pairing-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-pairing-2026-11-14.md) (items C20, C26).
