@@ -11,28 +11,27 @@
 
 Which statements are correct?
 
-- A. Overcommit is not affecting this VM: Memory Latency is 0%, and nothing is swapped or compressed at host level.
-- B. The balloon took 6 GB inside Linux; Linux then paged part of the Java memory out to its own swap, and the threads wait for those page-ins.
-- C. VM Memory Latency counts waits for ESXi to bring back swapped or compressed pages; it cannot see paging inside the Guest OS.
+- A. Swap activity inside Linux is, on its own, proof that host overcommit affects the VM.
+- B. The balloon pushed Linux to page Java memory out to its own swap; the threads wait on the page-ins.
+- C. The 6 GB in the balloon may have freed less than 6 GB of host memory, if some of those pages were shared.
 - D. Linux gave the balloon its free and cache pages first; it paged out used memory only when those ran short.
-- E. Adding 8 GB to the VM fixes it, because the balloon would then take the extra memory first and Java keeps its pages.
+- E. The guest is sized too small for Java; adding 8 GB to the VM removes the cause.
 - F. Swapped and Compressed at 0 prove the host has enough physical memory, since ESXi would compress before it balloons.
 
 ## Likely wrong answer
-A: Memory Latency is 0%, so memory is not the cause.
+A: "Linux is swapping, so the host is overcommitted: that settles it."
 
 ## Expected key points
 - Answer: B, C, D.
-- The overcommit indicators, in order: ballooning, host swap and compression, then swap inside the Guest OS. Here the last one is active: the balloon is now hurting the guest.
-- B: the balloon driver allocates memory inside Linux. When free and cache pages are not enough, Linux pages out used memory; every page-in is a wait the application feels.
-- C: VM Memory Latency is the share of time a vCPU waits for ESXi to bring a page back (swap-in, decompression). Guest paging happens above ESXi; ESXi cannot see it.
-- D: the Guest OS hands the balloon free pages first, then cache, then modified and in-use pages. Paging of used memory starts only when the first two run short.
-- A is wrong: Latency 0% rules out host-level waits only.
-- E is wrong: the balloon follows host pressure, not the VM's size; more configured memory adds to the overcommit.
+- A is wrong: swap inside the guest can have other causes (another guest issue, a guest sized too small), so the host indicators come first: ballooning, host swap or compression, then swap inside the Guest OS. Here the balloon at 09:00 ties the guest swap to the host.
+- B is correct: the balloon driver allocates memory inside Linux; when free and cache pages are not enough, Linux pages out used memory, and every page-in is a wait the application feels. Memory Latency stays at 0% because it counts only waits on ESXi (swap-in, decompression), not paging inside the guest.
+- C is correct: a balloon page whose ESXi page was shared with other pages frees less than its size; a 6 GB balloon can free less than 6 GB.
+- D is correct: the Guest OS hands the balloon free pages first, then cache, then modified and in-use pages. Paging of used memory starts only when the first two run short.
+- E is wrong: the cause is host overcommit, a provider event; the fix for the balloon is on the provider side. Before 09:00 the same 32 GB guest did not page.
 - F is wrong: ballooning comes before compression and swap; 0 there does not mean there is no pressure.
 
 ## Notes
-- Revised 2026-11-12: the earlier version repeated "balloon above 0 is normal" (also in L2-13); now the indicator that matters is the last one, guest paging.
+- Changed in the 2026-11-15 audit: C (VM Memory Latency cannot see guest paging, redundancy #36, homed in 0265/0383) replaced by the shared-pages fact (ballooning, Mechanism); A (the same fact as the misconception) replaced by the decision tree's misconception "Guest swap activity proves host overcommitment" ("No ballooning means no memory problem", the report's proposal, is arguable on a VM whose driver demonstrably works); E (undecidable: adding memory to a ballooned VM) rewritten to the guest-too-small belief, false by guest-os-sizing ("The fix for the balloon is on the provider side"); B shortened.
 
 ## Metadata
 ```yaml
@@ -50,10 +49,11 @@ knowledge:
   - vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
   - vsphere/technology/memory/concepts/ballooning
   - vsphere/technology/memory/metrics/virtual-motherboard/latency
+  - guest-os/system/guest-os-sizing
 knowledge_main: vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05"
+source_path: "Synthetic, 2026-11-05"
 answer: [B, C, D]
 misconception: [A]
 misconception_type: [layer-confusion, reclamation-as-contention]

@@ -13,11 +13,11 @@
 
 Which statements are correct?
 
-- A. When Windows pages out a page that ESXi had already swapped, ESXi first reads it from the VM swap file and Windows then writes it to its page file.
+- A. A page that ESXi swapped and Windows then pages out is read from the VM swap file and written to the page file.
 - B. The 26 ms page-file write latency points to a storage fault as the cause of the slow batch.
 - C. A Windows restart tonight clears the VM's swap file and brings the swapped pages back into memory.
 - D. Powering the VM off and on deletes its swap file, together with the pages swapped into it.
-- E. After a power-off and power-on, the batch will run without host swapping, even with the 6,144 MB limit kept.
+- E. After a power-off and power-on, the batch will run without host swapping, even with the 6,144 MB limit kept in place.
 - F. ESXi compresses and swaps under this limit rather than ballooning, because the VM has no balloon driver.
 - G. Turning the balloon driver back on, with the limit unchanged, would stop Windows from paging.
 - H. Swap in at about the rate of swap out shows a stable VM whose vCPUs do not wait on memory.

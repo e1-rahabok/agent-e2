@@ -15,15 +15,15 @@
 Which statements are correct?
 
 - A. Granted of 1,025 GB on a host with 768 GB of memory is a counter error.
-- B. Granted can pass physical memory, because it counts each VM's mapped pages, zero and shared pages included, before any saving.
-- C. Host Consumed can pass 768 GB in the same way, as the VMs touch more of their configured memory.
+- B. Granted can pass physical memory: it counts every mapped VM page, zero and shared pages too, before savings.
+- C. Host Consumed can also pass 768 GB in the same way, as the VMs go on touching more of their configured memory.
 - D. Page sharing saves about 305 GB on this host: the VMs' Granted minus their Consumed.
 - E. Page sharing saves about 352 GB on this host: the sum of the VMs' Shared.
 - F. Host Consumed is higher than the VMs' sum because it also holds the kernel's memory and the VMs' overhead.
 - G. Host Granted also holds the kernel's own memory, which is why it reads above the VMs' sum.
-- H. Host Granted can sit a little above the VMs' sum because it also counts non-VM processes, such as the management agents.
-- I. Granted is the figure to plan this host's capacity on, since it shows the memory the VMs hold.
-- J. Move VMs off esx-12 until its Granted falls below 768 GB.
+- H. Host Granted sits slightly above the VMs' sum, as it also counts non-VM processes like the management agents.
+- I. Granted is the figure to plan this host's capacity on, because it shows the memory the VMs hold on the host right now.
+- J. Move VMs off esx-12 with vMotion until its Granted falls below the 768 GB of physical memory.
 
 ## Likely wrong answer
 A: "Granted cannot be larger than the memory in the host, so the counter is broken." E: "Shared is the memory sharing saves."

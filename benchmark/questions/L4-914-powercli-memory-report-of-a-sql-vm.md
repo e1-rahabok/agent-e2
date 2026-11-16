@@ -22,13 +22,13 @@ Which statements are correct?
 - A. GuestMemoryUsage is ESXi's Active estimate for the VM, not a counter read from Windows.
 - B. GuestMemoryUsage is the memory Windows reports in use, collected through VMware Tools.
 - C. HostMemoryUsage adds the VM's overhead to the host memory the VM consumes.
-- D. HostMemoryUsage above the 32,768 MB configured is bad data that the report should drop.
+- D. HostMemoryUsage above the 32,768 MB configured is bad data, which the report should drop before it sums the VMs.
 - E. Like HostMemoryUsage, the VM's Consumed counter can pass 32,768 MB when SQL Server grows.
 - F. The VM's overhead in this sample is about 1,140 MB.
-- G. Entitlement of about 21.6 GB shows ESXi holding back about 10 GB of memory the VM asked for.
-- H. Entitlement below configured memory, with nothing ballooned, compressed or swapped and Latency at 0, is no sign of a memory shortage.
+- G. Entitlement of about 21.6 GB shows ESXi holding back about 10 GB of the memory that the VM asked for.
+- H. With nothing ballooned, compressed or swapped and Latency at 0, Entitlement below configured is no shortage.
 - I. Entitlement equals Granted plus overhead, so Windows has touched only about 21 GB.
-- J. A 32 GB reservation would lift Entitlement to 32 GB and close the gap.
+- J. A 32 GB reservation can lift Entitlement to 32 GB, because Entitlement follows the reservation.
 - K. Cut sql-07 to 4 GB of memory, as the guest uses about 2 GB.
 
 ## Likely wrong answer

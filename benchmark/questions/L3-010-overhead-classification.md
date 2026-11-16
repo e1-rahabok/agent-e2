@@ -22,24 +22,21 @@ Which statements are correct?
 
 ## Expected key points
 - Answer: A, B, F, K.
-- A is true: the ESXi kernel is not optional and not negligible; it reduces usable capacity.
-- B is true: the VM is a layer of its own, and its logs give necessary observability.
-- C is false: a snapshot is optional; you choose it for a capability the Guest OS does not have.
-- D is false: the HA spare host is optional availability protection.
-- E is false: the FTT policy is chosen availability protection (vSAN does not use hardware redundancy); FTT can even be 0.
-- F is true: overhead is mandatory and has a negative impact; a capability you choose to use is not overhead, even though it consumes resources.
-- G is false: consuming resources does not make an item overhead; a capability you choose (three of the five items) consumes resources and is still not overhead.
-- H is false: buffers (capacity, cost, DR, security) are a separate category from overhead.
-- I is false: vMotion is not overhead to the VM. It can change VM metrics on the destination (swapped or compressed pages can become regular pages), which is a metric effect, not overhead.
-- J is false: the swap file enables memory overcommit at ESXi level; it is not overhead.
-- K is true: ESXi memory consumed and CPU used by vSAN processes are overhead, although the FTT copy they manage is not.
+- A is correct: the ESXi kernel is not optional and not negligible; it reduces usable capacity.
+- B is correct: the VM is a layer of its own, and its logs give necessary observability.
+- C is wrong: a snapshot is optional; you choose it for a capability the Guest OS does not have.
+- D is wrong: the HA spare host is optional availability protection.
+- E is wrong: the FTT policy is chosen availability protection (vSAN does not use hardware redundancy); FTT can even be 0.
+- F is correct: overhead is mandatory and has a negative impact; a capability you choose to use is not overhead, even though it consumes resources.
+- G is wrong: consuming resources does not make an item overhead; a capability you choose (three of the five items) consumes resources and is still not overhead.
+- H is wrong: buffers (capacity, cost, DR, security) are a separate category from overhead.
+- I is wrong: vMotion is not overhead to the VM. It can change VM metrics on the destination (swapped or compressed pages can become regular pages), which is a metric effect, not overhead.
+- J is wrong: the swap file enables memory overcommit at ESXi level; it is not overhead.
+- K is correct: ESXi memory consumed and CPU used by vSAN processes are overhead, although the FTT copy they manage is not.
 
 ## Notes
-- Tests: Principle: overhead vs not overhead.
-- The old key point "not overhead: snapshots, HA spare host, FTT policy" is tested by the false options C, D and E; "not overhead = optional" is in the reason for F and G.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
-- Review 2026-11-14: options J and K hold one fact each; K no longer says the FTT copy is not overhead (that gave away E), J no longer says the log files are overhead (that gave away B).
-- Options G and I rewritten 2026-11-14 to one fact each (design.md 3.9; project/question-pairing-2026-11-14.md): G was an "all of the above"; I joined a claim and its reason. Key unchanged: A, B, F, K (author approved, 2026-11-14).
+- Tests: principle, overhead vs not overhead.
+- Open (2026-11-15 audit): the key rests on the knowledge base's definition of overhead (mandatory and with a negative impact), which the prompt does not state (design.md 6.1, F3). Stating it does not settle B: vSphere 9.1 lets VM logging be turned off (vSphere Virtual Machine Administration, Enable Virtual Machine Logging, PDF p. 1024), so "cannot be avoided" reads B as false while overhead.md lists VM log files as overhead. Options left unchanged for the author's decision.
 
 ## Metadata
 ```yaml

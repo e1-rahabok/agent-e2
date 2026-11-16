@@ -14,13 +14,13 @@
 Which statements are correct?
 
 - A. The memory Demand of 610 GB on the capacity page is the host's Memory|Utilization metric.
-- B. Utilization reads below Consumed mainly because it builds on each VM's Guest OS need, which leaves out cache and inactive pages that Consumed holds.
+- B. Utilization is lower as it builds on each VM's Guest OS need, which leaves out cache and inactive pages.
 - C. Consumed at 92% shows that esx-31 is short of memory.
 - D. Utilization adds the kernel's reservation, 48 GB, not the 21 GB the kernel consumes.
-- E. ESX System Usage should match the 21 GB the kernel consumes, so the 610 GB is inflated by an error.
-- F. db-01 counts in the host's Utilization at no less than its 256 GB reservation, although its own Utilization is 140 GB.
+- E. ESX System Usage should match the 21 GB the kernel consumes, so the 610 GB of Utilization is inflated by an error.
+- F. db-01 counts in host Utilization at no less than its 256 GB reservation, not at its 140 GB.
 - G. Utilization of 610 GB means the VMs hold 610 GB of the host's physical memory.
-- H. Because Utilization leaves out guest cache, it can never read above Consumed on any host.
+- H. Because Utilization leaves out guest cache and inactive pages, it can never read above Consumed on any host.
 - I. With every VM on esx-31 powered off, its Utilization would sit at about 48 GB.
 - J. Order more memory for esx-31, since Consumed is above 90%.
 - K. Machine Demand of 562 GB plus ESX System Usage of 48 GB gives the 610 GB of Utilization.

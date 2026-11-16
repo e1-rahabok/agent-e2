@@ -11,11 +11,11 @@ Which statements are correct?
 - C. Below 80% host Utilization, no thread of the host can be saturated.
 - D. On an otherwise quiet host, the planned alert stays silent while one job holds a thread at 100%.
 - E. Threads loaded unevenly on a quiet host mean the scheduler is misbalanced, which is worth its own alert.
-- F. When the month-end jobs run slowly, add hosts to the cluster.
+- F. When the month-end jobs run slowly, add hosts to the cluster to give them more CPU.
 - G. To catch one saturated thread, a check must read the busiest thread, not the host value.
 - H. Which thread runs hot can change between samples without changing that reading.
 - I. Host Usage (%) rests on the host's cores as a whole, so it hides one busy core in the same way.
-- J. Host-level CPU utilization is of no use for capacity planning, since it hides busy threads.
+- J. Host Utilization should be dropped from capacity planning, since it hides busy threads.
 
 ## Likely wrong answer
 C: if the host stays below 80%, no single thread can be saturated, so the alert catches the jobs.
@@ -37,6 +37,8 @@ C: if the host stays below 80%, no single thread can be saturated, so the alert 
 - Paired with the practical question 0379 (theory and practical; design.md, section 3.9). Situation numbers differ from 0379 on purpose.
 - The VCF Operations host metric for the busiest core is left out: its presence in VCF Operations 9.1 is not confirmed (Aria Operations 8.16 documents CPU|Peak CPU Core Usage). Fairness F2.
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item D5). Counts only after author approval.
+- Changed in the 2026-11-15 audit: J reworded ("of no use" was an absolute in a wrong option); F lengthened.
+- F rests on a fact no knowledge file states yet: a single-threaded job is bound by one core's clock, so free threads or another host do not speed it up (peak-core-usage says only "Not capacity"). Decidable from public knowledge today; add the line to the knowledge base.
 - Review 2026-11-15: new situation (an alert plan of a capacity team), away from the story of 0379; options reworded. Key letters A, B, D, G, H, I, on the new options.
 
 ## Metadata

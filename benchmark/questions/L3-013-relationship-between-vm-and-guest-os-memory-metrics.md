@@ -9,7 +9,7 @@
 Which statements are correct?
 
 - A. VCF Operations memory Utilization of a VM can read above 100% of its configured memory.
-- B. The about 32 GB that Windows cannot use on app-win-11 count in its Utilization.
+- B. The roughly 32 GB that Windows cannot use on app-win-11 count in its Utilization.
 - C. The vCenter Compressed counter of app-win-11 includes the 3 GB that Task Manager shows as compressed.
 - D. If VMware Tools is not installed on a Windows VM, ESXi cannot balloon it.
 - E. With plenty of free memory, a Windows VM's Utilization holds a buffer of 5% of its memory.

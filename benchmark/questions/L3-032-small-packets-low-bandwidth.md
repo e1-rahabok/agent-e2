@@ -28,10 +28,9 @@ C: reading bandwidth utilization as network load. A low share of the link says n
 - D is false: the packet count includes broadcast and multicast.
 - E is true: the packet counts exclude dropped packets; drops have their own counters.
 - F is false: the uplink is shared and often oversubscribed, so bandwidth can limit a VM too; throughput and packets per second are both consumption to read.
-- G is false: the uplink is at 1.2%; the limit is the per-packet work at 270,000 packets per second, which a quieter uplink does not change.
+- G is false: the uplink is at 1.2%; the limit is the per-packet work at 270,000 packets per second, which a quieter uplink does not change. The next check is dns-02's receive drops and the CPU of the vCPU that drains its receive ring.
 
 ## Notes
-- Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): over-correction F and wrong action G added. Key unchanged: A, B.
 - Review 2026-11-15: new scenario (a DNS resolver, 270,000 packets per second of about 100 bytes) so it shares no situation or wording with its practical half 0415; C, E, F and G reworded (E now states the dropped-packet rule as true). Key changed from A, B to A, B, E.
 
@@ -56,7 +55,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/metrics/virtual-motherboard/packets
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
+source_path: "Synthetic, 2026-11-12"
 answer: [A, B, E]
 misconception: [C, G]
 misconception_type: [unit-and-normalization]

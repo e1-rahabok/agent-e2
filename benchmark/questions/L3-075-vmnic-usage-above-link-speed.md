@@ -46,7 +46,7 @@ B: a port cannot carry more than its link speed, so the counter is wrong. Or F: 
 ## Notes
 - Paired with the theory question 0040 (theory and practical; design.md, section 3.9).
 - Units per vcenter-statistics, section Units (vSphere 9.1 documentation and API: network rates in kilobytes per second).
-- Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C18 (origin: synthetic). Counts only after author approval.
+- Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C18 (origin: synthetic).
 - Review 2026-11-15: A, C and E reworded away from 0040 (C is now a screen reading); F one fact; I (a false screen reading) added; knowledge_main is host/throughput. Key unchanged: A, C, D, G.
 - Converted 2026-11-15 from screenshots to a vCenter Real-time CSV and `esxcli network nic list` text (project/practical-questions-as-exports-2026-11-15.md). C, D and I reworded from chart to export. G replaced: the old G (the values are KBps, 1,100,000 KBps is about 9 Gb/s) made a third question on the KBps unit with 0412 and the old 0415 H; the new G is a reading of the export, still true. The unit is not in the export header (export-templates/HEADERS.md), so D still needs it.
 

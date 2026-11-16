@@ -17,16 +17,16 @@
 
 Which statements are correct?
 
-- A. ESXi still holds app-01's balloon target at the balloon's size, so the balloon stays inflated whatever Linux reports as available.
+- A. ESXi keeps app-01's balloon target equal to the balloon, so it stays inflated whatever Linux reports as available.
 - B. app-01's balloon will deflate once Linux needs more memory, because the guest asks the driver for its pages back.
-- C. app-01 can keep its balloon for as long as it stays this idle on a host that remains overcommitted.
+- C. app-01 keeps its balloon for as long as it stays this idle on a host that remains overcommitted.
 - D. app-01's balloon has reached the driver's ceiling, so ESXi would compress or swap any further target.
-- E. Higher memory shares for app-01, relative to the other VMs on esx-07, can lead ESXi to lower its balloon target.
+- E. More memory shares for app-01 than for the other VMs on esx-07 can make ESXi lower its target.
 - F. A balloon target above 0 on rpt-02, on a host with 42% of its memory free, is a counter error.
 - G. A memory limit on rpt-02 or on a resource pool above it is the likely cause of its balloon.
 - H. db-03's Ballooned memory of 1.6 GB beside a target of 0 shows the two counters are out of step and cannot be trusted.
 - I. ESXi no longer asks db-03 for that memory, and its balloon is deflating toward 0.
-- J. A balloon that stays flat for days rules out host pressure as the cause; only a limit keeps a balloon flat.
+- J. A balloon that stays flat for days can only come from a limit; host pressure would have deflated it by now.
 - K. Restart the VMware Tools service in app-01, so that the balloon driver releases its pages.
 
 ## Likely wrong answer

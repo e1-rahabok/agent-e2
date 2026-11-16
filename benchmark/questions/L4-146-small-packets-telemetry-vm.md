@@ -4,7 +4,7 @@
 - lb-web-01 is a VM that runs a software load balancer in front of a web farm, with one VMXNET3 adapter. During a sales campaign, clients get timeouts.
 - The VM's owner points to the bandwidth: the VM uses a few percent of its 10 Gb/s link, so he looks for the cause in the web servers.
 - [The attached vCenter export](0415/lb-web-01-network-real-time.csv) is the Real-time network view of lb-web-01 for the 30 minutes in which the timeouts started.
-- The chart legend (not in the export) gives the units: the rate and Usage columns in KBps; the packet columns as the count in each 20-second sample.
+- The chart legend (not in the export) gives the unit of the rate and Usage columns: KBps.
 
 Which statements are correct?
 
@@ -39,9 +39,10 @@ E: a few percent of the bandwidth, so the network cannot be the problem. Or K: r
 
 ## Notes
 - Paired with the theory question 0211 (theory and practical; design.md, section 3.9).
-- Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C20 (origin: synthetic). Counts only after author approval.
+- Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C20 (origin: synthetic).
 - Review 2026-11-15: new situation (a load balancer, not a UDP collector); options reworded away from 0211; B no longer the negation of A; K (a false screen reading) added. Key unchanged: A, C, D, I. The lab method stays a UDP stream with small packets: the screen shows only counts and rates.
 - Converted 2026-11-15 from a screenshot to a vCenter Real-time CSV (project/practical-questions-as-exports-2026-11-15.md). B, F, J and K reworded from chart to export. H replaced: the old H (Data receive rate is in kilobits per second) made a third question on the KBps unit with 0412 and the old 0413 G; the new H reads Receive packets dropped against Packets received and Data receive rate, still false. Usage and the transmit columns are in the export as near-name columns.
+- Audit 2026-11-15: the stem no longer says the packet columns are a count per 20-second sample (it gave A away and is the fact A and K test); the unit line keeps KBps, which D needs. Level kept at 400: H reads Receive packets dropped against the packet rate and the data rate, a reading only the mechanism decides; the review's 400 -> 300 relabel conflicts with the pairing plan (C20) and is left to the author.
 
 ## Metadata
 ```yaml
