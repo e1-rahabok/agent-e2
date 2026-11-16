@@ -33,6 +33,7 @@ B or A. B: All is read as "the strongest evidence" and the Warning and Critical 
 - E is wrong: the sets are combined with Any, so usage alone or CPU Ready alone creates an alert.
 
 ## Notes
+- Deferred 2026-11-16 (author, Q245: alert-definition content moves to after 1.0): the key rests on vendor facts about alert definitions that the knowledge base does not hold (Symptom Based criticality (the most critical triggered symptom) and the All and Any operators of symptom sets). Runs again when the alert definitions content is written (plan.md, After 1.0, VCF Operations alert mastery). Key unchanged: C.
 - Public source: Broadcom TechDocs, VCF Operations (VCF 9.0 and later), "Alert Definition Best Practices" (page last updated 2026-11-09): include the Warning and Critical symptom definitions in a single alert definition with an Any condition and set the alert criticality to Symptom Based; the alert is generated with the right criticality if either symptom is triggered. https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/infrastructure-operations/configuring-alerts-and-actions/defining-alerts-best-practices.html
 - Public source: Broadcom TechDocs, VCF Operations 9.1, "Alert Definitions in VCF Operations" (updated 2026-11-12), section Symptoms in Alert Definitions: an alert definition can require all of its symptom sets, or only one of several, before an alert is generated; criticality value "Symptom" displays symptom based criticality. https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/configuring-alerts-and-actions/alert-definitions.html
 - Public source: Broadcom TechDocs, Aria Operations 8.18, "Creating Alert Definitions": All and Any for symptom sets and for the symptoms inside a set (Boolean AND, OR); criticality of the alert is determined by the most critical of the triggered symptoms.
@@ -64,5 +65,5 @@ source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
 answer: [C]
 misconception: [A, B]
 misconception_type: [consumption-as-contention]
-status: draft
+status: deferred
 ```

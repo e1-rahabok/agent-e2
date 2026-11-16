@@ -34,6 +34,7 @@ E: db-07 is over the alert level and web-14 is well below it, so db-07 is the VM
 - I is correct: the % counter divides by the vCPU count; Ready (ms) sums over the vCPUs and does not compare across VM sizes.
 
 ## Notes
+- 2026-11-16 (author, Q251): level 300 to 400 (the Level 400 example of KNOWLEDGE-ENGINEERING.md section 4).
 - Paired with the practical question 0106 (theory and practical; design.md, section 3.9). Situation numbers differ from 0106 on purpose.
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item B1). Counts only after author approval.
 - Review 2026-11-15: option G now a wrong action of its own (a reservation for the VM over the alert level), away from 0106. Key unchanged: A, B, C, D, I.
@@ -46,7 +47,7 @@ title: "CPU Ready on a busy VM and a quiet VM"
 product: [vsphere]
 technology: [cpu]
 task: read-metric
-level: 300
+level: 400                      # Q251, author 2026-11-16: relabelled as written (was 300)
 answer_type: deterministic
 input: [text]
 object: [vm]

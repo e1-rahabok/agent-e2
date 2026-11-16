@@ -30,6 +30,7 @@ C, D or F: counters from inside Linux, stored on the VM object, assumed to come 
 - H is correct: Ballooned is a VMkernel counter, so it has data whatever the guest does (it would read 0 with no driver). It can stay above 0 here because on Linux the balloon driver is the kernel module `vmw_balloon`, not part of open-vm-tools, so ballooning goes on while vmtoolsd is stopped.
 
 ## Notes
+- 2026-11-16 (author, Q251): level 200 to 300, as the reviewers read it. A new Level 200 basics question for the guard is still to write.
 - Linux ballooning with vmtoolsd stopped: settled from the knowledge base (memory/concepts/ballooning; Q223).
 - Changed in the 2026-11-15 audit: level 200 -> 300 (H needs the Linux balloon module, G is the over-correction of the layer rule); key points one bullet per option, H says first that Ballooned is a VMkernel counter. C, D and F test one fact (Guest OS counters come through VMware Tools); the reviewer's replacements for F (the VCF Operations Usage fallback, Guest Needed Memory) are facts already tested twice or the same fact again, so F stays.
 
@@ -40,7 +41,7 @@ title: "VMware Tools not running on a Linux VM"
 product: [linux, vsphere]
 technology: [system, memory]
 task: read-metric
-level: 200
+level: 300                      # Q251, author 2026-11-16: relabelled as written (was 200)
 answer_type: deterministic
 input: [text]
 object: [guest-os, vm]

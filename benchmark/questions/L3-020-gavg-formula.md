@@ -31,6 +31,7 @@ B: adding QAVG on top of KAVG, counting the queue time twice. Or H: "Latency is 
 - I is wrong: the 10 ms in Broadcom KB 344099 is an upper bound for sustained latency on any array. The VMkernel stack itself adds a fraction of a millisecond, so a KAVG of 4.6 ms is queueing (QAVG 4.5 ms), and it makes GAVG almost seven times DAVG.
 
 ## Notes
+- 2026-11-16 (author, Q251): level 200 to 300, as the reviewers read it. A new Level 200 basics question for the guard is still to write.
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Revised 2026-11-12 for question set 1.0: values added so the relation can be checked. Counts only after author approval.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the theory half of 0086 (a full device queue). Plural stem, new values (different from 0086), one fact per option; over-correction G and wrong action H added. Key changed from A to A, D, E, F.
 - Review 2026-11-15: G no longer names a KAVG value. Key unchanged.
@@ -44,7 +45,7 @@ title: "How the esxtop storage latencies add up"
 product: [vsphere]
 technology: [storage]
 task: explain-mechanism
-level: 200
+level: 300                      # Q251, author 2026-11-16: relabelled as written (was 200)
 answer_type: deterministic
 input: [text]
 object: [esxi]
