@@ -9,7 +9,7 @@ Never index this folder: it contains answer keys.
 benchmark/
 ├── questions/L<level>-<nnn>-<slug>.md                # one question per file, one flat folder
 ├── questions/<id>/                                   # the question's attachments: screenshots, logs, diagrams (only when it has any)
-├── runner/                                       # Benchmark runner: run.py, run_all.py, preflight.py, health.py, summarize.py, report.py, governor.py, config.yaml
+├── runner/                                       # Benchmark runner: answer_questions_for_one_model.py, run_all_models_in_one_round.py, sample_check_before_round.py, stop_run_on_bad_answers.py, summary_of_all_runs.py, score_report_for_one_run.py, parallel_calls_per_model.py, config.yaml
 ├── models.md                                     # candidate models, frontier reference
 ├── RUN.md                                        # how to run a benchmark round: the prompt, approvals, time, cost
 ├── live-test.md                                  # the system on an offline model: plan and pass criteria

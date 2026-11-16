@@ -66,7 +66,7 @@ The agent's code calls them; the model calls none (`AGENT.md`, section 1).
 ## 6. Settings and checks
 - Settings live in [`benchmark/runner/config.yaml`](../benchmark/runner/config.yaml): `verify` and `catalog_facts` (not in the file: their defaults in code are true; `catalog_facts` puts catalog facts at the top of the reading set), `search_k`, `context_tokens`, `plan_section_tokens`, `plan_derive_n`, `plan_claims_max`, `term_map`, `term_map_files`, `case_model`, `case_max_tokens`, `gap_followup`, `query_expansion`, `consensus_samples`, `context_window`, `image_tokens`, `primer` (one switch per up-front block).
 - `.cache/` holds embedding vectors (not in git). The catalog is rebuilt in memory at each start (under a second).
-- Tools: `python3 -m unittest harness/test_tools.py`. Retrieval without a model: `python3 benchmark/runner/retrieval_eval.py`. Whole system: [`benchmark/runner/README.md`](../benchmark/runner/README.md).
+- Tools: `python3 -m unittest harness/test_tools.py`. Retrieval without a model: `python3 benchmark/runner/retrieval_check_without_model.py`. Whole system: [`benchmark/runner/README.md`](../benchmark/runner/README.md).
 - The runner records `tools_used`, `verify_flags` and `repaired` per answer. A soft verifier issue becomes a repair trigger only when results show it predicts wrong answers.
 
 ## 6a. Consensus

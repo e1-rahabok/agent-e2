@@ -2,13 +2,13 @@
 """Benchmark runner.
 
 Examples:
-  python3 benchmark/runner/run.py --dry-run
-  python3 benchmark/runner/run.py --mock --runs 2
-  AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-004
-  AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py              # full matrix from config.yaml
-  python3 benchmark/runner/run.py --resume benchmark/results/<benchmark-id>   # models, modes, runs and questions come from the folder
-  python3 benchmark/runner/run.py --models <id> --max-minutes 110            # stops cleanly after 110 minutes (exit code 3)
-Exit codes: benchmark/runner/exitcodes.py. A whole benchmark round: benchmark/RUN.md.
+  python3 benchmark/runner/answer_questions_for_one_model.py --dry-run
+  python3 benchmark/runner/answer_questions_for_one_model.py --mock --runs 2
+  AI_GATEWAY_API_KEY=... python3 benchmark/runner/answer_questions_for_one_model.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-004
+  AI_GATEWAY_API_KEY=... python3 benchmark/runner/answer_questions_for_one_model.py              # full matrix from config.yaml
+  python3 benchmark/runner/answer_questions_for_one_model.py --resume benchmark/results/<benchmark-id>   # models, modes, runs and questions come from the folder
+  python3 benchmark/runner/answer_questions_for_one_model.py --models <id> --max-minutes 110            # stops cleanly after 110 minutes (exit code 3)
+Exit codes: benchmark/runner/runner_exit_codes.py. A whole benchmark round: benchmark/RUN.md.
 """
 import argparse
 import csv
@@ -25,15 +25,15 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
-import exitcodes as X  # noqa: E402
-import questions as C  # noqa: E402
+import runner_exit_codes as X  # noqa: E402
+import question_files_and_answer_parsing as C  # noqa: E402
 import kb  # noqa: E402
 import modes  # noqa: E402
-import report  # noqa: E402
-from governor import Governor  # noqa: E402
-from health import Health  # noqa: E402
+import score_report_for_one_run as report  # noqa: E402
+from parallel_calls_per_model import ParallelCallsPerModel  # noqa: E402
+from stop_run_on_bad_answers import StopRunOnBadAnswers  # noqa: E402
 from llm import GatewayClient, LLMError, MockClient, ParamClient  # noqa: E402
-from naming import run_name  # noqa: E402
+from run_folder_names import run_name  # noqa: E402
 from retrieval import Retriever  # noqa: E402
 
 AGENT_ACTIONS = ('compute', 'gap', 'repair', 'consensus', 'context_over')
@@ -62,9 +62,9 @@ def main():
     ap.add_argument('--max-minutes', type=float, help='stop starting new answers after this many minutes, let the running ones finish, '
                     'print the resume command and exit with code 3 (default: config max_minutes, or no limit)')
     ap.add_argument('--out', default=os.path.join(kb.ROOT, 'benchmark', 'results'))
-    ap.add_argument('--name', help='folder name inside --out (default: <date>-<model>, naming.py)')
+    ap.add_argument('--name', help='folder name inside --out (default: <date>-<model>, run_folder_names.py)')
     ap.add_argument('--params', help='JSON {model: {"reasoning": {...}, "max_tokens": N}}: settings sent with every request of that model. '
-                    'Default: the first entry of the model\'s list in config model_params (benchmark/runner/preflight.py picks the entry that works)')
+                    'Default: the first entry of the model\'s list in config model_params (benchmark/runner/sample_check_before_round.py picks the entry that works)')
     ap.add_argument('--no-health', action='store_true', help='do not stop a run whose answers are cut off, unparsable or failing')
     a = ap.parse_args()
 
@@ -90,10 +90,10 @@ def main():
     modes_ = a.modes.split(',') if a.modes else (saved.get('modes') or cfg['modes'])
     limit = a.max_minutes if a.max_minutes is not None else cfg.get('max_minutes')
     deadline = time.monotonic() + limit * 60 if limit is not None else None
-    # Concurrency per model: the proven value is the floor; the governor probes above it (governor.py).
+    # Concurrency per model: the proven value is the floor; parallel_calls_per_model.py probes above it (parallel_calls_per_model.py).
     by_model = {} if a.concurrency is not None else (cfg.get('concurrency_by_model') or {})
     ac = cfg.get('adaptive_concurrency') or {}
-    gov = Governor({m: by_model.get(m, cfg['concurrency']) for m in models_},
+    gov = ParallelCallsPerModel({m: by_model.get(m, cfg['concurrency']) for m in models_},
                    adaptive=bool(ac.get('enabled')) and not a.no_adaptive and not a.mock,
                    step=ac.get('step', 2), max_probes=ac.get('max_probes', 2), window=ac.get('window', 40),
                    gain_fraction=ac.get('gain_fraction', 0.5), log=lambda s: print(f'  {s}', flush=True))
@@ -224,7 +224,7 @@ def main():
             ft.flush()
         return row
 
-    health = None if (a.no_health or a.mock) else Health()
+    health = None if (a.no_health or a.mock) else StopRunOnBadAnswers()
 
     def late():
         return (deadline is not None and time.monotonic() >= deadline) or bool(health and health.reason)
@@ -265,7 +265,7 @@ def main():
     if left:
         # Not a finished run: no report, which would score a partial run.
         print(f'Stopped at the {limit:g}-minute limit: {len(tasks) - left} answers done, {left} to go, {errors} errors.')
-        print(f'Resume: python3 benchmark/runner/run.py --resume {run_dir}')
+        print(f'Resume: python3 benchmark/runner/answer_questions_for_one_model.py --resume {run_dir}')
         sys.exit(X.STOPPED)
 
     path = report.write(run_dir)
@@ -276,7 +276,7 @@ def main():
 
 def _model_params(cfg, models_, given, saved):
     """Request settings per model: --params, else the ones a resumed folder started with, else the first entry of the
-    model's list in config model_params (preflight.py tries the entries in order and picks the first that answers cleanly)."""
+    model's list in config model_params (sample_check_before_round.py tries the entries in order and picks the first that answers cleanly)."""
     if given:
         return json.loads(given)
     if saved.get('model_params'):

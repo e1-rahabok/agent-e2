@@ -1,7 +1,7 @@
 # Retrieval check
 
 What it measures, why it is needed, how to read the result, and what to do when the score is low. For the author and for whoever changes the knowledge base or the harness. Not indexed.
-Script: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/retrieval_eval.py). Benchmark design: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 9.
+Script: [benchmark/runner/retrieval_check_without_model.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/retrieval_check_without_model.py). Benchmark design: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 9.
 
 ## Why it is needed
 - A wrong answer has three possible causes: the knowledge base lacks the fact, retrieval did not bring the file to the model, or the model misread a file it had. The benchmark score mixes all three.
@@ -20,11 +20,11 @@ Script: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent
 - It never drops an unknown id: a needed file that no longer exists (moved, renamed) stops the check, because dropping it would raise recall falsely. Moved files go in [project/tools/moved.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/moved.yaml).
 
 ```bash
-python3 benchmark/runner/retrieval_eval.py                       # keyword (BM25), offline
-python3 benchmark/runner/retrieval_eval.py --questions 0062,0067  # some questions
-python3 benchmark/runner/retrieval_eval.py --set plan_section_tokens=250   # try a setting
-python3 benchmark/runner/retrieval_eval.py --no-options                    # the stem only, as an operator asks: the field reading
-AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings   # hybrid, as in benchmark runs
+python3 benchmark/runner/retrieval_check_without_model.py                       # keyword (BM25), offline
+python3 benchmark/runner/retrieval_check_without_model.py --questions 0062,0067  # some questions
+python3 benchmark/runner/retrieval_check_without_model.py --set plan_section_tokens=250   # try a setting
+python3 benchmark/runner/retrieval_check_without_model.py --no-options                    # the stem only, as an operator asks: the field reading
+AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_check_without_model.py --embeddings   # hybrid, as in benchmark runs
 ```
 
 ## How to read the result

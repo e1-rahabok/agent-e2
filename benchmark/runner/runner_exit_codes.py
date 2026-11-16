@@ -1,4 +1,4 @@
-"""Exit codes of run.py and run_all.py. One meaning each, so a script (or the LLM that runs a round) can decide what to do next."""
+"""Exit codes of answer_questions_for_one_model.py and run_all_models_in_one_round.py. One meaning each, so a script (or the LLM that runs a round) can decide what to do next."""
 OK = 0              # finished: report written
 CRASHED = 1         # unexpected error (Python raises 1): relaunch with --resume
 USAGE = 2           # bad flags (argparse)

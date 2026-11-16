@@ -7,7 +7,7 @@ models:                       # candidates; all must read screenshots (vision). 
   - meta/muse-glimmer-30b       # added 2026-11-05: 29.8B, vision, Apache 2.0 (Hugging Face meta-models/Muse-Glimmer-30B)
 
 # No judge: every question is multiple choice (Q199, 2026-11-14); judge.py is archived in project/archive/legacy/judge-2026-11-14.
-# Release gate limits and the reference: benchmark/runner/report.py, GATE and REFERENCE (benchmark/design.md, section 7.5).
+# Release gate limits and the reference: benchmark/runner/score_report_for_one_run.py, GATE and REFERENCE (benchmark/design.md, section 7.5).
 
 modes: [baseline, agent-e2]     # the model alone, and Agent E2 (harness/AGENT.md). The frontier reference runs mode web (release.runs)
 runs: 5                       # repeats per question per model per mode
@@ -22,8 +22,8 @@ max_tokens: 4000              # per answer, thinking included: a reasoning model
 concurrency: 12               # proven parallel requests per model. The floor: the runner never goes below it
 concurrency_by_model:         # the proven value of a model that rate-limits earlier than 12
   anthropic/claude-opus-5.5: 3   # HTTP 429 at 12, 0 errors at 3
-model_params:                 # per model, a list of request settings in order of preference. The preflight (preflight.py) tries them on a sample and
-                              # keeps the first that answers cleanly: no cut-off answers, every letter readable. run.py without --params uses the first.
+model_params:                 # per model, a list of request settings in order of preference. The preflight (sample_check_before_round.py) tries them on a sample and
+                              # keeps the first that answers cleanly: no cut-off answers, every letter readable. answer_questions_for_one_model.py without --params uses the first.
                               # Fields: reasoning (sent to the gateway as is), max_tokens (replaces max_tokens above). The gateway lists what a model accepts
                               # in /v1/models, field reasoning_options (benchmark/models.md, section 5).
   alibaba/qwen3.8-27b:        # reasoning model: 3,700-4,300 tokens per answer with the default, 85% of baseline answers cut at the 4,000 cap
@@ -40,7 +40,7 @@ model_params:                 # per model, a list of request settings in order o
     - {reasoning: {effort: medium}, max_tokens: 8000}
     - {max_tokens: 8000}
 max_minutes: null              # stop cleanly after this many minutes (exit code 3, then --resume). A Claude Code cloud background command stops after 120: use --max-minutes 110 there
-adaptive_concurrency:         # probe above the proven value, one model at a time (benchmark/runner/governor.py)
+adaptive_concurrency:         # probe above the proven value, one model at a time (benchmark/runner/parallel_calls_per_model.py)
   enabled: true
   step: 2                     # levels: proven, proven + 2, proven + 4 (12, 14, 16)
   max_probes: 2
@@ -83,7 +83,7 @@ web:                          # public web knowledge (harness/web.py; MISSION.md
   search_results: 5
   search_fetch: 2             # result pages read for a current-facts question
 consensus_samples: 1          # multiple choice, Agent E2: n answer samples on one reading set; unanimous letters stand, else Unsure (harness/README.md, section Consensus).
-                              # The benchmark keeps 1: report.py projects consensus of 3 exactly from the 5 runs, at a third of the cost. The deployed
+                              # The benchmark keeps 1: score_report_for_one_run.py projects consensus of 3 exactly from the 5 runs, at a third of the cost. The deployed
                               # profile sets 3 (round of 2026-11-13, projected: confident-wrong multiple choice 10-18% -> 2-6%)
 context_window: 64000         # the deployed model's window (MISSION.md, section 5); a prompt above it is flagged in the trace (context_over)
 image_tokens: 1500            # estimated prompt tokens per image, for the window check; re-check against the deployed model
@@ -94,7 +94,7 @@ primer:                       # up-front blocks in Agent E2's answer prompt (har
 # Pin providers per model when known, e.g. openai/gpt-oss-20b: [groq]
 provider_order: {}
 
-release:                      # the final round: benchmark/RUN.md. One run folder per entry, all started together (run_all.py)
+release:                      # the final round: benchmark/RUN.md. One run folder per entry, all started together (run_all_models_in_one_round.py)
   runs:
     - {model: google/gemma-4-31b-it, modes: [baseline, agent-e2]}
     - {model: alibaba/qwen3.8-27b, modes: [baseline, agent-e2]}
