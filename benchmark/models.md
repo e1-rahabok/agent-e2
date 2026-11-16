@@ -124,9 +124,9 @@ Preferred, not required:
 ## 4. Candidates
 | Model | Tier | Size, licence | Why in the benchmark | Result so far |
 |---|---|---|---|---|
-| google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | No round on Agent E2 yet (earlier generations archived, not compared) |
-| alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | No round on Agent E2 yet; reasoning off |
-| meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for multi-turn tool use (weights 2026-08) | No round on Agent E2 yet; reasoning off |
+| google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | Round of 2026-11-16, default settings: Agent E2 79% (Level 400 74%), Base 40%, confident wrong 21% |
+| alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | Round of 2026-11-16, reasoning off: Agent E2 67% (Level 400 61%), Base 20%, confident wrong 32% |
+| meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for multi-turn tool use (weights 2026-08) | Round of 2026-11-16, effort low: Agent E2 84% (Level 400 83%), Base 41%, confident wrong 15% |
 
 - 3 candidates from 3 vendors (Google, Alibaba, Meta), all dense, all tier A (one 48 GB GPU at 4-bit or 8-bit).
 - Next challenger: a current-generation dense vision model of about 70B, after 1.0 (author, 2026-11-13; none on the gateway on 2026-11-14: only Llama 3.1 and 3.3 70B, text only; [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Milestones, list After 1.0).
@@ -135,6 +135,33 @@ Preferred, not required:
 - mistral-small (removed, section 7): the gateway description says the id serves Mistral Small 4 (2026-03, `mistralai/Mistral-Small-4-119B-2603`), the latest Mistral Small in the Mistral model list (https://docs.mistral.ai/models, checked 2026-11-05). The gateway's 2024-09 release date is older than the model the id now serves; the description is the authority. It is 119B MoE, not 24B dense as this file said before.
 - Licences checked on Hugging Face 2026-11-05. The Gemma licence allows commercial use; read it before deployment.
 - Request settings (`model_params` in `config.yaml`; [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md), section Request settings per model): qwen3.8-27b and muse-glimmer-30b are reasoning models. With the default settings they spend 2,000-4,300 tokens per answer thinking, are cut off at the 4,000-token cap, and take 3-8 times longer than gemma-4-31b-it. The final round sends reasoning off (`effort: none` for Qwen, `enabled: false` for Muse). That is a choice: it measures the model without thinking, and a deployment with thinking on needs its own run. The next entries of each list (effort low, with room for 8,000 tokens) are the fallback when the preflight or the health check finds cut-off answers.
+
+### Measured impact of the reasoning setting (Qwen3.8-27B, round of 2026-11-16, partial runs)
+- Read as a rough comparison, not a controlled test: each attempt is a different, unfinished slice of the run (the first two were stopped by the health check after a gateway 503 burst), and gateway load differed. Reasoning off is the first attempt (2,179 of 2,910 answers, mostly baseline then part of Agent E2); effort low is the later attempts. Answer sets differ, so compare the shape, not the second decimal.
+
+| Setting | Answers read | Mean completion tokens | Mean latency per call | Speed | Reached the token cap |
+|---|---|---|---|---|---|
+| Reasoning off (`effort: none`), 4,000 tokens | 2,179 | 845 | 5.8 s | about 78 answers a minute | 88 (4%) at 4,000; 18 (0.8%) of all answers had no readable letter |
+| Effort low, 4,000 tokens | 191 (baseline only) | 2,193 | 15.0 s | | 33 (17%) at 4,000, 27 (14%) with no readable letter; the health check stopped the run |
+| Effort low, 8,000 tokens | 553 at 11:23 UTC | 2,752 | 15.7 s | about 47 answers a minute | 8 (1.4%) at 8,000; 102 (18%) above 3,990 |
+
+- Effort low makes each call about 2.7 times slower and writes about 3.3 times as many tokens (measured on Qwen only; Muse's own numbers come with the round's results). A full run of 2,910 answers takes about 26 minutes with reasoning off and an estimated 60 to 75 minutes at effort low with 8,000 tokens; the cost rises with the tokens (about US$ 6 to 8 more for Qwen).
+- Reasoning off is not free of thinking tokens: 4% of its answers still reached the 4,000-token cap, 85 of the 88 in baseline mode. The visible answer is short (an ANSWER line and a REASON line, about 290 characters), so the cap was spent on hidden thinking that `effort: none` did not fully suppress. 70 of the 88 still had a readable letter. Why it happens on some questions is not known.
+- A cap of 4,000 tokens does not fit effort low: 17% reach it and 14% have no readable letter. Effort low needs 8,000, where 1.4% still reach the cap.
+- The scored round of 2026-11-16 ran Gemma at its default, Qwen with reasoning off and Muse at effort low. A gateway 503 burst stopped Qwen's and Muse's first runs (reasoning off) and the runner restarted both at effort low; Qwen's effort-low runs then stopped on cut-off answers, so Qwen's reasoning-off run was resumed and finished. Muse's reasoning-off run (1,875 of 2,910 answers) and Qwen's two effort-low runs (803 and 191 answers) are archived as stopped runs in `project/archive/benchmark-results-2026-11-16-stopped-runs/`. The scores are in `benchmark/results/README.md`.
+- Paired comparison, Base mode only (author asked, 2026-11-16): the same 803 question and run pairs (162 questions, 5 runs each, in id order, Level 100 to 400), Qwen reasoning off against effort low with 8,000 tokens. Sources: the Qwen effort-low run of 803 answers in `project/archive/benchmark-results-2026-11-16-stopped-runs/` and the Qwen reasoning-off run in `benchmark/results/`. Exact-match (every correct letter and no wrong one):
+
+| | Reasoning off | Effort low, 8,000 |
+|---|---|---|
+| Exact-match | 21.8% | 42.7% (+20.9 points) |
+| Right with thinking, wrong without / the reverse | 212 / 44 | (exact binomial p below 0.001) |
+| Readable answers only (766 pairs) | 22.7% | 44.4% |
+| Level 100 / 200 / 300 / 400 | 52 / 35 / 20 / 17% | 70 / 55 / 44 / 30% |
+| Mean tokens, latency, cost per answer | 699, 4.4 s, US$ 0.0016 | 3,058, 15.6 s, US$ 0.0068 |
+| No readable letter | 6 | 32 |
+
+- Thinking about doubles Qwen's exact-match without the knowledge base, at about 4 times the cost and 3.5 times the latency, on this slice. The full reasoning-off Base run stands at 20.0% (1,455 answers), so the slice is close to it. Not measured: the effect with the knowledge base (Agent E2), where the knowledge may already supply what the thinking supplies. Read it as a gap to measure, not as Qwen's score; the unscored remainder of the effort-low run (all Agent E2 answers) does not exist.
+- Real use differs between administrators (a user can switch thinking on or off, and a local server has no per-token price), so the deployed setting is still open ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), After 1.0).
 
 ## 5. Frontier reference
 - One frontier model, without the knowledge base: anthropic/claude-opus-5.5 only, because Agent E2 is built with Claude (Q164). Effort capped at medium, for cost.

@@ -1,0 +1,2564 @@
+{
+  "benchmark_id": "20261116-muse-glimmer-30b",
+  "started": "2026-11-16T11:07:37",
+  "resumed": [
+    "2026-11-16T12:24:41"
+  ],
+  "index_version": "c364e1cc4c8f7de7abaa7830bbf3cb1b1c63a140",
+  "primer": {
+    "rules": true,
+    "terms": true
+  },
+  "case_model": true,
+  "gap_followup": true,
+  "model_params": {
+    "meta/muse-glimmer-30b": {
+      "reasoning": {
+        "effort": "low"
+      }
+    }
+  },
+  "sampling": {
+    "meta/muse-glimmer-30b": {
+      "temperature": 1.0,
+      "top_p": 0.95,
+      "top_k": 64
+    }
+  },
+  "models": {
+    "meta/muse-glimmer-30b": {
+      "tags": [
+        "vision",
+        "implicit-caching",
+        "reasoning",
+        "tool-use",
+        "structured-output"
+      ],
+      "context_window": 131072,
+      "pricing": {
+        "input": "0.00000035",
+        "output": "0.0000015",
+        "input_cache_read": "0.00000004"
+      }
+    }
+  },
+  "modes": [
+    "baseline",
+    "agent-e2"
+  ],
+  "runs": 5,
+  "temperature": null,
+  "questions": [
+    "0029",
+    "0032",
+    "0034",
+    "0035",
+    "0036",
+    "0037",
+    "0038",
+    "0040",
+    "0042",
+    "0044",
+    "0046",
+    "0047",
+    "0048",
+    "0051",
+    "0052",
+    "0053",
+    "0149",
+    "0382",
+    "0001",
+    "0007",
+    "0009",
+    "0010",
+    "0011",
+    "0013",
+    "0014",
+    "0016",
+    "0017",
+    "0019",
+    "0020",
+    "0021",
+    "0022",
+    "0023",
+    "0027",
+    "0028",
+    "0039",
+    "0041",
+    "0043",
+    "0045",
+    "0049",
+    "0050",
+    "0065",
+    "0069",
+    "0074",
+    "0077",
+    "0094",
+    "0095",
+    "0105",
+    "0107",
+    "0110",
+    "0114",
+    "0144",
+    "0145",
+    "0151",
+    "0181",
+    "0182",
+    "0187",
+    "0210",
+    "0211",
+    "0213",
+    "0214",
+    "0231",
+    "0232",
+    "0233",
+    "0234",
+    "0237",
+    "0263",
+    "0270",
+    "0271",
+    "0273",
+    "0279",
+    "0295",
+    "0351",
+    "0362",
+    "0365",
+    "0366",
+    "0367",
+    "0369",
+    "0372",
+    "0375",
+    "0376",
+    "0378",
+    "0380",
+    "0383",
+    "0384",
+    "0385",
+    "0387",
+    "0390",
+    "0391",
+    "0392",
+    "0393",
+    "0394",
+    "0396",
+    "0398",
+    "0399",
+    "0400",
+    "0402",
+    "0403",
+    "0404",
+    "0405",
+    "0406",
+    "0407",
+    "0408",
+    "0409",
+    "0410",
+    "0411",
+    "0412",
+    "0413",
+    "0414",
+    "0416",
+    "0417",
+    "0420",
+    "0422",
+    "0424",
+    "0426",
+    "0428",
+    "0429",
+    "0430",
+    "0432",
+    "0433",
+    "0434",
+    "0437",
+    "0439",
+    "0441",
+    "0445",
+    "0448",
+    "0459",
+    "0464",
+    "0469",
+    "0470",
+    "0002",
+    "0003",
+    "0004",
+    "0005",
+    "0006",
+    "0008",
+    "0012",
+    "0018",
+    "0024",
+    "0025",
+    "0026",
+    "0054",
+    "0056",
+    "0057",
+    "0058",
+    "0059",
+    "0060",
+    "0061",
+    "0062",
+    "0063",
+    "0066",
+    "0067",
+    "0068",
+    "0070",
+    "0073",
+    "0079",
+    "0080",
+    "0081",
+    "0082",
+    "0083",
+    "0084",
+    "0085",
+    "0086",
+    "0088",
+    "0089",
+    "0090",
+    "0097",
+    "0100",
+    "0101",
+    "0102",
+    "0103",
+    "0104",
+    "0106",
+    "0108",
+    "0109",
+    "0111",
+    "0112",
+    "0113",
+    "0115",
+    "0140",
+    "0141",
+    "0142",
+    "0143",
+    "0146",
+    "0147",
+    "0148",
+    "0150",
+    "0152",
+    "0153",
+    "0180",
+    "0183",
+    "0184",
+    "0186",
+    "0188",
+    "0212",
+    "0215",
+    "0216",
+    "0217",
+    "0230",
+    "0235",
+    "0236",
+    "0238",
+    "0239",
+    "0240",
+    "0260",
+    "0261",
+    "0262",
+    "0264",
+    "0265",
+    "0266",
+    "0267",
+    "0268",
+    "0269",
+    "0272",
+    "0277",
+    "0290",
+    "0291",
+    "0292",
+    "0293",
+    "0294",
+    "0296",
+    "0297",
+    "0298",
+    "0310",
+    "0311",
+    "0313",
+    "0314",
+    "0331",
+    "0341",
+    "0342",
+    "0343",
+    "0344",
+    "0346",
+    "0347",
+    "0350",
+    "0352",
+    "0353",
+    "0354",
+    "0355",
+    "0356",
+    "0357",
+    "0359",
+    "0360",
+    "0361",
+    "0363",
+    "0364",
+    "0368",
+    "0370",
+    "0371",
+    "0373",
+    "0374",
+    "0377",
+    "0379",
+    "0381",
+    "0386",
+    "0388",
+    "0395",
+    "0397",
+    "0401",
+    "0415",
+    "0418",
+    "0421",
+    "0423",
+    "0425",
+    "0427",
+    "0431",
+    "0436",
+    "0438",
+    "0440",
+    "0442",
+    "0443",
+    "0444",
+    "0446",
+    "0447",
+    "0449",
+    "0450",
+    "0451",
+    "0452",
+    "0453",
+    "0454",
+    "0455",
+    "0456",
+    "0457",
+    "0458",
+    "0460",
+    "0461",
+    "0462",
+    "0463",
+    "0465",
+    "0466",
+    "0467",
+    "0468"
+  ],
+  "skipped_questions": [],
+  "groups": {
+    "0029": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 100
+    },
+    "0032": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 100
+    },
+    "0034": {
+      "answer_type": "deterministic",
+      "input": [
+        "screenshot"
+      ],
+      "level": 100
+    },
+    "0035": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 100
+    },
+    "0036": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 100
+    },
+    "0037": {
+      "answer_type": "deterministic",
+      "input": [
+        "screenshot"
+      ],
+      "level": 100
+    },
+    "0038": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 100
+    },
+    "0040": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0042": {
+      "answer_type": "deterministic",
+      "input": [
+        "screenshot"
+      ],
+      "level": 200
+    },
+    "0044": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0046": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 200
+    },
+    "0047": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0048": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0051": {
+      "answer_type": "deterministic",
+      "input": [
+        "screenshot"
+      ],
+      "level": 200
+    },
+    "0052": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0053": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0149": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0382": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0001": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0007": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0009": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0010": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0011": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0013": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0014": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0016": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0017": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0019": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0020": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0021": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0022": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0023": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0027": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0028": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0039": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0041": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0043": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0045": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0049": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0050": {
+      "answer_type": "deterministic",
+      "input": [
+        "screenshot"
+      ],
+      "level": 300
+    },
+    "0065": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0069": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0074": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0077": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0094": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0095": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0105": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0107": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0110": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0114": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0144": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0145": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0151": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0181": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0182": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0187": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0210": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0211": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0213": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0214": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0231": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0232": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0233": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0234": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0237": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0263": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0270": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0271": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0273": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0279": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0295": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0351": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0362": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0365": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0366": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0367": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0369": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0372": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0375": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0376": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0378": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0380": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0383": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0384": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0385": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0387": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0390": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0391": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0392": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0393": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0394": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0396": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0398": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0399": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0400": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0402": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0403": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0404": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0405": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0406": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0407": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0408": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0409": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0410": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0411": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0412": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0413": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0414": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0416": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0417": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0420": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0422": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0424": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0426": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0428": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0429": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0430": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0432": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0433": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0434": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0437": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0439": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0441": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0445": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0448": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0459": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0464": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0469": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0470": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0002": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0003": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0004": {
+      "answer_type": "deterministic",
+      "input": [
+        "screenshot"
+      ],
+      "level": 400
+    },
+    "0005": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0006": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0008": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0012": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0018": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0024": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0025": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0026": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0054": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0056": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0057": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0058": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0059": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0060": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0061": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0062": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0063": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0066": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0067": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0068": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0070": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0073": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0079": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0080": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0081": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0082": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0083": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0084": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0085": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0086": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0088": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0089": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0090": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0097": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0100": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0101": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0102": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0103": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0104": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0106": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0108": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0109": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0111": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0112": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0113": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0115": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0140": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0141": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0142": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0143": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0146": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0147": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0148": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0150": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0152": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0153": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0180": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0183": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0184": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0186": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0188": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0212": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0215": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0216": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0217": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0230": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0235": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0236": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0238": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0239": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0240": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0260": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0261": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0262": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0264": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0265": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0266": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0267": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0268": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0269": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0272": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0277": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0290": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0291": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0292": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0293": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0294": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0296": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0297": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0298": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0310": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0311": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0313": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0314": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0331": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0341": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0342": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0343": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0344": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0346": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0347": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0350": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0352": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0353": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0354": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0355": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0356": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0357": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0359": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0360": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0361": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0363": {
+      "answer_type": "deterministic",
+      "input": [
+        "screenshot"
+      ],
+      "level": 400
+    },
+    "0364": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0368": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0370": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0371": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0373": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0374": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0377": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0379": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0381": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0386": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0388": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0395": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0397": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0401": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0415": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0418": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0421": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0423": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0425": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0427": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0431": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0436": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0438": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0440": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0442": {
+      "answer_type": "deterministic",
+      "input": [
+        "table",
+        "screenshot"
+      ],
+      "level": 400
+    },
+    "0443": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0444": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0446": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0447": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0449": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0450": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0451": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0452": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0453": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0454": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0455": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0456": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0457": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0458": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0460": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0461": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0462": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0463": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0465": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0466": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0467": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0468": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    }
+  },
+  "retrieval": "hybrid",
+  "embedding_model": "alibaba/qwen3-embedding-0.6b",
+  "mock": false,
+  "config": {
+    "gateway": "https://ai-gateway.vercel.sh/v1",
+    "models": [
+      "google/gemma-4-31b-it",
+      "alibaba/qwen3.8-27b",
+      "meta/muse-glimmer-30b"
+    ],
+    "modes": [
+      "baseline",
+      "agent-e2"
+    ],
+    "runs": 5,
+    "temperature": null,
+    "sampling": {
+      "meta/muse-glimmer-30b": {
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "top_k": 64
+      }
+    },
+    "max_tokens": 4000,
+    "concurrency": 12,
+    "concurrency_by_model": {
+      "anthropic/claude-opus-5.5": 3
+    },
+    "model_params": {
+      "alibaba/qwen3.8-27b": [
+        {
+          "reasoning": {
+            "effort": "none"
+          }
+        },
+        {
+          "reasoning": {
+            "effort": "low"
+          }
+        },
+        {
+          "reasoning": {
+            "effort": "low"
+          },
+          "max_tokens": 8000
+        }
+      ],
+      "meta/muse-glimmer-30b": [
+        {
+          "reasoning": {
+            "enabled": false
+          }
+        },
+        {
+          "reasoning": {
+            "effort": "low"
+          }
+        },
+        {
+          "reasoning": {
+            "effort": "low"
+          },
+          "max_tokens": 8000
+        }
+      ],
+      "google/gemma-4-31b-it": [
+        {}
+      ],
+      "anthropic/claude-opus-5.5": [
+        {
+          "reasoning": {
+            "effort": "medium"
+          },
+          "max_tokens": 8000
+        },
+        {
+          "max_tokens": 8000
+        }
+      ]
+    },
+    "max_minutes": null,
+    "adaptive_concurrency": {
+      "enabled": true,
+      "step": 2,
+      "max_probes": 2,
+      "window": 40,
+      "gain_fraction": 0.5
+    },
+    "embedding_model": "alibaba/qwen3-embedding-0.6b",
+    "search_k": 10,
+    "context_tokens": 32000,
+    "plan_section_tokens": 400,
+    "plan_named_whole": 3,
+    "plan_derive_n": 8,
+    "plan_claims_max": 20,
+    "plan_related_n": 4,
+    "plan_related_back": 4,
+    "plan_related_claims": true,
+    "term_map": true,
+    "term_map_files": 2,
+    "case_model": true,
+    "case_max_tokens": 1200,
+    "gap_followup": true,
+    "query_expansion": false,
+    "rerank": false,
+    "rerank_model": "bge-reranker-v2-m3",
+    "rerank_n": 10,
+    "rerank_mode": "fuse",
+    "rerank_stem": false,
+    "web": {
+      "enabled": true,
+      "fetch": true,
+      "search_backend": "gateway",
+      "search_url": null,
+      "gateway_search_model": "google/gemma-4-31b-it",
+      "search_timeout": 60,
+      "allow_hosts": [],
+      "search_hosts": [
+        "techdocs.broadcom.com",
+        "knowledge.broadcom.com",
+        "docs.vmware.com",
+        "developer.broadcom.com"
+      ],
+      "timeout": 15,
+      "max_bytes": 3000000,
+      "page_tokens": 2000,
+      "search_results": 5,
+      "search_fetch": 2
+    },
+    "consensus_samples": 1,
+    "context_window": 64000,
+    "image_tokens": 1500,
+    "primer": {
+      "rules": true,
+      "terms": true
+    },
+    "provider_order": {},
+    "release": {
+      "runs": [
+        {
+          "model": "google/gemma-4-31b-it",
+          "modes": [
+            "baseline",
+            "agent-e2"
+          ]
+        },
+        {
+          "model": "alibaba/qwen3.8-27b",
+          "modes": [
+            "baseline",
+            "agent-e2"
+          ]
+        },
+        {
+          "model": "meta/muse-glimmer-30b",
+          "modes": [
+            "baseline",
+            "agent-e2"
+          ]
+        },
+        {
+          "model": "anthropic/claude-opus-5.5",
+          "modes": [
+            "web"
+          ]
+        }
+      ],
+      "reference": "anthropic/claude-opus-5.5",
+      "max_cost_usd": 150,
+      "cost_safety": 1.3,
+      "max_hours": 6,
+      "preflight": {
+        "questions": 7,
+        "min_parse_rate": 0.95,
+        "max_token_share": 0.5
+      },
+      "retries": 2
+    }
+  }
+}
