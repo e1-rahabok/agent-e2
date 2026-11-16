@@ -32,7 +32,7 @@ You run the health check on this VM. Which statements are correct?
 - A is true: peak Ready 1.4% and peak Co-stop 0.3% per vCPU are low; the vCPUs got the physical CPU they asked for.
 - B is false: the peak is one value for the VM, taken across all virtual disks and both directions; it does not say which disk.
 - C is true: only the disk peak is a wait; 410 ms in two cycles inside the job window is the finding, and the 5-minute averages of 4 and 6 ms hide it. The health check reads contention at the 20-second peak (Peak ... within collection cycle).
-- D is true: the peak latency is not green on its KPI row, so step 5 opens vm-storage-performance-checks: latency per virtual disk, read and write separately (the VM-level peak hides which disk), then errors (aborts, resets), then IOPS and outstanding IO. The host stack (kernel and device latency) comes later, when many VMs of the host or datastore show latency.
+- D is true: 410 ms is red against the levels for the VM peak disk latency, so step 5 opens vm-storage-performance-checks: latency per virtual disk, read and write separately (the VM-level peak hides which disk), then errors (aborts, resets), then IOPS and outstanding IO. The host stack (kernel and device latency) comes later, when many VMs of the host or datastore show latency.
 - E is false: vSphere has no VM network latency counter.
 - F is false: contention first, consumption after; consumption sizes the VM and does not show whether it waits. Efficiency (sizing) comes last.
 - G is true: received and transmitted drops are 0.
