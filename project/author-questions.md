@@ -20,18 +20,6 @@ Each entry:
 
 ## Release 1.0
 
-### Q244 · Cluster > HA admission control · Three vendor facts for the percentage policy
-
-- Files: [Admission control and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md); question [0330](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-100-ha-failover-percentage-uneven-hosts.md) (deferred until answered).
-- Now: the file has none of: the 32 MHz CPU (0 MB memory) default that a powered-on VM without a reservation counts in the percentage policy; the Insufficient Failover Resources warning when a manual percentage is below the share of the largest hosts; the power-on test against the configured percentage. Its line "A VM with no reservation passes CPU and memory admission control" leads a reader away from the key of 0330.
-- Research (2026-11-16): confirmed in the vSphere 9.1 PDF, p. 1971: a powered-on VM with no reservation counts 32 MHz CPU (`das.vmcpuminmhz`) and 0 MB memory; admission control disallows the operation when the Current CPU or Memory Failover Capacity is below the Configured Failover Capacity (step 4). Not confirmed: the Insufficient Failover Resources warning for a manual percentage below the share of the N largest hosts. No vSphere 9.1 PDF page, no TechDocs 8.0 or 9.0 page has it. The vendor fault is named "Insufficient Resources to Satisfy Configured Failover Level for HA" (p. 1949); Broadcom KB 424373 describes "Insufficient configured resources to satisfy the desired vSphere HA failover level" for the opposite case (percentage above current capacity); a 2018 post by Duncan Epping (not official) covers one host's share, not N hosts.
-- Source to check: vSphere 9.1 documentation, vSphere Availability, Cluster Resources Percentage Admission Control, Computing the Current Available Capacity (project/sources/vmware-vsphere-9-1.pdf, p. 1971).
-- Question: add the two confirmed facts, and rewrite 0330 without the warning half?
-  - A. Yes: add the 32 MHz / 0 MB default and the power-on test against the configured percentage; 0330 asks only the power-on result (the warning options go).
-  - B. No: retire 0330.
-- Recommended: A. Both facts are in the vendor text; the warning is not, so no file or key states it.
-- Answer:
-
 ### Q246 · Storage > Adapter Highest latency · Plain or command-weighted mean of read and write
 
 - Files: [Storage adapter and path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/adapter-and-path.md), [VM disk latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/virtual-motherboard/disk-latency.md); question [0072](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-025-vcenter-adapter-highest-latency.md).
@@ -76,6 +64,20 @@ Each entry:
 - Answer:
 
 ## Future release
+
+### Q244 · Cluster > HA admission control · Three vendor facts for the percentage policy
+
+- Moved to Future release by the author, 2026-11-16 (unsure of the 32 MHz default; minor). Impact: admission-control-and-cluster-state is unchanged, with no 32 MHz or 0 MB default; 0330 stays deferred (status `deferred`), key unchanged. The line "A VM with no reservation passes CPU and memory admission control" stays until this is answered.
+
+- Files: [Admission control and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md); question [0330](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-100-ha-failover-percentage-uneven-hosts.md) (deferred until answered).
+- Now: the file has none of: the 32 MHz CPU (0 MB memory) default that a powered-on VM without a reservation counts in the percentage policy; the Insufficient Failover Resources warning when a manual percentage is below the share of the largest hosts; the power-on test against the configured percentage. Its line "A VM with no reservation passes CPU and memory admission control" leads a reader away from the key of 0330.
+- Research (2026-11-16): confirmed in the vSphere 9.1 PDF, p. 1971: a powered-on VM with no reservation counts 32 MHz CPU (`das.vmcpuminmhz`) and 0 MB memory; admission control disallows the operation when the Current CPU or Memory Failover Capacity is below the Configured Failover Capacity (step 4). Not confirmed: the Insufficient Failover Resources warning for a manual percentage below the share of the N largest hosts. No vSphere 9.1 PDF page, no TechDocs 8.0 or 9.0 page has it. The vendor fault is named "Insufficient Resources to Satisfy Configured Failover Level for HA" (p. 1949); Broadcom KB 424373 describes "Insufficient configured resources to satisfy the desired vSphere HA failover level" for the opposite case (percentage above current capacity); a 2018 post by Duncan Epping (not official) covers one host's share, not N hosts.
+- Source to check: vSphere 9.1 documentation, vSphere Availability, Cluster Resources Percentage Admission Control, Computing the Current Available Capacity (project/sources/vmware-vsphere-9-1.pdf, p. 1971).
+- Question: add the two confirmed facts, and rewrite 0330 without the warning half?
+  - A. Yes: add the 32 MHz / 0 MB default and the power-on test against the configured percentage; 0330 asks only the power-on result (the warning options go).
+  - B. No: retire 0330.
+- Recommended: A. Both facts are in the vendor text; the warning is not, so no file or key states it.
+- Answer:
 
 ### Q245 · VCF Operations > Alerts · Alert-level wait and cancel cycles, criticality, Child and Descendant
 
