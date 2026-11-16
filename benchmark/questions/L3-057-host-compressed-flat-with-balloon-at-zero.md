@@ -1,9 +1,8 @@
 # Host compressed memory flat for months with balloon at 0
 
 ## Prompt
-See [the VCF Operations memory charts of the host](0391/vcf-operations-host-memory-90-days.png).
-
-- A new team member reviews an ESXi 9.1 host over the last 90 days and finds compressed memory on it, but no balloon.
+- A new team member reviews the hosts of cluster cl-east-02 (ESXi 9.1) in VCF Operations over the last 90 days and finds compressed memory on esx-e203.example.com, but no balloon.
+- She sends [the VCF Operations list of the cluster's hosts](0391/vcf-operations-cluster-hosts-memory-90-days.csv), with the first, last, lowest and highest value of each metric over the 90 days.
 - She asks whether that compressed memory still costs the VMs anything, and whether some VMs should move to another host.
 
 Which statements are correct?
@@ -11,43 +10,34 @@ Which statements are correct?
 - A. Compressed memory above 0 with the balloon at 0 shows a counter fault.
 - B. ESXi leaves compressed pages in the compression cache until a VM touches them again.
 - C. With usage below 90% all quarter, free memory stayed far above the level at which ESXi balloons.
-- D. The flat compressed line shows ESXi compressing pages at a steady rate.
+- D. Compressed holding near one value all quarter shows ESXi compressing pages at a steady rate.
 - E. No VM had a measurable wait on a compressed page during the quarter.
 - F. Pages still held in the compression cache can no longer slow any VM.
 - G. Move VMs off the host to stop ESXi from compressing their memory.
 - H. The compressed amount at the end of the quarter is less than half of what it was at the start.
 
-## Input to supply
-- Product: VCF Operations 9.1; one ESXi host that compressed memory at some point and has had compressed memory since.
-- Screen: VCF Operations > the host > Metrics, last 90 days, four charts stacked, with the names of the VCF Operations 9.1 host metric list: Mem|Usage (%), Mem|Balloon (KB), Mem|Compressed (KB), Mem|Decompression Rate (KBps). Save as `benchmark/questions/0391/vcf-operations-host-memory-90-days.png`.
-- Condition the key depends on, at every point of the 90 days:
-  - Mem|Compressed (KB) flat (within 10% of its first value) and at 500 MB or more, and not between 4.5 and 5.5 GB (the knowledge-base example);
-  - Mem|Balloon (KB) 0;
-  - Mem|Usage (%) below 90%;
-  - Mem|Decompression Rate (KBps) 0.
-- How to produce it: a host from the field matches more often than a lab; in a lab, push the host into the hard state with memory-touching VMs, then power off the extra load and leave the compressed VMs idle.
-- Masking: mask every VM, host, datastore and cluster name.
-
 ## Likely wrong answer
-A: "Ballooning comes before compression, so compressed memory without a balloon must be a fault." Or D: the flat amount read as compression going on now.
+A: "Ballooning comes before compression, so compressed memory without a balloon must be a fault." Or D: the steady amount read as compression going on now.
 
 ## Expected key points
 - Answer: B, C, E.
-- A false: Compressed is an amount held now, from compression in the past. The order balloon, then compression applies while pressure rises; with usage below 90% there is no host pressure to balloon now.
+- A false: Compressed is an amount held now, from compression in the past. The order balloon, then compression applies while pressure rises; with `Memory|Usage (%) (Max)` below 90 there is no host pressure to balloon now.
 - B true: compressed and swapped data stays out until the guest asks for it, because bringing it back costs CPU.
-- C true: ballooning from host pressure starts at about 99% of host memory used; below 90% the host is far from it.
-- D false: the line is an amount, not a rate; Compression Rate shows activity.
-- E true: a VM waits only when it touches a compressed page and ESXi decompresses it; Decompression Rate is 0 at every point of the quarter.
+- C true: ballooning from host pressure starts at about 99% of host memory used; the row of esx-e203.example.com has `Memory|Usage (%) (Max)` below 90 (the highest 5-minute value of the quarter), so the host was far from it, and `Memory|Balloon (KB) (Max)` is 0.
+- D false: Compressed is an amount, not a rate. `Memory|Compression Rate (KBps) (Max)` is 0: nothing was compressed during the quarter.
+- E true: a VM waits only when it touches a compressed page and ESXi decompresses it; `Memory|Decompression Rate (KBps) (Max)` is 0 for the quarter.
 - F false: over-correction. A VM that touches one of those pages waits for the decompression; the risk stays while the pages stay compressed.
-- G false: the wrong action. Nothing is being compressed now and nothing waits; moving VMs changes neither.
-- H false: the compressed line stays within 10% of its first value for the whole quarter.
+- G false: the wrong action. Nothing is being compressed now (Compression Rate 0) and nothing waits (Decompression Rate 0); moving VMs changes neither.
+- H false: reading. `Memory|Compressed (KB) (Last)` is within 10% of `(First)`, and `(Min)` and `(Max)` stay within the same 10%.
 
 ## Notes
 - Paired with 0025 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item C17.
 - Metric names from the VCF Operations 9.1 Host System metric list (TechDocs, updated 2026-11-12): https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/host-system-metrics.html
 - No option says what caused the compression (host pressure or a limit), and none rests on how fast a balloon deflates: ballooning (deflates when pressure ends) and ballooned (pages stay ballooned while idle) read differently on that point.
 - Review fixes 2026-11-15: new situation; A made one fact; the option on balloon deflation dropped (it rested on that difference); E now reads 0 at every point; a false screen reading added (H). Key B, C, E, H → B, C, E.
-- The key holds whenever the condition of `## Input to supply` holds.
+- Converted 2026-11-15 from a screenshot to a generated export (project/practical-questions-as-exports-2026-11-15.md, row 0391): a VCF Operations list of the cluster's hosts with First, Last, Min and Max over 90 days. D reworded from "the flat compressed line"; `Memory|Compression Rate (KBps) (Max)` added so that D is decided by the export. Key unchanged.
+- Open: C tests the same fact as 0385 C and L4-058 K (balloon from host pressure at about 99% used), over the cap of two (exports document, section 6). C is a true option, so it cannot be rewritten into a false one without changing the key; it stays until the author decides.
+- The export is generated by `project/tools/exportgen` (case 0391), which checks every value against the key. The list layout is assumed (no list export captured yet); the host metric labels follow the VCF Operations 9.1 Host System metric list (URL above), with the group written `Memory|` as the metric picker shows it.
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
 ## Metadata
@@ -59,7 +49,7 @@ technology: [memory]
 task: troubleshoot
 level: 300
 answer_type: deterministic
-input: [screenshot]
+input: [table]
 object: [esxi]
 tool: [vcf-operations]
 knowledge:
@@ -69,12 +59,12 @@ knowledge:
   - vsphere/technology/memory/concepts/host-memory-states
 knowledge_main: vsphere/technology/memory/concepts/swap-and-compression
 attachments:
-  - 0391/vcf-operations-host-memory-90-days.png
+  - 0391/vcf-operations-cluster-hosts-memory-90-days.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C17"
 answer: [B, C, E]
 misconception: [A, D]
 misconception_type: [cumulative-vs-current, reclamation-as-contention]
 pair: "0025"
-status: awaiting-input
+status: draft
 ```

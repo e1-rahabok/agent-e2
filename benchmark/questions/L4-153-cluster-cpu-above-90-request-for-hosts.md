@@ -1,46 +1,39 @@
 # A cluster above 90% CPU and a request for hosts
 
 ## Prompt
-- The capacity manager sends [the VCF Operations cluster CPU chart](0431/vcf-operations-cluster-cpu-usage-7-days.png): "CPU usage has been very high all week. The VMs must be suffering. Order two hosts now to fix the performance."
-- You add [the list of the cluster's VMs by CPU contention](0431/vcf-operations-cluster-vms-cpu-contention-7-days.png) for the same week.
+- The capacity manager sends [the VCF Operations export of cluster prod-cl03](0431/vcf-operations-cluster-cpu-7-days.csv) for the past week, one row per hour: "Look at the cluster's CPU this week. The VMs must be suffering. Order two hosts now to fix the performance."
+- You export [the cluster's VMs with their CPU for the same week](0431/vcf-operations-cluster-vms-cpu-7-days.csv) from VCF Operations.
 
 Which statements are correct?
 
-- A. A week this busy on the CPU chart means the cluster's VMs are being slowed down.
+- A. A week this busy in the cluster's CPU usage means the cluster's VMs are being slowed down.
 - B. Even the VM with the highest CPU contention of the week stays below 1%, so the VMs get the CPU they ask for.
 - C. Order the two hosts now to restore the VMs' performance.
 - D. The VMs get the most work done these hosts can give them.
 - E. The cluster has little room left for the next project.
-- F. Once the contention list is read, the usage chart answers no remaining question.
-- G. The usage chart reads the provider; the contention list reads the consumers, the VMs.
-- H. The usage chart never rises above 80% during the week.
-
-## Input to supply
-- Product and version: VCF Operations 9.1, a vSphere 9.1 cluster with DRS.
-- Screen 1: the cluster > Metrics, metric CPU|Usage (%), last 7 days. Save as `0431/vcf-operations-cluster-cpu-usage-7-days.png`.
-- Screen 2: a list view of the cluster's VMs (Environment > the cluster > the VMs, or a custom list view) with the column CPU|Contention (%) and the transformation Maximum over the same 7 days, sorted highest first; the top 10-20 VMs visible. Save as `0431/vcf-operations-cluster-vms-cpu-contention-7-days.png`.
-- How to produce it: a production or lab cluster that runs hot but fits; a lab can run CPU burners in many small VMs (1-2 vCPUs each) spread by DRS, with total vCPUs below the cluster's physical threads.
-- Condition the key depends on: cluster CPU|Usage (%) at 90% or more for most of the business hours of the week; the highest VM's maximum CPU|Contention (%) over the week below 1%; no VM with a CPU limit.
-- Masking: mask every VM, host, datastore and cluster name, including names in chart titles and legends.
+- F. Once the VMs' contention is read, the cluster's CPU usage answers no remaining question.
+- G. The cluster's CPU usage reads the provider; the VMs' contention reads the consumers.
+- H. The cluster's CPU|Usage (%) never rises above 80% during the week.
 
 ## Likely wrong answer
 A: high utilization read as a performance problem, and C, the action that follows from it. Or F, the over-correction.
 
 ## Expected key points
 - Answer: B, D, E, G.
-- A false: the misconception. Usage is consumption; a performance problem exists only when the VMs face contention, and the worst VM's contention stays below 1%.
-- B true: the list's top VM stays below 1%; the worst VM is the depth of the cluster's performance, so no VM waits for long.
+- A false: the misconception. Usage is consumption; a performance problem exists only when the VMs face contention, and the top row of the VM export, `CPU|Contention (%) (Max)`, is below 1%. Many VMs read `CPU|Usage (%) (Max)` near 100%: busy, not waiting.
+- B true: the VM export's highest `CPU|Contention (%) (Max)` over the week is below 1%; the worst VM is the depth of the cluster's performance, so no VM waits for long.
 - C false: the wrong action. Hosts do not fix a performance problem that does not exist; the capacity question is separate.
 - D true: high utilization with no queue is the most work done; for performance it is the best case.
-- E true: capacity is read against usable capacity, which sits below total once HA and buffer are taken out; at 90% or more of total, the cluster has little room for new workload.
-- F false: the over-correction. The usage chart answers the capacity question (E); utilization also serves troubleshooting, for example to find the busiest host.
+- E true: capacity is read against usable capacity, which sits below total once HA and buffer are taken out, and against demand, which is at least the utilization. `CPU|Usage (%) (Avg)` is 90% or more in most weekday business hours (09:00-18:00), so the cluster has little room for new workload.
+- F false: the over-correction. The cluster's usage answers the capacity question (E); utilization also serves troubleshooting, for example to find the busiest host.
 - G true: utilization is the provider view; contention per VM is the consumer view.
-- H false: the chart shows CPU|Usage (%) at 90% or more for most of the business hours.
+- H false: `CPU|Usage (%) (Avg)` is 90% or more in most weekday business hours, and `CPU|Usage (%) (Max)` higher still.
 
 ## Notes
 - Review 2026-11-15: the manager's quote no longer gives the chart's value; A, D, E, F reworded away from 0019; H added as a false reading of the chart; condition tightened to a worst VM below 1%. Key unchanged.
+- Converted to an export 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md, row 0431): a seeded VCF Operations list view of the cluster, one row per hour for 7 days (Avg and Max of the 5-minute values, plus the cluster's average contention), and a list of the cluster's 140 VMs with the weekly Max of CPU Contention and CPU Usage, sorted by contention. The manager's quote no longer states the level ("very high all week"), so H is read from the export. A, F, G, H reworded from chart and list to the export's values. The list view CSV format is assumed (project/tools/exportgen/README.md). The key holds for the generated export; the generator checks every condition against the rows.
 - Practical half of 0019 (pair: design.md, section 3.9).
-- Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C7). The options hold for any capture that meets the condition above. Counts only after author approval.
+- Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C7). Counts only after author approval.
 
 ## Metadata
 ```yaml
@@ -51,7 +44,7 @@ technology: [cpu, system]
 task: decide-capacity
 level: 400
 answer_type: deterministic
-input: [screenshot]
+input: [table]
 object: [cluster, vm]
 tool: [vcf-operations]
 knowledge:
@@ -60,13 +53,13 @@ knowledge:
   - sp5-framework/observability/aggregation
 knowledge_main: sp5-framework/concepts/performance-vs-capacity
 attachments:
-  - 0431/vcf-operations-cluster-cpu-usage-7-days.png
-  - 0431/vcf-operations-cluster-vms-cpu-contention-7-days.png
+  - 0431/vcf-operations-cluster-cpu-7-days.csv
+  - 0431/vcf-operations-cluster-vms-cpu-7-days.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C7"
 answer: [B, D, E, G]
 misconception: [A, C]
 misconception_type: [consumption-as-contention, provider-vs-consumer]
 pair: "0019"
-status: awaiting-input
+status: draft
 ```

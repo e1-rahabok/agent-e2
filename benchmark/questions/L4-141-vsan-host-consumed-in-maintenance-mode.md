@@ -1,14 +1,15 @@
 # vSAN host Consumed with no VMs in maintenance mode
 
 ## Prompt
-See [the vCenter memory chart of the host](0390/vcenter-host-memory-consumed-maintenance.png) and [its System Resource Reservation page](0390/vcenter-host-system-resource-reservation.png).
-
-- An ESXi 9.1 host in a vSAN cluster sits empty in maintenance mode, waiting for a BIOS update.
-- The firmware team sees that it still consumes memory with nothing on it, and asks whether to report a memory leak to the server vendor with the BIOS ticket.
+- An ESXi 9.1 host with 768 GB of memory, in a vSAN cluster, sits empty in maintenance mode, waiting for a BIOS update.
+- It entered maintenance mode on 2026-11-12; the last VM left it at 02:00 UTC. No VM has run on it since.
+- The host's Configure > System > System Resource Reservation page shows a memory reservation of 36.5 GB.
+- The firmware team sees that the host still consumes memory with nothing on it, and asks whether to report a memory leak to the server vendor with the BIOS ticket.
+- The vCenter keeps statistics level 2 for all intervals. The team exported the host's memory chart, custom interval 2026-11-11 to 2026-11-13: [the host memory export](0390/vcenter-host-memory-3-days.csv). The values are in KB.
 
 Which statements are correct?
 
-- A. Consumed fell when the VMs left and then stayed about level for the rest of the chart.
+- A. Consumed fell when the VMs left and then stayed about level for the rest of the export.
 - B. Consumed fell to about 0 once the last VM had left the host for maintenance.
 - C. With no VMs left, Consumed holds the host's own working memory: kernel modules, vSAN and other services.
 - D. An empty host's Consumed should match the memory figure on the System Resource Reservation page.
@@ -18,27 +19,17 @@ Which statements are correct?
 - H. Restart the host before it returns to service, so that it starts again with Consumed at 0.
 - I. The VMs took their overhead memory with them when they moved to the other hosts.
 
-## Input to supply
-- Product: vSphere Client 9.1; one ESXi host in a vSAN cluster.
-- Screen 1: vSphere Client > the host > Monitor > Performance > Advanced > Memory. Chart Options: timespan Past week (or a custom range of 3-4 days) that covers the hours before the host entered maintenance mode and at least one day after; counter Consumed (KB); target the host. Save as `benchmark/questions/0390/vcenter-host-memory-consumed-maintenance.png`.
-- Screen 2: vSphere Client > the host > Configure > System > System Resource Reservation, with the memory value visible. Save as `benchmark/questions/0390/vcenter-host-system-resource-reservation.png`.
-- Condition the key depends on:
-  - Consumed drops when the host enters maintenance mode, then stays flat (within 10%) and above 10 GB at every point of at least one day with 0 VMs, with no upward trend;
-  - the memory reservation on screen 2 differs from that flat Consumed by 20% or more, in either direction;
-  - neither value within 1 GB of 17, 32, 41, 49 or 57 GB (numbers of the knowledge base and of 0056).
-- Masking: mask every VM, host, datastore and cluster name.
-
 ## Likely wrong answer
 D: "With no VMs, Consumed should show what the kernel has reserved." Or F: "An empty host should consume almost nothing: a leak."
 
 ## Expected key points
 - Answer: A, C, E, I.
-- A true: the chart shows the step down at the evacuation and a level line after it.
-- B false: with 0 VMs the line stays above 10 GB.
+- A true: `Consumed for esx-v14` steps down in the rows of 2026-11-12 01:00-02:00 UTC, from above 620 GB to about 25.6 GB, and every row from 02:00 to the end stays within 10% of that level, with no upward trend.
+- B false: with 0 VMs, `Consumed for esx-v14` stays above 24 GB in every row.
 - C true: host Consumed counts every ESXi page in use: VMs, VM overhead and all kernel processes, vSAN included. With 0 VMs it is the kernel and its services.
-- D false: Consumed is actual use, not reservation; on an empty host the two can sit far apart.
+- D false: Consumed is actual use, not reservation; here about 25.6 GB against the 36.5 GB reservation.
 - E true: the figure is the host/system allocation minimum, a reservation for the host's own services; what they use shows in Consumed.
-- F false: vSAN and the kernel modules keep their memory with no VMs; a level Consumed after the evacuation is their steady use, not growth.
+- F false: vSAN and the kernel modules keep their memory with no VMs; Consumed after the evacuation is level, their steady use, not growth.
 - G false: over-correction. Without vSAN the kernel, its processes and NSX still consume memory; an empty host does not read 0.
 - H false: the wrong action. Nothing leaks; after a restart the kernel and vSAN take their memory again.
 - I true: VM overhead is part of host Consumed while the VMs run and leaves with them; what stays is the host's own use.
@@ -48,7 +39,8 @@ D: "With no VMs, Consumed should show what the kernel has reserved." Or F: "An e
 - No option says whether the kernel reservation is above or below kernel use: it does not follow use and differs by host (author question Q202, settled 2026-11-15). E reworded the same day from "set aside for" to "a reservation for": the knowledge base now says the kernel reservation holds no pages at boot (Q201), so "set aside" could read as physical pages. No option names the VCF Operations metric ESX System Usage (Q215 answered 2026-11-15: a VCF Operations metric, not a vCenter counter; the System Resource Reservation page is the host/system allocation minimum). E stays true: the figure is a reservation. Key unchanged.
 - The System Resource Reservation page is the one the CPU Demand files point to (vsphere/technology/cpu/metrics/host/demand); here only its memory value is read.
 - Review fixes 2026-11-15: new situation (firmware wait, vendor leak report); options reworded away from 0056; screen readings added (A true, B false; B is not the negation of A); the condition keeps the knowledge-base and 0056 numbers out. Key A, D, G → A, C, E, I.
-- The key holds whenever the condition of `## Input to supply` holds.
+- Converted 2026-11-15 from two screenshots to a vCenter export (custom interval of 3 days, 30-minute rows), generated by project/tools/exportgen from the spec of 0390. The evacuation time and the System Resource Reservation value are case facts in the prompt: vCenter has no running-VM count in the memory chart, and the page is not an export. Statistics level 2 is a case fact: Active, Granted and Shared common are not kept at level 1. A reworded from "chart" to "export"; truth unchanged. Key unchanged: A, C, E, I.
+- The key holds whenever the generator check of 0390 passes (project/tools/exportgen).
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
 ## Metadata
@@ -60,7 +52,7 @@ technology: [memory, system]
 task: read-metric
 level: 400
 answer_type: deterministic
-input: [screenshot]
+input: [table]
 object: [esxi]
 tool: [vcenter]
 knowledge:
@@ -69,13 +61,12 @@ knowledge:
   - vsphere/technology/cpu/metrics/host/demand
 knowledge_main: vsphere/technology/memory/metrics/host/consumed
 attachments:
-  - 0390/vcenter-host-memory-consumed-maintenance.png
-  - 0390/vcenter-host-system-resource-reservation.png
+  - 0390/vcenter-host-memory-3-days.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C16"
 answer: [A, C, E, I]
 misconception: [D, F]
 misconception_type: [provider-vs-consumer]
 pair: "0056"
-status: awaiting-input
+status: draft
 ```

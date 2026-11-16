@@ -10,7 +10,7 @@
 (generated)
 ```
 
-- and `ethtool -S ens192 | grep -i -E "queue|oob|drop"`:
+- Then `ethtool -S ens192 | grep -i -E "queue|oob|drop"`:
 
 ```text
      Tx Queue#: 0

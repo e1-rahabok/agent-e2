@@ -1,8 +1,12 @@
 # esxtop: the time a vCPU could not run
 
 ## Prompt
-- An application owner asks how much of the last minutes the vCPUs of his 4-vCPU VM spent unable to run.
-- You run esxtop on its host, open the CPU panel and expand the VM with `e`. See [the esxtop screen](0376/esxtop-cpu-vm-states.png).
+- An application owner asks how much of the last minutes the vCPUs of his 4-vCPU VM erp-05 spent unable to run.
+- You run esxtop on its host, open the CPU panel and expand the VM with `e`:
+
+```text
+(generated)
+```
 
 Which statements are correct?
 
@@ -18,35 +22,28 @@ Which statements are correct?
 - J. %RDY is above 0: add vCPUs to the VM.
 - K. %SWPWT reads 0 on every vcpu world, so memory plays no part here.
 
-## Input to supply
-- Product and version: ESXi 9.1, esxtop in an SSH session (interactive mode), CPU panel (`c`).
-- Object: one VM with 4 vCPUs, expanded with `e` so its vcpu worlds show.
-- Screen: the CPU panel with the expanded VM. Fields shown: %USED, %RUN, %SYS, %WAIT, %VMWAIT, %RDY, %IDLE, %OVRLP, %CSTP, %MLMTD, %SWPWT (use `f` to add any missing). Save as `0376/esxtop-cpu-vm-states.png`.
-- How to produce it in a lab: a 4-vCPU VM with moderate load on a busy host (other VMs running CPU burners) and memory pressure on the VM so that pages it touches come back from ESXi swap, for example a memory limit well below the memory a load in the guest keeps touching. No CPU limit.
-- Condition the key depends on: on the vcpu worlds, %RDY 2-10%, %CSTP above 0.5% on at least one, %SWPWT above 0.5%, %OVRLP above 0; %WAIT at least 40% on each vcpu world, with %IDLE within 10 points of it; %MLMTD 0.00.
-- Masking: mask every VM, host, datastore and cluster name.
-
 ## Likely wrong answer
 F: all of %WAIT is time lost to the VM. Or G: swap wait is memory, not time the vCPU stopped.
 
 ## Expected key points
 - Answer: A, B, C, D, E, H.
-- A true: Ready is demanded run time the kernel could not give.
+- A true: Ready is demanded run time the kernel could not give. The vcpu worlds show %RDY of 3-8.
 - B true: Co-stop holds a vCPU that ran ahead of a sibling.
 - C true: the vCPU stalls until the page is read back; the guest sees a freeze.
 - D true: Overlap is time stolen from a running vCPU for system services; the guest is frozen during it, even though Run keeps counting.
-- E true: reading. %WAIT = %VMWAIT + %IDLE; with %WAIT at 40% or more and %IDLE within 10 points of it, %IDLE is most of it.
+- E true: reading. On each `vmx-vcpu-N:erp-05` row %WAIT = %VMWAIT + %IDLE; %WAIT is 45 or more and %IDLE is within 6 points of it, so %IDLE is most of it.
 - F false: the misconception. %IDLE inside %WAIT is the guest's own idle time, not a wait imposed on it.
 - G false: over-correction. Swap wait is a stall of the vCPU, whatever its cause; it belongs to memory contention, but the vCPU could not run.
-- H true: reading. %MLMTD (Max Limited) is counted inside %RDY; at 0 the Ready is not from a limit.
+- H true: reading. %MLMTD (Max Limited) is counted inside %RDY; it is 0.00 on the group row and every world, so the Ready is not from a limit.
 - I false: %USED is consumption and moves with frequency and Hyper-Threading; it does not measure stopped time.
 - J false: wrong action. More vCPUs tend to raise Ready on a busy host.
-- K false: reading. %SWPWT is above 0.5%: the vCPUs stall on pages coming back from swap.
+- K false: reading. %SWPWT is 0.80 or more on every vcpu world: the vCPUs stall on pages coming back from swap.
 
 ## Notes
 - Paired with the theory question 0009 (theory and practical; design.md, section 3.9).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C29). Counts only after author approval.
 - Review 2026-11-15: condition now requires %WAIT of 40% or more (E decidable); screen reading K (false) added. Key unchanged: A, B, C, D, E, H.
+- Converted to exports 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md): the esxtop CPU panel as text, with %VMWAIT (E reads %WAIT = %VMWAIT + %IDLE). No option changed. E, H and K are the options only the panel decides; A-D repeat the pair's facts (open finding of the 2026-11-15 review, left to the author).
 
 ## Metadata
 ```yaml
@@ -57,7 +54,7 @@ technology: [cpu, memory]
 task: read-metric
 level: 300
 answer_type: deterministic
-input: [screenshot]
+input: [text]
 object: [vm]
 tool: [esxtop]
 knowledge:
@@ -67,13 +64,12 @@ knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/swap-wait
   - vsphere/technology/cpu/metrics/virtual-motherboard/wait
 knowledge_main: vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
-attachments:
-  - 0376/esxtop-cpu-vm-states.png
+attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C29"
 answer: [A, B, C, D, E, H]
 misconception: [F]
 misconception_type: [consumption-as-contention]
 pair: "0009"
-status: awaiting-input
+status: draft
 ```

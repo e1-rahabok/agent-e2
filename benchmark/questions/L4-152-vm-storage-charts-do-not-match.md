@@ -1,51 +1,41 @@
 # A VM's storage charts do not match
 
 ## Prompt
-- An administrator troubleshooting a slow application compares the VM's Virtual disk, Datastore and Disk charts with the host's chart of the LUN behind the VM's VMFS datastore.
-- The numbers differ, and he suspects the vCenter statistics are broken.
-- See [the VM's Virtual disk chart](0427/vcenter-vm-virtual-disk-real-time.png), [the VM's Datastore chart](0427/vcenter-vm-datastore-real-time.png), [the VM's Disk chart](0427/vcenter-vm-disk-real-time.png) and [the host's Disk chart of the LUN](0427/vcenter-host-disk-lun-real-time.png), same minutes.
+- An administrator troubleshooting a slow application on VM rpt-app-11 compares its storage counters with those of its host esx-c4-05. The numbers differ, and he suspects the vCenter statistics are broken.
+- Hard disk 1 (scsi0:0) is on the VMFS datastore ds-vmfs-21, backed by one LUN (naa.600a0b80003c5d2e00001f4a6b7c8d90) with no extents. Other running VMs on esx-c4-05 also use that LUN.
+- Hard disk 2 (scsi0:1) is on the NFS datastore nfs-arch-02. The VM has no snapshot.
+- He exported four Real-time charts to CSV, the same 10 minutes: [the VM's Virtual disk chart](0427/vcenter-vm-virtual-disk-realtime.csv), [the VM's Datastore chart](0427/vcenter-vm-datastore-realtime.csv), [the VM's Disk chart](0427/vcenter-vm-disk-realtime.csv) and [the host's Disk chart of the LUN](0427/vcenter-host-disk-lun-realtime.csv).
 
 Which statements are correct?
 
-- A. The NFS disk's IO is missing from the VM's Disk chart, because that chart covers block devices (VMFS and RDM) only.
-- B. The VM's Disk line matches its Hard disk 1 line within 10%.
-- C. The host's chart of the LUN counts the IO of every VM on this host that uses the LUN.
-- D. The VM's Disk chart is the whole LUN's IO, so it should match the host's chart of the LUN.
-- E. The three VM charts measure different IO and never agree.
+- A. The NFS disk's IO is missing from the VM's Disk export, because that view covers block devices (VMFS and RDM) only.
+- B. The VM's Disk IOPS match its Hard disk 1 IOPS within 10%.
+- C. The host's Disk export of the LUN counts the IO of every VM on this host that uses the LUN.
+- D. The VM's Disk export is the whole LUN's IO, so it should match the host's Disk export of the LUN.
+- E. The three VM exports measure different IO and never agree.
 - F. Raise a support case: the vCenter statistics are inconsistent.
-- G. The VM's Datastore chart shows the NFS disk's IO.
-- H. Screen 3 shows one line for each virtual disk of the VM.
-
-## Input to supply
-- Product and version: vSphere 9.1 (vSphere Client 9.1).
-- Object: one VM with Hard disk 1 on a VMFS datastore backed by one LUN (no extents) that other running VMs on the same host also use, and Hard disk 2 on an NFS datastore; no snapshot on the VM.
-- How to produce it: in the VM, a steady load on both disks (for example fio at about 500 IOPS on Hard disk 1 and 300 IOPS on Hard disk 2); keep other VMs on the same host and the same LUN busy, so that the host's IO to the LUN is at least 1.5 times this VM's IO.
-- Screen 1, vSphere Client > the VM > Monitor > Performance > Advanced > Virtual disk, Real-time, both disk instances, counters Average read requests per second and Average write requests per second. Save as `0427/vcenter-vm-virtual-disk-real-time.png`.
-- Screen 2, the same VM, Advanced > Datastore, Real-time, both datastores, the same two counters. Save as `0427/vcenter-vm-datastore-real-time.png`.
-- Screen 3, the same VM, Advanced > Disk, Real-time, the LUN, the same two counters. Save as `0427/vcenter-vm-disk-real-time.png`.
-- Screen 4, vSphere Client > the VM's host > Monitor > Performance > Advanced > Disk, Real-time, the same LUN only, the same two counters. Save as `0427/vcenter-host-disk-lun-real-time.png`.
-- Capture all four within the same minutes, each with its legend table.
-- Condition the key depends on: the NFS disk's IO shows in screens 1 and 2 and is absent from screen 3; the VM's Disk IOPS (screen 3) within 10% of Hard disk 1's IOPS (screen 1); the VM's VMFS datastore IOPS (screen 2) within 10% of Hard disk 1's IOPS; the host's IOPS for the LUN (screen 4) at least 1.5 times the VM's Disk IOPS.
-- Masking: mask every VM, host, datastore and cluster name, and the device identifier.
+- G. The VM's Datastore export shows the NFS disk's IO.
+- H. The VM's Disk export has a column for each virtual disk of the VM.
 
 ## Likely wrong answer
-D: the VM's Disk chart is the LUN, so it should match the host's chart. Or E and F: the charts never agree, so the statistics are broken.
+D: the VM's Disk export is the LUN, so it should match the host's. Or E and F: the exports never agree, so the statistics are broken.
 
 ## Expected key points
 - Answer: A, B, C, G.
-- A true: the VM Disk level covers VMFS and RDM devices, not NFS: an NFS datastore has no SCSI device.
-- B true: the screen reading. Screens 3 and 1 agree within 10%: the VM Disk value is this VM's IO on the LUN, and only Hard disk 1 sits on it.
+- A true: the VM Disk level covers VMFS and RDM devices, not NFS: an NFS datastore has no SCSI device. The VM's Disk export has only columns `... for Fibre Channel Disk (naa.600a0b80003c5d2e00001f4a6b7c8d90)`, while scsi0:1 does 250 IOPS or more in the Virtual disk export.
+- B true: reading. In every row, `Average read requests per second` plus `Average write requests per second` for the LUN in the VM's Disk export is within 10% of the same sum for scsi0:0 in the Virtual disk export: the VM Disk value is this VM's IO on the LUN, and only Hard disk 1 sits on it.
 - C true: the host's device counters cover all the IO this host sends to the LUN, for all its VMs; there is no breakdown per VM at the device.
-- D false: the misconception. The VM Disk value is this VM's IO only; screen 4 shows at least 1.5 times screen 3: the other VMs of the host on the same LUN.
-- E false: the over-correction. Hard disk 1, the VM's Disk chart and its VMFS datastore line agree within 10%: one LUN, no extents, no snapshot.
-- F false: the wrong action. Each chart is right from its level.
-- G true: the VM datastore level covers VMFS and NFS.
-- H false: the screen reading. The Disk chart shows the LUN, a device; it is not split per virtual disk, and the NFS disk has no line there.
+- D false: the misconception. The VM Disk value is this VM's IO only; the host's Disk export of the LUN shows at least 1.5 times the VM's Disk IOPS in every row: the other VMs of the host on the same LUN.
+- E false: the over-correction. Hard disk 1 (scsi0:0), the VM's Disk export and the ds-vmfs-21 columns of the Datastore export agree within 10% in every row: one LUN, no extents, no snapshot.
+- F false: the wrong action. Each export is right from its level.
+- G true: the VM datastore level covers VMFS and NFS: the nfs-arch-02 columns of the Datastore export are within 10% of scsi0:1.
+- H false: reading. The Disk export has columns for the LUN, a device, only; it is not split per virtual disk, and the NFS disk has no column there.
 
 ## Notes
 - Practical half of pair D7 with 0426 (theory; design.md, section 3.9).
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item D7 (origin: synthetic). Counts only after author approval.
 - Review 2026-11-15: B is a screen reading now (it was the negation of D); H a false screen reading. Key unchanged: A, B, C, G.
+- 2026-11-15: screenshots replaced by generated exports (project/practical-questions-as-exports-2026-11-15.md); H now reads the export's columns.
 
 ## Metadata
 ```yaml
@@ -56,7 +46,7 @@ technology: [storage]
 task: read-metric
 level: 400
 answer_type: deterministic
-input: [screenshot]
+input: [table]
 object: [vm, datastore, esxi]
 tool: [vcenter]
 knowledge:
@@ -67,15 +57,15 @@ knowledge:
   - vsphere/technology/storage/metrics/host/disk
 knowledge_main: vsphere/technology/storage/metrics/virtual-motherboard/disk
 attachments:
-  - 0427/vcenter-vm-virtual-disk-real-time.png
-  - 0427/vcenter-vm-datastore-real-time.png
-  - 0427/vcenter-vm-disk-real-time.png
-  - 0427/vcenter-host-disk-lun-real-time.png
+  - 0427/vcenter-vm-virtual-disk-realtime.csv
+  - 0427/vcenter-vm-datastore-realtime.csv
+  - 0427/vcenter-vm-disk-realtime.csv
+  - 0427/vcenter-host-disk-lun-realtime.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D7"
 answer: [A, B, C, G]
 misconception: [D]
 misconception_type: [same-name-other-object, provider-vs-consumer]
 pair: "0426"
-status: awaiting-input
+status: draft
 ```
