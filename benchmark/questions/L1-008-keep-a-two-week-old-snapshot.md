@@ -48,7 +48,7 @@ title: "Keep a two-week-old snapshot?"
 product: [vsphere, vcf-operations]
 technology: [storage]
 task: decide-capacity
-level: 300
+level: 100
 answer_type: deterministic
 answer: [B, C, D, F, I]
 misconception: [A]

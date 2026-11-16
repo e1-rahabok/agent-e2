@@ -53,7 +53,7 @@ title: "GPU memory used on a host with idle AI VMs"
 product: [vsphere]
 technology: [gpu, system]
 task: read-metric
-level: 300
+level: 200
 answer_type: deterministic
 answer: [B, C, D, E, F]
 misconception: [A]

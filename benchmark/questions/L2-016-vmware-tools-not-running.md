@@ -40,7 +40,7 @@ title: "VMware Tools not running on a Linux VM"
 product: [linux, vsphere]
 technology: [system, memory]
 task: read-metric
-level: 300
+level: 200
 answer_type: deterministic
 input: [text]
 object: [guest-os, vm]

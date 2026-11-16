@@ -47,7 +47,7 @@ title: "Datastore read IOPS above virtual disk read IOPS"
 product: [vsphere]
 technology: [storage]
 task: troubleshoot
-level: 300
+level: 200
 answer_type: deterministic
 answer: [A, D, J]
 misconception: [B]

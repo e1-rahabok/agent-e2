@@ -44,7 +44,7 @@ title: "How the esxtop storage latencies add up"
 product: [vsphere]
 technology: [storage]
 task: explain-mechanism
-level: 300
+level: 200
 answer_type: deterministic
 input: [text]
 object: [esxi]

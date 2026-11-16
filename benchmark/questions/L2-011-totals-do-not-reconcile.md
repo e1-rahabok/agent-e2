@@ -41,7 +41,7 @@ title: "Why VM, datastore and host totals differ"
 product: [vsphere]
 technology: [system, storage]
 task: explain-mechanism
-level: 300
+level: 200
 answer_type: deterministic
 input: [text]
 object: [vm, datastore, esxi, cluster]

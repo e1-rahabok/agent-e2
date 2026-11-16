@@ -39,7 +39,7 @@ technology: [network]
 object: [vm, guest-os]
 tool: [vcenter, guest-os-tools]
 task: explain-mechanism
-level: 300
+level: 200
 answer_type: deterministic
 input: [text]
 knowledge:

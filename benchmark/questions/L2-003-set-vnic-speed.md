@@ -53,7 +53,7 @@ technology: [network]
 object: [vm, network]
 tool: [vcenter, guest-os-tools]
 task: judge-setting
-level: 300
+level: 200
 answer_type: deterministic
 answer: [B, C, D, E, H, K]
 misconception: [A]
