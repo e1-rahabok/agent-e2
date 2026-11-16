@@ -30,6 +30,7 @@ A: the vendor guidance is to keep the alert-level wait cycle at 1 and tune sensi
 - F is wrong: a condition has its own Wait Cycle and Cancel Cycle, as a symptom definition does. With Wait Cycle 2 and Cancel Cycle 1 it is triggered one cycle at a time, as the symptom is now, so the alert-level Wait Cycle of 3 is still never met.
 
 ## Notes
+- Deferred 2026-11-16 (author, Q245: alert-definition content moves to after 1.0): the key rests on vendor facts about alert definitions that the knowledge base does not hold (the alert-level Wait and Cancel Cycle stacked on the symptom cycles, and the Cancel Cycle counting consecutive cycles). Runs again when the alert definitions content is written (plan.md, After 1.0, VCF Operations alert mastery). Key unchanged: C.
 - Public source: Broadcom TechDocs, VCF Operations (VCF 9.0 and later), "Alert Definition Best Practices" (page last updated 2026-11-09): the wait cycle and the cancel cycle of the alert definition go into effect after the wait and cancel cycle of the symptom definition result in a triggered or cancelled symptom; sensitivity is set at the symptom level and the alert-level cycles are 1. https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/infrastructure-operations/configuring-alerts-and-actions/defining-alerts-best-practices.html
 - Public source: Broadcom TechDocs, Aria Operations 8.18, "Creating Alert Definitions": symptom Wait Cycle, the trigger condition should remain true for this number of collection cycles before the symptom is triggered; symptom Cancel Cycle, the symptom is cancelled after the condition is false for this number of cycles; alert-level Wait Cycle, the symptoms remain triggered for this number of cycles before the alert is generated; alert-level Cancel Cycle, the symptoms are cancelled for this number of cycles after which the alert is cancelled. VCF 9.1, "Add a Virtual Machine CPU Usage Symptom to the Alert Definition" (updated 2026-11-12): Wait Cycle 3 requires the condition true for 3 collection cycles.
 - Public source: Broadcom KB 427996: the Wait Cycle is the number of consecutive collection cycles a condition must remain true.
@@ -60,5 +61,5 @@ source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
 answer: [C]
 misconception: [A, B]
 misconception_type: []
-status: draft
+status: deferred
 ```

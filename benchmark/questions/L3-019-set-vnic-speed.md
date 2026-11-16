@@ -39,6 +39,7 @@ Which statements are correct?
 - L is false: Network I/O Control has no metric that shows it capped bandwidth; check the logs.
 
 ## Notes
+- 2026-11-16 (author, Q251): level 200 to 300, as the reviewers read it. A new Level 200 basics question for the guard is still to write.
 - Revised 2026-11-12. The VMX setting is `ethernetX.linkspeed`, from vSphere 8.0 Update 2, 10,000 to 65,000 Mbps; values outside the range fall back to 10 Gbps. Vendor sources for the reported link speed: Broadcom KB 368812, How to change the vmxnet3 link speed of a VM, https://knowledge.broadcom.com/external/article/368812/how-to-change-the-vmxnet3-link-speed-of.html; Broadcom KB 444078, VMXNET3 guest OS link speed does not enforce bandwidth limits, https://knowledge.broadcom.com/external/article/444078/vmxnet3-guest-os-link-speed-resets-and-d.html.
 - Prompt sharpened: the port group is on a distributed switch with Network I/O Control v3, so the options on Network I/O Control and on shaping in each direction are decidable.
 - Options rewritten 2026-11-14 to the option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the negation pair B/C removed (old C dropped; B states the label positively); D made one fact; L (no Network I/O Control metric) added. The old L (the lower of limit and shaping wins) stays as K: resource-controls states it, so it is decidable. Key changed from B, D, E, F, I, L to B, C, D, E, H, K (same facts, relettered).
@@ -53,7 +54,7 @@ technology: [network]
 object: [vm, network]
 tool: [vcenter, guest-os-tools]
 task: judge-setting
-level: 200
+level: 300                      # Q251, author 2026-11-16: relabelled as written (was 200)
 answer_type: deterministic
 answer: [B, C, D, E, H, K]
 misconception: [A]

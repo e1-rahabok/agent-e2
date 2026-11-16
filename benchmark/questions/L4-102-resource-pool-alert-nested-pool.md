@@ -26,6 +26,7 @@ B: a pool is assumed to include the VMs of the pools inside it, as in the resour
 - E is wrong: the orange values use the same child population; 2 of 10 = 20% is under 25%, so Prod gets no orange alert either.
 
 ## Notes
+- Deferred 2026-11-16 (author, Q245: alert-definition content moves to after 1.0): the key rests on vendor facts about alert definitions that the knowledge base does not hold (the Child (one level below) and Descendant relationships). Runs again when the alert definitions content is written (plan.md, After 1.0, VCF Operations alert mastery). Key unchanged: A.
 - Public source: VMware Aria Operations 8.18, "Creating Alert Definitions" (https://techdocs.broadcom.com/us/en/vmware-cis/aria/aria-operations/8-18/vmware-aria-operations-configuration-guide-8-18/configuring-alerts-and-actions/alert-definitions/creating-alert-definitions.html), last updated 2026-05-20: Child is "an object type that is one level below the base object type"; Descendant is at any level below; Percent is the percentage of the total related objects. vSphere API ResourcePool: the pool's vm property is the set of VMs associated with that pool, and a pool is subdivided by child pools (https://developer.broadcom.com/xapis/vsan-management-api/8.0u3/vim.ResourcePool.html).
 - Knowledge file logic: vsphere/object-types/resource-pool/resource-pool-alerts, sections "Resource pool CPU contention" (does not work with nested pools) and "Coverage and receivers" (a share of the pool's VMs); catalog thresholds-alerts.yaml, alert-resource-pool-cpu-contention-red (population over 25%, relation child, VirtualMachine).
 - The infrastructure team still sees the nested VMs through the ESXi and cluster contention alerts (the VMs are also children of their hosts).
@@ -56,5 +57,5 @@ source_path: "Synthetic, 2026-11-13"
 answer: [A]
 misconception: [B]
 misconception_type: [average-hides-worst]
-status: draft
+status: deferred
 ```
