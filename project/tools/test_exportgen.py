@@ -316,5 +316,28 @@ class NetworkCases(unittest.TestCase):
             core.write_inline_blocks(md, {3: "q"})
 
 
+class ClusterCapacityCases(unittest.TestCase):
+    IDS = ("0401", "0431", "0438", "0440")
+
+    def test_generate_check_deterministic(self):
+        cases = core.load_cases()
+        for cid in self.IDS:
+            case = cases[cid]
+            files = case.generate(case.seed)
+            self.assertEqual(files, case.generate(case.seed), cid)
+            self.assertEqual(case.check(files), [], cid)
+            self.assertEqual(core.check_size_cap(files), [], cid)
+
+    def test_corrupted_rows_fail(self):
+        case = core.load_cases()["0438"]
+        name = "vcf-operations-cluster-hosts-cpu-usage-7-days.csv"
+        files = case.generate()
+        lines = files[name].split("\n")
+        parts = lines[40].split(",")
+        parts[-1] = str(float(parts[-1]) + 20)
+        lines[40] = ",".join(parts)
+        self.assertTrue(case.check({name: "\n".join(lines)}))
+
+
 if __name__ == "__main__":
     unittest.main()

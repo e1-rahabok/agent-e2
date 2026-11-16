@@ -4,7 +4,6 @@
 - Users of the VM pay-api-03 report slow responses this morning. The application owner sends the cluster score from PowerCLI and says: "The cluster score is green, so vSphere is fine. The problem must be inside the VM."
 
 ```text
-PS> (Get-Cluster cl-prod-02).ExtensionData.Summary.DrsScore
 (generated)
 ```
 

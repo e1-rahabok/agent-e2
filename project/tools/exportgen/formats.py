@@ -292,7 +292,10 @@ def _fmt_cell(v, col):
         return _cell("-", col, col.dlead)
     if isinstance(v, str):
         return _cell(v, col, col.dlead)
-    return _cell(col.fmt % v, col, col.dlead)
+    text = col.fmt % v
+    if col.align == "r" and len(text) >= col.width:
+        text = " " + text      # esxtop widens the cell instead of gluing two numbers together
+    return _cell(text, col, col.dlead)
 
 
 def _g9(*names, fmt="%.2f"):
