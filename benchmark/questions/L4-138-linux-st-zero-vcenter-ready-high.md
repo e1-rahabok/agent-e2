@@ -45,7 +45,7 @@ Which statements are correct?
 - B. In the vCenter export, Ready is more than a fifth of Run in every row.
 - C. In the vCenter export, Readiness stays below 2% in every row of the ten minutes.
 - D. vCenter's Readiness must be a collection error, since the guest sees no steal.
-- E. Without a `stealclock.enable` entry, this VM's `st` cannot count the time its vCPUs sat frozen.
+- E. Without a `stealclock.enable` entry, this VM's `st` cannot count frozen time.
 - F. With `stealclock.enable = "TRUE"` set on this VM, `st` would follow its Ready.
 - G. The us and sy figures in `top` include time the vCPUs were frozen.
 - H. `top` shows `wa` above 10%, so the guest is waiting on storage.
