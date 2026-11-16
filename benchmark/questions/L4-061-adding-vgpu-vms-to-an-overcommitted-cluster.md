@@ -9,7 +9,7 @@
 Is the capacity manager right, and what changes for the existing VMs, in normal operation and after a host failure? Which statements are correct?
 
 - A. Each vGPU VM gets a full memory reservation, and all its memory is allocated at power-on, whatever its guest uses.
-- B. The memory of the vGPU VMs is backed only as their guests touch it, like an ordinary reservation, so they add only what they use.
+- B. The reservation of a vGPU VM counts against HA admission control only; the host's own power-on check leaves it out.
 - C. The reserved memory of the vGPU VMs is never ballooned, compressed or swapped: later shortages hit the existing VMs alone.
 - D. The existing 4.8 TB of configured memory is then backed by about 2.5 TB, an overcommit of about 1.9:1 instead of 1.2:1.
 - E. In normal operation Consumed rises to about 3.7 TB of 4 TB, about 92%, which leaves about 300 GB for growth.
@@ -27,8 +27,8 @@ Is the capacity manager right, and what changes for the existing VMs, in normal 
 
 ## Expected key points
 - Answer: A, C, D, E, G, H, L.
-- A true: a VM with a vGPU (a PCI device) is fully reserved automatically; the device reads and writes guest memory directly, so every page is backed from power-on.
-- B false: unlike an ordinary reservation, the memory of a passthrough or vGPU VM is allocated at power-on and shows as Consumed whatever the guest uses.
+- A true: a VM with a vGPU (a PCI device) is fully reserved automatically; the device reads and writes guest memory directly, so every page is backed from power-on. Unlike an ordinary reservation, which is backed as the guest touches pages, it shows as Consumed whatever the guest uses.
+- B false: the full reservation of a vGPU VM counts in full against host, resource pool and HA admission control.
 - C true: reserved memory leaves the reclaimable pool; only the unreserved VMs can be reclaimed.
 - D true: 4 TB - 1.5 TB = 2.5 TB for 4.8 TB configured (about 1.92:1), against 4.8 / 4 = 1.2:1 today.
 - E true: 55% of 4 TB = 2.2 TB, plus 1.5 TB = 3.7 TB (92.5%). Any growth of the existing VMs runs into balloon, compression and swap.
@@ -44,6 +44,7 @@ Is the capacity manager right, and what changes for the existing VMs, in normal 
 - Sources: the knowledge base, GPU monitoring, section vGPU and host memory (full reservation, never reclaimed, counted in full by admission control, excluded from memory tiering); vSphere 9.1 documentation, vSphere Resource Management (PCI passthrough and vGPU VMs require a full memory reservation) and vSphere Availability, Cluster Resources Percentage.
 - Arithmetic: today Consumed 55% of 4 TB = 2.2 TB; plus 1.5 TB = 3.7 TB (92.5%). 4 TB - 1.5 TB = 2.5 TB for 4.8 TB configured (1.92:1); after a failure 3 TB - 1.5 TB = 1.5 TB for 2.2 TB consumed. Overhead ignored.
 - Review 2026-11-14: the prompt now says the GPUs fit with one host down, so option G (all 1.5 TB reserved after a failure) does not depend on GPU capacity.
+- 2026-11-16 re-review: B (backed only as touched) negated A; replaced in place with the host admission check (false; gpu-monitoring, vGPU and host memory). L stays: it follows from the reclaimable-pool sentence of the same section; no file names a separate cluster.
 - Audit 2026-11-15: H (HA admission counts reservations plus overhead) was over the two-question cap (0290, 0355 keep it) and was replaced with the memory tiering fact of the same file; the misconception moved from I to J (gpu-monitoring Misconceptions); L names a separate cluster only.
 
 ## Metadata

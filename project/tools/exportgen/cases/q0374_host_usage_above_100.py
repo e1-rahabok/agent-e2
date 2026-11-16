@@ -1,7 +1,7 @@
 """Question 0374: host CPU Usage above 100% (Turbo Boost), host with 64 threads.
 
-1: vCenter real-time chart of host esx-prod-11, one hour (180 rows). Quiet
-until about 01:55, then busy cores (Core Utilization 91-97.5%), half of the
+1: vCenter real-time chart of host esx-prod-11, the hour up to the alert at
+02:10 (180 rows, 01:10:20-02:10:00). Quiet until about 01:55, then busy cores (Core Utilization 91-97.5%), half of the
 threads idle (Utilization about 55%), Usage 106-116% (cycles beyond base).
 2: VCF Operations list (ASSUMED layout) of the 12 VMs, maximum over the hour.
 
@@ -17,7 +17,7 @@ from .. import core, formats
 
 HOST = "esx-prod-11"
 ROWS = 180
-START = dt.datetime(2026, 11, 10, 1, 40, 0, tzinfo=core.UTC)
+START = dt.datetime(2026, 11, 10, 1, 10, 0, tzinfo=core.UTC)   # export ends at the 02:10 alert
 BUSY_FROM = dt.datetime(2026, 11, 10, 1, 55, 0, tzinfo=core.UTC)
 VC = [f"{m} for {HOST}" for m in ("Usage", "Usage in MHz", "Core Utilization", "Utilization")]
 VCF = ["CPU|Usage (%) (Max)", "CPU|Ready (%) (Max)", "CPU|Co-stop (%) (Max)",
@@ -36,7 +36,7 @@ class HostUsageAbove100(core.Case):
 
     def generate(self, seed=None):
         rng = core.make_rng(self.seed if seed is None else seed, "host-usage")
-        w = core.burst_profile(ROWS, 44, 136, ramp=4)
+        w = core.burst_profile(ROWS, 134, 46, ramp=4)      # busy from 01:55:00 (row 134) to the end
         c_quiet = core.bounded_walk(rng, ROWS, 68, 1.5, 62, 75)
         c_busy = core.bounded_walk(rng, ROWS, 95, 1.0, 91, 97.5)
         u_busy = core.bounded_walk(rng, ROWS, 55, 0.8, 52.5, 57.5)
@@ -103,6 +103,8 @@ class HostUsageAbove100(core.Case):
                 fails.append(f"row {i}: Utilization {util} above 58")
         if first_over is None or first_over > dt.datetime(2026, 11, 10, 2, 10, 0, tzinfo=core.UTC):
             fails.append("alert: first Usage above 100 is not at or before 02:10:00")
+        if vrows and vrows[-1][0] != dt.datetime(2026, 11, 10, 2, 10, 0, tzinfo=core.UTC):
+            fails.append("alert: the export does not end at the 02:10:00 alert")
         for name, (u, rd, cs, prd, pcs) in lrows:
             one = name == "jump-01"
             if prd < rd or pcs < cs or (one and (cs != 0 or pcs != 0)):

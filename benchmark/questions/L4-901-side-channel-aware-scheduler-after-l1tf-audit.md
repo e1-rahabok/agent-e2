@@ -12,7 +12,7 @@
 | Host Core Utilization (%) | 85 | 96 |
 | VM CPU Readiness (%), mean of the VMs | 1.2 | 5.5 |
 
-Which statements about the change and the readings are correct?
+Which statements are correct?
 
 - A. The hosts now run the first version of the Side-Channel-Aware Scheduler, which uses one thread per core.
 - B. The current patches had already closed the concurrent-context vector, so the setting added no protection.

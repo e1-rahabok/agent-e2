@@ -32,30 +32,31 @@ Which statements are correct?
 - D. %OVRLP is time a running vCPU was interrupted for kernel work: the guest made no progress.
 - E. On each vcpu world, %RUN, %RDY, %CSTP and %WAIT add up to about 100%.
 - F. All of %WAIT is time the vCPUs were held back, so it adds to the VM's CPU wait.
-- G. Swap wait has a memory cause, so it does not count as time the vCPU was stopped.
+- G. VCF Operations adds a vCPU's swap wait to the VM's CPU Contention, not to memory contention.
 - H. On each vcpu world, %SWPWT is part of %VMWAIT, not added on top of it.
 - I. %USED on each vcpu world shows how long that vCPU was stopped.
 - J. %RDY is above 0 on every vcpu world: add vCPUs to the VM.
 - K. %SWPWT reads 0 on every vcpu world, so memory plays no part in the wait here.
 
 ## Likely wrong answer
-I: %USED read as the time the vCPUs stopped. Or F: all of %WAIT is time lost to the VM. Or G: swap wait is memory, not time the vCPU stopped.
+I: %USED read as the time the vCPUs stopped. Or F: all of %WAIT is time lost to the VM. Or G: swap wait read as CPU contention because it is a vCPU state.
 
 ## Expected key points
 - Answer: A, B, C, D, E, H.
-- A true: Ready is demanded run time the kernel could not give. The vcpu worlds show %RDY of 3-8.
+- A true: Ready is demanded run time the kernel could not give. The vcpu worlds show %RDY of 3.01-7.07.
 - B true: Co-stop holds a vCPU that ran ahead of a sibling.
 - C true: the vCPU stalls until the page is read back; the guest sees a freeze.
 - D true: Overlap is time stolen from a running vCPU for system services; the guest is frozen during it, even though Run keeps counting.
 - E true: reading. Per vcpu world, %RUN + %RDY + %CSTP + %WAIT = 100%: each `vmx-vcpu-N:erp-05` row adds to 100 (for example 35.02 + 6.26 + 0.22 + 58.50).
 - F false: %WAIT = %VMWAIT + %IDLE, and %IDLE is the guest's own idle time, not a wait imposed on it; here %IDLE is most of %WAIT.
-- G false: over-correction. Swap wait is a stall of the vCPU, whatever its cause; it belongs to memory contention, but the vCPU could not run.
+- G false: VCF Operations counts Swap Wait as part of memory contention, not CPU Contention: its cause is memory, although the vCPU could not run.
 - H true: %VMWAIT includes %SWPWT; on every vcpu world %SWPWT is below %VMWAIT, and %WAIT = %VMWAIT + %IDLE with nothing added for swap.
 - I false: the misconception. %USED is consumption and moves with frequency and Hyper-Threading; it does not measure stopped time.
 - J false: wrong action. More vCPUs tend to raise Ready on a busy host.
-- K false: reading. %SWPWT is 0.80 or more on every vcpu world: the vCPUs stall on pages coming back from swap.
+- K false: reading. %SWPWT is 1.24-1.82 on the four vcpu worlds: the vCPUs stall on pages coming back from swap.
 
 ## Notes
+- Changed 2026-11-16 (re-review): G (swap wait not a stop) was the near-negation of C; G now tests where VCF Operations counts swap wait (swap-wait, Mechanism), still false. Key points A and K quote the panel's ranges. Key unchanged.
 - Paired with the theory question 0009 (theory and practical; design.md, section 3.9).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C29). Counts only after author approval.
 - Review 2026-11-15: condition now requires %WAIT of 40% or more (E decidable); screen reading K (false) added. Key unchanged: A, B, C, D, E, H.

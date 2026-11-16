@@ -9,7 +9,7 @@ Which statements are correct?
 
 - A. One disk read at 15 ms or more for an hour while VM-level latency stayed low.
 - B. The VM-level latency stayed low, so every one of its virtual disks was served well.
-- C. Peak Latency within collection cycle stayed at 15 ms or more in the report's hour.
+- C. Peak Latency within collection cycle is 15 ms or more at every point from 02:05 to 03:00.
 - D. No VM-level metric in VCF Operations could have shown the latency of this one disk.
 - E. Close the ticket: the VM-level latency stayed within its target for the whole day.
 - F. A disk that serves only a few IOs per second can be left out of the latency check.
@@ -37,6 +37,7 @@ B or E: the VM's disk latency is low all day, so storage is fine and the ticket 
 - Review 2026-11-15: F one fact; 8 or more disks, so that the aggregate can stay at 3 ms or less whatever its weighting (one disk at 15 ms among eight averages to 2.75 ms even unweighted). Key unchanged: A, C, G.
 - 2026-11-15: screenshots replaced by generated exports (project/practical-questions-as-exports-2026-11-15.md), cut to 01:00-04:00. The slow disk stays at 15-17 ms and the other seven at 1 ms or less, so the aggregate stays at 3 ms or less whether VCF Operations weights it by IO or not.
 - Audit 2026-11-15 (redundancy): C no longer states that the peak is taken across all disks (kept by the pair 0089/0356); it is a reading of the Peak Latency export. Options A, B, D-H reworded for length only (truth unchanged). Key unchanged: A, C, G.
+- Re-review 2026-11-16: C said "in the report's hour", which a reader could take to include the 02:00 point (3.75 ms, the cycle before the report); it now names the points 02:05 to 03:00. Key unchanged: A, C, G.
 
 ## Metadata
 ```yaml

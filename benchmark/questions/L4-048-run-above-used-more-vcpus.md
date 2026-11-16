@@ -7,9 +7,9 @@
 
 Do you add the vCPUs, and what do you check instead? Which statements are correct?
 
-- A. Run averages about 25,000 ms, about 31% of the time the 4 vCPUs have: the vCPUs are far from full.
+- A. The vCPUs are far from full: no 2-hour point puts Run above a third of the time the 4 vCPUs have.
 - B. Ready below 1% and Co-stop near 0 show that the VM is not waiting for CPU.
-- C. Used is about 44% of Run while System and Overlap are small: each millisecond of run completes less work.
+- C. Used averages about 44% of Run: each millisecond of run did less work than a millisecond at base clock.
 - D. Likely causes: power saving under Balanced and busy sibling threads on the same cores.
 - E. The checks are on the host: its power policy, its actual clock speed, and the load on sibling threads.
 - F. More vCPUs change neither the clock speed nor the sharing of cores with sibling threads.
@@ -27,9 +27,9 @@ Do you add the vCPUs, and what do you check instead? Which statements are correc
 
 ## Expected key points
 - Answer: A, B, C, D, E, F.
-- A is correct: Run is about 24,300-25,700 ms in every point. A VCF Operations 5-minute ms value is the average of the 15 20-second values, so 100% is 20,000 ms per vCPU, 80,000 ms for 4 vCPUs; the 2-hour points average the 5-minute values and keep that base. Read against 1,200,000 ms (the vCenter Past Day sum), Run would look like 2%.
+- A is correct: Run is about 24,300-25,700 ms in every point, 30-32% of 80,000 ms. A VCF Operations 5-minute ms value is the average of the 15 20-second values, so 100% is 20,000 ms per vCPU, 80,000 ms for 4 vCPUs; the 2-hour points average the 5-minute values and keep that base. Read against 1,200,000 ms (the vCenter Past Day sum), Run would look like 2%.
 - B is correct: Ready 0.25-0.6%, Co-stop 0-0.04%.
-- C is correct: Used averages about 11,000 ms against 25,000 ms of Run; System is about 200 ms and Overlap about 110 ms.
+- C is correct: Used averages about 11,000 ms against 25,000 ms of Run; Used counts the work done and converts it to ms at the base (nominal) frequency, so a ratio of 0.44 is less work per millisecond of run. System (about 200 ms) and Overlap (about 110 ms) are too small to move it.
 - D is correct: with little System and Overlap, Used below Run comes from power saving and Hyper-Threading.
 - E is correct: power management and the actual frequency first (a setting), then the sibling-thread load, read as Thread against Core Utilization (it depends on the other VMs).
 - F is correct: the gap is in how fast each vCPU runs, not in how many vCPUs it has; adding vCPUs to a VM at 31% Run is the wrong answer to a request for speed.
@@ -46,6 +46,7 @@ Do you add the vCPUs, and what do you check instead? Which statements are correc
 - Leak closed 2026-11-14 on the knowledge side (project/question-pairing-2026-11-14.md, decision 3): the example row of run-vs-used-gap no longer gives this VM's numbers.
 - Export rescaled 2026-11-15 (Q224): a VCF Operations 5-minute ms value averages the 15 20-second values, so 100% is 20,000 ms per vCPU (Broadcom KB 315941; KB 444403 for VCF Operations 9.x). Every ms value is divided by 15; ratios, Ready (%), Co-stop (%) and the key are unchanged. The base line (1,200,000 ms) left the stem, so option A now needs the base. Old export: project/archive/benchmark-questions/attachments/0104-ubuntu-api-04-cpu-7-days-before-2026-11-15.csv.
 - Paired with 0003 (theory and practical, design.md 3.9).
+- 2026-11-16 re-review: A/L and C/I were near-negations. A no longer states "about 31%" (the 2% of L is not ruled out by the words, only by the base); C no longer says System and Overlap are small (I tests that). Truth kept; key unchanged.
 - 2026-11-15 audit: L added (the vCenter sum base applied to a VCF Operations value; collection-interval, Misconceptions). This is the one question that tests the VCF Operations ms base as an option (0105's proposed H/I were not added). D shortened; I carries a hedge (truth kept).
 
 ## Metadata

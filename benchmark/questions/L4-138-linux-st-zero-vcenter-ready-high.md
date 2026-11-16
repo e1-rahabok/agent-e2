@@ -2,7 +2,7 @@
 
 ## Prompt
 - A Linux administrator says: "`top` shows no steal all afternoon, so the hypervisor takes no CPU from this VM. The slowness must be elsewhere."
-- The VM app-lnx-03 runs RHEL 9 (kernel 5.14) with 4 vCPUs, virtual hardware version 21. It was deployed from a template with default VM settings; nobody changed its advanced parameters.
+- The VM app-lnx-03 runs RHEL 9 (kernel 5.14) with 4 vCPUs, virtual hardware version 21. It was deployed from a template with default VM settings; its advanced parameters hold no `stealclock` entry.
 - He pastes the summary of `top` at the end of the slow period:
 
 ```text
@@ -45,7 +45,7 @@ Which statements are correct?
 - B. In the vCenter export, Ready is more than a fifth of Run in every row.
 - C. In the vCenter export, Readiness stays below 2% in every row of the ten minutes.
 - D. vCenter's Readiness must be a collection error, since the guest sees no steal.
-- E. On this VM's default settings the steal clock is off: `st` cannot count the frozen time.
+- E. Without a `stealclock.enable` entry, this VM's `st` cannot count the time its vCPUs sat frozen.
 - F. With `stealclock.enable = "TRUE"` set on this VM, `st` would follow its Ready.
 - G. The us and sy figures in `top` include time the vCPUs were frozen.
 - H. `top` shows `wa` above 10%, so the guest is waiting on storage.
@@ -56,19 +56,19 @@ A: `st` is 0.0, so the hypervisor takes nothing from this VM. Or D: the tools di
 
 ## Expected key points
 - Answer: B, E, F, G.
-- A false: the misconception. Without the steal clock `st` cannot show the wait at all; the vCenter export shows it (`Readiness for app-lnx-03` 14-28% in every row, while `st` and sar `%steal` are 0.0 and 0.00).
-- B true: reading. `Ready for app-lnx-03` divided by `Run for app-lnx-03` is above 0.2 in every row (Ready about 12,000-21,600 ms against Run about 40,000-50,000 ms): the vCPUs wait a large share of the time they run.
-- C false: reading. `Readiness for app-lnx-03` stays between 14% and 28% in every row.
+- A false: the misconception. Without the steal clock `st` cannot show the wait at all; the vCenter export shows it (`Readiness for app-lnx-03` 20.46-26.11% in every row, while `st` and sar `%steal` are 0.0 and 0.00).
+- B true: reading. `Ready for app-lnx-03` divided by `Run for app-lnx-03` is above 0.2 in every row (Ready 16,370-20,887 ms against Run 40,000-45,751 ms; the ratio stays at 0.36-0.47): the vCPUs wait a large share of the time they run.
+- C false: reading. `Readiness for app-lnx-03` stays between 20.46% and 26.11% in every row.
 - D false: the tools count at different layers. The guest kernel is not told about the frozen time; vCenter counts it.
-- E true: on vSphere, steal accounting needs the VM's steal clock (`stealclock.enable`); default settings leave it off, so the steal counter stays 0.
+- E true: on vSphere, Linux steal accounting needs the VM's steal clock (`stealclock.enable = TRUE`); without it `st` stays 0 however high Ready is. The stem gives the raw setting: no `stealclock` entry on this VM.
 - F true: RHEL 9's kernel 5.14 has the VMware steal clock (mainline 5.7 or later) and hardware version 21 is above 13; with the option, `st` follows Ready.
 - G true: reading and mechanism. A frozen vCPU stays in the state it was in, so a busy vCPU's frozen time counts as us or sy: `us` + `sy` in `top` is 60 or more, and sar `%usr` + `%sys` stays near Run plus Ready of the vCenter export, above Run alone.
 - H false: reading. `wa` in `top` and sar `%iowait` stay below 2.
 - I false: wrong action. The vCPUs wait for physical threads on a busy host; more vCPUs add demand and tend to raise Ready.
 
 ## Reasoning path
-1. vCenter: Readiness of 14-28%: the vCPUs wait.
-2. `top` and sar: `st` and `%steal` 0 with defaults: the guest does not count the wait.
+1. vCenter: Readiness of 20-26%: the vCPUs wait.
+2. `top` and sar: `st` and `%steal` 0 with no steal clock: the guest does not count the wait.
 3. The wait is real; enable the steal clock to see it in the guest, and fix the host load or placement.
 
 ## Notes
@@ -76,6 +76,7 @@ A: `st` is 0.0, so the hypervisor takes nothing from this VM. Or D: the tools di
 - Vendor sources for general VMs: Broadcom TechDocs, Tanzu GemFire 10.1, High CPU Steal, section VMware ESXi (steal time needs `stealclock.enable = "TRUE"` except on Photon OS; without it `/proc/stat` steal stays 0), https://techdocs.broadcom.com/us/en/vmware-tanzu/data-solutions/tanzu-gemfire/10-1/gf/managing-checklist-cpu-steal-high.html; Broadcom KB 376609, https://knowledge.broadcom.com/external/article/376609; Broadcom KB 434983 (hardware version 13 or later).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item D12). Counts only after author approval.
 - Review 2026-11-15: kernel 5.14 in the stem (F needs it); B without the range; screen readings C and H (false) added; options reworded away from 0380. Key changed from B, D, E, G to B, E, F, G (options relettered).
+- Changed 2026-11-16 (re-review): E rested on "default settings leave the steal clock off", which no knowledge file states; the stem now gives the raw setting (no `stealclock` entry) and E reads the consequence; key-point ranges tightened to the export (Readiness 20.46-26.11%, Ready 16,370-20,887 ms, Run 40,000-45,751 ms). Truth values unchanged.
 - Changed in the 2026-11-15 audit: C, E and I reworded to similar lengths (E was the longest option and correct).
 - Converted to exports 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md): `top` and `sar` as guest text, vCenter as CSV. B (the Ready definition, over the cap of two: also 0009, 0376, 0368) became a reading of Ready against Run; still true. sar `%guest` 0.00 is a neighbour column only: no option rests on it, because the knowledge base does not state what `%guest` counts yet (guest-os-vs-vm-cpu, Linux metrics).
 

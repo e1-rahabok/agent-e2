@@ -1,4 +1,4 @@
-# Dense mode below the CPU threshold
+# Which hosts run dense mode
 
 ## Prompt
 - A cluster of five ESX 9.1 hosts. Each host has 2 sockets with 8 cores each: 16 cores and 32 logical processors (Hyper-Threading on).
@@ -39,13 +39,14 @@ D or E: the option /Net/NetTuneHostMode is read as the switch, or high CPU utili
 - Why one answer: the document gives the three conditions with their numbers and the note that the setting alone does not start the optimizations. The table decides each host by arithmetic.
 - numPCPUs: the vendor document does not define it; the knowledge base reads it as logical processors (host-wide-dense-mode, Trigger). Every host is built so that the result is the same on both readings (see the key). The condition CPUUtil >= 50% is the vendor's; host 5 at 51% and host 2 at 49% avoid a dispute about rounding or the exact equality. The document does not say how the host CPU utilization is measured, so the prompt gives one number per host.
 - The vendor also warns that batching raises the latency of individual requests, and that at low CPU utilization or with VMs that take a disproportionate share of network throughput, dense mode can lower system-wide throughput.
+- Title changed 2026-11-16 (re-review): "Dense mode below the CPU threshold" pointed at the utilization trap of host 2. Level: one rule with three thresholds applied to a table; the re-review reads it as 300 (not changed).
 - Changed in the 2026-11-15 audit: weak option A ("Host 1 only") replaced by "Host 1, host 2 and host 5", so each wrong set misses a different condition; key points one bullet per option.
 - Rewritten 2026-11-13 to raise difficulty: from one host to a five-host table where the three thresholds, the option value and the VM-count condition each exclude a different host; the exact thresholds are not known without the vendor document.
 
 ## Metadata
 ```yaml
 id: "0294"
-title: Dense mode below the CPU threshold
+title: Which hosts run dense mode
 product: [vsphere]
 technology: [cpu, network]
 task: judge-setting

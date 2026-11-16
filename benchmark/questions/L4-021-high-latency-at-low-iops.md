@@ -17,7 +17,7 @@ Which statements about this latency and the checks that find where it comes from
 - A. Latency can be high at low IOPS, because each layer below the VM has its own queue.
 - B. At 30 IOPS the data disk is not busy, so its latency cannot be a storage problem.
 - C. The problem sits in one disk and one direction: the reads of scsi0:1.
-- D. On a healthy host, KAVG rises and falls with DAVG, so the two lines should correlate.
+- D. A KAVG line that does not follow the DAVG line over the hour shows a fault in the host.
 - E. With the array at 0.6 ms and the VM at 24 ms, the extra time is added between the two.
 - F. Aborted commands, bus resets and dropped FC frames add delay at any load: check they are 0.
 - G. Because the writes of scsi0:1 are fast, the 24 ms of reads must be spent inside the Guest OS.
@@ -35,7 +35,7 @@ Which statements about this latency and the checks that find where it comes from
 - A is correct: every layer below the VM has its own queue (virtual disk, kernel, adapter, fabric, array). Check outstanding I/O with the latency.
 - B is wrong: the misconception. Queues and errors add latency at any load.
 - C is correct: work on that disk's reads; the VM total hides it, and read and write often have different causes.
-- D is wrong: kernel latency and device latency need not correlate; when both are healthy, KAVG stays near 0 whatever DAVG does.
+- D is wrong: kernel latency and device latency need not correlate; when both are healthy, KAVG stays near 0 whatever DAVG does, so a KAVG line that ignores DAVG is the normal case, not a fault.
 - E is correct: the time is added in the host, the HBA or the fabric.
 - F is correct: aborted commands and bus resets should be 0 all the time; dropped frames on FC are a sign of contention with an availability impact.
 - G is wrong: the VM's virtual disk latency starts below the Guest OS; only one side being slow is common and points to that side's cause, not to the guest.
@@ -47,8 +47,9 @@ Which statements about this latency and the checks that find where it comes from
 
 ## Notes
 - Synthetic, 2026-11-05. Revised 2026-11-12 for question set 1.0: per-disk values and the array's own reading added. Counts only after author approval.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). Knowledge added: snapshot-impact (reads check the snapshot chain). The old key's KAVG level (0-1 ms in the vSphere documentation) is left out of the options; the knowledge files give 0.5 ms.
+- Converted from judged to multiple choice (Q199 F, 2026-11-14). The old key's KAVG level (0-1 ms in the vSphere documentation) is left out of the options; the knowledge files give 0.5 ms.
 - Audit 2026-11-15 (redundancy): D (command-weighted total latency; kept by the pair 0044/0414) replaced by "kernel latency follows device latency" (false); H (redo-log snapshot slows reads; kept by 0187 and 0045) replaced by "on a healthy host GAVG is mostly DAVG" (true); L (percentile, not the maximum; kept by the pair 0081/0405) replaced by the 10 ms rule of Broadcom KB 344099 (false, threshold transplanted). E and F shortened (truth unchanged). J key point names the VMkernel limits behind a high QAVG; esxi-storage-io-path added to `knowledge`. Key unchanged: A, C, E, F, H, I, K.
+- Re-review 2026-11-16: D and H were paired "On a healthy host" statements, so H decided D; D now reads a KAVG line that ignores DAVG as a host fault (false: esxi-storage-latency-stack, Example). The note on snapshot-impact removed: the snapshot option left in the 2026-11-15 audit and `knowledge` no longer lists it. Key unchanged: A, C, E, F, H, I, K.
 
 ## Metadata
 ```yaml

@@ -1,7 +1,7 @@
 # esxtop load average on a host at 100% utilization
 
 ## Prompt
-- An ESXi 9.1 host has 2 sockets of 16 cores. Hyper-Threading is off, so esxtop shows 32 PCPUs.
+- An ESXi 9.1 host has 2 sockets of 16 cores. Hyper-Threading is off.
 - The esxtop CPU panel, refreshed every 5 seconds for 10 minutes, shows PCPU UTIL(%) at 100% on the average line the whole time.
 - The first line shows CPU load average: 2.60, 2.55, 2.40 (1, 5 and 15 minutes).
 - A colleague says: "Utilization cannot go above 100%, so the host is full but not overloaded. A load average above 1 adds nothing."
@@ -42,6 +42,7 @@ Which statements are correct?
 - The options avoid the word overloaded as a verdict (sources disagree on it).
 - Options changed 2026-11-14 (design.md 3.9; project/question-pairing-2026-11-14.md): D no longer states the clause (all worlds) that I negates; old J (%MLMTD inside %RDY) removed because 0066 and 0103 test that fact; K (the over-correction: the host average read as every VM's wait) added; E restated as the checks of the CPU contention flow (the old remedy list was not in the knowledge base). Key changed from D, E, F, G, H, J to D, E, F, G, H.
 - Changed in the 2026-11-15 audit: E lost its hedge ("If VMs wait"); G (read Ready and Co-stop per VM at the 20-second peak), held by 0106, 0115, 0019 and 0431, replaced by the per-NUMA-node averages of the PCPU lines (true, esxtop/cpu summary lines). The proposed "load of 1 or more is overloaded" option was not added: at load 2.60 and 100% UTIL the VMs do wait (F), so it is close to true here.
+- Changed 2026-11-16: the stem no longer states that esxtop shows 32 PCPUs (it handed over the PCPU mapping); it gives sockets, cores and Hyper-Threading off.
 - Public source: Broadcom KB 304594, "Troubleshooting ESX/ESXi virtual machine performance issues" (ESXi 7.x and 8.x): "A load average of 1.00 means that the ESXi/ESX Server machine's physical CPUs are fully utilized". Broadcom KB 382249, "Using ESXTop and Interpreting ESXTop Statistics" (ESXi 7.0 and 8.0): CPU load "accounts the run time and ready time for all the groups on the host". vSphere Monitoring and Performance 9.0, CPU Panel (last updated 2026-10-28 for the 8.0 copy, 2026-10-19 for the 9.0 index): "PCPU UTIL(%) represents the percentage of real time that the PCPU was not idle" and "100% = %RUN + %RDY + %CSTP + %WAIT". https://knowledge.broadcom.com/external/article/304594/troubleshooting-esxesxi-virtual-machine.html and https://knowledge.broadcom.com/external/article/382249/using-esxtop-and-interpreting-esxtop-sta.html . The sentence "2.00 means twice the PCPUs" is in the vSphere 6.5/6.7 documentation; the current 9.x CPU Panel page does not repeat the load-average text, so it is cited from the two KB articles.
 - Why the key holds: the load average adds ready time to run time and divides by the PCPU count (documented); run time cannot exceed the PCPU count; 2.60 minus 1.00 is then ready time. UTIL is capped at 100% by its definition.
 - Debatable risk: sources disagree on the word "overloaded" (the Performance Best Practices say a value of 1 or more is overloaded; KB 304594 says 2.00 is overloaded). The question and key avoid that word as a verdict and rely only on the counter definitions. The 60% figure is a lower bound of the average over the window, not an exact share.

@@ -46,6 +46,7 @@ What explains the change at 21:30, and what do you check? Which statements are c
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
 - Export regenerated 2026-11-14 with new numbers and a new VM (seeded script; project/question-pairing-2026-11-14.md, decision 3): the old export equalled the Demand, Usage and Latency example of the VM CPU Demand knowledge file. The stem question no longer reads the export for the candidate (it named Demand up, Usage down and Latency above the gap). Options A and B now state the reading only and D one fact: their old clauses (the extra demand was not met; the vCPUs were not waiting; the gap holds only the Hyper-Threading charge) negated F and H. Key unchanged (author approved, 2026-11-14).
 - Paired with 0002 (theory and practical, design.md 3.9).
+- 2026-11-16 re-review: G ("the host cannot be what slows the VM") was near the negation of C and K; it now tests its own false fact (a busy sibling thread counted in Readiness; ready, Mechanism: Ready does not register Hyper-Threading contention). Key unchanged.
 - 2026-11-15 audit: the stem gives 25,200 MHz as the counters' base-clock value, not as "capacity" (ESXi CPU capacity for vCPUs is threads, 0006 B). I's reason rests on Ready alone: the demand file's review note (API 9.1 defines cpu.demand with the limit) is still open, and I stays false through Ready whichever way the lab test goes.
 
 ## Metadata

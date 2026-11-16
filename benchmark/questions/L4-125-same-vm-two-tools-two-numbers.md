@@ -22,7 +22,7 @@ Which statements about the two pairs of numbers and the next step are correct?
 - J. The co-stopped vCPUs of app-07 were held back because no physical thread was free for them.
 - K. The Ready of 2.9% is the full CPU wait of app-07 in the 14:15 cycle.
 - L. For the 14:15 slowness, the 5-minute VCF Operations values are sharper evidence than the 1 Week point.
-- M. A snapshot on app-07 is one cause of its Co-stop to rule out before looking at the host.
+- M. A snapshot on app-07 is one cause of its Co-stop at 14:15 to rule out.
 - N. History and analysis of contention are read in VCF Operations; vCenter keeps a short, averaged history.
 - O. A CPU Contention of 9.8% at 14:15 calls for another host in the cluster of app-07.
 
@@ -44,7 +44,7 @@ Which statements about the two pairs of numbers and the next step are correct?
 - J is wrong: co-stopped vCPUs are held back to stay in step with a sibling, even when physical threads are free for them.
 - K is wrong: Co-stop (6.4%), Overlap and Other Wait add to the wait; Ready alone understates it. Quote Contention with its parts, or Ready and Co-stop, read against Run.
 - L is correct: the 5-minute points show the 96% and 92% plateau that the 30-minute average hides.
-- M is correct: snapshots are a known cause of Co-stop (Broadcom KB 2000058), next to Ready on a sibling vCPU and the VM's size against the NUMA node; they belong to the VM, not to the host.
+- M is correct: snapshots are a known cause of Co-stop (Broadcom KB 2000058), next to Ready on a sibling vCPU and the VM's size against the NUMA node; they belong to the VM, not to the host, and are checked on the VM.
 - N is correct: vCenter is the administrative tool, with a short history that rolls peaks away; capacity and performance analysis are done in VCF Operations.
 - O is wrong: Contention says that the VM waited, not why. Before capacity, the flow reads the VM's width against its work, the siblings' Ready, limits and shares, and the host's load in the same cycles; most of this 9.8% is Co-stop, which the VM's width and its siblings' Ready drive.
 
@@ -57,6 +57,7 @@ Which statements about the two pairs of numbers and the next step are correct?
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the stem no longer says the vSphere Client has no Contention counter (that is now option E); A and B one fact each and no longer negations of each other; E no longer negates H; O (the wrong action) added. An over-correction option (VCF Operations CPU Usage has its own formula) was tried and dropped on review 2026-11-15: no knowledge file states that VM CPU Usage is passed through. Key unchanged.
 - Paired with 0370 (theory and practical, design.md 3.9).
 - Changed in the 2026-11-15 audit: CPU Ready moved from the vSphere Client 1 Day chart to VCF Operations (at level 1 the 1 Day chart keeps one summed value in ms for the VM, not a per-vCPU percentage). Over-cap facts replaced in place, same truth: A (two readings differ in interval and rollup) and C (the 58% is the mean of the six points), held by 0047 and 0432, are now Co-stop in Guest OS sizing (A) and Co-stop felt as a freeze (C); M (Co-stop grows with the vCPU count), held by 0107 and 0373, is now the snapshot cause (M). O key point no longer says Co-stop comes from the VM's size alone.
+- Changed 2026-11-16: M lost "before looking at the host", an order of checks the knowledge base does not state; it now says only that a snapshot is one cause to rule out.
 
 ## Metadata
 ```yaml

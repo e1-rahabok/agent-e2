@@ -7,7 +7,7 @@
 - The monitoring policy that applies to H7 had no ESX Top setting until a colleague activated ESX Top for the object types Host System and Virtual Machine at 09:00 this morning.
 - The 20-second data of last night is still kept in VCF Operations.
 - Cluster C2, which holds H7 and 7 other hosts, also shows nothing in its charts at either time.
-- The administrator tried the Top N tab for the VMs of H7 at 10:00 to 10:30 and the values look the same as in the Overview.
+- The administrator has opened the Top N tab for the VMs of H7, for 10:00 to 10:30.
 
 Which statements are correct?
 
@@ -36,7 +36,7 @@ Which statements are correct?
 - C is correct: Real-Time Metrics is deployed and the policy for H7 had ESX Top Activated, for hosts and VMs, from 09:00.
 - D is correct: the ESX Top view must be selected in the view dropdown; it is not the default.
 - E is correct: 6.5 hours errors (and has no 2-second data before 09:00); 5.5 hours works. A short range around 10:15 is best.
-- F is wrong: Top N always uses 20-second data, even with ESX Top activated; its values matching the Overview are expected.
+- F is wrong: Top N always uses 20-second data, even with ESX Top activated, so its values for 10:00 to 10:30 match the Overview.
 - G is wrong: cluster and datacenter have 60-second and 5-minute data only; read the host and VM objects.
 - H is correct: a metric with both tiers returns two lines; filter by feature.
 - I is correct: limit collection so the monitored system is not loaded.
@@ -52,6 +52,7 @@ Which statements are correct?
 - Rewritten 2026-11-13 to raise difficulty: two incidents, one before and one after a known activation time, a smooth 12-hour chart, a Top N check and a cluster chart; the generic procedure fails for 03:00 and the 6-hour limit and the explicit view selection decide 10:15.
 - Key point dropped as an option: "to catch a repeat of the 03:00 freeze, leave ESX Top activated and look within 6-hour ranges after the next event" (a follow-up step; I and E cover its facts).
 - Changed in the 2026-11-15 audit: the stem activates ESX Top for Host System and Virtual Machine (C no longer rests on the open object-type note in vcf-operations/features/real-time-metrics); the 20-second data of the night is a case fact, so J lost its hedge.
+- Changed 2026-11-16: the Top N stem line no longer says the values look the same as in the Overview (it interpreted the evidence toward F being false); it states only that the tab is open for 10:00 to 10:30.
 
 ## Metadata
 ```yaml

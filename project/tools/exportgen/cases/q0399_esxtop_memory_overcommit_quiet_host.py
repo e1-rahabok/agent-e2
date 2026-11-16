@@ -65,8 +65,8 @@ class Q0399(core.Case):
         if "MEMTIER" in t:
             fails.append("inline:1: MEMTIER line present")
         loads = [float(x) for x in m.groups()]
-        if any(not 0.30 <= x <= 0.60 for x in loads):
-            fails.append(f"inline:1: A: overcommit values outside 0.30-0.60: {loads}")
+        if any(not 0.35 <= x <= 0.45 for x in loads):                        # A: about 1.4 GB requested per GB managed
+            fails.append(f"inline:1: A: overcommit values outside 0.35-0.45: {loads}")
         if max(loads) - min(loads) > 0.05:
             fails.append("inline:1: H: overcommit values spread above 0.05")
         total, vmk, other, free = (int(x) for x in p.groups())

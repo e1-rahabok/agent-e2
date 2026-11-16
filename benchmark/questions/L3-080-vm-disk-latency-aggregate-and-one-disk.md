@@ -5,10 +5,10 @@
 
 Which statements are correct?
 
-- A. The VM-level latency combines all the virtual disks, so one slow disk can hide in it.
-- B. A VM-level read latency of 2 ms shows that every virtual disk is served within about 2 ms.
-- C. No VM-level metric can reveal one slow virtual disk: only the per-disk view can.
-- D. Peak Latency within collection cycle can exceed 15 times the VM-level read latency.
+- A. To find a slow disk behind a low VM-level value, read the latency of each virtual disk.
+- B. A VM-level read latency of 2 ms bounds the read latency of the 12 disks near 2 ms.
+- C. A VM-level metric cannot show one slow virtual disk; that takes the per-disk view.
+- D. Peak Latency within collection cycle is not capped at 15 times the VM-level read latency.
 - E. Peak Latency within collection cycle names which of the 12 virtual disks set the peak.
 - F. Close the slowness ticket once the VM-level read latency is back to a low value.
 - G. The peak metric keeps last week's 20-second peaks after vCenter drops its samples.
@@ -19,7 +19,7 @@ B: the VM's latency is low, so every disk is fine. Or C, the overshoot: no VM-le
 
 ## Expected key points
 - Answer: A, D, G.
-- A is correct: a VM aggregate hides the one slow disk; the check is per virtual disk.
+- A is correct: a VM aggregate blends the disks and hides the one slow disk; the check is per virtual disk, read and write.
 - B is wrong: the misconception. The aggregate does not bound each disk.
 - C is wrong: the over-correction. Peak Latency within collection cycle takes the peak across all virtual disks, read and write, so a slow disk raises it.
 - D is correct: for one series a 20-second peak is at most 15 times its 5-minute average, but this peak is taken across all 24 series (12 disks, read and write), while the VM-level value blends the disks; one slow disk can set a peak far above 15 times the average.
@@ -34,6 +34,7 @@ B: the VM's latency is low, so every disk is fine. Or C, the overshoot: no VM-le
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item D4 (origin: synthetic). Counts only after author approval.
 - Review 2026-11-15: 12 virtual disks, so the situation differs from 0423 (8 or more). Key unchanged.
 - Audit 2026-11-15 (redundancy): D (the peak is taken across all disks, read and write; kept by 0089 and 0356) replaced by the peak above 15 times the average across instances (also 0089 A, two questions); G (read and write checked apart; kept by 0081 and 0405) replaced by the peak kept after vCenter drops its 20-second samples (also 0356 E, two questions). E, F and H lengthened (truth unchanged); H key point explains the Highest latency of the other layers. Key unchanged: A, D, G.
+- Re-review 2026-11-16: the hedges sat only in the correct options (A "can hide", D "can exceed") and the absolutes only in the wrong ones (B "every", C "No ... only"), and A was the near-negation of B. A now states the per-disk check (vm-storage-performance-checks, step 1), D says the peak is not capped at 15 times; B and C lose their absolutes (truth unchanged). Key unchanged: A, D, G.
 
 ## Metadata
 ```yaml

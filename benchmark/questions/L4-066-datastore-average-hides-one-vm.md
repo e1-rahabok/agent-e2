@@ -8,7 +8,7 @@
 
 Which statements are correct?
 
-- A. The datastore read latency averages the 24 VMs, so one VM's slow reads hide in it.
+- A. The datastore read latency averages the reads of the 24 VMs, so one VM's slow reads hide in it.
 - B. The datastore reads at 1.1 ms, so fin-rpt-03's slowness must be inside its Guest OS.
 - C. The other 23 VMs read at about 1 ms from this datastore: the array serves them.
 - D. At its low read IOPS, fin-rpt-03 cannot have a storage latency problem of any kind.
@@ -20,7 +20,7 @@ B: the datastore average stands for every VM on it.
 
 ## Expected key points
 - Answer: A, C, E, F.
-- A is correct: the datastore latency is an average over the VMs on the datastore, so one slow VM hides in it. fin-rpt-03 issues 41 of about 17,900 reads per second; the datastore reads 1.1 ms while the VM itself sees 35 ms. The option does not depend on how the average weights the VMs.
+- A is correct: the datastore latency is an average over the VMs on the datastore, so one slow VM hides in it. fin-rpt-03 issues 41 of about 17,900 reads per second; the datastore reads 1.1 ms while the VM itself sees 35 ms. In the export, the 24 VMs' read latencies weighted by their read IOPS give 1.15 ms, the datastore's 1.1 ms; the plain mean of the 24 VM values would be 2.5 ms.
 - B is wrong: the misconception. The datastore average hides the one VM that suffers. The VM's own virtual disk latency is 35 ms, below the Guest OS.
 - C is correct: 23 VMs on the same datastore read at 0.7-1.4 ms; the array serves them well, so the cause sits with the one slow VM.
 - D is wrong: the misconception. Queues and the snapshot chain add latency at any load; fin-rpt-03 issues only 41 read IOPS and still sees 35 ms.
@@ -33,6 +33,7 @@ B: the datastore average stands for every VM on it.
 - Review 2026-11-15: C, D, E and F no longer quote the export's values (41 IOPS, 312 GB, read against write), so the options do not read the CSV for the candidate. Key unchanged.
 - Review 2026-11-15: unpaired from 0062, which tests high latency at low IOPS on one disk, not a datastore average hiding one VM (plan A6 dropped).
 - Audit 2026-11-15: A and C reworded without hedges, D without "at all" (truth unchanged); E (read and write checked apart; kept by 0081 and 0405) replaced by ranking the VMs rather than averaging them (aggregation, added to `knowledge`); F (reads check the redo-log chain; kept by 0187 and 0045) reworded to the check order: one slow VM with a snapshot, the snapshot first. Key unchanged: A, C, E, F.
+- Re-review 2026-11-16: A said "averages the 24 VMs", which a reader could compute as the plain mean of the VM values (2.48 ms, not 1.1); it now says the datastore averages the VMs' reads, which the export shows (IO-weighted 1.15 ms). Key unchanged: A, C, E, F.
 
 ## Metadata
 ```yaml

@@ -12,7 +12,7 @@ Which statements about this counter and its effect are correct?
 - E. A frame that a congested top-of-rack switch discards is counted in this VM counter.
 - F. The VM's Packets Dropped (%) in VCF Operations counts only these transmitted drops.
 - G. A regular rhythm of transmit drops, at the same minutes each hour, is noise that needs no follow-up.
-- H. 1,000 transmit drops of full-size frames mean about 1.5 MB that TCP has to send again.
+- H. 2,400 transmit drops of full-size frames mean about 3.6 MB that TCP has to send again.
 - I. Across a large estate of VMs, there are far more transmit drops than receive drops.
 
 ## Likely wrong answer
@@ -27,7 +27,7 @@ C: nobody complains, so the transmit drops do not matter. Or the reverse: every 
 - E false: Ethernet does not acknowledge frames; ESXi counts a frame as sent once the physical NIC puts it on the wire. A drop in the top-of-rack switch is counted only in that switch.
 - F false: VCF Operations Packets Dropped (%) adds received and transmitted drops and divides by dropped plus delivered packets; only the VM dropped packets alert counts transmitted drops alone.
 - G false: regular patterns of transmit drops are worth raising with the network team; a rhythm points to a cause on the path.
-- H true: each dropped packet is resent; at about 1.5 KB per full-size frame, 1,000 drops are about 1.5 MB of data sent again.
+- H true: each dropped packet is resent; at about 1.5 KB per full-size frame, 2,400 drops are about 3.6 MB of data sent again.
 - I false: receive drops are far more common than transmit drops across VMs (3,938 VMs over a month in the knowledge base's data).
 
 ## Notes

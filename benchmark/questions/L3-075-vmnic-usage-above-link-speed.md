@@ -36,12 +36,12 @@ B: a port cannot carry more than its link speed, so the counter is wrong. Or F: 
 - A true: Usage rate = receive + transmit, and full duplex is 100% in each direction, so Usage can reach twice the link speed with no fault.
 - B false: the misconception. Usage counts both directions of a full-duplex port (esxcli: Speed 10000, Duplex Full); the counter is right.
 - C true: Usage for vmnic2 equals Data receive rate for vmnic2 plus Data transmit rate for vmnic2 in every row (the same holds for every vmnic and for the host).
-- D true: the values are KBps (1 KB = 1,024 bytes), so 10 Gb/s is about 1,220,700 KBps. Data receive rate for vmnic2 stays between 1,040,000 and 1,159,000 KBps in every row: 85-95% of the link speed, near the limit of that direction, whatever transmit does.
-- E false: the over-correction. Half of Usage is 62-73% of the link speed here and hides that receive is near its own limit; each direction is judged against the link speed.
+- D true: the values are KBps (1 KB = 1,024 bytes), so 10 Gb/s is about 1,220,700 KBps. Data receive rate for vmnic2 stays between 1,045,490 and 1,155,000 KBps in every row: 86-95% of the link speed (about 90% on average), near the limit of that direction, whatever transmit does.
+- E false: the over-correction. Half of Usage is 62-70% of the link speed here and hides that receive is near its own limit; each direction is judged against the link speed.
 - F false: the wrong action, for the wrong reason. Usage above the link speed is expected; the risk, if any, is the receive direction alone.
-- G true: the highest Data receive rate for vmnic2 is below 1,160,000 KBps, under the 1,220,700 KBps of 10 Gb/s; Usage passes the link speed only because transmit is added.
+- G true: the highest Data receive rate for vmnic2 is 1,155,000 KBps, under the 1,220,700 KBps of 10 Gb/s; Usage passes the link speed only because transmit is added.
 - H false: Usage is the sum of receive and transmit, not the higher of the two; in every row it is above both.
-- I false: Data transmit rate for vmnic2 stays between 366,000 and 732,000 KBps (30-60% of the link speed), below the receive rate in every row.
+- I false: Data transmit rate for vmnic2 stays between 480,000 and 577,316 KBps (39-47% of the link speed), below the receive rate in every row.
 
 ## Notes
 - Paired with the theory question 0040 (theory and practical; design.md, section 3.9).

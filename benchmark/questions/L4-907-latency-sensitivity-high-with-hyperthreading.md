@@ -2,7 +2,7 @@
 
 ## Prompt
 - ESXi 9.1 host esx-21: 2 sockets of 24 cores, base clock 2.0 GHz, Hyper-Threading on (96 logical processors).
-- pricing-api-01: a Java pricing service, 16 vCPUs, virtual hardware version 21, full memory reservation.
+- pricing-api-01: a Java pricing service, 16 vCPUs, virtual hardware version 21, full memory reservation, CPU reservation 16,000 MHz.
 - Last week its Latency Sensitivity was changed from Normal to High with Hyperthreading.
 - Since then the p99 response time rose from 4 ms to 7 ms.
 - vCenter, host, last 24 hours: Core Utilization 40%, Utilization 30%.

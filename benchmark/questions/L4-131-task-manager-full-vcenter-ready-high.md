@@ -22,11 +22,11 @@ G: Task Manager shows the CPU maxed out, so the VM needs more vCPUs. Or F: the t
 
 ## Expected key points
 - Answer: A, B, C, J.
-- A true: a frozen vCPU stays in the state it was in; Windows has no steal accounting, so a busy vCPU's frozen time counts as busy. The typeperf `% Processor Time` of each processor (90-100 in every row) matches Run + Ready + Co-stop of the vCenter export, not Run.
+- A true: a frozen vCPU stays in the state it was in; Windows has no steal accounting, so a busy vCPU's frozen time counts as busy. The typeperf `% Processor Time` of each processor (93.8-100 in every row) matches Run + Ready + Co-stop of the vCenter export, not Run.
 - B true: reading. `Run for app-win-07` + `Ready for app-win-07` is at least 75,000 ms in every row, of the 80,000 ms that four vCPUs hold per 20-second sample (Ready is summed over the vCPUs); `Wait for app-win-07` stays small. The vCPUs wanted to run nearly all the time and ran for only part of it.
-- C true: reading. `Run for app-win-07` stays between 40,000 and 60,000 ms in every row (50-75% per vCPU); Ready takes a fifth or more of the time, so Run cannot reach the figure Task Manager shows.
-- D false: reading. `Readiness for app-win-07` stays between 22% and 35% in every row.
-- E false: reading. `Processor(0)` to `Processor(3)` `% Processor Time` are all 90-100 in every row.
+- C true: reading. `Run for app-win-07` stays between 54,570 and 59,690 ms in every row (68-75% per vCPU); Ready takes a fifth or more of the time, so Run cannot reach the figure Task Manager shows.
+- D false: reading. `Readiness for app-win-07` stays between 23.00% and 27.54% in every row.
+- E false: reading. `Processor(0)` to `Processor(3)` `% Processor Time` are all 93.8-100 in every row.
 - F false: the misconception. The tools count at different layers: the guest kernel cannot see the time it was frozen, vSphere can.
 - G false: the wrong action. The vCPUs wait for physical threads; more vCPUs on a busy host are harder to schedule and tend to raise Ready and Co-stop.
 - H false: over-correction. Each layer shows its own problems (run queue, processes); read both, each at its own layer.
@@ -39,6 +39,7 @@ G: Task Manager shows the CPU maxed out, so the VM needs more vCPUs. Or F: the t
 3. The cure is the VM's shares or the host's load and placement, not the vCPU count.
 
 ## Notes
+- Key-point ranges tightened 2026-11-16 (re-review) to the export as generated: Run 54,570-59,690 ms, Readiness 23.00-27.54%, each processor 93.8-100.
 - Paired with the theory question 0266 (theory and practical; design.md, section 3.9).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C1). Counts only after author approval.
 - Review 2026-11-15: stem no longer quotes the value; screen readings added (C true; D, E false); J names the VM's shares as a VM-side check. Key changed from A, B, C, F, I to A, B, C, J (options relettered).
