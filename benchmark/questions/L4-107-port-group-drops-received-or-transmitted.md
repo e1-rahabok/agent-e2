@@ -33,6 +33,7 @@ A
 - Knowledge file logic: vsphere/object-types/distributed-port-group/distributed-port-group-alerts, section "Distributed port group dropped packets" (planned change: count transmitted only; received drops include packets not for the VM, security settings and a full receive ring, whose cause and fix are in the Guest OS) and Misconceptions ("every received drop on a port group is a network fault").
 - Why one answer: the three numbers (0.5%, 15%, 8.0%) and the one VM with 5.9 of 6.15 million drops separate the cases, and the Guest OS cause is documented by the KB.
 - Debatable risk: leaving received drops out of the port group alert is a planned design. A says only that this case's ring drops do not belong in the network team's alert, which the clean uplinks and the one-VM concentration decide. Audit 2026-11-15: one review judged the earlier A false over "so the network is healthy" and an unstated drop formula; the blind key check judged it true. A and the stem were reworded (counts given as "of which ... were dropped"; no health verdict) so A is true as keyed.
+- Deferred 2026-11-16 (author, Q248 moved to Future release): the vendor documents give no denominator for the port group drop percentage, and A rests on the stem's own arithmetic, on which two reviewers disagreed. Runs again once Q248 is answered. Key unchanged.
 - Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which statement is correct?"
 
 ## Metadata
@@ -57,5 +58,5 @@ origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
 misconception: [B, E]
 misconception_type: [layer-confusion, average-hides-worst]
-status: draft
+status: deferred
 ```

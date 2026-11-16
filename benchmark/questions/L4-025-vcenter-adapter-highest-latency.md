@@ -36,6 +36,7 @@ A, C, E, H
 - Paired with 0406 (theory; design.md, section 3.9).
 - Review 2026-11-15: options rewritten to read the CSV (the old A and E were general facts that 0406 tests; C, active paths, is not settled by the knowledge base and is removed); the alert threshold added as a case fact; over-correction G and wrong action F added. Key changed from A, E to A, C, E, H.
 - Audit 2026-11-15: B said "follows", which also reads as "moves with" (true in 28 of 29 steps); it now says "equals", false in every sample. F no longer starts with "Open a case". Key unchanged.
+- Deferred 2026-11-16 (author, Q246 moved to Future release): the key rests on Highest latency being the plain mean of read and write latency per adapter, which no vendor document states (the API 9.1 defines `storageAdapter.maxTotalLatency` only as the highest value across adapters). Runs again once Q246 is answered or the options are rewritten to hold under both readings. Key unchanged. The theory half 0406 keeps running (its A does not depend on the weighting).
 - Open item for the knowledge base: the key reads Highest latency as the plain mean of read and write latency per adapter (adapter-and-path: "averages read and write per adapter first"; the CSV is built as (read + write) / 2). If maxTotalLatency takes each adapter's command-weighted total latency (disk-latency: "Total latency is not (read latency + write latency) / 2"), a read-heavy batch would push it near the read latency and A, C and E would flip. Check against the vSphere Web Services API 9.1 storage adapter counters.
 
 ## Metadata
@@ -61,5 +62,5 @@ source_path: "Drafted 2026-11-05"
 misconception: [B, F]
 misconception_type: [average-hides-worst]
 pair: "0406"
-status: draft
+status: deferred
 ```
