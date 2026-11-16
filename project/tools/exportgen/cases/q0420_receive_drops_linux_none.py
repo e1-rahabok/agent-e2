@@ -110,7 +110,7 @@ class Q0420(core.Case):
         try:
             d = formats.parse_ip_s_link(ip)["ens192"]
             rx, tx = d["RX"], d["TX"]
-        except (KeyError, ValueError):
+        except (KeyError, ValueError, IndexError):
             return ["inline:1: cannot parse ip -s link output for ens192"]
         if rx["dropped"] != 0 or rx["errors"] != 0 or rx["missed"] != 0:
             fails.append("inline:1: RX errors, dropped or missed is not 0")

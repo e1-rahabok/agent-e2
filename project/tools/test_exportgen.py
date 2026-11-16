@@ -272,5 +272,49 @@ class Cases(unittest.TestCase):
         self.assertEqual(core.clamp(5, 0, 1), 1)
 
 
+class NetworkCases(unittest.TestCase):
+    """Cases 0420, 0413, 0415: generate + check pass, determinism, a broken row fails."""
+
+    def _blocks(self, cid):
+        qp = core.question_path(cid)
+        self.assertIsNotNone(qp)
+        return core.read_inline_blocks(qp.read_text(encoding="utf-8", newline=""))
+
+    def test_generate_check_determinism(self):
+        for cid in ("0420", "0413", "0415"):
+            case = core.load_cases()[cid]
+            files = case.generate(case.seed)
+            self.assertEqual(files, case.generate(case.seed), cid)
+            self.assertEqual(case.generate_inline(case.seed), case.generate_inline(case.seed), cid)
+            self.assertEqual(case.check(files), [], cid)
+            self.assertEqual(core.check_size_cap(files), [], cid)
+            blocks = dict(self._blocks(cid))
+            blocks.update({n: t.rstrip("\n") for n, t in case.generate_inline(case.seed).items()})
+            self.assertEqual(case.check_inline(blocks, files), [], cid)
+
+    def test_broken_rows_fail(self):
+        c = core.load_cases()["0413"]
+        name, text = next(iter(c.generate().items()))
+        lines = text.split("\n")
+        parts = lines[3].split(",")
+        parts[-1] = str(int(parts[-1]) + 1)
+        lines[3] = ",".join(parts)
+        self.assertTrue(c.check({name: "\n".join(lines)}))
+        c = core.load_cases()["0415"]
+        name, text = next(iter(c.generate().items()))
+        self.assertTrue(c.check({name: text.replace(',0,', ',7,', 1)}))
+        c = core.load_cases()["0420"]
+        self.assertTrue(c.check_inline({1: "bad", 2: "bad"}, {}))
+
+    def test_inline_blocks_round_trip(self):
+        md = "# T\n\n## Prompt\n- a\n\n```text\nx\n```\n\n```text\ny\n```\n\n## Notes\n```text\nz\n```\n"
+        self.assertEqual(core.read_inline_blocks(md), {1: "x", 2: "y"})
+        out = core.write_inline_blocks(md, {2: "Y1\nY2\n"})
+        self.assertEqual(core.read_inline_blocks(out), {1: "x", 2: "Y1\nY2"})
+        self.assertIn("```text\nz\n```", out)
+        with self.assertRaises(ValueError):
+            core.write_inline_blocks(md, {3: "q"})
+
+
 if __name__ == "__main__":
     unittest.main()
