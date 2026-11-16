@@ -4,8 +4,12 @@ No file. Inline:1 is the panel. Four other VM groups are shown as group rows
 only. The erp-05 group row is the sum of its seven worlds.
 
 Relations: vcpu world %WAIT = %VMWAIT + %IDLE; %RUN + %RDY + %CSTP + %WAIT =
-100; %USED = %RUN + %SYS - %OVRLP; %SWPWT <= %VMWAIT; group row = sum of its
-worlds per column (%VMWAIT: sum over the four vcpu worlds).
+100; %USED = (%RUN + %SYS - %OVRLP) x f with f 0.60-0.68, the Hyper-Threading
+charge of a core whose sibling thread runs at about nominal clock, so %USED
+is below %RUN (knowledge/vsphere/tools/esxtop/cpu.md, used.md); each PCPU USED
+is 0.50-0.58 of its PCPU UTIL (both threads of a core busy, no Turbo);
+%SWPWT <= %VMWAIT; group row = sum of its worlds per column (%VMWAIT: sum
+over the four vcpu worlds).
 """
 
 from .. import core, formats, relations as rel
@@ -23,13 +27,17 @@ def _build(seed):
     u = rng.uniform
     r2 = lambda x: round(x, 2)
     load = [round(b + u(-0.04, 0.04), 2) for b in (1.12, 1.08, 1.03)]
-    used = [u(70, 98) for _ in range(16)]
-    util = [min(100.0, x * u(0.92, 1.0)) for x in used]
+    util = [u(70, 98) for _ in range(16)]
+    # both threads of each core busy, no Turbo: a thread is charged half its core, 0.50-0.58 of its UTIL
+    # (the draws of the earlier version are reused, so every other value of the panel stays as it was)
+    used = [x * (0.50 + (u(0.92, 1.0) - 0.92) / 0.08 * 0.08) for x in util]
     core_u = [u(92, 100) for _ in range(8)]
     mean = lambda xs: sum(xs) / len(xs)
     summary = formats.esxtop_cpu_summary(used, util, core_u, mean(used), mean(util), mean(core_u))
     status = formats.esxtop_status_line("3:42:18pm", "88 days 06:12", 1104, 5, 22, formats.esxtop_cpu_tail(load))
     ids = rng.sample(range(20000, 60000), 4)
+    ht = core.make_rng(seed, "esxtop-erp-used")      # Hyper-Threading charge of %USED, separate stream
+    charge = lambda: ht.uniform(0.60, 0.68)
     rows = []
     for gid, name in zip(ids, OTHERS):
         nw = rng.randint(5, 9)
@@ -37,7 +45,7 @@ def _build(seed):
         sys_, ovrlp = r2(u(0.2, 3)), r2(u(0.1, 1.5))
         wait = r2(100 * nw - run - rdy - cstp)
         vmwait = r2(u(1, 6))
-        rows.append((gid, gid, name, nw, r2(run + sys_ - ovrlp), run, sys_, wait, vmwait, rdy,
+        rows.append((gid, gid, name, nw, r2((run + sys_ - ovrlp) * charge()), run, sys_, wait, vmwait, rdy,
                      r2(wait * u(0.8, 0.95)), ovrlp, cstp, 0.0, 0.0))
     worlds = []   # (id, name, values for VALS)
     worlds.append((GID + 1, "vmx", None))
@@ -50,7 +58,7 @@ def _build(seed):
         idle = r2(wait - vmwait)
         sys_, ovrlp = r2(u(0.30, 1.20)), r2(u(0.20, 0.80))
         worlds.append((GID + 2 + k, f"vmx-vcpu-{k}:{VM}",
-                       [r2(run + sys_ - ovrlp), run, sys_, wait, vmwait, rdy, idle, ovrlp, cstp, 0.0, swpwt]))
+                       [r2((run + sys_ - ovrlp) * charge()), run, sys_, wait, vmwait, rdy, idle, ovrlp, cstp, 0.0, swpwt]))
     worlds.append((GID + 6, f"vmx-mks:{VM}", None))
     worlds.append((GID + 7, f"vmx-svga:{VM}", None))
     full = []
@@ -116,21 +124,33 @@ class EsxtopVcpuCouldNotRun(core.Case):
             if abs(rel.esxtop_wait(f["%VMWAIT"], f["%IDLE"]) - f["%WAIT"]) > 0.011:
                 fails.append(f"inline:1: {n}: %WAIT != %VMWAIT + %IDLE")
             if abs(f["%RUN"] + f["%RDY"] + f["%CSTP"] + f["%WAIT"] - 100) > 0.02:
-                fails.append(f"inline:1: {n}: RUN + RDY + CSTP + WAIT != 100")
-            if abs(f["%USED"] - (f["%RUN"] + f["%SYS"] - f["%OVRLP"])) > 0.02:
-                fails.append(f"inline:1: {n}: %USED != RUN + SYS - OVRLP")
-            if f["%SWPWT"] > f["%VMWAIT"]:
+                fails.append(f"inline:1: {n}: E: RUN + RDY + CSTP + WAIT != 100")
+            charge = f["%USED"] / (f["%RUN"] + f["%SYS"] - f["%OVRLP"])
+            if not 0.595 <= charge <= 0.685 or not f["%USED"] < f["%RUN"]:
+                fails.append(f"inline:1: {n}: %USED is not the Hyper-Threading charge (0.60-0.68) of RUN + SYS - OVRLP, below %RUN")
+            if abs(f["%USED"] - (f["%RDY"] + f["%CSTP"] + f["%SWPWT"])) < 5:     # I false: %USED is not stopped time
+                fails.append(f"inline:1: {n}: %USED within 5 points of the stopped time RDY + CSTP + SWPWT")
+            if f["%SWPWT"] > f["%VMWAIT"]:                                # H true
                 fails.append(f"inline:1: {n}: %SWPWT above %VMWAIT")
-            if not 2 <= f["%RDY"] <= 10:                                  # A
+            if not 2 <= f["%RDY"] <= 10:                                  # A true, J premise (RDY above 0 on every vcpu world)
                 fails.append(f"inline:1: {n}: %RDY outside 2-10")
-            if f["%OVRLP"] <= 0:                                          # D
+            if f["%OVRLP"] <= 0:                                          # D true
                 fails.append(f"inline:1: {n}: %OVRLP not above 0")
-            if not (f["%WAIT"] >= 40 and f["%WAIT"] - f["%IDLE"] <= 6 and f["%IDLE"] > f["%WAIT"] / 2):   # E
+            if not (f["%WAIT"] >= 40 and f["%WAIT"] - f["%IDLE"] <= 6 and f["%IDLE"] > f["%WAIT"] / 2):   # F false
                 fails.append(f"inline:1: {n}: %IDLE is not most of %WAIT")
             if f["%SWPWT"] < 0.80:                                        # K false
                 fails.append(f"inline:1: {n}: %SWPWT below 0.80")
-        if not any(num(w["%CSTP"]) > 0.5 for w in vcpus):                 # B
+        for r in [g] + [x for x in recs if x["ID"] == x["GID"] and x["NAME"] != VM]:    # %USED below %RUN on every VM group row
+            if not num(r["%USED"]) < num(r["%RUN"]):
+                fails.append(f"inline:1: {r['NAME']}: group %USED not below %RUN on a Hyper-Threading host")
+        used_line = next((l for l in blocks[1].splitlines() if l.startswith("PCPU USED(%):")), "")
+        util_line = next((l for l in blocks[1].splitlines() if l.startswith("PCPU UTIL(%):")), "")
+        pu = [float(x) for x in used_line.split("NUMA:")[0].split(":", 1)[1].split()]
+        pt = [float(x) for x in util_line.split("NUMA:")[0].split(":", 1)[1].split()]
+        if len(pu) != 16 or any(not 0.49 <= a / b <= 0.59 for a, b in zip(pu, pt)):
+            fails.append("inline:1: a PCPU USED is not 0.50-0.58 of its PCPU UTIL (both threads of a core busy)")
+        if not any(num(w["%CSTP"]) > 0.5 for w in vcpus):                 # B true
             fails.append("inline:1: no vcpu world with %CSTP above 0.5")
-        if any(num(r["%MLMTD"]) != 0 for r in [g] + worlds):               # H
+        if any(num(r["%MLMTD"]) != 0 for r in [g] + worlds):               # %MLMTD 0 everywhere: no limit explains the Ready
             fails.append("inline:1: %MLMTD not 0.00 on the erp-05 rows")
         return fails[:20]

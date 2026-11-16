@@ -116,7 +116,7 @@ class WindowsInUseFalls(core.Case):
             comm.append(cb / MIB)
             pct.append(p)
         mean = lambda x: sum(x) / len(x)
-        if min(D[BEFORE:]) - max(D[:BEFORE]) < 8_492:
+        if min(D[BEFORE:]) - max(D[:BEFORE]) < 8_492:      # A true (a quarter of 32 GB), G false (In Use fell: no leak)
             fails.append("A: Available + Modified does not show the fall of In Use")
         if abs(mean(pct[BEFORE:]) - mean(pct[:BEFORE])) > 2.0 or min(comm[BEFORE:]) < 0.97 * max(comm[:BEFORE]):
             fails.append("A: commit shows the fall")
@@ -124,7 +124,7 @@ class WindowsInUseFalls(core.Case):
             fails.append("C: Free & Zero does not rise by 7,000 MiB")
         col = lambda j: [v[j] for _, v in vr]
         act, bal, cons, gran, swp, cmp_ = (col(j) for j in range(6))
-        if any(bal) or any(swp) or any(cmp_):
+        if any(bal) or any(swp) or any(cmp_):             # D true, H false (no reclamation, no pressure)
             fails.append("D: reclamation counter not 0")
         if any(not 32_780_000 <= c <= 32_880_000 for c in cons) or max(cons) - min(cons) > 335_544:
             fails.append("B: Consumed range")

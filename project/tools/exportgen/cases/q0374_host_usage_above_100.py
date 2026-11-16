@@ -88,21 +88,25 @@ class HostUsageAbove100(core.Case):
                 fails.append(f"row {i}: Usage above 100 with Core Utilization {core_u}")
             if usage > 100 and first_over is None:
                 first_over = t
-            if t >= BUSY_FROM:                              # A, F
+            if t >= BUSY_FROM:                              # A, B false (Turbo, valid reading above 100)
                 if not 106 <= usage <= 116 or not usage > core_u:
                     fails.append(f"row {i}: busy Usage {usage}")
                 if not 52 <= util <= 58:
                     fails.append(f"row {i}: busy Utilization {util} outside 52-58")
-            if core_u > 98:                                 # D
+            if usage > 100:                                 # C true: busy cores mostly ran one thread
+                one, two = 2 * core_u - 2 * util, 2 * util - core_u     # share of time with one / both threads busy
+                if not (90 <= core_u <= 98 and 52 <= util <= 58 and one > 0.5 * core_u and one > 2 * two >= 0):
+                    fails.append(f"row {i}: C: one-thread core time {one:.1f} not most of Core Utilization {core_u} (two-thread {two:.1f})")
+            if core_u > 98:                                 # C
                 fails.append(f"row {i}: Core Utilization {core_u} above 98")
-            if util > 58:                                   # E
+            if util > 58:                                   # D false: never above 75
                 fails.append(f"row {i}: Utilization {util} above 58")
         if first_over is None or first_over > dt.datetime(2026, 11, 10, 2, 10, 0, tzinfo=core.UTC):
-            fails.append("A: first Usage above 100 is not at or before 02:10:00")
+            fails.append("alert: first Usage above 100 is not at or before 02:10:00")
         for name, (u, rd, cs, prd, pcs) in lrows:
             one = name == "jump-01"
             if prd < rd or pcs < cs or (one and (cs != 0 or pcs != 0)):
                 fails.append(f"{name}: peak/base relation broken")
-            if not (prd < 1 and pcs < 0.5):                 # G
+            if not (prd < 1 and pcs < 0.5):                 # F true: VMs rarely waited
                 fails.append(f"{name}: peak Ready {prd} or peak Co-Stop {pcs} too high")
         return fails[:20]

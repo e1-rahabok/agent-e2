@@ -112,9 +112,9 @@ class LinuxStZeroReadyHigh(core.Case):
                 fails.append(f"row {i}: Usage not below Run %")
             if wait <= 0:
                 fails.append(f"row {i}: Wait not positive")
-            if not ready / run > 0.2:                      # B
+            if not ready / run > 0.2:                      # B true; A false (the wait is in the export)
                 fails.append(f"row {i}: Ready / Run {ready / run:.3f} not above 0.2")
-            if readiness < 14:                             # A, C
+            if readiness < 14:                             # C false (Readiness 14-28%), D false
                 fails.append(f"row {i}: Readiness {readiness} below 14")
         return fails[:20]
 
@@ -137,7 +137,7 @@ class LinuxStZeroReadyHigh(core.Case):
             fails.append("inline:1: us + sy below 60")
         if vals["wa"] >= 2:                                 # H
             fails.append("inline:1: wa not below 2")
-        if vals["st"] != 0.0:                               # A
+        if vals["st"] != 0.0:                               # A false, E true (steal clock off on defaults, st stays 0.0)
             fails.append("inline:1: st not 0.0")
         runs = [v[3] for _, v in rows]
         k = 0
@@ -161,7 +161,7 @@ class LinuxStZeroReadyHigh(core.Case):
                 fails.append(f"inline:2 row {k}: %usr + %sys below Run % + 5")
             if c["%iowait"] >= 2:                           # H
                 fails.append(f"inline:2 row {k}: %iowait not below 2")
-            if c["%steal"] != 0.0:                          # A
+            if c["%steal"] != 0.0:                          # A false, E true
                 fails.append(f"inline:2 row {k}: %steal not 0.00")
             k += 1
         if k != 10 or not avg_seen:

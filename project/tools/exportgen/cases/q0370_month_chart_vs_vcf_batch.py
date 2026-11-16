@@ -89,7 +89,7 @@ class Q0370(core.Case):
         except (KeyError, ValueError, IndexError) as e:
             return [f"parse: {e}"]
         if cols != [f"Usage for {VM}"] or len(mrows) != MONTH_ROWS:
-            return ["vCenter file: columns or row count differ"]
+            return ["vCenter file: columns or row count differ"]      # D: vCenter export holds Usage only, no Contention
         for i, (t, _) in enumerate(mrows):
             if t != MONTH_START + dt.timedelta(seconds=7200 * i):
                 fails.append(f"vCenter row {i}: step is not 7,200 s")
@@ -119,22 +119,22 @@ class Q0370(core.Case):
                 fails.append(f"point {i}: Contention - Overlap - Co-stop - Ready = {hidden} (outside [0, 1))")
         row = dict(mrows)[BATCH_ROW][0]
         mean = rel.rollup_mean(usage)
-        if abs(row - mean) > 0.006:                                              # A, C, D
+        if abs(row - mean) > 0.006:                                              # A true, C false (same mean, same counter)
             fails.append(f"A: vCenter row {row} vs mean of the 24 Usage values {mean:.4f}")
         idx = [i for i, u in enumerate(usage) if 80 <= u <= 100]
         if len(idx) != 4 or idx != list(range(idx[0], idx[0] + 4)):
             return fails + ["A: not exactly 4 consecutive Usage values in 80-100"]
         if sum(1 for u in usage if 20 <= u <= 40) != 20:
             fails.append("A: the other 20 Usage values are not all in 20-40")
-        if not row < min(usage[i] for i in idx) or not row < max(usage):      # B
-            fails.append("B: the vCenter row is not below the batch values")
+        if not row < min(usage[i] for i in idx) or not row < max(usage):      # vCenter row below the batch
+            fails.append("the vCenter row is not below the batch values")
         for i in idx:
-            if not cont[i] - ready[i] >= 2.0:                                  # F
-                fails.append(f"F: point {i}: Contention - Ready = {cont[i] - ready[i]:.3f} below 2.0")
-            if not costop[i] >= 0.67 * (cont[i] - ready[i]):                   # G
-                fails.append(f"G: point {i}: Co-stop below 0.67 x (Contention - Ready)")
-            if not usage[i] - row >= 40:                                       # I
-                fails.append(f"I: point {i}: Usage exceeds the vCenter row by less than 40")
+            if not cont[i] - ready[i] >= 2.0:                                  # E false: Contention is not Ready
+                fails.append(f"E: point {i}: Contention - Ready = {cont[i] - ready[i]:.3f} below 2.0")
+            if not costop[i] >= 0.67 * (cont[i] - ready[i]):                   # F true: Co-stop is most of the gap
+                fails.append(f"F: point {i}: Co-stop below 0.67 x (Contention - Ready)")
+            if not usage[i] - row >= 40:                                       # the batch is far above the vCenter row
+                fails.append(f"point {i}: Usage exceeds the vCenter row by less than 40")
         if max(v[0] for t, v in mrows if t != BATCH_ROW) >= row:
             fails.append("the batch row is not the month's highest")
         if any(not 12 <= v[0] <= 34 for t, v in mrows if t != BATCH_ROW):

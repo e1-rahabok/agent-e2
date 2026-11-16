@@ -140,7 +140,7 @@ class Q0377(core.Case):
             return [float(x) for x in body.split(":", 1)[1].split()], avg
         util, uavg = pcpu("PCPU UTIL(%)")
         used, davg = pcpu("PCPU USED(%)")
-        if len(util) != NPCPU or min(util) < 98.5 or not 99 <= uavg <= 100:
+        if len(util) != NPCPU or min(util) < 98.5 or not 99 <= uavg <= 100:     # A true, C false
             fails.append("inline:1: PCPU UTIL below 98.5 or AVG outside 99-100")
         if not (davg > 100 and uavg <= 100):
             fails.append("inline:1: PCPU USED AVG not above 100 with UTIL AVG at most 100")
@@ -167,6 +167,14 @@ class Q0377(core.Case):
                     fails.append(f"inline:1: {r['NAME']}: VMWAIT+IDLE above WAIT or MLMTD above RDY")
         if len(vmrows) != 9:
             fails.append(f"inline:1: {len(vmrows)} VM rows")
+        sysrows = [r for r in recs if r["%VMWAIT"] == "-"]            # F true: non-VM groups
+        if len(sysrows) != 6 or any(r["%RDY"] == "-" or num(r["%RDY"]) is None for r in sysrows) \
+                or any(r["NAME"] in [n for n, _ in VMS] for r in sysrows) \
+                or not {"system", "hostd"} <= {r["NAME"].split(".")[0] for r in sysrows}:
+            fails.append("inline:1: F: the six non-VM groups (system, hostd, ...) must show %RDY and a dash for %VMWAIT")
+        etl = next((r for r in recs if r["NAME"] == LIMITED and r["ID"] == r["GID"]), None)   # E true
+        if etl is None or not 200 <= num(etl["%RUN"]) <= 300 or int(etl["NWLD"]) < 16:
+            fails.append("inline:1: E: dw-etl-01 group %RUN is not 200-300 (2 to 3 PCPUs' worth)")
         if abs(sum_run - sum(util)) > 0.03 * sum(util):
             fails.append("inline:1: sum of %RUN not within 3% of sum of PCPU UTIL")
         if abs(sum_used - sum(used)) > 0.03 * sum(used):
@@ -179,12 +187,12 @@ class Q0377(core.Case):
             fails.append("inline:1: not exactly one VM row with %MLMTD > 0 (dw-etl-01)")
         else:
             r = lim[0]
-            if not 0.5 * num(r["%RDY"]) < num(r["%MLMTD"]) <= num(r["%RDY"]):
+            if not 0.5 * num(r["%RDY"]) < num(r["%MLMTD"]) <= num(r["%RDY"]):     # G, H false: %MLMTD inside %RDY
                 fails.append("inline:1: %MLMTD not between half of %RDY and %RDY")
             if num(r["%RDY"]) < max(num(x["%RDY"]) for x in vmrows):
                 fails.append("inline:1: limited VM does not have the highest %RDY")
         rd = [num(r["%RDY"]) for r in vmrows]
-        if max(rd) < 2 * min(rd):
+        if max(rd) < 2 * min(rd):                                         # I false
             fails.append("inline:1: highest VM %RDY below 2 x lowest")
         used_col = [num(r["%USED"]) for r in recs]
         if used_col != sorted(used_col, reverse=True):

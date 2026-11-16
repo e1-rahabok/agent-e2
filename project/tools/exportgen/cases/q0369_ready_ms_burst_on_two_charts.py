@@ -96,10 +96,10 @@ class Q0369(core.Case):
         ready = [r[1][1] for r in rt]
         high = [i for i, v in enumerate(ready) if v > 400]
         peak = max(ready)
-        if len(high) != 1 or not 3500 <= peak <= 4500:                          # A, B
+        if len(high) != 1 or not 3500 <= peak <= 4500:                          # A true, B false (20,000 ms is one vCPU)
             fails.append(f"A: {len(high)} samples above 400, peak {peak}")
-        elif rt[high[0]][0] != BURST_AT:                                        # E
-            fails.append(f"E: the burst sample is at {rt[high[0]][0]}, not 09:15:20Z")
+        elif rt[high[0]][0] != BURST_AT:                                        # stem: about 45 minutes ago
+            fails.append(f"burst: the burst sample is at {rt[high[0]][0]}, not 09:15:20Z")
         pdmap = {t: v for t, v in pd}
         for ws in CHECK_ROWS:
             win = [v for t, v in rt if core.align_down(t, 300) == ws]
@@ -108,8 +108,10 @@ class Q0369(core.Case):
                 continue
             if pdmap[ws][1] != rel.rollup_sum([v[1] for v in win]):             # C, G
                 fails.append(f"C: Past day Ready {ws:%H:%M} is not the sum of its 15 samples")
-            if abs(pdmap[ws][0] - rel.rollup_mean([v[0] for v in win])) > 0.006:
-                fails.append(f"Past day Usage {ws:%H:%M} is not the mean of its 15 samples")
+            if abs(pdmap[ws][0] - rel.rollup_mean([v[0] for v in win])) > 0.006:   # E false
+                fails.append(f"E: Past day Usage {ws:%H:%M} is not the mean of its 15 samples")
+            if not pdmap[ws][0] < 0.5 * sum(v[0] for v in win):                  # E false: not the sum
+                fails.append(f"E: Past day Usage {ws:%H:%M} is within reach of the sum of its samples")
         burst = pdmap[BURST_ROW][1]
         if not burst > peak:                                                    # G
             fails.append("G: the 09:15 Past day Ready is not above the burst sample")
@@ -118,6 +120,6 @@ class Q0369(core.Case):
         if any(v[1] >= burst for t, v in pd if t != BURST_ROW):                 # D
             fails.append("D: another Past day row has Ready at or above the 09:15 row")
         win = [v[1] for t, v in rt if core.align_down(t, 300) == BURST_ROW]
-        if sorted(win)[-2] >= 400:                                              # F
+        if sorted(win)[-2] >= 400:                                              # F false
             fails.append("F: another sample of the 09:15 window is 400 or more")
         return fails[:20]

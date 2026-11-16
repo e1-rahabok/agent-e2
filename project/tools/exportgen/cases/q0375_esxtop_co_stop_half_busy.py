@@ -234,8 +234,8 @@ class Q0375(core.Case):
             if abs(rel.esxtop_wait(num(w["%VMWAIT"]), num(w["%IDLE"])) - num(w["%WAIT"])) > 0.011:
                 fails.append(f"{w['NAME']}: %WAIT != %VMWAIT + %IDLE")
             tot = sum(num(w[c]) for c in ("%RUN", "%RDY", "%CSTP", "%WAIT"))
-            if abs(tot - 100) > 0.02:
-                fails.append(f"{w['NAME']}: RUN+RDY+CSTP+WAIT = {tot:.2f}")
+            if abs(tot - 100) > 0.02:                       # C true
+                fails.append(f"C: {w['NAME']}: RUN+RDY+CSTP+WAIT = {tot:.2f}")
             if abs(num(w["%RUN"]) + num(w["%SYS"]) - num(w["%OVRLP"]) - num(w["%USED"])) > 0.011:
                 fails.append(f"{w['NAME']}: %USED != %RUN + %SYS - %OVRLP")
             if num(w["%IDLE"]) < 0:
@@ -264,13 +264,15 @@ class Q0375(core.Case):
         if not avg < 60:
             fails.append("B: AVG not below 60")
         if num(g["%MLMTD"]) != 0 or any(num(w["%MLMTD"]) != 0 for w in worlds) or not num(g["%RDY"]) > 0:
-            fails.append("C: %MLMTD not 0.00 on the group and all worlds, or group %RDY not above 0")
+            fails.append("%MLMTD not 0.00 on the group and all worlds, or group %RDY not above 0")
         if sum(1 for w in vc if num(w["%RDY"]) >= 0.5) < 4 or any(not num(w["%RDY"]) > 0 for w in vc):
             fails.append("H: need at least 4 vcpu worlds with %RDY >= 0.5 and every vcpu world %RDY > 0")
         if not num(g["%CSTP"]) > 2:
-            fails.append("E, G: group %CSTP not above 2")
+            fails.append("E: group %CSTP not above 2")
+        if len(util) != 48 or len(core_u) != 24 or len(vc) > 24:     # G true: 16 vCPUs fit one 24-core socket (one NUMA node)
+            fails.append("G: the host is not one 24-core socket with 48 PCPUs, or the VM is wider than the node")
         for n in SMALL:
             r = next(r for r in recs if r["NAME"] == n)
-            if num(r["%CSTP"]) != 0:
+            if num(r["%CSTP"]) != 0:                        # F false
                 fails.append(f"F: {n} %CSTP is not 0.00")
         return fails[:20]

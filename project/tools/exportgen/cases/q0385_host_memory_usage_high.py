@@ -65,12 +65,12 @@ class HostMemoryUsageHigh(core.Case):
                 fails.append(f"{t}: Usage != Consumed / total")
             if not a < c:
                 fails.append(f"{t}: Active not below Consumed")
-            if bal != 0:
+            if bal != 0:                                    # B false
                 fails.append(f"{t}: Ballooned memory {bal}")
-            if not 94.0 <= u <= 97.0:
+            if not 94.0 <= u <= 97.0:                       # A true (Usage = Consumed / total), C true (below the ~99% balloon start), E false
                 fails.append(f"{t}: Usage {u} outside 94..97")
         for n, v in lrows:
-            if v[0] != 0 or v[1] != 0 or v[2] != 0:
+            if v[0] != 0 or v[1] != 0 or v[2] != 0:          # B false, D true, F false, H false
                 fails.append(f"{n}: contention, balloon or swap in not 0")
         cfg = dict(VMS)
         for n, v in lrows:

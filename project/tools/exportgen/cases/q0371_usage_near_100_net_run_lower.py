@@ -112,7 +112,7 @@ class Q0371(core.Case):
         usage = [v for _, v in pu]
         net = [v for _, v in pn]
         for i, (u, n) in enumerate(zip(usage, net)):
-            if n > 100 or u < n - 1e-9:
+            if n > 100 or u < n - 1e-9:                      # I false: Net Run never above 100
                 fails.append(f"afternoon point {i}: Usage {u}, Net Run {n}")
                 break
         if max(net) >= 82:                                                       # B, K

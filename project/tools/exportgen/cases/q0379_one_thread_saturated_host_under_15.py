@@ -80,6 +80,7 @@ class OneThreadSaturated(core.Case):
         if len(hrows) != ROWS or len(vrows) != ROWS:
             return [f"{len(hrows)} / {len(vrows)} rows"]
         fails = []
+        hots = []
         for i, ((th, h), (tv, v)) in enumerate(zip(hrows, vrows)):
             if th != tv or th != START + dt.timedelta(seconds=20 * (i + 1)):
                 fails.append(f"row {i}: time stamps differ or off the 20 s axis")
@@ -88,9 +89,13 @@ class OneThreadSaturated(core.Case):
                 fails.append(f"row {i}: host != mean of the instances")
             if any(not 0 <= x <= 100 for x in h):
                 fails.append(f"row {i}: a value outside 0-100")
-            if host >= 10:                                     # A, C
+            if host >= 10:                                     # A true, C false
                 fails.append(f"row {i}: host {host} not below 10")
             hot, sib = _hot(i)
+            over = [k for k, x in enumerate(inst) if x >= 50]
+            if over != [hot]:                                  # B false, H true: one saturated thread per row
+                fails.append(f"row {i}: instances at 50 or more {over}, expected only {hot}")
+            hots.append(over[0] if over else None)
             if inst[hot] < 95 or inst[sib] > 3.0:
                 fails.append(f"row {i}: hot instance {inst[hot]} / sibling {inst[sib]}")
             usage, mhz, c0, c1, c2, c3, ready = v
@@ -98,13 +103,18 @@ class OneThreadSaturated(core.Case):
                 fails.append(f"row {i}: VM MHz below the sum of the vCPUs")
             if abs(usage - mhz / 120) > 0.006:
                 fails.append(f"row {i}: Usage != VM MHz / 120")
-            if not c0 >= 3250 or not c0 > 3000:               # D, H
+            if not c0 >= 3250 or not c0 > 3000:               # D false, F true: one vCPU saturated above base
                 fails.append(f"row {i}: instance 0 at {c0} MHz")
             if any(c >= 300 for c in (c1, c2, c3)):            # D
                 fails.append(f"row {i}: a quiet vCPU at 300 MHz or more")
-            if ready >= 1:                                     # E
+            if not 25 <= usage <= 36:                          # I false: Usage about 30% hides the saturated vCPU
+                fails.append(f"row {i}: VM Usage {usage} outside 25-36")
+            if ready >= 1:                                     # E true
                 fails.append(f"row {i}: Readiness {ready} not below 1")
-        for inst_no in (13, 37):                               # B
+        changes = sum(1 for a, b in zip(hots, hots[1:]) if a != b)
+        if changes != 1 or hots[0] != 13 or hots[-1] != 37:    # H true: the saturated thread changes once, 13 to 37
+            fails.append(f"H: the saturated thread sequence {sorted(set(hots))} changes {changes} times, expected once from 13 to 37")
+        for inst_no in (13, 37):                               # B false
             col = formats.column(hcols, hrows, f"Utilization for {inst_no}")
             if max(col) < 95:
                 fails.append(f"instance {inst_no} never reaches 95")
