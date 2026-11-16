@@ -7,11 +7,11 @@
 Which statements are correct?
 
 - A. The job ran at about half load for 10 minutes, as the VCF Operations export shows.
-- B. The job started partway through a collection cycle, so its 5 minutes are split across two VCF Operations values.
+- B. The job started partway through a collection cycle, so its 5 minutes span two VCF Operations values.
 - C. Each of those two values averages about half busy samples and half idle ones.
 - D. VCF Operations dropped samples during the job, which is why no value reaches full height.
 - E. A 5-minute job cannot fill a 5-minute point at full height, whatever time it starts.
-- F. The vCenter Real-time export shows the job at its full height because its rows are 20-second averages.
+- F. The vCenter Real-time export shows the job at full height: its rows are 20-second averages.
 - G. Opened the next morning, the vCenter Real-time chart still shows the job's 20-second samples.
 - H. The two VCF Operations values that hold the job add up to about the height of one fully busy point.
 
