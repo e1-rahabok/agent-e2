@@ -7,13 +7,13 @@
 
 Which statements are correct?
 
-- A. Divided by 8 x 20,000 ms, the highest Real-time Ready sample comes to about 2-3% per vCPU.
+- A. Divided by 8 x 20,000 ms, the highest Real-time Ready sample is about 2-3% per vCPU.
 - B. The Real-time peak puts each vCPU in Ready about a fifth of that sample.
 - C. A Last day row of Ready adds up the 15 Real-time samples of its 5 minutes.
-- D. Divided by 8 x 300,000 ms, the Last day Ready row that holds the burst is below 0.5% per vCPU.
+- D. Divided by 8 x 300,000 ms, the burst's Last day Ready row is below 0.5% per vCPU.
 - E. Each Last day Usage row adds up the 15 Real-time Usage samples of its 5 minutes.
-- F. Several Real-time samples in the same 5 minutes pass 3,000 ms.
-- G. The Last day Ready row that holds the burst reads higher in ms than the Real-time peak because it adds up 15 samples, not because the wait grew.
+- F. Several Real-time samples in the same 5 minutes pass 3,000 ms of Ready.
+- G. The Last day Ready row holding the burst reads higher in ms than the Real-time peak: it sums 15 samples.
 - H. Raise the vCenter statistics level to 4 so that the Last day export keeps the burst at full height.
 - I. Judge Ready from the Last day export: a single 20-second sample is mostly noise.
 
