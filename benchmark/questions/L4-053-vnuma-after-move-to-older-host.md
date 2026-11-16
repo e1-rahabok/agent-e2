@@ -8,12 +8,12 @@
 - Since the move, query times vary from day to day, and esxtop shows part of the VM's memory as remote.
 - The DBA says SQL Server sees one NUMA node.
 
-Why does the guest see one node, what does that cost on the old host, and what do you do until the refresh ends? Which statements are correct?
+Which statements are correct?
 
 - A. The layout was built at power-on from the host the VM started on: 20 vCPUs fit one 32-core node, so the guest got one node.
 - B. vMotion does not rebuild the virtual NUMA layout: a running guest cannot take a change of its NUMA topology.
 - C. vMotion rebuilds the virtual NUMA layout for the destination host, so the guest always sees the layout of the host it runs on.
-- D. On this hardware version, a two-node layout set in the vNUMA Topology menu of Edit Settings matches the old hosts.
+- D. On this hardware version, a two-node layout set in the vNUMA Topology menu of Edit Settings fits the nodes of the old hosts.
 - E. On an old host ESXi keeps all 20 vCPUs in one 12-core node by using its hyper-threads, so all the memory stays local.
 - F. The remote memory in esxtop shows that the NUMA scheduler keeps moving the VM from one node to the other.
 - G. The guest sees a single node, so NUMA cannot explain the variation, and storage is the next suspect to check.
@@ -42,6 +42,7 @@ Why does the guest see one node, what does that cost on the old host, and what d
 
 ## Notes
 - Changed in the 2026-11-15 audit: D (the wide VM's remote memory, tested in 0063 and 0114) replaced by the manual vNUMA Topology fact, with the hardware version added to the stem; K without its hedge; misconception type threshold-transplanted replaced by layer-confusion (guest view against ESXi placement).
+- Changed 2026-11-16 (re-review): the three-part question line reduced to "Which statements are correct?"; D says the manual layout fits the old hosts' nodes (truth unchanged). The plainest remedy, a power cycle on an old host, stays out of the options until author question Q216 is answered.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). Left out of the options: whether the next power cycle on an old host rebuilds the layout (and `VPXD_PersistVnuma`): open author question Q216 (the vSphere 9.1 TechDocs say the topology does not change unless the vCPU count changes).
 
 ## Metadata

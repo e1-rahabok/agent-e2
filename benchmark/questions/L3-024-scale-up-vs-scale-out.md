@@ -6,9 +6,9 @@
 
 Which statements are correct?
 
-- A. Each 8-vCPU VM fits in one NUMA node of these hosts, so its memory can stay local.
+- A. Each 8-vCPU VM fits in one NUMA node of these hosts, so it gets one home node for its memory.
 - B. Both designs total 32 vCPUs, so the choice does not change performance.
-- C. The 32-vCPU VM spans both NUMA nodes, so some of its memory accesses can be remote.
+- C. The 32-vCPU VM spans both NUMA nodes, so part of its memory is remote to some of its vCPUs.
 - D. The 32-vCPU VM is split over both nodes only if its memory exceeds one node.
 - E. Idle vCPUs of the 32-vCPU VM are de-scheduled, so they add no overhead on the host or in the guest.
 - F. Each of the four VMs adds its own memory overhead on the host.
@@ -30,6 +30,7 @@ B: the same vCPU total gives the same performance. Or the over-correction G: the
 - H is true: the vendor guidance is to test with the workload in the environment.
 
 ## Notes
+- Changed 2026-11-16 (re-review): "can" removed from the correct A and C (hedge cue against the absolutes of B, D and E); truth unchanged.
 - Changed in the 2026-11-15 audit: memory sizes added to the stem; throwaway D ("vNUMA makes remote access free") replaced by the memory-split misconception; E and G reworded so absolutes are not only in wrong options; misconception type unit-and-normalization removed (it did not fit B).
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): C ("it depends: test both", vague and compound) replaced by the NUMA facts A and C and the action H; the old A (shared data) and F (licences) were not in the knowledge base; E (clock speed) replaced by the idle vCPU cost; G added as the over-correction. Key changed from A, C, F to A, C, F, H (new letters).
 
