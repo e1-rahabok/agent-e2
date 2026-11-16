@@ -1,56 +1,46 @@
 # Windows In use falls after a restart; VM Consumed stays
 
 ## Prompt
-See [Task Manager before the restart](0386/task-manager-memory-before-restart.png), [Task Manager after the restart](0386/task-manager-memory-after-restart.png) and [the vCenter memory chart of the VM](0386/vcenter-vm-memory-consumed-active-past-day.png).
-
-- A Windows Server VM runs a Java application server. Yesterday afternoon its owner restarted the application to free memory.
+- The Windows Server 2022 VM jas-prod-03 has 32 GB of memory and runs a Java application server. At 15:02 UTC its owner restarted the application to free memory.
+- The owner sends [the typeperf export from the guest](0386/typeperf-memory.csv), 5-minute samples from 12:00 to 18:00 UTC.
+- You export [the vCenter memory chart of the VM](0386/vcenter-vm-memory-past-day.csv), Past day, cut to the same six hours. vCenter keeps statistics at level 2 for all intervals.
 - The owner writes: "Windows gave the memory back, but vCenter did not notice. Either vCenter is broken, or the VM leaks. And if vCenter is right, the VM is short of memory."
 
 Which statements are correct?
 
-- A. In use is lower after the restart by at least a quarter of the VM's memory.
-- B. The vCenter chart shows Consumed dropping at about the time of the restart.
+- A. Windows In Use is lower after the restart than before it by at least a quarter of the VM's memory.
+- B. In the vCenter export, Consumed drops at about the time of the restart.
 - C. After the restart, Windows keeps the freed pages on its own lists, which ESXi has no view of.
 - D. ESXi keeps a VM page mapped once the guest has touched it, so Consumed has no reason to fall.
-- E. The flat Consumed line is vCenter lagging behind Windows; a later collection will catch up.
-- F. The Active line in vCenter is the VM-side copy of the In use value in Task Manager.
+- E. The level Consumed values show vCenter lagging behind Windows; a later collection will catch up.
+- F. Active in the vCenter export is the VM-side copy of Windows In Use.
 - G. A leak inside Windows is what holds Consumed up after the restart.
 - H. The VM needs more memory, because Consumed sits close to its configured size.
-- I. With Task Manager at hand, the Consumed line of this VM can be ignored for every purpose.
+- I. With the Windows counters at hand, the Consumed values of this VM can be ignored for every purpose.
 - J. The guest's memory is sized from Windows counters, part of the cache included.
 
-## Input to supply
-- Product: Windows Server 2022 (or 2019) VM with VMware Tools, vSphere Client 9.1. The VM has 16 GB or more and runs an application that holds much of its memory (a Java server with a large heap, or Sysinternals Testlimit with `-d` to touch memory).
-- Screen 1: Task Manager > Performance > Memory, a few minutes before the application restart, with the composition bar, In use, Available, Committed and Cached visible, and the Windows taskbar clock visible. Save as `benchmark/questions/0386/task-manager-memory-before-restart.png`.
-- Screen 2: the same screen a few minutes after the restart, once the application has started again, with the taskbar clock visible. Save as `benchmark/questions/0386/task-manager-memory-after-restart.png`.
-- Screen 3: vSphere Client > the VM > Monitor > Performance > Advanced > Memory. Chart Options: timespan Past day; counters Consumed and Active (KB); target the VM. Capture after the restart, so the chart covers the hours before and after it. Save as `benchmark/questions/0386/vcenter-vm-memory-consumed-active-past-day.png`.
-- Condition the key depends on:
-  - In use before the restart at 50% or more of the configured memory, and lower after it by at least a quarter of the configured memory;
-  - Consumed within 10% of the configured memory at every point of the day, with no step down at the restart;
-  - no balloon, swap or compression on the VM at any point of the day (the host is not under memory pressure).
-- Masking: mask every VM, host, datastore and cluster name (Task Manager shows none; check the vSphere Client header and legend).
-
 ## Likely wrong answer
-E: "vCenter is just behind; Consumed will follow Windows down." Or F: "The VM counter for In use is Active."
+E: "vCenter is just behind; Consumed will follow Windows down." Or F: "The VM counter for In Use is Active." Or A rejected because `% Committed Bytes In Use` hardly moves across the restart.
 
 ## Expected key points
 - Answer: A, C, D, J.
-- A true: the two Task Manager screens show In use falling by a quarter of the VM's memory or more.
-- B false: the Consumed line stays level through the restart.
-- C true: freeing a page only updates the guest's free list, an ordinary memory write that never reaches ESXi. How Windows classifies its pages is an ESXi blind spot.
-- D true: ESXi maps a VM page at the guest's first touch and keeps the mapping until it reclaims the page (sharing, balloon, compression, swap). With no host pressure nothing is reclaimed, so Consumed stays near the configured size.
-- E false: there is no mapping between In use and Consumed; the layers manage memory independently, so waiting does not make them agree.
-- F false: the same mistake on another counter. Active is a sampled ESXi estimate of recently touched pages; it has no mapping to In use.
-- G false: Consumed is not the guest's utilization; it stays high once pages are touched. The fall in In use shows that Windows released the memory.
+- A true: reading. In Use = total - (Modified + Standby + Free), and `Available MBytes` is Standby plus Free, so In Use moves by minus the change of `Available MBytes` plus `Modified Page List Bytes`. That sum is at least 8,492 MB higher in every row from 15:05 than in any row up to 15:00: In Use fell by more than 8 GB, a quarter of 32 GB. `Committed Bytes` and `% Committed Bytes In Use` stay within a few percent, because the restarted JVM commits its heap again at start without touching it; commit is not In Use.
+- B false: reading. `Consumed for jas-prod-03` stays between 32,780,000 and 32,880,000 KB (about 98% of 32 GB) in every row, with no step at 15:05.
+- C true: freeing a page only updates the guest's free list, an ordinary memory write that never reaches ESXi. How Windows classifies its pages (the rise of `Free & Zero Page List Bytes` here) is an ESXi blind spot.
+- D true: ESXi maps a VM page at the guest's first touch and keeps the mapping until it reclaims the page (sharing, balloon, compression, swap). `Ballooned memory`, `Swapped` and `Compressed` are 0 in every row: nothing is reclaimed, so Consumed stays near the configured size, and the restarted application reuses pages already mapped.
+- E false: there is no mapping between In Use and Consumed; the layers manage memory independently, so waiting does not make them agree.
+- F false: the same mistake on another counter. Active is a sampled ESXi estimate of recently touched pages; it has no mapping to In Use.
+- G false: Consumed is not the guest's utilization; it stays high once pages are touched. The fall in In Use shows that Windows released the memory.
 - H false: the wrong action. Consumed near the configured size is the normal state of a VM that has touched its memory; it is not demand.
 - I false: over-correction. Consumed shows the host memory the VM holds: what host capacity and the VM's footprint (for example, for a migration) count.
 - J true: Guest OS sizing reads the guest's own counters, with part of the cache; VM counters describe what ESXi does.
 
 ## Notes
 - Paired with 0095 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item C4.
-- Task Manager keeps only 60 seconds of history, so the before and after values come from two captures (their clocks place the restart), and the day from the vCenter chart.
-- Review fixes 2026-11-15: options reworded away from 0095; two screen readings added (A true, B false); the restart time moved from the stem to the taskbar clock. Key A, B, I → A, C, D, J.
-- The key holds whenever the condition of `## Input to supply` holds. No option rests on the Active values.
+- Converted 2026-11-15 from three screenshots to two generated exports (project/practical-questions-as-exports-2026-11-15.md, row 0386). Task Manager has no export; A now reads In Use from the PerfMon memory lists, with `Committed Bytes` and `% Committed Bytes In Use` as the near-name distractors. Options A, B, E, F, I reworded from screen words to the exports; key unchanged. The Task Manager screenshot question is deferred (exports document, section 5).
+- The exports are generated by `project/tools/exportgen` (case 0386), which checks every row against the key. `Swapped` and `Compressed` are kept at Past day only from statistics level 2, hence the level in the prompt.
+- Review fixes 2026-11-15: options reworded away from 0095; two screen readings added (A true, B false); the restart time moved from the stem to the taskbar clock (back in the stem since the conversion: the exports carry no event marker). Key A, B, I → A, C, D, J.
+- No option rests on the Active values.
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
 ## Metadata
@@ -62,7 +52,7 @@ technology: [memory]
 task: read-metric
 level: 400
 answer_type: deterministic
-input: [screenshot]
+input: [table]
 object: [guest-os, vm]
 tool: [guest-os-tools, vcenter]
 knowledge:
@@ -74,14 +64,13 @@ knowledge:
   - guest-os/system/guest-os-sizing
 knowledge_main: vsphere/technology/memory/concepts/guest-os-vs-vm-memory
 attachments:
-  - 0386/task-manager-memory-before-restart.png
-  - 0386/task-manager-memory-after-restart.png
-  - 0386/vcenter-vm-memory-consumed-active-past-day.png
+  - 0386/typeperf-memory.csv
+  - 0386/vcenter-vm-memory-past-day.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C4"
 answer: [A, C, D, J]
 misconception: [E, F]
 misconception_type: [layer-confusion]
 pair: "0095"
-status: awaiting-input
+status: draft
 ```
