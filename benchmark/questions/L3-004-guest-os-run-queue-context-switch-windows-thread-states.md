@@ -8,7 +8,7 @@ An application team runs Windows and Linux VMs and asks how to read the guest CP
 - C. A high context switch rate calls for more vCPUs.
 - D. Windows Processor Queue Length leaves out the running threads; the Linux run queue counts them.
 - E. A context switch costs CPU time that could otherwise run application work.
-- F. In Windows, the processor queue length counts threads in the Ready, Standby and Deferred Ready (Unknown) states.
+- F. In Windows, the queue counts threads in the Ready, Standby and Deferred Ready (Unknown) states.
 - G. A thread blocked on a lock adds to the Windows processor queue length.
 - H. A sustained queue of 1 thread per vCPU is reason enough to add vCPUs.
 

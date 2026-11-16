@@ -11,7 +11,7 @@
 Which statements are correct?
 
 - A. The vSphere team is right: with no balloon, no swap and 0% Memory Latency, memory is fine for this application.
-- B. From 14:00 to 14:40 Windows is short of memory: Available falls to about 110-190 MB while page-in and page-out are both high.
+- B. From 14:00 to 14:40 Windows is short of memory: Available falls to 110-190 MB with page-in and page-out both high.
 - C. In the same minutes % Committed Bytes In Use rises above 90%, the level at which Windows performance drops.
 - D. The disk queue rises because of the paging, not because of a slow datastore: virtual disk latency stays at 1-3 ms.
 - E. The storage team should look at the datastore, because the disk queue reaches 6-14 in the window.
@@ -20,7 +20,7 @@ Which statements are correct?
 - H. Size the fix from VM Consumed: flat at 8 GB, it shows the guest needs no more than 8 GB.
 - I. Give the VM more memory, or cut the Java heap and other memory the application takes, so Windows stops paging.
 - J. Page-in above 1,000 pages/s would by itself show a memory shortage.
-- K. Find what starts at 14:00: a business peak goes into the size; an IT job such as a scan or a backup is moved out of the users' hours.
+- K. Find what starts at 14:00: a business peak is sized for; an IT job such as a scan or backup moves out of user hours.
 - L. With 40% of host memory free, ESXi gives Windows more memory once Windows starts to page.
 
 ## Likely wrong answer

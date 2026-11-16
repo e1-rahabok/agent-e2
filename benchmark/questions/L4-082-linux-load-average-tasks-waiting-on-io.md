@@ -12,9 +12,9 @@
 Which statements are correct?
 
 - A. The load is four times the vCPU count, so the CPU is saturated and 16 vCPUs would help.
-- B. Linux load average counts runnable tasks and tasks in uninterruptible sleep; here most of it is the `b` column, tasks blocked on IO.
+- B. Load average counts runnable and uninterruptible tasks; here most of it is the `b` column, tasks blocked on IO.
 - C. The `r` column stays below 8, so threads are not queuing for a vCPU.
-- D. Linux waits on IO while the VM's data disk shows high read latency, so the wait sits below Linux: continue with that virtual disk and its datastore.
+- D. Linux waits on IO while the data disk shows high read latency, so the wait is below Linux: read that disk and its datastore.
 - E. `wa` is CPU time spent processing IO; add it to `us` and `sy` to get the real CPU busy figure.
 - F. A Linux load average of 31.8 means the same as an esxtop load average of 31.8: demand for about 32 times the CPUs present.
 

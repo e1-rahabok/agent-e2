@@ -52,28 +52,28 @@ Which statements are correct?
 
 - A. In `mpstat`, the guest keeps about 5-6 of its 16 CPUs busy at the peak hour.
 - B. Double the VM to 32 vCPUs: the work spreads and each vCPU waits less.
-- C. A narrower VM, closer to what the guest uses, needs fewer free threads at once, so its Ready and Co-stop tend to fall.
+- C. A narrower VM, nearer the guest's use, would tend to show less Ready and less Co-stop.
 - D. The Co-stop in the export shows the application's threads waiting on each other's locks inside the guest.
-- E. Co-stop on this VM follows from Ready on its siblings: when one vCPU waits for a thread, the others are held back.
-- F. In the hourly export, Co-stop stays above Ready all week.
+- E. Co-stop on this VM follows from Ready on its siblings: one vCPU waits, the others are held back.
+- F. In the hourly export, Co-stop stays above Ready in the peak hours all week.
 - G. The other VMs on the host wait as much as this one: the host is short of CPU.
-- H. A downsize lowers Co-stop only; Ready depends on the host alone.
-- I. Net Run in the hourly export matches the CPUs busy in `mpstat`: about a third of the 16 vCPUs.
+- H. A downsize mainly lowers Co-stop; this VM's Ready follows the load of the host.
+- I. Net Run in the hourly export matches the busy CPUs in `mpstat`: about a third of 16 vCPUs.
 
 ## Likely wrong answer
 B: the VM waits for CPU, so give it more vCPUs. Or D: Co-stop means the application's threads block each other.
 
 ## Expected key points
 - Answer: A, C, E, I.
-- A true: reading. In the `mpstat` block, 5 or 6 CPU rows have %idle below 20 and the other rows above 80.
-- B false: the misconception and wrong action. More vCPUs need more threads free at about the same time: Ready and Co-stop tend to rise.
-- C true: the guest uses about a third of its vCPUs; a narrower VM fits free threads more easily.
-- D false: Co-stop is a wait in the ESXi scheduler that keeps the vCPUs in step; the guest does not see it, and its own locks do not cause it.
-- E true: with the VM inside one NUMA node and no snapshot, the remaining cause of Co-stop is Ready on a sibling vCPU; co-stopped vCPUs stop even when threads are free.
-- F false: reading. In every hourly row CPU|Co-stop (%) is below CPU|Ready (%); in the peak hours Ready is 1.5-4 and Co-stop 0.5-2.
-- G false: reading. In the host list every other VM has CPU|Ready (%) (Max) below 0.5, against more than 2 for app-java-04: the wait comes from this VM's width, not the host.
-- H false: over-correction. Downsizing usually lowers Ready too: fewer vCPUs fit free threads more easily.
-- I true: CPU|Net Run (%) is normalised to the whole VM (16 vCPUs = 100%). At the peak hours it reads 28-40%, about 4.5-6.5 vCPUs of work; in the hour of the `mpstat` sample the busy CPUs add up to Net Run x 16 within about one CPU (the guest also counts Ready and Co-stop time as busy, so it reads slightly higher).
+- A is correct: reading. In the `mpstat` block, 5 or 6 CPU rows have %idle below 20 and the other rows above 80.
+- B is wrong: the misconception and wrong action. More vCPUs need more threads free at about the same time: Ready and Co-stop tend to rise.
+- C is correct: the guest uses about a third of its vCPUs; a narrower VM needs fewer threads free at once and fits free threads more easily.
+- D is wrong: Co-stop is a wait in the ESXi scheduler that keeps the vCPUs in step; the guest does not see it, and its own locks do not cause it.
+- E is correct: with the VM inside one NUMA node and no snapshot, the remaining cause of Co-stop is Ready on a sibling vCPU; co-stopped vCPUs stop even when threads are free.
+- F is wrong: reading. In every hourly row CPU|Co-stop (%) is below CPU|Ready (%); in the peak hours Ready is 1.5-4 and Co-stop 0.5-2.
+- G is wrong: reading. In the host list every other VM has CPU|Ready (%) (Max) below 0.5, against more than 2 for app-java-04: the wait comes from this VM's width, not the host.
+- H is wrong: over-correction. Downsizing usually lowers Ready too: fewer vCPUs fit free threads more easily, and the other VMs' low Ready shows the host load is not what drives this VM's Ready.
+- I is correct: CPU|Net Run (%) is normalised to the whole VM (16 vCPUs = 100%). At the peak hours it reads 28-40%, about 4.5-6.5 vCPUs of work; in the hour of the `mpstat` sample the busy CPUs add up to Net Run x 16 within about one CPU (the guest also counts Ready and Co-stop time as busy, so it reads slightly higher).
 
 ## Reasoning path
 1. `mpstat` and Net Run: about a third of the 16 vCPUs work.
@@ -85,6 +85,7 @@ B: the VM waits for CPU, so give it more vCPUs. Or D: Co-stop means the applicat
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C11). Counts only after author approval.
 - Review 2026-11-15: new situation (16-vCPU Linux application server, a request to double it, the developers' reading of Co-stop) and new wording, away from 0107; NUMA fit and no snapshot added so E is decidable; screen readings F, G (false) and I (true) added. Key changed from A, C, F to A, C, E, I (options relettered).
 - Converted 2026-11-16 from screenshots to a VCF Operations hourly list export, a host list export and `mpstat -P ALL` text, generated by a seeded script (project/practical-questions-as-exports-2026-11-15.md). A and I name `mpstat` instead of `top`; D, F and I say export instead of chart. Truth values unchanged. The list view CSV format is assumed (not captured yet; project/tools/exportgen/README.md).
+- 2026-11-15 audit: C shortened (no longer the longest option) and H reworded without "only" and "alone" (truth kept). Not done: a CPU|Usage (%) column and an option on Usage above Net Run (needs a generator change).
 
 ## Metadata
 ```yaml

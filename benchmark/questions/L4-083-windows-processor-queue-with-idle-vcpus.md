@@ -13,7 +13,7 @@
 Which statements are correct?
 
 - A. Windows is short of processors: a queue of about 6 threads per vCPU is three times the guidance of 2, so 8 more vCPUs will shorten it.
-- B. The waiting threads cannot run on the 7 lightly used vCPUs (processor affinity or work bound to vCPU 0), so 8 more vCPUs will not shorten the queue.
+- B. The waiting threads cannot use the 7 lightly used vCPUs (affinity, or work bound to vCPU 0), so more vCPUs will not help.
 - C. Ready at 0.4% shows that ESXi runs the vCPUs when Windows asks; the wait is inside Windows.
 - D. Privileged time making up most of the busy time points at kernel or driver work; check the drivers and the DPC and interrupt time on vCPU 0.
 - E. The queue is vCPUs waiting for physical CPUs on the host; a CPU reservation for the VM shortens it.

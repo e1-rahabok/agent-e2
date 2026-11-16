@@ -7,11 +7,11 @@
 
 Which statements about the Linux load average are correct?
 
-- A. A task asleep in the kernel waiting for a disk read adds to the figure, just as a task that runs or waits for a CPU does.
+- A. A task asleep in the kernel waiting for a disk read adds to the figure, as a running task does.
 - B. It counts the threads waiting for a vCPU, so here about two threads queue for a vCPU.
 - C. It is a count for the whole Guest OS, not a figure per vCPU.
 - D. A burst of runnable tasks shorter than 5 seconds always shows in the 1-minute figure.
-- E. Each figure is an exponentially decaying average of that count, sampled every 5 seconds, over 1, 5 or 15 minutes.
+- E. Each figure averages that count, sampled every 5 s, with exponential decay over 1, 5 or 15 minutes.
 - F. A load average above the vCPU count points to IO wait, not to a CPU queue.
 - G. Four more vCPUs are the fix: a load average of 6.20 is above the 4 vCPUs.
 - H. The load average can stay above the vCPU count while the vCPUs sit mostly idle.

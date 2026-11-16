@@ -29,32 +29,30 @@ PCPU UTIL(%): 99.4 99.5 99.4 99.8 99.6 99.6 99.2 99.6 99.5 99.4 99.7 99.6  100 9
 
 Which statements are correct?
 
-- A. With every PCPU busy, whatever the load average shows above 1.00 is work waiting for a PCPU.
-- B. A load average above 3 means the PCPUs run above 300% utilization.
-- C. PCPU UTIL(%) AVG in the panel is below 90%.
-- D. About two thirds or more of the runnable work on this host is waiting, not running.
-- E. PCPU USED(%) reads above 100% in the panel because it takes the clock speed into account.
-- F. The VM with %MLMTD above 0 is held back by its own CPU limit: that part of its %RDY is not caused by the busy host.
+- A. With every PCPU busy, the load average above 1.00 is work waiting for a PCPU.
+- B. A load average above 3 means the PCPUs of the host run above 300% utilization.
+- C. PCPU UTIL(%) AVG in the panel is below 90%, so some PCPUs sit idle.
+- D. Two thirds or more of the runnable work on this host is waiting, not running.
+- E. A group's %RUN counts 100% per PCPU: dw-etl-01 ran about 2 to 3 PCPUs' worth.
+- F. The non-VM groups, such as system and hostd, show %RDY but no %VMWAIT value.
 - G. %MLMTD is extra wait on top of %RDY: add the two for that VM's total wait.
-- H. The VM rows, not the first line, tell which VMs are held back and by how much.
-- I. Migrate the VM with the highest %RDY first: the busy host is what holds it back.
-- J. Every VM row should show about the same %RDY, since the load average is shared by all.
+- H. Migrate the VM with the highest %RDY first: the busy host is what holds it back.
+- I. Every VM row should show about the same %RDY, since the load average is shared by all.
 
 ## Likely wrong answer
 B: a load average above 3 means more than 300% utilization. Or the colleague's view: UTIL is at 100%, so the screen says nothing more.
 
 ## Expected key points
-- Answer: A, D, E, F, H.
-- A true: the load average counts running and ready-to-run worlds against the PCPU count; running work cannot exceed the PCPUs, so the excess over 1.00 is waiting work. Every PCPU UTIL(%) value is 98.5-100.
-- B false: the misconception. It is runnable work per PCPU, not a percentage of utilization.
-- C false: the reading. PCPU UTIL(%) AVG is 99-100: no PCPU is idle.
-- D true: the 1-minute load average L is 3.2-4.0; with at most 1.00 running, the waiting share is at least (L - 1) / L: about 69-75%.
-- E true: the reading. USED builds on UTIL and adds frequency; Turbo lifts PCPU USED(%) AVG above 100 (about 105-112) while UTIL stays at 99-100.
-- F true: Max Limited is time held back by a limit, not by lack of CPU. One VM row has %MLMTD above 0, most of its %RDY.
-- G false: %MLMTD is counted inside %RDY; adding them counts it twice.
-- H true: Ready is a consumer counter; the first line is one host-wide number over all worlds, VM and non-VM.
-- I false: the wrong action. The VM with the highest %RDY is the limited one, and most of its Ready is %MLMTD: its own limit, which moves with it. Moving it does not end that wait; the host holds back the other VMs with high %RDY.
-- J false: the reading and the mechanism. The highest VM %RDY is more than twice the lowest: each VM's wait depends on its own vCPU count, demand, shares and limits, not on the host average.
+- Answer: A, D, E, F.
+- A is correct: the load average counts running and ready-to-run worlds against the PCPU count; running work cannot exceed the PCPUs, so the excess over 1.00 is waiting work. Every PCPU UTIL(%) value is 98.5-100.
+- B is wrong: the misconception. It is runnable work per PCPU, not a percentage of utilization.
+- C is wrong: the reading. PCPU UTIL(%) AVG is 99-100: no PCPU is idle.
+- D is correct: the 1-minute load average L is 3.2-4.0; with at most 1.00 running, the waiting share is at least (L - 1) / L: about 69-75%.
+- E is correct: a world's percentages are of one physical CPU; dw-etl-01's group %RUN of about 230 (16 vCPUs at about 14-15% each) is about 2.3 PCPUs of run time.
+- F is correct: non-VM worlds have Ready but no VM Wait; their rows show %RDY and a dash for %VMWAIT.
+- G is wrong: %MLMTD is counted inside %RDY; adding them counts it twice.
+- H is wrong: the wrong action. The VM with the highest %RDY is the limited one, and most of its Ready is %MLMTD: its own limit, which moves with it. Moving it does not end that wait; the host holds back the other VMs with high %RDY.
+- I is wrong: the reading and the mechanism. The highest VM %RDY is more than twice the lowest: each VM's wait depends on its own vCPU count, demand, shares and limits, not on the host average.
 
 ## Reasoning path
 1. UTIL at 100%: no PCPU idle; it cannot show the queue.
@@ -66,6 +64,7 @@ B: a load average above 3 means more than 300% utilization. Or the colleague's v
 - Sources as in 0331: Broadcom KB 304594 and KB 382249 (load average: run and ready time of all groups against the PCPUs; 1.00 means fully used); vSphere Monitoring and Performance, CPU Panel (PCPU UTIL(%) is non-idle time).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C34). Counts only after author approval.
 - Converted to exports 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md): the esxtop CPU panel as text in the prompt, generated by project/tools/exportgen. C and E reworded from screen to panel; the PCPU count stated as a case fact. Key unchanged: A, D, E, F, H.
+- Changed in the 2026-11-15 audit (cap of two questions per fact): E (Turbo lifts PCPU USED above 100, held by 0366 and 0101) replaced by the %RUN-per-PCPU reading; F (%MLMTD is limit time inside %RDY, held by 0066 and 0103) replaced by the non-VM groups' %RDY without %VMWAIT; H (VM rows, not the first line, show which VMs wait, held by 0019 and 0431) dropped. Letters: old I and J are now H and I. Key changed from A, D, E, F, H to A, D, E, F. The generator's conditions for the old E, F and H still hold in the text; they no longer decide an option.
 - Review 2026-11-15: load average range moved to 3.2-4.0 (off 0331's 2.6); options reworded away from 0331; screen readings C and J (false) and D (true) added; the %MLMTD part kept. Key changed from A, D, E, F, I to A, D, E, F, H (new options).
 
 ## Metadata
@@ -88,7 +87,7 @@ knowledge_main: vsphere/tools/esxtop/cpu
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C34"
-answer: [A, D, E, F, H]
+answer: [A, D, E, F]
 misconception: [B]
 misconception_type: [consumption-as-contention, tool-confusion]
 pair: "0331"

@@ -24,34 +24,36 @@
 
 Which statements are correct?
 
-- A. esxtop shows the rate in megabits per second.
-- B. One of the two tools is wrong, since both show the same traffic in the same minute.
+- A. esxtop shows the transmit rate of the VM port in megabits per second.
+- B. One of the two tools is wrong: both show the same traffic in the same minute.
 - C. The vSphere Client value times 8, divided by about 1,000, gives about the esxtop value.
 - D. The vCenter export's Data transmit rate is already in megabits per second, as the chart title says.
 - E. The vSphere Client value is in kilobits per second, so dividing it by 1,000 gives the esxtop value.
 - F. The only difference is bits against bytes: esxtop shows 8 times the vSphere Client value.
-- G. The gap comes from the sampling interval: esxtop averages a few seconds, vCenter Real-time 20 seconds.
-- H. The VM transmits about 3 Gb/s.
-- I. Open a support case for the vCenter network counter.
+- G. The gap comes from the sampling interval: esxtop averages a few seconds, vCenter 20 seconds.
+- H. The VM transmits about 3 Gb/s to the iperf3 server during the test.
+- I. Open a support case for the vCenter network counter of the VM.
 - J. esxtop and the vSphere Client cannot be compared for the same VM.
 - K. The number in the vCenter export is about 125 times smaller than the number in esxtop.
+- L. The VM port's PKTTX/s and MbTX/s in esxtop give an average packet size near 1,500 bytes.
 
 ## Likely wrong answer
 B: the numbers are about 125 times apart, so one tool must be wrong. Or F: only bits against bytes, a factor of 8. The overshoot is J: the tools cannot be compared.
 
 ## Expected key points
-- Answer: A, C, H.
-- A true: esxtop network throughput is megabits per second: the MbTX/s column of the VM's port row reads 2,800-3,200.
-- B false: the misconception. Both are right: vCenter VM network throughput (Data transmit rate) is kilobytes per second, as the API stores it; after conversion the two agree within 10%.
-- C true: `Data transmit rate for rpt-lnx-14` in the last rows is 340,000-390,000; KBps x 8 is kilobits per second, divided by about 1,000 it is megabits per second: about 2,900-3,000, within 10% of MbTX/s.
-- D false: the VM's Data transmit rate is kilobytes per second, even where the network chart carries Mbps in its title; nothing is converted. Read as Mbps, 365,000 would be 365 Gb/s on one vNIC.
-- E false: the unit is kilobytes; skipping the factor 8 gives a value 8 times too low (about 365 against about 2,990).
-- F false: bits against bytes is a factor of 8; kilo against mega adds a factor of about 1,000, about 125 in all (365,000 against about 2,990).
-- G false: the stream is steady (the export's Data transmit rate stays within 5% for the last 10 minutes); the interval cannot explain a factor of about 125.
-- H true: esxtop MbTX/s is about 3,000; the vCenter value converts to the same.
-- I false: the wrong action. Both counters are correct.
-- J false: the over-correction. A steady stream gives the same rate in both tools once kilobytes per second are turned into megabits per second.
-- K false: the reading. The vCenter number (340,000-390,000) is about 125 times larger than the esxtop number (2,800-3,200), because kilobytes are a smaller unit than megabits.
+- Answer: A, C, H, L.
+- A is correct: esxtop network throughput is megabits per second: the MbTX/s column of the VM's port row reads 2,800-3,200.
+- B is wrong: the misconception. Both are right: vCenter VM network throughput (Data transmit rate) is kilobytes per second, as the API stores it; after conversion the two agree within 10%.
+- C is correct: `Data transmit rate for rpt-lnx-14` in the last rows is 340,000-390,000; KBps x 8 is kilobits per second, divided by about 1,000 it is megabits per second: about 2,900-3,000, within 10% of MbTX/s.
+- D is wrong: the VM's Data transmit rate is kilobytes per second, even where the network chart carries Mbps in its title; nothing is converted. Read as Mbps, 365,000 would be 365 Gb/s on one vNIC.
+- E is wrong: the unit is kilobytes; skipping the factor 8 gives a value 8 times too low (about 365 against about 2,990).
+- F is wrong: bits against bytes is a factor of 8; kilo against mega adds a factor of about 1,000, about 125 in all (365,000 against about 2,990).
+- G is wrong: the stream is steady (the export's Data transmit rate stays within 5% for the last 10 minutes); the interval cannot explain a factor of about 125.
+- H is correct: esxtop MbTX/s is about 3,000; the vCenter value converts to the same.
+- I is wrong: the wrong action. Both counters are correct.
+- J is wrong: the over-correction. A steady stream gives the same rate in both tools once kilobytes per second are turned into megabits per second.
+- K is wrong: the reading. The vCenter number (340,000-390,000) is about 125 times larger than the esxtop number (2,800-3,200), because kilobytes are a smaller unit than megabits.
+- L is correct: packet size is throughput over packet count: 2,945 Mb/s × 1,000,000 / 8 / 243,153 packets/s is about 1,514 bytes, as PSZTX shows; a full-size Ethernet frame for a bulk TCP stream.
 
 ## Notes
 - Paired with the theory question 0029 (theory and practical; design.md, section 3.9).
@@ -59,6 +61,7 @@ B: the numbers are about 125 times apart, so one tool must be wrong. Or F: only 
 - Whether esxtop counts a megabit as 10^6 or 2^20 bits changes the conversion by about 5%; the options use "about" so the key holds either way.
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C13 (origin: synthetic). Counts only after author approval.
 - Converted to exports 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md): vCenter Real-time CSV and the esxtop network panel as text, generated by project/tools/exportgen. The CSV has no units (export-templates/vcenter-chart-export/README.md), so the owner quotes the chart title in the prompt. D, G and K reworded from screen to export. Key unchanged: A, C, H.
+- Changed in the 2026-11-15 audit: B lost its "since" clause; L added (true: packet size from PKTTX/s and MbTX/s, esxtop/network PSZTX and vm-network-metrics). Key changed from A, C, H to A, C, H, L.
 - Review 2026-11-15: A one fact (it was the negation of B); D reworded away from 0029; J (over-correction) and K (a false screen reading) added; the condition ties the two values together. Key unchanged: A, C, H.
 
 ## Metadata
@@ -78,12 +81,13 @@ knowledge:
   - vsphere/tools/vsphere-client/vcenter-statistics
   - vsphere/tools/esxtop/network
   - vsphere/technology/network/metrics/virtual-motherboard/throughput
+  - vsphere/technology/network/metrics/vm-network-metrics
 knowledge_main: vsphere/tools/esxtop/network-units-vs-vsphere-client
 attachments:
   - 0412/rpt-lnx-14-network-realtime.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C13"
-answer: [A, C, H]
+answer: [A, C, H, L]
 misconception: [B]
 misconception_type: [tool-confusion, unit-and-normalization]
 pair: "0029"

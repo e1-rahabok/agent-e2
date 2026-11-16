@@ -7,10 +7,10 @@
 
 Which statements are correct?
 
-- A. % Disk Time is the average queue length times 100, so it passes 100% whenever more than one request is active on average.
-- B. % Disk Time above 100% shows a counter error.
+- A. % Disk Time is the average queue length times 100, so it passes 100% once the average queue is above 1.
+- B. % Disk Time above 100% shows a counter error, since a disk cannot be busier than all the time.
 - C. In the typeperf export, Avg. Disk Queue Length equals Disk Transfers/sec times Avg. Disk sec/Transfer.
-- D. The Windows time per transfer is close to the vCenter read latency, so nearly all the time per I/O is spent at or below the virtual disk.
+- D. Windows time per transfer is close to the vCenter read latency: nearly all of it is at or below the virtual disk.
 - E. Avg. Disk Queue Length counts only the requests that have not left Windows yet.
 - F. Keeping Avg. Disk Queue Length below 2 is the right target for this virtual disk.
 - G. A 1 MB read would add as much to Avg. Disk Queue Length as one of these 8 KB reads.

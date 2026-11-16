@@ -9,31 +9,31 @@ Which statements are correct?
 - A. The hosts all stayed as low as the cluster, so any of them can take new VMs.
 - B. At the cluster's busiest hours, one host ran near 100% while the cluster stayed near 70%.
 - C. Each hourly value of the cluster blends the hot host with the lighter ones.
-- D. The cluster cannot take the 40 VMs: one host at 100% means it is full.
-- E. Add hosts before placing the 40 VMs, since one host reached 100%.
-- F. Check why the load stays on one host: VM-Host rules, the DRS automation level, VMs that cannot move.
-- G. The VMs on the hot host may wait for CPU at those hours; their CPU Ready shows whether they did.
-- H. The busiest host's CPU|Usage (%) peaks below 80%.
+- D. The cluster cannot take the 40 VMs: one host at 100% means the cluster is full.
+- E. Add hosts before placing the 40 VMs, since one of the six hosts reached 100%.
+- F. Check why the load stays on one host: VM-Host rules, DRS automation level, VMs that cannot move.
+- G. Outside weekday business hours, esx-b23 runs no hotter than the other five hosts.
+- H. DRS at its default threshold balances the hosts whenever one runs hotter than the others.
 
 ## Likely wrong answer
 A: the cluster peak read as a ceiling for every host. Or E: one host at 100% read as a cluster short of capacity.
 
 ## Expected key points
 - Answer: B, C, F, G.
-- A false: the misconception. In the rows where the cluster's `CPU|Usage (%) (Avg)` is highest (65% to 72%), esx-b23 reads 95% or more.
-- B true: at the cluster's busiest hours (weekday business hours, cluster peak between 65% and 72%), esx-b23 reads 95% or more.
-- C true: with identical hosts, the cluster's value in every row is the mean of the six host values; for it to reach about 70%, at least one host was higher.
-- D false: the over-correction. Capacity is planned per cluster, from the cluster average against usable capacity; the hot host is a placement and risk finding, not the capacity input.
-- E false: the wrong action. The other five hosts stay below 75% in every row; the load that stays on one host is a pocket (affinity rules, host groups) that more hosts do not spread.
-- F true: affinity rules and host groups act as sub-clusters and hold a pocket of load that DRS cannot spread.
-- G true: high usage is consumption; whether the VMs on that host waited shows in their contention, such as CPU Ready.
-- H false: esx-b23 reaches 95% or more.
+- A is wrong: the misconception. In the rows where the cluster's `CPU|Usage (%) (Avg)` is highest (65% to 72%), esx-b23 reads 95% or more.
+- B is correct: at the cluster's busiest hours (weekday business hours, cluster peak between 65% and 72%), esx-b23 reads 95% or more.
+- C is correct: with identical hosts, the cluster's value in every row is the mean of the six host values; for it to reach about 70%, at least one host was higher.
+- D is wrong: the over-correction. Capacity is planned per cluster, from the cluster average against usable capacity; the hot host is a placement and risk finding, not the capacity input.
+- E is wrong: the wrong action. The other five hosts stay below 75% in every row; the load that stays on one host is a pocket (affinity rules, host groups) that more hosts do not spread.
+- F is correct: affinity rules and host groups act as sub-clusters and hold a pocket of load that DRS cannot spread.
+- G is correct: outside 09:00-17:00 on weekdays esx-b23 stays at about 50% or below, like the other hosts; the hot spot is a daytime load held on one host, which fits a pocket (F).
+- H is wrong: since vSphere 7.0 DRS works on each VM's DRS Score (VM happiness), not on even host utilization; a hot host whose VMs are served, or whose load a rule or setting holds, is left as it is.
 
 ## Notes
-- Review 2026-11-15: the manager's quote no longer gives the chart's value; A, C and D reworded away from the theory half 0437; H added as a false reading; identical hosts added to the condition. Key unchanged.
+- Changed in the 2026-11-15 audit: G replaced (per-VM contention rather than host usage is tested by the pair 0019/0431) by a true reading of the export (esx-b23 outside weekday business hours at most 49.3%, the others at most 50.0%); H replaced (a misread of the host column, the negation of B) by a DRS misconception, worded without rules so that it is not F's reason (drs-migration-levels: VM DRS Score). Key unchanged: B, C, F, G.
 - Converted to an export 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md, row 0438): a seeded VCF Operations list view, one row per hour for 7 days, the cluster and its six hosts; the cluster equals the mean of the identical hosts in every row. The export does not show the cause of the hot host (F stays open). A, B, C and H reworded from chart and line to the export's values. The list view CSV format is assumed (project/tools/exportgen/README.md). The key holds for the generated export; the generator checks every condition against the rows.
 - Practical half of the new pair D3; theory half: 0437 (design.md, section 3.9).
-- Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item D3). Counts only after author approval.
+- Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item D3). Counts only after the author's approval.
 
 ## Metadata
 ```yaml

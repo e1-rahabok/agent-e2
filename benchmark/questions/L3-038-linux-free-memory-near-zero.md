@@ -22,7 +22,7 @@ Which statements are correct?
 - D. Add memory: the database cannot use `buff/cache`, so only 310 MB is left for it.
 - E. Turn off swap, so Linux keeps all its pages in RAM and frees the 1.2 GB.
 - F. Cut the VM to 12 GB: the 22.9 GB available is memory Linux does not use.
-- G. The 4 GB of swap is below what vSphere asks the guest to configure for ballooning on this VM.
+- G. The 4 GB of swap is below what vSphere asks the guest to have for ballooning.
 
 ## Likely wrong answer
 A or C: free memory near 0, or swap in use, read as a current shortage.

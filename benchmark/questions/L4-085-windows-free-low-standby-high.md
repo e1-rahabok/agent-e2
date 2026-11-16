@@ -12,7 +12,7 @@ Which statements are correct?
 - A. Free is low because Windows keeps file data as standby cache; Available stays at 8,900-9,700 MB.
 - B. Cut below its Needed Memory, Windows on FS-03 may start to page.
 - C. % Committed Bytes In Use stays near 45%: committed memory is far from the commit limit.
-- D. Needed Memory, as VMware Tools derives it from these page lists, is about 7.4-8.1 GB over the day.
+- D. Needed Memory, as VMware Tools derives it from these lists, is about 7.4-8.1 GB.
 - E. Windows In Use alone is the right sizing input for FS-03, since standby cache is not demand.
 - F. Free below 300 MB all day means Windows will soon page heavily.
 - G. After 8 GB more, Free will rise above 300 MB and the alert will clear.

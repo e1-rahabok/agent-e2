@@ -28,18 +28,18 @@ Which statements are correct?
 
 - A. %RDY on a vcpu world is time it had work and no physical thread to run on.
 - B. %CSTP on a vcpu world is time it was held back to stay in step with a sibling.
-- C. %SWPWT on a vcpu world is time it stalled for a memory page coming back from ESXi swap.
-- D. %OVRLP is time a running vCPU was interrupted for kernel work, so the guest made no progress then.
-- E. Most of %WAIT on these vcpu worlds is %IDLE: time the guest had no work.
+- C. %SWPWT on a vcpu world is time it stalled for a page coming back from ESXi swap.
+- D. %OVRLP is time a running vCPU was interrupted for kernel work: the guest made no progress.
+- E. On each vcpu world, %RUN, %RDY, %CSTP and %WAIT add up to about 100%.
 - F. All of %WAIT is time the vCPUs were held back, so it adds to the VM's CPU wait.
-- G. Swap wait has a memory cause, so it is not time the vCPU was stopped.
-- H. %MLMTD is 0, so none of the VM's Ready came from a CPU limit.
-- I. %USED shows how long each vCPU was stopped.
-- J. %RDY is above 0: add vCPUs to the VM.
-- K. %SWPWT reads 0 on every vcpu world, so memory plays no part here.
+- G. Swap wait has a memory cause, so it does not count as time the vCPU was stopped.
+- H. On each vcpu world, %SWPWT is part of %VMWAIT, not added on top of it.
+- I. %USED on each vcpu world shows how long that vCPU was stopped.
+- J. %RDY is above 0 on every vcpu world: add vCPUs to the VM.
+- K. %SWPWT reads 0 on every vcpu world, so memory plays no part in the wait here.
 
 ## Likely wrong answer
-F: all of %WAIT is time lost to the VM. Or G: swap wait is memory, not time the vCPU stopped.
+I: %USED read as the time the vCPUs stopped. Or F: all of %WAIT is time lost to the VM. Or G: swap wait is memory, not time the vCPU stopped.
 
 ## Expected key points
 - Answer: A, B, C, D, E, H.
@@ -47,11 +47,11 @@ F: all of %WAIT is time lost to the VM. Or G: swap wait is memory, not time the 
 - B true: Co-stop holds a vCPU that ran ahead of a sibling.
 - C true: the vCPU stalls until the page is read back; the guest sees a freeze.
 - D true: Overlap is time stolen from a running vCPU for system services; the guest is frozen during it, even though Run keeps counting.
-- E true: reading. On each `vmx-vcpu-N:erp-05` row %WAIT = %VMWAIT + %IDLE; %WAIT is 45 or more and %IDLE is within 6 points of it, so %IDLE is most of it.
-- F false: the misconception. %IDLE inside %WAIT is the guest's own idle time, not a wait imposed on it.
+- E true: reading. Per vcpu world, %RUN + %RDY + %CSTP + %WAIT = 100%: each `vmx-vcpu-N:erp-05` row adds to 100 (for example 35.02 + 6.26 + 0.22 + 58.50).
+- F false: %WAIT = %VMWAIT + %IDLE, and %IDLE is the guest's own idle time, not a wait imposed on it; here %IDLE is most of %WAIT.
 - G false: over-correction. Swap wait is a stall of the vCPU, whatever its cause; it belongs to memory contention, but the vCPU could not run.
-- H true: reading. %MLMTD (Max Limited) is counted inside %RDY; it is 0.00 on the group row and every world, so the Ready is not from a limit.
-- I false: %USED is consumption and moves with frequency and Hyper-Threading; it does not measure stopped time.
+- H true: %VMWAIT includes %SWPWT; on every vcpu world %SWPWT is below %VMWAIT, and %WAIT = %VMWAIT + %IDLE with nothing added for swap.
+- I false: the misconception. %USED is consumption and moves with frequency and Hyper-Threading; it does not measure stopped time.
 - J false: wrong action. More vCPUs tend to raise Ready on a busy host.
 - K false: reading. %SWPWT is 0.80 or more on every vcpu world: the vCPUs stall on pages coming back from swap.
 
@@ -59,6 +59,8 @@ F: all of %WAIT is time lost to the VM. Or G: swap wait is memory, not time the 
 - Paired with the theory question 0009 (theory and practical; design.md, section 3.9).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C29). Counts only after author approval.
 - Review 2026-11-15: condition now requires %WAIT of 40% or more (E decidable); screen reading K (false) added. Key unchanged: A, B, C, D, E, H.
+- Changed in the 2026-11-15 audit (cap of two questions per fact): E (most of %WAIT is %IDLE, tested in 0001 and 0372) replaced by the state-sum reading; H (%MLMTD inside %RDY, tested in 0103 and 0066) replaced by the %SWPWT-inside-%VMWAIT reading; I is now the listed misconception in place of F (F's fact is homed in 0001/0372); D, I and J reworded for length. Key letters unchanged.
+- Export note for the generator: the vcpu worlds show %USED above %RUN (%USED = %RUN + %SYS - %OVRLP) on a busy Hyper-Threading host, where the knowledge base says %USED falls below %RUN while the sibling thread runs; no option rests on it.
 - Converted to exports 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md): the esxtop CPU panel as text, with %VMWAIT (E reads %WAIT = %VMWAIT + %IDLE). No option changed. E, H and K are the options only the panel decides; A-D repeat the pair's facts (open finding of the 2026-11-15 review, left to the author).
 
 ## Metadata
@@ -84,7 +86,7 @@ attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C29"
 answer: [A, B, C, D, E, H]
-misconception: [F]
+misconception: [I]
 misconception_type: [consumption-as-contention]
 pair: "0009"
 status: draft

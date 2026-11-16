@@ -13,7 +13,7 @@ Which statements are correct?
 - A. Most migrations paused the VM for 90-160 ms at switchover: within the guide.
 - B. The Tuesday migration paused the VM for about 1.45 seconds at switchover: above the guide, worth investigating.
 - C. The Tuesday value means the database was frozen for about 24 minutes, as the owner says.
-- D. A longer pause during the batch load fits the mechanism: a write-heavy VM leaves more changed pages to send while it is paused.
+- D. A longer pause during the batch load fits: a write-heavy VM leaves more changed pages to send while paused.
 - E. Switchover downtime is set by the configured memory size, so a 64 GB VM shows about the same downtime on each migration.
 - F. A pause of 1.45 seconds is too short for the database or its clients to notice.
 - G. Set db-orders to DRS manual mode, so that vMotion no longer freezes it for minutes at a time.
