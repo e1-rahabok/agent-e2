@@ -1,0 +1,673 @@
+{
+  "metamodel_version": "2.6",
+  "domain": "VMwarePrivateCloudArchitecture",
+  "objects": [
+    {
+      "id": "vCenterServer",
+      "plane": "ControlPlane",
+      "stack_layer": "Orchestration",
+      "attributes": {
+        "version": "string",
+        "ha_mode": ["Basic", "VCHA"]
+      }
+    },
+    {
+      "id": "Datacenter",
+      "plane": "ControlPlane",
+      "stack_layer": "Orchestration",
+      "attributes": {}
+    },
+    {
+      "id": "HostFolder",
+      "plane": "ControlPlane",
+      "stack_layer": "Orchestration",
+      "attributes": {}
+    },
+    {
+      "id": "VmFolder",
+      "plane": "ControlPlane",
+      "stack_layer": "Orchestration",
+      "attributes": {}
+    },
+    {
+      "id": "DatastoreFolder",
+      "plane": "ControlPlane",
+      "stack_layer": "Orchestration",
+      "attributes": {}
+    },
+    {
+      "id": "NetworkFolder",
+      "plane": "ControlPlane",
+      "stack_layer": "Orchestration",
+      "attributes": {}
+    },
+    {
+      "id": "ClusterComputeResource",
+      "plane": "ControlPlane",
+      "stack_layer": "Orchestration",
+      "attributes": {
+        "drs_enabled": "boolean",
+        "ha_enabled": "boolean",
+        "vsan_enabled": "boolean"
+      }
+    },
+    {
+      "id": "ResourcePool",
+      "plane": "ControlPlane",
+      "stack_layer": "Orchestration",
+      "attributes": {
+        "cpu_shares": ["Low", "Normal", "High", "Custom"],
+        "cpu_reservation_mhz": "integer",
+        "cpu_limit_mhz": "integer",
+        "mem_shares": ["Low", "Normal", "High", "Custom"],
+        "mem_reservation_mb": "integer",
+        "mem_limit_mb": "integer"
+      }
+    },
+    {
+      "id": "DatastoreCluster",
+      "plane": "ControlPlane",
+      "stack_layer": "Orchestration",
+      "attributes": {
+        "sdrs_enabled": "boolean",
+        "automation_level": ["noAutomation", "manual", "fullyAutomated"]
+      }
+    },
+    {
+      "id": "VirtualMachineTemplate",
+      "plane": "ControlPlane",
+      "stack_layer": "Orchestration",
+      "attributes": {
+        "hardware_version": "string",
+        "created_date": "string"
+      }
+    },
+    {
+      "id": "DistributedVirtualSwitch",
+      "plane": "ControlPlane",
+      "stack_layer": "Orchestration",
+      "attributes": {
+        "version": "string",
+        "max_ports": "integer",
+        "mtu": "integer"
+      }
+    },
+    {
+      "id": "UplinkPortGroup",
+      "plane": "ControlPlane",
+      "stack_layer": "Orchestration",
+      "attributes": {
+        "num_uplinks": "integer",
+        "uplink_names": "array"
+      }
+    },
+    {
+      "id": "HostSystem",
+      "plane": "DataPlane",
+      "stack_layer": "Hypervisor",
+      "attributes": {
+        "esxi_version": "string",
+        "cpu_sockets": "integer",
+        "cpu_cores_per_socket": "integer",
+        "ram_gb": "integer",
+        "power_state": ["poweredOn", "poweredOff", "standBy"],
+        "maintenance_mode": "boolean"
+      }
+    },
+    {
+      "id": "VirtualMachine",
+      "plane": "DataPlane",
+      "stack_layer": "VirtualHardware",
+      "attributes": {
+        "vcpu": "integer",
+        "vram_gb": "integer",
+        "hardware_version": "string",
+        "power_state": ["poweredOn", "poweredOff", "suspended"],
+        "custom_attributes": "map"
+      }
+    },
+    {
+      "id": "GuestOS",
+      "plane": "DataPlane",
+      "stack_layer": "GuestOS",
+      "attributes": {
+        "os_taxonomy": {
+          "MS Windows": ["Server", "Desktop"],
+          "Linux OS": ["RHEL", "Ubuntu", "SUSE", "Debian", "PhotonOS", "OracleLinux", "OtherLinux"],
+          "MacOS": ["macOS"]
+        },
+        "architecture": ["x86_64", "arm64"],
+        "vmware_tools_status": ["toolsOk", "toolsOld", "toolsNotInstalled", "toolsNotRunning"]
+      }
+    },
+    {
+      "id": "Container",
+      "plane": "DataPlane",
+      "stack_layer": "Container",
+      "attributes": {
+        "runtime": ["Docker", "containerd", "CRI-O"],
+        "image": "string",
+        "status": ["running", "stopped", "paused"]
+      }
+    },
+    {
+      "id": "VirtualDisk",
+      "plane": "DataPlane",
+      "stack_layer": "VirtualHardware",
+      "attributes": {
+        "controller_type": ["ParaVirtualSCSI", "LSILogicSAS", "NVMe", "SATA"],
+        "provisioning_type": ["Thin", "ThickLazyZeroed", "ThickEagerZeroed"],
+        "disk_mode": ["persistent", "independent_persistent", "independent_nonpersistent"],
+        "capacity_gb": "integer"
+      }
+    },
+    {
+      "id": "Datastore",
+      "plane": "DataPlane",
+      "stack_layer": "Hypervisor",
+      "attributes": {
+        "fs_type": ["VMFS6", "VMFS5", "NFS41", "NFS3", "vSAN", "vVol"],
+        "capacity_gb": "integer",
+        "free_gb": "integer"
+      }
+    },
+    {
+      "id": "HostBusAdapter",
+      "plane": "DataPlane",
+      "stack_layer": "Physical",
+      "attributes": {
+        "adapter_type": ["FC", "iSCSI", "NVMeoF", "RAID", "SATA"],
+        "wwpn": "string",
+        "iqn": "string"
+      }
+    },
+    {
+      "id": "StorageDevice",
+      "plane": "DataPlane",
+      "stack_layer": "Physical",
+      "attributes": {
+        "protocol": ["FC", "iSCSI", "NVMeoF", "LocalSAS", "LocalNVMe"],
+        "multipath_policy": ["VMW_PSP_RR", "VMW_PSP_FIXED", "VMW_PSP_MRU"],
+        "queue_depth": "integer"
+      }
+    },
+    {
+      "id": "StorageArray",
+      "plane": "DataPlane",
+      "stack_layer": "Physical",
+      "attributes": {
+        "vendor": "string",
+        "model": "string",
+        "architecture_type": ["SAN", "NAS", "Unified", "HCI"],
+        "supported_protocols": ["FC", "iSCSI", "NVMeoF", "NFS", "SMB"]
+      }
+    },
+    {
+      "id": "VirtualNIC",
+      "plane": "DataPlane",
+      "stack_layer": "VirtualHardware",
+      "attributes": {
+        "adapter_type": ["Vmxnet3", "E1000e", "SRIOV"],
+        "connected": "boolean"
+      }
+    },
+    {
+      "id": "StandardPortGroup",
+      "plane": "DataPlane",
+      "stack_layer": "VirtualHardware",
+      "attributes": {
+        "vlan_type": ["None", "VLAN", "VLANTrunk", "PVLAN"],
+        "vlan_id": "integer"
+      }
+    },
+    {
+      "id": "DistributedVirtualPortgroup",
+      "plane": "DataPlane",
+      "stack_layer": "VirtualHardware",
+      "attributes": {
+        "vlan_type": ["None", "VLAN", "VLANTrunk", "PVLAN"],
+        "vlan_id": "integer",
+        "port_binding": ["Static", "Dynamic", "Ephemeral"]
+      }
+    },
+    {
+      "id": "HostVirtualSwitch",
+      "plane": "DataPlane",
+      "stack_layer": "Hypervisor",
+      "attributes": {
+        "mtu": "integer",
+        "num_ports": "integer"
+      }
+    },
+    {
+      "id": "VMkernelNIC",
+      "plane": "DataPlane",
+      "stack_layer": "Hypervisor",
+      "attributes": {
+        "services": ["Management", "vMotion", "vSAN", "FaultTolerance", "Provisioning", "vSphereReplication", "NVMeTCP"],
+        "mtu": "integer"
+      }
+    },
+    {
+      "id": "PhysicalNIC",
+      "plane": "DataPlane",
+      "stack_layer": "Physical",
+      "attributes": {
+        "link_speed_mbps": "integer",
+        "link_up": "boolean"
+      }
+    },
+    {
+      "id": "TopOfRackSwitch",
+      "plane": "DataPlane",
+      "stack_layer": "Physical",
+      "attributes": {
+        "vendor": "string",
+        "model": "string",
+        "port_speed_gbps": "integer",
+        "mlag_enabled": "boolean"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "predicate": "CONTAINS",
+      "source": "vCenterServer",
+      "target": "Datacenter",
+      "cardinality": { "source_to_target": "1:N", "target_to_source": "1:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "Datacenter",
+      "target": "HostFolder",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "1:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "Datacenter",
+      "target": "VmFolder",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "1:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "Datacenter",
+      "target": "DatastoreFolder",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "1:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "Datacenter",
+      "target": "NetworkFolder",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "1:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "HostFolder",
+      "target": "HostFolder",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "HostFolder",
+      "target": "ClusterComputeResource",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "HostFolder",
+      "target": "HostSystem",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "VmFolder",
+      "target": "VmFolder",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "VmFolder",
+      "target": "VirtualMachine",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "VmFolder",
+      "target": "VirtualMachineTemplate",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "DatastoreFolder",
+      "target": "DatastoreFolder",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "DatastoreFolder",
+      "target": "Datastore",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "DatastoreFolder",
+      "target": "DatastoreCluster",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "NetworkFolder",
+      "target": "NetworkFolder",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "NetworkFolder",
+      "target": "DistributedVirtualSwitch",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "NetworkFolder",
+      "target": "DistributedVirtualPortgroup",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "ClusterComputeResource",
+      "target": "HostSystem",
+      "cardinality": { "source_to_target": "1:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "ClusterComputeResource",
+      "target": "ResourcePool",
+      "cardinality": { "source_to_target": "1:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "HostSystem",
+      "target": "ResourcePool",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "ResourcePool",
+      "target": "ResourcePool",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "DatastoreCluster",
+      "target": "Datastore",
+      "cardinality": { "source_to_target": "1:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "HostVirtualSwitch",
+      "target": "StandardPortGroup",
+      "cardinality": { "source_to_target": "1:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "DistributedVirtualSwitch",
+      "target": "DistributedVirtualPortgroup",
+      "cardinality": { "source_to_target": "1:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "DistributedVirtualSwitch",
+      "target": "UplinkPortGroup",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "1:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "CONTAINS",
+      "source": "StorageArray",
+      "target": "StorageDevice",
+      "cardinality": { "source_to_target": "1:N", "target_to_source": "0:1" },
+      "inverse": "CONTAINED_BY"
+    },
+    {
+      "predicate": "RUNS_ON",
+      "source": "VirtualMachine",
+      "target": "HostSystem",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "1:N" },
+      "inverse": "EXECUTES"
+    },
+    {
+      "predicate": "RUNS_ON",
+      "source": "GuestOS",
+      "target": "VirtualMachine",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "0:1" },
+      "inverse": "HAS_GUEST_OS"
+    },
+    {
+      "predicate": "RUNS_ON",
+      "source": "Container",
+      "target": "GuestOS",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "0:N" },
+      "inverse": "EXECUTES"
+    },
+    {
+      "predicate": "RUNS_ON",
+      "source": "HostVirtualSwitch",
+      "target": "HostSystem",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "0:N" },
+      "inverse": "EXECUTES"
+    },
+    {
+      "predicate": "CONSUMES_FROM",
+      "source": "VirtualMachine",
+      "target": "ResourcePool",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "1:N" },
+      "inverse": "PROVIDES_TO"
+    },
+    {
+      "predicate": "CONSUMES_FROM",
+      "source": "VirtualMachine",
+      "target": "Datastore",
+      "cardinality": { "source_to_target": "1:N", "target_to_source": "1:N" },
+      "inverse": "PROVIDES_TO"
+    },
+    {
+      "predicate": "CONSUMES_FROM",
+      "source": "VirtualMachineTemplate",
+      "target": "Datastore",
+      "cardinality": { "source_to_target": "1:N", "target_to_source": "0:N" },
+      "inverse": "PROVIDES_TO"
+    },
+    {
+      "predicate": "CONSUMES_FROM",
+      "source": "VirtualDisk",
+      "target": "Datastore",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "1:N" },
+      "inverse": "PROVIDES_TO"
+    },
+    {
+      "predicate": "CONSUMES_FROM",
+      "source": "Datastore",
+      "target": "StorageDevice",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "PROVIDES_TO"
+    },
+    {
+      "predicate": "CONSUMES_FROM",
+      "source": "Datastore",
+      "target": "StorageArray",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:N" },
+      "inverse": "PROVIDES_TO"
+    },
+    {
+      "predicate": "ATTACHED_TO",
+      "source": "VirtualDisk",
+      "target": "VirtualMachine",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "1:N" },
+      "inverse": "HAS_ATTACHED"
+    },
+    {
+      "predicate": "ATTACHED_TO",
+      "source": "VirtualNIC",
+      "target": "VirtualMachine",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "1:N" },
+      "inverse": "HAS_ATTACHED"
+    },
+    {
+      "predicate": "ATTACHED_TO",
+      "source": "VMkernelNIC",
+      "target": "HostSystem",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "1:N" },
+      "inverse": "HAS_ATTACHED"
+    },
+    {
+      "predicate": "ATTACHED_TO",
+      "source": "PhysicalNIC",
+      "target": "HostSystem",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "1:N" },
+      "inverse": "HAS_ATTACHED"
+    },
+    {
+      "predicate": "ATTACHED_TO",
+      "source": "HostBusAdapter",
+      "target": "HostSystem",
+      "cardinality": { "source_to_target": "1:1", "target_to_source": "1:N" },
+      "inverse": "HAS_ATTACHED"
+    },
+    {
+      "predicate": "MOUNTS",
+      "source": "HostSystem",
+      "target": "Datastore",
+      "cardinality": { "source_to_target": "1:N", "target_to_source": "1:N" },
+      "inverse": "MOUNTED_BY",
+      "relationship_attributes": {
+        "access_mode": ["readOnly", "readWrite"],
+        "accessible": "boolean"
+      }
+    },
+    {
+      "predicate": "CONNECTED_TO",
+      "source": "HostSystem",
+      "target": "StorageDevice",
+      "cardinality": { "source_to_target": "1:N", "target_to_source": "1:N" },
+      "inverse": "CONNECTED_TO",
+      "relationship_attributes": {
+        "active_paths": "integer",
+        "standby_paths": "integer",
+        "dead_paths": "integer"
+      }
+    },
+    {
+      "predicate": "CONNECTED_TO",
+      "source": "HostBusAdapter",
+      "target": "StorageDevice",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "1:N" },
+      "inverse": "CONNECTED_TO"
+    },
+    {
+      "predicate": "CONNECTED_TO",
+      "source": "HostBusAdapter",
+      "target": "TopOfRackSwitch",
+      "cardinality": { "source_to_target": "0:1", "target_to_source": "0:N" },
+      "inverse": "CONNECTED_TO",
+      "relationship_attributes": {
+        "switch_port": "string",
+        "fabric_zone": "string"
+      }
+    },
+    {
+      "predicate": "CONNECTED_TO",
+      "source": "VirtualNIC",
+      "target": "StandardPortGroup",
+      "cardinality": { "source_to_target": "0:1", "target_to_source": "0:N" },
+      "inverse": "CONNECTED_TO"
+    },
+    {
+      "predicate": "CONNECTED_TO",
+      "source": "VirtualNIC",
+      "target": "DistributedVirtualPortgroup",
+      "cardinality": { "source_to_target": "0:1", "target_to_source": "0:N" },
+      "inverse": "CONNECTED_TO"
+    },
+    {
+      "predicate": "CONNECTED_TO",
+      "source": "VMkernelNIC",
+      "target": "StandardPortGroup",
+      "cardinality": { "source_to_target": "0:1", "target_to_source": "0:N" },
+      "inverse": "CONNECTED_TO"
+    },
+    {
+      "predicate": "CONNECTED_TO",
+      "source": "VMkernelNIC",
+      "target": "DistributedVirtualPortgroup",
+      "cardinality": { "source_to_target": "0:1", "target_to_source": "0:N" },
+      "inverse": "CONNECTED_TO"
+    },
+    {
+      "predicate": "CONNECTED_TO",
+      "source": "HostVirtualSwitch",
+      "target": "PhysicalNIC",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONNECTED_TO"
+    },
+    {
+      "predicate": "CONNECTED_TO",
+      "source": "DistributedVirtualSwitch",
+      "target": "HostSystem",
+      "cardinality": { "source_to_target": "1:N", "target_to_source": "1:N" },
+      "inverse": "CONNECTED_TO"
+    },
+    {
+      "predicate": "CONNECTED_TO",
+      "source": "UplinkPortGroup",
+      "target": "PhysicalNIC",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:1" },
+      "inverse": "CONNECTED_TO"
+    },
+    {
+      "predicate": "CONNECTED_TO",
+      "source": "PhysicalNIC",
+      "target": "TopOfRackSwitch",
+      "cardinality": { "source_to_target": "0:1", "target_to_source": "1:N" },
+      "inverse": "CONNECTED_TO",
+      "relationship_attributes": {
+        "switch_port": "string",
+        "lacp_lag": "string"
+      }
+    },
+    {
+      "predicate": "CONNECTED_TO",
+      "source": "StorageArray",
+      "target": "TopOfRackSwitch",
+      "cardinality": { "source_to_target": "0:N", "target_to_source": "0:N" },
+      "inverse": "CONNECTED_TO",
+      "relationship_attributes": {
+        "switch_port": "string",
+        "storage_vlan": "integer"
+      }
+    }
+  ]
+}
