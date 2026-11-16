@@ -139,15 +139,15 @@ Preferred, not required:
 ### Measured impact of the reasoning setting (Qwen3.8-27B, round of 2026-11-16, partial runs)
 - Read as a rough comparison, not a controlled test: each attempt is a different, unfinished slice of the run (the first two were stopped by the health check after a gateway 503 burst), and gateway load differed. Reasoning off is the first attempt (2,179 of 2,910 answers, mostly baseline then part of Agent E2); effort low is the later attempts. Answer sets differ, so compare the shape, not the second decimal.
 
-| Setting | Answers read | Mean completion tokens | Mean latency per call | Speed | Cut off at the cap |
+| Setting | Answers read | Mean completion tokens | Mean latency per call | Speed | Reached the token cap |
 |---|---|---|---|---|---|
-| Reasoning off (`effort: none`), 4,000 tokens | 2,179 | 845 | 5.8 s | about 78 answers a minute | 88 (4%) at 4,000 |
-| Effort low, 4,000 tokens | 191 (baseline only) | 2,193 | 15.0 s | | 33 (17%) at 4,000; the health check stopped the run |
+| Reasoning off (`effort: none`), 4,000 tokens | 2,179 | 845 | 5.8 s | about 78 answers a minute | 88 (4%) at 4,000; 18 (0.8%) of all answers had no readable letter |
+| Effort low, 4,000 tokens | 191 (baseline only) | 2,193 | 15.0 s | | 33 (17%) at 4,000, 27 (14%) with no readable letter; the health check stopped the run |
 | Effort low, 8,000 tokens | 553 at 11:23 UTC | 2,752 | 15.7 s | about 47 answers a minute | 8 (1.4%) at 8,000; 102 (18%) above 3,990 |
 
 - Effort low makes each call about 2.7 times slower and writes about 3.3 times as many tokens (measured on Qwen only; Muse's own numbers come with the round's results). A full run of 2,910 answers takes about 26 minutes with reasoning off and an estimated 60 to 75 minutes at effort low with 8,000 tokens; the cost rises with the tokens (about US$ 6 to 8 more for Qwen).
-- Reasoning off is not free of cut-offs: 4% of its answers still hit the 4,000-token cap, mostly Agent E2 answers that carry a long reading set.
-- A cap of 4,000 tokens does not fit effort low: 17% cut off. Effort low needs 8,000, where 1.4% still hit the cap.
+- Reasoning off is not free of thinking tokens: 4% of its answers still reached the 4,000-token cap, 85 of the 88 in baseline mode. The visible answer is short (an ANSWER line and a REASON line, about 290 characters), so the cap was spent on hidden thinking that `effort: none` did not fully suppress. 70 of the 88 still had a readable letter. Why it happens on some questions is not known.
+- A cap of 4,000 tokens does not fit effort low: 17% reach it and 14% have no readable letter. Effort low needs 8,000, where 1.4% still reach the cap.
 - The first full scored round has Gemma at its default, Qwen at effort low with 8,000 tokens and Muse at effort low; the reasoning-off answers of Qwen and Muse sit in the archived `-invalid-0` folders. The full effect on the score is read in the round's `benchmark/results/README.md`.
 - Real use differs between administrators (a user can switch thinking on or off, and a local server has no per-token price), so the deployed setting is still open ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), After 1.0).
 
