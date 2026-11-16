@@ -1,4 +1,4 @@
-# Port group drops: TCP, UDP and red only
+# Port group drops for TCP and UDP traffic
 
 ## Prompt
 - VCF Operations. The red alert on distributed port groups fires when the share of dropped packets is above 10%, wait cycle 1.
@@ -50,7 +50,7 @@ Which statements are correct?
 ## Metadata
 ```yaml
 id: "0346"
-title: "Port group drops: TCP, UDP and red only"
+title: "Port group drops for TCP and UDP traffic"
 product: [vcf-operations, vsphere]
 technology: [network]
 task: judge-setting
