@@ -4,31 +4,35 @@
 In a private cloud (finite hardware), choose all the correct statements about performance management and capacity management:
 
 - A. For performance, a host at 100% utilization with no queue is the best case: it does the most work.
-- B. For capacity, a host near 100% is bad news: demand has passed usable capacity, so add capacity or reclaim.
-- C. For performance, low utilization can be bad news: work may be held up by a bottleneck elsewhere.
+- B. For capacity, a cluster near 100% is bad news: demand has passed usable capacity, so add capacity or reclaim.
+- C. For performance, low utilization with work queued points to a bottleneck elsewhere.
 - D. Capacity asks whether the hosts run hot; performance asks whether the VMs are served well.
 - E. Performance looks at seconds to minutes; capacity looks at trends over months.
-- F. High CPU utilization of a host or cluster is in itself a VM performance problem.
-- G. Utilization plays no part in performance troubleshooting.
-- H. Moving VMs off a host is the fix for their performance whenever the host's CPU utilization is high.
+- F. High CPU utilization of a host or cluster shows that its VMs are slow.
+- G. Performance troubleshooting reads VM contention counters; host utilization is left out of it.
+- H. When a host's CPU utilization is high, moving VMs off it is the first step for their performance.
+- I. Performance is read against usable capacity, so a host above its usable line is a performance risk.
+- J. Cluster utilization rising slowly means performance will degrade slowly: the utilization trend shows when it drops.
 
 ## Likely wrong answer
 F (high utilization read as a performance problem) and H (the action that follows from it); or G, the over-correction.
 
 ## Expected key points
 - Answer: A, B, C, D, E.
-- A is true: maximum utilization yields the highest throughput as long as nothing queues.
-- B is true: capacity is measured against usable capacity and keeps a buffer, because procurement takes time.
-- C is true: unmet demand at low utilization is common (imbalance, limits); check contention: queue, latency, context switch.
-- D is true: cluster capacity looks at the hosts (top down, against usable capacity); cluster performance looks at the VMs inside (bottom up, from their contention).
-- E is true: the two pillars have different time horizons, although they are intertwined.
-- F is false: utilization is consumption; a performance problem exists only when the VMs face contention (Ready, Co-stop, memory and disk latency).
-- G is false: cluster performance reads contention, and utilization is still used in troubleshooting, for example to find the busiest host.
-- H is false: high utilization with no contention needs no migration; read the VMs' contention first.
+- A is correct: maximum utilization yields the highest throughput as long as nothing queues.
+- B is correct: capacity reads demand against usable capacity, which sits below total capacity after HA, buffer and hypervisor overhead; near 100% there is no room left.
+- C is correct: unmet demand at low utilization is common (imbalance, limits); queued work at low utilization means the bottleneck is elsewhere. Check contention: queue, latency, context switch.
+- D is correct: cluster capacity looks at the hosts (top down, against usable capacity); cluster performance looks at the VMs inside (bottom up, from their contention).
+- E is correct: the two pillars have different time horizons (seconds to an hour against days to a year), although they are intertwined.
+- F is wrong: utilization is consumption; a performance problem exists only when the VMs face contention (Ready, Co-stop, memory and disk latency). 100% with no queue is the most work done.
+- G is wrong: cluster performance reads contention, and utilization is still used in troubleshooting, for example to find the busiest host.
+- H is wrong: high utilization with no contention needs no migration; read the VMs' contention first.
+- I is wrong: usable capacity is a capacity concept; performance is read against total capacity and ignores HA, buffer and reservation. Running above the usable line gives more work done, not worse performance.
+- J is wrong: performance stays flat while utilization rises, then drops steeply once contention starts, first on the hottest host; a utilization trend does not say when performance drops. Watch contention.
 
 ## Notes
-- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Performance management and capacity management are highly related. Related is not identical: two things that are related are, by that fact, two different things."
-- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): A-E one fact each; F (the misconception), G (its over-correction) and H (the wrong action) added, so not every option is true. Review 2026-11-15: D restated from the cluster table of performance-vs-capacity (capacity reads demand, not utilization); F and H worded as mechanisms, not as a reading of a cluster chart. Key unchanged, A to E (author approved, 2026-11-14).
+- For reviewers (kept out of the prompt): "Performance management and capacity management are highly related. Related is not identical: two things that are related are, by that fact, two different things."
+- Changed in the 2026-11-15 audit: F, G, H reworded without absolutes and C without hedges (the hedges sat only on true options, the absolutes only on false ones); B reads the cluster; I and J added from the misconceptions of performance-vs-capacity.
 
 ## Metadata
 ```yaml
@@ -48,7 +52,7 @@ source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q10 Pe
 answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [A, B, C, D, E]
-misconception: [F, H]
+misconception: [F, H, J]
 object: [esxi, cluster]
 tool: [none]
 knowledge_main: sp5-framework/concepts/performance-vs-capacity

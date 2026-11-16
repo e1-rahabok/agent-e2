@@ -8,19 +8,21 @@ On which object does Ready measure that object's own wait for a physical CPU?
 - A. The VM: a vCPU waits for a physical thread.
 - B. The ESXi host: the host waits for its physical cores.
 - C. Both: each object waits for its own CPU.
-- D. Neither: Ready is a DRS value of the cluster.
+- D. The Guest OS: its processes wait for a free vCPU.
 
 ## Likely wrong answer
 B or C: reading the host-level Ready as the host waiting.
 
 ## Expected key points
 - Answer: A.
-- Ready applies to a consumer: a vCPU of a VM that wants to run and has no physical thread to run on.
-- A physical core or thread is always ready, so the host has no Ready of its own. The host-level value is a sum of its VMs' Ready.
-- D is wrong: Ready is measured by the ESXi scheduler per vCPU, not by DRS.
+- A is correct: Ready applies to a consumer: a vCPU of a VM that wants to run and has no physical thread to run on.
+- B is wrong: a physical core or thread is always ready, so the host has no Ready of its own. The host-level value is a sum of its VMs' Ready.
+- C is wrong: only the VM waits; the host value sums the VMs' Ready (B).
+- D is wrong: Ready is counted by the ESXi scheduler per vCPU of the VM. The Guest OS does not account it (for the guest it is frozen time); a guest process waiting for a vCPU shows in the guest's run queue.
 
 ## Notes
 - Revised 2026-11-12: the stem no longer gives the answer away ("a consumer waiting"); option D replaces the cluster, which has no Ready counter in the vSphere Client.
+- 2026-11-15 audit: D ("Neither: Ready is a DRS value of the cluster", a throwaway) replaced by the Guest OS, a layer a Level 100 reader can take for the owner of the wait.
 
 ## Metadata
 ```yaml
@@ -40,7 +42,7 @@ knowledge:
 knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/ready
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
+source_path: "Synthetic, 2026-11-05; revised 2026-11-12"
 answer: [A]
 misconception: [B, C]
 misconception_type: [provider-vs-consumer]

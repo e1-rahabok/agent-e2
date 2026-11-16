@@ -26,10 +26,9 @@ A: treating the port speed as one pool for both directions.
 - E is true: Usage = receive + transmit, so it can exceed the link speed, up to 50 Gbps on a 25 Gb full-duplex port.
 - F is true: measure and size each direction separately.
 - G is false: one direction alone saturates at 25 Gb, while Usage may then read only a little above 25 Gbps.
-- H is false: Usage sums both directions, so it passes 25 Gbps on a healthy port (for example 20 Gb receive and 10 Gb transmit); alert on each direction against 25 Gb.
+- H is false: Usage sums both directions, so it passes 25 Gbps on a healthy port (for example 20 Gb receive and 10 Gb transmit); each direction is judged against 25 Gb.
 
 ## Notes
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Options rewritten 2026-11-14 to the option rules (design.md 3.9; project/question-pairing-2026-11-14.md): plural stem; usage-rate option E, per-direction option F, over-correction G (50 Gbps) and wrong action H added. Key changed from B to B, E, F.
 - Review 2026-11-15: B no longer restates F (one fact) and no longer reads as the negation of A; E and H reworded so they share no wording with the practical half 0413. Key unchanged: B, E, F.
 
@@ -51,7 +50,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/concepts/network-characteristics
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05"
+source_path: "Synthetic, 2026-11-05"
 answer: [B, E, F]
 misconception: [A]
 misconception_type: [unit-and-normalization]

@@ -7,28 +7,28 @@
 
 Which statements are correct?
 
-- A. One virtual disk ran at 15 ms or more for about an hour while the VM-level latency stayed low.
-- B. The VM-level latency stayed low, so every virtual disk was served well.
-- C. Peak Latency within collection cycle rose in the same hour, because it takes the worst 20 seconds across all the virtual disks.
-- D. No VM-level metric could have shown this disk's latency.
-- E. Close the ticket: the VM-level latency stayed within target all day.
-- F. A disk with few IOs can be left out of the latency check.
-- G. The next checks follow the slow disk: its read and write latency, errors, outstanding IO and the datastore behind it.
-- H. The slow disk carried most of the VM's IO in that hour.
+- A. One disk read at 15 ms or more for an hour while VM-level latency stayed low.
+- B. The VM-level latency stayed low, so every one of its virtual disks was served well.
+- C. Peak Latency within collection cycle stayed at 15 ms or more in the report's hour.
+- D. No VM-level metric in VCF Operations could have shown the latency of this one disk.
+- E. Close the ticket: the VM-level latency stayed within its target for the whole day.
+- F. A disk that serves only a few IOs per second can be left out of the latency check.
+- G. Next, check that disk: read and write latency, errors, outstanding IO, datastore.
+- H. The slow disk carried most of the VM's read IOPS during the hour of the report.
 
 ## Likely wrong answer
 B or E: the VM's disk latency is low all day, so storage is fine and the ticket can be closed. Or D, the overshoot: no VM-level metric could show it.
 
 ## Expected key points
 - Answer: A, C, G.
-- A true: reading. In the list view, `Virtual Disk:scsi1:2|Read Latency (ms) (Min)` is 15 ms or more for 02:00 to 03:00, while `Virtual Disk:Aggregate of all instances|Read Latency (ms) (Max)` is 3 ms or less; the VM-level read latency export stays at 3 ms or less at every point from 01:00 to 04:00.
-- B false: the misconception. A VM aggregate hides the one slow disk; read each virtual disk.
-- C true: the peak metric takes the highest 20-second value across all virtual disks, read and write; the Peak Latency export is 15 ms or more at every point from 02:05 to 03:00 and below 10 ms at every other point.
-- D false: the over-correction. Peak Latency within collection cycle showed it.
-- E false: the wrong action. The report reads from the slow disk.
-- F false: queues add latency at any load; the report waited on every one of that disk's IOs.
-- G true: the flow goes per virtual disk, read and write, then errors, then IOPS and outstanding IO, then the backing device and the configuration.
-- H false: reading. `Virtual Disk:scsi1:2|Read IOPS` is under 10% of `Virtual Disk:Aggregate of all instances|Read IOPS` for 02:00 to 03:00, and under 10% of the sum of the eight disks' Read IOPS.
+- A is correct: reading. In the list view, `Virtual Disk:scsi1:2|Read Latency (ms) (Min)` is 15 ms or more for 02:00 to 03:00, while `Virtual Disk:Aggregate of all instances|Read Latency (ms) (Max)` is 3 ms or less; the VM-level read latency export stays at 3 ms or less at every point from 01:00 to 04:00.
+- B is wrong: the misconception. A VM aggregate hides the one slow disk; read each virtual disk.
+- C is correct: reading. The Peak Latency export is 15 ms or more at every point from 02:05 to 03:00 and below 10 ms at every other point: the peak takes the highest 20-second value across all virtual disks, read and write, so the slow disk sets it.
+- D is wrong: the over-correction. Peak Latency within collection cycle showed it.
+- E is wrong: the wrong action. The report reads from the slow disk.
+- F is wrong: queues add latency at any load; the report waited on every one of that disk's IOs.
+- G is correct: the flow goes per virtual disk, read and write, then errors, then IOPS and outstanding IO, then the backing device and the configuration.
+- H is wrong: reading. `Virtual Disk:scsi1:2|Read IOPS` is under 10% of `Virtual Disk:Aggregate of all instances|Read IOPS` for 02:00 to 03:00, and under 10% of the sum of the eight disks' Read IOPS.
 
 ## Notes
 - Practical half of pair D4 with 0422 (theory; design.md, section 3.9).
@@ -36,6 +36,7 @@ B or E: the VM's disk latency is low all day, so storage is fine and the ticket 
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item D4 (origin: synthetic). Counts only after author approval.
 - Review 2026-11-15: F one fact; 8 or more disks, so that the aggregate can stay at 3 ms or less whatever its weighting (one disk at 15 ms among eight averages to 2.75 ms even unweighted). Key unchanged: A, C, G.
 - 2026-11-15: screenshots replaced by generated exports (project/practical-questions-as-exports-2026-11-15.md), cut to 01:00-04:00. The slow disk stays at 15-17 ms and the other seven at 1 ms or less, so the aggregate stays at 3 ms or less whether VCF Operations weights it by IO or not.
+- Audit 2026-11-15 (redundancy): C no longer states that the peak is taken across all disks (kept by the pair 0089/0356); it is a reading of the Peak Latency export. Options A, B, D-H reworded for length only (truth unchanged). Key unchanged: A, C, G.
 
 ## Metadata
 ```yaml

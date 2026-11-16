@@ -11,48 +11,50 @@ Swap:           4095        1210        2885
 
 - `sar -W` for the last 7 days: `pswpin/s` and `pswpout/s` are 0.00 in every sample.
 - `/proc/pressure/memory`: `some avg10=0.00 avg60=0.00 avg300=0.00`.
+- vCenter: the VM has no memory reservation.
 - The capacity team flags the VM: free memory below 1% and swap in use. They request 16 GB more.
 
 Which statements are correct?
 
 - A. Add 16 GB: free memory below 1% means Linux has run out of RAM.
-- B. Keep 32 GB: the memory pressure and swap activity counters both read 0.
+- B. No swap-in or swap-out all week and zero memory pressure: Linux is not short of RAM.
 - C. Add memory: 1.2 GB of swap used shows that the VM is swapping now.
 - D. Add memory: the database cannot use `buff/cache`, so only 310 MB is left for it.
 - E. Turn off swap, so Linux keeps all its pages in RAM and frees the 1.2 GB.
 - F. Cut the VM to 12 GB: the 22.9 GB available is memory Linux does not use.
+- G. The 4 GB of swap is below what vSphere asks the guest to configure for ballooning on this VM.
 
 ## Likely wrong answer
 A or C: free memory near 0, or swap in use, read as a current shortage.
 
 ## Expected key points
-- Answer: B.
+- Answer: B, G.
 - A is wrong: Linux fills free memory with page cache. Read `available` (MemAvailable), swap activity and memory pressure, not `free`.
 - B is correct: swap-in and swap-out were 0 for a week and memory pressure is 0, so no task waited for memory; about 22.9 GB is available. The 1.2 GB in swap are pages moved out earlier and not touched since.
 - C is wrong: swap used is an amount left by past activity. Pages stay in swap until they are touched again; a current shortage shows as swap-in and swap-out rates and memory pressure.
 - D is wrong: page cache is given back to applications on demand; that is why it counts in `available`.
 - E is wrong: it forces the 1.2 GB back into RAM for nothing and removes the safety net for a real peak; the guest also needs swap space configured for ballooning.
 - F is wrong: `available` is mostly page cache (23.5 GB of buff/cache) that Linux is using for the database files; it can give it back on demand, which is why it counts as available, but a cut to 12 GB removes that cache and sends the reads to disk. For memory, unused is waste, but this memory is used. This is the over-correction of A.
+- G is correct: for ballooning, the guest needs swap space of at least configured memory minus the memory reservation: 32 GB here, against 4 GB.
 
 ## Notes
 - The Windows free memory question (0264) tests the same concept on another Guest OS (benchmark/design.md, section 5).
 - Paired with 0387 (theory and practical; design.md, section 3.9).
-- Option B rewritten 2026-11-14 (design.md 3.9; project/question-pairing-2026-11-14.md): it no longer joins the facts that C and D negate (cache counted in `available`, no swap traffic); it rests on the pressure and swap counters. Key unchanged: B.
-- Review 2026-11-15: F added, the over-correction (available memory read as unused). Key unchanged: B.
+- Changed in the 2026-11-15 audit: B reworded without "Keep 32 GB" (the only non-action verb among action options was a cue); G added (true: guest swap space for ballooning, ballooning section Trigger; vSphere 9.1 documentation, Swap Space and Memory Overcommitment), with the case fact "no memory reservation" in the stem. Key B -> B, G.
 - `free` columns (procps-ng free(1)): `available` estimates memory available for new applications without swapping, including reclaimable page cache. https://man7.org/linux/man-pages/man1/free.1.html
 
 ## Metadata
 ```yaml
 id: "0263"
 title: "Linux free memory near zero"
-product: [linux]
+product: [linux, vsphere]
 technology: [memory]
 task: decide-capacity
 level: 300
 answer_type: deterministic
 input: [text]
-object: [guest-os]
-tool: [guest-os-tools]
+object: [guest-os, vm]
+tool: [guest-os-tools, vcenter]
 knowledge:
   - guest-os/system/troubleshooting/linux-os-slow
   - guest-os/system/guest-os-sizing
@@ -60,8 +62,8 @@ knowledge:
 knowledge_main: guest-os/system/troubleshooting/linux-os-slow
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
-answer: [B]
+source_path: "Synthetic, 2026-11-12"
+answer: [B, G]
 misconception: [A, C]
 misconception_type: [consumption-as-contention, reclamation-as-contention]
 pair: "0387"

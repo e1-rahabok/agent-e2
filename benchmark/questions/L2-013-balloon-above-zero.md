@@ -9,7 +9,7 @@ Which statements are correct?
 - A. Ballooned at 2 GB shows that ESXi is reclaiming memory from the VM now.
 - B. Ballooned counts memory the balloon took at some time, possibly long before this hour.
 - C. Inside Linux, the 2 GB held by the balloon driver counts as used memory, not as free.
-- D. VM Memory Latency (Memory Contention in VCF Operations) is the counter that shows whether the VM waits for memory.
+- D. VM Memory Latency (Memory Contention in VCF Operations) shows whether the VM waits for memory.
 - E. VM Memory Latency includes the time Linux spends paging out to fill the balloon.
 - F. Linux gives the balloon free and cache pages before pages that its processes are using.
 - G. ESXi keeps physical pages behind the ballooned 2 GB, ready to hand back to the VM at once.

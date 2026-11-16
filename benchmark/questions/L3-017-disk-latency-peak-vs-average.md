@@ -9,16 +9,16 @@ Which statements are correct?
 
 - A. The spike cannot be real: a 20-second value can be at most 15 times the 5-minute value it belongs to.
 - B. The peak is the highest of the 15 twenty-second values in the 5-minute collection cycle.
-- C. The peak is taken across all 6 virtual disks, reads and writes together.
-- D. In the spike's cycle the read latency rose far above its usual level, while the write latency stayed within its usual range.
+- C. The peak is taken across all 6 virtual disks, reads and writes together, as one value.
+- D. In the spike's cycle the read latency rose far above its usual level while the write latency stayed in its usual range.
 - E. VCF Operations keeps all 15 twenty-second values of each cycle, so you can see when within the spike's cycle the burst came.
-- F. The peak metric tells you which of the 6 virtual disks had the stall.
+- F. The peak metric tells you which of the 6 virtual disks had the stall in that cycle.
 - G. It is a one-off: every other peak that day stays below about 20 ms, and every other 5-minute value below about 4 ms.
 - H. In at least one 20-second point, IO to at least one disk took about 4 seconds on average.
 - I. An IO wait that long can stall or time out the mail service, so check the application and Guest OS logs of that cycle.
 - J. Check each virtual disk's latency in that cycle, and what ran then, such as a backup or a scheduled job.
 - K. The 5-minute latency of that cycle is what the mail service felt, so one cycle like this is harmless.
-- L. The 5-minute read latency of 71 ms is far above the write latency, so only one of the six disks can have been involved.
+- L. In that cycle the 5-minute read latency is far above the write latency, so only one of the six disks can have been involved.
 
 ## Likely wrong answer
 - A: "A 20-second peak can only be 15 times the 5-minute average, so about 60 times means the metric is wrong."

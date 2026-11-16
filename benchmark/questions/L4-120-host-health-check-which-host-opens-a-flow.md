@@ -15,29 +15,27 @@
 
 Which readings of the check are correct?
 
-- A. esx-01 first: at 88% it is the busiest host, so its CPU flow opens, and the other three hosts are healthy.
-- B. esx-02 opens the CPU contention flow, starting from limits and resource pools; esx-04 is a capacity warning; esx-01 and esx-03 have no finding.
+- A. Only esx-02 needs any step: the other three hosts are up and none of their VMs waits, so they are healthy.
+- B. esx-02 opens the CPU contention flow, from limits and resource pools; esx-04 goes to capacity as a warning; esx-01 and esx-03 open no flow.
 - C. esx-03 opens the memory flow because Consumed is 94%, and esx-02 is a capacity issue because its average Ready is low.
-- D. esx-02 and esx-04 both open a flow: a ballooning host is already short of memory, and esx-02 needs another host added to the cluster.
-- E. No host opens a flow: every host Ready average is below 1%, so the four hosts are healthy and only esx-01 needs a capacity note.
+- D. No host opens a flow: every host Ready average is below 1%, so the four hosts are healthy and only esx-01 needs a capacity note.
 
 ## Likely wrong answer
-A (busiest host first) or D (balloon read as a current wait).
+A: the hosts with no waiting VM are read as healthy, and the capacity readings of esx-01 and esx-04 are dropped.
 
 ## Expected key points
 - Answer: B.
-- A host is a provider: its contention is its VMs' contention. Read performance from the worst VM at the 20-second peak, not from the host average (E is wrong: esx-02's average of 0.8% hides one VM at 22% Ready against 30% Run, which is about 42% of the time it wanted to run).
-- esx-01 at 88% Core Utilization with its worst VM at 1.2% Ready against 92% Run: the host works hard and serves its VMs. That is a capacity reading, not a performance one (A is wrong).
-- esx-02 has the lowest utilization and the only contention: the cause is not load. The flow starts at the configuration items that create contention without load: the CPU limit or the resource pool of the worst VM, then shares, then NUMA placement. Adding a host does not remove a limit (D is wrong on the second half).
-- Memory Consumed holds guest cache, so 94% or 99.4% alone is not a problem (C is wrong). esx-04 shows the leading warnings, Balloon and the soft state: ESXi is reclaiming. Past reclamation is not a wait: the worst VM memory Contention is 0%. It goes to the capacity step as a warning, with the swap-in and compression counters to watch.
-- The order inside the host check is contention (through the worst VM), then consumption, then configuration, then capacity.
+- A is wrong: no wait is present health only; esx-01 at 88% Core Utilization is a capacity reading and esx-04, reclaiming memory (Balloon, soft state), goes to the capacity step as a warning. Capacity and configuration are risk, read apart from present health.
+- B is correct: esx-02 has the lowest utilization and the only contention (worst VM 22% Ready against 30% Run), so the cause is not load: the flow starts at the CPU limit or resource pool of that VM, then shares, then NUMA placement. esx-04's balloon and soft state are reclamation, not a wait (worst VM memory Contention 0%): a capacity warning. esx-01 works hard and serves its VMs (1.2% Ready against 92% Run), a capacity reading handed to the cluster check; esx-03 has no finding. Neither opens a troubleshooting flow.
+- C is wrong: Memory Consumed holds guest cache, so 94% alone is not a problem; and esx-02's low average hides one VM at 22% Ready, a contention finding.
+- D is wrong: a host is a provider and its Ready is an average of its VMs; esx-02's 0.8% hides one VM at 22% Ready, about 42% of the time it wanted to run.
 
 ## Notes
-- Public source: Performance Best Practices for VMware vSphere 9.1 (revision 20260624) on esxtop CPU load readings as utilization levels; Broadcom TechDocs vSphere 9.1 Monitoring and Performance for the ESXi memory states and counters; the esxtop %RDY description (the ready time includes time held back by a CPU limit, shown as %MLMTD). Soft state: ballooning starts (same fact as the host memory state question 0144).
-- Why one answer: only one VM waits (Ready 22% against Run 30%), and the vendor definitions make the other findings either utilization (esx-01, esx-03) or reclamation without wait (esx-04).
-- Debatable risk: moderate on the wording "capacity warning" for esx-04. The question does not ask what to do about it, only that it is not a contention flow; B is the only option that matches the table. Whether esx-04 deserves action at all is left out.
-- Rests on: the design logic of the ESXi health check (Principle: provider, worst VM, utilization is capacity; Interpretation: contention with low utilization points to limits and placement) and the vendor definitions above.
-- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which reading of the check is correct?"
+- Public source: Performance Best Practices for VMware vSphere 9.1 (revision 20260624) on esxtop CPU load readings as utilization levels; Broadcom TechDocs vSphere 9.1 Monitoring and Performance for the ESXi memory states and counters; the esxtop %RDY description (the ready time includes time held back by a CPU limit, shown as %MLMTD). Soft state: ballooning starts.
+- Only one VM waits (Ready 22% against Run 30%), and the vendor definitions make the other findings either utilization (esx-01, esx-03) or reclamation without wait (esx-04).
+- Rests on: esxi-health-check (provider, worst VM, utilization is capacity; contention with low utilization points to limits and placement; present health is not health).
+- Synthetic, 2026-11-13, for the coverage gap (project/plan.md).
+- 2026-11-15 audit: B reworded to "open no troubleshooting flow" (esx-01 at 88% is a capacity reading, so "no finding" was arguable); old A (busiest host first) replaced by the present-health misconception, as 0019 and 0431 keep the utilization-is-not-contention fact; old D (balloon read as a wait) dropped, as 0149 and 0392 keep it. Letters: A new text; B, C unchanged; D dropped; E -> D.
 
 ## Metadata
 ```yaml
@@ -60,9 +58,9 @@ knowledge:
 knowledge_main: vsphere/object-types/esxi/esxi-health-check
 attachments: []
 origin: synthetic
-source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
+source_path: "Synthetic, 2026-11-13"
 answer: [B]
-misconception: [A, D]
-misconception_type: [average-hides-worst, consumption-as-contention, reclamation-as-contention, provider-vs-consumer]
+misconception: [A]
+misconception_type: [average-hides-worst, consumption-as-contention, provider-vs-consumer]
 status: draft
 ```

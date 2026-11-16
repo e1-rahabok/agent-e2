@@ -1,32 +1,36 @@
 # Reclaiming vCPUs from an idle VM
 
 ## Prompt
-- A 32-vCPU VM has been idle for weeks.
-- You want to reclaim it to free capacity.
+- VCF Operations, vm-erp-old: 32 vCPUs, 128 GB configured, Memory Consumed 118 GB.
+- CPU Usage of the VM stayed between 30 and 60 MHz on every day of the last 30 days.
+- Host: 2 sockets of 32 cores, 2.0 GHz base clock, Hyper-Threading on.
+- The owner agrees that the VM can be reclaimed to free capacity.
 
 Choose all the correct statements:
 
-- A. Reclaim at most 16 vCPUs, because idle in VCF Operations means using less than half of the vCPUs.
-- B. On a 2 GHz host, removing 20 idle vCPUs frees about 40 GHz of CPU cycles for other VMs.
-- C. Removing 20 vCPUs frees allocation: the cluster's vCPU-to-core overcommit ratio falls.
+- A. Idle is best judged as CPU Usage below 5% of the VM's size, so a 32-vCPU VM and a 1-vCPU VM meet one standard.
+- B. Removing 20 of its idle vCPUs frees about 40 GHz of CPU cycles for other VMs.
+- C. Removing 20 vCPUs frees allocation: the cluster's CPU overcommit ratio (vCPUs per physical thread) falls.
 - D. Power off the VM: that frees the host memory its guest once touched.
 - E. A VM can process heavy disk and network IO with almost no CPU cycles.
 - F. Reducing the idle VM's vCPU count also frees its memory on the host.
+- G. A VM busy 2 hours each Monday and quiet the rest of the week counts as idle: it is idle 98.8% of the week.
 
 ## Likely wrong answer
-B (vCPU × GHz counted as freed cycles) or E (IO assumed to cost no CPU).
+B (vCPUs × GHz counted as freed cycles) or E (IO assumed to cost no CPU). Also A (an idle threshold relative to VM size) and G (idle judged over the whole week).
 
 ## Expected key points
 - Answer: C, D.
-- A is wrong: idle is absolute (a CPU Usage threshold in MHz, 100 MHz by default), not relative to VM size.
+- A is wrong: idle is absolute, a CPU Usage threshold in MHz (the policy row `idle-vm-cpu`), not relative to VM size; 5% of a 32-vCPU VM is 32 times the cycles of 5% of a 1-vCPU VM.
 - B is wrong: idle vCPUs used almost no cycles, so no cycles are freed; reclaiming them frees allocation only. A busy VM placed in that "room" adds real load.
-- C is correct: an idle or oversized VM gives back allocation, which lowers the overcommit ratio.
-- D is correct: Windows and Linux keep memory they once touched, so the host keeps it mapped; power-off releases it.
+- C is correct: an idle or oversized VM gives back allocation, which lowers the cluster's overcommit ratio, counted per physical thread.
+- D is correct: Windows and Linux keep memory they once touched, so the host keeps it mapped (Consumed 118 GB); power-off releases it.
 - E is wrong: every IO costs CPU cycles (packets processed, data copied to memory), so CPU idleness implies low disk and network activity, and idle is defined on CPU alone.
 - F is wrong: reducing vCPUs frees allocation, not memory; only power-off returns the consumed pages.
+- G is wrong: idle is evaluated every day, not over the whole window; a VM used 2 hours a week does business work and is not idle.
 
 ## Notes
-- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): old B and C each split into one fact (freed cycles, freed allocation); old C's vague "blank air" wording dropped; E states the IO fact without the action; F is new. Key letters unchanged, C, D; C now states the allocation fact (author approved, 2026-11-14).
+- Changed in the 2026-11-15 audit: evidence stem (VCF Operations values instead of "idle for weeks"); A replaced (was a throwaway: idle as half of the vCPUs) by the relative-threshold misconception; G added (idle over the week); C names the ratio per physical thread.
 
 ## Metadata
 ```yaml
@@ -50,7 +54,7 @@ source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q11 Re
 answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [C, D]
-misconception: [B, E]
-misconception_type: [unit-and-normalization]
+misconception: [A, B, E, G]
+misconception_type: [unit-and-normalization, rollup-and-interval]
 status: draft
 ```

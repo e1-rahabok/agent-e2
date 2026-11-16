@@ -1,28 +1,31 @@
 # Counters where a vCPU cannot run at all
 
 ## Prompt
+- The owner of a 4-vCPU VM reports that the application freezes for short moments and asks which counters would show those moments.
+
 Choose all the counters that measure a VM vCPU being unable to run: it completely stops, not just runs slower.
 
 - A. CPU Ready
 - B. CPU Co-stop
 - C. CPU Overlap
 - D. CPU Other Wait
-- E. CPU Usage
-- F. CPU Net Run
+- E. CPU Idle
+- F. Guest OS Processor Queue Length
 - G. CPU Demand
 - H. CPU Latency
 - I. CPU Swap Wait
 
 ## Likely wrong answer
-Omitting Overlap, Other Wait or Swap Wait; including Demand or Latency as a counter of a stopped vCPU.
+Omitting Overlap, Other Wait or Swap Wait; including Demand or Latency as a counter of a stopped vCPU; or reading a halted vCPU (Idle) or a guest run queue as a vCPU that cannot run.
 
 ## Expected key points
 - Answer: A, B, C, D, I.
 - A is true: in Ready the vCPU demands runtime and the kernel has no physical thread for it.
 - B is true: in Co-stop the vCPU is held back to stay in step with a sibling vCPU.
 - C is true: Overlap is time a running vCPU was interrupted for kernel work; the guest feels a freeze.
-- D is true: Other Wait is time the vCPU is blocked by something other than memory (IO, vMotion, snapshot); a freeze for the guest.
-- E and F are false: Usage and Net Run count consumption, not time stopped.
+- D is true: Other Wait is time the vCPU is blocked by something other than memory (IO, vMotion, snapshot); a freeze for the guest. On ESXi 7.0 Update 2 up to 8.0 Update 3j some halted time also lands in Other Wait by accounting (Broadcom KB 338438), which does not change what the counter is for.
+- E is false: Idle is time the guest itself halted the vCPU for lack of work (HLT or MWAIT); the vCPU has nothing to run, it is not held back.
+- F is false: Processor Queue Length counts guest threads waiting for a vCPU inside Windows; it is a Guest OS counter at another layer, not a vCPU that cannot run.
 - G is false: Demand is what the VM would use with no core sharing, a kernel scheduler value; it does not measure a vCPU unable to run.
 - H is false: Latency also counts a vCPU that runs slower (a busy sibling thread, a clock below nominal), so it mixes slower running with stopping.
 - I is true: Swap Wait is time the vCPU waits for a page to come in from ESXi swap; the guest feels a freeze, although the cause is memory.
@@ -31,18 +34,19 @@ Omitting Overlap, Other Wait or Swap Wait; including Demand or Latency as a coun
 - Author confirmed the key (Q035, 2026-11-03). Demand is a VM-realm counter and is affected by Hyper-Threading. The Guest OS realm does not see physical threads. Knowledge: [`vsphere/architecture/vm-vs-guest-os`](../../knowledge/vsphere/architecture/vm-vs-guest-os.md), section Two realms.
 - Misconception: applying a Guest OS-realm statement to a VM-realm counter.
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "In a shared environment, a VM vCPU may not get the resource it asks for: because of settings (VM, resource pool or ESXi) or a highly utilized ESXi host."
+- Changed in the 2026-11-15 audit: an owner's situation added to the stem; throwaways E (Usage) and F (Net Run) replaced by Idle (a halted vCPU, not one held back) and the Windows processor queue (a guest-layer queue).
 - Options added 2026-11-14 (design.md 3.9; project/question-pairing-2026-11-14.md): H (Latency, the over-correction: a contention counter that also counts slower running) and I (Swap Wait). Key changed from A, B, C, D to A, B, C, D, I (author approved, 2026-11-14).
 
 ## Metadata
 ```yaml
 id: "0009"
 title: "Counters where a vCPU cannot run at all"
-product: [vsphere]
+product: [vsphere, windows]
 technology: [cpu]
 input: [text]
 task: read-metric
-object: [vm]
-tool: [vcenter]
+object: [vm, guest-os]
+tool: [vcenter, guest-os-tools]
 knowledge:
   - vsphere/architecture/vm-vs-guest-os
   - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
@@ -53,6 +57,8 @@ knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/demand
   - vsphere/technology/cpu/metrics/virtual-motherboard/latency
   - vsphere/technology/cpu/metrics/virtual-motherboard/swap-wait
+  - vsphere/technology/cpu/metrics/virtual-motherboard/idle
+  - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 knowledge_main: vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
 attachments: []
 origin: quiz

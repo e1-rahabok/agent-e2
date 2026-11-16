@@ -31,6 +31,7 @@ B or E: "VM size" is read as a configuration item, so both the variety of sizes 
 - Why one answer: each request is matched by what it asks (count of variation, ranking by a setting, comparison of size with use). The prompt gives the set's design principle (no overlap) and the chart types that appear in the file's example.
 - Debatable risk: HIGH. The mapping of R1 to Inventory and R2 to Configuration is the author's design; another team could put "VM size distribution" in the Configuration report (the shipped Operations Management set even has a VM Size Distribution section under Configuration). The author should decide whether to keep this question. A frontier model may pick B or E for that reason.
 - Rests on: the knowledge file's design logic only.
+- Retired 2026-11-15 (question bank audit): options not decidable from the knowledge base. vcf-operations/report-suite lists VM Size Distribution under Configuration in the shipped Operations Management set, so B and E (R1 in Configuration) are defensible against the key A, and no rewording makes every option decidable without stating the author's report convention in the stem. The stem also restated the knowledge file's example (F5) and hinted the answer ("no two reports show the same view").
 
 ## Metadata
 ```yaml
@@ -54,5 +55,5 @@ source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
 answer: [A]
 misconception: [B, E]
 misconception_type: [tool-confusion]
-status: draft
+status: retired
 ```

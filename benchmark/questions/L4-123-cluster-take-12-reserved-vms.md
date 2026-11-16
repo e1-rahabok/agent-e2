@@ -30,19 +30,19 @@ Which statements about the 12 VMs and the health check of this cluster are corre
 
 ## Expected key points
 - Answer: A, C, E, G, I, J, K, L.
-- A true: 156 GB of headroom at 16.4 GB per VM: nine take 147.6 GB, a tenth would take the total to 164 GB. The tenth power-on fails with insufficient failover resources.
-- B false: admission control compares reserved memory with the capacity left after the failover share, not Consumed with free memory. A cluster can refuse a power-on with plenty of free memory.
-- C true: 75% of 2,000 GB is 1,500 GB; 1,500 - 1,344 = 156 GB.
-- D false: the reservations of powered-on VMs keep counting; the first batch's reservations still hold when the second batch powers on, so the tenth VM fails whatever the timing.
-- E true: the percentage policy sums reservations plus overhead of the powered-on VMs; usage plays no part.
-- F false: nine of 180 VMs (5%) in one pool wait, the other 171 show no wait, and utilization is 39%. The wait follows the pool, not the hosts: a limit, not a lack of cluster capacity. It is not a reason to refuse the new VMs.
-- G true: the pool limit (12 GHz) is below its demand (19 GHz). Check resource pools and limits in the configuration step.
-- H false: cluster utilization is an average; the dev-pool VMs wait at 39% utilization because of their pool limit.
-- I true: admission control charges each VM's reserved memory; a smaller reservation leaves room for more VMs in the 156 GB.
-- J true: 500 GB x 75% = 375 GB of reservable memory with 25% kept (more with a lower percentage).
-- K true: with HA admission control off the 12 VMs power on, but after a host failure HA restarts a VM only where its reservation plus overhead fits.
-- L true: availability first (green, failover capacity met: 1,344 GB below 1,500 GB), then contention, then configuration and capacity. Contention comes before capacity.
-- M false: a memory reservation is backed only as the VM touches memory; Consumed grows with use and does not jump to the reservation.
+- A is correct: 156 GB of headroom at 16.4 GB per VM: nine take 147.6 GB, a tenth would take the total to 164 GB. The tenth power-on fails with insufficient failover resources.
+- B is wrong: admission control compares reserved memory with the capacity left after the failover share, not Consumed with free memory. A cluster can refuse a power-on with plenty of free memory.
+- C is correct: 75% of 2,000 GB is 1,500 GB; 1,500 - 1,344 = 156 GB.
+- D is wrong: the reservations of powered-on VMs keep counting; the first batch's reservations still hold when the second batch powers on, so the tenth VM fails whatever the timing.
+- E is correct: the percentage policy sums reservations plus overhead of the powered-on VMs; usage plays no part.
+- F is wrong: nine of 180 VMs (5%) in one pool wait, the other 171 show no wait, and utilization is 39%. The wait follows the pool, not the hosts: a limit, not a lack of cluster capacity. It is not a reason to refuse the new VMs.
+- G is correct: the pool limit (12 GHz) is below its demand (19 GHz). Check resource pools and limits in the configuration step.
+- H is wrong: cluster utilization is an average; the dev-pool VMs wait at 39% utilization because of their pool limit.
+- I is correct: admission control charges each VM's reserved memory; a smaller reservation leaves room for more VMs in the 156 GB.
+- J is correct: 500 GB x 75% = 375 GB of reservable memory with 25% kept (more with a lower percentage).
+- K is correct: with HA admission control off the 12 VMs power on, but after a host failure HA restarts a VM only where its reservation plus overhead fits.
+- L is correct: availability first (green, failover capacity met: 1,344 GB below 1,500 GB), then contention, then configuration and capacity. Contention comes before capacity.
+- M is wrong: a memory reservation is backed only as the VM touches memory; Consumed grows with use and does not jump to the reservation.
 
 ## Notes
 - Synthetic, 2026-11-13, for the coverage gap (project/plan.md).

@@ -12,7 +12,7 @@ Which statements about outstanding IO and latency are correct?
 - C. Outstanding IO equals IOPS divided by latency.
 - D. Outstanding IO equals throughput multiplied by latency.
 - E. Two virtual disks with the same outstanding IO count have the same latency.
-- F. At 16,000 writes per second, 48 outstanding writes mean an average write latency of about 3 ms.
+- F. 48 outstanding writes at 16,000 writes per second mean a write latency of about 3 ms.
 - G. Outstanding IO is available for the datastore as well as for the virtual disk.
 - H. Open a case with the array team: 48 writes waiting show that the array cannot keep up.
 - I. A queue of outstanding IO is harmless at any length, as long as the disk keeps a high IOPS.
@@ -37,7 +37,7 @@ D (throughput instead of commands), or E and H: "A long queue means the disk is 
 ## Notes
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): plural stem with the operator's values; the author's options A-D kept; misconception E, over-correction G and wrong action H added (author approved, 2026-11-14). Key changed from B to B, F.
 - Review 2026-11-15: new situation (a backup VM writing, 48 outstanding writes at 16,000 per second), so it shares no situation or wording with its practical half 0416; A restated as a wrong formula (no longer the negation of B); G (datastore level) and over-correction I replace the options that copied 0416. Key unchanged: B, F.
-- Audit 2026-11-15: "always" removed from E (still false: the same count at another IOPS is another latency); J added (low outstanding IO at low IOPS, outstanding-io Misconceptions). Key unchanged: B, F.
+- Audit 2026-11-15: "always" removed from E (still false: the same count at another IOPS is another latency); J added (low outstanding IO at low IOPS, outstanding-io Misconceptions); F reworded for length (truth unchanged). Key unchanged: B, F.
 
 ## Metadata
 ```yaml

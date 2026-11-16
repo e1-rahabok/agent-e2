@@ -8,12 +8,12 @@
 Which statements about the Linux load average are correct?
 
 - A. A task asleep in the kernel waiting for a disk read adds to the figure, just as a task that runs or waits for a CPU does.
-- B. It counts only the threads waiting for a vCPU, so here about two threads queue for a vCPU at all times.
+- B. It counts the threads waiting for a vCPU, so here about two threads queue for a vCPU.
 - C. It is a count for the whole Guest OS, not a figure per vCPU.
 - D. A burst of runnable tasks shorter than 5 seconds always shows in the 1-minute figure.
 - E. Each figure is an exponentially decaying average of that count, sampled every 5 seconds, over 1, 5 or 15 minutes.
-- F. A load average above the vCPU count always points to IO wait, never to a CPU queue.
-- G. Add 4 vCPUs, so that the load average falls below the vCPU count.
+- F. A load average above the vCPU count points to IO wait, not to a CPU queue.
+- G. Four more vCPUs are the fix: a load average of 6.20 is above the 4 vCPUs.
 - H. The load average can stay above the vCPU count while the vCPUs sit mostly idle.
 
 ## Likely wrong answer
@@ -31,7 +31,7 @@ B: the load average read as the CPU queue, so 6.20 on 4 vCPUs means the VM is sh
 - H true: tasks blocked on IO raise the load while the vCPUs idle; a high load with idle vCPUs points to IO, not CPU.
 
 ## Notes
-- Review 2026-11-15: A reworded away from 0260 B; D (the esxtop comparison, the template of 0260 F) replaced by the 5-second sampling. Key unchanged.
+- Changed in the 2026-11-15 audit: B and F without the absolutes "only ... at all times" and "always ... never"; G without the "Add" opening (an imperative shape that is wrong in 18 of 19 options in the bank). D keeps "always": without it a 2-3 second burst can show or not, and the option would be undecidable. Key unchanged.
 - Theory half of 0260 (pair: design.md, section 3.9). Different numbers from 0260, so one does not give away the other.
 - Sources: Linux man-pages 6.19, proc_loadavg(5) (state R or state D, averaged over 1, 5 and 15 minutes); Linux kernel source, kernel/sched/loadavg.c (exponentially decaying average of nr_running + nr_uninterruptible) and include/linux/sched/loadavg.h (LOAD_FREQ, 5-second intervals). https://man7.org/linux/man-pages/man5/proc_loadavg.5.html
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item B3). Counts only after author approval.

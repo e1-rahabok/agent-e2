@@ -12,12 +12,12 @@
 
 Which statements are correct?
 
-- A. SplitRx mode is active now on VM 1's adapter.
-- B. SplitRx mode is active now on VM 2's adapter.
-- C. SplitRx mode is active now on VM 3's adapter.
-- D. SplitRx mode is active now on VM 4's adapter.
-- E. Setting Net.NetSplitRxMode to "0" on the host takes effect at once, with no host restart.
-- F. Restarting the ESX host is the only way to put VM 3's new parameter into effect.
+- A. SplitRx mode is active at this moment on the adapter of VM 1.
+- B. SplitRx mode is active at this moment on the adapter of VM 2.
+- C. SplitRx mode is active at this moment on the adapter of VM 3.
+- D. SplitRx mode is active at this moment on the adapter of VM 4.
+- E. A change of Net.NetSplitRxMode applies at once, with no host restart.
+- F. Only a restart of the ESX host puts VM 3's new parameter into effect.
 
 ## Likely wrong answer
 C left out, because a per-adapter change is assumed to apply at once. Or D: SplitRx is read as a host-wide feature for every adapter type. Or B: the per-adapter parameter is read as ignored while the host default is on.
@@ -36,6 +36,7 @@ C left out, because a per-adapter change is assumed to apply at once. Or D: Spli
 - Why this key: each VM maps to one sentence of the document: automatic activation (VM 1), override with restart (VM 2), override not yet in force (VM 3), unsupported adapter type (VM 4).
 - Debatable risk: the document does not say outright what a not-yet-effective parameter does to the running state; "the change will not take effect until restart" means the earlier state (automatic) stays. The prompt states that the stream has been constant, so the activation condition holds for an hour.
 - Options rewritten 2026-11-14 to the option rules (design.md 3.9; project/question-pairing-2026-11-14.md): one option per VM instead of sets of VMs; the restart rule added to the splitrx-mode knowledge file (it decides C and F); the stem's "so the queue meets the conditions on all four VMs" removed (it interpreted the case); E and F added. Key changed from B to A, C, E.
+- Audit 2026-11-15: level 400 -> 300 (each VM maps to one documented rule; no reading that misleads); options evened in length (E was the unique longest option).
 - Rewritten 2026-11-13 to raise difficulty: four adapters with different histories (override, override not yet in force, unsupported type); the answer needs the per-adapter override rules and the restart condition, not only the supported adapter type.
 
 ## Metadata
@@ -45,7 +46,7 @@ title: SplitRx on VMXNET3 and E1000E
 product: [vsphere]
 technology: [network, cpu]
 task: explain-mechanism
-level: 400
+level: 300
 answer_type: deterministic
 input: [text]
 object: [esxi, vm, network]
@@ -55,7 +56,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/configuration/splitrx-mode
 attachments: []
 origin: synthetic
-source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
+source_path: "Synthetic, 2026-11-13, for the coverage gap (project/plan.md)"
 answer: [A, C, E]
 misconception: [B, D]
 misconception_type: [layer-confusion]

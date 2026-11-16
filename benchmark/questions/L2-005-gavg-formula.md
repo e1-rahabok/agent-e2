@@ -5,33 +5,36 @@
 
 Which statements about these counters are correct?
 
-- A. GAVG equals KAVG plus DAVG.
-- B. GAVG equals KAVG plus QAVG plus DAVG.
+- A. GAVG equals KAVG plus DAVG for the commands of this LUN.
+- B. GAVG equals KAVG plus QAVG plus DAVG for the commands of this LUN.
 - C. GAVG is the latency that the Guest OS measures for its disk.
 - D. DAVG is the time from the host's HBA to the array and back.
-- E. A command that finds the device queue full waits in the kernel, which raises QAVG and KAVG.
-- F. QAVG can read higher than KAVG, because QAVG also counts IO that the kernel issues for itself.
-- G. A high KAVG always points to a fault on the host.
+- E. A command that finds the device queue full waits in the kernel and raises QAVG.
+- F. QAVG can read higher than KAVG for the same device.
+- G. A high KAVG points to a fault in the host's storage code.
 - H. With KAVG at 4.6 ms and DAVG at 0.8 ms, open a case with the array vendor.
+- I. All three latencies sit below 10 ms, so this LUN's storage path is healthy.
 
 ## Likely wrong answer
-B: adding QAVG on top of KAVG, counting the queue time twice. Or H: "Latency is high, so the array is slow."
+B: adding QAVG on top of KAVG, counting the queue time twice. Or H: "Latency is high, so the array is slow." Or I: "Everything is under 10 ms, so storage is fine."
 
 ## Expected key points
 - Answer: A, D, E, F.
-- A is true: GAVG (total seen from the VM monitor) = KAVG (time in the VMkernel) + DAVG (device): 4.6 + 0.8 = 5.4 ms.
-- B is false: QAVG is the queue part of the kernel time, already inside KAVG; adding it again gives 9.9 ms, not the 5.4 ms shown.
-- C is false: Guest in GAVG means the VM, measured from the VM monitor down; the Guest OS adds its own queues above it.
-- D is true: DAVG covers the HBA, the fabric and the array.
-- E is true: when commands exceed the device queue depth (DQLEN), they queue in the VMkernel; QAVG tracks that delay and it shows in KAVG, while DAVG stays as it was.
-- F is true: QAVG covers VM IO and kernel IO, KAVG VM IO only, so QAVG can exceed KAVG.
-- G is false: a VAAI offload raises KAVG with no problem when no other symptom comes with it.
-- H is false: the added time is in the host, before the array (KAVG 4.6 ms against DAVG 0.8 ms); check the queue depths along the stack first.
+- A is correct: GAVG (total seen from the VM monitor) = KAVG (time in the VMkernel) + DAVG (device): 4.6 + 0.8 = 5.4 ms.
+- B is wrong: QAVG is the queue part of the kernel time, already inside KAVG; adding it again gives 9.9 ms, not the 5.4 ms shown.
+- C is wrong: Guest in GAVG means the VM, measured from the VM monitor down; the Guest OS adds its own queues above it.
+- D is correct: DAVG covers the HBA, the fabric and the array.
+- E is correct: when commands exceed the device queue depth (DQLEN), they queue in the VMkernel; QAVG tracks that delay and it shows in KAVG, while DAVG stays as it was.
+- F is correct: QAVG covers VM IO and kernel IO, KAVG VM IO only, so QAVG can exceed KAVG.
+- G is wrong: KAVG is mostly QAVG, time in a VMkernel queue. A full device queue (DQLEN), Disk.SchedNumReqOutstanding on a device that several virtual disks share, or an IOPS limit on a virtual disk raises it with nothing faulty in the host's code.
+- H is wrong: the added time is in the host, before the array (KAVG 4.6 ms against DAVG 0.8 ms): queueing inside ESXi. Check the queue depths along the stack, and an IOPS limit on the virtual disk (high QAVG with normal DAVG), first.
+- I is wrong: the 10 ms in Broadcom KB 344099 is an upper bound for sustained latency on any array. The VMkernel stack itself adds a fraction of a millisecond, so a KAVG of 4.6 ms is queueing (QAVG 4.5 ms), and it makes GAVG almost seven times DAVG.
 
 ## Notes
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: values added so the relation can be checked. Counts only after author approval.
+- Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Revised 2026-11-12 for question set 1.0: values added so the relation can be checked. Counts only after author approval.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the theory half of 0086 (a full device queue). Plural stem, new values (different from 0086), one fact per option; over-correction G and wrong action H added. Key changed from A to A, D, E, F.
 - Review 2026-11-15: G no longer names a KAVG value. Key unchanged.
+- Audit 2026-11-15: F and G lose their reason clause and absolute; key point G no longer rests on the unverified VAAI claim of vsphere/tools/esxtop/storage; I added, the threshold misconception of esxi-storage-latency-stack ("fine below 10 ms", Broadcom KB 344099). Level 200 -> 300: I applies a published threshold to the values. Key unchanged: A, D, E, F.
 
 ## Metadata
 ```yaml
@@ -40,7 +43,7 @@ title: "How the esxtop storage latencies add up"
 product: [vsphere]
 technology: [storage]
 task: explain-mechanism
-level: 200
+level: 300
 answer_type: deterministic
 input: [text]
 object: [esxi]
@@ -52,10 +55,10 @@ knowledge:
 knowledge_main: vsphere/technology/storage/concepts/esxi-storage-latency-stack
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05"
+source_path: "Synthetic, 2026-11-05"
 answer: [A, D, E, F]
-misconception: [B, H]
-misconception_type: [unit-and-normalization, layer-confusion]
+misconception: [B, H, I]
+misconception_type: [unit-and-normalization, layer-confusion, threshold-transplanted]
 pair: "0086"
 status: draft
 ```

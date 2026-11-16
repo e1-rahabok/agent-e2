@@ -17,37 +17,38 @@ Which statements about this latency and the checks that find where it comes from
 - A. Latency can be high at low IOPS, because each layer below the VM has its own queue.
 - B. At 30 IOPS the data disk is not busy, so its latency cannot be a storage problem.
 - C. The problem sits in one disk and one direction: the reads of scsi0:1.
-- D. The total latency of scsi0:1 is the average of its read and write latency, about 12.7 ms.
-- E. The array reports 0.6 ms while the VM sees 24 ms, so the extra time is added between the VM and the array.
-- F. Aborted commands, bus resets and dropped FC frames add delay at any load, so check that they are 0.
+- D. On a healthy host, KAVG rises and falls with DAVG, so the two lines should correlate.
+- E. With the array at 0.6 ms and the VM at 24 ms, the extra time is added between the two.
+- F. Aborted commands, bus resets and dropped FC frames add delay at any load: check they are 0.
 - G. Because the writes of scsi0:1 are fast, the 24 ms of reads must be spent inside the Guest OS.
-- H. A redo-log snapshot on sql-07 would slow its reads more than its writes, so check whether it has one.
+- H. On a healthy host, nearly all of GAVG is DAVG, while KAVG stays near 0.
 - I. On the host, split GAVG into KAVG and DAVG for the LUN behind the datastore.
 - J. KAVG high with DAVG low points to the array, since the array returns the data.
 - K. DAVG high while the array reports 0.6 ms points to the fabric or the HBA configuration.
-- L. To locate the problem per adapter and path, read the highest latency of the hour, not a percentile.
+- L. DAVG, KAVG and GAVG all below 10 ms on the host would rule out the host and the array.
 
 ## Likely wrong answer
 - B: "At 30 IOPS the disk is not busy, so the latency cannot be a storage problem."
 
 ## Expected key points
 - Answer: A, C, E, F, H, I, K.
-- A true: every layer below the VM has its own queue (virtual disk, kernel, adapter, fabric, array). Check outstanding I/O with the latency.
-- B false: queues and errors add latency at any load.
-- C true: work on that disk's reads; the VM total hides it, and read and write often have different causes.
-- D false: total latency is weighted by command count: (30 x 24 + 5 x 1.3) / 35 is about 20.8 ms, close to the read latency.
-- E true: the time is added in the host, the HBA or the fabric.
-- F true: aborted commands and bus resets should be 0 all the time; dropped frames on FC are a sign of contention with an availability impact.
-- G false: the VM's virtual disk latency starts below the Guest OS; only one side being slow is common and points to that side's cause, not to the guest.
-- H true: with a redo-log snapshot on VMFS, reads must check the files of the chain; writes go to the newest file and are less affected.
-- I true: the split tells kernel latency (the host) from device latency (the HBA, fabric or array).
-- J false: KAVG high with DAVG low is queuing inside ESXi: queue depths or a saturated adapter.
-- K true: DAVG runs from the HBA to the array and back; with the array at 0.6 ms, the difference is in the fabric or the HBA configuration.
-- L false: one outlier dominates the maximum; use the 95th or 99th percentile per adapter and path.
+- A is correct: every layer below the VM has its own queue (virtual disk, kernel, adapter, fabric, array). Check outstanding I/O with the latency.
+- B is wrong: the misconception. Queues and errors add latency at any load.
+- C is correct: work on that disk's reads; the VM total hides it, and read and write often have different causes.
+- D is wrong: kernel latency and device latency need not correlate; when both are healthy, KAVG stays near 0 whatever DAVG does.
+- E is correct: the time is added in the host, the HBA or the fabric.
+- F is correct: aborted commands and bus resets should be 0 all the time; dropped frames on FC are a sign of contention with an availability impact.
+- G is wrong: the VM's virtual disk latency starts below the Guest OS; only one side being slow is common and points to that side's cause, not to the guest.
+- H is correct: the bulk of the latency should come from the device; KAVG is near 0 on a healthy host, and a higher KAVG means commands queue in the VMkernel (QAVG).
+- I is correct: the split tells kernel latency (the host) from device latency (the HBA, fabric or array).
+- J is wrong: KAVG high with DAVG low is queuing inside ESXi: a high QAVG means a VMkernel limit holds the commands (the device queue depth DQLEN, DSNRO on a device that several virtual disks share, or an IOPS limit on a virtual disk), or the adapter is saturated.
+- K is correct: DAVG runs from the HBA to the array and back; with the array at 0.6 ms, the difference is in the fabric or the HBA configuration.
+- L is wrong: 10 ms (Broadcom KB 344099) is an upper bound for sustained latency on any array, not a healthy level. A KAVG of several ms is time in a VMkernel queue, and on an FC array that reports 0.6 ms a DAVG near 10 ms points to the fabric or the HBA. Read KAVG against QAVG and DAVG against the array's own latency.
 
 ## Notes
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: per-disk values and the array's own reading added. Counts only after author approval.
+- Synthetic, 2026-11-05. Revised 2026-11-12 for question set 1.0: per-disk values and the array's own reading added. Counts only after author approval.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). Knowledge added: snapshot-impact (reads check the snapshot chain). The old key's KAVG level (0-1 ms in the vSphere documentation) is left out of the options; the knowledge files give 0.5 ms.
+- Audit 2026-11-15 (redundancy): D (command-weighted total latency; kept by the pair 0044/0414) replaced by "kernel latency follows device latency" (false); H (redo-log snapshot slows reads; kept by 0187 and 0045) replaced by "on a healthy host GAVG is mostly DAVG" (true); L (percentile, not the maximum; kept by the pair 0081/0405) replaced by the 10 ms rule of Broadcom KB 344099 (false, threshold transplanted). E and F shortened (truth unchanged). J key point names the VMkernel limits behind a high QAVG; esxi-storage-io-path added to `knowledge`. Key unchanged: A, C, E, F, H, I, K.
 
 ## Metadata
 ```yaml
@@ -68,11 +69,11 @@ knowledge:
   - vsphere/technology/storage/troubleshooting/host-storage-latency
   - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
   - vsphere/technology/storage/concepts/esxi-storage-latency-stack
-  - vsphere/technology/storage/concepts/snapshot-impact
+  - vsphere/technology/storage/concepts/esxi-storage-io-path
 knowledge_main: vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05"
-misconception_type: [consumption-as-contention, average-hides-worst]
+source_path: "Synthetic, 2026-11-05"
+misconception_type: [consumption-as-contention, average-hides-worst, threshold-transplanted]
 status: draft
 ```

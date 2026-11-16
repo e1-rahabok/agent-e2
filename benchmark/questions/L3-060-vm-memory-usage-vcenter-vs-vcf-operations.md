@@ -1,8 +1,8 @@
 # VM Memory Usage: vCenter vs VCF Operations
 
 ## Prompt
-- Both vCenter and VCF Operations show Memory Usage (%) for a VM.
-- For one Windows VM with VMware Tools running, the two tools show very different values for the same hour.
+- A Windows VM with VMware Tools running. VM Memory|Usage (%) is enabled in the VCF Operations policy.
+- For the same hour, vCenter shows the VM's memory Usage (%) at about 12%, and VCF Operations shows its Memory|Usage (%) at about 71%.
 
 Which statements about VM Memory Usage (%) are correct?
 
@@ -22,7 +22,7 @@ A: "Same name, same counter: one of the tools must be wrong." Or E, the reverse:
 - Answer: B, C, G.
 - A false: one name, two formulas. vCenter reads an ESXi estimate; VCF Operations reads the guest.
 - B true: vCenter VM Memory Usage (%) maps to Active, a sampled estimate of recently touched pages, against configured memory.
-- C true: VCF Operations Usage (%) = Guest OS Needed Memory / VM Memory Total Capacity × 100, from VMware Tools data.
+- C true: VCF Operations Usage (%) = Guest OS Needed Memory / VM Memory Total Capacity × 100, from VMware Tools data. VCF Operations 9.1 has VM Memory|Usage (%) disabled by default; Guest|Needed Memory over Mem|Total Capacity (KB), both collected by default, gives the same ratio.
 - D false: Active is an ESXi counter of pages read or written recently; it has no mapping to Windows In Use.
 - E false: over-correction. Only some names hide different formulas; VCF Operations Memory Contention, for example, is the vCenter Latency counter.
 - F false: the wrong action. Active is an internal kernel estimate and does not see how the guest uses its cache; size the guest from Needed Memory with headroom.
@@ -31,9 +31,10 @@ A: "Same name, same counter: one of the tools must be wrong." Or E, the reverse:
 
 ## Notes
 - Paired with 0395 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D2.
-- Kept to the difference between the tools. The fallback to Active without guest data is the fact of pair D8 (0396, 0397). No option rests on memory Demand (Q221, settled 2026-11-15: the capacity model is in sp5-framework/capacity/demand, the VCF Operations formulas in host/utilization and virtual-motherboard/utilization) or on ESX System Usage (Q215, answered 2026-11-15: a VCF Operations metric, not a vCenter counter; no option names it).
+- Kept to the difference between the tools. The fallback to Active without guest data is the fact of pair D8 (0396, 0397). No option rests on memory Demand or on ESX System Usage.
 - Review fixes 2026-11-15: the option that VCF Operations Memory Contention is the vCenter Latency counter was dropped: it was the counterexample of E (T2); E stays decidable from vm-memory-metrics. Key B, C, F, H → B, C, G (relettered).
 - VCF Operations 9.1 metric list (TechDocs, Virtual Machine Metrics, updated 2026-11-12, https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/virtual-machine-metrics.html): Memory|Usage (%) (`mem|usage_average`) is among the metrics disabled by default and has no description there. The formula in C is the knowledge base's (virtual-motherboard/usage); the practical 0395 enables the metric before its capture and checks the formula on the screen.
+- Changed in the 2026-11-15 audit: stem gives the two values and states that the metric is enabled in the policy (9.1 has it disabled by default); key point C adds the default-disabled note.
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
 ## Metadata

@@ -9,37 +9,35 @@ Which statements are correct?
 
 - A. The owner is right: Usage fell after the downsize, which shows 8 vCPUs are too few for the workload.
 - B. CPU Demand fell with the vCPU count, from about 9.7 GHz to about 8.5 GHz: the workload itself shrank.
-- C. The guest's peak vCPU queue stays below 2 per vCPU in both weeks, under the usual congestion guideline, so the guest shows no shortage of vCPUs.
-- D. CPU Usage (%) stayed near 24% after the change, so each remaining vCPU carries no more load than before.
+- C. The guest's peak vCPU queue stays below 2 per vCPU in both weeks, under the usual guideline: the guest shows no vCPU shortage.
+- D. At half the width the VM needs fewer free threads at once, so its Ready rise must come from other VMs on esx-07.
 - E. Since the change, CPU Ready rose from below 0.5% to about 5-6.5%, and Usage sits about 1.2 GHz below Demand.
 - F. The VM's default CPU shares halved with the vCPU count, so on a busy host it is entitled to less CPU under contention.
 - G. With default shares, each remaining vCPU now holds fewer shares than each vCPU held before the downsize.
-- H. esx-07 runs at only 80-86% in the busy hour, so there is no contention and shares cannot explain the drop.
-- I. Raise the VM's CPU shares (or move it to a less busy host), then check that Ready falls back and Usage meets Demand.
+- H. esx-07 stays at 80-86% in the busy hour, which leaves room for every VM's demand; shares are not what limits this VM.
+- I. Raise the VM's CPU shares, then check that Ready falls back and Usage meets Demand.
 
 ## Likely wrong answer
 - A: "Usage fell after the downsize, so the VM now has too few vCPUs: add them back."
 
 ## Expected key points
 - Answer: C, E, F, I.
-- A false: the vCPU count is not the constraint; the VM waits for physical CPU because its shares halved. Adding vCPUs back hides the cause.
-- B false: export, Demand stayed at 9.31-9.83 GHz in both weeks; about 8.5 GHz is Usage after the change, not Demand. The workload is the same.
-- C true: the export holds the VCF Operations value per vCPU: 0.19-0.25 before and 0.25-0.50 after, under the guideline of 2 per processor (Microsoft: a sustained queue above 2 per processor indicates congestion). The guest queue shows no vCPU shortage; the wait is Ready, below the guest, which the guest cannot see.
-- D false: export, CPU Usage (%) 23.0-24.3% before and 41.4-43.5% after: the same work now runs on half the vCPUs, as expected after a downsize.
-- E true: Ready 0.28-0.40% before, 5.26-6.48% after; Usage fell about 1.2 GHz below Demand, the time the VM waited for a physical thread.
-- F true: default shares are 1,000 per vCPU and a resize in the vSphere Client recalculates them: 16,000 became 8,000 while Demand stayed the same.
-- G false: default shares are 1,000 per vCPU, so each vCPU keeps 1,000; what halved is the VM's total, 16,000 to 8,000, for the same demand.
-- H false: Ready of 5-6.5% is the contention itself: the VM waited for physical CPU, so its shares decide how much it gets. Host utilization below 100% does not rule out contention; the VM's Ready reads it.
-- I true: the fix is the entitlement, not the vCPU count; then confirm Ready falls and Usage meets Demand.
+- A is wrong: the vCPU count is not the constraint; the VM waits for physical CPU because its shares halved. Adding vCPUs back hides the cause.
+- B is wrong: export, Demand stayed at 9.31-9.83 GHz in both weeks; about 8.5 GHz is Usage after the change, not Demand. The workload is the same.
+- C is correct: the export holds the VCF Operations value per vCPU: 0.19-0.25 before and 0.25-0.50 after, under the public Microsoft guideline of 2 per processor (a sustained queue above 2 per processor indicates congestion). The queue is read against that guideline, not against the week before. The guest queue shows no vCPU shortage; the wait is Ready, below the guest, which the guest cannot see.
+- D is wrong: Ready tends to fall after a wide VM is narrowed, but not when its shares halved on a busy host. Here the host's Utilization is flat at 80-86% in both weeks while this VM's Ready jumped on the day of its resize: the change is this VM's, not a neighbour's.
+- E is correct: Ready 0.28-0.40% before, 5.26-6.48% after; Usage fell about 1.2 GHz below Demand, the time the VM waited for a physical thread.
+- F is correct: default shares are 1,000 per vCPU and a resize in the vSphere Client recalculates them: 16,000 became 8,000 while Demand stayed the same.
+- G is wrong: default shares are 1,000 per vCPU, so each vCPU keeps 1,000; what halved is the VM's total, 16,000 to 8,000, for the same demand.
+- H is wrong: Ready of 5-6.5% is the contention itself: the VM waited for physical CPU, so its shares decide how much it gets. Host utilization below 100% does not rule out contention; the VM's Ready reads it.
+- I is correct: the fix is the entitlement, not the vCPU count (a less busy host is the other fix); then confirm Ready falls and Usage meets Demand.
 
 ## Notes
-- Drafted 2026-11-12.
+- Synthetic, 2026-11-12.
 - Default shares: 1,000 per vCPU at Normal; resizing in the vSphere Client recalculates them (vSphere 9.1 Resource Management, Shares).
 - Also acceptable as a next check: the load on the VM's NUMA home node on esx-07 (not an option).
-- CSV generated by a seeded script; Demand 9.31-9.83 GHz, Ready before 0.28-0.40%, after 5.26-6.48%.
-- Option C reads the queue against the 2 per processor guideline, not against the before value (author, 2026-11-15, Q233): no ratio between the queue before and after a resize can be predicted, because the total changes with the vCPU count, Ready, Co-stop and NUMA. The export holds the per vCPU value of VCF Operations (Q217): peaks are whole multiples of 1/16 in the first week and of 1/8 in the second. The first version held whole numbers 2-4, a total under a per vCPU name.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
-- Review 2026-11-14: options B (Demand) and D (Usage per vCPU) turned from true statements into false near-misses that test the same facts, so fewer options are true.
+- CSV generated by a seeded script; Demand 9.31-9.83 GHz, Ready before 0.28-0.40%, after 5.26-6.48%. The export holds the per-vCPU value of the VCF Operations guest queue.
+- Changed in the 2026-11-15 audit: D replaced (was a misread of the Usage (%) column) by the "narrower VM, so the Ready came from a neighbour" reading; H and I reworded (no absolutes in H; I shorter, the host move kept in the key point).
 
 ## Metadata
 ```yaml
@@ -64,7 +62,7 @@ knowledge_main: sp5-framework/capacity/rightsizing
 attachments:
   - 0236/erp-app-05-busy-hour-before-after.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
+source_path: "Synthetic, 2026-11-12"
 misconception_type: [consumption-as-contention]
 pair: "0365"
 status: draft

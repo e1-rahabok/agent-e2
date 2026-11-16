@@ -10,30 +10,31 @@
 
 Which changes remove the false alarm on DS-FAST in a way that keeps working when VMs move or disks are added?
 
-- A. Add a condition on the latency of the datastore itself (above 5 ms) next to the VM conditions, because a VM's latency covers all its disks and the datastore's own counter is the only value that belongs to one datastore.
+- A. Add a condition on the datastore's own latency, above 5 ms, next to the VM conditions, because only that counter belongs to one datastore.
 - B. Raise the share of VMs from 25% to 50%, because 45% of the VMs of DS-FAST falls under it and 95% of the VMs of DS-SLOW stays over it.
 - C. Add a condition on the highest VM disk latency in the population (above 40 ms), because it separates a datastore with a slow tail from one with only a mild average.
 - D. Lengthen the wait from 1 to 3 cycles, because only a datastore with persistent latency should alert and a spike on DS-FAST is not persistent.
-- E. Lower the VM disk latency value from 10 ms to 5 ms, because a stricter VM value gives the alert more weight on the datastore that is truly slow.
+- E. Use the VM peak disk latency of the 20-second samples instead of the 5-minute value, because the peak isolates the slow disk.
 
 ## Likely wrong answer
 B (a higher share) or C (a peak condition on the VMs): both keep the VM figure as the evidence, though a VM and a datastore are many-to-many and the VM figure cannot say which datastore is slow.
 
 ## Expected key points
 - Answer: A.
-- VMs and datastores are many-to-many. A VM with disks on two datastores has one VM-level latency value that mixes both. The 18 VMs of DS-FAST that report over 10 ms are slow because of their data disk on DS-SLOW, not because of DS-FAST.
-- The latency of the datastore (1.5 ms on DS-FAST, 22 ms on DS-SLOW) is measured on that datastore only. As an extra condition, above 5 ms, it removes DS-FAST and keeps DS-SLOW.
-- C does not work here: DS-FAST has VMs at 55 ms (the ones using DS-SLOW), so the highest-VM condition passes on DS-FAST as well.
-- B works only by luck of the numbers (45% against 50%): three more VMs with a data disk on DS-SLOW and it alerts again. The VM population stays the wrong measuring point.
-- D is wrong because the cause is persistent, not a spike: the same 18 VMs stay slow. E makes the false alarm more likely.
-- For this reason a datastore latency alert is not implemented as a plain VM-population alert. Guide if one is built: all of a share of VMs over 10 ms, a highest VM latency over 40 ms, and the datastore's own latency over 5 ms.
+- A is correct: VMs and datastores are many-to-many, and a VM with disks on two datastores has one VM-level latency that mixes both; the 18 slow VMs of DS-FAST are slow on their DS-SLOW disk. The datastore's own latency (1.5 ms on DS-FAST, 22 ms on DS-SLOW) belongs to one datastore: above 5 ms as an extra condition, it removes DS-FAST and keeps DS-SLOW.
+- B is wrong: it works only by luck of the numbers (45% against 50%); three more VMs with a data disk on DS-SLOW and it alerts again. The VM population stays the wrong measuring point.
+- C is wrong: DS-FAST has VMs at 55 ms (the ones using DS-SLOW), so the highest-VM condition passes on DS-FAST as well.
+- D is wrong: the cause is persistent, not a spike: the same 18 VMs stay slow.
+- E is wrong: the 20-second peak is still a VM-level value, the highest across all the VM's disks, read and write together; the 18 VMs peak on their DS-SLOW disk, so DS-FAST still alerts.
 
 ## Notes
-- Public source: the many-to-many relation is vSphere itself: a virtual disk lives on one datastore, a VM can have disks on several, so a VM-level disk latency counter averages across its disks (vSphere Monitoring and Performance, "Virtual Machine Disk Performance" counters, Broadcom TechDocs, vSphere 9.0; VCF Operations 9.1 VM metrics Disk | Total Latency). The datastore-level latency is a counter of the datastore object. I did not find one vendor page that states the sentence "a VM-level latency cannot be assigned to a datastore", so the answer rests on the knowledge file's design logic and on the metric definitions.
+- Public source: the many-to-many relation is vSphere itself: a virtual disk lives on one datastore, a VM can have disks on several, so a VM-level disk latency counter averages across its disks (vSphere Monitoring and Performance, "Virtual Machine Disk Performance" counters, Broadcom TechDocs, vSphere 9.0; VCF Operations 9.1 VM metrics Disk | Total Latency). The datastore-level latency is a counter of the datastore object. No vendor page found that states the sentence "a VM-level latency cannot be assigned to a datastore", so the answer rests on the knowledge file's design logic and on the metric definitions.
 - Knowledge file logic: vsphere/object-types/datastore/datastore-alerts, section "Datastore latency: not implemented": VMs and datastores are many-to-many, so a VM-level condition cannot be set for a datastore; guide values (more than 25% of VMs above 10 ms, highest VM above 40 ms, datastore above 5 ms).
-- Why one answer: only the datastore's own latency is measured on one datastore; the numbers (45% against 25%, 55 ms against 40 ms) show that the two VM-based conditions pass on DS-FAST.
-- Debatable risk: a reader could argue that per-virtual-disk counters (instances) would map disks to datastores. The prompt gives only the VM-level value the alert reads. B passes this case by chance, but fails the "keeps working" clause. The guide values (10, 40, 5 ms) are the author's design; the question uses only the 5 ms condition as the mechanism and does not ask for the number.
-- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which change removes ...".
+- Only the datastore's own latency is measured on one datastore; the numbers (45% against 25%, 55 ms against 40 ms) show that the two VM-based conditions pass on DS-FAST.
+- A datastore latency alert is therefore not implemented as a plain VM-population alert. Guide if one is built: a share of VMs over 10 ms, a highest VM latency over 40 ms, and the datastore's own latency over 5 ms.
+- Debatable risk: a reader could argue that per-virtual-disk counters (instances) would map disks to datastores. The prompt gives only the VM-level value the alert reads. B passes this case by chance, but fails the "keeps working" clause. The guide values (10, 40, 5 ms) are design values; the question uses only the 5 ms condition as the mechanism and does not ask for the number.
+- Synthetic, 2026-11-13, for the coverage gap (project/plan.md).
+- 2026-11-15 audit: E (lower the VM value, a change no reader picks) replaced by the 20-second VM peak; A shortened.
 
 ## Metadata
 ```yaml
@@ -51,10 +52,11 @@ knowledge:
   - vsphere/object-types/datastore/datastore-alerts
   - vsphere/object-types/vm/vm-alerts
   - vsphere/technology/storage/metrics/host/datastore
+  - vcf-operations/features/peak-20-second-metrics
 knowledge_main: vsphere/object-types/datastore/datastore-alerts
 attachments: []
 origin: synthetic
-source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
+source_path: "Synthetic, 2026-11-13"
 answer: [A]
 misconception: [B, C]
 misconception_type: [same-name-other-object, average-hides-worst]

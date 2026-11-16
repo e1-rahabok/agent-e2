@@ -13,10 +13,10 @@
 Which statements are correct?
 
 - A. The 10.3-day projection is longer than the 10-day delivery, so starting the request and waiting is safe.
-- B. Powering on the 12 DR VMs creates about 192 GB of swap files, since they have no memory reservation.
+- B. If DS-PROD-07 sits on a thin LUN, the free space of the array pool behind it must be checked too.
 - C. The DR VMs need no new space at power-on, because their files already sit on the datastore.
-- D. Under the engineer's plan, with those swap files counted, the datastore fills in about 9 days, before the new capacity arrives.
-- E. The 4,500 GB of unwritten thin space exceeds the 1,800 GB free, so the datastore can fill with no new VM and no warning in the trend.
+- D. Counting the DR VMs' swap files, the engineer's plan fills the datastore in about 9 days, before delivery.
+- E. The 4,500 GB of unwritten thin space, above the 1,800 GB free, can fill the datastore with no new VM added.
 - F. The snapshot should stay until the new capacity arrives, because it still protects the database.
 - G. Removing the snapshot comes first: it returns about 1,100 GB at once and stops 160 of the 175 GB per day of growth.
 - H. The thin disks count only through their 15 GB per day of growth; their provisioned size does not matter.
@@ -30,24 +30,23 @@ Which statements are correct?
 
 ## Expected key points
 - Answer: B, D, E, G, I, K.
-- A is false: the misconception; the projection is a trend alone. It ignores the swap files at power-on and the unwritten thin space, and that a snapshot is the cheapest space to give back.
-- B is true: each VM creates a swap file of configured memory minus reservation at power-on: 12 x 16 GB = 192 GB, in 3 days.
-- C is false: a powered-off VM holds no swap file; it is created at each power-on, so the DR test needs 192 GB of free space at that moment.
-- D is true: after 3 days 1,800 - 3 x 175 = 1,275 GB, minus 192 GB = 1,083 GB, which lasts 1,083 / 175 = about 6.2 days: about 9.2 days in total, under the 10-day delivery time with no time left to install. The plan is not safe.
-- E is true: provisioned minus used of the thin disks is space they can claim at any time; unwritten thin space larger than free space can fill the datastore with no trend in the history.
-- F is false: the change the snapshot protected was validated last week; a snapshot kept beyond its change window is a space risk and a performance cost, and the delta grows with every write.
-- G is true: snapshots before thin disks, because they grow fastest and are the easiest to remove; the base disks are thick, so the merge writes into space they already hold and the delta's 1,100 GB returns; growth falls from 175 to 15 GB per day. Then the orphaned VMDKs (300 GB, after approval).
-- H is false: the 4,500 GB of unwritten thin space is a reservation in effect against the free space; the thin disks still need an overcommit decision after the snapshot is gone.
-- I is true: the delivery time is fixed, so the request starts now while space is freed.
-- J is false: space does not change speed on all-flash storage; it threatens availability. The latency is normal.
-- K is true: space is availability: a VM whose thin disk or snapshot must grow cannot write when the datastore is full, whatever the load; hence the alert has no activity gate. A thick disk without a snapshot writes into space it already holds.
+- A is wrong: the misconception; the projection is a trend alone. It ignores the swap files at power-on and the unwritten thin space, and that a snapshot is the cheapest space to give back.
+- B is correct: on an array with thin LUNs the datastore can show room the array no longer has; when the thin LUN has no physical space left, the host pauses the VMs. Read the array's free space as well as the datastore's.
+- C is wrong: a powered-off VM holds no swap file; each VM creates one of configured memory minus reservation at power-on, so the DR test needs 12 x 16 GB = 192 GB of free space at that moment.
+- D is correct: the DR VMs' swap files take 12 x 16 GB = 192 GB at power-on. After 3 days 1,800 - 3 x 175 = 1,275 GB, minus 192 GB = 1,083 GB, which lasts 1,083 / 175 = about 6.2 days: about 9.2 days in total, under the 10-day delivery time with no time left to install. The plan is not safe.
+- E is correct: provisioned minus used of the thin disks is space they can claim at any time; unwritten thin space larger than free space can fill the datastore with no trend in the history.
+- F is wrong: the change the snapshot protected was validated last week; a snapshot kept beyond its change window is a space risk and a performance cost, and the delta grows with every write.
+- G is correct: snapshots before thin disks, because they grow fastest and are the easiest to remove; the base disks are thick, so the merge writes into space they already hold and the delta's 1,100 GB returns; growth falls from 175 to 15 GB per day. Then the orphaned VMDKs (300 GB, after approval).
+- H is wrong: the 4,500 GB of unwritten thin space is a reservation in effect against the free space; the thin disks still need an overcommit decision after the snapshot is gone.
+- I is correct: the delivery time is fixed, so the request starts now while space is freed.
+- J is wrong: space does not change speed on all-flash storage; it threatens availability. The latency is normal.
+- K is correct: space is availability: a VM whose thin disk or snapshot must grow cannot write when the datastore is full, whatever the load; hence the alert has no activity gate. A thick disk without a snapshot writes into space it already holds.
 
 ## Notes
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). Review 2026-11-14: the snapshot VM's disks are stated thick (so removing the snapshot returns the delta's space, option G), and the 160 GB per day started 4 days ago (5 weeks at that rate would make a delta far above 1,100 GB). Option K names the VMs that stop (thin disk or snapshot that must grow), as the knowledge file does.
-- Public source: swap file size = configured memory minus memory reservation, created at power-on and deleted at power-off (vSphere Resource Management, "Swap File Location and VM swap files", Broadcom TechDocs, vSphere 9.0). A snapshot delta grows with every write to the disk under it, and a snapshot should not be kept longer than its change (vSphere Virtual Machine Administration, "Best practices for virtual machine snapshots", Broadcom TechDocs, vSphere 9.0; Broadcom KB 313399 "Best practices for using snapshots in the vSphere environment"). A thin disk can claim its provisioned space at any time (vSphere Storage, "About Virtual Disk Provisioning Policies", Broadcom TechDocs, vSphere 9.0).
-- Knowledge file logic: vsphere/object-types/datastore/datastore-alerts, "Datastore consumption" (red only, space headroom flow); vsphere/technology/storage/datastore-space-headroom, checks 3 to 8 and "Order rationale": snapshots before thin disks, because they grow fastest and are the easiest to remove; reality overrides the projection.
-- Why one answer: the swap files are a documented formula, the thin gap is arithmetic, and the snapshot is the largest part of the growth, so the 10.3-day trend drops under the delivery time once the swap files are counted. The key accepts any order that starts with the snapshot and the reclaim, as long as the reasons are given.
-- Debatable risk: the order of the actions after the snapshot is a judgment; the key asks for the reasons, not for one fixed list. Time left: the engineer's 10.3 days against about 9.2 days (with the DR swap) are estimates; the judge should accept 9 to 10 days if the swap and the growth are used. The author's alert design (single symptom, red only) is not asked for; the prompt gives it.
+- Review 2026-11-14: the snapshot VM's disks are stated thick (so removing the snapshot returns the delta's space, option G), and the 160 GB per day started 4 days ago (5 weeks at that rate would make a delta far above 1,100 GB). Option K names the VMs that stop (thin disk or snapshot that must grow), as the knowledge file does.
+- Knowledge file logic: vsphere/object-types/datastore/datastore-alerts, "Datastore consumption" (red only, space headroom flow); vsphere/technology/storage/datastore-space-headroom, checks 1 to 8 and "Order rationale": thin LUNs on the array (step 1), snapshots before thin disks, because they grow fastest and are the easiest to remove; reality overrides the projection. Every fact the key uses is in these files and in vsphere/technology/storage/concepts/vm-files (swap file size, created at power-on); the snapshot practice is also in Broadcom KB 318825, https://knowledge.broadcom.com/external/article/318825.
+- Why one answer: the swap files are a documented formula, the thin gap is arithmetic, and the snapshot is the largest part of the growth, so the 10.3-day trend drops under the delivery time once the swap files are counted. The 9.2 days of D and the 10.3 days of the engineer are estimates; D says "about 9 days", before the 10-day delivery.
+- Audit 2026-11-15: B (the swap file size, tested by 0181 and 0296) replaced by the thin-LUN check of datastore-space-headroom step 1, which no other question tests; D and E shortened (length cue), D no longer leans on B. Judge-era notes removed. Key unchanged.
 
 ## Metadata
 ```yaml

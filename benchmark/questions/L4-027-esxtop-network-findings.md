@@ -20,28 +20,31 @@
   67108882 2460558:db-03.eth0   vmnic0    DvsPortset-0 n/a    n/a    n/a  611.03  702.44   0.00   0.00
 ```
 
-Which findings need action?
+Which statements are correct?
 
-- A. vmk1, the vSAN VMkernel port, drops 0.31% of the packets it receives.
-- B. web-01, a busy web VM, drops 0.10% of the packets it receives.
-- C. vmnic3, the out-of-band management port, runs at half duplex.
+- A. The 0.31% receive drops of vmk1, the vSAN VMkernel port, need action.
+- B. The 0.10% receive drops of web-01, a busy web VM, need action.
+- C. The half duplex of vmnic3, the out-of-band management port, needs action.
 - D. vmk2, the vMotion port, shows 0 Mb/s: its link or its uplink is down.
-- E. vmnic2 runs at 10,000 Mb/s while its team peers run at 25,000 Mb/s.
+- E. vmnic2 at 10,000 Mb/s, while its team peers run at 25,000 Mb/s, needs action.
+- F. vmk1's receive drops point first to the physical switch, since vmk1 receives through vmnic1.
 
 ## Likely wrong answer
 B: applying the zero-drop rule of a VMkernel network to a VM port. Or D: reading an idle port as a broken one.
 
 ## Expected key points
 - Answer: A, C, E.
-- A: a dedicated vSAN network should drop nothing. Receive drops on the vSAN VMkernel port need action: the host's CPU for packet processing, the uplink, and the physical path.
-- B is within the stated standard for a VM port at peak: watch it, no action now.
-- C: half duplex (FDUPLX N) is a fault on any link: check the port settings on both sides, the cable and the switch port.
-- D is not a fault: no vMotion runs in that minute, so the port is idle. Its uplink vmnic2 is up (UP Y) and carries other traffic; a down link would show UP N on the vmnic.
-- E: one team member negotiated down to 10 Gb/s: check the cable, the transceiver and the switch port. Every port mapped to it (here vMotion) gets less bandwidth.
+- A is correct: a dedicated vSAN network should drop nothing, and the team standard says the same. Receive drops on the vSAN VMkernel port need action: first the host's CPU for packet processing and the receive ring.
+- B is wrong: 0.10% is within the stated standard for a VM port at peak: watch it, no action now.
+- C is correct: half duplex (FDUPLX N) is a fault on any link: check the port settings on both sides, the cable and the switch port.
+- D is wrong: no vMotion runs in that minute, so the port is idle. Its uplink vmnic2 is up (UP Y) and carries other traffic; a down link would show UP N on the vmnic.
+- E is correct: one team member negotiated down to 10 Gb/s: check the cable, the transceiver and the switch port. Every port mapped to it (here vMotion) gets less bandwidth.
+- F is wrong: vmnic1 itself drops nothing (%DRPRX 0.00). Receive drops counted at a vSwitch port happen after the uplink, between the vSwitch and the receiving stack; they point to the host's CPU for packet processing or a full ring, not to the physical switch.
 
 ## Notes
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Synthetic, 2026-11-05, from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12: the screenshot became an esxtop excerpt in the prompt; the team standard is stated in the prompt (fairness F3); a negotiated-speed finding added. After the independent review, the units option was replaced (question 0029 owns that fact).
+- Changed in the 2026-11-15 audit: the question asks for correct statements; A, B, C and E state "needs action" (truth unchanged); F added (receive drops at a VMkernel port read as a physical switch fault: esxtop/network %DRPRX and Misconceptions). Level 400 to 300: the stated standard decides A and B, and each other option is one reading or one fact. A units option (vmk1 receives about 1.7 GB/s) was not added: the esxtop megabit fact is held by 0029 and 0412.
 
 ## Metadata
 ```yaml
@@ -52,7 +55,7 @@ technology: [network]
 object: [esxi, network, vm]
 tool: [esxtop]
 task: troubleshoot
-level: 400
+level: 300
 answer_type: deterministic
 input: [text]
 knowledge:
@@ -62,7 +65,7 @@ knowledge:
 knowledge_main: vsphere/tools/esxtop/network
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05"
+source_path: "Synthetic, 2026-11-05"
 answer: [A, C, E]
 misconception: [B, D]
 misconception_type: [threshold-transplanted]

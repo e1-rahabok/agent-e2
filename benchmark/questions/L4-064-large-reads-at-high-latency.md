@@ -19,7 +19,7 @@ Which statements are correct?
 - B. A 512 KB read takes longer to serve than an 8 KB read: 7 ms alone does not show a slow array.
 - C. The array is overloaded: 7 ms on bkp-01 is almost 6 times the 1.2 ms of db-02 on the same datastore.
 - D. Compare latency only at similar IO sizes: compare bkp-01 with its own past nights.
-- E. db-02 is barely affected by the backup: its read latency is 1.2 ms against 1.1 ms on nights without it.
+- E. db-02 is barely affected by the backup: 1.2 ms read latency against 1.1 ms on nights without it.
 - F. With Storage I/O Control on, DS-PROD07's Normalized Latency would read about 7 ms for this hour.
 
 ## Likely wrong answer
@@ -36,7 +36,7 @@ C: comparing the latency of large and small IOs as if they were the same work.
 
 ## Notes
 - Synthetic, 2026-11-12. Counts only after author approval.
-- Audit 2026-11-15: F (no throughput limit in vSphere, a third copy after 0424 F and 0183 F) replaced by Storage I/O Control Normalized Latency (IO-count weighted, size-adjusted). Key unchanged: A, B, D, E.
+- Audit 2026-11-15: F (no throughput limit in vSphere, a third copy after 0424 F and 0183 F) replaced by Storage I/O Control Normalized Latency (IO-count weighted, size-adjusted); E shortened (truth unchanged). Key unchanged: A, B, D, E.
 - Open (knowledge base): no knowledge file states as a mechanism line that per-IO latency grows with IO size; B, C and D rest on the size adjustment of Normalized Latency in storage-io-control.
 
 ## Metadata

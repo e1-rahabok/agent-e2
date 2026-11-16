@@ -10,23 +10,26 @@ Which statements are correct?
 
 - A. The 1 GB pages need a full reservation: all its memory is allocated at power-on and is never reclaimed.
 - B. About 210 GB of the VM's memory is idle, so ESXi will reclaim it by ballooning or swapping once the host runs short.
-- C. The VM is excluded from memory tiering: all its 256 GB stay in DRAM, which leaves less DRAM for the tiered VMs.
+- C. The VM stays out of memory tiering, all in DRAM, and shrinks the DRAM left for the tiered VMs.
 - D. After a vMotion, part of its memory may no longer be backed by 1 GB pages, because host memory fragments over time.
 - E. Lowering its reservation to 64 GB keeps the 1 GB pages and frees about 192 GB of the host for other VMs.
+- F. DRS takes the 1 GB page backing into account and places the VM on a host that can still provide it.
 
 ## Likely wrong answer
 B: Consumed above Active read as idle memory that ESXi can take back.
 
 ## Expected key points
 - Answer: A, C, D.
-- A: 1 GB pages are opt-in per VM and need a full reservation. All memory is preallocated at power-on and is never reclaimed: Consumed equals configured for the VM's lifetime, whatever the guest uses.
+- A is correct: 1 GB pages are opt-in per VM and need a full reservation. All memory is preallocated at power-on and is never reclaimed: Consumed equals configured for the VM's lifetime, whatever the guest uses.
 - B is wrong: the reservation and the 1 GB pages keep all of it; nothing is ballooned or swapped. Whether SQL Server needs it is read in the guest, not from Consumed or Active.
-- C: 1 GB page VMs stay in DRAM. A full reservation in DRAM also lowers the DRAM left for tiered VMs.
-- D: backing with 1 GB pages is best effort; a freshly booted host has the most contiguous memory. DRS and HA ignore 1 GB page capability in placement.
+- C is correct: 1 GB page VMs are excluded from memory tiering and stay in DRAM. A full reservation in DRAM also lowers the DRAM left for tiered VMs.
+- D is correct: backing with 1 GB pages is best effort; host memory fragments over time, so a freshly booted host is the most likely to provide them, and after a vMotion part of the memory may be backed by smaller pages.
 - E is wrong: a VM with 1 GB pages powers on only with a full reservation. To free memory, resize the VM from what SQL Server needs, or drop the 1 GB pages.
+- F is wrong: DRS and HA ignore 1 GB page capability in placement; that is why the backing after a vMotion is best effort.
 
 ## Notes
-- Sources: vSphere 9.1 documentation, Backing Guest vRAM with 1 GB Pages (full reservation, preallocation, best effort, vMotion), and Memory Tiering over NVMe (VMs kept in DRAM); the knowledge base, Large memory pages, section 1 GB pages.
+- Sources: vSphere 9.1 documentation, Backing Guest vRAM with 1 GB Pages (full reservation, preallocation, best effort, vMotion, DRS and HA placement), and Memory Tiering over NVMe (VMs kept in DRAM); the knowledge base, Large memory pages, section 1 GB pages.
+- F added in the 2026-11-15 audit (mechanism option). No option on a reservation served from the NVMe tier: memory-tiering, Interactions has two lines on reservations that are not reconciled yet.
 
 ## Metadata
 ```yaml
@@ -47,7 +50,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/concepts/large-memory-pages
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
+source_path: "Synthetic, 2026-11-12"
 answer: [A, C, D]
 misconception: [B]
 misconception_type: [consumption-as-contention]

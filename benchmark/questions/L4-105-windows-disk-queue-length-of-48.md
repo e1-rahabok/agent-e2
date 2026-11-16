@@ -3,16 +3,16 @@
 ## Prompt
 - A Windows Server 2022 VM with one virtual disk on a paravirtual SCSI (PVSCSI) controller.
 - Performance Monitor, PhysicalDisk, same 5 minutes: Disk Transfers/sec 3,000; Avg. Disk sec/Transfer 0.016; Avg. Disk Queue Length 48.
-- vCenter, the same 5 minutes: virtual disk latency about 15 ms.
+- vCenter, the same 5 minutes: virtual disk latency about 15 ms; virtual disk outstanding IO about 45.
 - A colleague says: "48 requests are waiting inside Windows before they reach the VM, so the Guest OS is the bottleneck. Storage is fine, its latency is only 15 ms."
 
 Which statements are correct?
 
 - A. The 48 requests are waiting inside Windows above the driver and have not reached the virtual disk yet.
-- B. The numbers do not support the colleague's conclusion that the Guest OS is the bottleneck.
+- B. Raising the PVSCSI device queue depth would not shorten this queue.
 - C. A queue length above 2 per disk shows a bottleneck in the Guest OS, whatever the latency.
 - D. The numbers show requests waiting in Windows for a free slot of the PVSCSI adapter.
-- E. About 45 of the 48 requests (3,000 x 0.015 s) are at or below the virtual disk.
+- E. Performance Monitor % Disk Time for this disk reads about 4,800% in the same 5 minutes.
 - F. Windows sees 16 ms per transfer and vCenter 15 ms: nearly all the time per I/O is spent at or below the virtual disk.
 - G. Because the vCenter latency is only 15 ms, storage can be ruled out as the source of the queue.
 - H. Avg. Disk Queue Length is Disk Transfers/sec times Avg. Disk sec/Transfer here: 3,000 x 0.016 = 48.
@@ -28,10 +28,10 @@ Which statements are correct?
 ## Expected key points
 - Answer: B, E, F, H, I, J.
 - A is false: the misconception; the counter counts requests active below the driver that takes the statistics, including I/O already sent to the virtual disk and the storage.
-- B is true: the conclusion needs a queue that has not reached the device, which the numbers do not show.
+- B is true: about 45 requests are at the virtual disk (3,000 x 0.015, the outstanding IO vCenter shows), below the PVSCSI default of 64 per device, and the remainder is about 3; no request waits for a slot, so a deeper queue changes nothing. Lower storage latency would.
 - C is false: Microsoft's "about 2 per physical disk" counts spindles; it cannot be applied to a virtual disk on shared storage.
 - D is false: waiting for an adapter slot needs a large remainder with the requests at the virtual disk at the adapter queue depth (PVSCSI default 64 per device); here about 45 are at the disk and the remainder is about 3.
-- E is true: requests at or below the virtual disk = I/O rate x virtual disk latency = 3,000 x 0.015 = 45. The remainder of about 3 is within the difference between two tools that sample and average separately, not a count of blocked requests.
+- E is true: % Disk Time is Avg. Disk Queue Length x 100, so a queue of 48 reads about 4,800%; it passes 100% whenever the average queue is above 1.
 - F is true: when the guest time per I/O is close to the vCenter virtual disk latency, the time is spent in the virtual storage path and the array; the Guest OS adds about 1 ms.
 - G is false: the queue follows from the time per I/O, which is spent almost all in storage; the 48 is not independent evidence of a queue in the Guest OS.
 - H is true: Windows derives Avg. Disk Queue Length from Disk Transfers/sec x Avg. Disk sec/Transfer (Little's Law); 3,000 x 0.016 = 48, exactly the reported value.
@@ -40,9 +40,8 @@ Which statements are correct?
 - K is false: the vCenter virtual disk latency starts at the virtual disk; time waiting in Guest OS queues is not in it.
 
 ## Notes
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). Option E keeps one fact (the 45 at or below the virtual disk); the reading of the remainder of 3 is in its key line and in option D.
+- Changed in the 2026-11-15 audit: the requests at the virtual disk (45) are now given in the stem as vCenter outstanding IO (redundancy #45: the Little's Law fact stays with 0028/0416), so old E ("about 45 of the 48 are at or below the virtual disk") was replaced in place by the % Disk Time fact, which the pair half 0418 also tests; meta option B (the negation of the colleague's quote, a near-negation of G) replaced in place by the PVSCSI queue-depth fact (windows-storage-io-path, Waiting inside Windows). The remainder of about 3 (48 - 45) is within the difference between two tools that sample and average separately, not a count of blocked requests.
 - Public source: Microsoft Learn (archived page), "Using Storage-related Parameters and Performance Counters" (https://learn.microsoft.com/previous-versions/dn567651(v=vs.85)), page date 2016-05-02, updated 2021-12-02, Windows Server 2012 R2 era. It states that Average Disk Queue Length is equal to (Disk Transfers/sec) x (Disk sec/Transfer), based on Little's Law, that the requests may be in service and not necessarily queued, and that the guideline of two per physical disk assumes known physical disks.
-- Why one answer: 3,000 x 0.016 = 48 shows the counter is the product of two other counters, and the vendor says it includes requests in service. The conclusion needs a queue that has not reached the device, which the numbers do not show.
 - Debatable risk: the page is archived and describes Windows Server 2012 R2. The derivation is a property of the counter definition; the prompt does not ask for a threshold. The knowledge file guest-os/storage/disk-queue said the queue is "above the SCSI driver"; it was corrected on 2026-11-13 to the Microsoft reading (author question Q194).
 
 ## Metadata
@@ -64,6 +63,7 @@ knowledge:
   - guest-os/guest-os-alerts
   - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
   - guest-os/storage/windows-storage-io-path
+  - vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io
 knowledge_main: guest-os/storage/disk-queue
 attachments: []
 origin: synthetic

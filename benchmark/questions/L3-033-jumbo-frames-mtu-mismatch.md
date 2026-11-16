@@ -18,25 +18,26 @@ Which statements are correct?
 - C. The iSCSI sessions log in and the paths are Active, so the MTU cannot be the cause here.
 - D. The lost frames show as Receive packets dropped on the VMs that use the iSCSI datastore.
 - E. The fault is on the host itself: vmk1 cannot send any frame that is larger than 1,500 bytes.
-- F. Carry MTU 9,000 on every hop of the path, or set vmk1 and the switch back to 1,500 for now.
+- F. Set MTU 9,000 on every hop of the path to the array, the physical side first.
+- G. The 8972 test is too small for a 9,000-byte MTU: the full-size test uses -s 9000.
 
 ## Likely wrong answer
-C: "the sessions are up, so the network is fine". Or D: looking for the loss in the VM counters.
+C: "the sessions are up, so the network is fine". Or D: looking for the loss in the VM counters. Or G: "test 9,000 with -s 9000".
 
 ## Expected key points
 - Answer: A, B, F.
-- 1472 and 8972 are the ICMP payloads that fill a 1,500-byte and a 9,000-byte MTU (28 bytes of IPv4 and ICMP headers). 1472 passes, 1473 fails: the largest frame the path carries is 1,500 bytes.
-- A and B: with the don't-fragment flag set, a frame above a hop's MTU is dropped at that hop. A time-out with no error message means the host sent the frame and the path lost it.
-- C is wrong: logins, discovery and small reads use small frames, which pass. Large data frames are lost, so IO stalls and times out.
-- D is wrong: iSCSI runs on the VMkernel port, not on the VMs' network adapters. The VMs see slow or failed disk IO, not network drops.
+- A is correct: 1472 is the ICMP payload that fills a 1,500-byte MTU (28 bytes of IPv4 and ICMP headers); 1472 passes and 1473 times out with no error, so a hop between the host and the array, a switch port or the array port, still carries only 1,500 bytes. The 1472 reply shows the array answers ping.
+- B is correct: with the don't-fragment flag set, a frame above a hop's MTU is dropped at that hop instead of being fragmented; the largest frame the path carries whole is 1,500 bytes.
+- C is wrong: logins, discovery and small reads use small frames, which pass a mismatch; large data frames are lost, so IO stalls and times out.
+- D is wrong: iSCSI runs on the VMkernel port, not on the VMs' network adapters; the VMs see slow or failed disk IO, not network drops.
 - E is wrong: if vmk1 or the virtual switch could not send the frame, vmkping would fail at once with a local error ("Message too long"), not time out.
-- F: jumbo frames work only end to end (switch ports, any router, the array ports); set the physical side first, then the virtual switch and VMkernel ports.
-- Of the two hops in A, a switch port in the middle is the likelier: an endpoint with a 1,500 MTU would advertise a smaller TCP segment size and both sides would adapt, while a switch port in the middle drops the jumbo frame. A holds for either.
+- F is correct: jumbo frames work only end to end (switch ports, any router, the array ports); raise the physical side first, then the virtual switch and the VMkernel ports.
+- G is wrong: -s is the ICMP payload, so 8972 plus 28 bytes of headers fills 9,000 exactly; -s 9000 would need a 9,028-byte MTU and fail even on a correct jumbo path.
 
 ## Notes
-- Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 - 2026-11-14: options B, C and E were not decidable from the knowledge base; the vmkping facts (don't-fragment flag, 28 bytes of IPv4 and ICMP headers, a local Message too long error against a time-out, small frames passing a mismatch) were added to network-configuration-review from the Broadcom KB articles below (project/question-pairing-2026-11-14.md). Key unchanged: A, B, F.
 - Review 2026-11-15: A names the hops it covers (a switch port or the array port). Key unchanged.
+- Audit 2026-11-15: F made one fact (the "or set back to 1,500" alternative removed); G added from network-configuration-review Misconceptions (the -s payload); the key point on TCP segment size was removed, as the knowledge base does not state it: A is decided by the ping, not by the symptom.
 - Vendor sources: Broadcom KB 313061, Testing jumbo frame pings from ESXi over the network (1472, 1473 and 8972; 28 bytes of overhead), https://knowledge.broadcom.com/external/article/313061/testing-jumbo-frame-pings-from-esxi-over.html; Broadcom KB 419088, Risks and potential impacts of changing the MTU on a virtual switch ("Message too long"; change the physical path first), https://knowledge.broadcom.com/external/article/419088/risks-and-potential-impacts-of-changing.html; Broadcom KB 448714, iSCSI storage connectivity issues due to MTU mismatch, https://knowledge.broadcom.com/external/article/448714/iscsi-storage-connectivity-issues-or-slo.html.
 
 ## Metadata
@@ -57,9 +58,9 @@ knowledge:
 knowledge_main: vsphere/technology/network/configuration/network-configuration-review
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
+source_path: "Synthetic, 2026-11-12"
 answer: [A, B, F]
-misconception: [C, D]
-misconception_type: [layer-confusion]
+misconception: [C, D, G]
+misconception_type: [layer-confusion, unit-and-normalization]
 status: draft
 ```

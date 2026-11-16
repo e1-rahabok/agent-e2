@@ -14,12 +14,11 @@ Which statements are correct?
 - D. The gap of about 440 MB between Swap target and Swapped is pages still waiting to be swapped out.
 - E. In most 20-second steps of the export, Swap target and Consumed change in opposite directions.
 - F. Granted stays the same all hour, so ESXi mapped no new pages for the guest in that hour.
-- G. The VM is not waiting for its swapped pages during this hour.
+- G. Granted leaves out the swapped and compressed pages; the three add up to the VM's 16 GB.
 - H. Add memory to the VM: it is short of memory.
-- I. The swapped pages stay out until the guest touches them.
-- J. A memory limit on the VM is the likely source of the swapped memory.
-- K. Swapped above 0 while the swap-in and swap-out rates are both 0 is a counter error.
-- L. The VM can be cut to a few hundred MB, the size of its Active memory.
+- I. A memory limit on the VM is the likely source of the swapped memory.
+- J. Swapped above 0 while the swap-in and swap-out rates are both 0 is a counter error.
+- K. The VM can be cut to a few hundred MB, the size of its Active memory.
 
 ## Likely wrong answer
 - B: "It will swap another 9.5 GB."
@@ -27,28 +26,28 @@ Which statements are correct?
 - D: "The rest of the swap target is still queued to go out."
 
 ## Expected key points
-- Answer: A, C, E, F, G, I.
+- Answer: A, C, E, F, G.
 - A true: Swap in rate, Swap out rate, Compression rate and Decompression rate are 0 all hour; Swapped is 9,486,212 KB in every sample (maximum = minimum).
 - B false: Swap target is a level that ESXi compares with Swapped, not pages queued on top of Swapped; above Swapped, ESXi can swap when it must, and with every rate at 0 nothing goes out.
 - C true: the target is a compress-swap target, an input; ESXi need not reach it if it does not have to.
-- D false: the gap is the distance between a target level and the current amount, not a queue; no page is going out: every rate is 0.
+- D false: no page is queued or going out: Swap out rate and Compression rate are 0 in every sample of the hour.
 - E true: in the export the target moves against Consumed in 161 of the 179 steps (the two mirror each other), and changes by less than 0.1 MB per step.
 - F true: Granted is 6,118,124 KB in every sample.
-- G true: swap-in is the contention; at 0, the guest does not wait for these pages now. A wait would show as swap-in, decompression and memory latency.
+- G true: Granted counts mapped VM pages and excludes swapped and compressed pages; 6,118,124 + 9,486,212 + 1,172,880 KB = 16,777,216 KB, the configured 16 GB.
 - H false: nothing is swapped in or out now; the swapped pages are history that the guest does not touch, and a VM with pages swapped out is not short of memory by that alone.
-- I true: swapped and compressed pages stay out until the guest requests them; ESXi does not bring them back on its own.
-- J false: the VM has no memory limit and no resource pool; the swapped pages come from past host pressure (or arrived with a vMotion).
-- K false: Swapped is not Swap in - Swap out; it is what is out now, built up in the past, and the rates show only the present.
-- L false: Active is a sampled estimate for the kernel; neither Active nor Consumed suits sizing. Size from Guest OS counters.
+- I false: the VM has no memory limit and no resource pool; the swapped pages come from past host pressure (or arrived with a vMotion).
+- J false: Swapped is not Swap in - Swap out; it is what is out now, built up in the past, and the rates show only the present.
+- K false: Active is a sampled estimate for the kernel; neither Active nor Consumed suits sizing. Size from Guest OS counters.
 
 ## Notes
 - From the author's samples (docx, 2026-11-12): a vSphere Client table of one hour with Swap target changing every 20 seconds, Swapped, Granted and Active flat, Consumed moving a little, every rate 0, and "The patterns of Consumed and Swap Target are mirror image." The knowledge base keeps that example (VM Memory Swap Target).
 - The CSV was regenerated 2026-11-14 with new numbers and another VM (a 16 GB Linux log collector instead of the 8 GB Windows VM of the author's sample), so that no value of the attachment is in the knowledge base (project/question-pairing-2026-11-14.md, section 1, item 3; pair A11). Generator: a seeded script (seed 14220261114). Granted + Swapped + Compressed = 16 GB exactly, as in the author's data.
 - Swap target is compared with Swapped (vSphere Monitoring and Performance, memory counters; Broadcom KB 374743, esxtop SWTGT vs SWCUR: https://knowledge.broadcom.com/external/article/374743). Here the target sits above Swapped while every rate is 0; the key relies on the zero rates, not on the gap.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). Dropped from the old key: "Active is tiny and flat: the guest barely touches memory" (Active is a sampled kernel estimate with no operational use: VM Memory Active) and "a reboot clears them" (no knowledge file states it).
-- Options rewritten 2026-11-14 to one fact each (design.md 3.9; project/question-pairing-2026-11-14.md) (author approved, 2026-11-14): A, C, F, H, I, K and L no longer carry a second clause; the vMotion clause of old I moved to the reason of J. Key unchanged: A, C, E, F, G, I.
+- Left out: "Active is tiny and flat: the guest barely touches memory" (Active is a sampled kernel estimate with no operational use: VM Memory Active) and "a reboot clears them" (no knowledge file states it).
+- Options rewritten 2026-11-14 to one fact each (design.md 3.9; project/question-pairing-2026-11-14.md) (author approved, 2026-11-14): A, C, F, H, I, K and L no longer carry a second clause; the vMotion clause moved to the reason of the limit option.
 - Review 2026-11-15: E and F paraphrased (they restated sentences of the knowledge example); the reasons for B and D follow the corrected swap-and-compression.md (Swap target is a level compared with Swapped; vSphere Web Services API 9.1, memory counters, swaptarget). Key unchanged.
 - Paired with 0143 (theory and practical; design.md, section 3.9).
+- Changed in the 2026-11-15 audit (redundancy cap: "swapped pages are past reclamation and stay out until touched" is kept in the pair 0025/0391): G (no wait now) replaced by Granted excluding swapped and compressed pages; old I (pages stay out until touched) dropped. Letters: old J, K, L are now I, J, K. Key point D rests on the zero rates only.
 
 ## Metadata
 ```yaml
@@ -59,7 +58,7 @@ technology: [memory]
 task: read-metric
 level: 400
 answer_type: deterministic
-answer: [A,C,E,F,G,I]
+answer: [A,C,E,F,G]
 misconception: [B,D,H]
 pair: "0143"
 input: [table]

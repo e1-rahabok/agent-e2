@@ -15,31 +15,31 @@ Which statements are correct?
 - A. A green cluster score means no VM in the cluster is short of resources.
 - B. In the VM DRS Score export, this VM is far below the cluster score.
 - C. The VM's CPU export shows its vCPUs ready but not running for under 1% of the time.
-- D. The VM's CPU export shows its vCPUs, on average, ready to run but not running for more than 5% of the time.
-- E. A figure that one slow VM cannot move tells nothing about how well DRS balances the cluster as a whole.
+- D. The VM's CPU export shows its vCPUs ready but not running for over 5% of the time, on average.
+- E. A figure that one slow VM cannot move tells nothing about the health of the cluster as a whole.
 - F. Ask the owner to tune the Guest OS first, since the cluster score clears vSphere.
-- G. Something DRS must obey, such as a must-run rule that ties the VM to its host, can keep it on a busy host.
-- H. Every VM with a low score in the VM DRS Score export waits for physical CPU.
+- G. Every VM with a low score in the VM DRS Score export waits for physical CPU.
+- H. A Cluster DRS Score of 85% and one of 95% show a real difference in performance.
 
 ## Likely wrong answer
 A: the cluster score read as the state of every VM, so the cause is put inside the Guest OS, and F, the action that follows from it.
 
 ## Expected key points
-- Answer: B, D, G.
-- A false: the misconception. The Cluster DRS Score is a weighted average of the VM scores; it does not bound any single VM, and one VM barely moves it.
-- B true: reading. The cluster score is 90 or more; pay-api-03 has the lowest `DRS Score` in the list, below 50%.
-- C false: reading. `Readiness for pay-api-03` is above 5 in most rows and never below 2.
-- D true: reading. Readiness is Ready per vCPU as a percentage of the sample; `Readiness for pay-api-03` averages above 5 over the rows, so the vCPUs spent that share of the time ready to run with no physical CPU free (`Max limited for pay-api-03` is 0: no limit).
-- E false: the over-correction. Since vSphere 7.0 the Cluster DRS Score replaces the load-balance metric and indicates cluster health; it only cannot speak for a single VM.
-- F false: the wrong action. The VM's Ready shows it waits for physical CPU, which no Guest OS tuning removes.
-- G true: migrations filtered out by affinity rules or VM-host incompatibilities are causes of a low VM score that DRS cannot fix by itself.
-- H false: reading and mechanism. The VM DRS Score is execution efficiency over CPU, memory, network and storage, not CPU contention alone: rpt-batch-09 also scores low, with `CPU Readiness` below 1% and swapped and ballooned memory.
+- Answer: B, D.
+- A is wrong: the misconception. The Cluster DRS Score is a weighted average of the VM scores; it does not bound any single VM, and one VM barely moves it.
+- B is correct: reading. The cluster score is 90 or more; pay-api-03 has the lowest `DRS Score` in the list, below 50%.
+- C is wrong: reading. `Readiness for pay-api-03` is above 5 in most rows and never below 2.
+- D is correct: reading. Readiness is Ready per vCPU as a percentage of the sample; `Readiness for pay-api-03` averages above 5 over the rows, so the vCPUs spent that share of the time ready to run with no physical CPU free (`Max limited for pay-api-03` is 0: no limit).
+- E is wrong: the over-correction. Since vSphere 7.0 the Cluster DRS Score replaces the load-balance metric and indicates cluster health; it only cannot speak for a single VM.
+- F is wrong: the wrong action. The VM's Ready shows it waits for physical CPU, which no Guest OS tuning removes.
+- G is wrong: reading and mechanism. The VM DRS Score is execution efficiency over CPU, memory, network and storage, not CPU contention alone: rpt-batch-09 also scores low, with `CPU Readiness` below 1% and swapped and ballooned memory.
+- H is wrong: a cluster score of 85% and one of 95% both sit in the range that indicates no performance impact; the range matters, not the exact value.
 
 ## Notes
-- Review 2026-11-15: the owner's quote no longer gives the screen's value; options reworded away from the theory half 0232; a false screen reading added (C). Key unchanged.
 - Practical half of 0232 (pair: design.md, section 3.9).
-- Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C25). Counts only after author approval.
-- Converted to exports 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md): cluster score as PowerCLI text, VM DRS Score list and VM CPU chart as CSV. B, C and D reworded from list, chart and screen to the exports; truth unchanged. H added (false): a second low-score VM with low CPU Readiness, the distractor of the export plan. G keeps its hedge, so no rule listing is needed (2026-11-15 break check). The VM DRS Score list CSV layout is assumed (not in the export templates yet).
+- 2026-11-15 audit: old G (a must-run rule keeps the VM on a busy host) dropped, as 0065 and 0438 keep the DRS-blocker fact; H added (85% vs 95%, false; drs-migration-levels Misconceptions); E now says "health", as the knowledge base says the score indicates cluster health, not load balance (the old wording read as true). Letters: A-F unchanged; G dropped; H -> G; H new.
+- Synthetic, 2026-11-14, for the question pairing plan (project/question-pairing-2026-11-14.md, item C25). Counts only after author approval.
+- Converted to exports 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md): cluster score as PowerCLI text, VM DRS Score list and VM CPU chart as CSV. B, C and D reworded from list, chart and screen to the exports; truth unchanged. A false option (now G) added: a second low-score VM with low CPU Readiness, the distractor of the export plan. The VM DRS Score list CSV layout is assumed (not in the export templates yet).
 
 ## Metadata
 ```yaml
@@ -63,8 +63,8 @@ attachments:
   - 0433/vcenter-cluster-vm-drs-scores.csv
   - 0433/vcenter-vm-cpu-realtime.csv
 origin: synthetic
-source_path: "Pairing plan 2026-11-14, item C25"
-answer: [B, D, G]
+source_path: "Synthetic, 2026-11-14, pairing plan item C25"
+answer: [B, D]
 misconception: [A, F]
 misconception_type: [average-hides-worst]
 pair: "0232"

@@ -6,14 +6,14 @@
 
 Which statements about these counters are correct?
 
-- A. A few errors per million packets are normal background on a 25 GbE port.
-- B. A non-zero error count always points to a fault in the ESXi NIC driver.
-- C. An average of receive errors over many vmnics can read near 0 while one port logs thousands of errors.
-- D. The esxcli counters are cumulative, so a non-zero value can come from a past event.
+- A. A few errors per million packets are normal background on a busy 25 GbE data center port.
+- B. A non-zero error count always points to a fault in the ESXi NIC driver on that host.
+- C. An average of receive errors over many vmnics reads near 0 while one port logs thousands.
+- D. The esxcli counters are cumulative: a non-zero value is not proof of a current fault.
 - E. Receive FIFO errors count frames the NIC could not take because its ring buffer was full.
-- F. Replace the NIC as soon as esxcli shows a non-zero receive error count.
+- F. Replace the NIC as soon as esxcli shows a non-zero receive error count on its port.
 - G. The host counts TCP retransmits of its own VMkernel traffic, such as vSAN and vMotion.
-- H. The host counts TCP retransmits of the VMs' traffic as well.
+- H. vCenter keeps a TCP retransmit counter for each vmnic, next to its two error counters.
 
 ## Likely wrong answer
 A: a small error rate is normal background. The overshoot is B: every error is a driver fault.
@@ -27,12 +27,13 @@ A: a small error rate is normal background. The overshoot is B: every error is a
 - E true: Receive FIFO errors and Transmit FIFO errors mean the NIC cannot process: ring buffer full.
 - F false: the wrong action. The count is cumulative and may be old, and the error type points to the cause: a CRC error is typically a bad cable, a FIFO or missed error a ring too small for the traffic.
 - G true: the VMkernel TCP/IP stack carries the host's own traffic (vSAN, vMotion, NFS, iSCSI) and counts its retransmits (vSAN Performance for Support, `net-stats`); they point to loss in the physical network.
-- H false: VM traffic is TCP inside the Guest OS; the host does not see its retransmits.
+- H false: vCenter shows only a receive and a transmit error total per vmnic; the host's retransmits are read in vSAN Performance for Support or with `net-stats`, and VM traffic retransmits only inside the Guest OS.
 
 ## Notes
 - Theory half of the pair with 0088 (practical; design.md, section 3.9). One host, not a cluster as in 0088.
-- Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item B11 (origin: synthetic). Counts only after author approval.
+- Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item B11 (origin: synthetic).
 - Review 2026-11-15: framed on one host; the expected-0 option (the negation of the misconception) and the cluster-average ticket option (close to 0088 B) dropped; new wrong action F; the stem no longer says esxcli shows more detail. Key changed from A, D, E, F, H to C, D, E, G (relettered).
+- Audit 2026-11-15: hedges in correct C and D made plain; H (the host does not count VM retransmits, the near-negation of G) replaced with a false option on where the host's retransmits are read.
 
 ## Metadata
 ```yaml

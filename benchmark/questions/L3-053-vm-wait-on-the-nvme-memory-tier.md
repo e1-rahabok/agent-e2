@@ -14,9 +14,11 @@ Which statements about how a VM on this host waits on the NVMe tier are correct?
 - F. Host active memory below 50% of DRAM shows that no VM on the host waits on the tier.
 - G. Move first the VM that holds the most memory on the NVMe tier, to cut the time VMs wait.
 - H. A high read latency on an idle NVMe device costs the VMs nothing.
+- I. A guest write to a page on the NVMe tier does not wait; only a read fetches the page back.
 
 ## Likely wrong answer
-B: the most memory on the NVMe tier read as the most waiting. Or E: a read latency inside the guideline read as no cost.
+B: the most memory on the NVMe tier read as the most waiting. Or E: a read latency inside the guideline read as no cost. Or I: "writes do not hurt, only reads come from NVMe."
+
 ## Expected key points
 - Answer: A, C.
 - A true: the CPU cannot read or write NVMe directly; a page on tier 1 is fetched back to DRAM when it becomes active, and the vCPU that touched it waits for the fetch.
@@ -27,10 +29,12 @@ B: the most memory on the NVMe tier read as the most waiting. Or E: a read laten
 - F false: the host figure is a leading signal for the whole host, not each VM's experience. A VM with high NVMe read bandwidth waits whatever the host average says.
 - G false: the wrong action from B. That VM's pages on NVMe are cold; move or protect the VMs that read from NVMe.
 - H false: the VMs that read while the device woke up waited for each read. The wake-up explains the latency; it does not remove the wait (reads times latency).
+- I false: the CPU cannot write NVMe directly either; any access to a page on NVMe raises a page fault and the page is fetched to DRAM before the write completes (vSphere 9.1 documentation, pp. 1848, 1872). Only demotion writes are off the vCPU's path.
 
 ## Notes
 - Paired with 0147 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item B17.
-- Review fixes 2026-11-15: the option on a guest write to a page on the NVMe tier was dropped. It rested on a memory-tiering line that its review notes mark as an inference (NVMe is not byte-addressable), with no vendor statement; 0147 option D rests on the same line. H made one fact. Key A, C, D → A, C (relettered).
+- I added in the 2026-11-15 audit: the write fact is now vendor-sourced in memory-tiering (vSphere 9.1 documentation, pp. 1848, 1872); with 0147 D it is two questions.
+- H rests on the memory-tiering Misconceptions line ("never zero"); the Touching a page on NVMe line "one fetch at a high latency on an idle device does not [slow a VM]" reads against it (knowledge-base wording, raised with the author).
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
 ## Metadata
@@ -53,7 +57,7 @@ attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B17"
 answer: [A, C]
-misconception: [B]
+misconception: [B, I]
 misconception_type: [consumption-as-contention, average-hides-worst]
 pair: "0147"
 status: draft

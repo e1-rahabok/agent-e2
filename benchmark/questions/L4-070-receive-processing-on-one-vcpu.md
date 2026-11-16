@@ -2,13 +2,13 @@
 
 ## Prompt
 - rp-02 is a Windows Server 2022 reverse proxy VM: 8 vCPUs, one VMXNET3 adapter.
-- At the daily peak, vCenter shows for rp-02:
+- The vCenter statistics level of the 1-day interval was raised to 3 last quarter. At the daily peak, vCenter shows for rp-02:
   - Receive packets dropped: about 180,000 per 5-minute sample. Transmit packets dropped: 0.
   - CPU Usage: 16%. CPU Ready: 0.4%.
 - Inside Windows, Performance Monitor at the same peak:
   - Processor(0) % Processor Time: 100%, of which % DPC Time 72%.
   - Processor(1) to Processor(7) % Processor Time: 4-7% each.
-  - Network Interface, Packets Received Discarded: rising.
+- On the host, `vsish` rxSummary for the adapter's port: "running out of buffers" and "# of times the 1st ring is full" rising.
 - The receive ring of the adapter was already raised to 4,096 last month. The drops came back as traffic grew.
 - The owner asks for 8 more vCPUs.
 
@@ -17,13 +17,13 @@ Which statements are correct?
 - A. Processor(0) is saturated by deferred procedure calls from network receive work, while the other seven vCPUs are nearly idle.
 - B. Eight more vCPUs will stop the drops, because Windows will spread the receive work over the added vCPUs.
 - C. The packets are dropped upstream by the physical switch, so the network team should check its port counters.
-- D. One vCPU at 100% is about 12.5% of an 8-vCPU VM, so a VM CPU Usage of 16% can hide a saturated vCPU.
+- D. One vCPU at 100% is about 12.5% of an 8-vCPU VM; a VM CPU Usage of 16% hides a saturated vCPU.
 - E. CPU Ready of 0.4% shows ESXi is not holding the vCPUs back; the bottleneck is how Windows places its receive work.
 - F. The drop happens when the VMXNET3 receive ring has no free buffer for the next frame.
 - G. Raising the receive ring again is the lasting fix: with a ring large enough, how fast one vCPU drains it stops mattering.
 - H. Enable receive side scaling in Windows and on the VMXNET3 adapter, with several receive queues spread over the vCPUs.
 - I. Configure more RSS receive queues than vCPUs, for example 16 queues on 8 vCPUs, to leave headroom for traffic growth.
-- J. The change is made inside Windows by the Guest OS owner; afterwards the drops and the per-vCPU load are read again.
+- J. Moving rp-02 to a less busy host leaves its receive drops as they are, as long as the adapter keeps one receive queue.
 
 ## Likely wrong answer
 - B: "The VM is short of CPU: give it 8 more vCPUs."
@@ -40,17 +40,15 @@ Which statements are correct?
 - G false: a larger ring absorbs bursts; it cannot fix a vCPU that drains too slowly. KB 440347: raising the rings to their maximum did not stop the drops.
 - H true: RSS in the guest with several receive queues spreads receive processing over several vCPUs (vnic-rx-drops, section Single receive queue; KB 440347).
 - I false: the number of receive queues a VM can use is capped by its vCPU count (vnic-rx-drops; KB 440347).
-- J true: receive drops on a VMXNET3 ring are caused and fixed in the Guest OS driver, so the Guest OS owner makes the change; then check the drops and per-vCPU load.
+- J true: with a single receive queue the ring fills because one vCPU inside the guest drains it; another host changes nothing in the guest, so the drops stay (vnic-rx-drops, Single receive queue; KB 440347).
 
 ## Notes
-- Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 - Differs from 0060 (receive ring too small for bursts): here the ring is already large and one vCPU cannot drain it.
 - Broadcom KB 440347, Mitigating VMXNET3 adapter packet drops due to single receive queue (all interrupts on one vCPU; a maximum ring does not fix it; enable RSS, queues capped by the vCPU count): https://knowledge.broadcom.com/external/article/440347
 - Host-side RSS on the physical NIC needs the NIC driver's RSS on and `ethernetX.pNicFeatures = "4"` in the VM's configuration (rss-and-interrupt-coalescing).
-- No option relies on which Windows counter carries the ring-full count: that is an open review note in packet-drop-accounting.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
 - 2026-11-14: option G (the ring-full drop invisible to ESXi) removed: it was the negation of F. Options relettered; key changed from A, D, E, F, I, K to A, D, E, F, H, J (same facts).
 - Review 2026-11-15: F no longer says that vCenter counts the drop (ring-drop visibility is tested in 0039 and 0420). Options H and I rested on Broadcom KB 440347 alone; its facts (single receive queue, maximum ring does not fix it, RSS in the guest, queues capped by the vCPU count) were added to vnic-rx-drops. Key unchanged.
+- Audit 2026-11-15: the stem states the raised statistics level (at the default level a VM keeps no network drop history, vcenter-statistics); the Windows counter Packets Received Discarded (not confirmed to carry the ring-full count, packet-drop-accounting) replaced with the host's vsish rxSummary; J (the Guest OS owner fixes a full ring) was over the two-question cap (0345, 0060 keep it) and was replaced with the single-queue symptom "moving the VM to another host does not help"; the hedge "can hide" in D made plain.
 
 ## Metadata
 ```yaml
@@ -75,7 +73,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/configuration/rss-and-interrupt-coalescing
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
+source_path: "Synthetic, 2026-11-12"
 misconception_type: [average-hides-worst, layer-confusion]
 status: draft
 ```

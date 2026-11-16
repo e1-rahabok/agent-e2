@@ -9,34 +9,32 @@ Which statements are correct?
 
 - A. The Cluster DRS Score is a weighted average of the VM DRS Scores of the powered-on VMs.
 - B. A Cluster DRS Score above 80% means every VM in the cluster, pay-db-01 included, has a VM DRS Score above 80%.
-- C. The VM list under Monitor > vSphere DRS shows each VM's own DRS Score and can be sorted with the lowest first.
-- D. vCenter keeps the VM DRS Score in its history at the default statistics level, so pay-db-01's score at 09:00 can be read.
-- E. A VM DRS Score below 80% means the VM is waiting for CPU or memory at that moment.
-- F. A VM-Host affinity rule can keep DRS from moving a VM whose score is low.
-- G. A VM DRS Score reflects how efficiently the VM's demand is being met.
-- H. The Cluster DRS Score carries no information about the health of the cluster.
-- I. Set the DRS migration threshold to level 1, so that DRS moves pay-db-01 to a host with more room.
+- C. The VM list under Monitor > vSphere DRS shows each VM's own DRS Score, sortable lowest first.
+- D. vCenter keeps the VM DRS Score in its history at the default statistics level; pay-db-01's score at 09:00 is there.
+- E. A VM DRS Score below 80% can only mean the VM waits for CPU or memory at that moment.
+- F. A VM DRS Score reflects how efficiently the VM's demand is being met.
+- G. The Cluster DRS Score carries no information about the health of the cluster.
+- H. Moving the DRS migration threshold to level 1 makes DRS move pay-db-01 to a host with more room.
 
 ## Likely wrong answer
-B: reading the cluster score as the state of every VM. Or H, the over-correction: since an average hides one VM, the cluster score is dismissed altogether.
+B: reading the cluster score as the state of every VM. Or G, the over-correction: since an average hides one VM, the cluster score is dismissed altogether.
 
 ## Expected key points
-- Answer: A, C, D, F, G.
-- A is true: the cluster score is a weighted average of the VM scores; one VM with a low score barely moves it among 420 VMs.
-- B is false: the misconception. A weighted average does not bound any single VM; one VM can score far below 80% while the cluster stays above it.
-- C is true: the per-VM list is where a low VM shows behind a high cluster score; sorted by score, the lowest come first.
-- D is true: `clusterServices.vmDrsScore` is a level 1 counter, stored by default.
-- E is false: a low VM DRS Score reflects execution efficiency, not contention; the VM's own contention counters (Ready, Co-stop, memory contention, disk latency) tell whether it waits.
-- F is true: migrations filtered out by affinity or anti-affinity rules, or by VM-host incompatibilities, are causes of a low score that DRS cannot fix by itself.
-- G is true: the VM DRS Score is the VM's execution efficiency (VM happiness).
-- H is false: the over-correction. Since vSphere 7.0 the Cluster DRS Score is the indicator of cluster balance and health; it only cannot speak for any single VM.
-- I is false: the wrong action. At level 1 DRS recommends only mandatory moves (rule violations, hosts entering maintenance mode); it no longer moves VMs to improve resource availability.
+- Answer: A, C, D, F.
+- A is correct: the cluster score is a weighted average of the VM scores; one VM with a low score barely moves it among 420 VMs.
+- B is wrong: the misconception. A weighted average does not bound any single VM; one VM can score far below 80% while the cluster stays above it.
+- C is correct: the per-VM list is where a low VM shows behind a high cluster score; sorted by score, the lowest come first.
+- D is correct: `clusterServices.vmDrsScore` is a level 1 counter, stored by default.
+- E is wrong: a low VM DRS Score reflects execution efficiency, not contention; the VM's own contention counters (Ready, Co-stop, memory contention, disk latency) tell whether it waits.
+- F is correct: the VM DRS Score is the VM's execution efficiency (VM happiness).
+- G is wrong: the over-correction. Since vSphere 7.0 the Cluster DRS Score replaces the load-balance metric and indicates cluster health; it only cannot speak for any single VM.
+- H is wrong: the wrong action. At level 1 DRS recommends only mandatory moves (rule violations, hosts entering maintenance mode); it does not move VMs to improve resource availability.
 
 ## Notes
 - Paired with the screenshot question 0433 (design.md, section 3.9).
-- Drafted 2026-11-12.
-- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): A one fact; C ("DRS would already have moved it") and E ("a steady 92% rules out a problem") dropped, as they repeat 0354 D; the VM list (C), the meaning of the VM score (E, G), a cause DRS cannot fix (F), the over-correction (H) and the wrong action (I) added. Key changed from A, D to A, C, D, F, G.
-- Cluster DRS Score and VM DRS Score: vSphere 9.1 Resource Management, DRS Score.
+- Synthetic, 2026-11-12.
+- Cluster DRS Score and VM DRS Score: vSphere 9.1 Resource Management, DRS Score; Performance Best Practices for vSphere 9.1, p. 76.
+- 2026-11-15 audit: old F (an affinity rule keeps a low-score VM in place) dropped, as 0065 and 0438 test the DRS-blocker fact; "can" no longer appears only in correct options. Letters: A-E unchanged; F dropped; G -> F; H -> G; I -> H.
 
 ## Metadata
 ```yaml
@@ -58,9 +56,9 @@ knowledge:
 knowledge_main: vsphere/object-types/cluster/configuration/drs-migration-levels
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
-answer: [A, C, D, F, G]
-misconception: [B, H]
+source_path: "Synthetic, 2026-11-12"
+answer: [A, C, D, F]
+misconception: [B, G]
 misconception_type: [average-hides-worst]
 pair: "0433"
 status: draft

@@ -11,10 +11,10 @@
 Which statements are correct?
 
 - A. Usage near 100% every night shows that the VM runs out of memory during the job and needs the extra 8 GB.
-- B. In this chart, Usage (%) is Active divided by the VM's configured memory.
+- B. Active stays below Consumed in every row of the export, the nightly peak included.
 - C. Linux was not short of memory during the nightly job.
 - D. Consumed near the configured 8 GB all day shows that the VM was short of memory all along.
-- E. The Usage (%) in this chart is Linux's own used memory, as VMware Tools reports it.
+- E. At 14:00 the chart's Usage (%) matches the share of memory that Linux reports as used.
 - F. No VM counter in vCenter can show whether this VM waited for memory during the job.
 
 ## Likely wrong answer
@@ -23,16 +23,17 @@ Which statements are correct?
 ## Expected key points
 - Answer: B, C.
 - A is false: the guest counters show no shortage; the nightly 100% is the Active estimate of recently touched pages, not memory the guest lacks.
-- B is true: vCenter VM memory Usage (%) maps to Active: in every row of the export, Usage (%) = Active (KB) / 8,388,608 KB × 100 (for example 7,875,853 KB at 02:00 gives 93.89%).
+- B is true: in all 288 rows Active is below Consumed (at 02:00, 7,875,853 KB against about 8.06 million KB). Active is a sampled estimate of recently touched pages; Consumed holds every page the guest touched, so Active is usually far lower.
 - C is true: about 2.4 GB stayed available during the job and Linux swapped nothing in or out; free memory near 0 is normal, since Linux uses it as page cache.
 - D is false: Consumed holds every page the guest has touched, cache included, and does not drop when the guest frees memory; it is not the guest's need.
-- E is false: vCenter Usage (%) is Active, an ESXi estimate; it does not use Linux counters. At 14:00 it reads about 14% while Linux uses about 4.4 of 7.8 GB.
+- E is false: at 14:00 Usage (%) reads 13.69% while Linux reports 4,436 of 7,962 MB used (about 56%). vCenter VM Usage (%) is an ESXi estimate (Active over configured memory); it does not read Linux counters.
 - F is false: VM memory Latency (Memory Contention in VCF Operations) is the share of time the VM waited for memory; it shows the wait that Usage does not.
 
 ## Notes
 - Rewritten 2026-11-14 (project/question-pairing-2026-11-14.md, pair A2): the old scenario (a domain controller, an agent collecting every 5 minutes, Active at 100% for over 12 hours, a vCenter alarm) was a near-copy of the knowledge example in Guest OS memory vs VM memory, section Example: Guest OS more accurate. New scenario and a new CSV from a seeded script (seed 15120261114): a nightly ETL job on a Linux database VM.
 - Removed with the old scenario: the alarm option, and the option on VCF Operations VM memory Usage (%) (Guest OS Needed Memory, falling back to Active), which the new pair D2 tests.
 - Paired with 0020 (theory and practical; design.md, section 3.9). Key changed from B, C, D, E, G, H to B, C.
+- Changed in the 2026-11-15 audit (redundancy cap: "vCenter VM Usage (%) is Active / configured" is kept in the pair 0394/0395): B (that formula) replaced by Active below Consumed, a reading the active misconception decides; E reworded to a reading at 14:00.
 - Review 2026-11-15: the CSV was regenerated (same seed) with Active capped below Consumed (it passed Consumed at 01:35, 01:50 and 02:05); key point B follows the new 02:00 values. F is not labelled an over-correction. Key unchanged.
 
 ## Metadata
@@ -60,7 +61,7 @@ knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/usage
 attachments:
   - 0151/vm-memory-past-day.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
+source_path: "Synthetic, 2026-11-12"
 misconception_type: [layer-confusion, consumption-as-contention]
 pair: "0020"
 status: draft

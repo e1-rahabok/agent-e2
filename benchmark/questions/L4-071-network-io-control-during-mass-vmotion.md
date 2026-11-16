@@ -41,10 +41,9 @@ Which statements are correct?
 - K false: DRS includes Network I/O Control bandwidth reservations in its calculations, and admission control and HA placement use them.
 
 ## Notes
-- Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 - Revised after the independent review (2026-11-12): the shares now cause the symptom; shares divide only among active traffic types (vSphere Networking, Bandwidth Allocation for System Traffic; netioc, section Shares and its misconceptions).
 - Option J and K: Broadcom TechDocs, vSphere 9.1 Networking, Configure Bandwidth Allocation for a Virtual Machine (with DRS, the total of VM reservations on a host does not exceed the bandwidth reserved for virtual machine system traffic on the host physical adapters; DRS and HA place VMs where their reservations can be met): https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-networking/network-io-control/bandwidth-allocation-for-virtual-machine-traffic/configure-bandwidth-allocation-for-a-virtual-machine.html
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- J is decided by this vendor document only: the knowledge base (netioc, resource-controls) does not yet say that VM adapter reservations draw on the virtual machine traffic reservation.
 
 ## Metadata
 ```yaml
@@ -67,7 +66,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/concepts/netioc
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
-misconception_type: []
+source_path: "Synthetic, 2026-11-12"
+misconception_type: [unit-and-normalization]
 status: draft
 ```

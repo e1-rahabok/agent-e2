@@ -19,13 +19,13 @@ C: reading the percentage as a share of memory, not of time. Or D: counting the 
 
 ## Expected key points
 - Answer: A, G.
-- The counter is the share of time a vCPU waits for a page fault that ESXi must resolve: mostly swap-in, plus decompression of a compressed page the guest touches.
+- The counter is the share of time a vCPU waits for a page fault that ESXi must resolve: mostly swap-in, plus decompression of a compressed page the guest touches and the break of a shared page on a write (copy-on-write).
 - A is right: swap-in is the main source.
 - B is wrong: that is CPU Ready, a CPU wait, not a memory wait.
 - C is wrong: it is a share of time, not of memory space, and not a latency in nanoseconds.
 - D is wrong: ballooned pages are taken inside the guest; ESXi sees no fault on them. The counter excludes balloon.
 - E is wrong: a remote NUMA access is a slower memory access, not a page fault; it shows in esxtop N%L and remote memory, not in this counter.
-- F is wrong: Memory Latency is a superset of CPU Swap Wait; Swap Wait covers swap-in only, Latency also covers decompression. This is the over-correction of D (only swap counts).
+- F is wrong: Memory Latency is a superset of CPU Swap Wait; Swap Wait covers swap-in only, Latency also covers decompression. This is the over-correction of the swap-only reading: Latency also covers decompression and copy-on-write breaks.
 - G is right: decompression of a touched compressed page is a page fault ESXi resolves.
 - H is wrong: memory contention measures speed, not space; it comes from host reclamation or a limit, so the configured size is not shown to be short. Find the cause first.
 
@@ -54,7 +54,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/latency
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
+source_path: "Synthetic, 2026-11-12"
 answer: [A, G]
 misconception: [C, D]
 misconception_type: [unit-and-normalization]

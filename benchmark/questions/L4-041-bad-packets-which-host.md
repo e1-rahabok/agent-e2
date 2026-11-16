@@ -11,14 +11,14 @@ Is the network clean, and if not, which host and port, what is the likely cause,
 - A. The network is not clean: one port, vmnic2 on esx-c1-11, logged about 48,000 receive errors in the day.
 - B. A cluster average of receive errors close to 0 shows that the cluster network is clean.
 - C. An average over 64 vmnics hides a single bad port; read the worst vmnic of the cluster, not the mean.
-- D. The host with older firmware is where the errors come from.
-- E. esxcli on esx-c1-11 splits vmnic2's receive errors by type (CRC, length, frame, FIFO, missed); the vCenter total in the export does not.
+- D. The host with older firmware, esx-c1-04, is where the receive errors of the cluster come from.
+- E. esxcli on esx-c1-11 splits vmnic2's receive errors by type (CRC, FIFO, missed and more); vCenter does not.
 - F. Receive errors on a vmnic are ring-buffer overflows, so a larger receive ring on vmnic2 will stop them.
 - G. vmnic2's link was negotiated down below 25 Gb/s, which is why only this port logs errors.
-- H. An error rate under 0.01% of packets is acceptable on a 25 GbE port.
+- H. An error rate under 0.01% of packets is acceptable background on a busy 25 GbE port.
 - I. The errors come with receive drops on the same port, a sign that the NIC receive ring is full.
-- J. The `esxcli network nic stats get` counters are cumulative: read them twice to see if the errors still grow.
-- K. Record vmnic2's counters before any host reboot: a reboot resets them.
+- J. The esxcli NIC counters are cumulative: read them twice to see if the errors still grow.
+- K. Record vmnic2's counters before any reboot of the host: a reboot resets them to 0.
 - L. The older firmware on esx-c1-04 is a consistency item to fix, even though that host shows no errors.
 
 ## Likely wrong answer
@@ -42,12 +42,12 @@ Is the network clean, and if not, which host and port, what is the likely cause,
 - L true: drivers and firmware should be identical across the hosts of a cluster; esx-c1-04 is a consistency fix, not the cause.
 
 ## Notes
-- Drafted 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12: the management pack metric and the screenshot removed (fairness); the 256-row workbook became a 64-row CSV. The CSV is synthetic, generated with a fixed seed: one port with errors, one host with older firmware and no errors.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). The old key point on moving traffic off the port (standby uplink) and checking which VMs use it is left out: no knowledge file settles it.
+- The old key point on moving traffic off the port (standby uplink) and checking which VMs use it is left out: no knowledge file settles it.
 - Options E, F, G rewritten 2026-11-14 (project/question-pairing-2026-11-14.md, item B11): the old E (fault isolated by the neighbouring port), F (driver) and G (half duplex) rested on inferences host/errors does not state; the new options rest on its esxcli table and on the export's speed and duplex columns. D kept: the export shows 0 errors on esx-c1-04. Key unchanged: A, C, E, J, K, L.
 - Paired with 0409 (theory; design.md, section 3.9).
 - Review 2026-11-15: D and H one fact each; K (the switch port with the network team) is not in the vendor document and is replaced by the KB 341594 step of recording the counters before a reboot. Key unchanged: A, C, E, J, K, L.
+- Audit 2026-11-15: E shortened and D lengthened (E was 1.63x the wrong mean); truth unchanged.
 
 ## Metadata
 ```yaml
@@ -72,7 +72,7 @@ knowledge_main: vsphere/technology/network/metrics/host/errors
 attachments:
   - 0088/cluster-c1-vmnic-counters-one-day.csv
 origin: synthetic
-source_path: "Drafted 2026-11-05"
+source_path: "Synthetic, 2026-11-05"
 misconception_type: [average-hides-worst]
 pair: "0409"
 status: draft

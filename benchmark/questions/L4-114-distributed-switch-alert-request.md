@@ -19,7 +19,7 @@ What would the switch-level alert show in this cycle, and is the alert worth bui
 - F. The switch alert adds nothing: the port groups and hosts it groups already have alerts of their own.
 
 ## Likely wrong answer
-B or D: a switch is assumed to need its own alert because the network team owns the switch. The share is a weighted figure, so the faulty port group is diluted.
+B or D: "The network team owns the switch, so the switch needs an alert of its own, and it will show the bad port group."
 
 ## Expected key points
 - Answer: A, F.

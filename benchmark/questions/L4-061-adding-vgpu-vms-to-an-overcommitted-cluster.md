@@ -15,15 +15,15 @@ Is the capacity manager right, and what changes for the existing VMs, in normal 
 - E. In normal operation Consumed rises to about 3.7 TB of 4 TB, about 92%, which leaves about 300 GB for growth.
 - F. The capacity manager is right: 1.8 TB is free, the new VMs need 1.5 TB, and admission control is green, so the cluster has room.
 - G. After a host failure 3 TB remain; with 1.5 TB reserved, the existing VMs have about 1.5 TB for the 2.2 TB they consume today.
-- H. HA admission control stays green because it counts reservations and overhead, and the existing VMs reserve nothing.
+- H. If memory tiering is turned on later, the memory of the vGPU VMs stays in DRAM and never moves to the NVMe tier.
 - I. HA admission control keeps enough capacity for the Consumed memory of the existing VMs after a host failure.
 - J. HA admission control refuses the vGPU VMs, because their 1.5 TB of reservations exceed the 25% kept for failover (1 TB).
 - K. After a host failure, ESXi can balloon the vGPU VMs to make room for the existing VMs they share hosts with.
-- L. Running the vGPU VMs on hosts or a cluster of their own keeps their reservations out of the memory the existing VMs share.
+- L. Running the vGPU VMs in a cluster of their own keeps their reservations out of the memory the existing VMs share.
 
 ## Likely wrong answer
 - F: "Yes: 1.8 TB is free, the new VMs need 1.5 TB, and admission control is green, so the cluster has room."
-- I: "HA admission control is green, so the cluster survives a host failure."
+- J: "The vGPU VMs reserve 1.5 TB, more than the 1 TB kept for failover, so HA admission control refuses them."
 
 ## Expected key points
 - Answer: A, C, D, E, G, H, L.
@@ -34,16 +34,17 @@ Is the capacity manager right, and what changes for the existing VMs, in normal 
 - E true: 55% of 4 TB = 2.2 TB, plus 1.5 TB = 3.7 TB (92.5%). Any growth of the existing VMs runs into balloon, compression and swap.
 - F false: right only for today in normal operation; no room for growth, and a host failure hurts the existing VMs.
 - G true: 3 TB - 1.5 TB = 1.5 TB for 2.2 TB of Consumed (and 4.8 TB configured): heavy reclamation for the existing VMs.
-- H true: the percentage policy sums reservations plus overhead; unreserved VMs pass whatever their size or usage.
-- I false: admission control does not see the usage of the unreserved VMs; check memory after a failure as remaining capacity minus all reservations, against their Consumed.
+- H true: a vGPU VM is excluded from memory tiering and stays in DRAM: the device reads and writes guest memory directly, so every page stays backed and in place.
+- I false: the percentage policy sums reservations plus overhead, so it does not see the usage of the unreserved VMs; check memory after a failure as remaining capacity minus all reservations, against their Consumed.
 - J false: with the percentage policy the reservations are compared with the capacity left after the failover percentage (3 TB), not with the percentage itself; 1.5 TB fits.
 - K false: vGPU VMs are fully reserved; nothing is reclaimed from them.
-- L true: one of the options, with more memory or fewer existing VMs: decide on the reserved memory plus what the other VMs need.
+- L true: a separate cluster keeps the reservations out of the reclaimable pool of the existing VMs (hosts kept apart by rules inside one HA cluster are weaker, as HA failover can still mix them); one of the options, with more memory or fewer existing VMs.
 
 ## Notes
 - Sources: the knowledge base, GPU monitoring, section vGPU and host memory (full reservation, never reclaimed, counted in full by admission control, excluded from memory tiering); vSphere 9.1 documentation, vSphere Resource Management (PCI passthrough and vGPU VMs require a full memory reservation) and vSphere Availability, Cluster Resources Percentage.
 - Arithmetic: today Consumed 55% of 4 TB = 2.2 TB; plus 1.5 TB = 3.7 TB (92.5%). 4 TB - 1.5 TB = 2.5 TB for 4.8 TB configured (1.92:1); after a failure 3 TB - 1.5 TB = 1.5 TB for 2.2 TB consumed. Overhead ignored.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). Review 2026-11-14: the prompt now says the GPUs fit with one host down, so option G (all 1.5 TB reserved after a failure) does not depend on GPU capacity.
+- Review 2026-11-14: the prompt now says the GPUs fit with one host down, so option G (all 1.5 TB reserved after a failure) does not depend on GPU capacity.
+- Audit 2026-11-15: H (HA admission counts reservations plus overhead) was over the two-question cap (0290, 0355 keep it) and was replaced with the memory tiering fact of the same file; the misconception moved from I to J (gpu-monitoring Misconceptions); L names a separate cluster only.
 
 ## Metadata
 ```yaml
@@ -55,7 +56,7 @@ task: decide-capacity
 level: 400
 answer_type: deterministic
 answer: [A,C,D,E,G,H,L]
-misconception: [F,I]
+misconception: [F,J]
 input: [text]
 object: [cluster, vm]
 tool: [none]
@@ -66,7 +67,7 @@ knowledge:
 knowledge_main: vsphere/technology/gpu/gpu-monitoring
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
+source_path: "Synthetic, 2026-11-12"
 misconception_type: [consumption-as-contention]
 status: draft
 ```
