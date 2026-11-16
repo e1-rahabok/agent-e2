@@ -6,13 +6,35 @@
 - He pastes the summary of `top` at the end of the slow period:
 
 ```text
-(generated)
+top - 14:10:00 up 12 days,  3:12,  1 user,  load average: 4.65, 4.45, 3.32
+Tasks: 287 total, 5 running, 282 sleeping, 0 stopped, 0 zombie
+%Cpu(s): 69.4 us,  6.6 sy,  0.0 ni, 22.3 id,  0.8 wa,  0.3 hi,  0.6 si,  0.0 st
+MiB Mem :  15731.4 total,   2210.6 free,   9876.3 used,   3644.5 buff/cache
+MiB Swap:   4096.0 total,   4096.0 free,      0.0 used.   5402.8 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+   2214 appsvc     20   0 6876544 742131  30212 S 295.5   4.6 1832:41.07 java
+   1088 root       20   0   19876  11024   9472 S   0.7   0.1   0:12.44 sshd
+    711 root       20   0   52140  21980  20112 S   0.3   0.1   1:02.18 systemd-journal
 ```
 
 - And `sar -u ALL 60 10` for the same 10 minutes:
 
 ```text
-(generated)
+Linux 5.14.0-427.13.1.el9_4.x86_64 (app-lnx-03) 	11/10/2026 	_x86_64_	(4 CPU)
+
+02:00:00 PM     CPU      %usr     %nice      %sys   %iowait    %steal      %irq     %soft    %guest    %gnice     %idle
+02:01:00 PM     all     69.60      0.00      7.54      1.21      0.00      0.27      0.65      0.00      0.00     20.73
+02:02:00 PM     all     68.84      0.00      8.19      1.30      0.00      0.44      0.75      0.00      0.00     20.48
+02:03:00 PM     all     70.94      0.00      6.64      0.84      0.00      0.48      0.43      0.00      0.00     20.67
+02:04:00 PM     all     67.60      0.00      7.71      0.33      0.00      0.45      0.59      0.00      0.00     23.32
+02:05:00 PM     all     71.79      0.00      6.55      1.35      0.00      0.35      0.80      0.00      0.00     19.16
+02:06:00 PM     all     71.70      0.00      8.64      1.21      0.00      0.42      0.65      0.00      0.00     17.38
+02:07:00 PM     all     72.34      0.00      8.40      0.33      0.00      0.40      0.44      0.00      0.00     18.09
+02:08:00 PM     all     70.26      0.00      9.03      1.27      0.00      0.51      0.54      0.00      0.00     18.39
+02:09:00 PM     all     63.58      0.00      9.57      0.53      0.00      0.30      0.83      0.00      0.00     25.19
+02:10:00 PM     all     64.54      0.00      8.72      1.46      0.00      0.52      0.35      0.00      0.00     24.41
+Average:        all     69.12      0.00      8.10      0.98      0.00      0.41      0.60      0.00      0.00     20.79
 ```
 
 - You export [the vCenter CPU chart of the VM](0381/vcenter-vm-cpu-realtime.csv), Real-time, for the same 10 minutes.

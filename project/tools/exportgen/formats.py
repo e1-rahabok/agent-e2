@@ -186,6 +186,30 @@ def parse_vcf_list_csv(text):
     return rdr[0][1:], [(r[0], [float(x) if x != "" else None for x in r[1:]]) for r in rdr[1:]]
 
 
+def vsphere_grid_csv(columns, rows):
+    """vSphere Client data grid > Export CSV (ASSUMED format, not captured).
+    Header and every cell quoted, cells as the grid prints them (strings).
+    columns: names; rows: lists of strings. LF line ends."""
+    def q(s):
+        return '"' + str(s).replace('"', '""') + '"'
+    out = [",".join(q(c) for c in columns)]
+    for r in rows:
+        if len(r) != len(columns):
+            raise ValueError("row length differs from header")
+        out.append(",".join(q(c) for c in r))
+    return "\n".join(out) + "\n"
+
+
+def parse_vsphere_grid_csv(text):
+    """Return (columns, [list of str]). Raises ValueError when a field is unquoted."""
+    lines = [ln for ln in text.split("\n") if ln]
+    for ln in lines:
+        if not (ln.startswith('"') and ln.endswith('"')):
+            raise ValueError("grid field not quoted")
+    rdr = [next(csv.reader([ln])) for ln in lines]
+    return rdr[0], rdr[1:]
+
+
 # ---- Windows typeperf -------------------------------------------------------
 
 def typeperf_name(host, obj, instance, counter):
@@ -287,13 +311,13 @@ def _cell(text, col, lead):
     return s.ljust(col.width) if col.align == "l" else s.rjust(col.width)
 
 
-def _fmt_cell(v, col):
+def _fmt_cell(v, col, widen=True):
     if v is None:
         return _cell("-", col, col.dlead)
     if isinstance(v, str):
         return _cell(v, col, col.dlead)
     text = col.fmt % v
-    if col.align == "r" and len(text) >= col.width:
+    if widen and col.align == "r" and len(text) >= col.width:
         text = " " + text      # esxtop widens the cell instead of gluing two numbers together
     return _cell(text, col, col.dlead)
 
@@ -310,6 +334,11 @@ PANEL_COLUMNS = {
          + _g9("GRANT", "CNSM", "SZTGT", "TCHD", "TCHD_W", "SWCUR", "SWTGT")
          + [Col("SWR/s", 8), Col("SWW/s", 8)]
          + _g9("LLSWR/s", "LLSWW/s", "OVHDUW", "OVHD", "OVHDMAX"),
+    # memory panel after `f` toggled off every group except ID/name, MEMSZ, GRANT, CNSM and NUMA STATS
+    "m-numa": [Col("GID", 11, fmt="%d"), Col("NAME", 18, "l", "%s", 1, 1), Col("MEMSZ", 10),
+               Col("GRANT", 10), Col("CNSM", 10), Col("NHN", 5, fmt="%s"), Col("NMIG", 5, fmt="%d"),
+               Col("NRMEM", 10), Col("NLMEM", 10), Col("N%L", 5, fmt="%d"), Col("GST_ND0", 10),
+               Col("OVD_ND0", 9), Col("GST_ND1", 10), Col("OVD_ND1", 9)],
     "u": [Col("DEVICE", 37, "l", "%s"), Col("PATH/WORLD/PARTITION", 21, "l", "%s", 1, 10),
           Col("DQLEN", 6, fmt="%d"), Col("WQLEN", 6, fmt="%d"), Col("ACTV", 5, fmt="%d"),
           Col("QUED", 5, fmt="%d"), Col("%USD", 5, fmt="%d"), Col("LOAD", 6)]
@@ -372,7 +401,7 @@ def esxtop_panel(kind, status_line, rows, summary_lines=()):
     for r in rows:
         if len(r) != len(cols):
             raise ValueError("row length differs from panel columns")
-        lines.append("".join(_fmt_cell(v, c) for v, c in zip(r, cols)) + " ")
+        lines.append("".join(_fmt_cell(v, c, i > 0) for i, (v, c) in enumerate(zip(r, cols))) + " ")
     return "\n".join(lines) + "\n"
 
 

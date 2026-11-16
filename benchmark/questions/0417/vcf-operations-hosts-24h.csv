@@ -1,0 +1,5 @@
+Name,Datastore:ds-shared-07|Read IOPS,Datastore:ds-shared-07|Read IOPS (Max),Datastore:ds-shared-07|Write IOPS,Datastore:ds-shared-07|Read Latency (ms),Datastore:ds-shared-08|Read IOPS,Datastore:ds-shared-08|Write IOPS,Datastore:ds-shared-08|Read Latency (ms)
+esx-c3-01,623.8757,1130.4318,223.6821,1.9281,245.7997,62.5959,1.8917
+esx-c3-02,780.491,1387.7534,275.7613,1.9905,248.706,90.8035,2.5625
+esx-c3-03,484.8165,875.763,167.7326,1.8703,216.5152,79.7934,2.4231
+esx-c3-04,373.3923,674.642,114.8225,1.9458,218.2098,58.1965,2.533

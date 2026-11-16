@@ -6,7 +6,13 @@
 - The memory panel header, as they pasted it into the ticket:
 
 ```text
-(generated)
+3:07:44pm up 112 days 06:40, 1311 worlds, 38 VMs, 164 vCPUs; MEM overcommit avg: 0.41, 0.40, 0.39
+PMEM  /MB: 786234   total:  2907     vmk,359600 other, 423727 free
+VMKMEM/MB: 785898 managed:  8476 minfree, 19077 rsvd, 766821 ursvd,  high state
+PSHARE/MB:    5006  shared,    1286  common:    3720 saving
+SWAP  /MB:       0    curr,       0 rclmtgt:                 0.00 r/s,   0.00 w/s
+ZIP   /MB:       0  zipped,       0   saved
+MEMCTL/MB:       0    curr,       0  target,  215760 max
 ```
 
 Which statements are correct?

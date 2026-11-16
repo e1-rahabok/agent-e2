@@ -167,7 +167,8 @@ def check_size_cap(files, cap=CSV_MAX_CHARS):
 def write_files(files, out_dir):
     """Write {name: text} under out_dir as UTF-8, no newline translation."""
     out_dir = Path(out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
+    if files:
+        out_dir.mkdir(parents=True, exist_ok=True)
     for name, text in files.items():
         with open(out_dir / name, "w", encoding="utf-8", newline="") as f:
             f.write(text)

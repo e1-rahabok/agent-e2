@@ -17,7 +17,17 @@ Logical Processor to NUMA Node Map:
 - And esxtop on its host, memory panel with the NUMA fields added:
 
 ```text
-(generated)
+2:14:07pm up 64 days 03:41, 1312 worlds, 7 VMs, 46 vCPUs; MEM overcommit avg: 0.00, 0.00, 0.00
+PMEM  /MB: 786112   total:  3210     vmk,612480 other, 170422 free
+VMKMEM/MB: 782420 managed:  9840 minfree, 18110 rsvd, 762200 ursvd,  high state
+        GID NAME                  MEMSZ     GRANT      CNSM  NHN NMIG     NRMEM     NLMEM  N%L   GST_ND0  OVD_ND0   GST_ND1  OVD_ND1 
+      86303 etl-big-02        458752.00 458752.00 458342.61    0    0  65387.55 392955.06   86 392955.06   236.83  65387.55     0.00 
+      79648 sql-prd-04         98304.00  98304.00  98198.72    1    0      0.00  98198.72  100      0.00     0.00  98198.72   123.30 
+      53240 app-web-11         16384.00  14834.44  14484.36    1    0      0.00  14484.36  100      0.00     0.00  14484.36    60.41 
+      30996 app-web-12         16384.00  14451.85  14150.88    0    0      0.00  14150.88  100  14150.88    59.90      0.00     0.00 
+      82776 vdi-pool-07         8192.00   6590.12   6489.15    0    0      0.00   6489.15  100   6489.15    40.49      0.00     0.00 
+      58170 hostd.2098385         71.89     71.89     62.63    -    -         -         -    -         -        -         -        - 
+      70490 vpxa.8526799          68.58     68.58     63.22    -    -         -         -    -         -        -         -        - 
 ```
 
 Which statements are correct?

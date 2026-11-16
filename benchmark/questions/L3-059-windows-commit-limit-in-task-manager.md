@@ -6,7 +6,12 @@
 - He sends [the typeperf export from the guest](0393/typeperf-memory.csv), 1-minute samples from 01:30 to 02:29, and two outputs taken at 02:05:
 
 ```text
-(generated)
+C:\> systeminfo | findstr /C:"Physical Memory" /C:"Virtual Memory"
+Total Physical Memory:     16,383 MB
+Available Physical Memory: 3,427 MB
+Virtual Memory: Max Size:  16,383 MB
+Virtual Memory: Available: 142 MB
+Virtual Memory: In Use:    16,241 MB
 ```
 
 ```text

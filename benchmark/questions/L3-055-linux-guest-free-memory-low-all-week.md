@@ -6,7 +6,14 @@
 - You export [the VCF Operations list of the four VMs](0387/vcf-operations-web-vms-memory-7-days.csv), last 7 days, and run three commands on web-arc-02:
 
 ```text
-(generated)
+$ uptime
+ 10:42:53 up 12 days,  5:39,  1 user,  load average: 0.50, 0.27, 0.50
+$ grep -E '^(pswpin|pswpout) ' /proc/vmstat
+pswpin 0
+pswpout 0
+$ cat /proc/pressure/memory
+some avg10=0.00 avg60=0.00 avg300=0.00 total=2313602
+full avg10=0.00 avg60=0.00 avg300=0.00 total=1122752
 ```
 
 Which statements are correct?

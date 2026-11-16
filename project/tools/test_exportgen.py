@@ -317,7 +317,7 @@ class NetworkCases(unittest.TestCase):
 
 
 class ClusterCapacityCases(unittest.TestCase):
-    IDS = ("0401", "0431", "0438", "0440")
+    IDS = ("0401", "0431", "0438", "0440", "0386", "0385", "0391", "0393", "0387", "0434")
 
     def test_generate_check_deterministic(self):
         cases = core.load_cases()
@@ -341,3 +341,30 @@ class ClusterCapacityCases(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MemoryExportCases(unittest.TestCase):
+    """Cases 0388, 0390, 0392, 0395, 0397, 0403: generate + check pass, determinism, a broken file fails."""
+    IDS = ("0388", "0390", "0392", "0395", "0397", "0403")
+
+    def test_generate_check_deterministic(self):
+        cases = core.load_cases()
+        for cid in self.IDS:
+            case = cases[cid]
+            files = case.generate(case.seed)
+            self.assertEqual(files, case.generate(case.seed), cid)
+            self.assertEqual(case.check(files), [], cid)
+            self.assertEqual(core.check_size_cap(files), [], cid)
+
+    def test_broken_files_fail(self):
+        cases = core.load_cases()
+        files = cases["0403"].generate()
+        name = "vcenter-vm-memory-12h.csv"
+        broken = dict(files)
+        broken[name] = files[name].replace(",0\n", ",3\n", 1)
+        self.assertTrue(cases["0403"].check(broken))
+        files = cases["0397"].generate()
+        name = "vcf-operations-guest-needed-memory.csv"
+        broken = dict(files)
+        broken[name] = files[name].replace("-,-,-,\n", "-,-,-,\n", 1).replace(",,-,-,-,", ",1,-,-,-,", 1)
+        self.assertTrue(cases["0397"].check(broken))

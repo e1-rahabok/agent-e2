@@ -6,7 +6,18 @@
 - In the same minute, esxtop on the VM's host, network panel:
 
 ```text
-(generated)
+2:14:40pm up 63 days 04:21, 1196 worlds, 11 VMs, 38 vCPUs; CPU load average: 0.41, 0.39, 0.37
+   PORT-ID USED-BY                         TEAM-PNIC DNAME              PKTTX/s  MbTX/s   PSZTX    PKTRX/s  MbRX/s   PSZRX %DRPTX %DRPRX 
+ 100663303 Management                            n/a vSwitch0              0.00    0.00    0.00       0.00    0.00    0.00   0.00   0.00 
+ 100663308 vmk0                               vmnic0 vSwitch0             20.66    0.06  339.31      14.05    0.06  554.06   0.00   0.00 
+ 100663309 vmk1                               vmnic0 vSwitch0              1.01    0.00  263.80       0.75    0.00  471.09   0.00   0.00 
+ 100663330 2104500:app-web-22                 vmnic1 vSwitch1            149.70    1.00  832.28      93.46    0.34  453.73   0.00   0.00 
+ 100663331 2104537:mon-col-01                 vmnic1 vSwitch1           4567.28   17.30  473.38    4398.54   14.71  417.90   0.00   0.00 
+ 100663332 2104574:app-web-21                 vmnic0 vSwitch1           2769.59   15.86  715.68    2417.15    4.91  253.74   0.00   0.00 
+ 100663333 2104611:ci-agent-03                vmnic1 vSwitch1             18.09    0.13  908.41      12.83    0.01   85.99   0.00   0.00 
+ 100663320 2104417:rpt-lnx-14                 vmnic1 vSwitch1           243152.93 2945.07 1514.00  116713.41   61.62   66.00   0.00   0.00 
+2248146951 vmnic0                                  - vSwitch0           2791.25   15.92  712.74    2431.94    4.97  255.54   0.00   0.00 
+2248146952 vmnic1                                  - vSwitch1           247888.01 2963.49 1494.37  121218.24   76.68   79.07   0.00   0.00 
 ```
 
 - The application owner says the two tools disagree and asks which one is wrong.
