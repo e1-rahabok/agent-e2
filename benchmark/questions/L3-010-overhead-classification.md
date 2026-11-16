@@ -39,7 +39,7 @@ A, F, J, K
 - Tests: principle, overhead vs not overhead.
 - 2026-11-16 (author, Q250: vSAN moves to after 1.0): the vSAN items are out. Stem item "vSAN FTT=1 storage" became "VM swap files"; E (vSAN FTT copy, false) became the kernel reservation read as the overhead figure (false; overhead.md, Misconceptions); K (vSAN processes, true) became the VM Monitor's per-VM CPU and memory (true; overhead.md, section Virtualization overhead). Key then: A, B, F, K (B since changed, next note). The vSAN lines of overhead.md stay until the vSAN content is written after 1.0.
 - 2026-11-16 (author, Q250): VM log files (B) are not virtualization overhead: physical servers have their own logs. They sit in Enterprise Readiness in overhead.md (mandatory by policy, not added by virtualization). The stem says "virtualization overhead", the term the key tests.
-- 2026-11-16 (author, Q255): the VM swap file (J) is virtualization overhead: mandatory, costs datastore space, no physical equivalent. Key A, F, J, K.
+- 2026-11-16 (author, swap file question): the VM swap file (J) is virtualization overhead: mandatory, costs datastore space, no physical equivalent. Key A, F, J, K.
 
 ## Metadata
 ```yaml

@@ -117,6 +117,17 @@ Each entry:
 - Recommended: move 0390 and 0080 to after 1.0 if vSAN is out of 1.0 as a whole; keep the others, where vSAN is the setting and not the fact tested.
 - Answer:
 
+### Q255 · Object model · Object relationships.json against objects.yaml (after 1.0)
+
+- Files: [Object relationships.json](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/Object%20relationships.json); [objects.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/objects.yaml); [Object relationships](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/object-relationships.md). Search strings: `stack_layer`, `plane`, `CONSUMES_FROM`.
+- Now: the JSON has 28 object types and 54 relationships; objects.yaml has 12 types and 18 relations. 14 JSON types are new (VirtualDisk, HostBusAdapter, StorageDevice, StorageArray, VirtualNIC, StandardPortGroup, UplinkPortGroup, HostVirtualSwitch, VMkernelNIC, PhysicalNIC, TopOfRackSwitch, GuestOS, Container, VirtualMachineTemplate). It conflicts with the repository in four places: (1) layers: Orchestration, VirtualHardware, Hypervisor, Physical, Container, GuestOS against guest-os, virtual-motherboard, hypervisor, physical; Datastore sits in the hypervisor layer and HostSystem is not in the physical layer; (2) `plane` (ControlPlane, DataPlane) is not a repository term; (3) `Container` is Linux and container scope, After 1.0; (4) edge verbs CONSUMES_FROM, ATTACHED_TO, CONNECTED_TO against contains, resource-parent, runs-on, mounts, stores-files-on, connects-to; VM CONSUMES_FROM ResourcePool runs against resource-parent, and VM CONSUMES_FROM Datastore repeats VM, VirtualDisk, Datastore.
+- Question: how does the JSON enter objects.yaml?
+  - A. Map the JSON to the repository layers and verbs; drop `plane`, `Container` and the repeated VM to Datastore edge; add the other 13 types.
+  - B. Adopt the JSON layers and verbs and change the repository vocabulary (tags.yaml, glossary, the layer rule).
+  - C. Keep it as a source only until the live VCF Operations integration needs a graph.
+- Recommended: A. The layer rule (a VM is a virtual motherboard; the Guest OS is a separate layer) decides a metric's home, so the repository names stay. Do it in one change set after 1.0, with `kb`, `role`, `supplies` and `charts` for each new type and the new types in tags.yaml.
+- Answer:
+
 ### Q241 · CPU > VM Demand · Demand under a limit (lab check)
 
 - Files: [VM CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/demand.md) (section Not unmet demand, two misconceptions).
