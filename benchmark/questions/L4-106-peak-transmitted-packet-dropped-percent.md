@@ -9,7 +9,7 @@
 Which statements are correct?
 
 - A. The metric shows about 0.4% for this cycle: 300 dropped out of 75,000 transmitted.
-- B. For this collection cycle the metric shows a value of about 6%.
+- B. The metric shows a value of about 6% for this collection cycle.
 - C. The cycle as a whole lost about 0.4% of what the VM transmitted.
 - D. The metric can tell whether the 300 drops fell in the first or the last minute of the cycle.
 - E. With 5,000 packets in every sample, the metric equals the worst sample's drops over its packets.

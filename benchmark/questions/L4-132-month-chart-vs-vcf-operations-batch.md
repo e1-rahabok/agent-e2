@@ -8,13 +8,13 @@
 
 Which statements are correct?
 
-- A. The vCenter 2-hour row for the batch averages the VM's Usage over its 2 hours, so the 20-minute batch is about a sixth of what it averages.
+- A. The vCenter 2-hour row averages the VM's Usage over 2 hours: the 20-minute batch weighs about a sixth.
 - B. For sizing rpt-db-02 over the coming months, the vCenter month export is the source to plan from.
 - C. Each tool computes Usage its own way, so the two exports can never be set side by side.
 - D. Contention is a VCF Operations calculation; vCenter has no such counter for the VM.
-- E. In the VCF Operations exports, Contention during the batch equals Ready.
+- E. In the VCF Operations exports, Contention during the batch equals Ready, point by point.
 - F. Co-stop accounts for most of the distance between Contention and Ready during the batch.
-- G. Contention rose during the batch, so the cluster needs another host.
+- G. Contention rose during the batch, so the cluster needs another host to absorb it.
 
 ## Likely wrong answer
 E: Contention is just Ready under another name. Or C: the two tools compute Usage differently, so their numbers cannot be compared.
@@ -71,7 +71,7 @@ attachments:
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C5"
 answer: [A, D, F]
-misconception: [E]
+misconception: [C, E]
 misconception_type: [tool-confusion, rollup-and-interval]
 pair: "0357"
 status: draft

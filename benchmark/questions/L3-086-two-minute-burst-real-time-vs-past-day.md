@@ -7,12 +7,12 @@
 Which statements are correct?
 
 - A. The Past day export is wrong: it should show the same peak as the Real-time export.
-- B. Each past-day point is the average of the 15 Real-time samples of its 5 minutes, busy and idle ones together.
-- C. The Real-time export shows the VM busy at close to its full CPU for about 2 minutes.
+- B. Each past-day point averages the 15 Real-time samples of its 5 minutes, busy and idle alike.
+- C. The Real-time export shows the VM near its full CPU for about 2 minutes.
 - D. The Past day export shows that the VM ran at that lower level for the whole 5 minutes.
 - E. Open a support case: vCenter dropped the peak samples during the rollup.
 - F. Without the Real-time export, the Past day export would give no hint that anything happened at that time.
-- G. The past-day point that holds the burst reads above 80%.
+- G. In the Past day export, the point that holds the burst reads above 80%.
 
 ## Likely wrong answer
 A: the past-day chart is expected to keep the peak, so it is called wrong; E, the action that follows from it.

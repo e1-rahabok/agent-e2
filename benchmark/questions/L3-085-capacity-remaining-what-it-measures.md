@@ -8,16 +8,16 @@
 
 Which statements about Capacity Remaining are correct?
 
-- A. It is the usable capacity minus the highest projected utilization over the next 3 days.
+- A. It is usable capacity minus the highest projected utilization over the next 3 days.
 - B. 31% means 69% of usable capacity is in use at this moment.
 - C. A projected point above usable capacity anywhere in its window sets it to 0.
 - D. 30 November lies outside the window that sets today's 31%.
 - E. The month-end batch fits on this cluster without more capacity: 31% covers it.
-- F. It is the average room left over the next 3 days.
-- G. Time Remaining counts down from Capacity Remaining.
-- H. The approved project of 200 VMs is not counted in it.
-- I. Its usable capacity is the total capacity minus the HA failover capacity and the policy buffer.
-- J. For the cluster, Capacity Remaining (%) is the value of its most constrained resource.
+- F. It is the average room left between usable capacity and utilization over the next 3 days.
+- G. Time Remaining counts down from Capacity Remaining as the days pass.
+- H. The approved project of 200 VMs, due in December, is not counted in it.
+- I. Its usable capacity is total capacity minus HA failover capacity and the policy buffer.
+- J. For the cluster, it is the value of its most constrained resource.
 - K. It is the largest gap between usable capacity and projected utilization in the next 3 days.
 
 ## Likely wrong answer
