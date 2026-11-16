@@ -29,7 +29,7 @@ Which VM is really waiting, why, and what do you do? Which statements are correc
 - F: "jump-01 has the highest Other Wait, so it is the worst VM."
 
 ## Expected key points
-- Answer: A, B, C, I, J.
+- Answer: A, B, C, I, J, L.
 - A is correct: 45% Net Run with 14% Other Wait: a busy VM whose vCPUs are blocked. Its host runs ESXi 8.0 Update 3j, where the idle-accounting issue is fixed, so the 14% is not halted time.
 - B is correct: 1% + 84% + 15% = 100%: when Run is low, Idle and Other Wait add up to about 100% by accounting. jump-01's host runs ESXi 8.0 Update 2, inside the range of the known accounting issue (ESXi 7.0 Update 2 and later, fixed in 8.0 Update 3j; Broadcom KB 338438, legacy 85393), where halted time is not always counted as Idle.
 - C is correct: snapshots are a common cause of Other Wait, and every IO now walks the snapshot chain.
