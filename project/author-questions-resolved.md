@@ -4,6 +4,14 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q251 · Benchmark levels · Relabels that conflict with the pairing plan or your earlier labels
+
+- Files: question files below; [project/question-pairing-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-pairing-2026-11-14.md) (items C20, C26).
+- Now: the audit kept the author's labels and the pairing plan's levels where reviewers disagreed (0420, 0415, 0364, 0362, 0025), changed 0390 and 0403 from 400 to 300, and kept eight questions as the Level 100-200 basics guard: 0187 (100), 0039, 0041, 0043, 0045, 0049, 0271, 0273 (200).
+- Question: accept, or name the ones to set back?
+- Answer (author, 2026-11-16): follow Claude's recommendation: accept; set 0364 to 400; for the eight guard questions, either keep the label and simplify the question, or relabel it 300 and write a new basic question in its place.
+- Applied (Claude's choice between the two): 0364 is Level 400. The eight are relabelled 300, as the reviewers read them (each has the multi-statement mechanism of a Level 300 question); keys unchanged. The new Level 100-200 basics questions that replace them are not written yet: plan.md, Open work, M2. Files renumbered by level.
+
 ### Q240 · Capacity > Models · Memory row of Cluster Consumption and Cluster Risk
 
 - Files: [cluster-consumption](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [cluster-risk](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md); [ESXi Memory Utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/utilization.md) (section Reason).

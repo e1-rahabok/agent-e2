@@ -40,6 +40,7 @@ A, C, D, F, G, H, I, K, L
 - Misconception: B: "Take it from the VMs with the largest gap between configured memory and Active: db-sql-01 alone gives back more than 200 GB."
 
 ## Notes
+- 2026-11-16 (author, Q247 and Q252 moved to after 1.0): no Linux option here, so Q247 changes nothing. Option L rests on active.md and sql-server-memory.md (VM Active shows what was touched, not a limit); guest-os-sizing, section Applications that manage their own memory, still says VM Active "shows the limit" (author question Q252, Future release). Key unchanged.
 - Revised 2026-11-12: the 300-VM export that was to be supplied is now a generated 40-VM export (a CSV of 1.0 must stay small; design.md, section 13.1). The ask is 256 GB instead of 1 TB.
 - The amounts are illustrative. Headroom of 25% above Guest Needed Memory, rounded up to 4 GB, gives 284 GB. An answer with another headroom that names the six VMs and reaches 256 GB is right, with or without small trims on other VMs.
 - Option C holds for any headroom up to about 50%: 432 GB configured minus 1.5 x 111.6 GB needed leaves about 265 GB.

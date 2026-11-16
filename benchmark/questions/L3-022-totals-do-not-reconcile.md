@@ -31,6 +31,7 @@ A, B, D, E, H
 - Misconception: C: concluding that a metric is broken.
 
 ## Notes
+- 2026-11-16 (author, Q251): level 200 to 300, as the reviewers read it. A new Level 200 basics question for the guard is still to write.
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`; shared datastores stated in the stem. Counts only after the author's approval.
 - Changed in the 2026-11-15 audit: D replaced (snapshot IO in datastore but not virtual disk counters is tested by 0045 and 0090) by network-drive IO outside all three sums (storage-layers); G reworded from "open a support case" to another wrong action; H added, a true action (host datastore counters hold the host's share); level 200 -> 300 (four vantage points applied to one case).
 
@@ -41,7 +42,7 @@ title: "Why VM, datastore and host totals differ"
 product: [vsphere]
 technology: [system, storage]
 task: explain-mechanism
-level: 200
+level: 300                      # Q251, author 2026-11-16: relabelled as written (was 200)
 answer_type: deterministic
 input: [text]
 object: [vm, datastore, esxi, cluster]

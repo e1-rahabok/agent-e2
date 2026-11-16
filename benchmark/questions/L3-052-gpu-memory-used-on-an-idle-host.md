@@ -38,6 +38,7 @@ B, C, D, E, F
 - Misconception: A: "GPU memory is at 90%, the GPUs are full of work: we need more GPUs."
 
 ## Notes
+- 2026-11-16 (author, Q251): level 200 to 300, as the reviewers read it. A new Level 200 basics question for the guard is still to write.
 - Sources: the knowledge base (GPU monitoring); Broadcom KB 439680 (the profile's frame buffer is allocated at power-on and freed at power-off).
 - Replaces the retired question 0091 (2026-11-12).
 - Prompt sharpened: the chart is Real-time (last hour), because the per-device host GPU counters are level 4 and have no 24-hour history at the default statistics level.
@@ -53,7 +54,7 @@ title: "GPU memory used on a host with idle AI VMs"
 product: [vsphere]
 technology: [gpu, system]
 task: read-metric
-level: 200
+level: 300                      # Q251, author 2026-11-16: relabelled as written (was 200)
 answer_type: deterministic
 misconception: [A]
 input: [text]
