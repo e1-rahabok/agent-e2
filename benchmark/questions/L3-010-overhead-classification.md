@@ -1,12 +1,13 @@
 # What counts as overhead
 
 ## Prompt
-- A capacity report lists the following as "virtualization overhead": VM snapshots, the spare host kept for vSphere HA, VM swap files, ESXi kernel memory, and VM log files.
+- You're the VMware Architect, who plan and design your company private cloud. Your IT Leadership forwarded a capacity audit report, that raises a concern that your private cloud has a high degree of overhead.
+- The report lists the following as "virtualization overhead": VM snapshots, the spare host kept for vSphere HA, VM swap files, ESXi kernel memory, and VM log files.
 
 Which statements are correct?
 
 - A. ESXi kernel memory belongs in the report as overhead.
-- B. VM log files belong in the report as overhead.
+- B. VM log files belong in the report as overhead. It is an additional files that the Guest OS wouldn't have generated if it were a physical server.
 - C. VM snapshots belong in the report as overhead.
 - D. The spare host kept for vSphere HA belongs in the report as overhead.
 - E. The kernel memory reservation of a host is the size of the kernel's overhead and goes in the report as that figure.
@@ -22,7 +23,7 @@ A, B, F, K
 
 ## Explanation
 - A is correct: the ESXi kernel is not optional and not negligible; it reduces usable capacity.
-- B is correct: the VM is a layer of its own, and its logs give necessary observability.
+- B is wrong: the VM is a layer of its own, and its logs give necessary observability. While it is an overhead, it is not a virtualization overhead as physical servers would have similar log. It is a replacement, not an addition. Virtualization technology does not add a new type of logs. It merely changes the content.
 - C is wrong: a snapshot is optional; you choose it for a capability the Guest OS does not have.
 - D is wrong: the HA spare host is optional availability protection.
 - E is wrong: the kernel reservation is a minimum that admission control sets aside, not a measure of what the kernel uses; hypervisor use can pass it or stay far below it.
