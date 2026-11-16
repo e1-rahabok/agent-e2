@@ -256,6 +256,9 @@ class Cases(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             self.assertEqual(main(["generate", "all", "--out", d]), 0)
             self.assertEqual(main(["check", "all", "--out", d]), 0)
+            self.assertFalse((Path(d) / "example-1").exists())
+            self.assertEqual(main(["generate", "example-1", "--out", d]), 0)
+            self.assertEqual(main(["check", "example-1", "--out", d]), 0)
             p = Path(d) / "example-1" / "vm-cpu-realtime.csv"
             p.write_text(p.read_text(encoding="utf-8").replace("\n", "\n\n", 1), encoding="utf-8")
             self.assertNotEqual(main(["check", "example-1", "--out", d]), 0)
@@ -273,16 +276,19 @@ class Cases(unittest.TestCase):
 
 
 class NetworkCases(unittest.TestCase):
-    """Cases 0420, 0413, 0415: generate + check pass, determinism, a broken row fails."""
+    """Every question case: generate + check pass, determinism, a broken row fails;
+    plus the inline-block helpers and the esxtop cell widening."""
 
     def _blocks(self, cid):
         qp = core.question_path(cid)
-        self.assertIsNotNone(qp)
+        if qp is None:
+            return {}
         return core.read_inline_blocks(qp.read_text(encoding="utf-8", newline=""))
 
     def test_generate_check_determinism(self):
-        for cid in ("0420", "0413", "0415"):
-            case = core.load_cases()[cid]
+        for cid, case in core.load_cases().items():
+            if cid.startswith("example"):
+                continue
             files = case.generate(case.seed)
             self.assertEqual(files, case.generate(case.seed), cid)
             self.assertEqual(case.generate_inline(case.seed), case.generate_inline(case.seed), cid)
@@ -305,6 +311,27 @@ class NetworkCases(unittest.TestCase):
         self.assertTrue(c.check({name: text.replace(',0,', ',7,', 1)}))
         c = core.load_cases()["0420"]
         self.assertTrue(c.check_inline({1: "bad", 2: "bad"}, {}))
+
+    def test_esxtop_cell_widens_for_large_values(self):
+        row = (1, 1, "sys", 442, 50.5, 21.49, 24.9, 44174.31, None, 4.2, 0.0, 0.05, 0.0, 0.0, 0.0)
+        text = formats.esxtop_panel("c", "s", [row])
+        self.assertIn("24.90 44174.31", text)
+        head, rows = formats.parse_esxtop_panel(text, "c")
+        self.assertEqual(rows[0][head.index("%WAIT")], "44174.31")
+
+    def test_case_checks_catch_edits(self):
+        c = core.load_cases()["0432"]
+        files = c.generate()
+        name = "hr-batch-02-cpu-past-day.csv"
+        lines = files[name].split("\n")
+        parts = lines[20].split(",")
+        parts[1] = "60"
+        lines[20] = ",".join(parts)
+        self.assertTrue(c.check({**files, name: "\n".join(lines)}))
+        c = core.load_cases()["0421"]
+        files = c.generate()
+        name = "ledger-app-03-total-tx-dropped.csv"
+        self.assertTrue(c.check({**files, name: files[name].replace(",0,-,-,-,", ",5,-,-,-,", 1)}))
 
     def test_inline_blocks_round_trip(self):
         md = "# T\n\n## Prompt\n- a\n\n```text\nx\n```\n\n```text\ny\n```\n\n## Notes\n```text\nz\n```\n"

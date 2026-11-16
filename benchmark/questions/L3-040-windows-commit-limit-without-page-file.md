@@ -15,13 +15,13 @@ Which statements are correct?
 - B. With about 1,400 MB available, memory was not short: the errors are an application bug.
 - C. ESXi was short of memory and refused the VM's requests, though vCenter shows no reclamation.
 - D. 15.6 GB committed means 15.6 GB of RAM is in use.
-- E. Without a page file Windows runs faster, with no side effect on its applications.
-- F. Adding RAM to the VM is the only way to stop the errors.
+- E. Windows grows the Commit Limit by itself once the commit charge passes 90% of it.
+- F. Adding RAM to the VM is required to stop the errors.
 - G. With no page file, the Commit Limit is about the size of the RAM.
 - H. Re-enabling the page file raises the Commit Limit.
 
 ## Likely wrong answer
-B: Available memory read as headroom for new allocations.
+B: Available memory read as headroom for new allocations. Or E: the page file growth taken to work without a page file.
 
 ## Expected key points
 - Answer: A, G, H.
@@ -29,13 +29,13 @@ B: Available memory read as headroom for new allocations.
 - B is wrong: Available is physical memory free or in standby; it is not commit headroom.
 - C is wrong: ESXi shows no reclamation and no latency, and the host has free memory; the limit is inside Windows.
 - D is wrong: committed memory is guaranteed in RAM or on disk, not all in RAM. Committed Bytes can rise without In Use rising.
-- E is wrong: Microsoft advises not disabling the page file; with it disabled, Windows slowed and applications crashed despite over 1 GB free.
+- E is wrong: the growth at 90% applies to a system-managed page file; with none there is nothing to grow, and the limit stays at about the RAM (15.9 GB at 98% committed).
 - F is wrong: re-enabling the page file also raises the limit, and Microsoft advises keeping it and letting Windows manage its size. This is the over-correction of B.
 - G is true: Commit Limit = RAM + the current page file size; with no page file it is about the RAM (15.9 GB here).
 - H is true: the page file adds to the Commit Limit; a system-managed page file also grows when the commit charge passes 90% of the limit.
 
 ## Notes
-- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): old A ("Windows hit its commit limit (RAM plus page file, here about the RAM): re-enable the page file or add memory") split into A, G and H; E one fact; F the over-correction added. Key changed from A to A, G, H.
+- Changed in the 2026-11-15 audit: throwaway E replaced by the page-file growth misconception; F without the absolute "only".
 
 ## Metadata
 ```yaml
@@ -55,9 +55,9 @@ knowledge:
 knowledge_main: guest-os/memory/windows-memory
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
+source_path: "Synthetic, 2026-11-12"
 answer: [A, G, H]
-misconception: [B]
+misconception: [B, E]
 misconception_type: [consumption-as-contention, layer-confusion]
 pair: "0393"
 status: draft

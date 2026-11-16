@@ -34,7 +34,7 @@ Which statements are correct?
 - F true: memory.events counts max (usage about to pass the limit), oom and oom_kill.
 - G true: a cgroup limit sits inside the Guest OS; neither the VM layer nor the system-wide free memory reads it.
 - H false: that describes `MemoryHigh` (memory.high), which throttles and never invokes the OOM killer; memory.max is the hard limit.
-- I false: total-vm is the process's virtual address space; anon-rss, about 4 GB (4,155,312 kB), is the resident memory near the 4 GB limit.
+- I false: total-vm is the process's virtual address space; anon-rss, 4,155,312 kB (about 3.96 GiB), is the resident memory at the 4 GiB limit (systemd reads 4G as 4 GiB).
 - J false: VM Memory Latency reads ESXi page-fault waits, not a limit inside the guest; the service reached its cgroup limit.
 
 ## Notes
@@ -42,7 +42,6 @@ Which statements are correct?
 - Linux kernel, Control Group v2: memory.max is the hard limit of a cgroup; when usage reaches it and cannot be reduced, the OOM killer runs inside the cgroup; memory.events counts max, oom and oom_kill; going over memory.high throttles and never invokes the OOM killer. https://docs.kernel.org/admin-guide/cgroup-v2.html
 - systemd.resource-control(5), MemoryMax=: the absolute limit on memory usage of the unit's processes; the OOM killer acts inside the unit when it cannot be kept; written to the cgroup v2 attribute memory.max (unified hierarchy). https://www.freedesktop.org/software/systemd/man/latest/systemd.resource-control.html
 - Linux kernel source, mm/oom_kill.c: the kill message starts with "Memory cgroup out of memory" for a cgroup OOM and "Out of memory" otherwise; total-vm prints mm->total_vm (virtual size), anon-rss the resident anonymous pages. https://github.com/torvalds/linux/blob/master/mm/oom_kill.c
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
 
 ## Metadata
 ```yaml
@@ -64,7 +63,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/concepts/guest-os-vs-vm-memory
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12, outside the knowledge base"
+source_path: "Synthetic, 2026-11-12, outside the knowledge base"
 misconception_type: [layer-confusion]
 status: draft
 ```

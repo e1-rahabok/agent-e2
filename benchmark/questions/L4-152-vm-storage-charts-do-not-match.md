@@ -6,6 +6,8 @@
 - Hard disk 2 (scsi0:1) is on the NFS datastore nfs-arch-02. The VM has no snapshot.
 - He exported four Real-time charts to CSV, the same 10 minutes: [the VM's Virtual disk chart](0427/vcenter-vm-virtual-disk-realtime.csv), [the VM's Datastore chart](0427/vcenter-vm-datastore-realtime.csv), [the VM's Disk chart](0427/vcenter-vm-disk-realtime.csv) and [the host's Disk chart of the LUN](0427/vcenter-host-disk-lun-realtime.csv).
 
+- The chart legends (not in the exports) give the units: rates in KBps, latencies in ms.
+
 Which statements are correct?
 
 - A. The NFS disk's IO is missing from the VM's Disk export, because that view covers block devices (VMFS and RDM) only.

@@ -22,14 +22,12 @@ A: the vendor guidance is to keep the alert-level wait cycle at 1 and tune sensi
 
 ## Expected key points
 - Answer: C.
-- Symptom level, as it is now: two cycles above 90 in a row meet the symptom Wait Cycle of 2, so the symptom triggers. The single cycle below 90 meets the Cancel Cycle of 1, so the symptom is cancelled. It is triggered for one collection cycle at a time and never for the 3 cycles the alert-level Wait Cycle requires (the symptoms must stay triggered for that many cycles). So no alert is generated.
-- C: with Cancel Cycle 2, one cycle below 90 does not cancel the symptom, and the next cycle above 90 resets the count. The symptom stays triggered through the whole window, the alert-level Wait Cycle of 3 is met after a few cycles, and one alert stays open. After the job ends, two cycles below 90 cancel the symptom and the alert-level Cancel Cycle of 1 closes the alert, about 10 to 15 minutes later.
-- A is wrong: the alert would be generated at the first trigger, but the symptom is cancelled one cycle later and the alert with it. The result is a new alert every 15 minutes, not one.
-- B is wrong: with Wait Cycle 1 the symptom is triggered for two cycles and cancelled for one, so it never stays triggered for 3 cycles. No alert.
-- D is wrong: the condition holds for at most 2 cycles in a row, so a Wait Cycle of 3 never triggers the symptom.
-- E is wrong: the alert-level Cancel Cycle acts only on an alert that exists. No alert is ever generated, so it changes nothing.
+- A is wrong: today two cycles above 90 meet the symptom Wait Cycle of 2 and the one cycle below 90 meets its Cancel Cycle of 1, so the symptom is triggered one cycle at a time. With an alert-level Wait Cycle of 1 the alert is generated at each trigger and cancelled with the symptom a cycle later: a new alert every 15 minutes, not one per job.
+- B is wrong: with symptom Wait Cycle 1 the symptom is triggered for two cycles and cancelled for one, so it never stays triggered for the 3 cycles the alert-level Wait Cycle needs. No alert.
+- C is correct: with symptom Cancel Cycle 2, one cycle below 90 does not cancel the symptom and the next cycle above 90 resets the count. The symptom stays triggered through the window, the alert-level Wait Cycle of 3 is met, and one alert stays open. After the job two cycles below 90 cancel the symptom and the alert-level Cancel Cycle of 1 closes the alert, about 10 to 15 minutes later. The cancel cycle of the symptom bridges the one-cycle dip.
+- D is wrong: the condition holds for at most 2 cycles in a row, so a symptom Wait Cycle of 3 never triggers the symptom.
+- E is wrong: the alert-level Cancel Cycle acts only on an alert that exists. The symptom still never stays triggered for 3 cycles, so no alert is generated and the change does nothing.
 - F is wrong: a condition has its own Wait Cycle and Cancel Cycle, as a symptom definition does. With Wait Cycle 2 and Cancel Cycle 1 it is triggered one cycle at a time, as the symptom is now, so the alert-level Wait Cycle of 3 is still never met.
-- In this case the Cancel Cycle of the symptom bridges the one-cycle dip; the alert-level cycles then act on a symptom that stays triggered.
 
 ## Notes
 - Public source: Broadcom TechDocs, VCF Operations (VCF 9.0 and later), "Alert Definition Best Practices" (page last updated 2026-11-09): the wait cycle and the cancel cycle of the alert definition go into effect after the wait and cancel cycle of the symptom definition result in a triggered or cancelled symptom; sensitivity is set at the symptom level and the alert-level cycles are 1. https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/infrastructure-operations/configuring-alerts-and-actions/defining-alerts-best-practices.html

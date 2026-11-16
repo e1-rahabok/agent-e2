@@ -26,14 +26,11 @@ B or A. B: All is read as "the strongest evidence" and the Warning and Critical 
 
 ## Expected key points
 - Answer: C.
-- The vendor pattern for one alert with two severities is a single set holding the Warning and the Critical symptom with Any, and criticality Symptom Based. That covers the usage side (S1 or S2).
-- The contention condition must be true as well, so it goes into a second set, and the alert must need all sets (Boolean AND across sets). Any alert needs both sets: usage high and CPU Ready high.
-- Symptom Based criticality takes the severity of the triggered symptoms (the most critical one counts). S3 is Warning, so with S1 the alert is Warning and with S2 it is Critical. A Critical S3 would make every alert Critical.
-- A is wrong: usage alone or CPU Ready alone creates an alert; the backup job would alert.
-- B is wrong: All in one set needs S1, S2 and S3 together. S2 implies S1, but the Warning-only state (usage between 80 and 95) never creates an alert.
-- D is wrong: a fixed criticality ignores the symptom severity and never shows Critical.
+- A is wrong: Any over S1, S2 and S3 is an OR, so usage alone or CPU Ready alone creates an alert; the backup job at 97% would alert.
+- B is wrong: All in one set needs S1, S2 and S3 together. Usage between 80 and 95 with high CPU Ready never creates the Warning alert.
+- C is correct: set 1 (S1 or S2, Any) covers the usage side and set 2 (S3) the CPU Ready side; needing all sets is a Boolean AND, so the expression is (S1 OR S2) AND S3. Symptom Based criticality takes the most critical triggered symptom: with S1 and S3 (both Warning) the alert is Warning, with S2 it is Critical. S1, S2 and S3 are reused unchanged.
+- D is wrong: a fixed criticality ignores the severity of the symptoms, so the case above 95 never shows Critical.
 - E is wrong: the sets are combined with Any, so usage alone or CPU Ready alone creates an alert.
-- S1, S2 and S3 are reused as they are; nothing in the other alert definitions changes.
 
 ## Notes
 - Public source: Broadcom TechDocs, VCF Operations (VCF 9.0 and later), "Alert Definition Best Practices" (page last updated 2026-11-09): include the Warning and Critical symptom definitions in a single alert definition with an Any condition and set the alert criticality to Symptom Based; the alert is generated with the right criticality if either symptom is triggered. https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/infrastructure-operations/configuring-alerts-and-actions/defining-alerts-best-practices.html

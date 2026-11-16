@@ -3,7 +3,7 @@
 ## Prompt
 - Users of the reporting VM rpt-scan-03 say a scan of its data disk takes hours. The data disk is Hard disk 2 (scsi0:1), on LUN naa.624a93701c2d3e4f5a6b7c8d00011a07; no other VM uses that LUN.
 - The VM owner says vCenter proves the storage is slow. The storage team says the array answers in under a millisecond.
-- You export [the VM's Virtual disk chart](0425/vcenter-vm-virtual-disk-realtime.csv), Real-time, 10 minutes during the scan.
+- You export [the VM's Virtual disk chart](0425/vcenter-vm-virtual-disk-realtime.csv), Real-time, 10 minutes during the scan. The chart legend (not in the export) gives the units: rates in KBps, latencies in ms.
 - On the VM's host, esx-c2-07, esxtop shows the disk device panel (u) during the same minutes:
 
 ```text

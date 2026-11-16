@@ -3,7 +3,7 @@
 ## Prompt
 - The Windows administrator of the file-processing VM fp-app-03 (Windows Server 2022) says Performance Monitor proves the disk is overloaded inside Windows, and that the storage is fine.
 - The data disk E: is the VM's scsi0:1, on a Paravirtual SCSI controller.
-- He logged [the PhysicalDisk counters with typeperf](0418/typeperf-physicaldisk.csv), every 20 seconds for 10 minutes. You export [the VM's Virtual disk chart](0418/vcenter-vm-virtual-disk-realtime.csv) from the vSphere Client, Real-time, the same 10 minutes.
+- He logged [the PhysicalDisk counters with typeperf](0418/typeperf-physicaldisk.csv), every 20 seconds for 10 minutes. You export [the VM's Virtual disk chart](0418/vcenter-vm-virtual-disk-realtime.csv) from the vSphere Client, Real-time, the same 10 minutes. Its chart legend (not in the export) gives the units: rates in KBps, latencies in ms.
 
 Which statements are correct?
 

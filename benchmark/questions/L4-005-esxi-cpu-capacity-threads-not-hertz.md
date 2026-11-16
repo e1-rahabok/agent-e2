@@ -4,6 +4,7 @@
 Two VMware ESXi 9.1 hosts, Hyper-Threading on:
 - ESXi 01: 20 cores, 40 threads, nominal speed 1.0 GHz, All Cores Turbo 1.2 GHz, Single Core Turbo 2 GHz.
 - ESXi 02: 10 cores, 20 threads, speed 2.0 GHz, All Cores Turbo 2.4 GHz, Single Core Turbo 4 GHz.
+- The vSphere Client shows Total Capacity 20 GHz for each host.
 
 Which statements give the CPU capacity of the two hosts correctly?
 
@@ -23,13 +24,13 @@ Which statements give the CPU capacity of the two hosts correctly?
 
 ## Expected key points
 - Answer: B.
-- A is false: cores x base frequency is the Total Capacity (GHz) label vCenter and VCF Operations show (20 GHz for both hosts). It is throughput at base clock, not capacity: the two hosts hold different numbers of vCPUs.
+- A is false: 20 GHz is the Total Capacity (GHz) label that vCenter and VCF Operations show: cores × base clock, the capability at base clock only. The host's capacity is counted in physical threads, 40 and 20, so the two hosts hold different numbers of vCPUs.
 - B is true: capacity measures space, not speed. It is counted in physical threads, where a vCPU can run: 40 on ESXi 01, 20 on ESXi 02. Performance and capacity do not correlate: on ESXi 02 a vCPU runs about 2x faster, but only half as many fit.
 - C is false: a GHz figure with a Hyper-Threading factor is still throughput; it changes with load, while the thread count does not.
 - D is false: Turbo raises throughput, not capacity, and varies with load and power policy.
 - E is false: with Hyper-Threading on, a core with one busy thread still has a free thread; capacity counts threads, not cores.
 - F is false: Turbo and Hyper-Threading are performance factors; GHz mixes performance and capacity.
-- G is false: still a GHz (throughput) figure; it also ignores that two threads on one core do not each run at full speed.
+- G is false: threads × base clock is still a GHz figure, and two threads of one core do not each deliver the core's clock (each gets about 62.5% of the core while both run).
 - H is false: hardware capacity is fixed by the hardware and the Hyper-Threading setting; Turbo and power policy change throughput only.
 
 ## Notes
@@ -38,6 +39,7 @@ Which statements give the CPU capacity of the two hosts correctly?
 - Hints:
   - The two hosts have different specifications, so the two answers must be different.
   - ESXi capacity can also be expressed in CPU compute cycles: the amount of processing it can do per second. That is not the same as the count of cores.
+- Changed in the 2026-11-15 audit: the stem shows the Total Capacity label the operator reads; key points A and G no longer call a capacity figure throughput; misconception type label-read-as-model added.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). The quiz's two lists of one answer per host became one list of pairs, each pair one way of counting capacity; exactly one pair is right.
 
 
@@ -65,6 +67,6 @@ answer_type: deterministic
 answer: [B]
 misconception: [A, C, F]
 level: 400                      # author 2026-11-05
-misconception_type: [frequency-and-hyper-threading]
+misconception_type: [frequency-and-hyper-threading, label-read-as-model]
 status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q199): review again
 ```

@@ -20,18 +20,18 @@ E (or C): 40% is read as the failover capacity of two hosts out of five, with th
 
 ## Expected key points
 - Answer: A.
-- With a manual percentage, vSphere HA expects at least the share of the N largest hosts, N being Host Failures Cluster Tolerates. Here the two largest hosts are 100 + 60 = 160 GHz of 300 GHz, 53.3%. 40% is below it, and vSphere HA raises the Insufficient Failover Resources warning whatever the free resources (C and E are wrong).
-- The current failover capacity is the total minus the CPU reservations, divided by the total. A VM without a CPU reservation counts 32 MHz: 250 x 32 MHz = 8 GHz. Reserved total is 158 GHz, so the current failover capacity is 142 / 300 = 47.3% (B ignores the 8 GHz).
-- Admission control refuses a power-on that would take the current failover capacity below the configured percentage, not below the minimum. After the power-on, 182 GHz are counted and 118 / 300 = 39.3% is left, below the configured 40%. The same cluster would accept a VM that reserves 20 GHz (40.7% left), so D is wrong.
-- The actual usage of 35% plays no role: admission control uses reservations, not consumption.
+- A is correct: with a manual percentage, vSphere HA expects at least the share of the N largest hosts (N = Host Failures Cluster Tolerates): 100 + 60 = 160 of 300 GHz, 53.3%, so 40% raises the Insufficient Failover Resources warning. A VM without a CPU reservation counts 32 MHz: 250 x 32 MHz = 8 GHz, so 158 GHz are counted now (47.3% left) and 182 GHz after the power-on, leaving 118 / 300 = 39.3%, below the configured 40%: refused.
+- B is wrong: it counts the 250 unreserved VMs as zero; with their 8 GHz the capacity left is 39.3%, not 42%.
+- C is wrong: 40% is two hosts out of five only for equal hosts; the reserve is sized on the largest hosts, so the warning is shown.
+- D is wrong: the power-on is tested against the configured 40%, not the 53.3% minimum; the same cluster would accept a VM that reserves 20 GHz (40.7% left).
+- E is wrong: the warning is shown (as in C), and admission control counts reservations, not the 35% usage: 39.3% would be left, below 40%.
 
 ## Notes
-- Public source: Cluster Resources Percentage Admission Control, vSphere 9.1 (Availability). https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html . Page last updated 2026-11-09. It gives the current failover capacity (total minus the VMs' requirements, divided by the total), the minimum as the combined capacity of the N largest hosts divided by the cluster total, the warning "regardless of available free resources", and the default of 32 MHz CPU and 0 MB memory for a VM without a reservation. vSphere HA Admission Control, vSphere 9.1 (https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control.html, last updated 2026-11-09): any action that might violate the failover constraints, powering on a VM among them, is not permitted; actual memory consumed is not considered.
-- Why one answer: the minimum, the 32 MHz default and the power-on check against the configured value are all in the vendor text; 53.3%, 47.3% and 39.3% follow from the prompt. Without the 32 MHz default the 24 GHz VM would leave 42% and be accepted, so that default decides the power-on result.
-- Debatable risk: the power-on test is stated by the admission control overview ("any action that might violate these constraints is not permitted"); the page does not print the exact formula for a power-on, so the question uses the failover capacity formula after the VM's reservation is added. Memory is excluded on purpose; the 9.1 page notes the memory computation has its own rules for clusters with Memory Tiering, not used here.
-- This is a mechanism the cluster health check relies on when it reads "HA failover capacity met"; the question uses no health-check order.
-- Rewritten 2026-11-13 to raise difficulty: five uneven hosts and two failures instead of four hosts and one; a power-on whose result depends on the 32 MHz default of unreserved VMs; the warning (minimum) and the power-on check (configured value) are two separate tests that give different numbers.
-- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which statement is correct?"
+- Synthetic, 2026-11-13, for the coverage gap (project/plan.md).
+- The key rests on three vendor facts the knowledge base does not hold yet: the 32 MHz CPU (0 MB memory) default for a powered-on VM without a reservation, the Insufficient Failover Resources warning when the manual percentage is below the share of the N largest hosts, and the power-on test against the configured value. Source: vSphere 9.1 documentation, vSphere Availability, Cluster Resources Percentage Admission Control, Computing the Current Available Capacity (VMware vSphere 9.1 PDF, build of 2026-11-02, p. 1971; online https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html, last updated 2026-11-09). The knowledge-base line "A VM with no reservation passes CPU and memory admission control" reads toward B until the 32 MHz default is added to admission-control-and-cluster-state.
+- vSphere HA Admission Control, vSphere 9.1 (https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control.html): any action that might violate the failover constraints, powering on a VM among them, is not permitted; actual memory consumed is not considered.
+- Debatable risk: the page does not print the exact formula for a power-on, so the question uses the failover capacity formula after the VM's reservation is added. Memory is excluded on purpose; the 9.1 page notes the memory computation has its own rules for clusters with Memory Tiering, not used here.
+- Each option joins a warning half and a power-on half; splitting them into single facts waits until the knowledge base holds the three facts above (the key stays A).
 
 ## Metadata
 ```yaml
@@ -51,7 +51,7 @@ knowledge:
 knowledge_main: vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 attachments: []
 origin: synthetic
-source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
+source_path: "Synthetic, 2026-11-13"
 answer: [A]
 misconception: [C, E]
 misconception_type: [threshold-transplanted]

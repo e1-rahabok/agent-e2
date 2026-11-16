@@ -29,17 +29,17 @@ The operations team wants new production web VMs to show in the business applica
 
 ## Expected key points
 - Answer: A, C, E, G, H.
-- A true: tier objects are static when the application is created manually; a VM added later needs a manual edit.
-- B false: tiers are added and filled by hand; they have no dynamic membership, unlike a custom group.
-- C true: a custom group can be dropped on the application directly, or nested; VCF Operations finds the objects that match its rules and updates the members, so the application follows the group.
-- D false: shop-web-test-017 also starts with shop-web-, so the prefix rule takes the test VMs too.
-- E true: a regular expression on the name separates the two schemes (the documented name operators include matches regular expression).
-- F false: both kinds carry the same tags; a tag rule separates two sets only when their tags differ.
-- G true: a group rule runs on the inventory of the object type, so it matches VMs of every vCenter adapter instance.
-- H true: Preview in the group workspace lists the objects the rules match, before the group is saved.
-- I false: a dynamic custom group added to the application does it without a script.
-- J false: how soon a dynamic group picks up a new VM is not documented, so no collection-cycle delay can be promised.
-- K false: a custom group can be connected to the application without a tier, dropped on it directly or nested; the application does not read its VMs only from tiers.
+- A is correct: tier objects are static when the application is created manually; a VM added later needs a manual edit.
+- B is wrong: tiers are added and filled by hand; they have no dynamic membership, unlike a custom group.
+- C is correct: a custom group can be dropped on the application directly, or nested; VCF Operations finds the objects that match its rules and updates the members, so the application follows the group.
+- D is wrong: shop-web-test-017 also starts with shop-web-, so the prefix rule takes the test VMs too.
+- E is correct: a regular expression on the name separates the two schemes (the documented name operators include matches regular expression).
+- F is wrong: both kinds carry the same tags; a tag rule separates two sets only when their tags differ.
+- G is correct: a group rule runs on the inventory of the object type, so it matches VMs of every vCenter adapter instance.
+- H is correct: Preview in the group workspace lists the objects the rules match, before the group is saved.
+- I is wrong: a dynamic custom group added to the application does it without a script.
+- J is wrong: how soon a dynamic group picks up a new VM is not documented, so no collection-cycle delay can be promised.
+- K is wrong: a custom group can be connected to the application without a tier, dropped on it directly or nested; the application does not read its VMs only from tiers.
 
 ## Notes
 - Public source: Broadcom TechDocs, VCF 9.1, "Add Business Application" (page last updated 2026-11-12): tier objects are static if the application is created manually; custom groups can be dragged onto the application without a tier, nested, or added to applications. https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/workload-monitoring-and-observability/configuring-business-applications/add-business-application.html
