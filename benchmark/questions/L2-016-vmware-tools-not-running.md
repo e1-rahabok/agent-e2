@@ -20,17 +20,18 @@ C, D or F: counters from inside Linux, stored on the VM object, assumed to come 
 
 ## Expected key points
 - Answer: A, B, E, G, H.
-- A, B, E are correct: the VMkernel measures them itself, from outside the guest: CPU scheduling, the memory pages it backs, and the IO the VM sends.
+- A is correct: Ready is CPU scheduling time the VMkernel measures itself, outside the guest.
+- B is correct: Consumed counts the host pages the VMkernel backs for the VM; no guest component takes part.
 - C is wrong: the run queue is a Linux counter; VMware Tools collects it inside the guest. Without Tools it does not exist in vSphere.
 - D is wrong: the guest disk queue is also collected inside the guest by VMware Tools; it is stored on the VM object, but the Guest OS produces it.
+- E is correct: virtual disk latency is measured by the VMkernel on the IO the VM sends to its virtual disk.
 - F is wrong: the context switch rate is a Guest OS counter that VMware Tools collects inside the guest.
 - G is correct: ESXi swaps the VM's pages itself, at random and blind to guest free memory; no guest component takes part, so Swapped keeps its data.
-- H is correct: the VMkernel counts ballooned pages itself, and on Linux the balloon driver is the kernel module `vmw_balloon`, not part of open-vm-tools, so ballooning goes on while vmtoolsd is stopped.
+- H is correct: Ballooned is a VMkernel counter, so it has data whatever the guest does (it would read 0 with no driver). It can stay above 0 here because on Linux the balloon driver is the kernel module `vmw_balloon`, not part of open-vm-tools, so ballooning goes on while vmtoolsd is stopped.
 
 ## Notes
-- Review 2026-11-15: G added as the over-correction trap (a VM memory counter that needs no guest component). Key changed from A, B, E to A, B, E, G.
-- Options rewritten 2026-11-14 (project/question-pairing-2026-11-14.md): D (file system free space) and F (IP addresses and host name) were not in the knowledge base; replaced by two Guest OS counters that VMware Tools collects. Key unchanged.
-- 2026-11-15, Q223 answered (a stopped Tools service does not stop ballooning on Linux): H (Ballooned) added. Key changed from A, B, E, G to A, B, E, G, H.
+- Linux ballooning with vmtoolsd stopped: settled from the knowledge base (memory/concepts/ballooning; Q223).
+- Changed in the 2026-11-15 audit: level 200 -> 300 (H needs the Linux balloon module, G is the over-correction of the layer rule); key points one bullet per option, H says first that Ballooned is a VMkernel counter. C, D and F test one fact (Guest OS counters come through VMware Tools); the reviewer's replacements for F (the VCF Operations Usage fallback, Guest Needed Memory) are facts already tested twice or the same fact again, so F stays.
 
 ## Metadata
 ```yaml
@@ -39,7 +40,7 @@ title: "VMware Tools not running on a Linux VM"
 product: [linux, vsphere]
 technology: [system, memory]
 task: read-metric
-level: 200
+level: 300
 answer_type: deterministic
 input: [text]
 object: [guest-os, vm]

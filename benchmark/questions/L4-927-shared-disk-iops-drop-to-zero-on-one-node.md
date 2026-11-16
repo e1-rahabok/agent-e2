@@ -13,7 +13,7 @@
 Which statements are correct?
 
 - A. The database moved from pg-ha-a to pg-ha-b in a failover at about 03:12 on Wednesday.
-- B. pg-ha-a's 0 on the shared disk after 03:12 is how the passive node of such a pair reports.
+- B. pg-ha-a shows 0 on the shared disk after 03:12 because that is how a passive node reports.
 - C. pg-ha-b's missing values before 03:12 show that data collection for it was broken until then.
 - D. pg-ha-a has had no disk work since Wednesday, so it is a candidate to reclaim.
 - E. pg-ha-a's Active Not Shared is 115 GB: the space only it owns, without the snapshot space.

@@ -12,7 +12,7 @@ Which statements about what the VM memory counters show in this case are correct
 - D. The VM can show 0 balloon, 0 swap and 0% Memory Latency while Windows pages heavily.
 - E. ESXi gives a paging guest extra memory from the host's free memory.
 - F. When Windows is short of memory, the VM memory counters can neither rule the host in nor out.
-- G. Paging in both directions at once, while the disk queue is high, points to a memory shortage inside Windows.
+- G. Page-in and page-out together with a high disk queue point to a memory shortage in Windows.
 - H. A full memory reservation on the VM would stop Windows paging to its page file.
 
 ## Likely wrong answer

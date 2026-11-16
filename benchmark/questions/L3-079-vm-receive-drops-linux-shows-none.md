@@ -49,7 +49,7 @@ Which statements are correct?
 - E. The gap between the vCenter export and the Linux counters shows a counter fault in vCenter.
 - F. Enlarging the Linux receive ring with `ethtool -G` will make the vCenter drops go away.
 - G. The physical network dropped these packets before they reached the host.
-- H. In the export, Receive packets dropped is a count per 20-second sample.
+- H. In the export, the drops come in one run of about 12 minutes, apart from two small counts before it.
 - I. In the sample with the most drops, the VM lost more than half of the packets sent to it.
 - J. Every receive drop that ESXi counts on a VM also shows somewhere in Linux.
 
@@ -65,15 +65,16 @@ A: the ring overflowed, and only the hypervisor sees that. Or E: one of the tool
 - E false: each layer counts what it sees; a drop before delivery exists only in the hypervisor's counters.
 - F false: the wrong action. The ring was not full; a larger ring does not change a drop that happens before delivery.
 - G false: a frame dropped in the physical network never reaches the host, so the VM counters cannot count it.
-- H true: packet and drop counters are totals per sample interval (summation), not rates per second. The rows are 20 seconds apart, and Packets received / 20 at about 1,000 bytes per packet matches Data receive rate (KBps) in every row.
+- H true: Receive packets dropped is above 0 in every row from 06:20:00 to 06:31:40 (36 rows of 20 seconds, 12 minutes) and otherwise only in two earlier rows with under 100 drops each.
 - I false: in the worst row, Receive packets dropped is 3-8% of Packets received (below 10% by construction), far from half.
 - J false: the over-correction. Drops before delivery (a firewall rule, the security policy) never reach Linux; only a full ring is counted on both sides.
 
 ## Notes
 - Paired with the theory question 0039 (theory and practical; design.md, section 3.9).
-- Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C26 (origin: synthetic). Counts only after author approval.
+- Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C26 (origin: synthetic).
 - Review 2026-11-15: options reworded away from 0039; I (a false value reading) and J (over-correction) added; capture by an NSX Distributed Firewall Drop rule (Broadcom KB 449113, added to packet-drop-accounting). Key unchanged: B, D, H.
 - Converted 2026-11-15 from screenshots to a vCenter Real-time CSV and Linux tool text (project/practical-questions-as-exports-2026-11-15.md). D, E and H reworded from screen to export; truth values unchanged. B and J rest on the Distributed Firewall boundary of Broadcom KB 449113 (ESXi 8.x, NSX 4.x), still to check on 9.1 (review note in packet-drop-accounting); the security-policy drop keeps B and J true either way.
+- Audit 2026-11-15: H (a vCenter packet count is per 20-second sample) was over the two-question cap (0211/0415 keep it) and was replaced with a reading of the drop run in the export (rows 31-66, generator-guaranteed). Level kept at 300: the review's 300 -> 400 conflicts with the pairing plan (C26) and is left to the author.
 
 ## Metadata
 ```yaml

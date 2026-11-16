@@ -11,7 +11,7 @@ Why do the reports slow down, and what do you change? Which statements are corre
 
 - A. A memory limit on the VM or on its resource pool caps the VM's memory.
 - B. The host is short of memory, and ESXi swaps this VM to free memory for the others.
-- C. During each report run, the guest reads swapped pages back while ESXi compresses other pages to stay under the cap.
+- C. In each run the guest reads swapped pages back while ESXi compresses others to stay under the cap.
 - D. Each fall of Swapped shows that the memory pressure on the VM has eased.
 - E. A compressed page the guest touches costs its vCPU a shorter wait than a swapped page does.
 - F. Pages swapped out make the VM wait even when the guest never touches them again.

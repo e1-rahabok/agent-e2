@@ -15,7 +15,7 @@
 
 Which statements are correct?
 
-- A. Highest latency is the top kernel plus device latency among the disks, so it exceeds every device line.
+- A. Highest latency is the top kernel plus device latency among the disks, so it can exceed every device line.
 - B. At 10:00, the 6 to 7 ms is mostly kernel latency on LUN-02: time spent in the host, not at the array.
 - C. Highest latency is the device latency of the worst disk, so at 10:00 it contradicts the device lines and is faulty.
 - D. With Highest latency at 6 to 7 ms at 10:00, the array is the place to look first.

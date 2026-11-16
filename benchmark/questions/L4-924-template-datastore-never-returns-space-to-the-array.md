@@ -12,7 +12,7 @@ Which statements are correct?
 
 - A. Pool P2's free space, about 7.2 TB, not DS-TPL01's 13.6 TB, limits how far P2's thin LUNs can still grow.
 - B. DS-TPL01 has 13.6 TB free, so the VMs on pool P2 still have ample room to grow.
-- C. With no file on DS-TPL01 open, VMFS 6 sends no automatic unmap for it, hence the Unmap Size of 0.
+- C. Unmap Size is 0 because VMFS 6 sends automatic unmap only while a file on DS-TPL01 is open.
 - D. Raising DS-TPL01's space reclamation priority to High would return the 6 TB to P2 with no other change.
 - E. Powering on a VM whose files sit on DS-TPL01 lets the background unmap release the freed blocks.
 - F. The 6 TB stays allocated on the array because the guests of the moved VMs never sent TRIM.

@@ -12,7 +12,7 @@ Which statements are correct?
 - A. Here ESX holds up to 64 packets before it interrupts the VM or transmits, for at most 4 ms.
 - B. Coalescing delays are microseconds, so the setting cannot account for 1 to 3 ms of extra delay.
 - C. The `disabled` scheme typically lowers latency, at the cost of more interrupts and CPU use.
-- D. Under the static scheme, a larger queue size lowers latency, because the VM is interrupted sooner.
+- D. Under the static scheme, a larger queue size lowers latency, as the VM is interrupted sooner.
 - E. A new value takes effect after the VM restarts or the adapter is disconnected and reconnected.
 - F. Removing both entries restores the rate-based default of 4,000 interrupts per second.
 - G. Coalescing should be turned off on every VM of the host, since all it does is add latency.

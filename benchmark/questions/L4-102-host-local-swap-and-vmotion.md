@@ -9,7 +9,7 @@
 
 Which statements are correct?
 
-- A. A VM restarted by HA fails to power on only when neither the host's swap datastore nor the VM folder has room.
+- A. An HA restart still powers the VM on when the host's swap datastore is full but the VM folder has room.
 - B. The 15.36 TB of local NVMe across the eight hosts covers the 14 TB of swap files, so space is not a concern.
 - C. A shared datastore on cheaper storage, used as every host's swap location, frees the VM datastores with no copy at vMotion.
 - D. A vSAN datastore can be named as the host-local swap location of each host in place of the NVMe datastore.

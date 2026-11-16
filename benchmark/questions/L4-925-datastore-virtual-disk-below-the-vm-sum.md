@@ -23,7 +23,7 @@ Which statements are correct?
 - B. The VM values should add up to the datastore's value, so the 1,924 GB gap is a collection error to raise with support.
 - C. erp-db-01's 2,064 GB includes the RDM, whose data sits on its own LUN, not on DS-ERP01.
 - D. Sizing DS-ERP01 needs room for the 3,124 GB of disks the three VMs report.
-- E. The RDM takes its 1,024 GB on DS-ERP01, because its mapping file sits in the VM folder there.
+- E. The RDM takes its 1,024 GB on DS-ERP01, as its mapping file sits in the VM folder there.
 - F. The VM and datastore values come from different objects, so neither can serve the datastore's capacity review.
 - G. The space each VM takes on DS-ERP01, every file included, is its per-datastore Virtual Machine Used for DS-ERP01.
 - H. DS-ERP01's Virtual Disk Used also includes the swap files and logs of the three VMs on DS-ERP01.

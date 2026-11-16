@@ -7,7 +7,7 @@
 
 Which statements are correct?
 
-- A. With 1.5 times the VMs, active memory lands in the band where Broadcom advises testing and monitoring the workloads.
+- A. With 1.5 times the VMs, active memory falls in Broadcom's test-and-monitor band.
 - B. No VM page moves to the NVMe tier until about 80% of the host DRAM is consumed.
 - C. Kernel memory moves to the NVMe tier first, since kernel pages are the least active pages on the host.
 - D. Adding the NVMe tier raises the memory the hypervisor itself needs, which leaves less memory for VM reservations.
