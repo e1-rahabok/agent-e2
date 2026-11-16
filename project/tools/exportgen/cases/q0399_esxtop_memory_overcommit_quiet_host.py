@@ -66,9 +66,9 @@ class Q0399(core.Case):
             fails.append("inline:1: MEMTIER line present")
         loads = [float(x) for x in m.groups()]
         if any(not 0.30 <= x <= 0.60 for x in loads):
-            fails.append(f"inline:1: overcommit values outside 0.30-0.60: {loads}")
+            fails.append(f"inline:1: A: overcommit values outside 0.30-0.60: {loads}")
         if max(loads) - min(loads) > 0.05:
-            fails.append("inline:1: overcommit values spread above 0.05")
+            fails.append("inline:1: H: overcommit values spread above 0.05")
         total, vmk, other, free = (int(x) for x in p.groups())
         managed, minfree, rsvd, ursvd = (int(x) for x in v.groups()[:4])
         if total != vmk + other + free:
@@ -76,9 +76,13 @@ class Q0399(core.Case):
         if managed > total or rsvd + ursvd != managed or minfree >= rsvd:
             fails.append("inline:1: VMKMEM relations broken")
         if v.group(5) != "high" or not free > 4 * minfree or not free > 0.5 * total:
-            fails.append("inline:1: not the high state with free > 4 x minfree and > 0.5 x total")
+            fails.append("inline:1: I false, B false: not the high state with free > 4 x minfree and > 0.5 x total")
         if int(s.group(1)) != int(s.group(2)) + int(s.group(3)):
             fails.append("inline:1: PSHARE shared != common + saving")
-        if int(w.group(1)) or int(z.group(1)) or int(c.group(1)):
-            fails.append("inline:1: SWAP, ZIP or MEMCTL curr not 0")
+        if int(w.group(1)) or int(z.group(1)) or int(c.group(1)):             # D true, B false
+            fails.append("inline:1: D: SWAP, ZIP or MEMCTL curr not 0")
+        if int(w.group(2)) != 0:                                              # C true: rclmtgt 0
+            fails.append("inline:1: C: SWAP rclmtgt not 0")
+        if not int(s.group(3)) > 0:                                           # E false: sharing saves memory in the high state too
+            fails.append("inline:1: E: PSHARE saving not above 0")
         return fails

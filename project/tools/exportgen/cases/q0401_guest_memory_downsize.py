@@ -103,23 +103,26 @@ class GuestMemoryDownsize(core.Case):
                 fails.append(f"row {i}: Contention {cont[i]} != 0")
             if any(x != int(x) for x in (total[i], cons[i], free[i], need[i], po[i])):
                 fails.append(f"row {i}: KB or page-out value is not an integer")
-        # A
+        # A true
         lim = 0.75 * TOTAL_AFTER
         if max(need) >= lim:
             fails.append(f"A: max Needed {max(need)} >= 0.75 x new Total")
-        # B
+        # B false
         mean = lambda xs: sum(xs) / len(xs)
         if mean(free[CUT:]) > 0.35 * mean(free[:CUT]):
             fails.append("B: Free after is not far lower than before")
-        # C
+        # C true
         if not max(po[CUT:]) < max(po[:CUT]):
             fails.append("C: page-out peak after is not below before")
-        # E
+        # E true: Needed about 1 GB lower after the cut (5% buffer of a 20 GB VM against 40 GB)
+        gap = (mean(need[:CUT]) - mean(need[CUT:])) / 1_048_576
+        if not 0.8 <= gap <= 1.3:
+            fails.append(f"E: mean Needed before - after = {gap:.2f} GB, not 0.8-1.3 GB")
         rb = mean([n / t for n, t in zip(need[:CUT], total[:CUT])])
         ra = mean([n / t for n, t in zip(need[CUT:], total[CUT:])])
         if not 0.24 <= rb <= 0.29 or not 0.44 <= ra <= 0.52 or not 1.7 <= ra / rb <= 2.3:
-            fails.append(f"E: Needed/Total before {rb:.3f}, after {ra:.3f}")
-        # F (false)
+            fails.append(f"Needed/Total before {rb:.3f}, after {ra:.3f}")
+        # F (false): Needed did not fall by half
         nb = mean(need[:CUT])
         if not 0.85 <= mean(need[CUT:]) / nb <= 1.0:
             fails.append("F: mean Needed ratio outside [0.85, 1.0]")

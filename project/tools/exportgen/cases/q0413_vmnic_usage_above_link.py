@@ -72,22 +72,22 @@ class Q0413(core.Case):
         us = {o: formats.column(cols, rows, f"Usage for {o}") for o in ORDER_US}
         for i in range(len(rows)):
             for o in ORDER_RX:
-                if us[o][i] != rel.vmnic_usage(rx[o][i], tx[o][i]):
+                if us[o][i] != rel.vmnic_usage(rx[o][i], tx[o][i]):     # C true, H false
                     fails.append(f"row {i + 1}: Usage for {o} != receive + transmit")
             if rx[HOST][i] != sum(rx[n][i] for n in NICS):
                 fails.append(f"row {i + 1}: host receive != sum of vmnics")
             if tx[HOST][i] != sum(tx[n][i] for n in NICS):
                 fails.append(f"row {i + 1}: host transmit != sum of vmnics")
             u, r, x = us["vmnic2"][i], rx["vmnic2"][i], tx["vmnic2"][i]
-            if not u > LINK:                      # A/B/F stem
+            if not u > LINK:                      # A true, B false, F false
                 fails.append(f"row {i + 1}: Usage for vmnic2 {u} not above link")
-            if not 1_040_000 <= r <= 1_159_000:   # D
+            if not 1_040_000 <= r <= 1_159_000:   # D true
                 fails.append(f"row {i + 1}: vmnic2 receive {r} outside 1,040,000-1,159,000")
-            if not 0.62 <= (u / 2) / LINK <= 0.73:  # E
+            if not 0.62 <= (u / 2) / LINK <= 0.73:  # E false
                 fails.append(f"row {i + 1}: half of Usage / link outside 0.62-0.73")
-            if not u > max(r, x):                 # H
+            if not u > max(r, x):                 # H false
                 fails.append(f"row {i + 1}: Usage not above max(receive, transmit)")
-            if not 366_000 <= x <= 732_000:       # I
+            if not 366_000 <= x <= 732_000:       # I false
                 fails.append(f"row {i + 1}: vmnic2 transmit {x} outside 366,000-732,000")
         if max(rx["vmnic2"]) >= 1_160_000:        # G
             fails.append("G: max vmnic2 receive not below 1,160,000")

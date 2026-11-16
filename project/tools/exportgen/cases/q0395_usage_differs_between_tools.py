@@ -81,7 +81,7 @@ class Q0395(core.Case):
             if not con[i] <= gr[i] <= CONF or c["Ballooned memory"][i] != 0:
                 fails.append(f"row {i}: Consumed/Granted/Ballooned relation broken")
             if con[i] < 0.85 * CONF:
-                fails.append(f"row {i}: Consumed below 85% of configured")
+                fails.append(f"row {i}: C false: Consumed below 85% of configured")
         if _pearson(use, act) <= 0.95:
             fails.append("A: Usage does not follow Active")
         if max(con) / min(con) > 1.02:
@@ -96,6 +96,8 @@ class Q0395(core.Case):
                 fails.append(f"B: {VCF_COLS[k]} below 60")
         if v[9] != 0:
             fails.append("F: Contention (Max) not 0")
+        if v[4] >= 0.9 * v[8]:                       # I false: Consumed near configured while Windows needs well under it
+            fails.append("I: Needed Memory (Max) at 90% of Total Capacity or more, Consumed no longer overstates use")
         if max(act) >= 0.3 * v[5]:
             fails.append("G: Active not far below Needed")
         return fails[:20]

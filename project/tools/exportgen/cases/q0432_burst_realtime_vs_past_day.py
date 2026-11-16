@@ -78,7 +78,7 @@ class Q0432(core.Case):
         if cur:
             runs.append(cur)
         if len(runs) != 1 or not 5 <= runs[0] <= 7:
-            fails.append(f"C: runs of Usage >= 90: {runs}")
+            fails.append(f"C true: runs of Usage >= 90: {runs}")
         if any(10 <= x < 90 for x in u):
             fails.append("C: a Real-time row between 10 and 90")
         if max(max(vm), max(a), max(b)) >= 2.5:
@@ -92,11 +92,11 @@ class Q0432(core.Case):
             if t in rt_at and rt_at[t] + 15 <= len(u):
                 m = rel.rollup_mean(u[rt_at[t]:rt_at[t] + 15])
                 if abs(m - vals[0]) > 0.011:
-                    fails.append(f"{t}: Past day point != mean of its 15 Real-time rows")
+                    fails.append(f"B true, E false: {t}: Past day point != mean of its 15 Real-time rows")
                 if any(x >= 90 for x in u[rt_at[t]:rt_at[t] + 15]):
                     holds = vals[0]
         if holds is None or not 30 <= holds <= 50:
             fails.append(f"G: the Past day row that holds the burst is {holds}, not 30-50")
         if sum(x >= 10 for x in pd) != 1:
-            fails.append("G/F: not exactly one Past day row at 10 or above")
+            fails.append("F false, G true: not exactly one Past day row at 10 or above")
         return fails[:20]

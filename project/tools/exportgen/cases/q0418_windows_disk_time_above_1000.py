@@ -82,16 +82,16 @@ class Q0418(core.Case):
             if abs(tx[i] - rd[i] - wr[i]) > 1e-9 or wr[i] != 0 or st[i] != sr[i]:
                 fails.append(f"{k}: transfers / reads / writes / sec per transfer relations")
             if dtm[i] < 1000:                                              # A, B
-                fails.append(f"{k}: A % Disk Time {dtm[i]:.0f} below 1,000")
+                fails.append(f"{k}: A true, B false: % Disk Time {dtm[i]:.0f} below 1,000")
             if cpu[i] >= 20:                                               # H
-                fails.append(f"{k}: H % Processor Time {cpu[i]:.1f}")
+                fails.append(f"{k}: H false: % Processor Time {cpu[i]:.1f}")
             j = i - 1
             if vwrites[j] != 0 or abs(vrate[j] / vreads[j] - 8) > 0.1:
-                fails.append(f"{k}: vCenter writes or Read rate / reads")
+                fails.append(f"{k}: G true: vCenter writes or Read rate / reads (8 KB reads, reads only)")
             if abs(st[i] * 1000 - vlat[j]) > 0.15 * st[i] * 1000:           # D, L
-                fails.append(f"{k}: D guest {st[i] * 1000:.2f} ms vs vCenter {vlat[j]} ms")
+                fails.append(f"{k}: D true, L false: guest {st[i] * 1000:.2f} ms vs vCenter {vlat[j]} ms")
             if abs(tx[i] - vreads[j]) > 0.10 * tx[i]:
-                fails.append(f"{k}: D/L transfers vs vCenter reads")
-            if not 0.80 <= tx[i] * vlat[j] / 1000 / aq[i] <= 1.05:          # G
-                fails.append(f"{k}: G transfers x latency / queue outside 0.80-1.05")
+                fails.append(f"{k}: D true, L false: transfers vs vCenter reads")
+            if not 0.80 <= tx[i] * vlat[j] / 1000 / aq[i] <= 1.05:          # I true: the queue is transfers x time below the virtual disk, so halving the time halves it
+                fails.append(f"{k}: I: transfers x latency / queue outside 0.80-1.05")
         return fails[:20]

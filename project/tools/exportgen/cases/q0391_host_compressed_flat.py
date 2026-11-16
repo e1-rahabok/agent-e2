@@ -49,13 +49,13 @@ class HostCompressedFlat(core.Case):
             if not (cmin <= first <= cmax and cmin <= last <= cmax) or not umin < umax <= 100 or min(v) < 0:
                 fails.append(f"{n}: relation broken")
             if dec != 0:
-                fails.append(f"E: {n} Decompression Rate Max not 0")
+                fails.append(f"E, G: {n} Decompression Rate Max not 0")
         v = dict(rows)[SUBJECT]
         umin, umax, bal, first, last, cmin, cmax, comp, dec = v
         if bal != 0 or cmin < 512_000 or umax >= 90:
-            fails.append("A/C: balloon, compressed or Usage Max condition")
+            fails.append("A (balloon 0, no pressure) / C: balloon, compressed or Usage Max condition")
         if cmax > 1.10 * cmin or comp != 0:
-            fails.append("D: Compressed not near one value or Compression Rate not 0")
+            fails.append("D, G: Compressed not near one value or Compression Rate not 0")
         if last < 0.9 * first or cmin < 0.9 * cmax:
             fails.append("H: Compressed falls below 0.9")
         if cmax >= 4_500_000:

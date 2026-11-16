@@ -80,7 +80,7 @@ class ClusterAt70OneHostHot(core.Case):
                 fails.append(f"row {i}: time off the hourly axis")
                 break
             if abs(v[0] - sum(v[1:]) / 6) > 0.006:
-                fails.append(f"row {i}: cluster {v[0]} != mean of hosts")
+                fails.append(f"C true: row {i}: cluster {v[0]} != mean of hosts")
             if any(not 0 <= x <= 100 for x in v):
                 fails.append(f"row {i}: value outside 0..100")
         cl = [v[0] for _, v in rows]
@@ -88,7 +88,7 @@ class ClusterAt70OneHostHot(core.Case):
         top = sorted(range(HOURS), key=lambda i: -cl[i])[:10]
         for i in top:
             if hot[i] < 95 or cl[i] > 72:
-                fails.append(f"TOP row {i}: hot host {hot[i]}, cluster {cl[i]}")
+                fails.append(f"A/B: TOP row {i}: hot host {hot[i]}, cluster {cl[i]}")
             if not max(rows[i][1][1:]) > cl[i]:
                 fails.append(f"TOP row {i}: max host not above cluster")
         if not 65 <= max(cl) <= 72:
@@ -97,5 +97,11 @@ class ClusterAt70OneHostHot(core.Case):
             fails.append("hot host never reaches 95")
         for h in HOSTS:
             if h != HOT_HOST and any(v[HOSTS.index(h) + 1] >= 75 for _, v in rows):
-                fails.append(f"E: {h} reaches 75 or more")
+                fails.append(f"E false: {h} reaches 75 or more")
+        # G true: outside weekday business hours (Mon-Fri 09:00-17:00) the hot host is no hotter than the others
+        off = [v for n, v in rows if not (formats.parse_vcf_time(n).weekday() < 5 and 9 <= formats.parse_vcf_time(n).hour <= 17)]
+        hot_off = max(v[HOSTS.index(HOT_HOST) + 1] for v in off)
+        other_off = max(v[HOSTS.index(h) + 1] for v in off for h in HOSTS if h != HOT_HOST)
+        if not off or hot_off > 50 or hot_off > other_off:
+            fails.append(f"G: off-hours hot host max {hot_off} above 50 or above the other hosts' max {other_off}")
         return fails[:20]

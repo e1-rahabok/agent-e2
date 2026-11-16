@@ -121,16 +121,16 @@ class ClusterCpuAbove90(core.Case):
             fails.append("file 2 is not sorted by contention descending")
         if any(v[1] > 100 or v[1] < 0 for _, v in r2):
             fails.append("file 2: Usage Max outside 0..100")
-        # A false / B true
+        # A false / B true / D true / H false (the top VM is below 1% anyway: the average and the worst give the same reading)
         if not max(cons) < 1.0:
-            fails.append("A/B: a VM weekly contention max is 1.0 or more")
+            fails.append("A, B, D, H: a VM weekly contention max is 1.0 or more")
         if sum(1 for _, v in r2 if v[1] >= 88) < 40:
-            fails.append("B: fewer than 40 VMs with Usage Max >= 88")
-        # E true / H false
+            fails.append("A/B: fewer than 40 VMs with Usage Max >= 88")
+        # E true; the cluster is busy (A false needs busy without contention)
         if biz_n != 45 or biz_avg < 40:
             fails.append(f"E: {biz_avg} of {biz_n} business rows have Avg >= 90")
         if not max(v[0] for _, v in r1) >= 90:
-            fails.append("H: max Usage Avg below 90")
+            fails.append("A/E: max Usage Avg below 90")
         if not max(v[1] for _, v in r1) > 80:
-            fails.append("H: max Usage Max not above 80")
+            fails.append("A/E: max Usage Max not above 80")
         return fails[:20]

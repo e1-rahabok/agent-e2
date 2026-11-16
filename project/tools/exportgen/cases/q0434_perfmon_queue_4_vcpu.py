@@ -90,8 +90,10 @@ class PerfmonQueue4Vcpu(core.Case):
             if sum(v[k] >= 90 for v in data) < 54:
                 fails.append(f"D: Processor({k}) at 90 or above in fewer than 54 rows")
         if rows[0][1][7] == 0 or any(x == 0 for x in q) or sorted(q)[30] <= 8:
-            fails.append("I: queue is 0 or median not above 8")
+            fails.append("I false: queue is 0 or median not above 8")
+        if sum(v[6] > 100 for v in data) < 45 or any(v[4] > 100 for v in data):   # J true: Utility above 100, Processor Time never
+            fails.append("J: % Processor Utility not above 100 in at least 45 rows, or % Processor Time above 100")
         cs = [v[8] for v in data]
         if sum(cs[50:]) / 10 < 1.5 * sum(cs[:10]) / 10:
-            fails.append("C: Context Switches/sec do not rise 1.5x")
+            fails.append("C false (stem): Context Switches/sec do not rise 1.5x")
         return fails[:20]

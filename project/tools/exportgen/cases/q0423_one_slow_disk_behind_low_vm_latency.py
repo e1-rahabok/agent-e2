@@ -96,10 +96,10 @@ class Q0423(core.Case):
             if p < a:
                 fails.append(f"point {i + 1}: peak below aggregate")
             if (i in WIN and p < 15) or (i not in WIN and p >= 10):
-                fails.append(f"point {i + 1}: C/D peak {p} outside the window rule")
+                fails.append(f"point {i + 1}: C true, D false: peak {p} outside the window rule")
         if g(SLOW, "Read IOPS") >= 0.10 * g(AGG, "Read IOPS") or g(SLOW, "Read IOPS") >= 0.10 * s:
             fails.append("H: scsi1:2 carries 10% or more of the IOPS")
         for d in DISKS:
             if d != SLOW and g(d, "Read Latency (ms) (Max)") > 1.2:
-                fails.append(f"B/E: {d} Max above 1.2")
+                fails.append(f"B false: {d} Max above 1.2")
         return fails[:20]

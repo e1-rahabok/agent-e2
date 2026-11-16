@@ -140,17 +140,17 @@ class DrsScoreHighOneVmLow(core.Case):
                 fails.append(f"row {i}: Co-stop, Max limited, Wait or Usage relation broken")
             readiness.append(rd)
         pay, decoy = g[0], g[1]
-        if pay["name"] != VM or decoy["name"] != DECOY:                          # B, H
+        if pay["name"] != VM or decoy["name"] != DECOY:                          # B true, G false (a second VM with a low score and no CPU wait)
             fails.append("first grid row is not pay-api-03 or second is not rpt-batch-09")
         m15 = sum(readiness[-15:]) / 15
         if abs(pay["ready"] - m15) > 0.01:
             fails.append(f"grid Readiness {pay['ready']} != mean of the last 15 chart rows {m15:.2f}")
-        if min(readiness) < 2:                                                    # C
+        if min(readiness) < 2:                                                    # C false
             fails.append("a Readiness below 2")
-        if not (sum(readiness) / ROWS > 5 and sum(1 for x in readiness if x > 5) >= 0.8 * ROWS):   # D
+        if not (sum(readiness) / ROWS > 5 and sum(1 for x in readiness if x > 5) >= 0.8 * ROWS):   # D true, C false
             fails.append("D: mean Readiness not above 5, or fewer than 80% of rows above 5")
-        if not (decoy["drs"] < 60 and decoy["ready"] < 1 and decoy["swap"] > 0 and decoy["balloon"] > 0):   # H
-            fails.append("H: rpt-batch-09 does not show a low score with low Ready and swap/balloon")
+        if not (decoy["drs"] < 60 and decoy["ready"] < 1 and decoy["swap"] > 0 and decoy["balloon"] > 0):   # G false: a low VM DRS Score is not always CPU wait
+            fails.append("G false: rpt-batch-09 does not show a low score with low Ready and swap/balloon")
         if not pay["drs"] < 50:
             fails.append("B: pay-api-03 DRS Score not below 50")
         return fails[:20]

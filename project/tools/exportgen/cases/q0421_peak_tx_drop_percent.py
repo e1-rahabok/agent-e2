@@ -72,29 +72,29 @@ class Q0421(core.Case):
         if fails:
             return fails
         if len(set(stamps)) != N or any((b - a).total_seconds() != STEP_S for a, b in zip(stamps, stamps[1:])):
-            fails.append("D: stamps are not 72 distinct points 300 s apart")
+            fails.append("stamps are not 72 distinct points 300 s apart")
         v = {k: [x for _, x in rows] for k, rows in data.items()}
         for i in range(N):
             if abs(v["dep"][i] - v["total_drop"][i] / 15) > 1e-5:
                 fails.append(f"row {i + 1}: (DEP) != Total dropped / 15")
             if abs(v["peak"][i] - 15 * v["total_drop"][i] / v["total_tx"][i] * 100) > 1e-3:
-                fails.append(f"row {i + 1}: Peak != 15 x Total dropped / Total transmitted x 100")
+                fails.append(f"row {i + 1}: A false, C false: Peak != 15 x Total dropped / Total transmitted x 100")
             if v["total_tx"][i] <= 4_500_000:
                 fails.append(f"row {i + 1}: Total transmitted {v['total_tx'][i]} not above 4,500,000")
         pos = [i for i, x in enumerate(v["peak"]) if x > 0]
         if len(pos) != 1:
-            return fails + [f"A/H: {len(pos)} rows with Peak > 0"]
+            return fails + [f"G true, H false: {len(pos)} rows with Peak > 0 (one burst cycle expected)"]
         i = pos[0]
         if not 2.5 <= v["peak"][i] <= 3.5:
-            fails.append(f"A/H: Peak {v['peak'][i]} outside 2.5-3.5")
+            fails.append(f"G: Peak {v['peak'][i]} outside 2.5-3.5")
         ratio = 100 * v["total_drop"][i] / v["total_tx"][i]
         if not 0.15 <= ratio <= 0.25:
-            fails.append(f"B/C: Total ratio {ratio:.3f}% outside 0.15-0.25")
+            fails.append(f"B true: Total ratio {ratio:.3f}% outside 0.15-0.25")
         if not 14.5 <= v["peak"][i] / ratio <= 15.5:
-            fails.append("B/C: Peak / Total ratio not about 15")
+            fails.append("B true, G true: Peak / Total ratio not about 15")
         if not 100 * v["dep"][i] / v["total_tx"][i] < 0.02:
-            fails.append("C trap: (DEP) ratio not below 0.02%")
+            fails.append("B true: (DEP) ratio not below 0.02%")
         for j in range(N):
             if j != i and (v["peak"][j] or v["total_drop"][j] or v["dep"][j]):
-                fails.append(f"F/I: row {j + 1} has a non-zero drop value")
+                fails.append(f"E false, H false: row {j + 1} has a non-zero drop value")
         return fails[:20]

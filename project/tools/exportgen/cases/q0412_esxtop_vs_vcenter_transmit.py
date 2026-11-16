@@ -128,7 +128,7 @@ class Q0412(core.Case):
         last30 = tx[-30:]
         mean = sum(last30) / 30
         if max(abs(x - mean) for x in last30) > 0.05 * mean:
-            fails.append("G: last 30 rows not within 5% of their mean")
+            fails.append("G false: last 30 rows not within 5% of their mean")
         last3 = sum(tx[-3:]) / 3
         self._mbps_csv = rel.kbps_to_mbps(last3)
         return fails[:20]
@@ -156,6 +156,9 @@ class Q0412(core.Case):
         vm = vm[0]
         if vm["TEAM-PNIC"] != "vmnic1" or vm["PSZTX"] != "1514.00" or vm["%DRPTX"] != "0.00" or vm["%DRPRX"] != "0.00":
             fails.append("inline:1: VM port TEAM-PNIC, PSZTX or drops differ")
+        pk = f(vm, "PKTTX/s")
+        if not 1400 <= 1e6 / 8 * f(vm, "MbTX/s") / pk <= 1550:     # L true: average packet size near 1,500 bytes
+            fails.append("inline:1: L: PKTTX/s and MbTX/s do not give an average packet size near 1,500 bytes")
         mb = f(vm, "MbTX/s")
         if not 2800 <= mb <= 3200:
             fails.append(f"inline:1: VM MbTX/s {mb} outside 2,800-3,200")
@@ -164,7 +167,7 @@ class Q0412(core.Case):
             tx = [r[1][COLS.index(f"Data transmit rate for {VM}")] for r in rows_csv]
             if abs(tx[-1] * 8 / 1000 - mb) > 0.1 * mb:                  # C
                 fails.append("inline:1: transmit x 8 / 1000 not within 10% of MbTX/s")
-            if not 110 <= tx[-1] / mb <= 140:                          # K
+            if not 110 <= tx[-1] / mb <= 140:                          # K false (about 125 times larger, not smaller)
                 fails.append("inline:1: transmit / MbTX/s outside 110-140")
             if abs(rel.kbps_to_mbps(sum(tx[-3:]) / 3) - mb) > 0.05 * mb:  # B, J, I
                 fails.append("inline:1: last-minute mean converted not within 5% of MbTX/s")

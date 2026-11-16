@@ -56,11 +56,11 @@ class Q0414(core.Case):
         for i in range(N):
             k = f"row {i + 1}"
             if abs(cmd[i] - rel.weighted_latency(rd[i], rq[i], wr[i], wq[i])) > 0.5:
-                fails.append(f"{k}: Command latency not the weighted mean")
+                fails.append(f"{k}: G true: Command latency not the weighted mean")
             if cmd[i] != phy[i] + ker[i]:
                 fails.append(f"{k}: Command != Physical + Kernel")
             if not 6 <= rq[i] / wq[i] <= 10:
-                fails.append(f"{k}: reads / writes {rq[i] / wq[i]:.1f}")
+                fails.append(f"{k}: A: reads / writes {rq[i] / wq[i]:.1f}")
             self._keys(fails, k, rd[i], wr[i], cmd[i])
         if sum(x > 0 for x in ker) > 0.10 * N:
             fails.append("Kernel latency above 0 in more than 10% of rows")
@@ -71,12 +71,12 @@ class Q0414(core.Case):
     @staticmethod
     def _keys(fails, k, r, w, cm):
         if not 1.2 <= cm / r <= 1.8:
-            fails.append(f"{k}: A Command / Read {cm / r:.2f}")
+            fails.append(f"{k}: A true: Command / Read {cm / r:.2f}")
         if not cm < 0.9 * (r + w) / 2:
-            fails.append(f"{k}: B Command not below 0.9 x plain mean")
+            fails.append(f"{k}: B false: Command not below 0.9 x plain mean")
         if not 4 <= w / r <= 6 or not cm < w / 2:
-            fails.append(f"{k}: C Write / Read or Command < Write / 2")
+            fails.append(f"{k}: C true, D false: Write / Read or Command < Write / 2")
         if not cm > r:
-            fails.append(f"{k}: E Command not above Read")
+            fails.append(f"{k}: E false: Command not above Read")
         if not (cm - r) < (w - cm) or cm - r > 2 or w - cm < 8:
-            fails.append(f"{k}: I Command - Read, Write - Command")
+            fails.append(f"{k}: H false: Command - Read, Write - Command")

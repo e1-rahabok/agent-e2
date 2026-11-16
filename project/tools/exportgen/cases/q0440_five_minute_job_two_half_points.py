@@ -93,13 +93,13 @@ class FiveMinuteJobTwoHalfPoints(core.Case):
                 covered += 1
                 m = sum(usage[w] for w in win) / 15
                 if abs(v - m) > 1e-6:
-                    fails.append(f"D: VCF {t} {v} != mean of file 1 window {m}")
+                    fails.append(f"D false: VCF {t} {v} != mean of file 1 window {m}")
         if covered != 5:
             fails.append(f"D: {covered} covered cycles, expected 5")
         # A / F
         hi = [t for t, v in r1 if v[0] >= 90]
         if hi != core.time_axis(BUSY_FIRST, 15, 20):
-            fails.append("F: busy rows are not 15 consecutive rows 02:05:20Z..02:10:00Z")
+            fails.append("A false, F true: busy rows are not 15 consecutive rows 02:05:20Z..02:10:00Z")
         if any(v[0] >= 10 for t, v in r1 if t not in hi):
             fails.append("F: an idle row is 10 or more")
         # B / C
@@ -108,14 +108,18 @@ class FiveMinuteJobTwoHalfPoints(core.Case):
         by = dict(r2)
         for c in (c1, c2):
             if not 40 <= by[c] <= 60:
-                fails.append(f"B: VCF value at {c} is {by[c]}")
+                fails.append(f"B true: VCF value at {c} is {by[c]}")
         for t, v in r2:
             if t not in (c1, c2) and v >= 10:
                 fails.append(f"B: VCF {t} is {v}, not idle")
         n1 = sum(1 for t in hi if c1 - dt.timedelta(seconds=280) <= t <= c1)
         n2 = sum(1 for t in hi if c2 - dt.timedelta(seconds=280) <= t <= c2)
         if (n1, n2) != (8, 7) or not (6 <= n1 <= 9 and 6 <= n2 <= 9):
-            fails.append(f"C: busy rows per cycle {n1}, {n2}")
+            fails.append(f"C true: busy rows per cycle {n1}, {n2}")
         if any(v >= 70 for _, v in r2):
-            fails.append("G: a VCF value is 70 or more")
+            fails.append("A false: a VCF value is 70 or more")
+        busy_mean = sum(usage[t] for t in hi) / len(hi)                 # H true: the two values add up to about one busy point
+        two = by[c1] + by[c2]
+        if abs(two - busy_mean) > 8:
+            fails.append(f"H: the two job values add to {two:.1f}, not about the busy level {busy_mean:.1f}")
         return fails[:20]

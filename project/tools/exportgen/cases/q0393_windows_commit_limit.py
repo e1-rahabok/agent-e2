@@ -88,7 +88,7 @@ class WindowsCommitLimit(core.Case):
             if any(x % 4096 for x in (cb, lim, cache)):
                 fails.append(f"row {i}: byte value not a multiple of 4096")
             if abs(lim / MIB - P) > 1 or abs(lim / MIB - 16_384) > 0.05 * 16_384:
-                fails.append(f"row {i}: D Commit Limit not about 16 GB")
+                fails.append(f"row {i}: D true: Commit Limit not about 16 GB")
             if i in FAIL:
                 if cb / lim < 0.97:
                     fails.append(f"row {i}: A commit below 97%")
@@ -101,7 +101,7 @@ class WindowsCommitLimit(core.Case):
         fails = []
         if blocks.get(2, "") != ("PS C:\\> Get-CimInstance Win32_PageFileUsage | Format-List Name, AllocatedBaseSize, "
                                  "CurrentUsage, PeakUsage\nPS C:\\>"):
-            fails.append("inline:2: not the literal empty result")
+            fails.append("inline:2: C true: not the literal empty result")
         num = lambda label: (lambda m: int(m.group(1).replace(",", "")) if m else None)(
             re.search(rf"^{re.escape(label)}\s+([\d,]+) MB$", t, re.M))
         tot, av = num("Total Physical Memory:"), num("Available Physical Memory:")

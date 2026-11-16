@@ -92,16 +92,20 @@ class Q0420(core.Case):
                 fails.append(f"row {i + 1}: transmit bytes per packet {bpt:.0f}")
             if td[i] != 0:
                 fails.append(f"row {i + 1}: Transmit packets dropped {td[i]}")
-        # B: drops in at least 30 rows
+        # B true (ESXi counts drops Linux does not), H true: one 12-minute run plus two small counts before it
         if sum(d > 0 for d in rd) < 30:
             fails.append("B: fewer than 30 rows with Receive packets dropped > 0")
+        run = [i + 1 for i, d in enumerate(rd) if d > 0 and WIN[0] <= i + 1 <= WIN[1]]
+        lone = [(i + 1, d) for i, d in enumerate(rd) if d > 0 and not WIN[0] <= i + 1 <= WIN[1]]
+        if len(run) != WIN[1] - WIN[0] + 1 or len(lone) != 2 or any(r > WIN[0] or d >= 100 for r, d in lone):
+            fails.append(f"H: drops are not one run of rows {WIN} plus two earlier counts under 100: {len(run)} run rows, outside {lone}")
         win = rd[WIN[0] - 1:WIN[1]]
         if min(win) < 13000 or max(win) > 32000:
             fails.append(f"burst drops outside 13,000-32,000: {min(win)}-{max(win)}")
         # I: the worst row loses 3-8.5% of Packets received
         worst = max(d / p for d, p in zip(rd, rx))
         if not 0.03 <= worst <= 0.085:
-            fails.append(f"I: worst drop share {worst:.3f}, expected 0.03-0.085")
+            fails.append(f"I false: worst drop share {worst:.3f}, expected 0.03-0.085")
         return fails[:20]
 
     def check_inline(self, blocks, files):
@@ -113,7 +117,7 @@ class Q0420(core.Case):
         except (KeyError, ValueError, IndexError):
             return ["inline:1: cannot parse ip -s link output for ens192"]
         if rx["dropped"] != 0 or rx["errors"] != 0 or rx["missed"] != 0:
-            fails.append("inline:1: RX errors, dropped or missed is not 0")
+            fails.append("inline:1: B true, C false: RX errors, dropped or missed is not 0")
         if tx["dropped"] != 0:
             fails.append("inline:1: TX dropped is not 0")
         if FILE in files:
@@ -126,8 +130,8 @@ class Q0420(core.Case):
             fails.append("inline:2: not exactly 4 Rx Queue# lines")
         if [int(x) for x in re.findall(r"Rx Queue#:\s*(\d+)", eth)] != [0, 1, 2, 3]:
             fails.append("inline:2: Rx queue indices are not 0-3")
-        if len(re.findall(r"pkts rx OOB: 0\s*$", eth, re.M)) != 4:
-            fails.append("inline:2: pkts rx OOB is not 0 on four lines")
+        if len(re.findall(r"pkts rx OOB: 0\s*$", eth, re.M)) != 4:    # D true, A false, F false
+            fails.append("inline:2: D: pkts rx OOB is not 0 on four lines")
         if len(re.findall(r"drv dropped rx total: 0\s*$", eth, re.M)) != 4:
             fails.append("inline:2: drv dropped rx total is not 0 on four lines")
         nonzero = [n for ln in eth.splitlines() if ":" in ln and "Queue#" not in ln
