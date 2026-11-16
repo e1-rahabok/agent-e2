@@ -108,12 +108,12 @@ class Q0388(core.Case):
             fails.append("A: Ballooned is not 0 before row 76 and positive from it")
         if any(b < a for a, b in zip(bl[:R + 3], bl[1:R + 3])):
             fails.append("A: rise is not a single non-decreasing step")
-        flat_t, flat_b = tg[R + 3:], bl[R + 3:]            # B
+        flat_t, flat_b = tg[R + 3:], bl[R + 3:]            # B false, H false: the target held, flat and equal to Ballooned
         if max(flat_t) / min(flat_t) > 1.02:
-            fails.append("B: target varies in the flat rows")
+            fails.append("B/H: target varies in the flat rows")
         if any(abs(t - b) / t > 0.01 for t, b in zip(flat_t, flat_b)):
-            fails.append("B: Ballooned further than 1% from the target in the flat rows")
-        if any(v != 0 for v in lat) or any(v != 0 for v in si):  # C, D, F
+            fails.append("B/H: Ballooned further than 1% from the target in the flat rows")
+        if any(v != 0 for v in lat) or any(v != 0 for v in si):  # C true, D false, F false
             fails.append("C/D: Latency or Swap in rate not 0")
         if any(v != 0 for v in so):
             fails.append("Swap out rate not 0")

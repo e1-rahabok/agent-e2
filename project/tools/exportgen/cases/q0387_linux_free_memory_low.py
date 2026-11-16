@@ -63,9 +63,9 @@ class LinuxFreeMemoryLow(core.Case):
                 fails.append(f"{n}: relation broken")
         tot, fmin, fmax, nmin, nmax, cons = dict(rows)[SUBJECT]
         if fmax >= 0.05 * T:
-            fails.append("A: Free Max not below 5%")
+            fails.append("A false / B true: Free Max not below 5%")
         if nmax >= 0.5 * T or nmin < 0.2 * T:
-            fails.append("E: Needed range")
+            fails.append("E true: Needed range")
         return fails[:20]
 
     def check_inline(self, blocks, files):
@@ -75,12 +75,12 @@ class LinuxFreeMemoryLow(core.Case):
         if not m or int(m.group(1)) < 8:
             fails.append("inline:1: uptime shows fewer than 8 days")
         if not re.search(r"^pswpin 0$", t, re.M) or not re.search(r"^pswpout 0$", t, re.M):
-            fails.append("inline:1: swap counters not 0")
+            fails.append("inline:1: C: swap counters not 0")
         try:
             psi = formats.parse_pressure(t[t.index("some avg10"):])
         except (ValueError, IndexError):
             return fails + ["inline:1: PSI lines missing"]
-        for tag in ("some", "full"):
+        for tag in ("some", "full"):                      # D false: no stall in the last 10 s, minute or 5 minutes
             if any(psi[tag][k] != 0 for k in ("avg10", "avg60", "avg300")):
                 fails.append(f"inline:1: PSI {tag} average not 0.00")
         if psi["full"]["total"] > psi["some"]["total"]:
