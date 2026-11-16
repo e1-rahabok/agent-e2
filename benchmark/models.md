@@ -124,9 +124,9 @@ Preferred, not required:
 ## 4. Candidates
 | Model | Tier | Size, licence | Why in the benchmark | Result so far |
 |---|---|---|---|---|
-| google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | No round on Agent E2 yet (earlier generations archived, not compared) |
-| alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | No round on Agent E2 yet; reasoning off |
-| meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for multi-turn tool use (weights 2026-08) | No round on Agent E2 yet; reasoning off |
+| google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | Round of 2026-11-16, default settings: Agent E2 79% (Level 400 74%), Base 40%, confident wrong 21% |
+| alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | Round of 2026-11-16, reasoning off: Agent E2 67% (Level 400 61%), Base 20%, confident wrong 32% |
+| meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for multi-turn tool use (weights 2026-08) | Round of 2026-11-16, effort low: Agent E2 84% (Level 400 83%), Base 41%, confident wrong 15% |
 
 - 3 candidates from 3 vendors (Google, Alibaba, Meta), all dense, all tier A (one 48 GB GPU at 4-bit or 8-bit).
 - Next challenger: a current-generation dense vision model of about 70B, after 1.0 (author, 2026-11-13; none on the gateway on 2026-11-14: only Llama 3.1 and 3.3 70B, text only; [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Milestones, list After 1.0).
@@ -148,8 +148,8 @@ Preferred, not required:
 - Effort low makes each call about 2.7 times slower and writes about 3.3 times as many tokens (measured on Qwen only; Muse's own numbers come with the round's results). A full run of 2,910 answers takes about 26 minutes with reasoning off and an estimated 60 to 75 minutes at effort low with 8,000 tokens; the cost rises with the tokens (about US$ 6 to 8 more for Qwen).
 - Reasoning off is not free of thinking tokens: 4% of its answers still reached the 4,000-token cap, 85 of the 88 in baseline mode. The visible answer is short (an ANSWER line and a REASON line, about 290 characters), so the cap was spent on hidden thinking that `effort: none` did not fully suppress. 70 of the 88 still had a readable letter. Why it happens on some questions is not known.
 - A cap of 4,000 tokens does not fit effort low: 17% reach it and 14% have no readable letter. Effort low needs 8,000, where 1.4% still reach the cap.
-- The first full scored round has Gemma at its default, Qwen at effort low with 8,000 tokens and Muse at effort low; the reasoning-off answers of Qwen and Muse sit in the archived `-invalid-0` folders. The full effect on the score is read in the round's `benchmark/results/README.md`.
-- Paired comparison, Base mode only (author asked, 2026-11-16): the same 803 question and run pairs (162 questions, 5 runs each, in id order, Level 100 to 400), Qwen reasoning off against effort low with 8,000 tokens. Exact-match (every correct letter and no wrong one):
+- The scored round of 2026-11-16 ran Gemma at its default, Qwen with reasoning off and Muse at effort low. A gateway 503 burst stopped Qwen's and Muse's first runs (reasoning off) and the runner restarted both at effort low; Qwen's effort-low runs then stopped on cut-off answers, so Qwen's reasoning-off run was resumed and finished. Muse's reasoning-off run (1,875 of 2,910 answers) and Qwen's two effort-low runs (803 and 191 answers) are archived as stopped runs in `project/archive/benchmark-results-2026-11-16-stopped-runs/`. The scores are in `benchmark/results/README.md`.
+- Paired comparison, Base mode only (author asked, 2026-11-16): the same 803 question and run pairs (162 questions, 5 runs each, in id order, Level 100 to 400), Qwen reasoning off against effort low with 8,000 tokens. Sources: the Qwen effort-low run of 803 answers in `project/archive/benchmark-results-2026-11-16-stopped-runs/` and the Qwen reasoning-off run in `benchmark/results/`. Exact-match (every correct letter and no wrong one):
 
 | | Reasoning off | Effort low, 8,000 |
 |---|---|---|
