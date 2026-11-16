@@ -1,29 +1,33 @@
 # Which counter to size VM CPU
 
 ## Prompt
-- The context is sizing, not performance troubleshooting.
+- The owner of a VM asks for more vCPUs. You size the vCPU count the guest needs, not the VM's cost on the host.
 
-Which counters from the list are the most accurate?
+Which of these counters are better inputs for the vCPU count the guest needs than the others listed?
 
-- A. VM CPU Usage (MHz)
-- B. VM CPU Usage (%)
-- C. VM CPU Demand (MHz)
-- D. VM CPU Demand (%)
-- E. VM CPU Run - Overlap. In VCF Operations this is CPU Net Run (%).
+- A. VM CPU Usage (MHz), from vCenter
+- B. VM CPU Used (ms), from vCenter
+- C. VM CPU Demand (MHz), from vCenter
+- D. VM CPU System (ms), from vCenter
+- E. CPU Net Run (%), from VCF Operations
 
 ## Likely wrong answer
-C or D (Demand), because it includes unmet demand; or A/B (Usage).
+C: Demand read as the CPU the guest asks for, unmet demand included. Or A: Usage read as the work the guest needs.
 
 ## Expected key points
 - Answer: E.
-- A and B are wrong: you size the Guest OS, not the VM's virtual hardware. Frequency-based metrics measure throughput.
-- C and D are wrong: Demand is an internal counter the kernel uses for scheduling decisions. It does not apply to the Guest OS.
-- More accurate: configured vCPU - Idle + a CPU Run Queue factor. No such counter exists; build it as a super metric.
+- A is wrong: Usage counts cycles. Turbo, power saving and Hyper-Threading move it, and it carries load charged at VM level; the guest sees none of these.
+- B is wrong: VM Used includes System and the VMX, MKS and helper worlds, hypervisor overhead that is not guest demand, and it is scaled by frequency and Hyper-Threading.
+- C is wrong: Demand is an internal counter of the kernel scheduler, and like Usage it moves with frequency and Hyper-Threading.
+- D is wrong: System is the time the hypervisor spends on the VM's IO and privileged instructions, charged at VM level; the guest never sees it, so it is hypervisor overhead, not guest demand.
+- E is correct: the best of the list. Net Run is Run minus Overlap: run time, blind to frequency and Hyper-Threading. It still leaves out Ready, Co-stop and the non-idle waits the guest demanded; the fuller Guest OS formula is configured vCPU - Idle + a run queue factor (no single counter; build it as a super metric).
 
 ## Notes
-- Author (Q186, 2026-11-12): "VM sizing" in an administrator's words almost always means Guest OS sizing. Agent E2 names that reading (term map row vm-sizing). The hint was removed. Claude Haiku 5.5 picked C (Demand) on this prompt.
+- Author (Q186, 2026-11-12): "VM sizing" in an administrator's words almost always means Guest OS sizing. Agent E2 names that reading (term map row vm-sizing).
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "A correctly sized VM balances performance, capacity and cost."
-- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Choose the most accurate counter from the list."
+- Changed in the 2026-11-15 audit: the stem names the job (the owner asks for more vCPUs: Guest OS sizing, not VM footprint, where Usage or Demand can be right) and asks for a comparison with the others listed (no singular superlative, no absolute "suit": Net Run leaves out Ready and Co-stop). B (VM CPU Usage (%), the same truth as A) replaced by VM CPU Used (ms) (guest-os-sizing, CPU: exclude, Hypervisor overhead); E no longer carries an explanation sentence. Kept as text: the evidence form is the practical partner 0371.
+- 2026-11-16 re-review: D (VM CPU Demand (%), the same counter as C in another unit, so the same truth value) replaced by VM CPU System (ms) (guest-os-sizing, CPU: exclude, Hypervisor overhead; system, Meaning). Key unchanged. Left noted: the reviewer reads the level as generous (a strong Level 300 reader answers from "size from Run").
+- Open in the knowledge base: net-run and run remove Overlap from the sizing input, overlap and guest-os-sizing keep it inside Run. E stays the best of the list either way (Run is not an option).
 
 ## Metadata
 ```yaml
@@ -48,7 +52,7 @@ source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q5 VM 
 answer_type: deterministic
 level: 400                      # author 2026-11-05
 answer: [E]
-misconception: [C,D]
+misconception: [C]
 misconception_type: [frequency-and-hyper-threading]
 pair: "0371"
 status: draft

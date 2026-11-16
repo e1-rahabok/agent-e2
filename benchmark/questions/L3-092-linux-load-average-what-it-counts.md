@@ -1,0 +1,63 @@
+# Linux load average: what it counts
+
+## Prompt
+- A Linux VM has 4 vCPUs.
+- The application owner runs `uptime` and reads: load average: 6.20, 5.90, 4.10.
+- He asks whether the VM is short of CPU.
+
+Which statements about the Linux load average are correct?
+
+- A. A task asleep in the kernel waiting for a disk read adds to the figure, as a running task does.
+- B. It counts the threads waiting for a vCPU, so here about two threads queue for a vCPU.
+- C. It is a count for the whole Guest OS, not a figure per vCPU.
+- D. A burst of runnable tasks shorter than 5 seconds always shows in the 1-minute figure.
+- E. Each figure averages that count, sampled every 5 s, with exponential decay over 1, 5 or 15 minutes.
+- F. A load average above the vCPU count points to IO wait, not to a CPU queue.
+- G. Four more vCPUs are the fix: a load average of 6.20 is above the 4 vCPUs.
+- H. The load average can stay above the vCPU count while the vCPUs sit mostly idle.
+
+## Likely wrong answer
+B: the load average read as the CPU queue, so 6.20 on 4 vCPUs means the VM is short of CPU. Or G, the action that follows from it.
+
+## Expected key points
+- Answer: A, C, E, H.
+- A true: the load average counts tasks in state R (running or runnable) and in state D (uninterruptible sleep, usually waiting for disk IO).
+- B false: the misconception. Tasks waiting for IO are in the count too, so the figure alone does not show a CPU queue; the run queue (`r` in vmstat) and per-vCPU time do.
+- C true: the count is not divided by the vCPU count; it is read against it.
+- D false: the kernel samples the count every 5 seconds; a burst that starts and ends between two samples is never counted.
+- E true: the kernel samples the count every 5 seconds and keeps three exponentially decaying averages, so the 1-minute figure still carries older samples.
+- F false: the over-correction. Runnable tasks are part of the count; a load above the vCPU count with every vCPU busy and a long run queue is a CPU queue.
+- G false: the wrong action. The load includes tasks waiting for IO; more vCPUs do not make a disk answer faster. Read the run queue and per-vCPU time first.
+- H true: tasks blocked on IO raise the load while the vCPUs idle; a high load with idle vCPUs points to IO, not CPU.
+
+## Notes
+- Changed in the 2026-11-15 audit: B and F without the absolutes "only ... at all times" and "always ... never"; G without the "Add" opening (an imperative shape that is wrong in 18 of 19 options in the bank). D keeps "always": without it a 2-3 second burst can show or not, and the option would be undecidable. Key unchanged.
+- Theory half of 0260 (pair: design.md, section 3.9). Different numbers from 0260, so one does not give away the other.
+- Sources: Linux man-pages 6.19, proc_loadavg(5) (state R or state D, averaged over 1, 5 and 15 minutes); Linux kernel source, kernel/sched/loadavg.c (exponentially decaying average of nr_running + nr_uninterruptible) and include/linux/sched/loadavg.h (LOAD_FREQ, 5-second intervals). https://man7.org/linux/man-pages/man5/proc_loadavg.5.html
+- Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item B3). Counts only after author approval.
+
+## Metadata
+```yaml
+id: "0428"
+title: "Linux load average: what it counts"
+product: [linux, vsphere]
+technology: [cpu, storage]
+task: explain-mechanism
+level: 300
+answer_type: deterministic
+input: [text]
+object: [guest-os]
+tool: [guest-os-tools]
+knowledge:
+  - guest-os/system/troubleshooting/linux-os-slow
+  - guest-os/cpu/metrics/run-queue
+knowledge_main: guest-os/system/troubleshooting/linux-os-slow
+attachments: []
+origin: synthetic
+source_path: "Pairing plan 2026-11-14, item B3"
+answer: [A, C, E, H]
+misconception: [B, G]
+misconception_type: [unit-and-normalization, rollup-and-interval]
+pair: "0260"
+status: draft
+```

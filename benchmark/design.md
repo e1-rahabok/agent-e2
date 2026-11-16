@@ -137,15 +137,15 @@ An administrator rarely questions a counter in the abstract. The question comes 
 | Type | Tests | Input |
 |---|---|---|
 | Theory | The counter: what it counts, its formula, how it differs from its namesakes | Text |
-| Practical | The same fact on a screen that disagrees with what the administrator expects | Screenshot, sometimes a table |
+| Practical | The same fact in tool output that disagrees with what the administrator expects | An export: CSV or tool text; a screenshot only where the misreading is visual (2026-11-15) |
 
 - Both questions carry `pair` with the other's id; lint checks that it exists and points back.
-- Reading the pair: wrong on both is a knowledge gap (fix the knowledge base); right on theory and wrong on practical is a reading failure (check the trace: the screen misread in stage 1, the file missed, or the model ignored it); wrong on theory and right on practical is a guess.
+- Reading the pair: wrong on both is a knowledge gap (fix the knowledge base); right on theory and wrong on practical is a reading failure (check the trace: the export or screen misread, the file missed, or the model ignored it); wrong on theory and right on practical is a guess.
 - Each question is sent alone, so one never gives away the other.
-- Pairs are written where the trap shows on a screen, not for every counter. A practical half whose screenshot does not exist yet waits with status `awaiting-input` and a `## Input to supply` that states the capture its key needs (benchmark/README.md); it does not run until the author supplies the image. A fact gets two questions at most: every question weighs the same (section 3.6).
-- The pairing of the whole set (audit, decisions, the pairs and their captures): [project/question-pairing-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-pairing-2026-11-14.md).
+- Pairs are written where the misreading shows in tool output, not for every counter. Each practical half has at least one option only its evidence decides. A practical half whose evidence does not exist yet waits with status `awaiting-input` and a `## Input to supply`; since 2026-11-15 the evidence is generated (section 13.1), so none waits. A fact gets two questions at most: every question weighs the same (section 3.6). The audit of 2026-11-15 counted facts by the correct and misconception options only ([project/question-bank-audit-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-bank-audit-2026-11-15.md)).
+- The pairing of the whole set (audit, decisions, the pairs): [project/question-pairing-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-pairing-2026-11-14.md); the practical halves as exports: [project/practical-questions-as-exports-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/practical-questions-as-exports-2026-11-15.md).
 - Theory options, from the first pair: each option one fact about the mechanism, no option the negation of another, no vague "they differ"; the Level 300 misconception and its over-correction both present; a false option that draws the wrong action from the reading.
-- First pair: [ESXi CPU Demand and Usage: vCenter vs VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-041-esxi-cpu-demand-vcenter-vs-vcf-operations.md) and [ESXi CPU Demand differs between VCF Operations and vCenter](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-130-esxi-cpu-demand-differs-between-tools.md). The practical question is Level 400: it needs arithmetic across three screenshots.
+- First pair: [ESXi CPU Demand and Usage: vCenter vs VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-049-esxi-cpu-demand-vcenter-vs-vcf-operations.md) and [ESXi CPU Demand differs between VCF Operations and vCenter](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-120-esxi-cpu-demand-differs-between-tools.md). The practical question is Level 400: it needs arithmetic across three screenshots.
 
 ## 4. Sample size
 - The set has no target size. What its size buys is precision, and the report prints it for the set as run: the 95% margin on the final score (`report.py`, `_margin`; the summary README).
@@ -340,12 +340,13 @@ For the set:
 ## 12. Status
 - The run set is every question with status draft or reviewed. Its counts: `python3 project/tools/coverage.py`. Retired questions: [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
 - Every synthetic question was checked by an independent review agent, which tried to break each key against the knowledge files and the vendor documents; the defects found were fixed. Author questions from the review: all answered (Q182-Q191). Knowledge fixes found on the way: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M1.
+- Question bank audit, 2026-11-16 ([project/question-bank-audit-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-bank-audit-2026-11-15.md)): every option of every question decided again from the current knowledge base by independent reviewers, each finding challenged by a second agent, every changed key re-checked blind.
 - Status draft: each question counts after the author's review (section 6.2).
 - Status `awaiting-input`: a practical half whose screenshot the author has not captured yet (section 3.9). It does not run and is not in the counts of the run set; once the image is added and its condition checked, it becomes draft.
 
 ## 13. Screenshot questions
 - Purpose: administrators upload screenshots and ask the agent to explain the problem, often several at once, from different tools.
-- 1.0 grows the screenshot set (author, 2026-11-14): the practical halves of pairs (section 3.9), the author's field screenshots, and knowledge-base charts redrawn or recaptured so that no attachment is a knowledge-base image. A few per source: vCenter, VCF Operations, esxtop, Guest OS tools.
+- Screenshots stay few, as customers send them (2026-11-15): the 8 running screenshot questions and the author's field screenshots. The practical halves of pairs are exports, not screenshots ([project/practical-questions-as-exports-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/practical-questions-as-exports-2026-11-15.md)): a key rests on values, not pixels, and screen reading is checked apart, in stage 1 of the harness, against the true values of each image.
 - Reading screenshots stays a basic requirement: a model without vision is not a candidate ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md)).
 - A screenshot question carries all its images in `attachments`; every image is sent with the same prompt. The prompt states the problem in words; the images supply the values.
 - No leak: an attachment is never a knowledge-base image (lint), and the knowledge base never states an attachment's values; a knowledge example of the same mechanism uses its own numbers.
@@ -353,10 +354,12 @@ For the set:
 
 ### 13.1 Table questions
 - Purpose: administrators export data and ask about it: a vCenter chart export, a VCF Operations list or metric export, esxtop batch output.
-- 1.0 tables are small: at most about 3,000 tokens (`question_csv_max_chars` in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml), checked by lint), about 60 rows by 8 columns. The runner puts the CSV after the prompt as text (`Question.tables`); the deployed model's window is 32,000 tokens.
+- 1.0 tables: at most 24,000 characters, about 6,000 tokens (`question_csv_max_chars` in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml), checked by lint; 2026-11-15). Each period is cut to the event; multi-day cases use a VCF Operations list view with Max, Min, First and Last, or daily rows. The runner puts the CSV after the prompt as text (`Question.tables`); the context window is 64,000 tokens.
+- Tool text (esxtop panels, `top`, `sar`, `iostat`, `mpstat`, `ip -s link`, `systeminfo`, PowerCLI output) goes inside the prompt in a fenced `text` block, as an operator pastes it; only CSV files and images are attachments.
+- Wide exports are the point: the misleading neighbour counter sits in the same file (Readiness next to Ready, Wait next to Idle, Total next to non-Total drops), so the model must choose the counter.
 - Larger exports (hundreds of rows) need a table tool in the harness (filter, sort, aggregate, top-N). After 1.0.
 - Column names are the product's metric names (for example `CPU|Ready (%)`, `Usage for vm-01 (Percent)`), so the reading follows the product, not the header's English.
-- A CSV is generated by a seeded script, then checked: every value the key relies on is in it, and nothing contradicts the key. Time stamps, object names and noise are realistic; names are invented, never a customer's.
+- Every CSV and every generated tool-text block comes from a seeded case in [project/tools/exportgen/](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/exportgen/README.md) (one module per question): the case writes the files in the real export format (templates in project/sources/export-templates/) and `check` re-reads them and asserts every condition the key rests on. `python3 -m project.tools.exportgen check all` and `python3 -m unittest project/tools/test_exportgen.py` must pass. Time stamps, object names and noise are realistic; names are invented, never a customer's or the lab's; no lab values.
 
 ## 14. Free-text answers
 - Not in the benchmark (author, Q199 F, 2026-11-14). The judge model that scored them 0-3 is archived with its rubric ([project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14/judge.py)); this section's earlier rules are in git history.

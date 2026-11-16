@@ -50,8 +50,8 @@ question_prompt_hints:
   '(?i)\bwhat is (its|the) (capacity|relationship)\b': 'tells that one option is correct: use the plural'
   '(?i)\bby how much\b': 'tells that one option is correct: use the plural'
   '(?i)\bhow (is|are) [^?.]* related\b': 'tells that one option is correct: use the plural'
-# Size cap of a CSV attachment in 1.0: the runner puts it in the prompt (benchmark/design.md, section 13.1). About 3,000 tokens.
-question_csv_max_chars: 12000
+# Size cap of a CSV attachment in 1.0: the runner puts it in the prompt (benchmark/design.md, section 13.1). About 6,000 tokens (24,000 characters, 2026-11-15).
+question_csv_max_chars: 24000
 # Prompt-injection guard: rejected in every knowledge file (body and metadata) and every benchmark prompt.
 injection_patterns: ['<!--', '[\u200b-\u200f\u2060\ufeff]', '(?i)ignore (all |any )?(previous|prior|above) instructions', '(?i)disregard (the )?(above|previous|prior)', '(?i)you are now (a|an|the)\b', '(?i)new instructions:', '(?i)system prompt']
 # Phrases rejected in body text of every knowledge file.

@@ -1,4 +1,4 @@
-Name,vCPUs,CPU|Ready (%),CPU|Co-stop (%),CPU|Net Run (%)
+Name,vCPUs,CPU|Peak vCPU Ready within collection cycle (%),CPU|Peak vCPU Co-Stop within collection cycle (%),CPU|Net Run (%)
 app-01,4,0.55,0.02,8.6
 app-02,4,0.2,0.06,39.2
 app-03,2,0.6,0.05,30.2

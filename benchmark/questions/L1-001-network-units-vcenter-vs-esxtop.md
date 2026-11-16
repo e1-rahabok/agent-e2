@@ -1,7 +1,7 @@
 # Network units in the vSphere Client and esxtop
 
 ## Prompt
-Which units do the vSphere Client performance charts and esxtop use for VM network throughput?
+Which units do the Advanced performance chart of a VM in the vSphere Client and the esxtop network panel use for VM network throughput?
 
 - A. Both show kilobytes per second.
 - B. The vSphere Client shows kilobytes per second; esxtop shows megabits per second.
@@ -13,11 +13,15 @@ A: assuming both tools use the same unit, then comparing the numbers directly.
 
 ## Expected key points
 - Answer: B.
-- The vSphere Client (vCenter) shows network counters in kilobytes per second.
-- esxtop shows them in megabits per second: convert bits to bytes and mega to kilo before comparing.
+- A is wrong: esxtop shows network throughput in megabits per second, not kilobytes.
+- B is correct: the VM network counters of the Advanced chart are in kilobytes per second, even where the chart title says Mbps; esxtop shows megabits per second. Convert bits to bytes and mega to kilo before comparing.
+- C is wrong: the units are swapped; the chart title's Mbps does not change the KBps counters.
+- D is wrong: only esxtop is in megabits per second.
 
 ## Notes
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Counts only after author approval.
+- Changed in the 2026-11-15 audit: the stem names the VM's Advanced chart and the esxtop network panel; the two stacked Overview charts list megabits per second in the vSphere 9.1 documentation, which made D partly true under the broad wording.
+
 ## Metadata
 ```yaml
 id: "0029"
@@ -36,7 +40,7 @@ knowledge:
 knowledge_main: vsphere/tools/esxtop/network-units-vs-vsphere-client
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05"
+source_path: "Synthetic, 2026-11-05"
 answer: [B]
 misconception: [A]
 misconception_type: [tool-confusion, unit-and-normalization]

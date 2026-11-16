@@ -1,0 +1,19 @@
+Name,Memory|Contention (%) (Max),Memory|Balloon (%) (Max),Memory|Swap In Rate (KBps) (Max),Memory|Consumed (KB) (Max)
+crm-db-01,0,0,0,85349950
+crm-db-02,0,0,0,86333580
+crm-app-01,0,0,0,24869369
+crm-app-02,0,0,0,26198260
+crm-app-03,0,0,0,29792789
+crm-app-04,0,0,0,24881348
+crm-web-01,0,0,0,12715969
+crm-web-02,0,0,0,14232312
+crm-web-03,0,0,0,12677965
+crm-web-04,0,0,0,14647631
+bi-etl-01,0,0,0,40146300
+bi-etl-02,0,0,0,37570261
+bi-rpt-01,0,0,0,18385028
+file-01,0,0,0,14489529
+print-01,0,0,0,7003486
+mon-01,0,0,0,14511627
+dc-03,0,0,0,6745950
+jump-02,0,0,0,6281895

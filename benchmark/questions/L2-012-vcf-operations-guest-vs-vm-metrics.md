@@ -19,12 +19,14 @@ Taking every metric on the VM object as a VM metric.
 
 ## Expected key points
 - Answer: A, C.
-- The Guest group comes from inside Windows through VMware Tools. It is stored on the VM object, but the Guest OS layer produces it.
-- Ready and Co-stop are measured by the VMkernel: VM metrics the Guest OS cannot see.
-- Decide by the layer that produces a metric, not by the object that stores it.
+- A is correct: CPU Queue is the Guest OS run queue, read inside Windows through VMware Tools. It is stored on the VM object, but the Guest OS layer produces it: decide by the producing layer, not by the storing object.
+- B is wrong: Ready is time the VMkernel held a ready vCPU off a physical CPU; the VMkernel measures it, and the Guest OS cannot see it.
+- C is correct: Free Memory is the Guest OS memory counter in the Guest group, read inside Windows through VMware Tools.
+- D is wrong: Co-stop is time the VMkernel stopped a vCPU to keep the VM's vCPUs in step; a VM metric the Guest OS cannot see.
 
 ## Notes
 - 2026-11-14 (project/question-pairing-2026-11-14.md, section 3.B): in the screenshot, the VM name masked in the title and the four chart headings (author: every VM name is masked); the stale `## Input to supply` removed.
+- 2026-11-16 re-review: key points rewritten to one reason per option.
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml

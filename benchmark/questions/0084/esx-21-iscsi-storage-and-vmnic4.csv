@@ -1,4 +1,4 @@
-Time,Storage adapter vmhba64 - Read requests per second,Storage adapter vmhba64 - Read rate (KBps),Storage adapter vmhba64 - Write requests per second,Storage adapter vmhba64 - Write rate (KBps),vmnic4 - Packets received (sum per sample),vmnic4 - Packets transmitted (sum per sample),vmnic4 - Data receive rate (KBps),vmnic4 - Data transmit rate (KBps)
+Time,Read requests per second for vmhba64,Read rate for vmhba64,Write requests per second for vmhba64,Write rate for vmhba64,Packets received for vmnic4,Packets transmitted for vmnic4,Data receive rate for vmnic4,Data transmit rate for vmnic4
 2026-11-10 08:00:00,1837.0,14696.0,0.9,7.2,1100699,1100553,15030.7,312.1
 2026-11-10 08:05:00,1838.3,14706.4,0.6,4.8,1103567,1104396,15018.2,310.1
 2026-11-10 08:10:00,2014.2,16113.6,0.4,3.2,1208602,1210650,16462.9,337.8

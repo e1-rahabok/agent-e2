@@ -1,4 +1,4 @@
-Name,vCPUs,CPU|Ready (%) in the 20-second sample with the highest Ready,CPU|Net Run (%) in that same sample
+Name,vCPUs,Readiness (%) in the 20-second sample with the highest Readiness,Run (% per vCPU) in that same sample
 web-01,2,3.1,6.2
 web-02,2,2.9,5.8
 web-03,2,3.0,6.5

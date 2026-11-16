@@ -1,0 +1,5 @@
+Name,Memory|Usage (%) (Min),Memory|Usage (%) (Max),Memory|Balloon (KB) (Max),Memory|Compressed (KB) (First),Memory|Compressed (KB) (Last),Memory|Compressed (KB) (Min),Memory|Compressed (KB) (Max),Memory|Compression Rate (KBps) (Max),Memory|Decompression Rate (KBps) (Max)
+esx-e201.example.com,59.0215,72.3051,0,0,0,0,0,0,0
+esx-e202.example.com,54.249,83.4366,0,0,0,0,0,0,0
+esx-e203.example.com,58.4657,80.249,0,2083753,2083753,2083753,2083753,0,0
+esx-e204.example.com,52.2122,78.0953,0,0,0,0,0,0,0

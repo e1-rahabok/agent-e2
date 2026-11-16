@@ -1,6 +1,6 @@
 # Practical questions as exports, not screenshots (2026-11-15)
 
-Review of the 47 practical halves that wait for screenshots ([question-pairing-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-pairing-2026-11-14.md), section Screenshots to capture). Read-only so far: no question, design rule or tool is changed yet. Not indexed. Status: waiting for the export templates (section 8), then one change set (section 9).
+Review of the 47 practical halves that wait for screenshots ([question-pairing-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-pairing-2026-11-14.md), section Screenshots to capture). Not indexed. Status: done 2026-11-16 in the question bank audit ([question-bank-audit-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-bank-audit-2026-11-15.md)): 44 converted, 0389 and 0419 retired, 0435 and 0015 deferred.
 
 ## 1. The question
 - The author: a practical question does not need a screenshot. Practical means a case to apply the fact to, not an image. The readers are AI only; humans need screenshots because they cannot digest much text, a model can.

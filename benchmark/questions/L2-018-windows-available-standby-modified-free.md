@@ -13,10 +13,10 @@ Which statements about these Windows memory counters are correct?
 - E. Free that stays low all day shows that Windows is running out of memory.
 - F. In Use is the least memory that Windows and its applications can run with.
 - G. No Windows counter can show that the guest is short of memory.
-- H. A VM whose Free stays below 500 MB all day needs more memory.
+- H. Modified pages are part of Available: Windows can hand them to a process at once.
 
 ## Likely wrong answer
-E: "Free is almost 0, so Windows is out of memory." Or H: "The free memory alert fires all day, so add memory."
+E: "Free is almost 0 and the alert fires all day, so Windows is out of memory."
 
 ## Expected key points
 - Answer: A, B, C, D.
@@ -27,11 +27,11 @@ E: "Free is almost 0, so Windows is out of memory." Or H: "The free memory alert
 - E false: Windows fills memory with Standby cache, and Free can touch 0 for a moment. Read Available, paging together with the disk queue, and % Committed.
 - F false: In Use is not a minimum: Windows compresses In Use pages it does not use, even with plenty of memory free.
 - G false: over-correction. Low Free alone is not a shortage, but page-in and page-out together with a high disk queue are the Windows sign of a memory performance problem.
-- H false: low Free alone does not mean the guest needs more memory; Windows fills added memory with more Standby cache, so Free stays low.
+- H false: Modified pages hold changed data that must be written to disk before reuse, so they are in Cached, not in Available (Standby plus Free).
 
 ## Notes
 - Paired with 0264 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item B2.
-- Review fixes 2026-11-15: G replaced; the commit-limit fact stays with 0270 and 0393, and G is now the over-correction of E. Key unchanged: A, B, C, D.
+- Changed in the 2026-11-15 audit: H (a second copy of E's belief) replaced by a false definition, so not every definition is true and not every judgment false. A true judgment ("low Free with high Standby wastes no memory") was not added: the Free memory row of the threshold catalog scores that state as poor (knowledge-base issue 3 of the review).
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
 ## Metadata

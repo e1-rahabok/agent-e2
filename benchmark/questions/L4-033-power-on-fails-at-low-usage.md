@@ -1,0 +1,91 @@
+# Power-on fails at 25% usage
+
+## Prompt
+- DRS cluster cl-east-02: 6 hosts, about 880 GHz of CPU. Cluster CPU usage is about 25%.
+- You power on fin-batch02 in resource pool RP-FIN-BATCH. It has a CPU reservation of 2,400 MHz.
+- The vSphere Client shows: "Power On virtual machine fin-batch02: Insufficient resources. The available CPU resources in the parent resource pool are insufficient for the operation."
+- [The attached export](0085/resource-pool-tree.csv) lists the resource pools and VMs of the cluster with their reservations, limits and shares.
+
+Why does the power-on fail when the cluster is at 25%, what do you change, and what do you advise for the reservation design? Which statements are correct?
+
+- A. The check compares the 2,400 MHz reservation with capacity not yet reserved; the 25% CPU usage plays no part.
+- B. Adding a seventh host lets fin-batch02 power on, because the cluster has run out of unreserved CPU.
+- C. fin-batch01 already holds the 3,200 MHz of RP-FIN-BATCH, so the request goes up to RP-FIN because RP-FIN-BATCH is expandable.
+- D. fin-batch01 is mostly idle, so the part of its reservation it does not use is free for fin-batch02 at power-on.
+- E. RP-FIN has about 1,600 MHz unreserved: 9,600 MHz minus 4,800 MHz for its own VMs minus 3,200 MHz for RP-FIN-BATCH.
+- F. As the reservation of RP-FIN is fixed, the check stops there and never reaches the unreserved CPU of the root.
+- G. The 14,000 MHz reservation of RP-INFRA takes the unreserved CPU that fin-batch02 needs at power-on.
+- H. The message comes from vSphere HA; disable HA on cl-east-02 and retry.
+- I. Raising the CPU reservation of RP-FIN to 11,000 MHz lets fin-batch02 power on.
+- J. Raising the CPU reservation of RP-FIN-BATCH to 5,600 MHz lets fin-batch02 power on without any change to RP-FIN.
+- K. Setting RP-FIN to an expandable reservation lets the request reach the cluster root, which has CPU to spare.
+- L. Setting RP-FIN-BATCH to a fixed reservation lets fin-batch02 power on from the reservation of RP-FIN-BATCH alone.
+- M. Removing the CPU reservation of fin-batch02 lets it pass CPU admission control.
+- N. The error is transient: a retry or a restart of vCenter lets the power-on through.
+- O. An expandable reservation isolates the VMs of a pool from the demands of the sibling pools under the same parent.
+- P. Keep at least 10% of the cluster's capacity unreserved, as headroom for reservation changes and pool edits.
+- Q. Lowering the CPU reservation of fin-erp-app01 from 2,400 to 1,800 MHz lets fin-batch02 power on.
+- R. The export shows that each VM of RP-TEST reserves 4,000 MHz of CPU.
+
+## Likely wrong answer
+- B: "The cluster is short of CPU: add a host."
+- N: "The cluster is at 25% CPU, so it is a glitch: retry, or restart vCenter."
+- D: "batch01 is idle, so its reservation is free for batch02."
+
+## Expected key points
+- Answer: A, C, E, F, I, K, M, P.
+- A is correct: admission control counts reservations, not usage.
+- B is wrong: the cluster root has well over 800 GHz unreserved; the walk stops at the fixed reservation of RP-FIN, so a host adds nothing that RP-FIN can reach.
+- C is correct: RP-FIN-BATCH reserves 3,200 MHz and fin-batch01 holds all of it; an expandable pool asks its parent for the rest.
+- D is wrong: admission control counts the reservation of every powered-on VM in full, whether the VM uses it or not.
+- E is correct: 9,600 - (2,400 + 1,800 + 0 + 600 + 0) - 3,200 = 1,600 MHz, less than the 2,400 MHz asked.
+- F is correct: a fixed reservation admits only from the pool's own unreserved capacity; the walk up the tree continues only while each ancestor is expandable.
+- G is wrong: RP-INFRA is a sibling of RP-FIN under the root, and the root has plenty unreserved; the check never reaches the root.
+- H is wrong: the error names the parent resource pool: it is resource pool (DRS) admission control, which runs at every power-on and cannot be turned off. Disabling vSphere HA does not remove it and drops the cluster's failover protection.
+- I is correct: 11,000 - 4,800 - 3,200 = 3,000 MHz, enough for 2,400; the root has the extra 1,400 MHz to give.
+- J is wrong: a pool reservation is taken from the parent when it is set; RP-FIN has only 1,600 MHz unreserved, so the 2,400 MHz increase itself fails admission control.
+- K is correct: an expandable RP-FIN borrows from the root; the cost is that RP-FIN no longer isolates its VMs.
+- L is wrong: a fixed RP-FIN-BATCH admits only from its own unreserved capacity, which is 0.
+- M is correct: a VM with no reservation passes CPU admission control (its overhead memory is still checked; the memory side reaches the root, every pool there is expandable for memory).
+- N is wrong: the failure is deterministic, from the reservations in the tree.
+- O is wrong: only a fixed reservation isolates; with an expandable one, a child can take all of the parent's spare reservation and leave none for its siblings.
+- P is correct: the documented advice is at least 10% unreserved; near 100% reserved, reservation changes and pool edits fail and DRS cannot migrate VMs.
+- Q is wrong: RP-FIN would then have 9,600 - 4,200 - 3,200 = 2,200 MHz unreserved, still less than the 2,400 MHz asked; lowering the reservations of RP-FIN's own VMs by 800 MHz or more in total would work.
+- R is wrong: the 4,000 MHz of the RP-TEST VMs is in the CPU limit column; their CPU reservation is 0.
+
+## Notes
+- Review 2026-11-15: H reworded (it copied 0048 F); R added as a false reading of the export; title follows the 25% in the prompt. Key unchanged.
+- Revised 2026-11-12: the tree as a CSV export, the error as text; no screenshot.
+- Expandable reservations walk up the tree while each ancestor is expandable (vSphere 9.1 Resource Management, Expandable Reservations Example).
+- Admission control questions test different facts: L2-010 (reservations, not usage), L4-030 (Invalid vs Overcommitted), this one (the walk up the tree stops at a fixed reservation).
+- Option Q is a near miss: a cut in the fixed parent pool too small to be enough.
+- CSV regenerated 2026-11-14 (project/question-pairing-2026-11-14.md, section 1, item 3): the old tree carried the knowledge example's numbers (6 - 3 - 2 = 1 GHz). New cluster, pools, VMs and numbers from a seeded script; the options and key follow the new numbers. Key letters unchanged.
+- Paired with 0048 (the same mechanism as theory).
+
+## Metadata
+```yaml
+id: "0085"
+title: "Power-on fails at 25% usage"
+product: [vsphere]
+technology: [system, cpu]
+task: judge-setting
+level: 400
+answer_type: deterministic
+answer: [A,C,E,F,I,K,M,P]
+misconception: [B,D,N]
+input: [table]
+object: [resource-pool, cluster, vm]
+tool: [vcenter]
+knowledge:
+  - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
+  - vsphere/object-types/resource-pool/resource-pool-design
+  - vsphere/architecture/resource-controls
+knowledge_main: vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
+attachments:
+  - 0085/resource-pool-tree.csv
+origin: synthetic
+source_path: "Synthetic, 2026-11-05; revised 2026-11-12"
+misconception_type: [consumption-as-contention]
+pair: "0048"
+status: draft
+```

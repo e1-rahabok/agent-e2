@@ -39,11 +39,11 @@ Which statements are correct?
 
 ## Notes
 - Sources: the knowledge base (GPU monitoring); Broadcom KB 439680 (the profile's frame buffer is allocated at power-on and freed at power-off).
-- Replaces the retired URL question 0091 at Level 200, judged (2026-11-12).
+- Replaces the retired question 0091 (2026-11-12).
 - Prompt sharpened: the chart is Real-time (last hour), because the per-device host GPU counters are level 4 and have no 24-hour history at the default statistics level.
 - Dropped from the key: nvidia-smi inside a vGPU guest as a second way to read workload use; the knowledge base names nvidia-smi only for passthrough GPUs.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): one fact per option (A, C, D, E); F stated as the placement fact instead of next to its negation G; J the over-correction and K the wrong action added. Key unchanged: B, C, D, E, F.
+- Audit 2026-11-15: level 200 -> 300 (eleven options over level 4 history, per-GPU placement, passthrough accounting and 9.x semantics; more than one item in isolation).
 - Review 2026-11-15: J reworded; "room for another vGPU VM" depended on the profile size, which the stem does not give. Key unchanged.
 
 ## Metadata
@@ -66,7 +66,7 @@ knowledge:
 knowledge_main: vsphere/technology/gpu/gpu-monitoring
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 to replace the retired question 0091"
+source_path: "Synthetic, 2026-11-12, to replace the retired question 0091"
 misconception_type: [same-name-other-object]
 status: draft
 ```

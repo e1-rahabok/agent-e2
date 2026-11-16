@@ -12,19 +12,22 @@ Which of the counters in the chart measure latency? Choose all that apply.
 
 
 ## Screenshot
-![vCenter advanced chart of one VM, Virtual disk: read and write latency (ms), read and write rate (KBps)](0034/vcenter-vm-virtual-disk-chart.png)
+![vCenter advanced performance chart of one VM, metric group Virtual disk, with four counters in the legend](0034/vcenter-vm-virtual-disk-chart.png)
 
 ## Likely wrong answer
 C or D: taking the rate (KBps) for latency.
 
 ## Expected key points
 - Answer: A, B.
-- Read latency and Write latency are in milliseconds: the time per IO.
-- Read rate and Write rate are in kilobytes per second: throughput, not latency.
+- A is correct: Read latency is in milliseconds, the time per read.
+- B is correct: Write latency is in milliseconds, the time per write.
+- C is wrong: Read rate is in kilobytes per second: read throughput, not latency.
+- D is wrong: Write rate is in kilobytes per second: write throughput, not latency.
 
 ## Notes
-- 2026-11-14 (project/question-pairing-2026-11-14.md, section 3.B): in the screenshot, the VM name masked in the title and the legend (author: every VM name is masked); the stale `## Input to supply` removed.
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). 
+- 2026-11-14 (project/question-pairing-2026-11-14.md, section 3.B): in the screenshot, the VM name masked in the title and the legend (every VM name is masked); the stale `## Input to supply` removed.
+- Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`.
+- Re-review 2026-11-16: who-said-it tags removed from `source_path` and Notes; the screenshot alt text no longer gives the units (the key); key points one per option. Key unchanged.
 
 ## Metadata
 ```yaml
@@ -42,7 +45,7 @@ knowledge:
 attachments:
   - 0034/vcenter-vm-virtual-disk-chart.png
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05"
+source_path: "Synthetic, 2026-11-05"
 answer: [A, B]
 misconception: [C]
 object: [vm]
