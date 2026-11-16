@@ -149,6 +149,18 @@ Preferred, not required:
 - Reasoning off is not free of thinking tokens: 4% of its answers still reached the 4,000-token cap, 85 of the 88 in baseline mode. The visible answer is short (an ANSWER line and a REASON line, about 290 characters), so the cap was spent on hidden thinking that `effort: none` did not fully suppress. 70 of the 88 still had a readable letter. Why it happens on some questions is not known.
 - A cap of 4,000 tokens does not fit effort low: 17% reach it and 14% have no readable letter. Effort low needs 8,000, where 1.4% still reach the cap.
 - The first full scored round has Gemma at its default, Qwen at effort low with 8,000 tokens and Muse at effort low; the reasoning-off answers of Qwen and Muse sit in the archived `-invalid-0` folders. The full effect on the score is read in the round's `benchmark/results/README.md`.
+- Paired comparison, Base mode only (author asked, 2026-11-16): the same 803 question and run pairs (162 questions, 5 runs each, in id order, Level 100 to 400), Qwen reasoning off against effort low with 8,000 tokens. Exact-match (every correct letter and no wrong one):
+
+| | Reasoning off | Effort low, 8,000 |
+|---|---|---|
+| Exact-match | 21.8% | 42.7% (+20.9 points) |
+| Right with thinking, wrong without / the reverse | 212 / 44 | (exact binomial p below 0.001) |
+| Readable answers only (766 pairs) | 22.7% | 44.4% |
+| Level 100 / 200 / 300 / 400 | 52 / 35 / 20 / 17% | 70 / 55 / 44 / 30% |
+| Mean tokens, latency, cost per answer | 699, 4.4 s, US$ 0.0016 | 3,058, 15.6 s, US$ 0.0068 |
+| No readable letter | 6 | 32 |
+
+- Thinking about doubles Qwen's exact-match without the knowledge base, at about 4 times the cost and 3.5 times the latency, on this slice. The full reasoning-off Base run stands at 20.0% (1,455 answers), so the slice is close to it. Not measured: the effect with the knowledge base (Agent E2), where the knowledge may already supply what the thinking supplies. Read it as a gap to measure, not as Qwen's score; the unscored remainder of the effort-low run (all Agent E2 answers) does not exist.
 - Real use differs between administrators (a user can switch thinking on or off, and a local server has no per-token price), so the deployed setting is still open ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), After 1.0).
 
 ## 5. Frontier reference
