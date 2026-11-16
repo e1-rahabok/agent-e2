@@ -93,6 +93,12 @@ primer:                       # up-front blocks in Agent E2's answer prompt (har
 # Pin providers per model when known, e.g. openai/gpt-oss-20b: [groq]
 provider_order: {}
 
+snapshots:                    # run_all_models_in_one_round.py pushes the answers, configs and reports to a separate branch (push_snapshots_to_branch.py)
+  enabled: true
+  every_minutes: 15           # a lost machine then costs at most this much of the round
+  branch_prefix: snapshots/round-   # + the date; never merged: the author deletes it after the round
+  remote: origin
+
 release:                      # the final round: benchmark/RUN.md. One run folder per entry, all started together (run_all_models_in_one_round.py)
   runs:
     - {model: google/gemma-4-31b-it, modes: [baseline, agent-e2]}

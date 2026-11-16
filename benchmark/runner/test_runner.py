@@ -16,6 +16,8 @@ import run_folder_names as N  # noqa: E402
 import sample_check_before_round as P  # noqa: E402
 import run_all_models_in_one_round as RA  # noqa: E402
 import summary_of_all_runs as S  # noqa: E402
+import check_round_is_alive as CA  # noqa: E402
+import push_snapshots_to_branch as SN  # noqa: E402
 from llm import MockClient, ParamClient  # noqa: E402
 
 
@@ -604,6 +606,128 @@ class RoundRecoveryTest(unittest.TestCase):
         self.assertEqual(p.returncode, X.STOPPED)
         self.assertIn('--resume', p.stdout)
         self.assertTrue(os.path.exists(os.path.join(out, '.round.json')))
+
+
+class SnapshotBranchTest(unittest.TestCase):
+    """Snapshots go to their own branch, built with a temporary index: the working branch is not touched."""
+
+    def sh(self, repo, *args):
+        import subprocess
+        return subprocess.run(['git', '-C', repo, *args], capture_output=True, text=True, check=True).stdout.strip()
+
+    def setUp(self):
+        import tempfile
+        self.d = tempfile.mkdtemp()
+        self.addCleanup(__import__('shutil').rmtree, self.d, True)
+        self.remote, self.repo = os.path.join(self.d, 'remote.git'), os.path.join(self.d, 'repo')
+        os.makedirs(self.remote)
+        os.makedirs(self.repo)
+        self.sh(self.remote, 'init', '-q', '--bare')
+        self.sh(self.repo, 'init', '-q', '-b', 'work')
+        self.sh(self.repo, 'config', 'user.name', 't')
+        self.sh(self.repo, 'config', 'user.email', 't@x')
+        open(os.path.join(self.repo, 'README.md'), 'w').write('x')
+        self.sh(self.repo, 'add', 'README.md')
+        self.sh(self.repo, 'commit', '-q', '-m', 'first')
+        self.sh(self.repo, 'remote', 'add', 'origin', self.remote)
+        self.results = os.path.join(self.repo, 'benchmark', 'results')
+        run = os.path.join(self.results, 'r1')
+        os.makedirs(run)
+        for n, t in (('answers.csv', 'a'), ('config.json', '{}'), ('report.md', '# r'), ('traces.jsonl', 'big'), ('run.log', 'log')):
+            open(os.path.join(run, n), 'w').write(t)
+
+    def test_a_snapshot_holds_the_answers_configs_and_reports_but_not_the_traces(self):
+        c = SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
+        self.assertTrue(c)
+        files = self.sh(self.remote, 'ls-tree', '-r', '--name-only', 'snapshots/round-x').splitlines()
+        self.assertIn('benchmark/results/r1/answers.csv', files)
+        self.assertIn('benchmark/results/r1/config.json', files)
+        self.assertIn('benchmark/results/r1/report.md', files)
+        self.assertNotIn('benchmark/results/r1/traces.jsonl', files)
+        self.assertNotIn('benchmark/results/r1/run.log', files)
+        self.assertIn('README.md', files)                                  # the tree of HEAD is kept
+
+    def test_the_working_branch_index_and_files_are_not_touched(self):
+        head = self.sh(self.repo, 'rev-parse', 'HEAD')
+        SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
+        self.assertEqual(self.sh(self.repo, 'rev-parse', 'HEAD'), head)
+        self.assertEqual(self.sh(self.repo, 'branch', '--show-current'), 'work')
+        self.assertEqual(self.sh(self.repo, 'diff', '--cached', '--name-only'), '')           # nothing staged
+        self.assertTrue(os.path.exists(os.path.join(self.results, 'r1', 'traces.jsonl')))
+
+    def test_no_change_gives_no_new_commit_and_a_change_chains_on_the_previous_snapshot(self):
+        c1 = SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
+        self.assertIsNone(SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin'))
+        open(os.path.join(self.results, 'r1', 'answers.csv'), 'w').write('a,b')
+        c2 = SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
+        self.assertNotEqual(c1, c2)
+        self.assertEqual(self.sh(self.repo, 'rev-parse', f'{c2}^'), c1)
+        self.assertEqual(self.sh(self.remote, 'rev-parse', 'snapshots/round-x'), c2)
+
+    def test_folders_outside_the_repository_are_skipped(self):
+        import tempfile
+        other = tempfile.mkdtemp()
+        self.addCleanup(__import__('shutil').rmtree, other, True)
+        os.makedirs(os.path.join(other, 'r'))
+        open(os.path.join(other, 'r', 'config.json'), 'w').write('{}')
+        self.assertIsNone(SN.snapshot(self.repo, other, 'snapshots/round-y', 'origin'))
+
+
+class CheckRoundIsAliveTest(unittest.TestCase):
+    """The progress check must not read stale counts as progress (2026-11-16: a machine restart killed two runs unseen for 25 minutes)."""
+
+    def setUp(self):
+        import tempfile
+        self.d = tempfile.mkdtemp()
+        self.addCleanup(__import__('shutil').rmtree, self.d, True)
+        self.now = __import__('datetime').datetime(2026, 11, 16, 14, 0, 0)
+
+    def folder(self, name, good, minutes_ago, total_q=4):
+        import json
+        import time
+        f = os.path.join(self.d, name)
+        os.makedirs(f)
+        json.dump({'questions': [f'q{i}' for i in range(total_q)], 'runs': 1, 'modes': ['baseline']}, open(os.path.join(f, 'config.json'), 'w'))
+        with open(os.path.join(f, 'answers.csv'), 'w') as fh:
+            fh.write('model,mode,question_id,track,run,error,cost_usd\n')
+            for i in range(good):
+                fh.write(f'm,baseline,q{i},text,1,,0.5\n')
+        t = time.mktime((self.now - __import__('datetime').timedelta(minutes=minutes_ago)).timetuple())
+        os.utime(os.path.join(f, 'answers.csv'), (t, t))
+        return f
+
+    PS = ['python3 benchmark/runner/answer_questions_for_one_model.py --out o --resume benchmark/results/run-a']
+
+    def status(self, f, ps, boot=None):
+        return CA.run_status(f, self.now, ps, boot)
+
+    def test_a_finished_folder_is_done(self):
+        self.assertEqual(self.status(self.folder('run-a', 4, 90), [])['verdict'], 'DONE')
+
+    def test_a_process_and_a_recent_write_is_alive(self):
+        self.assertEqual(self.status(self.folder('run-a', 2, 1), self.PS)['verdict'], 'ALIVE')
+
+    def test_a_process_with_no_write_for_minutes_is_stalled(self):
+        self.assertEqual(self.status(self.folder('run-a', 2, 12), self.PS)['verdict'], 'STALLED')
+
+    def test_no_process_and_an_unfinished_folder_is_dead(self):
+        self.assertEqual(self.status(self.folder('run-a', 2, 3), [])['verdict'], 'DEAD')
+
+    def test_a_boot_after_the_last_write_says_machine_restarted(self):
+        import datetime
+        boot = self.now - datetime.timedelta(minutes=5)
+        self.assertEqual(self.status(self.folder('run-a', 2, 30), [], boot)['verdict'], 'MACHINE RESTARTED')
+
+    def test_the_process_of_another_folder_does_not_count(self):
+        self.assertEqual(self.status(self.folder('run-b', 2, 1), self.PS)['verdict'], 'DEAD')
+
+    def test_the_old_script_name_counts_as_a_process(self):
+        self.assertTrue(CA.processes_for('run-a', ['python3 benchmark/runner/run.py --resume benchmark/results/run-a']))
+
+    def test_good_answers_and_cost_are_counted(self):
+        r = self.status(self.folder('run-a', 3, 1), self.PS)
+        self.assertEqual((r['good'], r['total']), (3, 4))
+        self.assertAlmostEqual(r['cost'], 1.5)
 
 
 class ReconcileWithFoldersTest(unittest.TestCase):

@@ -286,6 +286,24 @@ def main():
 
     done = threading.Event()
     threading.Thread(target=report_progress, daemon=True).start()
+    snap = cfg.get('snapshots') or {}
+
+    def take_snapshot():
+        try:
+            import push_snapshots_to_branch as snapshots
+            c = snapshots.snapshot(ROOT, a.out, snapshots.branch_name(snap.get('branch_prefix', 'snapshots/round-'), state['started'][:10]),
+                                   snap.get('remote', 'origin'))
+            if c:
+                print(f'[{dt.datetime.now():%H:%M}] snapshot {c[:12]} pushed', flush=True)
+        except Exception as e:      # noqa: BLE001  a snapshot must never stop the round
+            print(f'[{dt.datetime.now():%H:%M}] snapshot failed: {e}', flush=True)
+
+    def snapshot_loop():
+        while not done.wait(snap.get('every_minutes', 15) * 60):
+            take_snapshot()
+
+    if snap.get('enabled') and not a.dry_run and not os.environ.get('RUN_ALL_NO_SNAPSHOTS'):
+        threading.Thread(target=snapshot_loop, daemon=True).start()
     if a.resume:
         for e in reconcile_with_folders(state, a.out, cfg, n_questions):
             print(f'{e["folder"]}: {e["status"]} (from the folder: the state file said otherwise)', flush=True)
@@ -305,6 +323,8 @@ def main():
         list(ex.map(safe_drive, live))
     done.set()
     save_state(a.out, state, lock)
+    if snap.get('enabled') and not os.environ.get('RUN_ALL_NO_SNAPSHOTS'):
+        take_snapshot()
 
     by = {s: [e for e in state['runs'] if e['status'] == s] for s in ('complete', 'stopped', 'invalid', 'refused', 'failed', 'pending')}
     print('\nRound status:')
