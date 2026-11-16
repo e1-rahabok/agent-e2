@@ -10,7 +10,7 @@ Which statements are correct?
 - A. A common `sched.mem.pshare.salt` works only after the host salting setting is changed too.
 - B. With default settings, two VMs share a page only when their salt values match.
 - C. By default, each VM gets a salt value of its own.
-- D. The small saving shows that page sharing is broken on these hosts and needs a support case.
+- D. The small saving shows that page sharing is broken on these hosts.
 - E. Sharing pages between VMs is still on by default in vSphere 9.1.
 - F. One host advanced setting turns on sharing between all the VMs of a host.
 - G. Giving all the desktops one common salt value has no security downside.

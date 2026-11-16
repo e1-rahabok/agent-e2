@@ -13,7 +13,7 @@ Which statements about how a VM on this host waits on the NVMe tier are correct?
 - E. While NVMe read latency stays below 200 µs, the tier costs a VM no measurable time.
 - F. Host active memory below 50% of DRAM shows that no VM on the host waits on the tier.
 - G. Move first the VM that holds the most memory on the NVMe tier, to cut the time VMs wait.
-- H. A high read latency on an idle NVMe device costs the VMs nothing.
+- H. A high read latency on an idle NVMe device is a wake-up delay that no vCPU waits through.
 - I. A guest write to a page on the NVMe tier does not wait; only a read fetches the page back.
 
 ## Likely wrong answer
@@ -28,13 +28,13 @@ B: the most memory on the NVMe tier read as the most waiting. Or E: a read laten
 - E is wrong: over-correction. Each fetch costs about 1,000 times a DRAM access (about 100-200 µs against about 100 ns); many fetches at a good latency still slow a VM.
 - F is wrong: the host figure is a leading signal for the whole host, not each VM's experience. A VM with high NVMe read bandwidth waits whatever the host average says.
 - G is wrong: the wrong action from B. That VM's pages on NVMe are cold; move or protect the VMs that read from NVMe.
-- H is wrong: the VMs that read while the device woke up waited for each read. The wake-up explains the latency; it does not remove the wait (reads times latency).
+- H is wrong: the vCPU that touched the page waited for that read, wake-up included. The wake-up explains the latency; it does not remove the wait. With few reads the total wait is small (reads times latency), but it is not zero.
 - I is wrong: the CPU cannot write NVMe directly either; any access to a page on NVMe raises a page fault and the page is fetched to DRAM before the write completes (vSphere 9.1 documentation, pp. 1848, 1872). Only demotion writes are off the vCPU's path.
 
 ## Notes
 - Paired with 0147 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item B17.
 - I added in the 2026-11-15 audit: the write fact is now vendor-sourced in memory-tiering (vSphere 9.1 documentation, pp. 1848, 1872); with 0147 D it is two questions.
-- H rests on the memory-tiering Misconceptions line ("never zero"); the Touching a page on NVMe line "one fetch at a high latency on an idle device does not [slow a VM]" reads against it (knowledge-base wording, raised with the author).
+- H reworded in the 2026-11-16 re-review: it now asks whether the touching vCPU waits (memory-tiering, Misconceptions: "the VM that touched the page waited 900 µs"), not whether the VM is slowed, so the Touching a page on NVMe line ("one fetch at a high latency on an idle device does not [slow a VM]") no longer reads against it.
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
 ## Metadata

@@ -9,7 +9,7 @@ Which statements are correct?
 
 - A. With 1.5 times the VMs, active memory falls in Broadcom's test-and-monitor band.
 - B. No VM page moves to the NVMe tier until about 80% of the host DRAM is consumed.
-- C. Kernel memory moves to the NVMe tier first, since kernel pages are the least active pages on the host.
+- C. Kernel memory moves to the NVMe tier first, ahead of the cold pages of the VMs.
 - D. Adding the NVMe tier raises the memory the hypervisor itself needs, which leaves less memory for VM reservations.
 - E. Once Consumed passes the 768 GB of DRAM, the host starts compressing and swapping.
 - F. The NVMe device of the memory tier can still give part of its capacity to vSAN.
@@ -29,6 +29,7 @@ C: assuming kernel memory can be tiered. Or E: Consumed above DRAM read as press
 ## Notes
 - Sources: vSphere 9.1 documentation, vSphere Resource Management > Memory Tiering over NVMe (candidates, the 80% line, hypervisor overhead, the device not available to vSAN); Performance Best Practices for vSphere 9.1, Memory Tiering.
 - Synthetic, from the knowledge files listed in `knowledge`. Counts only after author approval.
+- C lost its "since" clause in the 2026-11-16 re-review (the only reason clause sat in a wrong option); same fact.
 - F added in the 2026-11-15 audit (memory-tiering, Capacity and Misconceptions: a tiering device is taken out of vSAN capacity).
 
 ## Metadata

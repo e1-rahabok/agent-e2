@@ -3,8 +3,9 @@
 One VCF Operations list (ASSUMED list format, README), four hosts of cluster
 cl-east-02, columns First/Last/Min/Max of the 5-minute values over 90 days.
 Group prefix `Memory|` as the other list cases (TechDocs prints `Mem|`).
-The subject esx-e203 holds about 2 GB compressed, 4-7% fewer at the end of
-the quarter (pages left with a powered-off VM, no decompression).
+The subject esx-e203 holds about 2 GB compressed, the same value all quarter:
+with Compression Rate and Decompression Rate at 0 and no VM moved or powered
+off, nothing can add or remove compressed pages (re-review 2026-11-16).
 """
 
 from .. import core, formats
@@ -29,7 +30,7 @@ class HostCompressedFlat(core.Case):
         for h in HOSTS:
             if h == SUBJECT:
                 x = rng.randint(2_000_000, 2_400_000)
-                last = round(x * (1 - rng.uniform(0.04, 0.07)))
+                last = x
                 v = [round(rng.uniform(58, 64), 4), round(rng.uniform(80, 86), 4), 0, x, last, last, x, 0, 0]
             else:
                 v = [round(rng.uniform(52, 65), 4), round(rng.uniform(72, 87), 4), 0, 0, 0, 0, 0, 0, 0]
@@ -58,6 +59,8 @@ class HostCompressedFlat(core.Case):
             fails.append("D, G: Compressed not near one value or Compression Rate not 0")
         if last < 0.9 * first or cmin < 0.9 * cmax:
             fails.append("H: Compressed falls below 0.9")
+        if (cmin != cmax) and comp == 0 and dec == 0:
+            fails.append("E: Compressed changes with Compression and Decompression Rate at 0")
         if cmax >= 4_500_000:
             fails.append("size guard: Compressed Max >= 4,500,000")
         return fails[:20]
