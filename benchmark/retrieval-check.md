@@ -85,6 +85,12 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 - Perfect is the right goal for one thing, and it is the gate: no question misses its main file (`knowledge_main`). A miss of a supporting file is tolerable; a miss of the main file is a defect to fix every time.
 - Watch the held-out set: when it scores clearly below the visible set, retrieval is being fitted, not improved.
 
+## Known limitation: needed files that no tier selects
+- Most of the needed files that miss the reading set are not cut by the budget. No tier selects them: not the flow, not a named object or user term, not search, not a link from a file already read.
+- Retrieval check of 2026-11-16: 78 of the 81 missed files were in no tier; the other 3 were cut by the budget.
+- Raising `context_tokens` does not help these files. They need a link, a user-term row, the user's words in the file, or a ranking change (see the table below).
+- Status: accepted for release 1.0. The fix is after 1.0 ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), After 1.0).
+
 ## When the score is bad
 - First decide what kind of bad:
   - **A drop after a change**: compare the per-question rows of before and after. Which questions lost a file, and which new file took its place?
