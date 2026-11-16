@@ -93,6 +93,8 @@ primer:                       # up-front blocks in Agent E2's answer prompt (har
 # Pin providers per model when known, e.g. openai/gpt-oss-20b: [groq]
 provider_order: {}
 
+spread_runs_over_providers: true   # the five runs of a question prefer different hosts of the model (provider_hosts_per_model.py): the score is pooled, the host of every answer is recorded
+concurrency_per_provider: false    # true: the proven concurrency counts per host (3 hosts, 3 times the value). Off until measured: a 429 returns to the proven value, which is then the floor
 snapshots:                    # run_all_models_in_one_round.py pushes the answers, configs and reports to a separate branch (push_snapshots_to_branch.py)
   enabled: true
   every_minutes: 15           # a lost machine then costs at most this much of the round

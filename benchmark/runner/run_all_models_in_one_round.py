@@ -102,6 +102,8 @@ def child_cmd(entry, out_dir, minutes_left, resume, extra=''):
     else:
         cmd += ['--models', entry['model'], '--modes', ','.join(entry['modes']), '--name', entry['folder'],
                 '--params', json.dumps({entry['model']: entry['params']} if entry.get('params') else {})]
+        if entry.get('hosts'):
+            cmd += ['--hosts', json.dumps({entry['model']: entry['hosts']})]
     return cmd
 
 
@@ -189,11 +191,21 @@ def main():
             verdict = rep['runs']
         else:
             verdict = {}
+        hosts = {}
+        if cfg.get('spread_runs_over_providers') and not a.skip_preflight and not a.child_args:
+            import provider_hosts_per_model as PH
+            client = GatewayClient(cfg['gateway'], retry_seconds=15)      # a host that is down must fail fast
+            for p in plan:
+                ladder = (cfg.get('model_params') or {}).get(p['model']) or [{}]
+                params = verdict[p['model']]['params'] if p['model'] in verdict else ladder[0]
+                hosts[p['model']] = PH.choose_hosts(client, p['model'], params, log=lambda s: print(s, flush=True))
+                print(f'{p["model"]}: runs spread over {hosts[p["model"]] or "one host (the gateway chooses)"}', flush=True)
         for p in plan:
             ladder = (cfg.get('model_params') or {}).get(p['model']) or [{}]
             params = verdict[p['model']]['params'] if p['model'] in verdict else ladder[0]
             state['runs'].append({'model': p['model'], 'modes': p['modes'], 'folder': run_name([p['model']], a.out), 'params': params,
-                                  'rung': ladder.index(params) if params in ladder else 0, 'status': 'pending', 'note': '', 'retries': 0})
+                                  'rung': ladder.index(params) if params in ladder else 0, 'status': 'pending', 'note': '', 'retries': 0,
+                                  'hosts': hosts.get(p['model'], [])})
         save_state(a.out, state, lock)
     import question_files_and_answer_parsing as C
     n_questions = len([c for c in C.load() if c.scorable])

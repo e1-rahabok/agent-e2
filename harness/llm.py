@@ -154,7 +154,7 @@ class MockClient:
             return {'content': json.dumps({'kind': 'metric-meaning', 'objects': ['VM'], 'claims': [],
                                            'metrics': [{'name': 'CPU Ready', 'object': 'VM', 'value': None, 'unit': None}]}),
                     'tool_calls': [], 'finish_reason': 'stop', 'prompt_tokens': 300, 'completion_tokens': 60, 'latency': 0.01,
-                    'served_model': model, 'provider': 'mock'}
+                    'served_model': model, 'provider': (provider_order[0] if provider_order else 'mock')}
         if tools and tool_turns == 0:
             q = next(m['content'] for m in messages if m['role'] == 'user')
             q = q if isinstance(q, str) else q[0]['text']
@@ -164,7 +164,7 @@ class MockClient:
         pick = sorted(self.rng.sample(letters, k=1 if letters else 0)) or ['A']
         return {'content': f'ANSWER: {", ".join(pick)}\nREASON: mock', 'tool_calls': [], 'finish_reason': 'stop',
                 'prompt_tokens': 500, 'completion_tokens': 20, 'latency': 0.01,
-                'served_model': model, 'provider': 'mock'}
+                'served_model': model, 'provider': (provider_order[0] if provider_order else 'mock')}
 
     def _tool(self, name, args):
         return {'content': '', 'finish_reason': 'tool_calls', 'tool_calls': [{'id': f'call_{self.rng.randint(0, 10**9)}', 'type': 'function',

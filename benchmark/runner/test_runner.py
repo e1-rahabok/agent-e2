@@ -18,6 +18,8 @@ import run_all_models_in_one_round as RA  # noqa: E402
 import summary_of_all_runs as S  # noqa: E402
 import check_round_is_alive as CA  # noqa: E402
 import push_snapshots_to_branch as SN  # noqa: E402
+import provider_hosts_per_model as PH  # noqa: E402
+import resume_unfinished_round_if_any as RS  # noqa: E402
 from llm import MockClient, ParamClient  # noqa: E402
 
 
@@ -608,6 +610,73 @@ class RoundRecoveryTest(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(out, '.round.json')))
 
 
+class ResumeOnSessionStartTest(unittest.TestCase):
+    """The SessionStart hook resumes an interrupted round, and does nothing otherwise."""
+
+    CFG = {'runs': 1}
+
+    def setUp(self):
+        import tempfile
+        self.d = tempfile.mkdtemp()
+        self.addCleanup(__import__('shutil').rmtree, self.d, True)
+
+    def state(self, runs):
+        import json
+        json.dump({'started': '2026-11-16T10:00:00', 'runs': runs}, open(os.path.join(self.d, RA.STATE), 'w'))
+
+    def folder(self, name, good):
+        os.makedirs(os.path.join(self.d, name), exist_ok=True)
+        with open(os.path.join(self.d, name, 'answers.csv'), 'w') as f:
+            f.write('model,mode,question_id,track,run,error\n')
+            for i in range(good):
+                f.write(f'm,baseline,q{i},text,1,\n')
+
+    def entry(self, name, status='running'):
+        return {'model': 'm', 'modes': ['baseline'], 'folder': name, 'status': status}
+
+    def test_no_round_no_action(self):
+        self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'nothing')
+
+    def test_an_unfinished_run_with_no_process_is_resumed(self):
+        self.state([self.entry('r1')])
+        self.folder('r1', 2)
+        self.assertEqual(RS.decide(self.d, self.CFG, 4, []), ('resume', ['r1']))
+
+    def test_a_run_with_a_live_process_is_left_alone(self):
+        self.state([self.entry('r1')])
+        self.folder('r1', 2)
+        ps = ['python3 benchmark/runner/answer_questions_for_one_model.py --resume benchmark/results/r1']
+        self.assertEqual(RS.decide(self.d, self.CFG, 4, ps)[0], 'nothing')
+
+    def test_a_state_file_whose_folders_are_gone_is_left_alone(self):
+        self.state([self.entry('renamed-or-archived')])
+        self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'nothing')
+
+    def test_a_finished_round_is_left_alone(self):
+        self.state([self.entry('r1', 'complete')])
+        self.folder('r1', 4)
+        self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'nothing')
+
+    def test_a_run_that_waits_for_the_author_is_not_resumed(self):
+        self.state([self.entry('r1', 'invalid')])
+        self.folder('r1', 2)
+        self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'nothing')
+
+    def test_a_refused_or_stopped_run_is_resumed(self):
+        for status in ('refused', 'stopped', 'outage', 'failed'):
+            self.state([self.entry('r1', status)])
+            self.folder('r1', 1)
+            self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'resume', status)
+
+    def test_the_hook_script_does_nothing_outside_a_remote_session_or_without_a_round(self):
+        import subprocess
+        hook = os.path.join(os.path.dirname(__file__), '..', '..', '.claude', 'hooks', 'resume_unfinished_benchmark_round.sh')
+        for env in ({'CLAUDE_CODE_REMOTE': ''}, {'CLAUDE_CODE_REMOTE': 'true', 'CLAUDE_PROJECT_DIR': self.d}):
+            p = subprocess.run(['bash', hook], capture_output=True, text=True, env=dict(os.environ, **env), timeout=60)
+            self.assertEqual(p.returncode, 0, p.stderr)
+            self.assertEqual(p.stdout.strip(), '')
+
+
 class SnapshotBranchTest(unittest.TestCase):
     """Snapshots go to their own branch, built with a temporary index: the working branch is not touched."""
 
@@ -800,6 +869,72 @@ class RoundMockTest(unittest.TestCase):
             for m in ('gemma-4-31b-it', 'qwen3.8-27b', 'muse-glimmer-30b', 'claude-opus-5.5'):
                 self.assertIn(m, text)
             self.assertIn('## Reading', text)
+
+
+class ProviderHostsTest(unittest.TestCase):
+    """The five runs of a question prefer different provider hosts; a host that fails is left out."""
+
+    REPLY = {'choices': [{'message': {'content': 'OK', 'provider_metadata': {'gateway': {'routing': {
+        'finalProvider': 'novita', 'fallbacksAvailable': ['friendli', 'gmicloud', 'parasail']}}}}}]}
+
+    class Fake:
+        def __init__(self, reply, down=()):
+            self.reply, self.down, self.calls = reply, set(down), []
+
+        def _post(self, path, body):
+            only = ((body.get('providerOptions') or {}).get('gateway') or {}).get('only')
+            self.calls.append(only)
+            if only and only[0] in self.down:
+                raise RuntimeError('HTTP 503: Service temporarily unavailable')
+            return self.reply, {}, 0.1
+
+    def test_the_routing_names_the_host_and_the_others(self):
+        self.assertEqual(PH.hosts_in(PH.routing_of(self.REPLY)), ['novita', 'friendli', 'gmicloud', 'parasail'])
+
+    def test_a_reply_without_routing_gives_no_hosts(self):
+        self.assertEqual(PH.hosts_in(PH.routing_of({'choices': [{'message': {'content': 'OK'}}]})), [])
+
+    def test_each_run_prefers_another_host_and_the_others_follow(self):
+        hosts = ['a', 'b', 'c']
+        self.assertEqual([PH.order_for_run(hosts, r)[0] for r in (1, 2, 3, 4, 5)], ['a', 'b', 'c', 'a', 'b'])
+        self.assertEqual(PH.order_for_run(hosts, 2), ['b', 'a', 'c'])
+        self.assertEqual(sorted(PH.order_for_run(hosts, 3)), ['a', 'b', 'c'])      # every host stays as a fallback
+
+    def test_one_host_means_no_spreading(self):
+        self.assertEqual(PH.order_for_run(['a'], 3), [])
+        self.assertEqual(PH.order_for_run([], 1), [])
+
+    def test_a_host_that_fails_is_left_out_of_the_round(self):
+        client, lines = self.Fake(self.REPLY, down={'gmicloud'}), []
+        good = PH.choose_hosts(client, 'google/gemma-4-31b-it', log=lines.append)
+        self.assertEqual(good, ['novita', 'friendli', 'parasail'])
+        self.assertTrue([x for x in lines if 'gmicloud' in x])
+
+    def test_fewer_than_two_working_hosts_means_the_gateway_chooses(self):
+        client = self.Fake(self.REPLY, down={'friendli', 'gmicloud', 'parasail'})
+        self.assertEqual(PH.choose_hosts(client, 'm', log=lambda s: None), [])
+
+    def test_a_model_with_one_host_is_not_spread(self):
+        one = {'choices': [{'message': {'provider_metadata': {'gateway': {'routing': {'finalProvider': 'x', 'fallbacksAvailable': []}}}}}]}
+        self.assertEqual(PH.choose_hosts(self.Fake(one), 'm', log=lambda s: None), [])
+
+    def test_a_run_gets_its_hosts_and_records_the_preferred_host_offline(self):
+        import csv
+        import json
+        import subprocess
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            out = os.path.join(d, 'out')
+            os.makedirs(out)
+            hosts = json.dumps({'google/gemma-4-31b-it': ['a', 'b', 'c']})
+            p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'answer_questions_for_one_model.py'), '--out', out, '--mock',
+                                '--models', 'google/gemma-4-31b-it', '--modes', 'baseline', '--runs', '3', '--questions', 'L1-001', '--hosts', hosts],
+                               capture_output=True, text=True, env=dict(os.environ, AI_GATEWAY_API_KEY='x'), timeout=120)
+            self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+            run_dir = os.path.join(out, os.listdir(out)[0])
+            rows = sorted(csv.DictReader(open(os.path.join(run_dir, 'answers.csv'), encoding='utf-8')), key=lambda r: r['run'])
+            self.assertEqual([r['provider'] for r in rows], ['a', 'b', 'c'])        # run 1, 2, 3 prefer a, b, c
+            self.assertEqual(json.load(open(os.path.join(run_dir, 'config.json')))['hosts'], {'google/gemma-4-31b-it': ['a', 'b', 'c']})
 
 
 class SummarizeTest(unittest.TestCase):

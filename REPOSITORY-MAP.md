@@ -72,7 +72,7 @@ Started by one operational question; ends in a choice to act, with its reason. N
 | Folder | Holds |
 |---|---|
 | [`benchmark/questions/`](benchmark/questions) | Questions with answer keys. Never indexed. Template: [`benchmark/_templates/question.md`](benchmark/_templates/question.md) |
-| [`benchmark/runner/`](benchmark/runner) | Runner, retrieval check (`retrieval_check_without_model.py`), config |
+| [`benchmark/runner/`](benchmark/runner) | Runner (one file per job, named by it: `answer_questions_for_one_model.py`, `run_all_models_in_one_round.py`, `check_round_is_alive.py`), retrieval check (`retrieval_check_without_model.py`), config |
 | [`benchmark/results/`](benchmark/results) | One folder per run (`<date>-<model>`), [`README.md`](benchmark/results/README.md) (the analysis of all runs) and the retrieval check outputs (`retrieval-<date>/`) |
 | [`benchmark/RUN.md`](benchmark/RUN.md) | How to run a benchmark round: prompt, approvals, time, cost |
 | `benchmark/*.md` | [design](benchmark/design.md), [models](benchmark/models.md), [live test](benchmark/live-test.md), [retrieval check](benchmark/retrieval-check.md) |

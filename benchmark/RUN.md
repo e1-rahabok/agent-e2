@@ -19,7 +19,7 @@ When the round is complete: merge it to main, then give me the summary.
 ## Before you start (only you can do these)
 1. `AI_GATEWAY_API_KEY` is set in the environment of the session.
 2. Credits: at least US$ 100 (projected US$ 77 with the safety factor). The preflight reads the balance and refuses the round if it does not cover the projected cost times 1.3.
-3. Key budget: room for US$ 100 beyond what the key has used. The budget of a key is cumulative and cannot be read by the runner; it shows as HTTP 402. (On 2026-11-13 the key had used US$ 150.43 of 150.)
+3. Budgets, both: the key's budget and the team's budget (Vercel dashboard, AI Gateway, API Keys and Budgets & Spend). Each needs room for the projected cost times 1.3 plus margin, beyond what it has used, and its refresh period must not reset in the middle of the round. The runner cannot read either; an empty one shows as HTTP 402, and the message names which one ("Team budget exceeded"). (2026-11-13: the key had used US$ 150.43 of 150. 2026-11-16: the round stopped on the team budget of US$ 100, with US$ 47 left on the key.) Write the amounts and the periods in the reply to the human before the round.
 4. Everything is committed. The index version is the commit SHA: the questions, `knowledge/` and `harness/` must not change during the round. A resume after a change mixes two versions in one run.
 5. The session works on its own branch, started from `main`.
 6. This is a development round, not the release round: the held-out set of 30 ([benchmark/design.md](design.md), section 7.5) is drawn at release and does not exist yet, so that gate is not read. The run set is every question with status `draft` or `reviewed`; on 2026-11-16 288 are drafts and 3 reviewed, so the scores are read before the author's review of the questions (Q256).
@@ -54,8 +54,8 @@ Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the fro
 ## Steps for the LLM
 
 1. Check `test -n "$AI_GATEWAY_API_KEY"` and `git status` (clean). If the key is missing: stop and tell the human.
-2. Start the round in the background: `python3 benchmark/runner/run_all_models_in_one_round.py --max-minutes 110`. Use the longest background timeout (7,200,000 ms).
-3. Every 15 minutes read `benchmark/results/.progress.txt` and send the human one line: answers done and errors per model, time left. Schedule the next check with `send_later` (15 minutes) or `ScheduleWakeup`. Never poll with `sleep`.
+2. Start the round in the background with one command and no wrapper shell, `nohup` or `&`: `python3 benchmark/runner/run_all_models_in_one_round.py --max-minutes 110`. Use the longest background timeout (7,200,000 ms). The system then reports the command's own end. (A wrapped run reported the wrapper's end after seconds on 2026-11-16.) The same rule for any run started by hand with `answer_questions_for_one_model.py --resume`.
+3. Every 10 minutes run `python3 benchmark/runner/check_round_is_alive.py` and send the human one line: per run, the verdict (ALIVE, DONE, STALLED, DEAD, MACHINE RESTARTED), good answers against the total, time left. Say "running" only when the command says ALIVE and the good-answer count moved since the last check. STALLED, DEAD or MACHINE RESTARTED: relaunch with `python3 benchmark/runner/run_all_models_in_one_round.py --resume --max-minutes 110` (it resumes every unfinished run, whatever stopped it) and tell the human. Schedule the next check with `send_later` or `ScheduleWakeup`. Never poll with `sleep`. Answers and configs are pushed to the branch `snapshots/round-<date>` every 15 minutes by the runner; do not commit run folders by hand during the round.
 4. When the command ends, read its exit code and last lines:
 
 | Exit | Meaning | What to do |
@@ -64,13 +64,15 @@ Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the fro
 | 3 | Stopped at the time limit | Relaunch `python3 benchmark/runner/run_all_models_in_one_round.py --resume --max-minutes 110`. Repeat until 0. No other change |
 | 4 | Preflight failed or the credits do not cover the round | Read the printed reason. A setting problem: nothing to fix by hand, the next settings were already tried. Credits: stop and tell the human the amount |
 | 5 | A run produced invalid answers on its last settings | Stop and report: model, the printed reason, the run folder |
-| 6 | The gateway refused (HTTP 402, 401, 403) | Stop and tell the human: raise the key budget or add credits, then say "resume". Then run `run_all_models_in_one_round.py --resume --max-minutes 110` |
+| 6 | The gateway refused (HTTP 402, 401, 403) | Stop and tell the human: read the saved error to see which budget ran out (the team's or the key's), raise it or add credits, then say "resume". Then run `run_all_models_in_one_round.py --resume --max-minutes 110` (it resumes the refused runs too) |
+| 8 | The gateway or a provider kept failing | The runner waits and resumes the same folder by itself (`release.outage_waits` times). Only when it gives up: stop and report the run and the error text; do not change settings |
 | 7 | Some runs complete, others failed | Stop and report the list printed under "Round status". Do not merge a partial round |
 | 1, other | The orchestrator itself crashed | Relaunch once with `--resume`. A second crash: stop and report the traceback |
 
    Recovery the runner does by itself, without you:
    - a run that crashed is relaunched with `--resume` (2 times);
-   - answers that failed (HTTP 5xx, 429 that outlasted the retries) are retried the same way;
+   - answers that failed (HTTP 5xx, 429 that outlasted the retries, for up to `gateway_retry_minutes`) are retried the same way;
+   - a gateway or provider outage (exit 8) never counts against the settings: the runner waits and resumes the same folder;
    - a run whose answers are invalid with the current settings starts again from the beginning with the next settings of its model (`model_params` in `config.yaml`); the invalid folder is kept and archived at the end;
    - a run stopped at the time limit continues where it stopped.
 
@@ -82,7 +84,7 @@ Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the fro
 2. `python3 project/tools/lint.py` reports 0 problems; `python3 -m unittest harness/test_tools.py` and `python3 -m unittest benchmark/runner/test_runner.py` pass. Read the results, not only the exit codes.
 3. Add one entry to [`project/plan.md`](../project/plan.md) (Decisions, latest first): what ran, the final scores, time and cost against the projection, anything unexpected. Update the "Result so far" cells in [`benchmark/models.md`](models.md), section 4, from the README.
 4. Commit everything (run folders without `traces.jsonl`, [`README.md`](results/README.md), the archive move, the plan and models changes). The message describes the change in plain words and names no model.
-5. Push the session branch, open a pull request, merge it with a merge commit (not squash), and check that `main` holds [`benchmark/results/README.md`](results/README.md). Do this yourself in the same session.
+5. Delete nothing by yourself: tell the human that the branch `snapshots/round-<date>` can be deleted (a cloud session cannot). Push the session branch, open a pull request, merge it with a merge commit (not squash), and check that `main` holds [`benchmark/results/README.md`](results/README.md). Do this yourself in the same session.
 6. Reply to the human: the Final score table and the Reading lines of the README, actual time and cost against the projection, anything the human must decide.
 
 ## Approve up front
