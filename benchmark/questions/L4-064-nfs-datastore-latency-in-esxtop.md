@@ -22,10 +22,10 @@ Which statements are correct?
 - G. With the NAS at 1.5 ms, most of the 18 ms is spent between the host's NFS client and the NAS.
 - H. With the NAS at 1.5 ms and KAVG at 0.03 ms, esxtop misreports the latency of this datastore.
 
-## Likely wrong answer
-B: tuning a block-storage queue that NFS does not have. Or F: expecting an NFS datastore in the vSphere Client Disk charts.
-## Expected key points
-- Answer: A, C, D, E, G.
+## Answers
+A, C, D, E, G
+
+## Explanation
 - A is correct: an NFS datastore has its own row in the disk device panel; its DAVG = network latency + NAS processing time.
 - B is wrong: there is no HBA and no device queue for NFS.
 - C is correct: NFS bypasses the block storage stack (PSA), so there is no device queue depth, no kernel device queue and no QAVG.
@@ -34,6 +34,7 @@ B: tuning a block-storage queue that NFS does not have. Or F: expecting an NFS d
 - F is wrong: the vSphere Client lists only block devices as Disk objects; NFS latency is read on the datastore counters.
 - G is correct: DAVG for NFS is network latency plus NAS processing time; with the NAS at 1.5 ms, about 17 of the 18.4 ms lie on the path between the NFS client and the NAS: check the storage network (drops, MTU) first.
 - H is wrong: the two readings agree. The NAS reports only its own processing time; DAVG adds the network path, and KAVG near 0 only shows that the IO does not wait in the host's storage stack.
+- Misconception: B: tuning a block-storage queue that NFS does not have. Or F: expecting an NFS datastore in the vSphere Client Disk charts.
 
 ## Notes
 - Synthetic, 2026-11-12. Paired with 0050, which tests the same panel on a screenshot. Counts only after author approval.
@@ -59,7 +60,6 @@ knowledge_main: vsphere/technology/storage/concepts/esxi-storage-latency-stack
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, C, D, E, G]
 misconception: [B, F]
 misconception_type: [tool-confusion]
 pair: "0050"

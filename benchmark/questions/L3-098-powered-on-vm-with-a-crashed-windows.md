@@ -24,11 +24,10 @@ Which statements are correct?
 - Condition the key depends on: power state Powered On; VMware Tools Not running; the console shows the Windows stop screen.
 - Masking: mask every VM, host, datastore and cluster name, the guest host name and any IP address.
 
-## Likely wrong answer
-A: the Guest OS crash read as a VM outage, and E, the action that follows from it. Or F, the over-correction.
+## Answers
+B, D, I
 
-## Expected key points
-- Answer: B, D, I.
+## Explanation
 - A false: the misconception. It mixes two layers: the Guest OS is down; the VM, the virtual hardware, is powered on and so available.
 - B true: the Summary page reads Powered On.
 - C false: the Summary page reads VMware Tools Not running.
@@ -38,6 +37,7 @@ A: the Guest OS crash read as a VM outage, and E, the action that follows from i
 - G false: Guest OS availability needs checks from inside the OS (the RPC service on Windows); the power state reads the VM only.
 - H false: CPU and memory counters of the VM are measured by the VMkernel outside the guest; they keep their data while the guest is down.
 - I true: the console shows the Windows stop screen: the Guest OS layer has failed.
+- Misconception: A: the Guest OS crash read as a VM outage, and E, the action that follows from it. Or F, the over-correction.
 
 ## Notes
 - Deferred 2026-11-15: availability is not in release 1.0 (author, exports review 2026-11-15, section 9).
@@ -65,7 +65,6 @@ attachments:
   - 0435/vcenter-vm-console-stop-screen.png
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C32"
-answer: [B, D, I]
 misconception: [A, E]
 misconception_type: [layer-confusion]
 pair: "0015"

@@ -23,16 +23,16 @@ On which hosts does ESX implement the dense mode optimizations at 14:00?
 - D. Host 1, host 3, host 4 and host 5.
 - E. Host 1, host 4 and host 5.
 
-## Likely wrong answer
-D or E: the option /Net/NetTuneHostMode is read as the switch, or high CPU utilization alone is read as enough. Or C: the number of VMs is not checked. Or A: the consolidation ratio is checked and the utilization is not.
+## Answers
+B
 
-## Expected key points
-- Answer: B.
+## Explanation
 - A is wrong: host 2 fails on utilization: 49% is below the 50% threshold, although its 70 VMs and 180 vCPUs pass both ratios.
 - B is correct: with the option set to dense, ESX implements the optimizations only while numVMs ≥ numPCPUs, numvCPUs ≥ 2 × numPCPUs and CPU utilization ≥ 50%. Host 1 (44 VMs, 130 vCPUs, 62%) and host 5 (36 VMs, 140 vCPUs, 51%) pass all three whether numPCPUs is read as 16 cores or 32 logical processors.
 - C is wrong: host 3 has the highest utilization of the dense hosts (85%) and enough vCPUs, but only 9 VMs, below numPCPUs on either reading: a few large VMs are not a high consolidation ratio.
 - D is wrong: host 3 fails on the VM count, and host 4 is not set to dense. Setting the option makes a host eligible; the thresholds then decide, and a host left at default gets nothing.
 - E is wrong: host 4 meets all three thresholds with its numbers but stays at the default value of the option, so nothing is implemented; high utilization is not the switch.
+- Misconception: D or E: the option /Net/NetTuneHostMode is read as the switch, or high CPU utilization alone is read as enough. Or C: the number of VMs is not checked. Or A: the consolidation ratio is checked and the utilization is not.
 
 ## Notes
 - Public source: Performance Best Practices for VMware vSphere 9.1, revision 20260624, "Host-Wide Performance Tuning" (page 54), including the NOTE after the setting values. https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices (read 2026-11-13 from the saved PDF, revision 20260624).
@@ -61,7 +61,6 @@ knowledge_main: vsphere/technology/cpu/configuration/host-wide-dense-mode
 attachments: []
 origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
-answer: [B]
 misconception: [D, E]
 misconception_type: []
 status: draft

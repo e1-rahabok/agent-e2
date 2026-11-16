@@ -8,15 +8,15 @@ Which units do the Advanced performance chart of a VM in the vSphere Client and 
 - C. The vSphere Client shows megabits per second; esxtop shows kilobytes per second.
 - D. Both show megabits per second.
 
-## Likely wrong answer
-A: assuming both tools use the same unit, then comparing the numbers directly.
+## Answers
+B
 
-## Expected key points
-- Answer: B.
+## Explanation
 - A is wrong: esxtop shows network throughput in megabits per second, not kilobytes.
 - B is correct: the VM network counters of the Advanced chart are in kilobytes per second, even where the chart title says Mbps; esxtop shows megabits per second. Convert bits to bytes and mega to kilo before comparing.
 - C is wrong: the units are swapped; the chart title's Mbps does not change the KBps counters.
 - D is wrong: only esxtop is in megabits per second.
+- Misconception: A: assuming both tools use the same unit, then comparing the numbers directly.
 
 ## Notes
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Counts only after author approval.
@@ -41,7 +41,6 @@ knowledge_main: vsphere/tools/esxtop/network-units-vs-vsphere-client
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [B]
 misconception: [A]
 misconception_type: [tool-confusion, unit-and-normalization]
 pair: "0412"

@@ -23,12 +23,10 @@ You run the health check on this VM. Which statements are correct?
 - I. The data points to adding vCPUs and memory to the VM before the next nightly run.
 - J. The Windows processor queue belongs to the Guest OS layer, outside the VM health check.
 
-## Likely wrong answer
-- I: "CPU Usage is high at 89% and 11 GB is ballooned and 3 GB swapped: add memory and vCPUs."
-- F: "Start with what the VM uses; contention only matters when usage is high."
+## Answers
+A, C, D, G, J
 
-## Expected key points
-- Answer: A, C, D, G, J.
+## Explanation
 - A is true: peak Ready 1.4% and peak Co-stop 0.3% per vCPU are low; the vCPUs got the physical CPU they asked for.
 - B is false: the peak is one value for the VM, taken across all virtual disks and both directions; it does not say which disk.
 - C is true: only the disk peak is a wait; 410 ms in two cycles inside the job window is the finding, and the 5-minute averages of 4 and 6 ms hide it. The health check reads contention at the 20-second peak (Peak ... within collection cycle).
@@ -39,6 +37,7 @@ You run the health check on this VM. Which statements are correct?
 - H is false: the data gives only the job's start (02:00) and that it took three times longer, not when it ran slow; the peak is one value per 5-minute cycle, with no time inside it. Check the job's timeline against the two cycles.
 - I is false: CPU waits are small and Memory Contention is 0% with no swap-in, so the balloon, swap and compression amounts are past reclamation, not a wait; adding vCPUs or memory does not address a storage wait.
 - J is true: run queue, page-outs and disk queue inside the guest belong to the Guest OS layer, checked as its own object. If the storage flow finds nothing, the wait is inside the Guest OS.
+- Misconception: I: "CPU Usage is high at 89% and 11 GB is ballooned and 3 GB swapped: add memory and vCPUs." - F: "Start with what the VM uses; contention only matters when usage is high."
 
 ## Notes
 - Public source: Broadcom KB 444403, Understanding "Peak" or "Worst" Performance Metrics in VMware VCF / Aria Operations (VCF Operations 9.x and Aria Operations 8.x; the page shows no updated date): VCF Operations polls vCenter every 5 minutes, takes 15 samples of 20 seconds, and the peak metrics show the highest of them; averages hide short spikes. Memory Contention (vSphere mem.latency, "time spent waiting to swap in or decompress guest physical memory") is the wait; Balloon, Swapped and Compressed are amounts.
@@ -57,7 +56,6 @@ technology: [cpu, memory, storage, network]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A, C, D, G, J]
 misconception: [I]
 input: [text]
 object: [vm, guest-os]

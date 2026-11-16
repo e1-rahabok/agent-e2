@@ -17,11 +17,10 @@ Which statements are correct?
 - G. Read each VM's own Ready per vCPU at the 20-second peak; the host value is only a starting point.
 - H. Add a host to the cluster before anything else, since esx-07 is short of CPU.
 
-## Likely wrong answer
-B: the host average read as every VM. Or D: the slowness must be in the guest.
+## Answers
+A, C, F, G
 
-## Expected key points
-- Answer: A, C, F, G.
+## Explanation
 - A is correct: db-07 shows Ready 7.8% at the peak; all other VMs are below 0.7%. The host value is averaged over the running VMs, so one 16-vCPU VM is diluted by the other 27.
 - B is wrong: Ready belongs to each VM; a host value is a sum or average of its consumers.
 - C is correct: Co-stop of 1.9% on a 16-vCPU VM: a vCPU in Ready makes its siblings stop to stay in step. The other listed causes are ruled out: no snapshot (stem), and 16 vCPUs fit one 24-core socket. The database feels both.
@@ -30,6 +29,7 @@ B: the host average read as every VM. Or D: the slowness must be in the guest.
 - F is correct: a CPU limit or low shares on db-07 or its resource pool can hold one VM back; a 16-vCPU VM needs many threads free at about the same time; and other load on the host at that hour competes with it. Check these before treating it as a cluster capacity problem.
 - G is correct: contention is per consumer; sort the VMs by their own Ready, at the 20-second peak that keeps short waits visible.
 - H is wrong: the other 27 VMs barely wait (Ready below 0.7%) and the host runs at about 60%; one large VM waits, so check its size, limits and shares before any capacity change.
+- Misconception: B: the host average read as every VM. Or D: the slowness must be in the guest.
 
 ## Notes
 - Changed 2026-11-16 (re-review): the stem says no VM has a snapshot, so C's cause (Ready) is the only one left among co-stop's listed causes; truth unchanged.
@@ -59,7 +59,6 @@ attachments:
   - 0115/esx-07-vms-cpu-14-to-15.csv
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, C, F, G]
 misconception: [B, D]
 misconception_type: [average-hides-worst, provider-vs-consumer]
 pair: "0016"

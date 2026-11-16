@@ -16,11 +16,10 @@ Which statements are correct?
 - F. Co-stop accounts for most of the distance between Contention and Ready during the batch.
 - G. Contention rose during the batch, so the cluster needs another host to absorb it.
 
-## Likely wrong answer
-E: Contention is just Ready under another name. Or C: the two tools compute Usage differently, so their numbers cannot be compared.
+## Answers
+A, D, F
 
-## Expected key points
-- Answer: A, D, F.
+## Explanation
 - A is correct: the Last month interval keeps 2-hour points averaged from four 1 Week points; the 20 minutes of batch weigh a sixth. The 14:00Z row equals the mean of the 24 VCF Operations 5-minute Usage values (four batch points at 80-100%, twenty at 20-40%).
 - B is wrong: vCenter is an administrative tool; its history is short and averaged (2-hour points here, which flatten the batch). Capacity is planned from VCF Operations.
 - C is wrong: over-correction. Usage is a vSphere counter that VCF Operations passes through and means the same in both tools; the averaging window is what differs, and the mean of the 24 VCF Operations values gives the vCenter row.
@@ -28,6 +27,7 @@ E: Contention is just Ready under another name. Or C: the two tools compute Usag
 - E is wrong: reading. In the four batch rows CPU|Contention (%) is at least 2 points above CPU|Ready (%): it adds Co-stop, Overlap and a small Other Wait to Ready.
 - F is correct: reading. Contention = Overlap + Co-stop + Ready + Other Wait (below 1%); in every batch row CPU|Co-stop (%) is more than two thirds of Contention minus Ready.
 - G is wrong: wrong action. Contention on one VM does not size a cluster: it mixes Ready, Co-stop, Overlap and limits of one VM, and it cannot measure ESXi or cluster performance. Read Ready across the host's and the cluster's VMs, and the VM's width, first.
+- Misconception: E: Contention is just Ready under another name. Or C: the two tools compute Usage differently, so their numbers cannot be compared.
 
 ## Reasoning path
 1. The 2-hour row averages 24 five-minute values: the batch is a sixth of it (A).
@@ -70,7 +70,6 @@ attachments:
   - 0370/rpt-db-02-vcf-cpu-overlap.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C5"
-answer: [A, D, F]
 misconception: [C, E]
 misconception_type: [tool-confusion, rollup-and-interval]
 pair: "0357"

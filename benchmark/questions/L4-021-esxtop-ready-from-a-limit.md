@@ -31,17 +31,17 @@ Which statements are correct?
 - E. Find the limit that holds batch-07 and remove or raise it.
 - F. Add vCPUs to batch-07 so that its nightly jobs finish faster.
 
-## Likely wrong answer
-B: a high %RDY read as a host short of CPU. Or F: more vCPUs for a VM that waits.
+## Answers
+A, D, E
 
-## Expected key points
-- Answer: A, D, E.
+## Explanation
 - A is correct: %MLMTD is time the vCPU was ready but not scheduled because running it would break a CPU limit. It is counted inside %RDY: 56.2 of 58.1 per vCPU.
 - B is wrong: PCPU UTIL averages 27%. The host has free threads.
 - C is wrong: vCenter Ready includes the time held back by a limit, as %RDY does; vCenter also shows that part as Max Limited. It reads about 58% per vCPU, not the 2% left after the limit time.
 - D is correct: esxtop group values are sums over the VM's worlds (NWLD 8), so they pass 100%. Read the vcpu rows, or divide by the vCPU count.
 - E is correct: the limit holds the VM back, so removing or raising it ends the wait; it can sit on the VM or on a parent resource pool. Each vCPU runs about 40% of the time: about 4 vCPUs × 40% × 2.5 GHz = 4 GHz, which looks like a 4,000 MHz limit.
 - F is wrong: more vCPUs would share the same limit.
+- Misconception: B: a high %RDY read as a host short of CPU. Or F: more vCPUs for a VM that waits.
 
 ## Notes
 - Revised 2026-11-12: the screenshot it waited for became an esxtop excerpt typed in the prompt (no new screenshots in 1.0).
@@ -68,7 +68,6 @@ knowledge_main: vsphere/tools/esxtop/cpu
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05; revised 2026-11-12"
-answer: [A, D, E]
 misconception: [B, F]
 misconception_type: [unit-and-normalization, provider-vs-consumer]
 pair: "0103"

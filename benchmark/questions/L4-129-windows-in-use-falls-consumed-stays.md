@@ -19,11 +19,10 @@ Which statements are correct?
 - I. With the Windows counters at hand, the Consumed values of this VM can be ignored for every purpose.
 - J. Whether this VM needs more memory is read from Windows counters, part of the cache included.
 
-## Likely wrong answer
-E: "vCenter is just behind; Consumed will follow Windows down." Or F: "The VM counter for In Use is Active." Or A rejected because `% Committed Bytes In Use` hardly moves across the restart.
+## Answers
+A, C, D, J
 
-## Expected key points
-- Answer: A, C, D, J.
+## Explanation
 - A is correct: reading. In Use = total - (Modified + Standby + Free), and `Available MBytes` is Standby plus Free, so In Use moves by minus the change of `Available MBytes` plus `Modified Page List Bytes`. That sum is at least 9,224 MB higher in every row from 15:05 than in any row up to 15:00 (16,866 MB at least after, 7,641 MB at most before): In Use fell by more than 8 GB, a quarter of 32 GB. `Committed Bytes` and `% Committed Bytes In Use` stay within a few percent, because the restarted JVM commits its heap again at start without touching it; commit is not In Use.
 - B is wrong: reading. `Consumed for jas-prod-03` stays between 32,780,000 and 32,880,000 KB (about 98% of 32 GB) in every row, with no step at 15:05.
 - C is correct: freeing a page only updates the guest's free list, an ordinary memory write that never reaches ESXi. How Windows classifies its pages (the rise of `Free & Zero Page List Bytes` here) is an ESXi blind spot.
@@ -34,6 +33,7 @@ E: "vCenter is just behind; Consumed will follow Windows down." Or F: "The VM co
 - H is wrong: the wrong action. Consumed near the configured size is the normal state of a VM that has touched its memory; it is not demand.
 - I is wrong: over-correction. Consumed shows the host memory the VM holds: what host capacity and the VM's footprint (for example, for a migration) count.
 - J is correct: Guest OS sizing reads the guest's own counters, with part of the cache; VM counters describe what ESXi does.
+- Misconception: E: "vCenter is just behind; Consumed will follow Windows down." Or F: "The VM counter for In Use is Active." Or A rejected because `% Committed Bytes In Use` hardly moves across the restart.
 
 ## Notes
 - Paired with 0095 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item C4.
@@ -69,7 +69,6 @@ attachments:
   - 0386/vcenter-vm-memory-past-day.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C4"
-answer: [A, C, D, J]
 misconception: [E, F]
 misconception_type: [layer-confusion]
 pair: "0095"

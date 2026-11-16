@@ -22,11 +22,10 @@ Which statements about this host are correct?
 - I. An idle thread on a busy core gives a new vCPU the same speed as a whole free core.
 - J. Demand reads higher than Usage once VMs share cores with Hyper-Threading.
 
-## Likely wrong answer
-- B: "Demand well above the host's GHz and Usage above 100% mean the host is out of CPU. Stop placing VMs."
+## Answers
+A, C, F, G, J
 
-## Expected key points
-- Answer: A, C, F, G, J.
+## Explanation
 - A is correct: Ready and Co-stop per VM are the contention reading; at about 1.5% and below 0.2% there is no CPU performance problem now.
 - B is wrong: neither counter shows overload on its own. Usage above 100% is Turbo against the base clock, and Demand runs above Usage once threads share cores; read Core Utilization, Thread Utilization and VM contention.
 - C is correct: ESXi Usage is based on Core Utilization, adjusted for frequency: 112 / 80 is about 1.4, so while busy the cores run about 40% above base (All-Core Turbo).
@@ -37,6 +36,7 @@ Which statements about this host are correct?
 - H is wrong: Core Utilization counts a core as fully used when one of its two threads runs. For capacity (space) count threads: Thread Utilization.
 - I is wrong: a second thread shares the core; Hyper-Threading delivers about 1.25 times per core, not 2 times, so a vCPU on a shared core runs slower than on a free core.
 - J is correct: Demand is the scheduler's view of what the VMs would use with no contention; with Hyper-Threading it is higher than Usage.
+- Misconception: B: "Demand well above the host's GHz and Usage above 100% mean the host is out of CPU. Stop placing VMs."
 
 ## Notes
 - Changed in the 2026-11-15 audit: new host figures and window (the old ones were the knowledge base's own example); Demand and Usage given as separate numbers; base clock no longer called capacity; options that repeated facts homed elsewhere replaced in place: C (Usage above 100% is Turbo) by the Usage-over-Core-Utilization arithmetic, F (free cores) by the second-thread Usage fact, G (free threads) by the Demand-per-core fact; old J (keep placing while Ready is low) dropped, old K re-lettered J; key point E corrected to vCenter's Demand (no reservations); misconception type label-read-as-model added.
@@ -52,7 +52,6 @@ technology: [cpu]
 task: decide-capacity
 level: 400
 answer_type: deterministic
-answer: [A, C, F, G, J]
 misconception: [B]
 input: [text]
 object: [esxi, vm]

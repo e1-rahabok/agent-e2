@@ -14,17 +14,17 @@ Which statements about how the limit acts and how it shows are correct?
 - E. Once capped, the pool's total CPU barely moves from one sample to the next.
 - F. CPU Ready on any VM of the cluster is a sign that the limit of RP-Reports is reached.
 
-## Likely wrong answer
-A: a pool limit is read as a per-host cap that leaves a VM free on a host with spare CPU. Or D: more hosts are expected to lift a capped pool.
+## Answers
+B, E
 
-## Expected key points
-- Answer: B, E.
+## Explanation
 - A is wrong: the misconception. The pool's limit applies across the cluster; once the pool's VMs together reach 60 GHz, each of them is held back wherever it runs, also on a host with spare CPU.
 - B is correct: a pool's reservation, limit and shares apply across the cluster, while each of its VMs runs on one host; the VMs of the pool share one ceiling wherever they run.
 - C is wrong: a limit caps only its own pool and frees CPU for the siblings; it cannot raise Ready in a sibling pool.
 - D is wrong: the wrong action. More hosts do not help a pool at its limit: its VMs share the same cap.
 - E is correct: a pool at its limit shows its CPU usage flat near the limit while its hosts have spare CPU; a pool that is not capped varies with its load.
 - F is wrong: the over-correction. Ready also comes from host contention, shares and vMotion; the wait from the pool limit follows the pool, not the host.
+- Misconception: A: a pool limit is read as a per-host cap that leaves a VM free on a host with spare CPU. Or D: more hosts are expected to lift a capped pool.
 
 ## Notes
 - Theory half of 0239 (pair: design.md, section 3.9). Different numbers and names from 0239, so one does not give away the other.
@@ -51,7 +51,6 @@ knowledge_main: vsphere/object-types/resource-pool/resource-pool-design
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-14, pairing plan item B4"
-answer: [B, E]
 misconception: [A, D]
 misconception_type: [provider-vs-consumer]
 pair: "0239"

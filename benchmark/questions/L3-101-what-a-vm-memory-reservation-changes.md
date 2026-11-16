@@ -19,12 +19,10 @@ Which statements are correct?
 - I. The host's Reservation consumed rises by the full 12 GB, though the VM has touched only about 9 GB.
 - J. From now on the 12 GB is held back from other VMs, including the part this VM has not touched.
 
-## Likely wrong answer
-- A: "Consumed jumps to the reservation."
-- G: the over-correction: "only the untouched part of the reservation is backed at once".
+## Answers
+C, D, F, I
 
-## Expected key points
-- Answer: C, D, F, I.
+## Explanation
 - A is wrong: Consumed counts the pages the VM has touched; a reservation alone does not back pages, so Consumed rises only as the guest touches memory.
 - B is wrong: Total reservation is the host's reservable capacity (Reservation consumed plus Reservation available). It does not follow the VMs' reservations.
 - C is correct: a reservation changes no page, so Consumed and Granted keep their level.
@@ -35,6 +33,7 @@ Which statements are correct?
 - H is wrong: the flat Consumed is the expected result of a reservation; the task completed, so the change applied. Repeating it changes nothing.
 - I is correct: Reservation consumed counts each running VM's reservation as set, not the pages the VM has touched, so it takes the whole 12 GB.
 - J is wrong: a memory reservation is held as pages only once used; until the VM touches it, the untouched part can back other VMs' pages. Only admission control counts the full amount.
+- Misconception: A: "Consumed jumps to the reservation." - G: the over-correction: "only the untouched part of the reservation is backed at once".
 
 ## Notes
 - Pair with 0442 (practical: the same fact on a VM chart and the task list). A fact gets two questions at most (design.md, section 3.9).
@@ -68,7 +67,6 @@ knowledge_main: vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, from the author's lab test"
-answer: [C, D, F, I]
 misconception: [A, G]
 misconception_type: [provider-vs-consumer]
 pair: "0442"

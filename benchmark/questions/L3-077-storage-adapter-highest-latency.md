@@ -15,11 +15,10 @@ Which statements about Highest latency and the adapter chart are correct?
 - G. In a 1 Day history, each point of Highest latency is the last value of its interval, not the mean.
 - H. Highest latency also includes the time requests wait in the Guest OS queues of the VMs on that adapter.
 
-## Likely wrong answer
-F: Highest latency is taken as the worst read or write latency of any adapter, so it looks like a complete alert line. Or the overshoot, D: it is useless for alerting.
+## Answers
+A, E, G
 
-## Expected key points
-- Answer: A, E, G.
+## Explanation
 - A is correct: Highest latency takes the worst adapter or path, but averages read and write per adapter first.
 - B is wrong: there is no commands-aborted counter at adapter level; aborts are counted per path (commandsAborted, beside Bus Resets) and per device.
 - C is wrong: it takes the worst adapter, not the mean of the adapters.
@@ -28,6 +27,7 @@ F: Highest latency is taken as the worst read or write latency of any adapter, s
 - F is wrong: the misconception (Highest latency = the worst read or write) turned into an action. The per-adapter average of read and write comes first, so the value is not the worst single direction: an adapter with slow reads and fast writes averages to a value below its read latency, so an alert on Highest latency alone misses it; watch read and write latency per adapter.
 - G is correct: Highest latency (storageAdapter.maxTotalLatency) is rolled up as Latest, collected from statistics level 3: each history point is the value at the end of its interval (the last 20-second value of a 5-minute point), not representative of it.
 - H is wrong: the time a request waits in the Guest OS queues is outside ESXi latency; adapter latency starts in the host.
+- Misconception: F: Highest latency is taken as the worst read or write latency of any adapter, so it looks like a complete alert line. Or the overshoot, D: it is useless for alerting.
 
 ## Notes
 - Theory half of the pair with 0072 (practical; design.md, section 3.9). Different situation from 0072.
@@ -57,7 +57,6 @@ knowledge_main: vsphere/technology/storage/metrics/host/adapter-and-path
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B8"
-answer: [A, E, G]
 misconception: [F]
 misconception_type: [average-hides-worst]
 pair: "0072"

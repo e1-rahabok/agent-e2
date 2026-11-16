@@ -15,17 +15,17 @@ Which statements are correct?
 - E. The vmnic totals include VMkernel traffic such as vSAN, which no VM counter shows.
 - F. The vmnics count each VM-to-VM packet only once, which is why the VM sum is higher.
 
-## Likely wrong answer
-C: adding up VM throughput and reading it as the load on the uplinks.
+## Answers
+A, B, D, E
 
-## Expected key points
-- Answer: A, B, D, E.
+## Explanation
 - A is correct: web, app and db talk to each other inside the host; that traffic is switched in the distributed switch's host data plane and never touches a vmnic. Only the clients' traffic to the web VMs and util-01's backup traffic leave the host. The VM ports add up to about 14,000 Mb/s, while vmnic0 and vmnic1 together carry about 2,160 Mb/s transmit and 1,870 Mb/s receive.
 - B is correct: the ports whose TEAM-PNIC is vmnic1 (vmk1 861, web-02 637, web-04 624, app-02 905, db-01 1,518) transmit about 4,545 Mb/s, while vmnic1 transmits 1,349 Mb/s; the difference is traffic to VMs on the same host, which never reaches the uplink.
 - C is wrong: the VM counters measure what each VM sends and receives, not what crosses the uplinks; two more ports would add nothing.
 - D is correct: placement changes the uplink load. db-01 exchanges about 2,700 Mb/s with the app VMs; on another host that traffic would leave both hosts through their uplinks.
 - E is correct: vmk1 (vSAN) carries about 860 Mb/s transmit and 1,040 Mb/s receive through vmnic1; no VM counter includes it.
 - F is wrong: in-host VM-to-VM traffic is not on the vmnics at all; each VM's port counts its own side, so a flow appears on two VM ports and on no vmnic.
+- Misconception: C: adding up VM throughput and reading it as the load on the uplinks.
 
 ## Notes
 - Audit 2026-11-15: B (full duplex, about 2 Gb/s of 20 Gb/s each way) was over the two-question cap (0040/0413 keep it) and was replaced with a reading only the TEAM-PNIC column and the in-host mechanism decide. Plan uplink capacity from the vmnic counters per direction.
@@ -54,7 +54,6 @@ attachments:
   - 0217/esx-05-esxtop-network-busy-hour.csv
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, B, D, E]
 misconception: [C]
 misconception_type: [provider-vs-consumer, same-name-other-object]
 pair: "0407"

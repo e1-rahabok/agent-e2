@@ -21,11 +21,10 @@ Which statements about this Storage DRS run are correct?
 - I. The moves are applied without an administrator approving them.
 - J. Storage DRS also moves disks off DS-1 if its I/O latency is high.
 
-## Likely wrong answer
-B (the cluster average is compared with the threshold), C (Storage DRS levels all members to the average), or G (a source is skipped when the nearest datastore is within the minimum difference).
+## Answers
+A, F, I
 
-## Expected key points
-- Answer: A, F, I.
+## Explanation
 - A is correct: the thresholds are set on the datastore cluster but apply to each datastore. DS-1 (92%) is over the default 80% space utilization threshold, so it is a source.
 - B is wrong: the threshold is set on the datastore cluster but checked against each member datastore; an average hides a full member, so DS-1 and DS-2 (over 80%) are sources whatever the 73.6%.
 - C is wrong: Storage DRS moves enough disks to bring each source back under the threshold; it does not level the members to the average.
@@ -36,6 +35,7 @@ B (the cluster average is compared with the threshold), C (Storage DRS levels al
 - H is wrong: DS-3 (79.5%) is under the threshold; being above the cluster average does not make it a source, as datastores under the threshold are left alone.
 - I is correct: Fully Automated applies the recommendations.
 - J is wrong: in vSphere 9.1 Storage DRS balances space only; I/O load balancing is gone (Storage I/O Control components deprecated from VCF 9.0).
+- Misconception: B (the cluster average is compared with the threshold), C (Storage DRS levels all members to the average), or G (a source is skipped when the nearest datastore is within the minimum difference).
 
 ## Notes
 - Public source: Broadcom KB "Storage DRS FAQ" (https://knowledge.broadcom.com/external/article?legacyId=2149938, article 320864, no date shown): default space threshold 80%; thresholds configured on the cluster apply to each datastore; the space utilization difference threshold defaults to 5% (example: no move from an 83% to a 78% datastore); the space threshold is a soft constraint that Storage DRS violates only when no datastore in the cluster is below it. Broadcom TechDocs, vSphere Resource Management 9.0, "Initial Placement and Ongoing Balancing" (https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-0/vsphere-resource-management/creating-a-datastore-cluster/initial-placement.html), last updated 2026-10-19: Storage DRS runs at the configured frequency (default eight hours) or when a datastore exceeds the space utilization threshold. VMware vSphere 8.0 Resource Management, "Storage DRS Aggressiveness" (the 82% / 79% example of the minimum difference), reached through the redirect from docs.vmware.com. Frank Denneman, "SDRS out of space avoidance" (https://frankdenneman.ai/2011-09-13-sdrs-out-of-space-avoidance/): Storage DRS avoids a destination expected to cross the threshold.
@@ -64,7 +64,6 @@ knowledge_main: vsphere/object-types/datastore-cluster/storage-drs
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-13"
-answer: [A, F, I]
 misconception: [B, C, G]
 misconception_type: [average-hides-worst]
 status: draft

@@ -25,13 +25,10 @@ Why did page sharing jump now and not before, how much memory does it save, and 
 - N. Turning off 2 MB backing on the hosts, so that sharing saves memory before any pressure, is the better setting.
 - O. Now that about 55 GB is free again, ESXi backs newly touched memory with 2 MB pages again.
 
-## Likely wrong answer
-- F: "The new VMs run the same OS as the old ones, so they share pages with them."
-- D: "64 GB is saved."
-- I: "Nothing to worry about while Balloon and Swapped are 0."
+## Answers
+A, B, C, J, M, O
 
-## Expected key points
-- Answer: A, B, C, J, M, O.
+## Explanation
 - A true: ESXi backs guest memory with 2 MB pages whenever it can and does not share them; sharing waits until large pages are broken.
 - B true: minFree for 768 GB is about 0.9 GB for the first 28 GB plus 1% of the rest, about 8.3 GB; 300% is about 25 GB, and 768 - 755 leaves about 13 GB. In Clear, ESXi stops backing new memory with large pages and breaks existing ones.
 - C true: Shared counts the pages that point to a shared page, Shared common the shared pages themselves; 64 - 22 = 42 GB, and Consumed fell by the same 755 - 713 = 42 GB.
@@ -47,6 +44,7 @@ Why did page sharing jump now and not before, how much memory does it save, and 
 - M true: large pages reduce TLB misses; breaking them loses part of that benefit.
 - N false: large pages significantly reduce TLB misses and help most workloads; a host that keeps 400% of minFree free keeps the 2 MB backing and its performance. Turning it off trades that for a saving sharing gives anyway once the host is under pressure. This is the wrong action.
 - O true: with Consumed back at about 713 GB, about 55 GB of the 768 GB is free, above 400% of minFree (about 33 GB), so the host has left Clear for High, where new memory is backed by 2 MB pages again.
+- Misconception: F: "The new VMs run the same OS as the old ones, so they share pages with them." - D: "64 GB is saved." - I: "Nothing to worry about while Balloon and Swapped are 0."
 
 ## Notes
 - Clear entered below 300% of minFree, back to High only above 400%; large pages broken in Clear: the knowledge base, ESXi memory states. Large pages not shared, and sharing that appears only when overcommitment breaks them: Performance Best Practices for vSphere 9.1, Memory Page Sharing and Large Memory Pages. Saving = Shared - Shared common: the knowledge base, ESXi Memory Shared and Shared Common.
@@ -63,7 +61,6 @@ technology: [memory]
 task: explain-mechanism
 level: 400
 answer_type: deterministic
-answer: [A,B,C,J,M,O]
 misconception: [D,F,I]
 input: [text]
 object: [esxi]

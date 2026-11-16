@@ -21,13 +21,10 @@ Which statements are correct?
 - K. Vendor guidance is to turn off all C-states in the BIOS of every host for the best performance per watt.
 - L. Setting Use P States to 0 in the ESXi advanced settings keeps the cores at their base clock under load.
 
-## Likely wrong answer
-- A: "Balanced slows everything down: set High Performance everywhere."
-- B: "A C-state is a lower clock, like a P-state."
-- L: "Turn P-states off to hold the clock steady at base."
+## Answers
+C, D, E, F, G, H, I
 
-## Expected key points
-- Answer: C, D, E, F, G, H, I.
+## Explanation
 - A is false: Balanced typically costs little or nothing, and on hosts with idle cores it can raise performance through Turbo Boost.
 - B is false: in a C-state an idle core halts, and deeper C-states cut power to parts of the core (C3 flushes the L1 and L2 caches and stops all internal clocks). Lowering the frequency is the job of P-states, not C-states.
 - C is true: Balanced lets ESXi use deep C-states (C2 or deeper) when cores are idle, and a deeper C-state takes longer to start running again.
@@ -40,6 +37,7 @@ Which statements are correct?
 - J is false: Turbo is a BIOS setting (or Power.MaxFreqPct below 100% on Intel); turning off deep C-states lowers the Turbo headroom of lightly threaded work but does not turn Turbo off.
 - K is false: for the best performance per watt the advice is to activate all C-states in the BIOS and leave the choice to ESXi.
 - L is false: with Use P States off, ESXi runs the cores at the highest available frequency, Turbo included. Only Power.MaxFreqPct below 100% (Intel) or the BIOS takes Turbo away.
+- Misconception: A: "Balanced slows everything down: set High Performance everywhere." - B: "A C-state is a lower clock, like a P-state." - L: "Turn P-states off to hold the clock steady at base."
 
 ## Notes
 - Changed 2026-11-16 (re-review): B (the policy does not change how fast an idle core starts work) was the near-negation of C; B now tests what a C-state does (power-states, ESXi level and C-states table), still false. F is a Level 200 fact among Level 400 options (re-review note; not changed).
@@ -56,7 +54,6 @@ technology: [cpu]
 task: judge-setting
 level: 400
 answer_type: deterministic
-answer: [C, D, E, F, G, H, I]
 misconception: [A, B, L]
 input: [text]
 object: [esxi]

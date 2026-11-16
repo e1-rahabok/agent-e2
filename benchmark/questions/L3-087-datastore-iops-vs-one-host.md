@@ -18,11 +18,10 @@ Which statements are correct?
 - H. The datastore value and the per-host values cannot be compared.
 - I. Host A's highest 5-minute Read IOPS for ds-shared-07 is above the datastore's highest.
 
-## Likely wrong answer
-B: the datastore and host A's view of it must match, so a value is wrong. Or F: open a case.
+## Answers
+A, C, D
 
-## Expected key points
-- Answer: A, C, D.
+## Explanation
 - A is correct: the datastore object spans all hosts that mount it; a host's datastore metrics are that host's view only.
 - B is wrong: the misconception. Each value is correct from its own vantage point; the gap is the other hosts' IO.
 - C is correct: reading. `Datastore:ds-shared-07|Read IOPS` of esx-c3-02 in the hosts export, 780.5, is 34.6% of `Datastore I/O|Read IOPS` of ds-shared-07 in the datastores export, 2,254.3: host A is the largest of the four hosts but sends about a third.
@@ -32,6 +31,7 @@ B: the datastore and host A's view of it must match, so a value is wrong. Or F: 
 - G is wrong: Storage I/O Control Aggregate IOPs is a datastore-wide counter, summed over all hosts and VMs on the datastore, whichever host's chart shows it; only the host's own datastore counters show its share.
 - H is wrong: the over-correction. The datastore object spans the hosts that mount it; their values add up to it.
 - I is wrong: reading. Host A's `Read IOPS (Max)` for ds-shared-07 is 1,387.8, the datastore's 3,956.6. In each 5-minute point the datastore counts host A's reads plus the other hosts', so its peak cannot fall below one host's.
+- Misconception: B: the datastore and host A's view of it must match, so a value is wrong. Or F: open a case.
 
 ## Notes
 - Paired with the theory question 0049 (theory and practical; design.md, section 3.9).
@@ -64,7 +64,6 @@ attachments:
   - 0417/vcf-operations-hosts-24h.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C22"
-answer: [A, C, D]
 misconception: [B]
 misconception_type: [same-name-other-object, provider-vs-consumer]
 pair: "0049"

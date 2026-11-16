@@ -13,17 +13,17 @@ Choose the correct statements:
 - E. With vSAN, NSX and ESXi, the kernel memory reservation is a cap: kernel memory use stays under it, even when ESXi is highly utilized.
 - F. Admission control withholds the whole kernel memory reservation from VM reservations, whether the kernel uses it or not.
 
-## Likely wrong answer
-D (the kernel reservation assumed to block memory before use) or C (VMkernel consumed read as all hypervisor memory).
+## Answers
+A, B, F
 
-## Expected key points
-- Answer: A, B, F.
+## Explanation
 - A is correct: memory is a form of storage; once the VM asks for memory and is served, the page stays held for it, even if the VM idles for days. CPU reservation, by contrast, holds nothing back.
 - B is correct: VM reservations are guarantees that admission control counts in full, so they lower how far the host can be overcommitted and can leave DRS no host to move a VM to.
 - C is wrong: VMkernel consumed is the VMkernel's own use for core functions; it leaves out the management agents and the NSX agents (host/vim) and the vSAN services (host/opt), so it is well below all hypervisor memory.
 - D is wrong: in the page sense the kernel reservation is granted on demand, not set aside at boot; the part the kernel has not consumed is free memory that VMs can consume.
 - E is wrong: utilization can exceed reservation. A reservation is a minimum, not a cap, and the kernel reservation covers host/system only; the NSX agents and vSAN services run in host/vim and host/opt, outside it.
 - F is correct: in the admission sense the full kernel reservation counts, used or not, so it is not available for VM reservations (vCenter `mem.unreserved` leaves it out).
+- Misconception: D (the kernel reservation assumed to block memory before use) or C (VMkernel consumed read as all hypervisor memory).
 
 ## Notes
 - The kernel reservation has two senses (overhead, section Memory metrics): admission (F, true) and pages (D, false). Only the mechanism separates them.
@@ -50,7 +50,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q4 Memory Reservation"
 answer_type: deterministic
 level: 400                      # author 2026-11-05
-answer: [A, B, F]
 misconception: [C, D]
 misconception_type: [provider-vs-consumer]
 status: draft

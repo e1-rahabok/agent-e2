@@ -18,13 +18,10 @@ Which statements are correct?
 - G. No VM had a measurable wait on a swapped or compressed page during the day.
 - H. Moving some VMs off this host is needed to stop it swapping and compressing.
 
-## Likely wrong answer
-- A: "Ballooning comes first, so Balloon 0 with Swapped above 0 is impossible: the counters are wrong."
-- D: "Those pages are old, so they cost nothing any more."
-- E: "Swap consumed is just swap out minus swap in."
+## Answers
+B, C, G
 
-## Expected key points
-- Answer: B, C, G.
+## Explanation
 - A is wrong: ballooning comes first only while pressure rises. Swap consumed and Compressed are amounts held now; they stay from past reclamation until the guest touches the pages, while the balloon deflates as soon as its target falls.
 - B is correct: compressed and swapped data stays out until the guest requests it. Swap in rate and Decompression rate at 0 show no page came back; Swap out rate and Compression rate at 0 show no new reclamation.
 - C is correct: State High in every sample; host-driven ballooning starts in the Soft state. No host pressure and no limit, no balloon.
@@ -33,6 +30,7 @@ Which statements are correct?
 - F is wrong: Swap consumed is an amount held, not a rate; the Swap out rate is 0 in every sample.
 - G is correct: a VM waits on these pages only when one is swapped in or decompressed; the host's Swap in rate and Decompression rate are 0 in every sample.
 - H is wrong: the host is not swapping or compressing now (both rates are 0); the amounts are left from the past, and moving VMs answers no current pressure.
+- Misconception: A: "Ballooning comes first, so Balloon 0 with Swapped above 0 is impossible: the counters are wrong." - D: "Those pages are old, so they cost nothing any more." - E: "Swap consumed is just swap out minus swap in."
 
 ## Notes
 - Theory half of 0391 (VCF Operations list of the same pattern). Facts shared with 0391 (past reclamation, the over-correction, the wrong action) are two questions each; E with L3-025 C is two.
@@ -65,7 +63,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q5 ESXi Memory Utilisation"
 answer_type: deterministic
 level: 400                      # author 2026-11-05
-answer: [B, C, G]
 misconception: [A, D, E]
 misconception_type: [cumulative-vs-current, reclamation-as-contention]
 pair: "0391"

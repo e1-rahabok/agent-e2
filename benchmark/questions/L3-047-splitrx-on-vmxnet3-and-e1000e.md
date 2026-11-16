@@ -19,17 +19,17 @@ Which statements are correct?
 - E. A change of Net.NetSplitRxMode applies at once, with no host restart.
 - F. Only a restart of the ESX host puts VM 3's new parameter into effect.
 
-## Likely wrong answer
-C left out, because a per-adapter change is assumed to apply at once. Or D: SplitRx is read as a host-wide feature for every adapter type. Or B: the per-adapter parameter is read as ignored while the host default is on.
+## Answers
+A, C, E
 
-## Expected key points
-- Answer: A, C, E.
+## Explanation
 - A is true: with Net.NetSplitRxMode at its default "1", ESX activates SplitRx automatically for a VMXNET3 adapter when a single queue of the physical NIC is both heavily utilized and gets more than 10,000 broadcast or multicast packets per second, and the traffic comes in over a physical NIC.
 - B is false: ethernetX.emuRxMode = "0" overrides the host-wide setting for that adapter and deactivates SplitRx. The change is in force because the VM was restarted afterwards.
 - C is true: the per-adapter parameter takes effect only after the VM is restarted or the vNIC is disconnected and connected again. Until then the adapter keeps the automatic behavior, so SplitRx stays active.
 - D is false: VMXNET3 is the only adapter type on which SplitRx is supported, so the E1000E adapter never gets it.
 - E is true: a host-wide change of Net.NetSplitRxMode takes effect immediately and needs no host restart.
 - F is false: a VM restart, or a disconnect and reconnect of the vNIC, puts the per-adapter parameter into effect; the host need not restart.
+- Misconception: C left out, because a per-adapter change is assumed to apply at once. Or D: SplitRx is read as a host-wide feature for every adapter type. Or B: the per-adapter parameter is read as ignored while the host default is on.
 
 ## Notes
 - 2026-11-16 re-review: the stem no longer copies the activation wording ("heavily utilized"); it gives the queue's packet rate and share of the NIC's received packets.
@@ -58,7 +58,6 @@ knowledge_main: vsphere/technology/network/configuration/splitrx-mode
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-13, for the coverage gap (project/plan.md)"
-answer: [A, C, E]
 misconception: [B, D]
 misconception_type: [layer-confusion]
 status: draft

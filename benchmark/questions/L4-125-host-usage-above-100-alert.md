@@ -16,11 +16,10 @@ Which statements are correct?
 - G. Core Utilization near 100% means the host has no room left for more vCPUs.
 - H. A second busy thread on a core doubles the work that the core gets done.
 
-## Likely wrong answer
-A: Usage above 100% means the host is out of CPU, so evacuate it.
+## Answers
+C, E, F
 
-## Expected key points
-- Answer: C, E, F.
+## Explanation
 - A is wrong: the misconception and the wrong action. Usage above 100% is Turbo Boost against the base clock, speed and not a shortage; the VMs do not wait (F).
 - B is wrong: the cap of older releases is removed in vCenter (8.0 Update 3, Broadcom KB 417702) and VCF Operations; above 100% is a valid reading.
 - C is correct: reading and arithmetic. Per core, Core Utilization adds the time one thread runs and the time both run; Utilization adds half the first and all of the second. In every row where `Usage for esx-prod-11` passes 100, `Core Utilization for esx-prod-11` is 91-96 and `Utilization for esx-prod-11` 52.5-57.4, so two-thread time is at most about 23% of core time and one-thread time at least about 69%.
@@ -29,6 +28,7 @@ A: Usage above 100% means the host is out of CPU, so evacuate it.
 - F is correct: reading. `CPU|Peak vCPU Ready within collection cycle (%) (Max)` is below 1 and `CPU|Peak vCPU Co-Stop within collection cycle (%) (Max)` below 0.5 on every VM row.
 - G is wrong: Core Utilization counts a core as fully used when one of its two threads runs; capacity is counted in threads, and about half are free.
 - H is wrong: the misconception. A second thread shares the core: Hyper-Threading gives about 1.25 times per core, not 2 times.
+- Misconception: A: Usage above 100% means the host is out of CPU, so evacuate it.
 
 ## Reasoning path
 1. Usage above 100% with Turbo: speed, not overload.
@@ -68,7 +68,6 @@ attachments:
   - 0374/vcf-operations-host-vms.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C14"
-answer: [C, E, F]
 misconception: [A]
 misconception_type: [consumption-as-contention, frequency-and-hyper-threading]
 pair: "0058"

@@ -24,13 +24,10 @@ Which statements are correct?
 - M. A 256 GB VM carries about 11.5 GB of per-VM overhead, a 64 GB VM about 3.5 GB.
 - N. Swap files are created only when a host starts to swap, so they take no space while memory is not overcommitted.
 
-## Likely wrong answer
-- A: "Over- and under-allocation are equally bad."
-- G: "If a host runs short, ballooning gives all of it back."
-- L: "Over-allocation is harmless: the guest only uses it as cache."
+## Answers
+B, D, E, F, H, I, K, M
 
-## Expected key points
-- Answer: B, D, E, F, H, I, K, M.
+## Explanation
 - A is wrong: Performance Best Practices for vSphere 9.1 calls under-allocation the more damaging error; the impact of over-allocating is far less, though substantial over-allocation is still to avoid.
 - B is correct: since vSphere 7.0 DPM computes memory demand from granted memory, and memory demand is low only if granted memory is low.
 - C is wrong: no host pressure, no balloon; a VM inside its configured memory on a host with free memory is not ballooned.
@@ -45,6 +42,7 @@ Which statements are correct?
 - L is wrong: the colleague's claim; the overhead, the granted-memory effect on DRS and DPM, and the swap file space remain.
 - M is correct: per-VM overhead grows with configured memory; about 4.5% of 256 GB (11.5 GB) against 5.5% of 64 GB (3.5 GB), about 8 GB per VM and about 190 GB for 24 VMs that support no application.
 - N is wrong: the swap file is created at power-on with its full size, whether or not the host ever swaps.
+- Misconception: A: "Over- and under-allocation are equally bad." - G: "If a host runs short, ballooning gives all of it back." - L: "Over-allocation is harmless: the guest only uses it as cache."
 
 ## Notes
 - Changed in the 2026-11-16 re-review: I (power-on time of a swap file above 100 GB) was in no knowledge file; replaced by another true fact from DPM (Demand inputs: DPM mostly responds to changes in CPU demand), tested nowhere else.
@@ -62,7 +60,6 @@ technology: [memory]
 task: judge-setting
 level: 400
 answer_type: deterministic
-answer: [B, D, E, F, H, I, K, M]
 misconception: [L, G, A]
 input: [text]
 object: [vm, esxi, cluster]

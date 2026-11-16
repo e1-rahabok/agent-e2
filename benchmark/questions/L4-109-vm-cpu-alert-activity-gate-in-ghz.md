@@ -25,11 +25,10 @@ The colleague's change takes effect. Which statements about the notifications of
 - F. VM-2 keeps its orange alert under the 5% floor, as it has it under the 1 GHz floor today.
 - G. VM-3 alerts under neither floor, though its Ready values are the highest of the four.
 
-## Likely wrong answer
-C: a percentage is assumed to scale with size and so to be "fairer". For a 64-vCPU VM, 3% is a large load. Or D: 4% of 8 vCPUs taken for more than 1 GHz.
+## Answers
+A, F, G
 
-## Expected key points
-- Answer: A, F, G.
+## Explanation
 - A is correct: today VM-1 uses 3% of 64 x 2.4 = 153.6 GHz, about 4.6 GHz, over 1 GHz, with Ready 41% (>32%) and 9% (>8%): red, sent to both teams. At 3% it falls under a 5% floor and loses the alert; the application team receives red only, so it is no longer told. A small percentage of a large VM is a large load.
 - B is wrong: VM-4 (12%, 1.15 GHz) passes either floor, but its CPU Ready (cycle) of 3% is under the orange 4%; all three conditions must hold in the same cycle.
 - C is wrong: the floors select different VMs. VM-1 passes 1 GHz (4.6 GHz) and fails 5% (3%); the load that matters is absolute.
@@ -37,6 +36,7 @@ C: a percentage is assumed to scale with size and so to be "fairer". For a 64-vC
 - E is wrong: the floor is a condition of both the red and the orange alert, so failing it removes the alert; it does not move the VM to the other colour.
 - F is correct: VM-2 uses 40% of 4.8 GHz, about 1.9 GHz, so it passes both floors; highest Ready 20% (>16, <32) and 5% (>4, <8) give orange under either floor.
 - G is correct: VM-3 is at 4%, about 0.77 GHz: under 1 GHz and under 5%, so no alert either way, though its Ready (50% and 12%) is the highest.
+- Misconception: C: a percentage is assumed to scale with size and so to be "fairer". For a 64-vCPU VM, 3% is a large load. Or D: 4% of 8 vCPUs taken for more than 1 GHz.
 
 ## Notes
 - Public source: VCF Operations VM metrics CPU | Usage (MHz), CPU | Ready (%) (VCF Operations 9.1 documentation, metric reference); the arithmetic uses 64 x 2.4 GHz. The 20-second Ready sample is the vSphere real-time sample.
@@ -64,7 +64,6 @@ knowledge_main: vsphere/object-types/vm/vm-alerts
 attachments: []
 origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
-answer: [A, F, G]
 misconception: [C, D]
 misconception_type: [unit-and-normalization, provider-vs-consumer]
 status: draft

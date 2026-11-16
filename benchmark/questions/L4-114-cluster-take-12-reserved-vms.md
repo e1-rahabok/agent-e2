@@ -24,12 +24,10 @@ Which statements about the 12 VMs and the health check of this cluster are corre
 - L. The check reads cluster state and failover capacity first, then contention, and capacity after that.
 - M. With the full 16 GB reserved, each new VM's Consumed memory jumps to 16 GB at power-on.
 
-## Likely wrong answer
-- B: "58% consumed leaves plenty of memory, so all 12 power on."
-- F: "Nine VMs show 14% to 18% Ready, so the cluster is out of CPU and needs a host."
+## Answers
+A, C, E, G, I, J, K, L
 
-## Expected key points
-- Answer: A, C, E, G, I, J, K, L.
+## Explanation
 - A is correct: 156 GB of headroom at 16.4 GB per VM: nine take 147.6 GB, a tenth would take the total to 164 GB. The tenth power-on fails with insufficient failover resources.
 - B is wrong: admission control compares reserved memory with the capacity left after the failover share, not Consumed with free memory. A cluster can refuse a power-on with plenty of free memory.
 - C is correct: 75% of 2,000 GB is 1,500 GB; 1,500 - 1,344 = 156 GB.
@@ -43,6 +41,7 @@ Which statements about the 12 VMs and the health check of this cluster are corre
 - K is correct: with HA admission control off the 12 VMs power on, but after a host failure HA restarts a VM only where its reservation plus overhead fits.
 - L is correct: availability first (green, failover capacity met: 1,344 GB below 1,500 GB), then contention, then configuration and capacity. Contention comes before capacity.
 - M is wrong: a memory reservation is backed only as the VM touches memory; Consumed grows with use and does not jump to the reservation.
+- Misconception: B: "58% consumed leaves plenty of memory, so all 12 power on." - F: "Nine VMs show 14% to 18% Ready, so the cluster is out of CPU and needs a host."
 
 ## Notes
 - Synthetic, 2026-11-13, for the coverage gap (project/plan.md).
@@ -60,7 +59,6 @@ technology: [memory, cpu, system]
 task: decide-capacity
 level: 400
 answer_type: deterministic
-answer: [A,C,E,G,I,J,K,L]
 misconception: [B,F]
 input: [text]
 object: [cluster, resource-pool, vm]

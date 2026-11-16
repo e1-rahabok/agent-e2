@@ -16,11 +16,10 @@ Which statements about how a VM on this host waits on the NVMe tier are correct?
 - H. A high read latency on an idle NVMe device is a wake-up delay that no vCPU waits through.
 - I. A guest write to a page on the NVMe tier does not wait; only a read fetches the page back.
 
-## Likely wrong answer
-B: the most memory on the NVMe tier read as the most waiting. Or E: a read latency inside the guideline read as no cost. Or I: "writes do not hurt, only reads come from NVMe."
+## Answers
+A, C
 
-## Expected key points
-- Answer: A, C.
+## Explanation
 - A is correct: the CPU cannot read or write NVMe directly; a page on tier 1 is fetched back to DRAM when it becomes active, and the vCPU that touched it waits for the fetch.
 - B is wrong: tier 1 consumed holds cold pages. It is saturation (memory spilled beyond DRAM), not a wait: a VM whose pages on NVMe stay cold reads nothing back.
 - C is correct: what a VM loses is its NVMe reads times the read latency; the per-VM NVMe read bandwidth shows who pays.
@@ -30,6 +29,7 @@ B: the most memory on the NVMe tier read as the most waiting. Or E: a read laten
 - G is wrong: the wrong action from B. That VM's pages on NVMe are cold; move or protect the VMs that read from NVMe.
 - H is wrong: the vCPU that touched the page waited for that read, wake-up included. The wake-up explains the latency; it does not remove the wait. With few reads the total wait is small (reads times latency), but it is not zero.
 - I is wrong: the CPU cannot write NVMe directly either; any access to a page on NVMe raises a page fault and the page is fetched to DRAM before the write completes (vSphere 9.1 documentation, pp. 1848, 1872). Only demotion writes are off the vCPU's path.
+- Misconception: B: the most memory on the NVMe tier read as the most waiting. Or E: a read latency inside the guideline read as no cost. Or I: "writes do not hurt, only reads come from NVMe."
 
 ## Notes
 - Paired with 0147 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item B17.
@@ -56,7 +56,6 @@ knowledge_main: vsphere/technology/memory/concepts/memory-tiering
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B17"
-answer: [A, C]
 misconception: [B, I]
 misconception_type: [consumption-as-contention, average-hides-worst]
 pair: "0147"

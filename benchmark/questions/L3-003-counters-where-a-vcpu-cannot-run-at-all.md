@@ -15,11 +15,10 @@ Choose all the counters that measure a VM vCPU being unable to run: it completel
 - H. CPU Latency
 - I. CPU Swap Wait
 
-## Likely wrong answer
-Omitting Overlap, Other Wait or Swap Wait; including Demand or Latency as a counter of a stopped vCPU; or reading a halted vCPU (Idle) or a guest run queue as a vCPU that cannot run.
+## Answers
+A, B, C, D, I
 
-## Expected key points
-- Answer: A, B, C, D, I.
+## Explanation
 - A is true: in Ready the vCPU demands runtime and the kernel has no physical thread for it.
 - B is true: in Co-stop the vCPU is held back to stay in step with a sibling vCPU.
 - C is true: Overlap is time a running vCPU was interrupted for kernel work; the guest feels a freeze.
@@ -29,6 +28,7 @@ Omitting Overlap, Other Wait or Swap Wait; including Demand or Latency as a coun
 - G is false: Demand is what the VM would use with no core sharing, a kernel scheduler value; it does not measure a vCPU unable to run.
 - H is false: Latency also counts a vCPU that runs slower (a busy sibling thread, a clock below nominal), so it mixes slower running with stopping.
 - I is true: Swap Wait is time the vCPU waits for a page to come in from ESXi swap; the guest feels a freeze, although the cause is memory.
+- Misconception: Omitting Overlap, Other Wait or Swap Wait; including Demand or Latency as a counter of a stopped vCPU; or reading a halted vCPU (Idle) or a guest run queue as a vCPU that cannot run.
 
 ## Notes
 - Author confirmed the key (Q035, 2026-11-03). Demand is a VM-realm counter and is affected by Hyper-Threading. The Guest OS realm does not see physical threads. Knowledge: [`vsphere/architecture/vm-vs-guest-os`](../../knowledge/vsphere/architecture/vm-vs-guest-os.md), section Two realms.
@@ -65,7 +65,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q6 VM CPU Contention"
 answer_type: deterministic
 level: 300                      # author 2026-11-05
-answer: [A, B, C, D, I]
 misconception: [G, H]
 misconception_type: [consumption-as-contention]
 pair: "0376"

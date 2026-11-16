@@ -15,11 +15,10 @@ Which statements are correct?
 - G. Half the cores run two threads and the other half run one thread each.
 - H. Both threads busy on every running core would be expected once Core Utilization reaches 100%.
 
-## Likely wrong answer
-B (equal values read as one thread per core). Or D, the over-correction: equal values read as impossible.
+## Answers
+A, C, F, H
 
-## Expected key points
-- Answer: A, C, F, H.
+## Explanation
 - A is true: Core Utilization counts a core as busy while one or both of its threads run; Utilization is the mean over all threads. Per core, Core Utilization adds the time one thread runs and the time both run, Utilization adds half the first and all of the second; the two are equal only if no core ever ran a single thread. So a running core always ran both threads: two threads per running core (imbalance score 2.0) while core time sits idle is the worst spread. The sample does not say whether half the cores ran all the time or every core ran half the time.
 - B is false: one thread per running core with Core Utilization at 50% would give Utilization 25%.
 - C is true: Utilization is the share of threads in use; for capacity, half the threads are free.
@@ -28,6 +27,7 @@ B (equal values read as one thread per core). Or D, the over-correction: equal v
 - F is true: each core is one thread, so the two counters are the same.
 - G is false: that spread would give Core Utilization 100% and Utilization 75%.
 - H is true: a score of 2.0 is a concern only while cores are idle; at 100% Core Utilization two threads per core are expected.
+- Misconception: B (equal values read as one thread per core). Or D, the over-correction: equal values read as impossible.
 
 ## Notes
 - Rewritten 2026-11-14 as the theory half of 0004 (project/question-pairing-2026-11-14.md, A1; design.md 3.9): the stem states that Hyper-Threading is on; one fact per option; old C ("Nothing. Not enough information") was vague; E (the wrong action), F, G and H are new; D scoped to Hyper-Threading on (review 2026-11-15), so that F does not contradict it. Key changed from A to A, C, F, H (author approved, 2026-11-14).
@@ -55,7 +55,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q9 ESXi CPU Utilisation"
 answer_type: deterministic
 level: 400                      # author 2026-11-05
-answer: [A, C, F, H]
 misconception: [B, D]
 misconception_type: [average-hides-worst, frequency-and-hyper-threading]
 pair: "0004"

@@ -16,11 +16,10 @@ Which statements are correct?
 - G. A large gap between the peak and the 5-minute value marks a short burst, not sustained loss.
 - H. The exports show transmit drops in several of the 5-minute cycles of the six hours.
 
-## Likely wrong answer
-A: about 3% of the traffic was lost over the 5 minutes. Or D: the 5-minute value is the only real one. Or B read as false from the (DEP) Transmitted Packets Dropped column, which is averaged over the 15 samples and reads 15 times lower.
+## Answers
+B, F, G
 
-## Expected key points
-- Answer: B, F, G.
+## Explanation
 - A is wrong: the misconception. A Peak ... within collection cycle metric is the highest of the 15 values of 20 seconds in the 5-minute cycle: the drop rate of the worst 20-second period (one non-zero row, between 2.5% and 3.5%). The 5-minute share is Total Transmitted Packets Dropped over Total Packets Transmitted of the same row, 0.15-0.25%, about 1/15 of the peak.
 - B is correct: the reading. In the alert row, Network|Total Transmitted Packets Dropped divided by Network|Total Packets Transmitted is 0.15-0.25%; the peak is 15 times that, as for drops held in one sample of 15. The (DEP) Transmitted Packets Dropped value of that row is the Total divided by 15 (averaged over the 15 samples); used against Total Packets Transmitted it gives about 0.013%, the wrong reading.
 - C is wrong: the metric stores only the peak of the 15 points: one value per 5-minute row, no pattern within the 300 seconds.
@@ -29,6 +28,7 @@ A: about 3% of the traffic was lost over the 5 minutes. Or D: the 5-minute value
 - F is correct: both are VCF Operations metrics built from the 20-second samples; they are not vSphere counters.
 - G is correct: comparing the peak (about 3%) with the 5-minute value (about 0.2%) tells a one-off burst from sustained loss.
 - H is wrong: the reading. Every row of the three drop exports except the alert row is 0.
+- Misconception: A: about 3% of the traffic was lost over the 5 minutes. Or D: the 5-minute value is the only real one. Or B read as false from the (DEP) Transmitted Packets Dropped column, which is averaged over the 15 samples and reads 15 times lower.
 
 ## Notes
 - Paired with the theory question 0313 (theory and practical; design.md, section 3.9).
@@ -63,7 +63,6 @@ attachments:
   - 0421/ledger-app-03-tx-dropped.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C33"
-answer: [B, F, G]
 misconception: [A, E]
 misconception_type: [rollup-and-interval]
 pair: "0313"

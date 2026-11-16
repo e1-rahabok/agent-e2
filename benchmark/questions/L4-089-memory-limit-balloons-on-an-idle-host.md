@@ -26,14 +26,10 @@ Which statements are correct?
 - M. The 3 GB of swap that Linux reports is the 2.1 GB Swapped that vCenter reports, measured from inside the guest.
 - N. The 4.8 GB balloon cannot come from the pool limit, since a limit is enforced by compression and host swapping.
 
-## Likely wrong answer
-- A: "The host is not short of memory and the VM limit is Unlimited, so the counters or the tools are wrong."
-- F: "Turn the balloon driver off with sched.mem.maxmemctl."
-- H: "vMotion the VM to a host with more free memory."
-- N: "A limit compresses and swaps; the balloon must come from somewhere else."
+## Answers
+B, C, D, E, G, J, L
 
-## Expected key points
-- Answer: B, C, D, E, G, J, L.
+## Explanation
 - A false: a limit is enforced at all times, also on a host with free memory; with no VM outside the pool reclaimed, the swapping comes from a limit on the VM or its pool.
 - B true: 24 GB against 40 GB configured on the pool's three VMs; the pool's Consumed is flat just under the cap.
 - C true: the vendor's troubleshooting text names the VM, its parent pool or an ancestor pool as the place of a limit that is too restrictive.
@@ -48,6 +44,7 @@ Which statements are correct?
 - L true: the balloon ceiling is 65% of configured memory by default (Mem.CtlMaxPercent, or sched.mem.maxmemctl per VM): 0.65 x 16 GB = 10.4 GB.
 - M false: host-level swapping is transparent to the guest and distinct from swapping inside the guest OS.
 - N false: under a limit the balloon goes first when the driver runs; compression and swapping take over when it cannot reclaim enough. The driver is loaded here, so the pool limit explains the balloon too.
+- Misconception: A: "The host is not short of memory and the VM limit is Unlimited, so the counters or the tools are wrong." - F: "Turn the balloon driver off with sched.mem.maxmemctl." - H: "vMotion the VM to a host with more free memory." - N: "A limit compresses and swaps; the balloon must come from somewhere else."
 
 ## Notes
 - Public source: Broadcom KB 326270, "Impact of virtual machine memory and CPU resource limits" ("The guest operating system is not aware of this limit"; the Updated On field is empty). VMware vSphere 9.1 PDF (build of 2026-11-02): Monitoring and Performance, memory troubleshooting ("the virtual machine (or resource pool) has reached its resource limit"; the virtual machine, its parent pool or ancestor pools may have a limit that is too restrictive); Resource Management, advanced virtual machine attributes (sched.mem.maxmemctl: "If the ESX host needs to reclaim additional memory, it is forced to swap. Swapping is less desirable than ballooning").
@@ -63,7 +60,6 @@ technology: [memory]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [B, C, D, E, G, J, L]
 misconception: [A, F, H, N]
 input: [text]
 object: [vm, esxi, resource-pool]

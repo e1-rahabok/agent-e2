@@ -17,12 +17,10 @@ Which statements are correct?
 - G. Leave the peak out of the report, since the 5-minute share is the loss that matters.
 - H. Like Packets Dropped (%), the metric adds the VM's received drops to its transmitted drops.
 
-## Likely wrong answer
-- A: "0.4%: 300 dropped out of 75,000 transmitted."
-- G: "The 5-minute share is the real loss; the peak only exaggerates it."
+## Answers
+B, C, E, F
 
-## Expected key points
-- Answer: B, C, E, F.
+## Explanation
 - A is wrong: a Peak ... within collection cycle metric takes the highest of the 15 twenty-second values, not the cycle's drops over the cycle's packets.
 - B is correct: the worst sample dropped 300 of about 5,000 packets: 300 / 5,000 = 6% (5.7% if the dropped packets are added to the denominator).
 - C is correct: 300 / 75,000 = 0.4% (also 0.4% with the 300 in the denominator). The peak is 15 times the 5-minute share here; both are correct, they answer different questions.
@@ -31,6 +29,7 @@ Which statements are correct?
 - F is correct: a threshold holds only for the interval it was set on; 20-second peaks read higher than 5-minute values, so their threshold must be higher (the VM drop alert is set high because it reads a 20-second period).
 - G is wrong: the peak shows the burst that the 5-minute average hides; both values are correct and answer different questions.
 - H is wrong: Packets Dropped (%) adds received and transmitted drops, but the peak transmit metric, like the VM drop alert, reads transmitted drops only; received drops include packets not meant for the VM and drops in a full guest receive ring.
+- Misconception: A: "0.4%: 300 dropped out of 75,000 transmitted." - G: "The 5-minute share is the real loss; the peak only exaggerates it."
 
 ## Notes
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the two stem lines that explained the mechanism (the adapter's collection and the metric formula) removed; new numbers (different from the practical half); the negation pair E/F resolved (old E dropped, F stated positively as E); over-correction and wrong action H added. Key changed from B, C, F, H to B, C, E, G.
@@ -49,7 +48,6 @@ technology: [network]
 task: read-metric
 level: 400
 answer_type: deterministic
-answer: [B, C, E, F]
 misconception: [A, G]
 input: [text]
 object: [vm]

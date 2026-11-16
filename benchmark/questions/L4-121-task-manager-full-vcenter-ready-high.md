@@ -17,11 +17,10 @@ Which statements are correct?
 - I. With VMware Tools running, Windows would report the frozen time as steal time.
 - J. Next, check the shares of the VM and its resource pool, the host's overcommit and other VMs' Ready.
 
-## Likely wrong answer
-G: Task Manager shows the CPU maxed out, so the VM needs more vCPUs. Or F: the tools disagree, so one is wrong.
+## Answers
+A, B, C, J
 
-## Expected key points
-- Answer: A, B, C, J.
+## Explanation
 - A true: a frozen vCPU stays in the state it was in; Windows has no steal accounting, so a busy vCPU's frozen time counts as busy. The typeperf `% Processor Time` of each processor (93.8-100 in every row) matches Run + Ready + Co-stop of the vCenter export, not Run.
 - B true: reading. `Run for app-win-07` + `Ready for app-win-07` is at least 75,000 ms in every row, of the 80,000 ms that four vCPUs hold per 20-second sample (Ready is summed over the vCPUs); `Wait for app-win-07` stays small. The vCPUs wanted to run nearly all the time and ran for only part of it.
 - C true: reading. `Run for app-win-07` stays between 54,570 and 59,690 ms in every row (68-75% per vCPU); Ready takes a fifth or more of the time, so Run cannot reach the figure Task Manager shows.
@@ -32,6 +31,7 @@ G: Task Manager shows the CPU maxed out, so the VM needs more vCPUs. Or F: the t
 - H false: over-correction. Each layer shows its own problems (run queue, processes); read both, each at its own layer.
 - I false: Windows has no steal time; VMware Tools does not change that.
 - J true: with no limit (`Max limited for app-win-07` is 0 in every row), Ready comes from low shares on the VM or its resource pool, or from the host's load; many VMs in Ready at once points to an overcommitted host.
+- Misconception: G: Task Manager shows the CPU maxed out, so the VM needs more vCPUs. Or F: the tools disagree, so one is wrong.
 
 ## Reasoning path
 1. Readiness at a fifth to a third of each sample: the vCPUs wait for physical threads.
@@ -69,7 +69,6 @@ attachments:
   - 0368/vcenter-vm-cpu-realtime.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C1"
-answer: [A, B, C, J]
 misconception: [F, G]
 misconception_type: [layer-confusion, tool-confusion]
 pair: "0266"

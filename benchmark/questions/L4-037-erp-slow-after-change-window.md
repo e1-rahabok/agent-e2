@@ -40,13 +40,10 @@ Which statements about the cause of the slowness, what to change tonight and wha
 - P. Tonight, delete or consolidate the snapshot off-peak, and fix the backup job that left it.
 - Q. After the snapshot is gone, read Co-stop and Other Wait again to confirm that they fall.
 
-## Likely wrong answer
-- K: "Big VMs always show some Co-stop; 6% is nothing to worry about."
-- L: "Add the ninth host."
-- C: "The datastore IOPS above the VM's own disk IOPS must be another VM."
+## Answers
+A, B, E, H, I, M, N, P, Q
 
-## Expected key points
-- Answer: A, B, E, H, I, M, N, P, Q.
+## Explanation
 - A is correct: the storage and CPU evidence both point to the snapshot left by the backup: it raises read IOPS at equal throughput, it is a known cause of Co-stop and Other Wait, and the kernel time to traverse the chain shows as System. The NUMA span (N) adds to Co-stop but explains none of the other signs.
 - B is correct: with a redo-log snapshot on VMFS, reads check the chain; the extra reads return no data, so read IOPS rise while throughput stays equal.
 - C is wrong: on VMFS, datastore IOPS above virtual disk IOPS for the same VM points to a snapshot on this VM; these are the VM's own datastore counters.
@@ -64,6 +61,7 @@ Which statements about the cause of the slowness, what to change tonight and wha
 - O is wrong: N%L is the local share: 70% local, about 30% remote. A secondary finding: erp-db is wide (24 vCPUs on 16-core nodes), so some remote memory is expected; size it to one node only if the guest demand allows.
 - P is correct: the fix is to remove the snapshot and stop the backup job from leaving it.
 - Q is correct: the check order ends by confirming that the snapshot was the cause; if Other Wait stays high, follow the Other Wait checks.
+- Misconception: K: "Big VMs always show some Co-stop; 6% is nothing to worry about." - L: "Add the ninth host." - C: "The datastore IOPS above the VM's own disk IOPS must be another VM."
 
 ## Notes
 - Revised 2026-11-12: management pack terms removed from the key (fairness); knowledge list without the pack's model files.
@@ -83,7 +81,6 @@ technology: [system, storage, cpu, memory, network]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,B,E,H,I,M,N,P,Q]
 misconception: [C,K,L]
 input: [text]
 knowledge:

@@ -41,12 +41,10 @@ Which statements about the NUMA columns of `db-ora-07`, their cause and the fix 
 - L. A VM with manual CPU or memory affinity gets no NUMA rebalancing and no memory migration.
 - M. Configured with 320 GB of memory, the same VM would fit one node, with no remote memory.
 
-## Likely wrong answer
-- B: "The remote memory means ESXi keeps moving the VM between nodes."
-- I: "Pin it to node 0 with CPU and memory affinity, and its memory becomes local."
+## Answers
+A, C, E, G, J, K, L, M
 
-## Expected key points
-- Answer: A, C, E, G, J, K, L, M.
+## Explanation
 - A is correct: NHN shows one number. 12 vCPUs fit in 16 cores, so ESXi keeps the VM as one NUMA client on node 0.
 - B is wrong: NHN, NRMEM and N%L are the same in both samples: no migration now.
 - C is correct: NRMEM 186,368 MB is about 182 GB; GST_ND1 shows the same amount on node 1. About a third of the memory is remote, and accesses to it are slower.
@@ -60,6 +58,7 @@ Which statements about the NUMA columns of `db-ora-07`, their cause and the fix 
 - K is correct: two NUMA clients, each with local memory, and two vNUMA nodes the database can use. Size it to split evenly across as few nodes as possible.
 - L is correct: manual CPU or memory affinity removes the VM from NUMA scheduling.
 - M is correct: 320 GB fits in one 384 GB node (with the 24 GB of the other VMs on node 0), so a VM of 12 vCPUs and 320 GB stays local; remote memory starts when memory is raised past one node's capacity.
+- Misconception: B: "The remote memory means ESXi keeps moving the VM between nodes." - I: "Pin it to node 0 with CPU and memory affinity, and its memory becomes local."
 
 ## Notes
 - NMIG left out (author, Q191 e: its meaning is unsure; not in the benchmark before 1.0).
@@ -79,7 +78,6 @@ technology: [memory, cpu]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,C,E,G,J,K,L,M]
 misconception: [B,I]
 input: [text]
 object: [vm, esxi]

@@ -21,11 +21,10 @@ Which statements are correct?
 - G. Every VM with a low score in the VM DRS Score export waits for physical CPU.
 - H. A Cluster DRS Score of 85% and one of 95% show a real difference in performance.
 
-## Likely wrong answer
-A: the cluster score read as the state of every VM, so the cause is put inside the Guest OS, and F, the action that follows from it.
+## Answers
+B, D
 
-## Expected key points
-- Answer: B, D.
+## Explanation
 - A is wrong: the misconception. The Cluster DRS Score is a weighted average of the VM scores; it does not bound any single VM, and one VM barely moves it.
 - B is correct: reading. The cluster score is 90 or more; pay-api-03 has the lowest `DRS Score` in the list, below 50%.
 - C is wrong: reading. `Readiness for pay-api-03` is above 5 in most rows and never below 2.
@@ -34,6 +33,7 @@ A: the cluster score read as the state of every VM, so the cause is put inside t
 - F is wrong: the wrong action. The VM's Ready shows it waits for physical CPU, which no Guest OS tuning removes.
 - G is wrong: reading and mechanism. The VM DRS Score is execution efficiency over CPU, memory, network and storage, not CPU contention alone: rpt-batch-09 also scores low, with `CPU Readiness` below 1% and swapped and ballooned memory.
 - H is wrong: a cluster score of 85% and one of 95% both sit in the range that indicates no performance impact; the range matters, not the exact value.
+- Misconception: A: the cluster score read as the state of every VM, so the cause is put inside the Guest OS, and F, the action that follows from it.
 
 ## Notes
 - Practical half of 0232 (pair: design.md, section 3.9).
@@ -64,7 +64,6 @@ attachments:
   - 0433/vcenter-vm-cpu-realtime.csv
 origin: synthetic
 source_path: "Synthetic, 2026-11-14, pairing plan item C25"
-answer: [B, D]
 misconception: [A, F]
 misconception_type: [average-hides-worst]
 pair: "0232"

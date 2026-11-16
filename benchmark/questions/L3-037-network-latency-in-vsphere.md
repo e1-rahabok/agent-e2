@@ -19,12 +19,10 @@ Which statements are correct?
 - J. Both VMs sit on one distributed port group, so their traffic never leaves the hosts and the physical network is ruled out.
 - K. Next, compare Ready and Co-stop in VCF Operations for web-03, db-05 and any VM in the path, 14:00-14:30.
 
-## Likely wrong answer
-- A: "Open the VM's network latency counter in the vSphere Client."
-- D: "No dropped packets, so the network added no delay."
+## Answers
+C, E, F, G, H, K
 
-## Expected key points
-- Answer: C, E, F, G, H, K.
+## Explanation
 - A is false: vSphere has no network latency metric for a VM.
 - B is false: vSphere has no latency counter, but CPU contention on the VMs and on any VM in the path is vSphere evidence for the same window.
 - C is true: receive and transmit packets dropped are kept per vNIC instance and per VM; they are the only VM network contention counter.
@@ -36,6 +34,7 @@ Which statements are correct?
 - I is false: the distributed port group has no vCenter performance counters, and the vSphere Client shows no performance charts for switches or port groups.
 - J is false: only VM-to-VM traffic on the same host stays inside the host; these VMs are on different hosts, so their traffic crosses the uplinks and the physical network.
 - K is true: CPU contention of the two VMs and of any VM in the path is the evidence to check for that window; VCF Operations keeps yesterday's Ready and Co-stop, while vCenter at the default statistics level keeps no Co-stop history.
+- Misconception: A: "Open the VM's network latency counter in the vSphere Client." - D: "No dropped packets, so the network added no delay."
 
 ## Notes
 - TCP retransmits seen inside the guest belong to a Guest OS question of the set; this one tests what vSphere measures and what it can add.
@@ -54,7 +53,6 @@ tool: [vcenter, vcf-operations]
 task: explain-mechanism
 level: 300
 answer_type: deterministic
-answer: [C, E, F, G, H, K]
 misconception: [A, D]
 input: [text]
 knowledge:

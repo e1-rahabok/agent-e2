@@ -13,15 +13,15 @@ Which counters in the chart show contention, and what value do you expect from t
 ## Attachments
 ![vCenter advanced chart of one ESXi host, Network: usage, packets received, receive and transmit packets dropped per vmnic](0042/vcenter-esxi-network-chart.png)
 
-## Likely wrong answer
-C or D: "The data rate and the packet count show how busy the network is, so they show contention."
+## Answers
+A, B
 
-## Expected key points
-- Answer: A, B.
+## Explanation
 - A is correct: dropped (and error) packets are the host network contention counters; a data center network should be free of drops, so the expected value is 0 at all times.
 - B is correct: transmit drops on a vmnic are contention too, expected at 0; on a healthy host they are rare.
 - C is wrong: Data receive rate is consumption, the work done; a busy host can be healthy, and a network has no clear 100% to read contention from.
 - D is wrong: Packets received is consumption too; a rise means more work, not a shortage of capacity.
+- Misconception: C or D: "The data rate and the packet count show how busy the network is, so they show contention."
 
 ## Notes
 - 2026-11-14 (project/question-pairing-2026-11-14.md, section 3.B): in the screenshot, the host name masked in the title and the legend (host, VM, datastore and cluster names are masked: benchmark/design.md, section 13); the stale `## Input to supply` removed.
@@ -45,7 +45,6 @@ attachments:
   - 0042/vcenter-esxi-network-chart.png
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A, B]
 misconception: [C, D]
 object: [esxi]
 tool: [vcenter]

@@ -16,11 +16,10 @@ Which statements about the Linux load average are correct?
 - G. Four more vCPUs are the fix: a load average of 6.20 is above the 4 vCPUs.
 - H. The load average can stay above the vCPU count while the vCPUs sit mostly idle.
 
-## Likely wrong answer
-B: the load average read as the CPU queue, so 6.20 on 4 vCPUs means the VM is short of CPU. Or G, the action that follows from it.
+## Answers
+A, C, E, H
 
-## Expected key points
-- Answer: A, C, E, H.
+## Explanation
 - A true: the load average counts tasks in state R (running or runnable) and in state D (uninterruptible sleep, usually waiting for disk IO).
 - B false: the misconception. Tasks waiting for IO are in the count too, so the figure alone does not show a CPU queue; the run queue (`r` in vmstat) and per-vCPU time do.
 - C true: the count is not divided by the vCPU count; it is read against it.
@@ -29,6 +28,7 @@ B: the load average read as the CPU queue, so 6.20 on 4 vCPUs means the VM is sh
 - F false: the over-correction. Runnable tasks are part of the count; a load above the vCPU count with every vCPU busy and a long run queue is a CPU queue.
 - G false: the wrong action. The load includes tasks waiting for IO; more vCPUs do not make a disk answer faster. Read the run queue and per-vCPU time first.
 - H true: tasks blocked on IO raise the load while the vCPUs idle; a high load with idle vCPUs points to IO, not CPU.
+- Misconception: B: the load average read as the CPU queue, so 6.20 on 4 vCPUs means the VM is short of CPU. Or G, the action that follows from it.
 
 ## Notes
 - Changed in the 2026-11-15 audit: B and F without the absolutes "only ... at all times" and "always ... never"; G without the "Add" opening (an imperative shape that is wrong in 18 of 19 options in the bank). D keeps "always": without it a 2-3 second burst can show or not, and the option would be undecidable. Key unchanged.
@@ -55,7 +55,6 @@ knowledge_main: guest-os/system/troubleshooting/linux-os-slow
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B3"
-answer: [A, C, E, H]
 misconception: [B, G]
 misconception_type: [unit-and-normalization, rollup-and-interval]
 pair: "0260"

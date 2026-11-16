@@ -17,11 +17,10 @@ Which statements about the VM after the downsize are correct?
 - G. VM Consumed falling after the cut shows that the guest has enough memory.
 - H. Before the next step, take the ballooned 2 GB out of Needed Memory: those pages are ESXi's request.
 
-## Likely wrong answer
-A: "Free memory dropped after the downsize, so the VM is now short: undo it." Or H: "Ballooned memory is ESXi's request, so take it out of the need before sizing."
+## Answers
+B, E, F
 
-## Expected key points
-- Answer: B, E, F.
+## Explanation
 - A is wrong: free memory is not the measure of a shortage; Windows and Linux fill memory with cache.
 - B is correct: after each step, check guest page-out and VM memory contention over a business cycle before the next. A guest that pages out is short; a VM with contention waits on ESXi.
 - C is wrong: over-correction. Memory contention covers waits on ESXi only; a guest short of memory pages out with no contention at all, so guest page-out is read too.
@@ -30,6 +29,7 @@ A: "Free memory dropped after the downsize, so the VM is now short: undo it." Or
 - F is correct: the driver pins the pages it got from Windows and the VM monitor returns the ESXi pages behind them to the VMkernel, so Consumed falls at once; by less than the balloon size when some of those pages were shared.
 - G is wrong: Consumed is an ESXi counter of pages the VM holds on the host; it falls because the VM is smaller, and it does not show what the guest needs.
 - H is wrong: the balloon driver pins its pages inside Windows, which counts them as in use, so Needed Memory already holds them; the balloon also takes pages in use, which Windows pages out and still needs; sizing makes no deduction for the balloon, so a cut does not shrink a VM the balloon already squeezes. The balloon is a host event, fixed on the host side.
+- Misconception: A: "Free memory dropped after the downsize, so the VM is now short: undo it." Or H: "Ballooned memory is ESXi's request, so take it out of the need before sizing."
 
 ## Notes
 - Paired with 0401 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D11.
@@ -60,7 +60,6 @@ knowledge_main: sp5-framework/capacity/rightsizing
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D11"
-answer: [B, E, F]
 misconception: [A, H]
 misconception_type: [consumption-as-contention]
 pair: "0401"

@@ -21,11 +21,10 @@ Three metrics show three values at the end of the chart, where the counters spik
 
 ![Zoom on the start of the same chart, where the three counters ramp up](0004/esxi-cpu-usage-core-utilization-utilization-zoom-on-ramp.png)
 
-## Likely wrong answer
-A (100%): reading CPU Usage as utilization. Or B (85%): treating Core Utilization as the capacity measure.
+## Answers
+C, G
 
-## Expected key points
-- Answer: C, G.
+## Explanation
 - A is wrong: CPU Usage (%) includes frequency (Turbo Boost), which is speed, not space. It reads flat at 100% because releases before vSphere 8.0 Update 3 capped it (Broadcom KB 417702); on 9.1 the same host would read above 100%, the Turbo above base clock.
 - B is wrong: Core Utilization counts a core as busy when one thread runs. Each thread can run a vCPU or a kernel world, so the thread is the unit of capacity.
 - C is correct: the legend's Latest value is 54.38%, so about 46% of the physical threads are idle and can still run work. Capacity counts space (threads available), not speed.
@@ -33,6 +32,7 @@ A (100%): reading CPU Usage as utilization. Or B (85%): treating Core Utilizatio
 - E is wrong: it mixes the consumer (VM) and provider (ESXi) perspectives.
 - F is wrong: the wrong action from reading Usage as capacity. About 46% of the threads are idle and can still take work.
 - G is correct: of 2N threads on N cores, about 1.08N threads and 0.85N cores are busy, so about 0.62N cores run one thread and 0.15N none. Of the 0.92N idle threads, about 0.62N (two thirds) sit beside a busy sibling.
+- Misconception: A (100%): reading CPU Usage as utilization. Or B (85%): treating Core Utilization as the capacity measure.
 
 ## Notes
 - Attachments: host names masked in the legend before commit.
@@ -67,7 +67,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q1 ESXi CPU Utilisation"
 answer_type: deterministic
 level: 400                      # author 2026-11-05
-answer: [C, G]
 misconception: [A, B]
 misconception_type: [same-name-other-object, frequency-and-hyper-threading, label-read-as-model]
 pair: "0012"

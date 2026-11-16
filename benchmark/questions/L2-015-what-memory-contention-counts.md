@@ -14,11 +14,10 @@ Which statements about this counter are correct?
 - G. It rises when a vCPU waits while ESXi decompresses a page that the guest touches.
 - H. At 2%, the VM's configured memory is too small: add memory to the VM.
 
-## Likely wrong answer
-C: reading the percentage as a share of memory, not of time. Or D: counting the balloon as a wait.
+## Answers
+A, G
 
-## Expected key points
-- Answer: A, G.
+## Explanation
 - The counter is the share of time a vCPU waits for a page fault that ESXi must resolve: mostly swap-in, plus decompression of a compressed page the guest touches and the break of a shared page on a write (copy-on-write).
 - A is right: swap-in is the main source.
 - B is wrong: that is CPU Ready, a CPU wait, not a memory wait.
@@ -28,6 +27,7 @@ C: reading the percentage as a share of memory, not of time. Or D: counting the 
 - F is wrong: Memory Latency is a superset of CPU Swap Wait; Swap Wait covers swap-in only, Latency also covers decompression. This is the over-correction of the swap-only reading: Latency also covers decompression and copy-on-write breaks.
 - G is right: decompression of a touched compressed page is a page fault ESXi resolves.
 - H is wrong: memory contention measures speed, not space; it comes from host reclamation or a limit, so the configured size is not shown to be short. Find the cause first.
+- Misconception: C: reading the percentage as a share of memory, not of time. Or D: counting the balloon as a wait.
 
 ## Notes
 - Sources: the knowledge base, VM Memory Latency (esxtop %LAT_M; VCF Operations Memory Contention maps to it); vSphere Monitoring and Performance, memory counters (latency: percentage of time the VM is waiting to access swapped or compressed memory).
@@ -55,7 +55,6 @@ knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/latency
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, G]
 misconception: [C, D]
 misconception_type: [unit-and-normalization]
 pair: "0392"

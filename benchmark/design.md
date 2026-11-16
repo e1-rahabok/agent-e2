@@ -172,7 +172,7 @@ The frontier model must be able to answer every question from public knowledge. 
 - F1. Public words only. Counter and feature names as the product shows them (vCenter, VCF Operations, esxtop, Windows, Linux). No Agent E2 terms: SP5 Framework, Triple See Method, KPI, realm, IaaS high utilization, virtual motherboard (say VM), Close for Business.
 - F2. No vCommunity management pack metrics: Cluster Performance, Cluster Consumption and Cluster Risk, Close for Business, VM, Guest OS and ESXi Performance (%), inter-host imbalance, any `vCommunity|` key. Native VCF Operations metrics are allowed: CPU Contention (%), Memory Contention (%), the 20-second peak metrics, Capacity Remaining.
 - F3. Decidable from mechanisms and public documents. A strong expert without Agent E2 could answer it. An author threshold appears only when the prompt states it ("your team alerts at 10 ms").
-- F4. The rules hold for the title, the prompt, the options, `## Likely wrong answer` and `## Expected key points`: reviewers read the key points as the reasons of the key.
+- F4. The rules hold for the title, the prompt, the options, `## Answers` and `## Explanation`: reviewers read the explanation as the reasons of the key.
 - F5. Evidence first. A Level 300-400 stem is an operator's situation with the data a tool shows: values, a table, a time window. Not a knowledge-file sentence turned into a question (the 2026-11-11 review found most synthetic questions tested recall of the knowledge base).
 - F6. No question is picked or dropped because the frontier model fails it. An adversarial set, if ever used, is declared and reported apart.
 - Lint checks F1, F2 and F4 against the list `question_fairness` in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml). F3, F5 and F6 are review items (section 11).
@@ -187,9 +187,9 @@ The frontier model must be able to answer every question from public knowledge. 
   - similar length and style, so length gives no hint;
   - no "all of the above", no double negatives;
   - every wrong option is wrong for a reason the knowledge base states;
-  - one option is the misconception: the conclusion a Level 300 reader would draw. It is named in `## Likely wrong answer` and in metadata `misconception`.
+  - one option is the misconception: the conclusion a Level 300 reader would draw. It is named in metadata `misconception` and described in the last bullet of `## Explanation`.
 - Wording: paraphrased, never copied from the knowledge base. The benchmark checks reasoning, not string matching.
-- Key: `answer` letters, and `## Expected key points` with the reason for every option. Product behaviour that is not in the knowledge base is checked against the current vendor document, and its URL goes in `## Notes`.
+- Key: `## Answers` (the correct letters; the only key the runner reads), and `## Explanation` with the reason for every option. Product behaviour that is not in the knowledge base is checked against the current vendor document, and its URL goes in `## Notes`.
 - Sources: the author's books, quizzes and samples first; then real tickets and field questions; then synthetic questions drafted by Claude. A synthetic question needs the author's approval before it counts.
 
 ### 6.3 Attachments
@@ -318,7 +318,7 @@ The frontier model must be able to answer every question from public knowledge. 
 | Ambiguous options | A question with a disputed option is fixed or removed, and the benchmark is re-scored. |
 | Position, length and count bias | Shuffled options; similar option length; varied number of correct options. |
 | Guessing | Unsure option, the prompt rule that a wrong answer is worse than Unsure, confident-wrong rate, 5-run stability. |
-| Leakage into the model | Questions are never indexed, never used for fine-tuning, and `## Expected key points` is never sent to the model. A screenshot is never a knowledge-base image (lint compares the bytes), and its values are never written into the knowledge base. |
+| Leakage into the model | Questions are never indexed, never used for fine-tuning, and `## Answers` and `## Explanation` are never sent to the model. A screenshot is never a knowledge-base image (lint compares the bytes), and its values are never written into the knowledge base. |
 | Frontier model knows public material | Base and the web reference test exactly that. The knowledge base must add what public material lacks. |
 | Version drift | Every benchmark records the index version (git commit), model, provider and settings. Scores are compared only within one scoring scheme. |
 

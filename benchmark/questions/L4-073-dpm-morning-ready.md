@@ -31,12 +31,10 @@ Which statements are correct?
 - J. Predictive DRS with VCF Operations as its data provider lets DPM bring hosts out of standby before the predicted demand.
 - K. The fix is proven once the hourly averages of VM CPU Ready from 07:00 to 10:00 are back to normal.
 
-## Likely wrong answer
-- A: "The cluster runs out of CPU in the morning: buy two more hosts."
-- D: "DPM knows the daily pattern and wakes the hosts in time."
+## Answers
+B, E, F, I, J
 
-## Expected key points
-- Answer: B, E, F, I, J.
+## Explanation
 - A is wrong: the contention appears only while the powered-on host count climbs; with all hosts on, Ready is normal. It is power-on lag, not a shortage.
 - B is correct: 4 hosts at 93% at 08:00 with 214 VMs above 5% Ready; the count rises to 10 only by 09:30.
 - C is wrong: a standby host takes minutes: power on through IPMI, iLO or Wake-on-LAN, boot ESXi, reconnect to vCenter, start the HA agent, then DRS vMotion. Here about an hour until all 10 hosts carry load.
@@ -48,6 +46,7 @@ Which statements are correct?
 - I is correct: MinPoweredOnCpuCapacity (default 1 MHz) sets the minimum CPU capacity DPM keeps powered on.
 - J is correct: with Predictive DRS on and VCF Operations registered as the data provider, DPM can bring hosts back before demand rises.
 - K is wrong: an hourly average hides a remaining wait inside the ramp; the proof is low VM CPU Ready across the whole 07:30-09:00 window, sample by sample.
+- Misconception: A: "The cluster runs out of CPU in the morning: buy two more hosts." - D: "DPM knows the daily pattern and wakes the hosts in time."
 
 ## Notes
 - DPM: vSphere 9.1 Resource Management, Managing Power Resources (DPM consolidates VMs and puts hosts in standby; powers hosts on when demand rises).
@@ -65,7 +64,6 @@ technology: [system, cpu]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [B, E, F, I, J]
 misconception: [A, D]
 input: [text]
 object: [cluster, esxi, vm]

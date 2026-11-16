@@ -27,11 +27,10 @@ Which statements about this latency and the checks that find where it comes from
 - K. DAVG high while the array reports 0.6 ms points to the fabric or the HBA configuration.
 - L. DAVG, KAVG and GAVG all below 10 ms on the host would rule out the host and the array.
 
-## Likely wrong answer
-- B: "At 30 IOPS the disk is not busy, so the latency cannot be a storage problem."
+## Answers
+A, C, E, F, H, I, K
 
-## Expected key points
-- Answer: A, C, E, F, H, I, K.
+## Explanation
 - A is correct: every layer below the VM has its own queue (virtual disk, kernel, adapter, fabric, array). Check outstanding I/O with the latency.
 - B is wrong: the misconception. Queues and errors add latency at any load.
 - C is correct: work on that disk's reads; the VM total hides it, and read and write often have different causes.
@@ -44,6 +43,7 @@ Which statements about this latency and the checks that find where it comes from
 - J is wrong: KAVG high with DAVG low is queuing inside ESXi: a high QAVG means a VMkernel limit holds the commands (the device queue depth DQLEN, DSNRO on a device that several virtual disks share, or an IOPS limit on a virtual disk), or the adapter is saturated.
 - K is correct: DAVG runs from the HBA to the array and back; with the array at 0.6 ms, the difference is in the fabric or the HBA configuration.
 - L is wrong: 10 ms (Broadcom KB 344099) is an upper bound for sustained latency on any array, not a healthy level. A KAVG of several ms is time in a VMkernel queue, and on an FC array that reports 0.6 ms a DAVG near 10 ms points to the fabric or the HBA. Read KAVG against QAVG and DAVG against the array's own latency.
+- Misconception: B: "At 30 IOPS the disk is not busy, so the latency cannot be a storage problem."
 
 ## Notes
 - Synthetic, 2026-11-05. Revised 2026-11-12 for question set 1.0: per-disk values and the array's own reading added. Counts only after author approval.
@@ -60,7 +60,6 @@ technology: [storage]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,C,E,F,H,I,K]
 misconception: [B]
 input: [text]
 object: [vm, esxi]

@@ -17,11 +17,10 @@ Which statements about Linux steal time on vSphere are correct?
 - G. Open a support case: vCenter reports Readiness for a VM whose guest shows no steal at all.
 - H. A Windows guest on the same host would show this frozen time as steal time.
 
-## Likely wrong answer
-C: vm-old shows `st` 0.0, so its vCPUs were never held back. Or G: the guest and vCenter disagree, so vCenter is wrong.
+## Answers
+A, B, D, E
 
-## Expected key points
-- Answer: A, B, D, E.
+## Explanation
 - A true: with the steal clock working, Linux accounts the time a vCPU waits for a physical thread as steal; it mirrors Ready.
 - B true: the steal clock needs the VM option, virtual hardware version 13 or later, and a guest kernel with the VMware steal clock; vm-old misses the hardware version.
 - C false: the misconception. vm-old waits as much as vm-new (Readiness about 9%); it only cannot count the wait.
@@ -30,6 +29,7 @@ C: vm-old shows `st` 0.0, so its vCPUs were never held back. Or G: the guest and
 - F false: steal time holds Ready only. ESXi counts Overlap as Run, so the guest is not told about it.
 - G false: wrong action. The two layers count differently; vCenter sees the wait that vm-old's guest cannot report.
 - H false: Windows has no steal time accounting.
+- Misconception: C: vm-old shows `st` 0.0, so its vCPUs were never held back. Or G: the guest and vCenter disagree, so vCenter is wrong.
 
 ## Notes
 - Paired with the practical question 0381 (theory and practical; design.md, section 3.9). Situation numbers differ from 0381 on purpose.
@@ -58,7 +58,6 @@ knowledge_main: vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D12"
-answer: [A, B, D, E]
 misconception: [C]
 misconception_type: [layer-confusion]
 pair: "0381"

@@ -14,11 +14,10 @@ Which statements are correct?
 - F. Without the Real-time export, the Past day export would give no hint that anything happened at that time.
 - G. In the Past day export, the point that holds the burst reads above 80%.
 
-## Likely wrong answer
-A: the past-day chart is expected to keep the peak, so it is called wrong; E, the action that follows from it.
+## Answers
+B, C
 
-## Expected key points
-- Answer: B, C.
+## Explanation
 - A is wrong: the misconception. The 1 Day interval stores averages; a 20-second peak is diluted 15 times in a 5-minute point.
 - B is correct: one 5-minute point is built from 15 Real-time samples of 20 seconds. The Past day `Usage for hr-batch-02` row that holds the burst equals the mean of the 15 Real-time rows of its 5 minutes: 6 busy samples at 95-100% and 9 idle ones average to 30-50%.
 - C is correct: the reading. `Usage for hr-batch-02` in the Real-time export has 6 consecutive rows (2 minutes) at 95% or more; every other row is below 10%. The Readiness columns stay low and are not the burst.
@@ -26,6 +25,7 @@ A: the past-day chart is expected to keep the peak, so it is called wrong; E, th
 - E is wrong: the wrong action. The rollup averages by design; nothing was dropped (the point equals the mean of its 15 samples).
 - F is wrong: the over-correction. The Past day point that holds the burst stands at 30-50% against every other point below 10%; the burst is diluted, not erased.
 - G is wrong: the reading. The Past day point that holds the burst is between 30% and 50%.
+- Misconception: A: the past-day chart is expected to keep the peak, so it is called wrong; E, the action that follows from it.
 
 ## Notes
 - Changed in the 2026-11-15 audit: B, C and G reworded for length (B was the longest option and correct); truth and key unchanged.
@@ -55,7 +55,6 @@ attachments:
   - 0432/hr-batch-02-cpu-past-day.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C8"
-answer: [B, C]
 misconception: [A, E]
 misconception_type: [rollup-and-interval]
 pair: "0047"

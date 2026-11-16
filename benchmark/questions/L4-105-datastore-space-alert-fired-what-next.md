@@ -24,12 +24,10 @@ Which statements are correct?
 - J. At 91% used the all-flash datastore is already slower, so the alert is a performance warning.
 - K. A full datastore stops any VM whose thin disk or snapshot must grow to write, whatever its load.
 
-## Likely wrong answer
-- A: "10.3 days is more than 10 days, so start the request and wait."
-- C: "The DR VMs are already on the datastore, so powering them on takes no space."
+## Answers
+B, D, E, G, I, K
 
-## Expected key points
-- Answer: B, D, E, G, I, K.
+## Explanation
 - A is wrong: the misconception; the projection is a trend alone. It ignores the swap files at power-on and the unwritten thin space, and that a snapshot is the cheapest space to give back.
 - B is correct: on an array with thin LUNs the datastore can show room the array no longer has; when the thin LUN has no physical space left, the host pauses the VMs. Read the array's free space as well as the datastore's.
 - C is wrong: a powered-off VM holds no swap file; each VM creates one of configured memory minus reservation at power-on, so the DR test needs 12 x 16 GB = 192 GB of free space at that moment.
@@ -41,6 +39,7 @@ Which statements are correct?
 - I is correct: the delivery time is fixed, so the request starts now while space is freed.
 - J is wrong: space does not change speed on all-flash storage; it threatens availability. The latency is normal.
 - K is correct: space is availability: a VM whose thin disk or snapshot must grow cannot write when the datastore is full, whatever the load; hence the alert has no activity gate. A thick disk without a snapshot writes into space it already holds.
+- Misconception: A: "10.3 days is more than 10 days, so start the request and wait." - C: "The DR VMs are already on the datastore, so powering them on takes no space."
 
 ## Notes
 - Review 2026-11-14: the snapshot VM's disks are stated thick (so removing the snapshot returns the delta's space, option G), and the 160 GB per day started 4 days ago (5 weeks at that rate would make a delta far above 1,100 GB). Option K names the VMs that stop (thin disk or snapshot that must grow), as the knowledge file does.
@@ -57,7 +56,6 @@ technology: [storage]
 task: decide-capacity
 level: 400
 answer_type: deterministic
-answer: [B, D, E, G, I, K]
 misconception: [A, C]
 input: [text]
 object: [datastore, vm]

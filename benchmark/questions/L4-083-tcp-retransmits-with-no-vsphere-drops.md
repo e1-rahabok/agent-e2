@@ -19,12 +19,10 @@ Which statements are correct?
 - H. Each retransmission costs time; a loss of a few percent slows the nightly transfer.
 - I. With no drops counted in vCenter, on the vmnics or in Linux, the network is clean: ask the application team to fix the export.
 
-## Likely wrong answer
-- D: "If a switch dropped our packets, vCenter would show transmit drops on the VM."
-- I: "vSphere and Linux show no dropped packets, so the network is clean; it is the application."
+## Answers
+A, C, E, H
 
-## Expected key points
-- Answer: A, C, E, H.
+## Explanation
 - A is true: the evidence of a top-of-rack drop is in the switch's discard counters, read by the network team for the same hour.
 - B is false: a retransmit only says no acknowledgement came back; the switch counters or a packet capture at both ends locate the loss (top-of-rack, upstream, firewall, WAN link, partner).
 - C is true: TCP resends a segment when no acknowledgement returns (timer or duplicate acknowledgements); the retransmits are the evidence of loss.
@@ -34,6 +32,7 @@ Which statements are correct?
 - G is false: a drop at the host's physical NIC is counted as a dropped packet on that vmnic, and the vmnics show none.
 - H is true: each loss forces a resend and slows TCP down; the application sees higher latency.
 - I is false: the misconception; a drop at a congested switch is invisible to ESXi and to the guest, so the zero counts do not clear the network.
+- Misconception: D: "If a switch dropped our packets, vCenter would show transmit drops on the VM." - I: "vSphere and Linux show no dropped packets, so the network is clean; it is the application."
 
 ## Notes
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the negation pair H/N resolved (old H dropped); old E (vmnic transmit error) dropped next to D; old J (full receive ring in vCenter) dropped, as ring-drop visibility stays in 0039 and 0212; old L (VM network latency counter) dropped, as 0214 holds that fact; over-correction I added; K carries the wrong action. Key changed from A, C, F, G, H, J, K, M to A, C, E, F, H, J.
@@ -50,7 +49,6 @@ technology: [network]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A, C, E, H]
 misconception: [I, D]
 input: [text]
 object: [guest-os, vm, network]

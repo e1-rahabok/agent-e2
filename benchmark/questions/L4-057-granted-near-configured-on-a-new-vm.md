@@ -21,11 +21,10 @@ Which statements are correct?
 - G. Consumed, about 61.2 GB, is the host memory to plan for if this VM moves to another host.
 - H. The zeroed pages cost almost no host memory as long as the host stays in the High state.
 
-## Likely wrong answer
-B or C: Granted near configured read as a VM that is full. H: "Windows zeroes its memory, and zero pages are shared, so they cost nothing."
+## Answers
+A, D, E, G
 
-## Expected key points
-- Answer: A, D, E, G.
+## Explanation
 - A: Granted counts VM pages that have an ESXi page mapped. OS initialization and memory zeroing touch most of the address space early, so Granted rises toward configured, its upper limit.
 - B is wrong: Granted says which pages were ever touched, not what the guest needs. Need is read in the Guest OS once the application runs.
 - C is wrong: a VM does not swap because its Granted is high; Granted cannot pass configured memory, and ESXi reclaims under host pressure or a limit, and there is neither.
@@ -34,6 +33,7 @@ B or C: Granted near configured read as a VM that is full. H: "Windows zeroes it
 - F is wrong: swapped pages are not in Granted. Consumed is Granted minus what sharing saves, and that saving can be at most Shared (0.1 GB): the gap is sharing.
 - G is true: VM Consumed is the VM's footprint on ESXi, the figure for migration and host capacity; it is not the guest's need.
 - H is wrong: ESXi backs VM memory with 2 MB pages and does not share them; a zeroed 4 KB page inside a large page keeps its host memory until the host breaks large pages, from the Clear state. Here Consumed is close to Granted: the zeroed pages cost real memory.
+- Misconception: B or C: Granted near configured read as a VM that is full. H: "Windows zeroes its memory, and zero pages are shared, so they cost nothing."
 
 ## Notes
 - Sources: the knowledge base, VM Memory Granted (touched pages stay mapped; Granted excludes swapped pages; Consumed = Granted - sharing savings), VM Memory Zero Pages (Windows initializes pages with zeroes; zero pages inside 2 MB pages keep their RAM until Clear) and VM Memory Consumed (the VM's footprint on ESXi).
@@ -59,7 +59,6 @@ knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/granted
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, D, E, G]
 misconception: [B, C, H]
 misconception_type: [consumption-as-contention]
 status: draft

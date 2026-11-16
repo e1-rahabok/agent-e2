@@ -16,11 +16,10 @@ Choose all the correct statements:
 - G. A VM's CPU reservation raises its CPU Usage, even while the guest is idle.
 - H. A VM pinned with CPU affinity is admitted only if its pinned CPUs can deliver the reservation.
 
-## Likely wrong answer
-E (non-sticky read as overcommittable), F (kernel assumed to need no reservation), or G (a reservation read as CPU in use).
+## Answers
+A, B, C, D
 
-## Expected key points
-- Answer: A, B, C, D.
+## Explanation
 - A is correct: only the base frequency is guaranteed, because Turbo is not: here 48 × 2.4 = 115.2 GHz, not 48 × 3.1. A conservative design.
 - B is correct: at runtime, if there is enough CPU for every VM, each gets its runtime with or without a reservation; the reservation still counts at power-on and migration (admission control, as in E and F).
 - C is correct: CPU is transient: reserved CPU that the VM does not use is used by other VMs.
@@ -29,6 +28,7 @@ E (non-sticky read as overcommittable), F (kernel assumed to need no reservation
 - F is wrong: the kernel holds a CPU reservation of its own (host/system and host/vim allocation minimum, mostly 6-10 GHz across about 400 hosts, higher with vSAN and NSX); 115.2 GHz minus that leaves less than the 110 GHz asked for, which is why the power-on fails at 35% Usage.
 - G is wrong: a CPU reservation is on demand and shows in no utilization metric; an idle VM with a reservation has CPU Usage near 0.
 - H is wrong: CPU admission control ignores CPU affinity, so a pinned VM can be admitted and still not get its full reservation.
+- Misconception: E (non-sticky read as overcommittable), F (kernel assumed to need no reservation), or G (a reservation read as CPU in use).
 
 ## Notes
 - Changed in the 2026-11-15 audit: the stem was two lines of definitions (design.md 6.2: no definitions); it now gives a host, the reserved total and a failed power-on, so A, E and F rest on numbers. H added (admission control ignores CPU affinity; second question on it after 0048/L2-010 H).
@@ -55,7 +55,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q8 Reservation"
 answer_type: deterministic
 level: 300                      # author 2026-11-05
-answer: [A, B, C, D]
 misconception: [E, F, G]
 misconception_type: [provider-vs-consumer]
 status: draft

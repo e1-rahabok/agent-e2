@@ -21,11 +21,10 @@ Which statements are correct?
 - I. The process was killed for using about 9.4 GB of RAM, more than twice its 4 GB limit, as the total-vm value shows.
 - J. With Memory Latency 0% in vCenter, the guest had no memory pressure, so the kill is an application bug, not memory.
 
-## Likely wrong answer
-- A: "Linux ran out of memory and the OOM killer fired: add memory to the VM."
+## Answers
+B, C, D, E, F, G
 
-## Expected key points
-- Answer: B, C, D, E, F, G.
+## Explanation
 - A is wrong: 19,000 MB was available in Linux; the log names a memory cgroup, so the OOM killer ran inside the service's cgroup.
 - B is correct: the kernel prints "Memory cgroup out of memory" for a cgroup OOM and "Out of memory" for a system-wide one (mm/oom_kill.c).
 - C is correct: memory.max is the hard limit of a cgroup; if usage reaches it and cannot be reduced, the OOM killer is invoked in the cgroup (Linux kernel, Control Group v2). systemd writes MemoryMax= to memory.max.
@@ -36,6 +35,7 @@ Which statements are correct?
 - H is wrong: that describes `MemoryHigh` (memory.high), which throttles and never invokes the OOM killer; memory.max is the hard limit.
 - I is wrong: total-vm is the process's virtual address space; anon-rss, 4,155,312 kB (about 3.96 GiB), is the resident memory at the 4 GiB limit (systemd reads 4G as 4 GiB).
 - J is wrong: VM Memory Latency reads ESXi page-fault waits, not a limit inside the guest; the service reached its cgroup limit.
+- Misconception: A: "Linux ran out of memory and the OOM killer fired: add memory to the VM."
 
 ## Notes
 - Outside the knowledge base (benchmark/design.md, section 3.5): no knowledge file covers Linux cgroups, `MemoryMax` or the OOM killer. Options B, C, E, F, H and the total-vm reading in I are keyed from the Linux kernel documentation (Control Group v2, mm/oom_kill.c) and the systemd documentation below; A, D, G and J are decided by the knowledge base (the guest and VM layers are separate) and the stem. The question checks that this gap does not turn into the wrong answer A.
@@ -52,7 +52,6 @@ technology: [memory]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [B, C, D, E, F, G]
 misconception: [A]
 input: [text]
 object: [guest-os, vm]

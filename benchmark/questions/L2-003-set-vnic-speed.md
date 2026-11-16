@@ -20,11 +20,10 @@ Which statements are correct?
 - K. When an adapter limit and a port group shaping average both apply, the lower of the two sets the cap.
 - L. vCenter has a counter that shows when Network I/O Control capped the VM's bandwidth.
 
-## Likely wrong answer
-- A: "Just set the NIC to 500 Mbps in Windows (or in the VM settings) and it can't send more than that."
+## Answers
+B, C, D, E, H, K
 
-## Expected key points
-- Answer: B, C, D, E, H, K.
+## Explanation
 - A is false: the guest speed setting caps nothing; 500 Mbps cannot be allocated through the vNIC speed.
 - B is true: the virtual device has no physical link to negotiate; VMXNET3 reports 10 Gbps by default, whatever the vmnic behind the port group, and moves data as fast as host CPU, virtual switch policies and uplinks allow.
 - C is true: `ethernetX.linkspeed` (vSphere 8.0 Update 2 and later) accepts 10,000 to 65,000 Mbps; a value outside the range falls back to 10 Gbps, and the setting caps nothing.
@@ -37,6 +36,7 @@ Which statements are correct?
 - J is false: shares divide the link only among consumers that want bandwidth; unused bandwidth is available to others.
 - K is true: a 200 Mbps adapter limit under a 100 Mbps shaping average gives 100 Mbps.
 - L is false: Network I/O Control has no metric that shows it capped bandwidth; check the logs.
+- Misconception: A: "Just set the NIC to 500 Mbps in Windows (or in the VM settings) and it can't send more than that."
 
 ## Notes
 - Revised 2026-11-12. The VMX setting is `ethernetX.linkspeed`, from vSphere 8.0 Update 2, 10,000 to 65,000 Mbps; values outside the range fall back to 10 Gbps. Vendor sources for the reported link speed: Broadcom KB 368812, How to change the vmxnet3 link speed of a VM, https://knowledge.broadcom.com/external/article/368812/how-to-change-the-vmxnet3-link-speed-of.html; Broadcom KB 444078, VMXNET3 guest OS link speed does not enforce bandwidth limits, https://knowledge.broadcom.com/external/article/444078/vmxnet3-guest-os-link-speed-resets-and-d.html.
@@ -55,7 +55,6 @@ tool: [vcenter, guest-os-tools]
 task: judge-setting
 level: 200
 answer_type: deterministic
-answer: [B, C, D, E, H, K]
 misconception: [A]
 input: [text]
 knowledge:

@@ -14,11 +14,10 @@ Which statements are correct?
 - F. esxi-k2-22 is slow on writes and esxi-k2-30 on reads, so each is followed up on its own direction.
 - G. The maximum column can be dropped from such reports, since it says nothing useful about a host.
 
-## Likely wrong answer
-B: ranking hosts by the maximum.
+## Answers
+A, C, E, F
 
-## Expected key points
-- Answer: A, C, E, F.
+## Explanation
 - A true: one outlier dominates the maximum. With a 99th percentile of 0.72 ms, at most about 20 of esxi-k2-09's 2,016 samples were above 0.72 ms; the 184 ms is a level few samples reached.
 - B false: the maximum ranks one sample, not a host problem; here it would send the team to esxi-k2-09 first.
 - C true: esxi-k2-22 (write, 99th percentile 31.6 ms) and esxi-k2-30 (read, 99th percentile 26.7 ms) are far above the other hosts, whose 99th percentiles stay near or below 2 ms: a recurring problem. Drill down per adapter and path.
@@ -26,6 +25,7 @@ B: ranking hosts by the maximum.
 - E true: esxi-k2-22 has 17.9 ms at the 95th percentile, so it is slow often; esxi-k2-30 has 3.4 ms at the 95th and 26.7 ms at the 99th, so it is slow less often.
 - F true: read and write latency are checked separately; esxi-k2-22's reads and esxi-k2-30's writes are as low as on the other hosts.
 - G false: worst and percentile are read together: the worst gives the depth, and a maximum far above the 99th percentile is what marks a one-off.
+- Misconception: B: ranking hosts by the maximum.
 
 ## Notes
 - Drafted 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: 192 hosts reduced to 40; esx-024 and esx-031 replace esx-044 and esx-101; options D and E new. Counts only after author approval.
@@ -54,7 +54,6 @@ attachments:
   - 0081/host-adapter-latency-36-hosts-1-week.csv
 origin: synthetic
 source_path: "Drafted 2026-11-05"
-answer: [A, C, E, F]
 misconception: [B]
 misconception_type: [average-hides-worst, rollup-and-interval]
 pair: "0405"

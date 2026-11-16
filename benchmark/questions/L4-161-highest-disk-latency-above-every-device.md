@@ -25,11 +25,10 @@ Which statements are correct?
 - H. The VMs whose pages were read during the night spikes did not wait for them, as memory tiering is invisible to the guests.
 - I. One 4 KB tier read in a 20-second sample averages 0.2 KBps, so a chart can show a working device at 0.
 
-## Likely wrong answer
-"Highest latency is the worst disk's latency, so with every device under 1 ms the chart is wrong" (C), or the storage team's "6 to 7 ms means the array" (D). For the night: "0 KBps, no IO, so the latency is noise" (F), or "nothing in the guest waits on it" (H).
+## Answers
+A, B, E, I
 
-## Expected key points
-- Answer: A, B, E, I.
+## Explanation
 - A is correct: Highest latency (disk.maxTotalLatency) is the highest total latency, kernel latency plus device latency, among the disks the host uses.
 - B is correct: LUN-02's device latency is below 1 ms and its kernel latency is 5.5 to 6.2 ms, so its total of about 6 to 7 ms is mostly VMkernel time. Read the kernel and queue latency per device next.
 - C is wrong: the misconception. The counter adds kernel latency, so it can be well above every device line and still be right.
@@ -39,6 +38,7 @@ Which statements are correct?
 - G is wrong: the latency at near-zero activity is the wake-up from a power state, not a device fault.
 - H is wrong: a vCPU that touches a page on the NVMe tier waits for the fetch, so the reads that woke the device waited that long. How much the VMs lost depends on how many reads hit it.
 - I is correct: 4 KB / 20 s = 0.2 KBps, which rounds to 0 on a chart in KBps.
+- Misconception: "Highest latency is the worst disk's latency, so with every device under 1 ms the chart is wrong" (C), or the storage team's "6 to 7 ms means the array" (D). For the night: "0 KBps, no IO, so the latency is noise" (F), or "nothing in the guest waits on it" (H).
 
 ## Notes
 - Per-device latency history needs statistics level 3; the captures are Real-time, so the default level does not matter.
@@ -65,7 +65,6 @@ knowledge_main: vsphere/technology/storage/metrics/host/disk
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/storage/metrics/host/disk"
-answer: [A, B, E, I]
 misconception: [C, D, F, H]
 misconception_type: [unit-and-normalization]
 status: draft

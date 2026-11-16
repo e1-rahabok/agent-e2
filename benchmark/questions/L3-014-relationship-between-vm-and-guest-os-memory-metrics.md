@@ -17,11 +17,10 @@ Which statements are correct?
 - G. A memory limit at the guest's In Use value is a safe way to make ESXi take back the memory the guest freed.
 - H. Stopping vmtoolsd on db-lnx-04 stops ESXi from ballooning that VM.
 
-## Likely wrong answer
-C: a Guest OS counter and a VM counter with the same name read as one. Or F, the over-correction: ESXi can never take memory back.
+## Answers
+A, B, D, E
 
-## Expected key points
-- Answer: A, B, D, E.
+## Explanation
 - A is true: VCF Operations VM memory Utilization adds guest page-in (rate × page size) and the memory the guest cannot use to Guest Needed Memory, so it can exceed 100%. The 92% of app-win-11 is not an error either: 32 GB the guest cannot use plus a Needed Memory of about 56 GB (In Use, part of the cache and the 5% buffer).
 - B is true: the formula adds Memory Total Capacity minus Guest Physically Usable Memory, here 96 - 64 = 32 GB.
 - C is false: Windows compresses its In Use pages inside the guest, a Guest OS counter; VM Compressed is ESXi's compression of VM pages. Different layers, different counters.
@@ -30,6 +29,7 @@ C: a Guest OS counter and a VM counter with the same name read as one. Or F, the
 - F is false: ESXi takes memory back by ballooning, compression and swapping. This is the over-correction of "ESXi does not see guest frees".
 - G is false: the guest cannot see a limit, so it keeps using memory as if it had all of it. ESXi enforces the limit at once, ballooning first, then compressing and swapping pages it picks blind; a limit used instead of sizing the VM smaller behaves worse than a VM configured smaller.
 - H is false: on Linux the balloon driver is the kernel module `vmw_balloon`, not part of open-vm-tools; ballooning goes on while vmtoolsd is stopped. "VMware Tools: Not running" reports the service, not the driver.
+- Misconception: C: a Guest OS counter and a VM counter with the same name read as one. Or F, the over-correction: ESXi can never take memory back.
 
 ## Notes
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): one fact per option; F the over-correction and G the wrong action added (author approved, 2026-11-14).
@@ -64,7 +64,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q2 VM vs Guest OS"
 answer_type: deterministic
 level: 300                      # author 2026-11-05
-answer: [A,B,D,E]
 misconception: [C, H]
 misconception_type: [layer-confusion]
 status: draft

@@ -27,12 +27,10 @@ Which statements are correct?
 - N. Once the limit is off RP-Web, web VM Ready falls and RP-Web usage leaves its flat line at 40 GHz.
 - O. Setting RP-Web's CPU shares to High lifts its VMs' CPU while the limit stays in place.
 
-## Likely wrong answer
-- D: "The batch jobs take the CPU from the web VMs."
-- E: "Many VMs show high CPU Ready, so the cluster is short of CPU: add the two hosts."
+## Answers
+A, B, C, F, G, H, I, N
 
-## Expected key points
-- Answer: A, B, C, F, G, H, I, N.
+## Explanation
 - A is correct: the pool the change was meant for runs below the limit and the other pool sits flat at it: the change hit the wrong pool.
 - B is correct: export, RP-Web 39,815-40,007 MHz, flat sample after sample near a round number.
 - C is correct: export, RP-Batch 28,566-32,694 MHz; it varies with its load.
@@ -48,6 +46,7 @@ Which statements are correct?
 - M is wrong: more vCPUs share the same 40 GHz pool limit.
 - N is correct: the hosts have spare CPU (30-48%), so without the limit the web VMs get their demand: the check of the fix is web VM Ready falling and the pool's usage no longer flat at the limit.
 - O is wrong: shares act only under contention and never lift a limit; with spare host CPU the cap, not the share, holds the web VMs.
+- Misconception: D: "The batch jobs take the CPU from the web VMs." - E: "Many VMs show high CPU Ready, so the cluster is short of CPU: add the two hosts."
 
 ## Notes
 - Synthetic, 2026-11-12, the second long scenario.
@@ -65,7 +64,6 @@ technology: [system, cpu, memory, storage]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A, B, C, F, G, H, I, N]
 misconception: [D, E]
 input: [table]
 object: [resource-pool, vm, esxi, cluster]

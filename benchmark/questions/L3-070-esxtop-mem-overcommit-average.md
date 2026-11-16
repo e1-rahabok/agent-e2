@@ -17,11 +17,10 @@ Which statements about this line are correct?
 - I. At 0.82, the memory requested on the host is about 1.8 times the memory ESXi manages.
 - J. A memory limit on a VM would leave this line unchanged, as requested counts the configured memory.
 
-## Likely wrong answer
-D: "Overcommit above 0, so the host is short of memory and will swap." Or E: the value read as a share of memory in use.
+## Answers
+A, B, C, H, I
 
-## Expected key points
-- Answer: A, B, C, H, I.
+## Explanation
 - A is correct: the line is the ratio of total requested memory to managed memory, minus 1. Requested is the VMs' configured memory (or their limits), user world memory and reserved overhead.
 - B is correct: the three values are 1-, 5- and 15-minute exponentially weighted averages.
 - C is correct: requested is an allocation, not a use; ESXi backs a VM page only when the guest first touches it.
@@ -32,6 +31,7 @@ D: "Overcommit above 0, so the host is short of memory and will swap." Or E: the
 - H is correct: VM memory latency (esxtop %LAT_M, VCF Operations Memory Contention) is the counter of the wait; this line is allocation.
 - I is correct: requested / managed = 1 + 0.82, about 1.8.
 - J is wrong: requested counts a VM's limit in place of its configured memory, so a limit below the configured size lowers the line.
+- Misconception: D: "Overcommit above 0, so the host is short of memory and will swap." Or E: the value read as a share of memory in use.
 
 ## Notes
 - Paired with 0399 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D10.
@@ -60,7 +60,6 @@ knowledge_main: vsphere/tools/esxtop/memory
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D10"
-answer: [A, B, C, H, I]
 misconception: [D, E]
 misconception_type: [consumption-as-contention, unit-and-normalization]
 pair: "0399"

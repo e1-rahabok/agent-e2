@@ -1,8 +1,8 @@
 """Questions: load, shuffle options, render, parse and score answers.
 
 Only `## Prompt` and attachments are ever shown to the model under test. The answer key
-(metadata `answer`, `misconception`; sections `## Expected key points`, `## Likely wrong answer`) is read here
-for scoring only: letters by the runner, key points by the judge (judge.py).
+(section `## Answers`: the correct letters; metadata `misconception`) is read here for scoring only, by letters, no judge.
+`## Explanation` is for reviewers and is never read.
 
 Sub-scores (benchmark/design.md, section 3): answer type (deterministic: letters; judged: free text),
 input type (text, table, screenshot: from the attachments), level (100, 200, 300, 400).
@@ -43,7 +43,6 @@ class Question:
         self.task = self.meta.get('task', '')
         self.level = self.meta.get('level', '')
         self.answer_type = self.meta.get('answer_type', 'judged')
-        self.answer = [str(a) for a in (self.meta.get('answer') or [])]
         self.misconception = [str(a) for a in (self.meta.get('misconception') or [])]
         self.knowledge = list(self.meta.get('knowledge') or [])
         self.knowledge_main = str(self.meta.get('knowledge_main') or '')  # the file that holds the answer or the misconception (Q130)
@@ -52,8 +51,7 @@ class Question:
         self.prompt = ATTACH_LINK.sub(r'\1', m.group(1).strip()) if m else ''
         self.tables = self._tables()
         self.stem, self.options, self.footer = self._split_prompt(self.prompt)
-        self.key_points = _section(body, 'Expected key points')
-        self.likely_wrong = _section(body, 'Likely wrong answer')
+        self.answer = re.findall(r'[A-Y]', _section(body, 'Answers'))  # 'A, C, D, E': the one place the key is written
 
     @staticmethod
     def _split_prompt(prompt):
@@ -86,9 +84,7 @@ class Question:
     def scorable(self):
         if self.meta.get('status') in ('awaiting-input', 'retired', 'deferred'):
             return False  # input not supplied yet, retired, or deferred to a later release (screenshot set after 1.0)
-        if self.choice:
-            return bool(self.options) and bool(self.answer)
-        return bool(self.prompt) and bool(self.key_points)
+        return bool(self.options) and bool(self.answer)
 
     @property
     def input_types(self):

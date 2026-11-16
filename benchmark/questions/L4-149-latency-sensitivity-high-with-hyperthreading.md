@@ -20,11 +20,10 @@ Which statements are correct?
 - H. Core Utilization of 40% shows that the host lacks CPU for this VM: move it to another host.
 - I. A full CPU reservation guarantees the VM exclusive threads every time it powers on, on any host.
 
-## Likely wrong answer
-"High with Hyperthreading is High at half the price: the guest sees the topology and the host is mostly idle, so nothing is lost (C, F)." C and F are the misconceptions.
+## Answers
+A, B, D
 
-## Expected key points
-- Answer: A, B, D.
+## Explanation
 - A is correct: High with Hyperthreading gives each vCPU exclusive access to one hyper-thread, and consecutive vCPU pairs share one core. ESX numbers the two logical processors of a core next to each other, so PCPUs 0-15 are cores 0-7.
 - B is correct: locking vCPUs to specific hyper-threads can stop ESX from scheduling them on otherwise idle cores, which limits performance; here 8 cores carry 16 busy threads while most of the host idles.
 - C is wrong: only the few workloads that use awareness of the hyper-threading topology benefit; for most there is no gain and possibly a loss.
@@ -34,6 +33,7 @@ Which statements are correct?
 - G is wrong: it removes Hyper-Threading for every VM on the host, which Performance Best Practices recommends keeping on; High already gives each vCPU of this VM a whole core.
 - H is wrong: the host has many idle cores; the VM is held on 8 cores by its own setting.
 - I is wrong: even with a full CPU reservation the VM might not get exclusive cores if no NUMA node has enough non-exclusive cores at power-on.
+- Misconception: "High with Hyperthreading is High at half the price: the guest sees the topology and the host is mostly idle, so nothing is lost (C, F)." C and F are the misconceptions.
 
 ## Metadata
 ```yaml
@@ -55,7 +55,6 @@ knowledge_main: vsphere/technology/cpu/configuration/latency-sensitivity
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/cpu/configuration/latency-sensitivity (High with Hyperthreading)"
-answer: [A, B, D]
 misconception: [C, F]
 misconception_type: [frequency-and-hyper-threading]
 status: draft

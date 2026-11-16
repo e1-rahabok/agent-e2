@@ -17,11 +17,10 @@ Which statements are correct?
 - H. esx-07 stays at 80-86% in the busy hour, which leaves room for every VM's demand; shares are not what limits this VM.
 - I. Raise the VM's CPU shares, then check that Ready falls back and Usage meets Demand.
 
-## Likely wrong answer
-- A: "Usage fell after the downsize, so the VM now has too few vCPUs: add them back."
+## Answers
+C, E, F, I
 
-## Expected key points
-- Answer: C, E, F, I.
+## Explanation
 - A is wrong: the vCPU count is not the constraint; the VM waits for physical CPU because its shares halved. Adding vCPUs back hides the cause.
 - B is wrong: export, Demand stayed at 9.31-9.83 GHz in both weeks; about 8.5 GHz is Usage after the change, not Demand. The workload is the same.
 - C is correct: the export holds the VCF Operations value per vCPU: 0.19-0.25 before and 0.25-0.50 after, under the public Microsoft guideline of 2 per processor (a sustained queue above 2 per processor indicates congestion). The queue is read against that guideline, not against the week before. The guest queue shows no vCPU shortage; the wait is Ready, below the guest, which the guest cannot see.
@@ -31,6 +30,7 @@ Which statements are correct?
 - G is wrong: default shares are 1,000 per vCPU, so each vCPU keeps 1,000; what halved is the VM's total, 16,000 to 8,000, for the same demand.
 - H is wrong: Ready of 5-6.5% is the contention itself: the VM waited for physical CPU, so its shares decide how much it gets. Host utilization below 100% does not rule out contention; the VM's Ready reads it.
 - I is correct: the fix is the entitlement, not the vCPU count (a less busy host is the other fix); then confirm Ready falls and Usage meets Demand.
+- Misconception: A: "Usage fell after the downsize, so the VM now has too few vCPUs: add them back."
 
 ## Notes
 - Synthetic, 2026-11-12.
@@ -48,7 +48,6 @@ technology: [system, cpu]
 task: decide-capacity
 level: 400
 answer_type: deterministic
-answer: [C, E, F, I]
 misconception: [A]
 input: [table]
 object: [vm, esxi]

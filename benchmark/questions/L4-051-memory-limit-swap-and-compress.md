@@ -23,14 +23,10 @@ Why do the reports slow down, and what do you change? Which statements are corre
 - L. Memory|Balloon at 0 in every sample rules out a limit, since a limit always balloons first.
 - M. The gap of about 0.4 GB between Consumed and Memory|Effective limit is room the VM can still grow into.
 
-## Likely wrong answer
-- B: "The host is running out of memory and swaps the VM."
-- G: "Move the VM to a host with more free memory."
-- H: "Give the VM more memory."
-- L: "No balloon, so no limit: a limit balloons first."
+## Answers
+A, C, E, I
 
-## Expected key points
-- Answer: A, C, E, I.
+## Explanation
 - A is correct: Consumed stays flat at 15.66-15.83 GB, just under a limit of about 16 GB (Memory|Effective limit, 16.19 GB, is the limit plus the VM overhead), while the host has over 200 GB free and no other VM is reclaimed: the cause is a limit on the VM or its pool, not the host.
 - B is wrong: with free host memory and no other VM swapped or compressed, the host is not short.
 - C is correct: in and out run at the same time on different pages; in each run Swapped falls (about 6.12 to 4.86, 4.85 to 3.79 and 3.80 to 2.99 GB) while Compressed rises (about 0.24 to 0.80, 0.80 to 1.28 and 1.28 to 1.65 GB), and Consumed stays flat.
@@ -44,6 +40,7 @@ Why do the reports slow down, and what do you change? Which statements are corre
 - K is wrong: outside the runs Contention stays at 0.05% or less, mostly 0, against about 3.2-6.2% in the runs; swapped pages the guest does not touch cost no wait. This is the over-correction of A: a limit read as a wait at every moment.
 - L is wrong: the balloon goes first under a limit only when the driver runs; `sched.mem.maxmemctl = 0` switches it off, so ESXi compresses and swaps instead.
 - M is wrong: the configured limit caps Consumed; Memory|Effective limit adds the VM overhead, which the limit does not cap, so the gap is not room to grow.
+- Misconception: B: "The host is running out of memory and swaps the VM." - G: "Move the VM to a host with more free memory." - H: "Give the VM more memory." - L: "No balloon, so no limit: a limit balloons first."
 
 ## Notes
 - Practical half of 0291 (project/question-pairing-2026-11-14.md, pair A14). CSV from a seeded script (seed 14020261114, 3 days, 30-minute samples); the old 64 GB scenario, a near-copy of the knowledge example in swap-and-compression, is in project/archive/benchmark-questions/attachments.
@@ -62,7 +59,6 @@ technology: [memory]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,C,E,I]
 misconception: [B,G,H,L]
 input: [table]
 object: [vm]

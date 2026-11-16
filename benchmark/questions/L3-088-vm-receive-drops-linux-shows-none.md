@@ -53,11 +53,10 @@ Which statements are correct?
 - I. In the sample with the most drops, the VM lost more than half of the packets sent to it.
 - J. Every receive drop that ESXi counts on a VM also shows somewhere in Linux.
 
-## Likely wrong answer
-A: the ring overflowed, and only the hypervisor sees that. Or E: one of the tools miscounts.
+## Answers
+B, D, H
 
-## Expected key points
-- Answer: B, D, H.
+## Explanation
 - A false: the misconception. VMXNET3 shares a ring-full drop with the guest driver, which shows it as pkts rx OOB; the ethtool output reads 0 on all four receive queues.
 - B true: Receive packets dropped is above 0 in the export (a 12-minute run of rows), while Linux shows RX dropped 0 and pkts rx OOB 0. ESXi dropped the frames before delivery, for example on an NSX Distributed Firewall rule (filtered at the port's I/O chain) or against the port's security settings; the guest never received them, so it cannot count them.
 - C false: rx_dropped counts only frames the driver itself dropped; the ring-full count is pkts rx OOB.
@@ -68,6 +67,7 @@ A: the ring overflowed, and only the hypervisor sees that. Or E: one of the tool
 - H true: Receive packets dropped is above 0 in every row from 06:20:00 to 06:31:40 (36 rows of 20 seconds, 12 minutes) and otherwise only in two earlier rows with under 100 drops each.
 - I false: in the worst row, Receive packets dropped is 3-8% of Packets received (below 10% by construction), far from half.
 - J false: the over-correction. Drops before delivery (a firewall rule, the security policy) never reach Linux; only a full ring is counted on both sides.
+- Misconception: A: the ring overflowed, and only the hypervisor sees that. Or E: one of the tools miscounts.
 
 ## Notes
 - Paired with the theory question 0039 (theory and practical; design.md, section 3.9).
@@ -97,7 +97,6 @@ attachments:
   - 0420/ingest-04-network-real-time.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C26"
-answer: [B, D, H]
 misconception: [A, E]
 misconception_type: [layer-confusion]
 pair: "0039"

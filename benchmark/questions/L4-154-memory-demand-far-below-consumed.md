@@ -25,11 +25,10 @@ Which statements are correct?
 - J. Order more memory for esx-31, since Consumed is above 90%.
 - K. Machine Demand of 562 GB plus ESX System Usage of 48 GB gives the 610 GB of Utilization.
 
-## Likely wrong answer
-C: "92% Consumed means the host is nearly out of memory." E: "Utilization should add what the kernel actually uses."
+## Answers
+A, B, D, F, I, K
 
-## Expected key points
-- Answer: A, B, D, F, I, K.
+## Explanation
 - A is correct: the VCF Operations capacity pages show host Memory|Utilization under the name Demand (Broadcom KB 439253).
 - B is correct: VM Memory Utilization comes from Guest OS Needed Memory, read through VMware Tools; it removes the free pages and most of the cache that ESXi Memory Consumed holds (Needed Memory keeps part of the cache, to be conservative, plus a 5% buffer). The two tools measure different things; neither is wrong.
 - C is wrong: the misconception of ESXi Memory Consumed and Utilization ("ESXi Memory Consumed near 100% means the host is out of memory"). Consumed holds guest cache and inactive pages; the saturation counters (Ballooned, Compressed, Swapped) are 0 and Memory Contention is 0 for every VM.
@@ -41,6 +40,7 @@ C: "92% Consumed means the host is nearly out of memory." E: "Utilization should
 - I is correct: with no running VMs, Machine Demand is 0 and Utilization equals ESX System Usage.
 - J is wrong: the wrong action. Nothing is reclaimed and no VM waits; 92% Consumed on its own is not a reason to add memory.
 - K is correct: Utilization = Machine Demand + ESX System Usage: 562 + 48 = 610 GB.
+- Misconception: C: "92% Consumed means the host is nearly out of memory." E: "Utilization should add what the kernel actually uses."
 
 ## Notes
 - Sources: the knowledge base, ESXi Memory Utilization (Formula; Reason; Misconceptions), Memory capacity (section Demand: the three formulas that share the word Demand), ESXi Memory Consumed (cache and inactive pages; read the saturation counters). VCF Operations 9.1 documentation, Host System Metrics (Mem|Utilization based on the VMs' utilization, including reservations, limits and overhead); Broadcom KB 439253.
@@ -68,7 +68,6 @@ knowledge_main: vsphere/technology/memory/metrics/host/utilization
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/memory/metrics/host/utilization"
-answer: [A, B, D, F, I, K]
 misconception: [C, E]
 misconception_type: [consumption-as-contention, tool-confusion]
 status: draft

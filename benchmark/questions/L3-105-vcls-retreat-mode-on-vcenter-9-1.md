@@ -19,11 +19,10 @@ Which statements are correct?
 - G. Embedded vCLS needs every host of the cluster on ESXi 8.0 Update 3 or later; one older host keeps the cluster on External vCLS.
 - H. Retreat Mode is one vCenter-wide setting: it removes the vCLS VMs from every cluster of the vCenter at once.
 
-## Likely wrong answer
-F: "The vCLS VMs hold reservations, so they are a real capacity cost, like a failover host." C misreads the KB update as a restatement instead of a change.
+## Answers
+A, B, D, E
 
-## Expected key points
-- Answer: A, B, D, E.
+## Explanation
 - A is correct: KB 312147 states that from vCenter 9.0 deactivating vCLS does not impact DRS or HA; the recommendation to switch to Retreat Mode follows from it.
 - B is correct: the Fault Tolerance note (DRS depends on the vCLS VMs since 7.0 Update 1) is older text kept in the 9.1 documentation; KB 312147 says its 9.0 update overrides earlier statements about the dependency. Performance Best Practices 9.1 no longer carries the vCLS dependency that the 9.0 edition stated.
 - C is wrong: before vCenter 9.0, Retreat Mode affected some cluster services; the 9.0 update is what ended the dependency.
@@ -32,6 +31,7 @@ F: "The vCLS VMs hold reservations, so they are a real capacity cost, like a fai
 - F is wrong: a 6-host cluster's failover host is a whole host of cores and memory; the vCLS reservations are a few hundred MHz and MB.
 - G is wrong: Embedded vCLS replaces External vCLS when vCenter is 8.0 Update 3 or later and at least one host of the cluster runs ESXi 8.0 Update 3 or later, not every host.
 - H is wrong: Retreat Mode is set per cluster (Configure > vSphere Cluster Services > General > Edit vCLS Mode).
+- Misconception: F: "The vCLS VMs hold reservations, so they are a real capacity cost, like a failover host." C misreads the KB update as a restatement instead of a change.
 
 ## Notes
 - The prompt carries the vendor evidence on both sides (the 9.1 Fault Tolerance note and KB 312147), so the conflict between the knowledge base and the 9.1 documentation is decidable from public documents (benchmark/design.md, sections 3.7 and 6.1 F3).
@@ -58,7 +58,6 @@ knowledge_main: vsphere/object-types/cluster/concepts/vcls
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/object-types/cluster/concepts/vcls"
-answer: [A, B, D, E]
 misconception: [F]
 misconception_type: [unit-and-normalization]
 status: draft

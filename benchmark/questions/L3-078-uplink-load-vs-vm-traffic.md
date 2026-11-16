@@ -16,11 +16,10 @@ Which statements are correct?
 - H. Size the uplinks for the new placement from the sum of all VMs' transmit and receive on the host.
 - I. While on one host, their flow counts twice in the sum of the VM counters: as one VM's transmit and the other's receive.
 
-## Likely wrong answer
-C: VM traffic is uplink traffic, so placement does not matter. Or D, the overshoot: VM counters say nothing about the uplinks.
+## Answers
+A, B, E, G, I
 
-## Expected key points
-- Answer: A, B, E, G, I.
+## Explanation
 - A true: VM-to-VM traffic on the same host never reaches the physical network; while it stays in the host it has no fixed limit, and a VMXNET3 adapter can pass the speed it reports.
 - B true: vMotion uses a VMkernel port; the vmnics carry VM and kernel traffic over shared uplinks, and no VM counter includes kernel traffic.
 - C false: the misconception. Today the flow is switched inside the host and never touches a vmnic.
@@ -30,6 +29,7 @@ C: VM traffic is uplink traffic, so placement does not matter. Or D, the oversho
 - G true: every teaming algorithm maps one vNIC to one uplink, and IP hash maps one source-destination pair to one uplink; one flow between two VMs never gets more than one uplink's speed.
 - H false: the wrong action. The VM sum is not the uplink load (in-host flows, kernel traffic); plan from the vmnic counters per direction, plus the flow that the rule moves onto the wire.
 - I true: each VM's counters measure its own side, so one in-host flow appears on two VM ports and on no vmnic.
+- Misconception: C: VM traffic is uplink traffic, so placement does not matter. Or D, the overshoot: VM counters say nothing about the uplinks.
 
 ## Notes
 - Theory half of the pair with 0217 (practical; design.md, section 3.9). Different host and numbers from 0217.
@@ -58,7 +58,6 @@ knowledge_main: vsphere/technology/network/concepts/network-observability
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B9"
-answer: [A, B, E, G, I]
 misconception: [C]
 misconception_type: [provider-vs-consumer, same-name-other-object]
 pair: "0217"

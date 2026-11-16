@@ -20,11 +20,10 @@ Which statements are correct?
 - K. Windows disk counters cannot be compared with the vCenter virtual disk counters.
 - L. The PhysicalDisk time per transfer in the typeperf export includes the time spent in the NTFS file system driver.
 
-## Likely wrong answer
-E and F: the queue is waiting inside Windows, and a queue above 2 per disk is the problem. Or B: % Disk Time cannot pass 100%.
+## Answers
+A, C, D, G, I
 
-## Expected key points
-- Answer: A, C, D, G, I.
+## Explanation
 - A true: % Disk Time is Avg. Disk Queue Length x 100, shown as a percentage; it exceeds 100% whenever the average queue is above 1. In the export `PhysicalDisk(1 E:)\% Disk Time` is 1,000 or more (about 2,400) in every sample, 100 times `Avg. Disk Queue Length`.
 - B false: the counter is right; it is a queue length shown as a percentage.
 - C true: reading. Windows derives Avg. Disk Queue Length from Disk Transfers/sec x Avg. Disk sec/Transfer (Little's law); in every sample after the first the export shows it within 1% (about 2,400 x 0.010 s = 24).
@@ -37,6 +36,7 @@ E and F: the queue is waiting inside Windows, and a queue above 2 per disk is th
 - J false: the vCenter virtual disk latency starts at the virtual disk; time waiting in Windows queues, Storport included, is not in it.
 - K false: the over-correction. Comparing the Windows time per I/O with the vCenter latency for the same period is the first test of where the time is spent.
 - L false: the partition manager collects the PhysicalDisk counters, so they cover the request from that layer down (disk class driver, Storport, adapter driver, device and back) and leave out the file system above it.
+- Misconception: E and F: the queue is waiting inside Windows, and a queue above 2 per disk is the problem. Or B: % Disk Time cannot pass 100%.
 
 ## Notes
 - Paired with the theory question 0311 (theory and practical; design.md, section 3.9).
@@ -68,7 +68,6 @@ attachments:
   - 0418/vcenter-vm-virtual-disk-realtime.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C23"
-answer: [A, C, D, G, I]
 misconception: [E, F]
 misconception_type: [layer-confusion]
 pair: "0311"

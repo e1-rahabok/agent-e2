@@ -12,17 +12,17 @@ Which statements are correct?
 - E. Across a large fleet of VMs over a month, receive drops run far higher than transmit drops.
 - F. Each receive drop that vCenter shows for a VM is a fault to hand to the network team as a ticket.
 
-## Likely wrong answer
-D: "The counts should match, so one of them is broken." Or C: "the VM and the guest never see the same drop."
+## Answers
+A, B, E
 
-## Expected key points
-- Answer: A, B, E.
+## Explanation
 - A is true: ESXi drops received frames that are not for the guest or that break the port group's security settings; the guest never receives them.
 - B is true: transmitted packets are dropped after they leave the Guest OS (for example an NSX distributed firewall reject), so ESXi counts them on the VM and the guest sees only the resend delay.
 - C is false: a full VMXNET3 receive ring is counted at the port and on the VM (droppedRx, %DRPRX) and also by the guest driver (Linux `ethtool -S`, pkts rx OOB).
 - D is false: received drops happen before the Guest OS and transmitted drops after it, so the two layers count different packets.
 - E is true: over 3,938 VMs and one month, receive drops were far higher than transmit drops.
 - F is false: a full VMXNET3 receive ring is caused and fixed in the Guest OS (ring size, guest CPU), so the Guest OS owner fixes it; other receive drops are ESXi enforcing policy.
+- Misconception: D: "The counts should match, so one of them is broken." Or C: "the VM and the guest never see the same drop."
 
 ## Notes
 - Revised 2026-11-12, then after the independent review: Linux guest with a decidable counter. `ip -s link` RX dropped does not include the device's out-of-buffer count; `ethtool -S` shows it as `pkts rx OOB` per queue (upstream Linux vmxnet3 driver, vmxnet3_ethtool.c).
@@ -50,7 +50,6 @@ knowledge_main: vsphere/technology/network/concepts/packet-drop-accounting
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A, B, E]
 misconception: [D, C]
 misconception_type: [layer-confusion]
 pair: "0420"

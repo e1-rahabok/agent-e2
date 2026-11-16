@@ -17,13 +17,10 @@ Which statements are correct?
 - I. Throughput of the host's physical NICs (vmnics) has no VM equivalent.
 - J. Host CPU Demand can be read for each physical core or thread of the host.
 
-## Likely wrong answer
-- B: "Host Ready is the host's own cores waiting."
-- E: "Host Demand is the host's whole load, VMs plus the VMkernel."
-- C: "Host Usage adds up its VMs, like host Ready" (the over-correction).
+## Answers
+A, D, G, I
 
-## Expected key points
-- Answer: A, D, G, I.
+## Explanation
 - A is correct: Ready is a consumer concept (a VM waiting to be scheduled); the host value adds up its VMs.
 - B is wrong: a physical core or thread is always ready; Ready does not apply to ESXi itself.
 - C is wrong: host Usage is summed over the physical cores and threads, not over the VMs (it also holds kernel work); only some host counters add up the VMs.
@@ -34,6 +31,7 @@ Which statements are correct?
 - H is wrong: the name does not say which kind a counter is; you must know the mechanism.
 - I is correct: physical network in ESXi exists only at the host; the sum of VM network at ESXi is the counter that adds up the VMs.
 - J is wrong: Demand is summed over the VMs, not over physical threads, so it has no per-core or per-thread value.
+- Misconception: B: "Host Ready is the host's own cores waiting." - E: "Host Demand is the host's whole load, VMs plus the VMkernel." - C: "Host Usage adds up its VMs, like host Ready" (the over-correction).
 
 ## Notes
 - Tests: principle, provider vs consumer perspective; a host metric of its own vs a sum of the VMs' metric.
@@ -59,7 +57,6 @@ attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Virtualization Impact; Architecture Complexity (VM vs ESXi; ESXi ≠ VMs + Kernel)."
 answer_type: deterministic
-answer: [A, D, G, I]
 misconception: [B, E]
 level: 300                      # author 2026-11-05
 object: [esxi, vm]

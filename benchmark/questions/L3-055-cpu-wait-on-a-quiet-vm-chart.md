@@ -18,11 +18,10 @@ Which statements are correct?
 - I. A halted vCPU stays parked on its physical thread until the guest wakes it.
 - J. Whether the VM is held back is read from Ready and Co-stop, which stay low here.
 
-## Likely wrong answer
-B or H: Wait near its maximum means the VM waits for CPU, so give it more vCPUs.
+## Answers
+A, C, D, E, J
 
-## Expected key points
-- Answer: A, C, D, E, J.
+## Explanation
 - A is correct: in every row `Idle for svc-int-08` is within 1,000 ms of `Wait for svc-int-08`. A halted vCPU is de-scheduled and counted in Wait.
 - B is wrong: the misconception. Waiting for a physical thread is Ready, which stays below 800 ms; Wait is mostly the guest's own idle time.
 - C is correct: per vCPU, Run + Ready + Co-stop + Wait = 20,000 ms per sample; the VM value sums eight vCPUs, and every row adds up to 160,000 ms.
@@ -33,6 +32,7 @@ B or H: Wait near its maximum means the VM waits for CPU, so give it more vCPUs.
 - H is wrong: wrong action. The vCPUs are idle, not waiting for threads; more vCPUs add idle vCPUs and make the VM harder to schedule.
 - I is wrong: a halted vCPU is de-scheduled and holds no physical thread; other VMs can run there.
 - J is correct: Ready and Co-stop are the waits for the hypervisor; Ready stays below 800 ms and Co-stop near 0 of 160,000 ms.
+- Misconception: B or H: Wait near its maximum means the VM waits for CPU, so give it more vCPUs.
 
 ## Reasoning path
 1. Compare Wait with Idle: nearly equal.
@@ -68,7 +68,6 @@ attachments:
   - 0372/svc-int-08-cpu-real-time.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C9"
-answer: [A, C, D, E, J]
 misconception: [B]
 misconception_type: [layer-confusion]
 pair: "0001"

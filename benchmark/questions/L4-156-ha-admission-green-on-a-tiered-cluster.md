@@ -27,11 +27,10 @@ Which statements are correct?
 - H. Admission control on this release leaves the NVMe tier out, so the green status understates the cluster's room.
 - I. The VMs on these hosts wait on NVMe now, because Tier 1 consumed is 140-180 GB per host.
 
-## Likely wrong answer
-A: "Admission control is green with spare failover capacity, so every VM will restart after a host failure."
+## Answers
+B, C, D, F
 
-## Expected key points
-- Answer: B, C, D, F.
+## Explanation
 - A is wrong: the misconception of memory tiering ("HA admission control is green, so the VMs will restart"). Up to and including 9.1, admission control counted DRAM and NVMe as one pool; it could show green while the surviving hosts lacked the DRAM to restart the VMs.
 - B is correct: before 9.1.1, admission control counted DRAM and NVMe as one pool.
 - C is correct: DRAM is required to power on a VM; its overhead memory always sits in DRAM, and NVMe cannot replace DRAM at restart.
@@ -41,6 +40,7 @@ A: "Admission control is green with spare failover capacity, so every VM will re
 - G is wrong: the wrong action. The DRAM check is not supported with the slot policy; do not use the slot policy on a tiered cluster.
 - H is wrong: over-correction in the wrong direction. Admission control counted the NVMe tier, so the green status overstates the room for restarts.
 - I is wrong: the misconception of memory tiering ("Tier 1 consumed means the VMs are slow"). Tier 1 consumed holds cold pages: it is saturation, not a wait. The performance signals are active memory against DRAM and NVMe reads.
+- Misconception: A: "Admission control is green with spare failover capacity, so every VM will restart after a host failure."
 
 ## Notes
 - Sources: the knowledge base, Memory tiering (sections HA admission control, Capacity management, Misconceptions); vSphere 9.1 documentation, vSphere Availability, Memory Tiering and HA Admission Control (pp. 1969-1971).
@@ -65,7 +65,6 @@ knowledge_main: vsphere/technology/memory/concepts/memory-tiering
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/memory/concepts/memory-tiering"
-answer: [B, C, D, F]
 misconception: [A]
 misconception_type: [label-read-as-model, consumption-as-contention]
 status: draft

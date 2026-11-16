@@ -17,11 +17,10 @@ Which statements are correct?
 - I. Adding the requested memory is the right response to the 2 GB balloon.
 - J. Stopping the VMware Tools service (vmtoolsd) on this VM would stop the balloon.
 
-## Likely wrong answer
-- A: "Ballooned at 2 GB means the host is taking memory from the VM right now: give it more RAM."
+## Answers
+B, C, D, F
 
-## Expected key points
-- Answer: B, C, D, F.
+## Explanation
 - A is false: Ballooned is an amount the balloon holds, not a rate of reclamation; flat for the hour, it shows nothing taken in that hour. The balloon can date from earlier host pressure or from a limit.
 - B is true: Ballooned is past tense: the pages reclaimed earlier, possibly days ago, that the balloon still holds; it deflates only when ESXi lowers the VM's Balloon Target.
 - C is true: the driver's pinned pages are neither free nor cache to the guest, so the guest's used memory includes the balloon.
@@ -32,6 +31,7 @@ Which statements are correct?
 - H is false: a problem comes when the guest must read back data it gave up for the balloon (from disk or guest swap); the bigger the balloon, the higher that chance. This is the over-correction of the balloon-means-slow reading.
 - I is false: the balloon alone shows no wait; check Latency first. The balloon is a provider event (host pressure, or a limit, which balloons a VM on a host with free memory too), so its fix is on the provider side; with no wait, more memory fixes nothing the owner sees.
 - J is false: the Linux balloon driver is the kernel module `vmw_balloon`, not part of open-vm-tools; ballooning goes on while vmtoolsd is stopped.
+- Misconception: A: "Ballooned at 2 GB means the host is taking memory from the VM right now: give it more RAM."
 
 ## Notes
 - Changed in the 2026-11-16 re-review: B lost its hedge ("possibly long before"): it now states that Ballooned is an amount held, whenever taken; same truth value.
@@ -48,7 +48,6 @@ technology: [memory]
 task: read-metric
 level: 200
 answer_type: deterministic
-answer: [B, C, D, F]
 misconception: [A]
 input: [text]
 object: [vm]

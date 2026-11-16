@@ -21,11 +21,10 @@ Which statements are correct?
 - F. Open an outage ticket for the VM's network for 03:20 to 03:30.
 - G. Sorted by the week's maximum Packets Dropped (%), the VM at the top of a list is the VM that lost the most packets.
 
-## Likely wrong answer
-A: reading 88-90% as that share of the VM's normal traffic lost.
+## Answers
+B, C
 
-## Expected key points
-- Answer: B, C.
+## Explanation
 - A is false: the two samples held about 315 packets in all, not the usual 400,000. The percentage is of the traffic in the sample, not of the usual traffic.
 - B is true: Packets Dropped (%) = dropped / (dropped + delivered) × 100, with dropped = received + transmitted packets dropped and delivered = packets received + packets transmitted: 110 / 125 = 88% and 171 / 190 = 90%.
 - C is true: 110 + 171 = 281 dropped packets. Read the packet count and the throughput next to the percentage.
@@ -33,6 +32,7 @@ A: reading 88-90% as that share of the VM's normal traffic lost.
 - E is false: the percentage is read with the packet count, not dropped: a drop profile uses the 99th percentile of the drop percentage next to the sum of dropped packets.
 - F is false: a short spike near 90% at near-zero throughput, driven by received drops, is not an outage; no user saw one and the job finished on time.
 - G is false: a near-idle VM like this one reaches 88-90% with under 300 dropped packets, while a busy VM can drop millions at a few percent; rank by a percentile and by the dropped packet count.
+- Misconception: A: reading 88-90% as that share of the VM's normal traffic lost.
 
 ## Notes
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the stem gives the counters instead of the formula's terms ("delivered and dropped together") and no longer mirrors the knowledge file's example; the negation pair B/D resolved (old D dropped); over-correction E and wrong action F added. Key unchanged: B, C.
@@ -58,7 +58,6 @@ knowledge_main: vsphere/technology/network/metrics/virtual-motherboard/packets-d
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [B, C]
 misconception: [A, G]
 misconception_type: [unit-and-normalization]
 pair: "0082"

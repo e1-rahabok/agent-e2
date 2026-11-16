@@ -16,17 +16,17 @@ Which statements explain the failed power-on?
 - E. The slot size takes its memory component from the average memory reservation of all VMs, and the database VM lifts the average above what a host can hold.
 - F. Every powered-on VM takes at least one slot, so a 4 GB VM without a reservation costs as much as the database VM.
 
-## Likely wrong answer
-B or C: HA admission control is read as a check on consumed memory, or as the per-host reservation check. A reader who knows only the Cluster Resource Percentage policy expects a reservation to cost only its own size.
+## Answers
+A, F
 
-## Expected key points
-- Answer: A, F.
+## Explanation
 - A is correct: with the Slot Policy, the memory component of the slot is the largest memory reservation plus its overhead among the powered-on VMs: about 200 GB here.
 - B is wrong: HA admission control counts reservations and overhead, not consumed memory; under 15% consumed plays no part.
 - C is wrong: host admission control checks one host's unreserved memory, and 512 GB minus 200 GB (plus overhead) leaves room on every host; the message names the HA failover level.
 - D is wrong: the reserve is counted in slots, not as the database VM's reservation on every host.
 - E is wrong: the slot size uses the largest reservation, not the average.
 - F is correct: one slot size applies to every VM, so a small VM with no reservation still takes a slot of about 200 GB. A host holds 2 such slots, 12 in the cluster, 10 after one host fails: the database VM and about nine small VMs.
+- Misconception: B or C: HA admission control is read as a check on consumed memory, or as the per-host reservation check. A reader who knows only the Cluster Resource Percentage policy expects a reservation to cost only its own size.
 
 ## Notes
 - Synthetic, 2026-11-13, for the coverage gap (project/plan.md).
@@ -54,7 +54,6 @@ knowledge_main: vsphere/object-types/cluster/concepts/admission-control-and-clus
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-13"
-answer: [A, F]
 misconception: [B, C]
 misconception_type: [consumption-as-contention]
 status: draft

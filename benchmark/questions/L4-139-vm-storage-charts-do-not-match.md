@@ -19,11 +19,10 @@ Which statements are correct?
 - G. The VM's Datastore export shows the NFS disk's IO.
 - H. The VM's Disk export has a column for each virtual disk of the VM.
 
-## Likely wrong answer
-D: the VM's Disk export is the LUN, so it should match the host's. Or E and F: the exports never agree, so the statistics are broken.
+## Answers
+A, B, C, G
 
-## Expected key points
-- Answer: A, B, C, G.
+## Explanation
 - A true: the VM Disk level covers VMFS and RDM devices, not NFS: an NFS datastore has no SCSI device. The VM's Disk export has only columns `... for Fibre Channel Disk (naa.600a0b80003c5d2e00001f4a6b7c8d90)`, while scsi0:1 does 250 IOPS or more in the Virtual disk export.
 - B true: reading. In every row, `Average read requests per second` plus `Average write requests per second` for the LUN in the VM's Disk export is within 10% of the same sum for scsi0:0 in the Virtual disk export: the VM Disk value is this VM's IO on the LUN, and only Hard disk 1 sits on it.
 - C true: the host's device counters cover all the IO this host sends to the LUN, for all its VMs; there is no breakdown per VM at the device.
@@ -32,6 +31,7 @@ D: the VM's Disk export is the LUN, so it should match the host's. Or E and F: t
 - F false: the wrong action. Each export is right from its level.
 - G true: the VM datastore level covers VMFS and NFS: the nfs-arch-02 columns of the Datastore export are within 10% of scsi0:1.
 - H false: reading. The Disk export has columns for the LUN, a device, only; it is not split per virtual disk, and the NFS disk has no column there.
+- Misconception: D: the VM's Disk export is the LUN, so it should match the host's. Or E and F: the exports never agree, so the statistics are broken.
 
 ## Notes
 - Practical half of pair D7 with 0426 (theory; design.md, section 3.9).
@@ -65,7 +65,6 @@ attachments:
   - 0427/vcenter-host-disk-lun-realtime.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D7"
-answer: [A, B, C, G]
 misconception: [D]
 misconception_type: [same-name-other-object, provider-vs-consumer]
 pair: "0426"

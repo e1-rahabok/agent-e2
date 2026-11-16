@@ -14,15 +14,15 @@ Which statements are correct?
 - C. At 100%, the default, this setting stays silent however high the cluster's CPU usage climbs.
 - D. At a threshold of 20% instead of 0%, the same cluster at 90% usage would still raise the warning.
 
-## Likely wrong answer
-B: reading the warning as a block on power-ons.
+## Answers
+A, C
 
-## Expected key points
-- Answer: A, C.
+## Explanation
 - A is correct: 90% of 6 hosts is 5.4 hosts of load; on the 5 hosts left that is 108%. The VMs restart after a failure, then contend.
 - B is wrong: the degradation setting only raises a configuration warning; it does not block power-ons, migrations or reservation changes.
 - C is correct: the default 100% tolerates any reduction, so it never warns.
 - D is wrong: at 20% the tolerated reduction is 20% of the current usage: 5.4 x 0.8 = 4.32 hosts of load, below the 5 hosts left, so no warning.
+- Misconception: B: reading the warning as a block on power-ons.
 
 ## Notes
 - Synthetic, 2026-11-12. The setting is in admission-control-and-cluster-state, section HA performance degradation threshold (vSphere 9.1 Availability, vSphere HA Admission Control, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control.html).
@@ -46,7 +46,6 @@ knowledge_main: vsphere/object-types/cluster/concepts/admission-control-and-clus
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, C]
 misconception: [B]
 misconception_type: [consumption-as-contention]
 status: draft

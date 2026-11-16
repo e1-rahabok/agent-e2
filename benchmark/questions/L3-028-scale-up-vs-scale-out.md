@@ -15,11 +15,10 @@ Which statements are correct?
 - G. Four 8-vCPU VMs give the better performance here, since each fits a NUMA node.
 - H. Test both designs with the application's own load before choosing.
 
-## Likely wrong answer
-B: the same vCPU total gives the same performance. Or the over-correction G: the design that fits a NUMA node wins.
+## Answers
+A, C, F, H
 
-## Expected key points
-- Answer: A, C, F, H.
+## Explanation
 - A is true: 8 vCPUs are fewer than the 16 cores of a node, so the VM gets one home node and its memory is allocated there.
 - B is false: NUMA fit, cache locality and scheduling differ between one large VM and several small ones.
 - C is true: 32 vCPUs are more than the 16 cores of a node; a wide VM is split across nodes and some vCPUs reach remote memory, which raises the average memory latency.
@@ -28,6 +27,7 @@ B: the same vCPU total gives the same performance. Or the over-correction G: the
 - F is true: every VM carries its own per-VM memory overhead (reserved at power-on and written to its vmware.log).
 - G is false: the over-correction. NUMA fit alone does not decide it: scaling out can perform better and scaling up can perform better; it depends on NUMA node size, cache locality and how the application is built.
 - H is true: the vendor guidance is to test with the workload in the environment.
+- Misconception: B: the same vCPU total gives the same performance. Or the over-correction G: the design that fits a NUMA node wins.
 
 ## Notes
 - Changed 2026-11-16 (re-review): "can" removed from the correct A and C (hedge cue against the absolutes of B, D and E); truth unchanged.
@@ -55,7 +55,6 @@ knowledge_main: vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12; replaces a CPU Hot Add question (vNUMA behaviour with Hot Add differs by release and hardware version)"
-answer: [A, C, F, H]
 misconception: [B, G]
 misconception_type: []
 status: draft

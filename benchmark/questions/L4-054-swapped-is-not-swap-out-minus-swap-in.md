@@ -19,11 +19,10 @@ Which statements are correct?
 - G. ESXi brings swapped pages back into memory on its own once host pressure ends.
 - H. Close the memory question for this VM: a flat Swapped shows that the VM did not wait for swapped pages this hour.
 
-## Likely wrong answer
-A: a flat Swapped read as no swap activity. Or C: Swapped read as the running difference of out and in.
+## Answers
+B, D
 
-## Expected key points
-- Answer: B, D.
+## Explanation
 - A is wrong: swap out and swap in run in parallel on different pages. The swap file can keep its size while its content changes.
 - B is true: in and out happen at the same time on different pages. Here about 2,000 KBps each way moves about 7 GB out and 7 GB back in this hour, with no change in the total.
 - C is wrong: in and out are not one stream on one set of pages, and pages can arrive already swapped.
@@ -32,6 +31,7 @@ A: a flat Swapped read as no swap activity. Or C: Swapped read as the running di
 - F is wrong: a flat total can also mean nothing moves at all, when the swap rates are 0; the rates tell which. This is the over-correction of A.
 - G is wrong: swapped and compressed pages stay out until the guest requests them; bringing them back costs CPU. The balloon is different: it deflates when ESXi lowers the Balloon Target (host pressure ends, a limit is raised).
 - H is wrong: swap-in at about 2,000 KBps is contention: each page read back is a wait for the vCPU that touched it. Check Memory Latency.
+- Misconception: A: a flat Swapped read as no swap activity. Or C: Swapped read as the running difference of out and in.
 
 ## Notes
 - vMotion and Swapped: the knowledge base, VM Memory Swapped, section Behaviour.
@@ -60,7 +60,6 @@ knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/swapped
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [B, D]
 misconception: [A, C]
 pair: "0142"
 misconception_type: [cumulative-vs-current]

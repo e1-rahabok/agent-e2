@@ -21,11 +21,10 @@ Which statements are correct?
 - F. Set MTU 9,000 on every hop of the path to the array, the physical side first.
 - G. The 8972 test is too small for a 9,000-byte MTU: the full-size test uses -s 9000.
 
-## Likely wrong answer
-C: "the sessions are up, so the network is fine". Or D: looking for the loss in the VM counters. Or G: "test 9,000 with -s 9000".
+## Answers
+A, B, F
 
-## Expected key points
-- Answer: A, B, F.
+## Explanation
 - A is correct: 1472 is the ICMP payload that fills a 1,500-byte MTU (28 bytes of IPv4 and ICMP headers); 1472 passes and 1473 times out with no error, so a hop between the host and the array, a switch port or the array port, still carries only 1,500 bytes. The 1472 reply shows the array answers ping.
 - B is correct: with the don't-fragment flag set, a frame above a hop's MTU is dropped at that hop instead of being fragmented; the largest frame the path carries whole is 1,500 bytes.
 - C is wrong: logins, discovery and small reads use small frames, which pass a mismatch; large data frames are lost, so IO stalls and times out.
@@ -33,6 +32,7 @@ C: "the sessions are up, so the network is fine". Or D: looking for the loss in 
 - E is wrong: if vmk1 or the virtual switch could not send the frame, vmkping would fail at once with a local error ("Message too long"), not time out.
 - F is correct: jumbo frames work only end to end (switch ports, any router, the array ports); raise the physical side first, then the virtual switch and the VMkernel ports.
 - G is wrong: -s is the ICMP payload, so 8972 plus 28 bytes of headers fills 9,000 exactly; -s 9000 would need a 9,028-byte MTU and fail even on a correct jumbo path.
+- Misconception: C: "the sessions are up, so the network is fine". Or D: looking for the loss in the VM counters. Or G: "test 9,000 with -s 9000".
 
 ## Notes
 - 2026-11-14: options B, C and E were not decidable from the knowledge base; the vmkping facts (don't-fragment flag, 28 bytes of IPv4 and ICMP headers, a local Message too long error against a time-out, small frames passing a mismatch) were added to network-configuration-review from the Broadcom KB articles below (project/question-pairing-2026-11-14.md). Key unchanged: A, B, F.
@@ -59,7 +59,6 @@ knowledge_main: vsphere/technology/network/configuration/network-configuration-r
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, B, F]
 misconception: [C, D, G]
 misconception_type: [layer-confusion, unit-and-normalization]
 status: draft

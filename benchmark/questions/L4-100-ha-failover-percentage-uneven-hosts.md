@@ -15,16 +15,16 @@ Which statements are correct?
 - D. The Insufficient Failover Resources warning is shown, because 40% is below the 53.3% minimum for two failures. The power-on is refused, because vSphere HA enforces the 53.3% minimum and the cluster has only 47.3% of failover capacity now.
 - E. No warning is shown, because 40% is two hosts out of five. The power-on succeeds, because 24 GHz is 8% of the cluster and 47.3% of the CPU is still unreserved.
 
-## Likely wrong answer
-E (or C): 40% is read as the failover capacity of two hosts out of five, with the host sizes ignored. Or B: the VMs without a reservation are counted as zero.
+## Answers
+A
 
-## Expected key points
-- Answer: A.
+## Explanation
 - A is correct: with a manual percentage, vSphere HA expects at least the share of the N largest hosts (N = Host Failures Cluster Tolerates): 100 + 60 = 160 of 300 GHz, 53.3%, so 40% raises the Insufficient Failover Resources warning. A VM without a CPU reservation counts 32 MHz: 250 x 32 MHz = 8 GHz, so 158 GHz are counted now (47.3% left) and 182 GHz after the power-on, leaving 118 / 300 = 39.3%, below the configured 40%: refused.
 - B is wrong: it counts the 250 unreserved VMs as zero; with their 8 GHz the capacity left is 39.3%, not 42%.
 - C is wrong: 40% is two hosts out of five only for equal hosts; the reserve is sized on the largest hosts, so the warning is shown.
 - D is wrong: the power-on is tested against the configured 40%, not the 53.3% minimum; the same cluster would accept a VM that reserves 20 GHz (40.7% left).
 - E is wrong: the warning is shown (as in C), and admission control counts reservations, not the 35% usage: 39.3% would be left, below 40%.
+- Misconception: E (or C): 40% is read as the failover capacity of two hosts out of five, with the host sizes ignored. Or B: the VMs without a reservation are counted as zero.
 
 ## Notes
 - Deferred 2026-11-16 (question bank audit): from the knowledge base alone options A and B cannot be told apart; the key needs three vendor facts the knowledge base does not hold (the 32 MHz CPU default for VMs with no reservation, the warning for a manual percentage below the largest hosts' share, the power-on test against the configured value). Runs again once admission-control-and-cluster-state states them (author question Q244).
@@ -53,7 +53,6 @@ knowledge_main: vsphere/object-types/cluster/concepts/admission-control-and-clus
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-13"
-answer: [A]
 misconception: [C, E]
 misconception_type: [threshold-transplanted]
 status: deferred

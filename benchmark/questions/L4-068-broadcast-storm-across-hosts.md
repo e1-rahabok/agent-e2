@@ -14,17 +14,17 @@ Which statements are correct?
 - E. The VMs with the most receive drops, the 1-vCPU VMs, are where the broadcast flood comes from.
 - F. Moving the 1-vCPU VMs to a less busy host stops their drops, as their own host is overloaded.
 
-## Likely wrong answer
-E: blaming the VMs that show the most drops. Or F: treating it as a host problem and moving VMs.
+## Answers
+A, B, C, D
 
-## Expected key points
-- Answer: A, B, C, D.
+## Explanation
 - A is correct: app-17 transmits about 134.8 million broadcast packets in 300 seconds, about 450,000 per second; every other VM sends fewer than 1,000. It is a broadcast storm from one VM (a loop or a misbehaving service on it).
 - B is correct: the drops span all four hosts in the same port group, so look at what the VMs share: the VLAN and its broadcast domain, not one host's uplink.
 - C is correct: pg-db20 VMs receive only about 600-1,700 broadcasts in the sample and drop nothing: VLAN 20 is a separate broadcast domain.
 - D is correct: each VM in VLAN 10 must receive and process every broadcast. The 1-vCPU VMs run at about 95% CPU and drop about 40% of what arrives; the 8-vCPU VMs drop under 1%.
 - E is wrong: the victims show the drops; the source shows the transmitted broadcasts.
 - F is wrong: the storm floods the whole VLAN on every host. A VM moved to another host still receives every broadcast. The usage rate stays low (about 235 Mb/s for the source) because broadcasts are small; the load is the packet rate.
+- Misconception: E: blaming the VMs that show the most drops. Or F: treating it as a host problem and moving VMs.
 
 ## Notes
 - Next step for the operator: isolate app-17 (disconnect its adapter or move it to a quarantine port group), then find the cause on it.
@@ -53,7 +53,6 @@ attachments:
   - 0216/vms-network-one-sample-1035.csv
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, B, C, D]
 misconception: [E, F]
 misconception_type: []
 pair: "0411"

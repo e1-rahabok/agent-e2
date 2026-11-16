@@ -21,13 +21,10 @@ Which statements are correct?
 - J. The 12% is VCF Operations' value for each port group, aggregated over its ports on all hosts; vCenter keeps none.
 - K. vCenter keeps drop counters per distributed port, at statistics level 3 and through the API, to find the ports that drop.
 
-## Likely wrong answer
-- A: "TCP recovers, so PG-Files is fine and only PG-Voice matters."
-- C: "The switch as a whole shows almost no drops, so the port group value is wrong."
-- E: "An orange alert at 5% is a good early warning."
+## Answers
+B, D, F, G, I, J, K
 
-## Expected key points
-- Answer: B, D, F, G, I, J, K.
+## Explanation
 - A is false: the misconception; TCP resends, so the data arrives, but the cost is time: each loss shrinks the congestion window or waits for a retransmit timeout, so the copies slow down or stall.
 - B is true: each loss halves the congestion window (RFC 5681) or waits for a retransmission timeout.
 - C is false: the switch total divides the drops of every port group by all the switch's packets, so two port groups at 12% read as a small share of the whole switch; a low switch total hides a port group and does not make its value an error.
@@ -39,6 +36,7 @@ Which statements are correct?
 - I is true: the same value has a different effect per traffic type, and both are above the damage level.
 - J is true: the distributed port group has no vCenter performance counters; VCF Operations aggregates the port group's metrics over the ports on all hosts.
 - K is true: vCenter keeps dropped-packet counters on the distributed switch object per DVPort (and per LAG and for the switch), at statistics level 3, readable through the API with no vSphere Client chart; they locate the port that drops.
+- Misconception: A: "TCP recovers, so PG-Files is fine and only PG-Voice matters." - C: "The switch as a whole shows almost no drops, so the port group value is wrong." - E: "An orange alert at 5% is a good early warning."
 
 ## Notes
 - Review 2026-11-14: the stem no longer blames a faulty line card on an upstream switch. A frame dropped beyond the host is counted only in that switch, not by vSphere (vsphere/technology/network/concepts/packet-drop-accounting), so it could not show as 12% on the port groups. The cause stays open; the TCP and UDP effects and the red-only design do not depend on where the drop happens.
@@ -56,7 +54,6 @@ technology: [network]
 task: judge-setting
 level: 400
 answer_type: deterministic
-answer: [B, D, F, G, I, J, K]
 misconception: [A, C, E]
 input: [text]
 object: [network]

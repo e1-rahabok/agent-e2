@@ -14,17 +14,17 @@ Which statements are correct?
 - E. The newest hour of the past-week chart can still be empty: its points arrive up to an hour late.
 - F. With Ready summed over the vCPUs, the VM's Ready history cannot show how long the vCPUs waited in total during the incident.
 
-## Likely wrong answer
-B: expecting a higher level to fill in the past. Or D: level 4 everywhere, permanently.
+## Answers
+A, C, E
 
-## Expected key points
-- Answer: A, C, E.
+## Explanation
 - A is correct: statistics levels decide which counters vCenter stores for the history intervals. The Real-time chart of a powered-on VM reads the host's own samples for the last hour and offers every counter the host collects, whatever the level.
 - B is wrong: the misconception. A level applies from the moment it is set; it does not rebuild history that was never stored.
 - C is correct: CPU Demand (cpu.demand) is a level 2 counter in the vSphere API 9.1; at level 1 it has a Real-time chart and no history.
 - D is wrong: the wrong action. Levels 3 and 4 add per-instance counters and raise vCenter load sharply; the vpxd process can grow until it runs out of memory. Raise a level for a short time, after a problem appears.
 - E is correct: a point appears only after its interval closes and the rollup runs; 1 Week data can be up to 1 hour behind (30 minutes for the 1 Week interval plus 30 for 1 Day), and the chart is empty for that time.
 - F is wrong: the over-correction. The sum shows how long the vCPUs waited in total; divided by 8 it is the mean per vCPU, and a low sum rules out a long wait on any vCPU.
+- Misconception: B: expecting a higher level to fill in the past. Or D: level 4 everywhere, permanently.
 
 ## Notes
 - Synthetic, 2026-11-12.
@@ -53,7 +53,6 @@ knowledge_main: vsphere/tools/vsphere-client/vcenter-statistics
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, C, E]
 misconception: [B, D]
 misconception_type: [rollup-and-interval, tool-confusion]
 status: draft

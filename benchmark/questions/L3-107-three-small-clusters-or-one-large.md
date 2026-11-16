@@ -19,11 +19,10 @@ Which statements are correct?
 - H. In proposal 1, a VM in one cluster cannot use the free capacity of the other two clusters.
 - I. A 23-host cluster is past the size DRS can balance, so proposal 2 must be split however the hosts are counted.
 
-## Likely wrong answer
-C and D: "Smaller clusters are safer, and each needs only one spare host." E is the wrong action on manual DRS; G is the over-correction.
+## Answers
+A, B, F, H
 
-## Expected key points
-- Answer: A, B, F, H.
+## Explanation
 - A is correct: 3 × (7 + 1) = 24 hosts against 21 + 2 = 23.
 - B is correct: proposal 2 reserves two hosts in one cluster; each cluster of proposal 1 reserves one.
 - C is wrong: the misconception that three small clusters are safer than one large one: proposal 1 uses one host more and tolerates fewer failures per cluster.
@@ -33,6 +32,7 @@ C and D: "Smaller clusters are safer, and each needs only one spare host." E is 
 - G is wrong: DRS covers performance and capacity, HA covers availability; DRS cannot move VMs off a host that fails without warning, and HA restarts them.
 - H is correct: many small clusters create resource silos; DRS balances inside a cluster, not across clusters.
 - I is wrong: 23 hosts is well inside a cluster's limit; operations get harder only from about 32 nodes.
+- Misconception: C and D: "Smaller clusters are safer, and each needs only one spare host." E is the wrong action on manual DRS; G is the over-correction.
 
 ## Notes
 - Cluster maximum: vSphere 9.1 Configuration Maximums (hosts per cluster), https://configmax.broadcom.com.
@@ -55,7 +55,6 @@ knowledge_main: vsphere/object-types/cluster/configuration/cluster-configuration
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/object-types/cluster/configuration/cluster-configuration-review"
-answer: [A, B, F, H]
 misconception: [C, D]
 misconception_type: [unit-and-normalization]
 status: draft

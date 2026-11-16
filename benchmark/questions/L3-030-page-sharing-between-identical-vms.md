@@ -15,11 +15,10 @@ Which statements are correct?
 - F. One host advanced setting turns on sharing between all the VMs of a host.
 - G. Giving all the desktops one common salt value has no security downside.
 
-## Likely wrong answer
-D: low sharing read as a fault. Or E: the pre-6.0 default assumed to still hold.
+## Answers
+B, C, F
 
-## Expected key points
-- Answer: B, C, F.
+## Explanation
 - A is wrong: the per-VM salt and the host setting are two separate ways to allow sharing between VMs; desktops given the same `sched.mem.pshare.salt` form a sharing pool with the host setting at its default.
 - B is correct: since vSphere 6.0, inter-VM sharing needs the same salt value unless the host setting in F turns salting off.
 - C is correct: the default salt is the VM's own `vc.uuid`, unique per VM on a host, which prevents inter-VM sharing.
@@ -27,6 +26,7 @@ D: low sharing read as a fault. Or E: the pre-6.0 default assumed to still hold.
 - E is wrong: since vSphere 6.0 the default is sharing within a VM only; earlier releases shared between VMs by default.
 - F is correct: `Mem.ShareForceSalting = 0` applies to all VMs on the host and restores the pre-6.0 behaviour (KB 2097593). The per-VM option `sched.mem.pshare.salt` builds smaller sharing groups.
 - G is wrong: one salt for every VM makes a single sharing pool, the pre-6.0 default that was changed for security; review the security implications first (KB 2080735, 2097593). The fix taken as free.
+- Misconception: D: low sharing read as a fault. Or E: the pre-6.0 default assumed to still hold.
 
 ## Notes
 - Sources: Performance Best Practices for vSphere 9.1, Memory Page Sharing; Broadcom KB 2097593 and 2080735 (salting); the knowledge base, page sharing.
@@ -52,7 +52,6 @@ knowledge_main: vsphere/technology/memory/concepts/page-sharing
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [B, C, F]
 misconception: [D, E]
 misconception_type: [threshold-transplanted]
 status: draft

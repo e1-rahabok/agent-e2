@@ -20,13 +20,10 @@ Which statements are correct?
 - J. The counter also counts requests in service at the virtual disk and the array, or on their way back.
 - K. The vCenter virtual disk latency of 15 ms includes the time requests waited in Windows queues.
 
-## Likely wrong answer
-- A: "48 I/Os are queued in Windows and have not reached the VM or the storage."
-- C: "A queue above 2 per disk is a bottleneck."
-- G: "Storage is fine at 15 ms, so the queue is a Windows problem."
+## Answers
+B, E, F, H, I, J
 
-## Expected key points
-- Answer: B, E, F, H, I, J.
+## Explanation
 - A is false: the misconception; the counter counts requests active below the driver that takes the statistics, including I/O already sent to the virtual disk and the storage.
 - B is true: about 45 requests are at the virtual disk (3,000 x 0.015, the outstanding IO vCenter shows), below the PVSCSI default of 64 per device, and the remainder is about 3; no request waits for a slot, so a deeper queue changes nothing. Lower storage latency would.
 - C is false: Microsoft's "about 2 per physical disk" counts spindles; it cannot be applied to a virtual disk on shared storage.
@@ -38,6 +35,7 @@ Which statements are correct?
 - I is true: the 48 is the concurrency that 3,000 IOPS at 16 ms produces; it follows from the latency, so lower latency at the same IOPS lowers it.
 - J is true: a request can wait in a lower queue, be in service at the virtual or physical device, or be completed and on the way back; the counter does not separate waiting from service.
 - K is false: the vCenter virtual disk latency starts at the virtual disk; time waiting in Guest OS queues is not in it.
+- Misconception: A: "48 I/Os are queued in Windows and have not reached the VM or the storage." - C: "A queue above 2 per disk is a bottleneck." - G: "Storage is fine at 15 ms, so the queue is a Windows problem."
 
 ## Notes
 - Changed in the 2026-11-15 audit: the requests at the virtual disk (45) are now given in the stem as vCenter outstanding IO (redundancy #45: the Little's Law fact stays with 0028/0416), so old E ("about 45 of the 48 are at or below the virtual disk") was replaced in place by the % Disk Time fact, which the pair half 0418 also tests; meta option B (the negation of the colleague's quote, a near-negation of G) replaced in place by the PVSCSI queue-depth fact (windows-storage-io-path, Waiting inside Windows). The remainder of about 3 (48 - 45) is within the difference between two tools that sample and average separately, not a count of blocked requests.
@@ -53,7 +51,6 @@ technology: [storage]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [B, E, F, H, I, J]
 misconception: [A, C, G]
 input: [text]
 object: [guest-os, vm]

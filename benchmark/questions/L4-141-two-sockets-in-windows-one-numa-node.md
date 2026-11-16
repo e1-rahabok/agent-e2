@@ -40,11 +40,10 @@ Which statements are correct?
 - F. With the memory already local, the two sockets Windows shows mean nothing for SQL Server.
 - G. The home node esxtop shows can change later with no change to the VM's settings.
 
-## Likely wrong answer
-A: the socket count read as the NUMA layout, and E, the change that follows from it.
+## Answers
+B, C, G
 
-## Expected key points
-- Answer: B, C, G.
+## Explanation
 - A false: the misconception. Cores per socket only changes how the vCPUs are presented to the guest as sockets; Coreinfo maps all 16 logical processors to NUMA Node 0.
 - B true: the sql-prd-04 row has one number in NHN (1): one home node, the VM is one NUMA client. NRMEM is 0.00, NLMEM holds its memory and N%L is 100: all memory is local.
 - C true: the guest's NUMA node count, not its socket count, shows the layout it sees; a VM that fits one physical node gets one virtual node. Coreinfo lists one node with all 16 logical processors.
@@ -52,6 +51,7 @@ A: the socket count read as the NUMA layout, and E, the change that follows from
 - E false: the wrong action. The memory is already on one node, and cores per socket does not decide where ESXi places memory.
 - F false: the over-correction. The socket count is what per-socket software licensing reads, and some cores per socket values still give the guest a sub-optimal topology.
 - G true: the NUMA rebalancer checks node loads every 2 seconds and can move a VM to a less loaded node; its memory then follows page by page.
+- Misconception: A: the socket count read as the NUMA layout, and E, the change that follows from it.
 
 ## Notes
 - Review 2026-11-15: the administrator's quote and every option reworded away from the theory half 0267; D added as a false reading of esxtop; G added (the home node can move). Key changed from B, C, F to B, C, G.
@@ -81,7 +81,6 @@ knowledge_main: vsphere/technology/cpu/concepts/virtual-numa
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C35"
-answer: [B, C, G]
 misconception: [A, E]
 misconception_type: [layer-confusion, same-name-other-object]
 pair: "0267"

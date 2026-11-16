@@ -15,11 +15,10 @@ Which statements are correct?
 - G. Opened the next morning, the vCenter Real-time chart still shows the job's 20-second samples.
 - H. The two VCF Operations values that hold the job add up to about the height of one fully busy point.
 
-## Likely wrong answer
-A: two half-height points read as a long job at half load. Or D: the split read as lost data.
+## Answers
+B, C, F, H
 
-## Expected key points
-- Answer: B, C, F, H.
+## Explanation
 - A is wrong: the misconception. `Usage for rpt-batch-11` in the vCenter export holds 15 consecutive rows (5 minutes) at 90% or more, with the rows before and after below 10%: one 5-minute plateau near 100%, not 10 minutes at half load.
 - B is correct: the vCenter time stamps are UTC and the VCF Operations ones GMT+08:00. The first busy vCenter row is 02:05:20Z, so the job started at 02:05:00Z (10:05:00 local), inside the cycle that ends at 10:07:40; the job ends inside the cycle that ends at 10:12:40. Those two VCF Operations values are the only ones between 40% and 60%.
 - C is correct: a VCF Operations 5-minute value is the mean of the cycle's 15 samples of 20 seconds; the 10:07:40 value is the mean of the vCenter rows 02:03:00Z to 02:07:40Z (8 busy, 7 idle), the 10:12:40 value the mean of 02:08:00Z to 02:12:40Z (7 busy, 8 idle).
@@ -28,6 +27,7 @@ A: two half-height points read as a long job at half load. Or D: the split read 
 - F is correct: Real-time rows are 20 seconds apart, each a 20-second average, short enough to show a 5-minute plateau at full height.
 - G is wrong: vCenter keeps 20-second Real-time samples for about an hour; the next morning the shortest interval is the 5-minute Past Day rollup, which averages the job like VCF Operations does.
 - H is correct: the 15 busy samples are split 8 + 7 across the two cycles, so the two means add up to the busy level plus the idle level: about 53.7 + 47.4 = 101, against about 98 for a cycle of 15 busy samples. Nothing is lost; the job is spread over two points.
+- Misconception: A: two half-height points read as a long job at half load. Or D: the split read as lost data.
 
 ## Notes
 - Changed in the 2026-11-15 audit: G replaced (a misread of the export, given away by the owner's claim) by the Real-time retention (false; vcenter-statistics); D reworded from "open a support case" to a wrong reading; E without "never" (still false); H added, the arithmetic of the split (true). Answer B, C, F -> B, C, F, H.
@@ -57,7 +57,6 @@ attachments:
   - 0440/vcf-operations-vm-cpu-usage-2-hours.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D9"
-answer: [B, C, F, H]
 misconception: [A, D]
 misconception_type: [rollup-and-interval]
 pair: "0439"

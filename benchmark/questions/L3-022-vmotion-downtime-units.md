@@ -18,11 +18,10 @@ Which statements are correct?
 - F. A switchover pause like Tuesday's is too short for the database or its clients to notice.
 - G. Set db-orders to DRS manual mode, so that vMotion no longer freezes it for minutes at a time.
 
-## Likely wrong answer
-C: the value read as milliseconds (1,450,000 ms is about 24 minutes) instead of microseconds.
+## Answers
+A, B, D
 
-## Expected key points
-- Answer: A, B, D.
+## Explanation
 - A is true: the downtime value is in microseconds, so 90,000-160,000 is 90-160 ms, within the guide (under 200 ms).
 - B is true: 1,450,000 microseconds is 1.45 seconds, above 1 second, so investigate: the guest was paused for 1.45 s. (Read as milliseconds it would also be above 1 second; B tests the guide, A and C the unit.)
 - C is false: it reads microseconds as milliseconds.
@@ -30,6 +29,7 @@ C: the value read as milliseconds (1,450,000 ms is about 24 minutes) instead of 
 - E is false: downtime varies per migration with the page-change rate, the vMotion network and host load, not only with memory size.
 - F is false: the switchover pause is the largest guest impact of a vMotion, a sudden latency rise, and above 1 second it is worth investigating.
 - G is false: it rests on reading the value as 24 minutes; the pause was 1.45 seconds, and its cause (the page-change rate during the batch load) is what to look at.
+- Misconception: C: the value read as milliseconds (1,450,000 ms is about 24 minutes) instead of microseconds.
 
 ## Notes
 - The guide values are stated in the prompt (benchmark/design.md, section 6.1, F3).
@@ -55,7 +55,6 @@ knowledge_main: vsphere/object-types/vm/vmotion
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05; revised 2026-11-12"
-answer: [A, B, D]
 misconception: [C, G]
 misconception_type: [unit-and-normalization]
 status: draft

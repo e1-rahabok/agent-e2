@@ -10,15 +10,15 @@ Which counters measure the time from the ESXi host bus adapter to the storage ar
 - C. QAVG
 - D. DAVG
 
-## Likely wrong answer
-A: GAVG is the total latency the VM sees, not the device part.
+## Answers
+D
 
-## Expected key points
-- Answer: D.
+## Explanation
 - A is wrong: GAVG is the total seen from the VM monitor: kernel plus device.
 - B is wrong: KAVG is the time spent in the VMkernel.
 - C is wrong: QAVG is the time in kernel queues, part of KAVG.
 - D is correct: DAVG (device average) runs from the ESXi HBA to the array and back.
+- Misconception: A: GAVG is the total latency the VM sees, not the device part.
 
 ## Notes
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Revised 2026-11-12 for question set 1.0. Counts only after author approval.
@@ -43,7 +43,6 @@ knowledge_main: vsphere/technology/storage/concepts/esxi-storage-latency-stack
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [D]
 misconception: [A]
 misconception_type: []
 status: draft

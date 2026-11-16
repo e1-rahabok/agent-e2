@@ -16,11 +16,10 @@ Which statements are correct?
 - G. Run and Demand near 100% after the change show that the trading VM is short of CPU.
 - H. High with Hyperthreading gives any latency-sensitive VM more performance than High does.
 
-## Likely wrong answer
-C: the cores are shared again when the VM is idle. Or E: the reservation alone guarantees exclusive cores. Or G: Demand at 100% read as a CPU shortage.
+## Answers
+A, B, D, F
 
-## Expected key points
-- Answer: A, B, D, F.
+## Explanation
 - A is correct: High needs 100% of memory reserved. From virtual hardware 14, a 100% CPU reservation (vCPUs × frequency) is required to power on.
 - B is correct: once exclusive cores are granted (not guaranteed, see E), each vCPU has a dedicated core without virtual Hyper-Threading; the partner thread is held by an idle world. The cores leave the pool for every other VM and for VMkernel worlds.
 - C is wrong: the exclusive assignment holds whether the VM is busy or not.
@@ -29,6 +28,7 @@ C: the cores are shared again when the VM is idle. Or E: the reservation alone g
 - F is correct: with virtual Hyper-Threading, consecutive vCPU pairs share one core: (8 / 2) × 2.0 GHz = 8 GHz on 4 cores. It needs virtual hardware 20 or later, and a full memory reservation.
 - G is wrong: Run and Demand read about 100% because the vCPUs are pinned and always scheduled; Usage stays low, so it is not a CPU shortage.
 - H is wrong: locking vCPUs to hyper-threads helps only workloads that use the topology and can stop ESX from using idle cores; most workloads gain nothing or lose.
+- Misconception: C: the cores are shared again when the VM is idle. Or E: the reservation alone guarantees exclusive cores. Or G: Demand at 100% read as a CPU shortage.
 
 ## Notes
 - Changed in the 2026-11-15 audit: D no longer explains its own reading (the explanation is now the misconception G); H added (High with Hyperthreading as a general gain); B shortened.
@@ -53,7 +53,6 @@ knowledge_main: vsphere/technology/cpu/configuration/latency-sensitivity
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, B, D, F]
 misconception: [C, E, G]
 misconception_type: [consumption-as-contention]
 status: draft

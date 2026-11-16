@@ -31,8 +31,8 @@ class AttachmentTest(unittest.TestCase):
     def _question(self):
         import tempfile
         body = ('# T\n\n## Prompt\n- [The attached table](0046/datastore-ds01-vm-disk-space.csv) lists the VMs.\n\n'
-                'Which is right?\n\n- A. One\n- B. Two\n\n## Expected key points\n- Answer: A.\n\n## Metadata\n```yaml\n'
-                'id: "9999"\nanswer_type: deterministic\nanswer: [A]\nattachments: [0046/datastore-ds01-vm-disk-space.csv]\n```\n')
+                'Which is right?\n\n- A. One\n- B. Two\n\n## Answers\nA\n\n## Explanation\n- A is correct.\n- B is wrong.\n\n## Metadata\n```yaml\n'
+                'id: "9999"\nanswer_type: deterministic\nattachments: [0046/datastore-ds01-vm-disk-space.csv]\n```\n')
         d = tempfile.mkdtemp()
         path = os.path.join(d, 'L2-99-t.md')
         open(path, 'w').write(body)
@@ -160,13 +160,14 @@ class OverrideTest(unittest.TestCase):
 
 
 class QuestionFieldsTest(unittest.TestCase):
-    def test_every_question_has_groups_and_judged_has_a_key(self):
+    def test_every_question_has_groups_and_an_answer_key(self):
         for c in C.load():
             self.assertIn(c.answer_type, report.ANSWER_TYPES)
             self.assertTrue(set(c.input_types) <= set(report.INPUT_TYPES), c.id)
             self.assertIn(str(c.level), report.LEVELS, c.id)
-            if not c.choice:
-                self.assertTrue(c.key_points, c.id)
+            self.assertTrue(c.answer, c.id)
+            self.assertTrue(set(c.answer) <= {o[0] for o in c.options}, c.id)
+            self.assertTrue(set(c.misconception) <= {o[0] for o in c.options}, c.id)
 
 
 class _Clock:

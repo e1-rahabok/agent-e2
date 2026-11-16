@@ -39,11 +39,10 @@ Which statements are correct?
 - H. Migrate the VM with the highest %RDY first: the busy host is what holds it back.
 - I. Every VM row should show about the same %RDY, since the load average is shared by all.
 
-## Likely wrong answer
-B: a load average above 3 means more than 300% utilization. Or the colleague's view: UTIL is at 100%, so the screen says nothing more.
+## Answers
+A, D, E, F
 
-## Expected key points
-- Answer: A, D, E, F.
+## Explanation
 - A is correct: the load average counts running and ready-to-run worlds against the PCPU count; running work cannot exceed the PCPUs, so the excess over 1.00 is waiting work. Every PCPU UTIL(%) value is 98.5-100.
 - B is wrong: the misconception. It is runnable work per PCPU, not a percentage of utilization.
 - C is wrong: the reading. PCPU UTIL(%) AVG is 99-100: no PCPU is idle.
@@ -53,6 +52,7 @@ B: a load average above 3 means more than 300% utilization. Or the colleague's v
 - G is wrong: %MLMTD is counted inside %RDY; adding them counts it twice.
 - H is wrong: the wrong action. The VM with the highest %RDY is the limited one, and most of its Ready is %MLMTD: its own limit, which moves with it. Moving it does not end that wait; the host holds back the other VMs with high %RDY.
 - I is wrong: the reading and the mechanism. The highest VM %RDY is more than twice the lowest: each VM's wait depends on its own vCPU count, demand, shares and limits, not on the host average.
+- Misconception: B: a load average above 3 means more than 300% utilization. Or the colleague's view: UTIL is at 100%, so the screen says nothing more.
 
 ## Reasoning path
 1. UTIL at 100%: no PCPU idle; it cannot show the queue.
@@ -87,7 +87,6 @@ knowledge_main: vsphere/tools/esxtop/cpu
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C34"
-answer: [A, D, E, F]
 misconception: [B]
 misconception_type: [consumption-as-contention, tool-confusion]
 pair: "0331"

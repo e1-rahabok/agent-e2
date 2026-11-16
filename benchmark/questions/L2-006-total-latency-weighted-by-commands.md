@@ -16,11 +16,10 @@ Which statements about the Command latency are correct?
 - F. With writes at 40 ms and the same IO counts, Command latency would be about 6.2 ms.
 - G. The LUN needs no follow-up, as its Command latency of 4.0 ms is low.
 
-## Likely wrong answer
-A: (read + write) / 2, which would be 11 ms.
+## Answers
+B, F
 
-## Expected key points
-- Answer: B, F.
+## Explanation
 - A is wrong: equal weight would give (2 + 20) / 2 = 11 ms, not the 4.0 ms shown.
 - B is correct: (120 × 2 + 15 × 20) / 135 = 540 / 135 = 4.0 ms. With eight reads per write it follows read latency.
 - C is wrong: each command counts once, whatever its size; the layers below the Guest OS count commands, not bytes, so a 64 KB write weighs the same as a 4 KB read.
@@ -28,6 +27,7 @@ A: (read + write) / 2, which would be 11 ms.
 - E is wrong: Command latency follows the read latency when reads dominate, but the slower writes still pull it up: 4.0 ms against 2 ms.
 - F is correct: (120 × 2 + 15 × 40) / 135 = 840 / 135 ≈ 6.2 ms.
 - G is wrong: the writes take 20 ms, and the combined value hides them; read and write latency are checked separately, as often only one has a problem.
+- Misconception: A: (read + write) / 2, which would be 11 ms.
 
 ## Notes
 - Synthetic, 2026-11-05. Revised 2026-11-12 for question set 1.0: values added; moved to the host Disk chart (disk.totalLatency), since the vSphere Client has no total latency counter for a virtual disk. Counts only after author approval.
@@ -57,7 +57,6 @@ knowledge_main: vsphere/technology/storage/metrics/virtual-motherboard/disk-late
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [B, F]
 misconception: [A, G]
 misconception_type: [unit-and-normalization]
 pair: "0414"

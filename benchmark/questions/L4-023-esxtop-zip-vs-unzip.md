@@ -24,11 +24,10 @@ Which statements are correct?
 - H. Move vm-d off the host first, to end its memory wait now.
 - I. vm-a's MCTLSZ of 2,100 MB shows that its balloon is inflating in this interval.
 
-## Likely wrong answer
-B: reading compression and swap-out as the VM waiting. Or D: the largest SWCUR read as the slowest VM.
+## Answers
+A, C, E, F
 
-## Expected key points
-- Answer: A, C, E, F.
+## Explanation
 - A is correct: SWR/s and UNZIP/s bring pages back into memory. The vCPU that touched the page waits for it: memory contention.
 - B is wrong: ZIP/s and SWW/s move pages out; a page that is not touched again costs the VM no wait. Only swap-in and decompression make the vCPU wait.
 - C is correct: compression and swap-out are a capacity problem: the host is short of RAM and is taking pages back.
@@ -38,6 +37,7 @@ B: reading compression and swap-out as the VM waiting. Or D: the largest SWCUR r
 - G is wrong: the more swapped, the higher the chance of a future hit; if vm-d's guest touches those pages, it waits. This is the over-correction of D.
 - H is wrong: vm-d does not wait now; vm-b does. Moving vm-d first follows the misreading of SWCUR.
 - I is wrong: MCTLSZ is the memory the balloon holds now; above 0 says the host reclaimed it at some point, not that it reclaims now (MCTLTGT and the host state show that). In the hard state ballooning stops inflating.
+- Misconception: B: reading compression and swap-out as the VM waiting. Or D: the largest SWCUR read as the slowest VM.
 
 ## Notes
 - Revised 2026-11-12: the esxtop screenshot that was to be supplied is now an esxtop excerpt typed as text.
@@ -66,7 +66,6 @@ knowledge_main: vsphere/tools/esxtop/memory
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A, C, E, F]
 misconception: [B, D]
 misconception_type: [reclamation-as-contention, cumulative-vs-current]
 status: draft

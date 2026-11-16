@@ -19,11 +19,10 @@ Which statements are correct?
 - H. At about 10 GB a day, the growth of this snapshot alone fills DS-ERP within the month.
 - I. Broadcom's best practice is not to keep a single snapshot for more than 72 hours.
 
-## Likely wrong answer
-- A: "The snapshot is just a small change log; keep it a month as a safety net, it does no harm."
+## Answers
+B, C, D, F, I
 
-## Expected key points
-- Answer: B, C, D, F, I.
+## Explanation
 - A is wrong: the delta grows with every write to the disk under it; it is already 1.4 TB, more than the 1.1 TB the base disk held.
 - B is correct: remove a snapshot once the change it protects is validated; a snapshot kept beyond its change window costs space and performance.
 - C is correct: a snapshot is not a backup; it is a change log on top of the base disk, not a copy of it. Broadcom KB 318825 says not to use snapshots as backups.
@@ -33,6 +32,7 @@ Which statements are correct?
 - G is wrong: snapshots are a cause of Co-stop and Other Wait on the VM, and its System time rises as the kernel traverses the snapshot chain.
 - H is wrong: 30 days × 10 GB is about 300 GB against 5 TB free; the risk is the snapshot's age and IO cost, not this month's space.
 - I is correct: Broadcom KB 318825, "Do not retain a single snapshot for more than 72 hours."
+- Misconception: A: "The snapshot is just a small change log; keep it a month as a safety net, it does no harm."
 
 ## Notes
 - The datastore size and disk size are placed for distraction. The key point is that a snapshot should not be kept for days.
@@ -50,7 +50,6 @@ technology: [storage]
 task: decide-capacity
 level: 100
 answer_type: deterministic
-answer: [B, C, D, F, I]
 misconception: [A]
 input: [text]
 object: [vm, datastore]

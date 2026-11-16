@@ -14,17 +14,17 @@ Which statements are correct?
 - E. Once Consumed passes the 768 GB of DRAM, the host starts compressing and swapping.
 - F. The NVMe device of the memory tier can still give part of its capacity to vSAN.
 
-## Likely wrong answer
-C: assuming kernel memory can be tiered. Or E: Consumed above DRAM read as pressure.
+## Answers
+A, B, D
 
-## Expected key points
-- Answer: A, B, D.
+## Explanation
 - A is correct: 290 × 1.5 = 435 GB of active memory, about 57% of 768 GB. Broadcom's guidance: 50% or lower is good; 50-75% means test and monitor; above 75%, significant loss in most cases.
 - B is correct: tiering starts at about 80% DRAM consumption; pages are classified by recency and frequency, and cold pages move to NVMe.
 - C is wrong: only VM pages are tiered; kernel memory never goes to NVMe.
 - D is correct: tiering raises the hypervisor overhead (about 7.96% for 512 GB DRAM + 512 GB NVMe, against about 2% for a 1 TB non-tiered host).
 - E is wrong: on a tiered host Consumed covers both tiers and may exceed DRAM by design (about 930 GB here); new pages come from the NVMe tier once DRAM passes about 80%. Active against DRAM decides performance, not Consumed.
 - F is wrong: an NVMe device used for tiering is not available to vSAN; the lost vSAN capacity counts in the cluster sizing.
+- Misconception: C: assuming kernel memory can be tiered. Or E: Consumed above DRAM read as pressure.
 
 ## Notes
 - Sources: vSphere 9.1 documentation, vSphere Resource Management > Memory Tiering over NVMe (candidates, the 80% line, hypervisor overhead, the device not available to vSAN); Performance Best Practices for vSphere 9.1, Memory Tiering.
@@ -51,7 +51,6 @@ knowledge_main: vsphere/technology/memory/concepts/memory-tiering
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A, B, D]
 misconception: [C, E]
 misconception_type: [consumption-as-contention, threshold-transplanted]
 status: draft

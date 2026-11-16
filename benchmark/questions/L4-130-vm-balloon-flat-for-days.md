@@ -17,11 +17,10 @@ Which statements are correct?
 - G. While the balloon holds memory, no ESXi page stands behind it: ESXi uses that memory elsewhere.
 - H. The balloon has stayed flat for days, so Linux has not asked for that memory back since.
 
-## Likely wrong answer
-B: "The balloon is there, so ESXi is taking memory from the VM right now and slowing it." Or H: "The balloon would shrink if Linux needed the memory; it is flat, so Linux does not need it."
+## Answers
+A, C, G
 
-## Expected key points
-- Answer: A, C, G.
+## Explanation
 - A true: `Ballooned memory for mq-broker-02` rises once, on the second day, and then stays within 1% of about 3.3 GB (27% of the 12 GB) in every row of the last three days and more (3,437,179 to 3,471,570 KB). `Balloon target for mq-broker-02` stays within 1% of it over the same rows: the target held, so ESXi neither inflated nor deflated the balloon beyond small steps.
 - B false: Ballooned is a held amount. In the flat rows Balloon target equals Ballooned, so the balloon is not inflating: nothing more is being reclaimed. A balloon above 0 says ESXi reclaimed memory at some point.
 - C true: Memory Latency is the share of time a vCPU waits for a page fault ESXi resolves (mostly swap-in, plus decompression); `Latency for mq-broker-02` is 0 in every row of the week, and `Swap in rate for mq-broker-02` is 0 in every row.
@@ -30,6 +29,7 @@ B: "The balloon is there, so ESXi is taking memory from the VM right now and slo
 - F false: the wrong action. The VM shows no wait to end: Latency and Swap in rate are 0 in every row.
 - G true: ballooned pages map to no ESXi page; ESXi gave their physical pages to other uses.
 - H false: the balloon deflates when ESXi lowers the Balloon Target, not when the guest asks for memory; `Balloon target for mq-broker-02` stays flat and equal to the ballooned amount, so the target held. A guest that needs memory while the target holds pages within what it has (cache, guest swap); its need does not shrink the balloon.
+- Misconception: B: "The balloon is there, so ESXi is taking memory from the VM right now and slowing it." Or H: "The balloon would shrink if Linux needed the memory; it is flat, so Linux does not need it."
 
 ## Notes
 - Paired with 0052 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item C12.
@@ -67,7 +67,6 @@ attachments:
   - 0388/vcenter-vm-swap-rates-past-week.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C12"
-answer: [A, C, G]
 misconception: [B, H]
 misconception_type: [reclamation-as-contention, cumulative-vs-current]
 pair: "0052"

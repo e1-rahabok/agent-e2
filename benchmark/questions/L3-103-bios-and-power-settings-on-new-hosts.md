@@ -20,11 +20,10 @@ Which statements are correct?
 - H. The BIOS factory defaults suit an ESXi host, so the rest of the BIOS needs no review.
 - I. With EPT turned off in the BIOS, ESXi 9.1 would fall back to software MMU virtualization.
 
-## Likely wrong answer
-"Use C States = 0 would pin the clock at base (C); interleaving gives every VM even memory latency, which is good (G); and the factory defaults are fine (H)." C, G and H are the misconceptions.
+## Answers
+A, D, F
 
-## Expected key points
-- Answer: A, D, F.
+## Explanation
 - A is correct: Use P States disabled makes ESXi use the highest available frequency, Turbo included; Turbo stays on while the BIOS enables it.
 - B is wrong: the readings are what the setting does; a reboot changes nothing.
 - C is wrong: Use C States controls deep C-states on idle cores; disabling it does not disable Turbo, and firmware thermal management still sets each core's frequency.
@@ -34,6 +33,7 @@ Which statements are correct?
 - G is wrong: Performance Best Practices for vSphere 9.1 says to deactivate node interleaving in most cases.
 - H is wrong: Performance Best Practices for vSphere 9.1 says default BIOS settings might not be the best for performance and lists the settings to check on a new server.
 - I is wrong: ESXi 6.7 and later support neither software CPU nor software MMU virtualization; VT-x and EPT must be on in the BIOS.
+- Misconception: "Use C States = 0 would pin the clock at base (C); interleaving gives every VM even memory latency, which is good (G); and the factory defaults are fine (H)." C, G and H are the misconceptions.
 
 ## Metadata
 ```yaml
@@ -56,7 +56,6 @@ knowledge_main: vsphere/object-types/esxi/configuration/bios-settings
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/object-types/esxi/configuration/bios-settings, vsphere/technology/cpu/concepts/hardware-assisted-virtualization"
-answer: [A, D, F]
 misconception: [C, G, H]
 misconception_type: [frequency-and-hyper-threading]
 status: draft

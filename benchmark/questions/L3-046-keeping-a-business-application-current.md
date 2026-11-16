@@ -22,13 +22,10 @@ The operations team wants new production web VMs to show in the business applica
 - J. The owner can be promised that a new VM shows in the group within one 5-minute collection cycle of its creation.
 - K. A custom group can be nested in a business application, but a business application cannot be nested in a custom group.
 
-## Likely wrong answer
-- B: "Tiers are dynamic; the VM appears once vCenter reports it."
-- D: "A custom group with the rule Object Name starts with shop-web-."
-- I: "This needs a script against the API."
+## Answers
+A, C, E, G, H
 
-## Expected key points
-- Answer: A, C, E, G, H.
+## Explanation
 - A is correct: tier objects are static when the application is created manually; a VM added later needs a manual edit.
 - B is wrong: tiers are added and filled by hand; they have no dynamic membership, unlike a custom group.
 - C is correct: a custom group can be dropped on the application directly, or nested; VCF Operations finds the objects that match its rules and updates the members, so the application follows the group.
@@ -40,6 +37,7 @@ The operations team wants new production web VMs to show in the business applica
 - I is wrong: a dynamic custom group added to the application does it without a script.
 - J is wrong: how soon a dynamic group picks up a new VM is not documented, so no collection-cycle delay can be promised.
 - K is wrong: custom groups and business applications can be nested in each other, in both directions.
+- Misconception: B: "Tiers are dynamic; the VM appears once vCenter reports it." - D: "A custom group with the rule Object Name starts with shop-web-." - I: "This needs a script against the API."
 
 ## Notes
 - Public source: Broadcom TechDocs, VCF 9.1, "Add Business Application" (page last updated 2026-11-12): tier objects are static if the application is created manually; custom groups can be dragged onto the application without a tier, nested, or added to applications. https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/workload-monitoring-and-observability/configuring-business-applications/add-business-application.html
@@ -60,7 +58,6 @@ technology: [system]
 task: judge-setting
 level: 300
 answer_type: deterministic
-answer: [A, C, E, G, H]
 misconception: [B, D, I]
 input: [text]
 object: [vm]

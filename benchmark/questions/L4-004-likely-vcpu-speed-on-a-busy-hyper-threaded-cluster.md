@@ -20,17 +20,17 @@ A tenant asks what CPU speed one running vCPU of their VM will get, as VM CPU Us
 - E. Most of the time, one running vCPU gets about 4.5 GHz.
 - F. Most of the time, one running vCPU gets about 4.1 GHz.
 
-## Likely wrong answer
-B (2.2 GHz, the speed on the label) or D (3.3 GHz, the All Cores Turbo with the Hyper-Threading charge on VM Usage left out).
+## Answers
+C
 
-## Expected key points
-- Answer: C.
+## Explanation
 - A is wrong: 1.8 GHz is 2.2 GHz × 0.8 (1.76). It applies the Hyper-Threading charge to the base clock, but a busy core runs near All Cores Turbo, not at base.
 - B is wrong: 2.2 GHz is the base clock on the label; a loaded CPU rarely runs there.
 - C is correct: 3.3 GHz All Cores Turbo × about 0.8 = 2.64 GHz. VM CPU Usage charges a vCPU 62.5% of the core while its sibling thread runs and the full core while the sibling is halted; on a busy cluster the mix comes to about 80%.
 - D is wrong: 3.3 GHz leaves out the Hyper-Threading charge; VM CPU Usage is Hyper-Threading aware.
 - E is wrong: Single Core Turbo needs most cores idle; here most cores are busy.
 - F is wrong: it adds the 1.25x Hyper-Threading gain to one vCPU (3.3 × 1.25 = 4.125). The 1.25x is the total of the two threads of a core; a vCPU is charged at most the full core, about 3.3 GHz at All Cores Turbo.
+- Misconception: B (2.2 GHz, the speed on the label) or D (3.3 GHz, the All Cores Turbo with the Hyper-Threading charge on VM Usage left out).
 
 ## Notes
 - Author confirmed the key (Q034, 2026-11-03). Knowledge: [`vsphere/technology/cpu/concepts/cpu-frequency`](../../knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md), section Likely vCPU speed on a busy cluster.
@@ -61,7 +61,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q2 VM CPU Speed"
 answer_type: deterministic
 level: 400                      # author 2026-11-05
-answer: [C]
 misconception: [B, D]
 misconception_type: [frequency-and-hyper-threading]
 status: draft

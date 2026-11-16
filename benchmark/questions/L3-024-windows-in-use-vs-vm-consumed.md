@@ -17,12 +17,10 @@ Which statements are correct?
 - J. VM Consumed near the configured size is a reason to add memory to the VM.
 - K. When Windows gives freed pages to a new process, ESXi backs them again and Consumed rises.
 
-## Likely wrong answer
-- A: "They are the same utilization seen from two sides; the patterns differ only because they are collected at different times."
-- G: "Then Windows In Use must map to VM Active instead."
+## Answers
+B, C, D, E
 
-## Expected key points
-- Answer: B, C, D, E.
+## Explanation
 - A is wrong: there is no mapping; the two layers count different things, so no timing fix makes them agree.
 - B is correct: the Guest OS cannot see host memory and runs its memory as if on a physical server; ESXi cannot see the guest's lists.
 - C is correct: how the guest classifies pages (Standby is Windows' cache list) and its page file are ESXi blind spots; ESXi sees only reads and writes (Active: recently touched; Consumed: touched and still backed).
@@ -34,6 +32,7 @@ Which statements are correct?
 - I is wrong: Consumed is the ESXi view of the VM; it feeds host capacity and the VM's memory footprint (for example for a migration). This is the over-correction of A.
 - J is wrong: Consumed stays high once the guest has touched its pages, cache included; that is not demand. Whether Windows needs more memory is read from Windows counters.
 - K is wrong: freed pages are still mapped, so a new process reuses the existing mapping with no EPT violation and no ESXi work; Consumed does not move.
+- Misconception: A: "They are the same utilization seen from two sides; the patterns differ only because they are collected at different times." - G: "Then Windows In Use must map to VM Active instead."
 
 ## Notes
 - The only channel for ESXi to ask the Guest OS for memory is the balloon driver (VMware Tools on Windows; the vmw_balloon kernel module on Linux): not needed for the answer.
@@ -63,7 +62,6 @@ attachments: []
 origin: real-ticket
 source_path: "Author's prompt and Gemini 3.1 Pro exchange, 2026-11-10"
 answer_type: deterministic
-answer: [B, C, D, E]
 misconception: [A, G]
 level: 300
 misconception_type: [layer-confusion]

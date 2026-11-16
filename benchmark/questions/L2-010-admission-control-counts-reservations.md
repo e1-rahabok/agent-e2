@@ -17,11 +17,10 @@ Which statements about the power-on check are correct?
 - H. A VM pinned with CPU affinity can pass the check and still not receive its full CPU reservation.
 - I. A request an expandable pool cannot meet climbs the tree and stops at the first ancestor with a fixed reservation.
 
-## Likely wrong answer
-C: expecting admission control to look at usage, so a host at 10% must have room.
+## Answers
+A, B, H, I
 
-## Expected key points
-- Answer: A, B, H, I.
+## Explanation
 - A is correct: admission control counts reservations, not usage; a host at 10% CPU usage can have all of its capacity reserved.
 - B is correct: with DPM, the capacity of standby hosts counts as available; when a VM cannot be admitted without it, DRS recommends powering a host on.
 - C is wrong: the misconception. Usage plays no part in the check.
@@ -31,6 +30,7 @@ C: expecting admission control to look at usage, so a host at 10% must have room
 - G is wrong: the over-correction. Near 100% reserved, reservation changes and pool edits fail admission control, and DRS cannot migrate VMs because no destination can admit them.
 - H is correct: CPU admission control ignores CPU affinity, so a pinned VM can be admitted and still not get its full reservation.
 - I is correct: an expandable pool admits from its own unreserved capacity, then its parent's, up the tree while each ancestor is expandable; a fixed ancestor admits only from its own unreserved capacity.
+- Misconception: C: expecting admission control to look at usage, so a host at 10% must have room.
 
 ## Notes
 - Synthetic, 2026-11-05. Counts only after author approval.
@@ -53,7 +53,6 @@ knowledge:
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A, B, H, I]
 misconception: [C]
 object: [esxi, vm]
 tool: [none]

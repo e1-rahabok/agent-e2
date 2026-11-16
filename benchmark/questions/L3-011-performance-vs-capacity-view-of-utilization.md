@@ -14,11 +14,10 @@ In a private cloud (finite hardware), choose all the correct statements about pe
 - I. Performance is read against usable capacity, so a host above its usable line is a performance risk.
 - J. Cluster utilization rising slowly means performance will degrade slowly: the utilization trend shows when it drops.
 
-## Likely wrong answer
-F (high utilization read as a performance problem) and H (the action that follows from it); or G, the over-correction.
+## Answers
+A, B, C, D, E
 
-## Expected key points
-- Answer: A, B, C, D, E.
+## Explanation
 - A is correct: maximum utilization yields the highest throughput as long as nothing queues.
 - B is correct: capacity reads demand against usable capacity, which sits below total capacity after HA, buffer and hypervisor overhead; near 100% there is no room left.
 - C is correct: unmet demand at low utilization is common (imbalance, limits); queued work at low utilization means the bottleneck is elsewhere. Check contention: queue, latency, context switch.
@@ -29,6 +28,7 @@ F (high utilization read as a performance problem) and H (the action that follow
 - H is wrong: high utilization with no contention needs no migration; read the VMs' contention first.
 - I is wrong: usable capacity is a capacity concept; performance is read against total capacity and ignores HA, buffer and reservation. Running above the usable line gives more work done, not worse performance.
 - J is wrong: performance stays flat while utilization rises, then drops steeply once contention starts, first on the hottest host; a utilization trend does not say when performance drops. Watch contention.
+- Misconception: F (high utilization read as a performance problem) and H (the action that follows from it); or G, the over-correction.
 
 ## Notes
 - For reviewers (kept out of the prompt): "Performance management and capacity management are highly related. Related is not identical: two things that are related are, by that fact, two different things."
@@ -51,7 +51,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q10 Performance vs Capacity"
 answer_type: deterministic
 level: 300                      # author 2026-11-05
-answer: [A, B, C, D, E]
 misconception: [F, H, J]
 object: [esxi, cluster]
 tool: [none]

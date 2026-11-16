@@ -17,12 +17,10 @@ Which statements are correct?
 - H. Host Memory Usage has no use in capacity management.
 - I. Adding up the Consumed of every VM on the host gives the host's Consumed.
 
-## Likely wrong answer
-- D: "The host is nearly full, buy RAM."
-- A: "The numbers are inconsistent, something is broken."
+## Answers
+C, F, G
 
-## Expected key points
-- Answer: C, F, G.
+## Explanation
 - A is false: one label, two models. vCenter VM Usage (%) is Active over configured memory, a sampled kernel estimate of recently touched pages; ESXi Usage (%) is Consumed over capacity, the pages the host holds. They do not contradict.
 - B is false: vCenter has no memory Demand counter (CPU has one); memory is space, not time.
 - C is true: ESXi Memory Usage maps to Consumed, a capacity counter.
@@ -32,6 +30,7 @@ Which statements are correct?
 - G is true: Memory Latency is the only counter of the wait; swap-in correlates with it. Read the worst VM, since the host's own Latency averages its VMs. Balloon is reclamation, not contention.
 - H is false: host Usage maps to Consumed, which is related to capacity management; it does not decide a shortage, but it is not useless. This is the over-correction of D.
 - I is false: host Consumed adds the kernel, vSAN, NSX and the VM overhead to the VMs' pages, so the sum of the VMs is lower.
+- Misconception: D: "The host is nearly full, buy RAM." - A: "The numbers are inconsistent, something is broken."
 
 ## Notes
 - Tests: Same name, different formula per object (distinction).
@@ -64,7 +63,6 @@ attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Architecture Complexity (Memory)."
 answer_type: deterministic
-answer: [C, F, G]
 misconception: [D, A]
 pair: "0151"
 level: 300

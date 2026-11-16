@@ -15,11 +15,10 @@ Which statements about host memory Latency are correct?
 - F. Host memory Latency is the sum of the memory Latency values of its running VMs.
 - G. Memory Latency is the percentage of time a vCPU spends waiting on page faults, not a duration.
 
-## Likely wrong answer
-B: "Host memory latency is low, so no VM waits for memory."
+## Answers
+A, D, G
 
-## Expected key points
-- Answer: A, D, G.
+## Explanation
 - A true: host memory Latency is a normalized average of the running VMs' memory Latency.
 - B false: an average hides the VM that suffers; one VM can wait while the host value stays low.
 - C false: over-correction. Host memory Latency averages the running VMs, so any VM's wait adds to it; one VM among 40 moves it a little (a value such as 0.02%), not to exactly 0.
@@ -27,6 +26,7 @@ B: "Host memory latency is low, so no VM waits for memory."
 - E false: the wrong action from B; check the VMs of that application first.
 - F false: the host value is an average, not a sum: it stays a percentage of time on the same scale as one VM's.
 - G true: the counter is the share of time a vCPU waits for a page fault ESXi resolves (swap-in, decompression), not latency in ns.
+- Misconception: B: "Host memory latency is low, so no VM waits for memory."
 
 ## Notes
 - Paired with 0403 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D13.
@@ -54,7 +54,6 @@ knowledge_main: vsphere/technology/memory/metrics/host/latency
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D13"
-answer: [A, D, G]
 misconception: [B]
 misconception_type: [average-hides-worst]
 pair: "0403"

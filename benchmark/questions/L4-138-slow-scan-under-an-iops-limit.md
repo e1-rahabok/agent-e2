@@ -39,11 +39,10 @@ Which statements are correct?
 - H. Setting Limit - IOPS back to Unlimited, its default, takes away the wait in the kernel queue.
 - I. In the esxtop disk device panel, DAVG/cmd is higher than KAVG/cmd.
 
-## Likely wrong answer
-E or F: the latency is high, so the array is slow. Or C: 250 reads per second is far below the 1,000 limit, so the limit cannot be the cause.
+## Answers
+A, B, D, H
 
-## Expected key points
-- Answer: A, B, D, H.
+## Explanation
 - A true: reading. `Read rate for scsi0:1` (KBps) divided by `Average read requests per second for scsi0:1` is 127-129 KB in every row (about 32,000 KBps at about 250 reads per second).
 - B true: mClock counts an IO above 32 KB as several: a 128 KB read counts as 4, so 1,000 / 4 = 250 reads per second; `Average read requests per second for scsi0:1` stays flat at 230-260 in every row.
 - C false: the misconception. The limit counts 128 KB reads four times; the disk sits at its limit.
@@ -53,6 +52,7 @@ E or F: the latency is high, so the array is slow. Or C: 250 reads per second is
 - G false: the over-correction. High QAVG means IO waits in a VMkernel queue; the device queue depth (DQLEN) and Disk.SchedNumReqOutstanding on a device that several virtual disks share are other causes. Here the PowerCLI output shows the limit on Hard disk 2.
 - H true: the default is no limit (-1 in the PowerCLI output); without it the reads are no longer held in the kernel queue. The device queue does not take over: the LUN row shows ACTV at 0-1 against a DQLEN of 64, and no other VM uses the LUN.
 - I false: reading. DAVG/cmd is below 1 ms and KAVG/cmd at least 10 times higher.
+- Misconception: E or F: the latency is high, so the array is slow. Or C: 250 reads per second is far below the 1,000 limit, so the limit cannot be the cause.
 
 ## Reasoning path
 1. Read rate / read requests per second: the IO size.
@@ -87,7 +87,6 @@ attachments:
   - 0425/vcenter-vm-virtual-disk-realtime.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D6"
-answer: [A, B, D, H]
 misconception: [C, E]
 misconception_type: [consumption-as-contention, unit-and-normalization]
 pair: "0424"

@@ -15,11 +15,10 @@ Which statements about how the burst shows in the vCenter charts are correct?
 - G. Raise the statistics level to 4 now to see last night's maximum in the 1 Day chart.
 - H. Once that day is rolled up, the 1 Year point that holds it dilutes the burst 4,320 times.
 
-## Likely wrong answer
-C: 288 is the number of points per day, read as the dilution of one point. Or D: the chart is read as a chart of peaks.
+## Answers
+A, B, H
 
-## Expected key points
-- Answer: A, B, H.
+## Explanation
 - A is correct: one 1 Day point (5 minutes) averages 15 real-time samples of 20 seconds, so the burst counts for one fifteenth of the point.
 - B is correct: a 1 Week point (30 minutes) averages 6 points of 1 Day, so 6 × 15 = 90 samples of 20 seconds.
 - C is wrong: 288 is how many 5-minute points a day holds; one point is built from 15 samples.
@@ -28,6 +27,7 @@ C: 288 is the number of points per day, read as the dilution of one point. Or D:
 - F is wrong: the Real-time archive covers the last hour only.
 - G is wrong: the wrong action. A statistics level applies from the moment it is set; counters that were not collected are not rebuilt, and level 4 everywhere grows the vCenter database and vpxd load.
 - H is correct: a 1 Year point covers one day, 86,400 / 20 = 4,320 samples.
+- Misconception: C: 288 is the number of points per day, read as the dilution of one point. Or D: the chart is read as a chart of peaks.
 
 ## Notes
 - Paired with the screenshot question 0432 (design.md, section 3.9).
@@ -50,7 +50,6 @@ knowledge:
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A, B, H]
 misconception: [C, D]
 object: [vm]
 tool: [vcenter]

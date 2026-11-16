@@ -16,11 +16,10 @@ Which statements are correct?
 - G. The Cluster DRS Score carries no information about the health of the cluster.
 - H. Moving the DRS migration threshold to level 1 makes DRS move pay-db-01 to a host with more room.
 
-## Likely wrong answer
-B: reading the cluster score as the state of every VM. Or G, the over-correction: since an average hides one VM, the cluster score is dismissed altogether.
+## Answers
+A, C, D, F
 
-## Expected key points
-- Answer: A, C, D, F.
+## Explanation
 - A is correct: the cluster score is a weighted average of the VM scores; one VM with a low score barely moves it among 420 VMs.
 - B is wrong: the misconception. A weighted average does not bound any single VM; one VM can score far below 80% while the cluster stays above it.
 - C is correct: the per-VM list is where a low VM shows behind a high cluster score; sorted by score, the lowest come first.
@@ -29,6 +28,7 @@ B: reading the cluster score as the state of every VM. Or G, the over-correction
 - F is correct: the VM DRS Score is the VM's execution efficiency (VM happiness).
 - G is wrong: the over-correction. Since vSphere 7.0 the Cluster DRS Score replaces the load-balance metric and indicates cluster health; it only cannot speak for any single VM.
 - H is wrong: the wrong action. At level 1 DRS recommends only mandatory moves (rule violations, hosts entering maintenance mode); it does not move VMs to improve resource availability.
+- Misconception: B: reading the cluster score as the state of every VM. Or G, the over-correction: since an average hides one VM, the cluster score is dismissed altogether.
 
 ## Notes
 - Paired with the screenshot question 0433 (design.md, section 3.9).
@@ -57,7 +57,6 @@ knowledge_main: vsphere/object-types/cluster/configuration/drs-migration-levels
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, C, D, F]
 misconception: [B, G]
 misconception_type: [average-hides-worst]
 pair: "0433"

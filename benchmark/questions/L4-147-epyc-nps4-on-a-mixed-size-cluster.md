@@ -22,11 +22,10 @@ Which statements are correct?
 - I. Set numa.migThreshold to 50 or more on the hosts, so that db-sql-01 keeps its memory local.
 - J. Return the cluster to NPS-1 with CCX as NUMA Domain off, the default for a general-purpose cluster.
 
-## Likely wrong answer
-"NPS-4 matches the four quadrants of the socket, so every VM gets local memory (B), and the cores of one node are all alike (G); so only db-sql-01 needs a NUMA tweak (I)." B and G are the misconceptions.
+## Answers
+A, C, D, F, J
 
-## Expected key points
-- Answer: A, C, D, F, J.
+## Explanation
 - A is correct: NPS-4 divides the socket into 4 NUMA domains: 96 / 4 = 24 cores and 12 / 4 = 3 channels per node (192 GB of the socket's 768 GB).
 - B is wrong: a VM wider than a quarter of the socket spans NPS-4 nodes; db-sql-01 (40 vCPUs > 24 cores) shows two home nodes and N%L 54. EPYC 9005 has one central I/O die, not four separate memory domains on separate dies.
 - C is correct: a node boundary inside one I/O die removes no die-to-die hop; a local access saves only part of the path across that die.
@@ -37,6 +36,7 @@ Which statements are correct?
 - H is wrong: the same N%L in two samples is steady placement; a migration shows N%L climbing. The remote share comes from the VM spanning two nodes.
 - I is wrong: the migration threshold is advice for Intel Granite Rapids to reduce VM moves between nodes; it does not shrink db-sql-01 into one node.
 - J is correct: Performance Best Practices for vSphere 9.1, AMD's vSphere tuning guide for EPYC 9005 and KB 432801 give NPS-1 with CCX as NUMA Domain off for a general-purpose cluster with VMs of mixed or unknown sizes.
+- Misconception: "NPS-4 matches the four quadrants of the socket, so every VM gets local memory (B), and the cores of one node are all alike (G); so only db-sql-01 needs a NUMA tweak (I)." B and G are the misconceptions.
 
 ## Metadata
 ```yaml
@@ -59,7 +59,6 @@ knowledge_main: vsphere/technology/cpu/concepts/cpu-topology
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/cpu/concepts/cpu-topology"
-answer: [A, C, D, F, J]
 misconception: [B, G]
 misconception_type: [threshold-transplanted]
 status: draft

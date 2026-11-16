@@ -17,12 +17,10 @@ Which statements about how the guest sees this VM, and how ESXi places it, are c
 - I. Pin the VM to one physical node with CPU and memory affinity to keep its memory local.
 - J. A 12-vCPU VM on 24-core nodes runs on the hyper-threads of both sockets.
 
-## Likely wrong answer
-- A: "Two sockets in Windows mean two NUMA nodes."
-- G: "Set cores per socket to the vCPU count to fix the memory placement."
+## Answers
+B, C, D, E
 
-## Expected key points
-- Answer: B, C, D, E.
+## Explanation
 - A false: from vSphere 6.5 cores per socket does not set the virtual NUMA topology; it only sets how the vCPUs are presented to the guest as sockets.
 - B true: the vNUMA topology is built at power-on from the NUMA topology of the host and the VM's vCPU count and memory.
 - C true: a VM that fits one physical node is presented to the guest as one node; 12 vCPUs and 64 GB fit a node of 24 cores and 384 GB.
@@ -33,6 +31,7 @@ Which statements about how the guest sees this VM, and how ESXi places it, are c
 - H false: by default vNUMA is active for VMs with more than 8 vCPUs, so it is on for this 12-vCPU VM.
 - I false: affinity takes the VM out of NUMA management (no rebalancing, no memory migration).
 - J false: a VM uses hyper-threads by size only when its vCPU count is above the physical core count of the node; 12 vCPUs fit 24 cores.
+- Misconception: A: "Two sockets in Windows mean two NUMA nodes." - G: "Set cores per socket to the vCPU count to fix the memory placement."
 
 ## Notes
 - Sources: the knowledge base (virtual NUMA, section corespersocket: from vSphere 6.5 corespersocket no longer changes the vNUMA topology); Performance Best Practices for VMware vSphere 9.1, virtual NUMA; vSphere 9.1 Resource Management, Virtual NUMA ("not influenced by the number of virtual sockets and number of cores per socket").
@@ -50,7 +49,6 @@ technology: [cpu, memory]
 task: explain-mechanism
 level: 400
 answer_type: deterministic
-answer: [B, C, D, E]
 misconception: [A, G]
 input: [text]
 object: [guest-os, vm, esxi]

@@ -17,11 +17,10 @@ Which statements about the VM's CPU shares are correct?
 - H. Shares set by hand (Custom) keep their number when the VM is resized.
 - I. If other VMs reserve 80% of the host and use it at the busy hour, this VM's shares still divide the whole host.
 
-## Likely wrong answer
-C: a smaller VM gets fewer shares per vCPU, so a downsize makes each vCPU wait longer. Or the reverse: shares belong to the VM and do not change with its size.
+## Answers
+A, B, D, E, H
 
-## Expected key points
-- Answer: A, B, D, E, H.
+## Explanation
 - A is correct: Normal is 1,000 shares per vCPU; 12 vCPUs hold 12,000.
 - B is correct: a resize in the vSphere Client recalculates default shares from the new vCPU count: 6 x 1,000.
 - C is wrong: the misconception. Each vCPU keeps 1,000 shares; what falls is the VM's total.
@@ -31,6 +30,7 @@ C: a smaller VM gets fewer shares per vCPU, so a downsize makes each vCPU wait l
 - G is wrong: the vCPU count was not the constraint. Raise the VM's shares or move it to a less busy host, then check that Ready falls and Usage meets Demand.
 - H is correct: only default share levels are recalculated; a custom number stays as set.
 - I is wrong: shares divide only what reservations leave; with 80% of the host reserved and in use, shares divide the other 20%.
+- Misconception: C: a smaller VM gets fewer shares per vCPU, so a downsize makes each vCPU wait longer. Or the reverse: shares belong to the VM and do not change with its size.
 
 ## Notes
 - Paired with the practical question 0236 (theory and practical; design.md, section 3.9). Situation numbers differ from 0236 on purpose.
@@ -59,7 +59,6 @@ knowledge_main: vsphere/architecture/resource-controls
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B12"
-answer: [A, B, D, E, H]
 misconception: [C]
 misconception_type: [unit-and-normalization]
 pair: "0236"

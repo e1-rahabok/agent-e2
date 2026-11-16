@@ -19,11 +19,10 @@ Which statements are correct?
 - I. Consumed close to the VM's memory shows that Windows is using all of it.
 - J. Both Usage metrics are built from ESXi counters, so neither says what Windows needs.
 
-## Likely wrong answer
-D: "The same counter cannot read so differently on the same day: one tool is wrong." Or G: Active taken as what Windows uses.
+## Answers
+A, B, F, H
 
-## Expected key points
-- Answer: A, B, F, H.
+## Explanation
 - A true: in every row, `Usage for erp-db-11` is within 2 points of `Active for erp-db-11` / 25,165,824 KB × 100 (between 7% and 15%) and moves with it, while `Consumed for erp-db-11` stays high and flat.
 - B true: the Max, Min, First and Last of `Guest|Needed Memory (KB)` over `Memory|Total Capacity (KB)` each match the same column of `Memory|Usage (%)` within two points: VCF Operations VM Memory Usage (%) = Guest OS Needed Memory / VM Memory Total Capacity × 100.
 - C false: `Consumed for erp-db-11` is at 85% or more of the 24 GB in every row.
@@ -34,6 +33,7 @@ D: "The same counter cannot read so differently on the same day: one tool is wro
 - H true: Guest OS sizing leaves memory contention out of the size, because contention is speed and sizing is space; contention counts only in choosing which VMs can give memory back (a VM that already waits gives none).
 - I false: Consumed counts pages the VM has touched since power-on and ESXi still backs; it is not what Windows uses now.
 - J false: over-correction. VCF Operations Usage (%) reads Guest Needed Memory, which VMware Tools collects inside the guest.
+- Misconception: D: "The same counter cannot read so differently on the same day: one tool is wrong." Or G: Active taken as what Windows uses.
 
 ## Notes
 - Paired with 0394 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D2.
@@ -71,7 +71,6 @@ attachments:
   - 0395/vcf-operations-vm-memory-12h.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D2"
-answer: [A, B, F, H]
 misconception: [D]
 misconception_type: [tool-confusion, rollup-and-interval]
 pair: "0394"

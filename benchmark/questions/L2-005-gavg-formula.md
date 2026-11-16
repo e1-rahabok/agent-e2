@@ -15,11 +15,10 @@ Which statements about these counters are correct?
 - H. With KAVG at 4.6 ms and DAVG at 0.8 ms, open a case with the array vendor.
 - I. All three latencies sit below 10 ms, so this LUN's storage path is healthy.
 
-## Likely wrong answer
-B: adding QAVG on top of KAVG, counting the queue time twice. Or H: "Latency is high, so the array is slow." Or I: "Everything is under 10 ms, so storage is fine."
+## Answers
+A, D, E, F
 
-## Expected key points
-- Answer: A, D, E, F.
+## Explanation
 - A is correct: GAVG (total seen from the VM monitor) = KAVG (time in the VMkernel) + DAVG (device): 4.6 + 0.8 = 5.4 ms.
 - B is wrong: QAVG is the queue part of the kernel time, already inside KAVG; the time in the host is KAVG, 4.6 ms, of which 4.5 ms is queueing. Adding QAVG again would make GAVG 9.9 ms, not the 5.4 ms shown.
 - C is wrong: Guest in GAVG means the VM, measured from the VM monitor down; the Guest OS adds its own queues above it.
@@ -29,6 +28,7 @@ B: adding QAVG on top of KAVG, counting the queue time twice. Or H: "Latency is 
 - G is wrong: KAVG is mostly QAVG, time in a VMkernel queue. A full device queue (DQLEN), Disk.SchedNumReqOutstanding on a device that several virtual disks share, or an IOPS limit on a virtual disk raises it with nothing faulty in the host's code.
 - H is wrong: the added time is in the host, before the array (KAVG 4.6 ms against DAVG 0.8 ms): queueing inside ESXi. Check the queue depths along the stack, and an IOPS limit on the virtual disk (high QAVG with normal DAVG), first.
 - I is wrong: the 10 ms in Broadcom KB 344099 is an upper bound for sustained latency on any array. The VMkernel stack itself adds a fraction of a millisecond, so a KAVG of 4.6 ms is queueing (QAVG 4.5 ms), and it makes GAVG almost seven times DAVG.
+- Misconception: B: adding QAVG on top of KAVG, counting the queue time twice. Or H: "Latency is high, so the array is slow." Or I: "Everything is under 10 ms, so storage is fine."
 
 ## Notes
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Revised 2026-11-12 for question set 1.0: values added so the relation can be checked. Counts only after author approval.
@@ -57,7 +57,6 @@ knowledge_main: vsphere/technology/storage/concepts/esxi-storage-latency-stack
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A, D, E, F]
 misconception: [B, H, I]
 misconception_type: [unit-and-normalization, layer-confusion, threshold-transplanted]
 pair: "0086"

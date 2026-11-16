@@ -20,12 +20,10 @@ Which statements are correct?
 - J. The load average tells which VM is waiting for a PCPU, so it points to the VM to move first.
 - K. A load average of 2.60 means every VM on the host waits for a PCPU about 60% of the time.
 
-## Likely wrong answer
-- A: "A load average of 2.60 means 260% CPU utilization."
-- B: "PCPU UTIL is 100%, the maximum, so the host is at capacity and that is all the CPU panel can say."
+## Answers
+D, E, F, G, H
 
-## Expected key points
-- Answer: D, E, F, G, H.
+## Explanation
 - A is wrong: the load average is not a percent of utilization; it is runnable work per PCPU, run plus ready.
 - B is wrong: the colleague's claim; UTIL saturates at 100% while the load average keeps rising with the ready time.
 - C is wrong: PCPU USED(%) builds on UTIL and adds frequency; it can exceed 100% (example 131%, Turbo above nominal) while UTIL stops at 100%.
@@ -37,6 +35,7 @@ Which statements are correct?
 - I is wrong: the load average counts all worlds (groups) on the host, including non-VM worlds.
 - J is wrong: it is a host-wide number that averages all worlds, VM and non-VM; it does not say which VM waits.
 - K is wrong: the ready share is a host-wide average over all worlds; each VM's own wait differs and is read per VM (%RDY, Ready).
+- Misconception: A: "A load average of 2.60 means 260% CPU utilization." - B: "PCPU UTIL is 100%, the maximum, so the host is at capacity and that is all the CPU panel can say."
 
 ## Notes
 - The options avoid the word overloaded as a verdict (sources disagree on it).
@@ -56,7 +55,6 @@ technology: [cpu]
 task: read-metric
 level: 400
 answer_type: deterministic
-answer: [D, E, F, G, H]
 misconception: [B, A]
 input: [text]
 object: [esxi]

@@ -21,13 +21,10 @@ Is the network clean, and if not, which host and port, what is the likely cause,
 - K. Record vmnic2's counters before any reboot of the host: a reboot resets them to 0.
 - L. The older firmware on esx-c1-04 is a consistency item to fix, even though that host shows no errors.
 
-## Likely wrong answer
-- B: "The cluster value is near 0, so the network is clean."
-- D: "One host has older firmware, so that host is the cause."
-- H: "Under 0.01% of the packets is noise."
+## Answers
+A, C, E, J, K, L
 
-## Expected key points
-- Answer: A, C, E, J, K, L.
+## Explanation
 - A true: esx-c1-11 vmnic2 has 48,120 receive errors; every other vmnic has 0 errors and 0 drops.
 - B false: on a data center network errors and drops on a vmnic are expected to be 0 at all times; a share over 64 ports turns one bad port into a value near 0.
 - C true: 48,120 errors in about 29.2 billion received packets is about 0.0002%, all from vmnic2 on esx-c1-11. An aggregate across members hides the outlier until the problem is widespread; read the worst member.
@@ -40,6 +37,7 @@ Is the network clean, and if not, which host and port, what is the likely cause,
 - J true: esxcli counters are cumulative, so one reading cannot tell a past burst from a current fault.
 - K true: the counters are cumulative and a reboot resets them; record them first, then watch whether they still grow (Broadcom KB 341594).
 - L true: drivers and firmware should be identical across the hosts of a cluster; esx-c1-04 is a consistency fix, not the cause.
+- Misconception: B: "The cluster value is near 0, so the network is clean." - D: "One host has older firmware, so that host is the cause." - H: "Under 0.01% of the packets is noise."
 
 ## Notes
 - Revised 2026-11-12: the management pack metric and the screenshot removed (fairness); the 256-row workbook became a 64-row CSV. The CSV is synthetic, generated with a fixed seed: one port with errors, one host with older firmware and no errors.
@@ -61,7 +59,6 @@ tool: [vcenter]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,C,E,J,K,L]
 misconception: [B,D,H]
 input: [table]
 knowledge:

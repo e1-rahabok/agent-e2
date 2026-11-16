@@ -18,11 +18,10 @@ Which statements are correct?
 - H. With the peak metric in place, the 5-minute latency average has no further use.
 - I. No tool kept 20-second data from that night; rerun the backup with esxtop running.
 
-## Likely wrong answer
-F: a 20-second peak can be at most 15 times its 5-minute value, so the peak metric must be wrong. Or I: the 20-second data is assumed to be lost everywhere after an hour.
+## Answers
+B, D, E
 
-## Expected key points
-- Answer: B, D, E.
+## Explanation
 - A is wrong: vCenter keeps the 20-second samples for one hour only.
 - B is correct: VCF Operations collects every 5 minutes but takes the 15 samples of 20 seconds per cycle; a peak metric stores the highest of them next to the average.
 - C is wrong: nine days ago is past the 1 Week archive, so vCenter shows the window in the 1 Month chart. Its history is a chain of averages: 15 samples into a 5-minute point, 6 of those into a 30-minute point, 4 of those into the 2-hour point. A 20-second burst is diluted 360 times there.
@@ -32,6 +31,7 @@ F: a 20-second peak can be at most 15 times its 5-minute value, so the peak metr
 - G is wrong: one value per cycle for the VM, taken across all its virtual disks; it does not say which disk.
 - H is wrong: the over-correction. The peak is a new metric, not a replacement: the 5-minute average stays for trends and capacity, and a large gap between peak and average marks a one-off burst rather than a sustained level.
 - I is wrong: the wrong action. The peak metric already answers the DBA's question for that night.
+- Misconception: F: a 20-second peak can be at most 15 times its 5-minute value, so the peak metric must be wrong. Or I: the 20-second data is assumed to be lost everywhere after an hour.
 
 ## Notes
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): 9 single-fact options instead of 5 compound ones; the misconception (F), its over-correction (H) and the wrong action (I) added. Numbers changed (12 disks, 9 ms, 2,640 ms) so that the practical half 0089 is not given away. Key changed from D to B, D, E.
@@ -63,7 +63,6 @@ knowledge_main: vcf-operations/features/peak-20-second-metrics
 attachments: []
 origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
-answer: [B, D, E]
 misconception: [F, I]
 misconception_type: [rollup-and-interval, tool-confusion, average-hides-worst]
 pair: "0089"

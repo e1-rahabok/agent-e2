@@ -16,11 +16,10 @@ Which statements are correct?
 - G. Highest latency is of no use here: it does not move with the worst adapter at all.
 - H. The batch's read latency is on vmhba2's Read latency line, not on Highest latency.
 
-## Likely wrong answer
-B: reading Highest latency as the worst read or write latency of any adapter. Or F: the export must be wrong.
+## Answers
+A, C, E, H
 
-## Expected key points
-- Answer: A, C, E, H.
+## Explanation
 - A is correct: Highest latency averages read and write per adapter, then takes the worst adapter; in every sample of the export it equals the mean of the worse adapter, during the batch about (15 + 0.8) / 2 = 8 ms.
 - B is wrong: the misconception. Highest latency runs at about half of vmhba2's read latency (7.4-9.7 ms against 14.0-18.5 ms), because vmhba2's fast writes are averaged in.
 - C is correct: the export shows Highest latency at 7.4-9.7 ms and vmhba2 read latency at 14.0-18.5 ms during the batch.
@@ -29,6 +28,7 @@ B: reading Highest latency as the worst read or write latency of any adapter. Or
 - F is wrong: the export is consistent; Highest latency averages read and write per adapter first, so it sits below an adapter's read latency whenever its writes are faster.
 - G is wrong: the over-correction. Highest latency rises from about 1 ms to 7-10 ms with vmhba2 during the batch; it follows the worst adapter, after averaging read and write.
 - H is correct: the useful value is the highest read or write latency among the adapters, here vmhba2 reads.
+- Misconception: B: reading Highest latency as the worst read or write latency of any adapter. Or F: the export must be wrong.
 
 ## Notes
 - Drafted 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: the screenshot replaced by a CSV export of the chart; option E added. Counts only after author approval.
@@ -58,7 +58,6 @@ attachments:
   - 0072/esx-14-storage-adapter-latency-1-hour.csv
 origin: synthetic
 source_path: "Drafted 2026-11-05"
-answer: [A, C, E, H]
 misconception: [B, F]
 misconception_type: [average-hides-worst]
 pair: "0406"

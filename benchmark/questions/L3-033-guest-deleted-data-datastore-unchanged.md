@@ -15,11 +15,10 @@ Which statements are correct?
 - F. With a thick disk, the same guest unmap would lower the datastore's used space.
 - G. At the default reclamation priority, VMFS 6 needs hours to return 600 GB of unmapped space to the array.
 
-## Likely wrong answer
-B: deleted in the guest means free on the datastore.
+## Answers
+A, D, G
 
-## Expected key points
-- Answer: A, D, G.
+## Explanation
 - A is correct: a guest delete marks blocks free inside the guest filesystem only; the thin disk and the array keep them. TRIM (ATA) or unmap (SCSI) passes the free blocks down to the virtual disk and the array.
 - B is wrong: nothing is released until an unmap reaches the disk.
 - C is wrong: VMFS 6 reclaims automatically, in the background, at a throttled rate set by the space reclamation priority; a manual unmap only catches up at once.
@@ -27,6 +26,7 @@ B: deleted in the guest means free on the datastore.
 - E is wrong: powering off frees only the swap file.
 - F is wrong: a thick disk keeps its full size; unmap applies only to thin disks.
 - G is correct: at the default Low priority (25-50 MB/s), 600 GB takes about 3.5 to 7 hours; the vSphere Client offers only Low and None, so a faster rate (Medium, High or a fixed rate) needs esxcli. VMFS frees the space at once, while the array's free space lags.
+- Misconception: B: deleted in the guest means free on the datastore.
 
 ## Notes
 - Synthetic, 2026-11-12. Counts only after author approval.
@@ -53,7 +53,6 @@ knowledge_main: vsphere/technology/storage/metrics/host/datastore
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, D, G]
 misconception: [B]
 misconception_type: [layer-confusion]
 status: draft

@@ -29,17 +29,17 @@ Which statements are correct?
 - E. vmnic2 at 10,000 Mb/s, while its team peers run at 25,000 Mb/s, needs action.
 - F. vmk1's receive drops point first to the physical switch, since vmk1 receives through vmnic1.
 
-## Likely wrong answer
-B: applying the zero-drop rule of a VMkernel network to a VM port. Or D: reading an idle port as a broken one.
+## Answers
+A, C, E
 
-## Expected key points
-- Answer: A, C, E.
+## Explanation
 - A is correct: a dedicated vSAN network should drop nothing, and the team standard says the same. Receive drops on the vSAN VMkernel port need action: first the host's CPU for packet processing and the receive ring.
 - B is wrong: 0.10% is within the stated standard for a VM port at peak: watch it, no action now.
 - C is correct: half duplex (FDUPLX N) is a fault on any link: check the port settings on both sides, the cable and the switch port.
 - D is wrong: no vMotion runs in that minute, so the port is idle. Its uplink vmnic2 is up (UP Y) and carries other traffic; a down link would show UP N on the vmnic.
 - E is correct: one team member negotiated down to 10 Gb/s: check the cable, the transceiver and the switch port. Every port mapped to it (here vMotion) gets less bandwidth.
 - F is wrong: vmnic1 itself drops nothing (%DRPRX 0.00). Receive drops counted at a vSwitch port happen after the uplink, between the vSwitch and the receiving stack; they point to the host's CPU for packet processing or a full ring, not to the physical switch.
+- Misconception: B: applying the zero-drop rule of a VMkernel network to a VM port. Or D: reading an idle port as a broken one.
 
 ## Notes
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
@@ -66,7 +66,6 @@ knowledge_main: vsphere/tools/esxtop/network
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A, C, E]
 misconception: [B, D]
 misconception_type: [threshold-transplanted]
 status: draft

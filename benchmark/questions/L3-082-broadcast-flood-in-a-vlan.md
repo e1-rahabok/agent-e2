@@ -14,11 +14,10 @@ Which statements are correct?
 - F. Each receiving VM's Packets received counter includes these broadcasts, next to its unicast.
 - G. Any broadcast in a VLAN is a fault: a healthy VM receives no broadcast packets at all.
 
-## Likely wrong answer
-D: "the VM that drops the most is where the flood comes from."
+## Answers
+A, E, F
 
-## Expected key points
-- Answer: A, E, F.
+## Explanation
 - A true: a VLAN is one broadcast domain; a broadcast reaches every port of the VLAN on every host that carries it, and each packet costs CPU to receive, whatever its size.
 - B false: a broadcast stays inside its VLAN; VLAN 31 is another broadcast domain, even on the same uplinks.
 - C false: the wrong action. The VLAN spans the hosts, so the VM receives every broadcast on any host; free CPU only changes how many it drops.
@@ -26,6 +25,7 @@ D: "the VM that drops the most is where the flood comes from."
 - E true: VM broadcast packets are counted per direction; the sender transmits them.
 - F true: a VM's packet counts include broadcast and multicast packets (and exclude dropped ones), so the flood shows in Packets received of every VM in VLAN 30.
 - G false: the over-correction. Broadcast has purposes and should be low, not zero; even a vCenter VM receives some broadcasts.
+- Misconception: D: "the VM that drops the most is where the flood comes from."
 
 ## Notes
 - Theory half of the pair with 0216 (practical; design.md, section 3.9). Different VLANs and numbers from 0216.
@@ -53,7 +53,6 @@ knowledge_main: vsphere/technology/network/metrics/distributed-switch/packets
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B18"
-answer: [A, E, F]
 misconception: [D]
 misconception_type: []
 pair: "0216"

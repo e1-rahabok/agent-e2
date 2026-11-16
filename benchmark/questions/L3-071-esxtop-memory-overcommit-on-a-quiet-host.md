@@ -27,11 +27,10 @@ Which statements are correct?
 - H. The three values close together show a steady overcommit over the last 15 minutes.
 - I. The VMKMEM line of the header shows the host in the soft memory state right now.
 
-## Likely wrong answer
-B: "Overcommit above 0 means the host is short of memory and will swap." Or E: page sharing read as reclamation under pressure.
+## Answers
+A, C, D, H
 
-## Expected key points
-- Answer: A, C, D, H.
+## Explanation
 - A is correct: MEM overcommit avg is requested over managed memory, minus 1; the three values are 0.39 to 0.41, so requested is about 1.4 times managed.
 - B is wrong: requested counts configured memory, not touched memory. VMKMEM reads `high state`, PMEM free is far above minfree, and SWAP, ZIP and MEMCTL are 0: no shortage.
 - C is correct: rclmtgt is the target in MB that ESXi sets for swapping; 0 means it plans to swap nothing, consistent with the high state.
@@ -41,6 +40,7 @@ B: "Overcommit above 0 means the host is short of memory and will swap." Or E: p
 - G is wrong: the wrong action. Overcommit above 0 is planned; migrate on contention (VM memory latency, swap-in), not on this line.
 - H is correct: the values are exponentially weighted averages with 1-, 5- and 15-minute windows; the three are within 0.05 of each other: a steady overcommit.
 - I is wrong: the reading. The VMKMEM line ends with `high state`.
+- Misconception: B: "Overcommit above 0 means the host is short of memory and will swap." Or E: page sharing read as reclamation under pressure.
 
 ## Notes
 - Paired with 0398 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D10.
@@ -69,7 +69,6 @@ knowledge_main: vsphere/tools/esxtop/memory
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D10"
-answer: [A, C, D, H]
 misconception: [B, E]
 misconception_type: [consumption-as-contention, reclamation-as-contention]
 pair: "0398"

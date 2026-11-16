@@ -16,11 +16,10 @@ Which statements are correct?
 - G. Once ESXi shows no memory wait, the guest's own paging no longer needs checking.
 - H. Restore the VM's old memory size to bring the free memory figure back.
 
-## Likely wrong answer
-B: "Free memory dropped after the downsize, so the VM is short: give the memory back."
+## Answers
+A, C, D, E
 
-## Expected key points
-- Answer: A, C, D, E.
+## Explanation
 - A is correct: `Guest|Needed Memory (KB) (Max)` stays below 75% of the new `Memory|Total Capacity (KB) (Max)` (20,971,520 KB) on every row from November 1 to November 14: what left was memory the guest held free. Less free memory after a downsize is expected.
 - B is wrong: free memory is not the measure of a shortage. `Guest|Free Memory (KB) (Max)` fell, but Needed Memory stays below the new size, page-out does not rise and contention stays 0. `Memory|Consumed (KB) (Max)` near the new size is ESXi pages the guest has touched, not guest need.
 - C is correct: page-out is the guest's sign of being short; the highest daily value of `Guest|Peak Guest OS Page-out Rate within collection cycle (Max)` after the cut is lower than the highest before it.
@@ -29,6 +28,7 @@ B: "Free memory dropped after the downsize, so the VM is short: give the memory 
 - F is wrong: the mean of Needed Memory after the cut is within 15% of its mean before (about 9% lower, the 5% buffer of a smaller VM), and every row after the cut is within 15% of the mean before; the guest's need did not follow the size.
 - G is wrong: over-correction. Contention covers waits on ESXi only; a guest short of memory pages out with no contention at all, so guest paging is read too.
 - H is wrong: the wrong action. The removed memory was unused; restoring it brings back free memory and nothing else.
+- Misconception: B: "Free memory dropped after the downsize, so the VM is short: give the memory back."
 
 ## Notes
 - Paired with 0400 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D11.
@@ -61,7 +61,6 @@ attachments:
   - 0401/vcf-operations-vm-memory-28-days.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D11"
-answer: [A, C, D, E]
 misconception: [B]
 misconception_type: [consumption-as-contention]
 pair: "0400"

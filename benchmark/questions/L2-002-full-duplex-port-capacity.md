@@ -14,11 +14,10 @@ Which statements about the capacity of this port are correct?
 - G. The port is saturated only when its Usage reaches 50 Gbps.
 - H. Set the Usage alert of this port at 25 Gbps, the link speed.
 
-## Likely wrong answer
-A: treating the port speed as one pool for both directions.
+## Answers
+B, E, F
 
-## Expected key points
-- Answer: B, E, F.
+## Explanation
 - A is false: full duplex is 100% in each direction.
 - B is true: each direction has its own 25 Gb, so one direction can be full while the other carries almost nothing.
 - C is false: neither direction is halved; each has the full 25 Gb.
@@ -27,6 +26,7 @@ A: treating the port speed as one pool for both directions.
 - F is true: measure and size each direction separately.
 - G is false: one direction alone saturates at 25 Gb, while Usage may then read only a little above 25 Gbps.
 - H is false: Usage sums both directions, so it passes 25 Gbps on a healthy port (for example 20 Gb receive and 10 Gb transmit); each direction is judged against 25 Gb.
+- Misconception: A: treating the port speed as one pool for both directions.
 
 ## Notes
 - Options rewritten 2026-11-14 to the option rules (design.md 3.9; project/question-pairing-2026-11-14.md): plural stem; usage-rate option E, per-direction option F, over-correction G (50 Gbps) and wrong action H added. Key changed from B to B, E, F.
@@ -51,7 +51,6 @@ knowledge_main: vsphere/technology/network/concepts/network-characteristics
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [B, E, F]
 misconception: [A]
 misconception_type: [unit-and-normalization]
 pair: "0413"

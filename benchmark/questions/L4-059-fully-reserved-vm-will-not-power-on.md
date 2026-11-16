@@ -18,11 +18,10 @@ Which statements are correct?
 - G. Lowering the memory reservation by 1 GB, to 479 GB, is enough to let the VM power on on this host.
 - H. Setting `sched.swap.vmxSwapEnabled = FALSE` on the VM lowers the memory reservation its power-on needs.
 
-## Likely wrong answer
-- A: "It should fit: 481 GB is free for 480 GB. The host is only 30% used, so it is a bug; retry or reboot the host."
+## Answers
+B
 
-## Expected key points
-- Answer: B.
+## Explanation
 - A is wrong: admission control compares reservations with the unreserved memory, so the 30% Consumed plays no part; the VM asks for 480 GB plus its overhead, more than 481 GB, and the result does not change on a retry.
 - B is correct: the memory of the VMM and the virtual devices is fully reserved at power-on, in addition to the configured memory; by the documented representative values (4.5% of a 256 GB VM) a 256 GB VM carries about 11.5 GB, and overhead grows with the configured memory and the vCPU count, so a 480 GB, 64-vCPU VM carries more than that (the exact value is in its vmware.log, VMMEM). The largest VM that powers on with a full reservation is smaller than the unreserved memory.
 - C is wrong: the system swap file covers the system-wide overhead of the VMkernel and host agents (up to 1 GB, under memory pressure); it is separate from the per-VM swap files and holds no per-VM overhead. Even a full 1 GB gained leaves far less than the VM's overhead.
@@ -31,6 +30,7 @@ Which statements are correct?
 - F is wrong: the VM has no CPU reservation, and a VM with no reservation passes CPU admission control; the error names memory.
 - G is wrong: 479 GB plus an overhead of several GB is still above the 481 GB unreserved. The fix is to lower the reservation, or the configured memory, by more than the overhead; or free reservations held by other VMs; or use a host with more memory.
 - H is wrong: without a VMX swap file the VMX memory must be reserved too, so the reservation rises significantly; VMX swap is what lowers it.
+- Misconception: A: "It should fit: 481 GB is free for 480 GB. The host is only 30% used, so it is a bug; retry or reboot the host."
 
 ## Notes
 - Sources: the knowledge base, Memory overhead (per-VM overhead reserved at power-on, in addition to configured memory; the largest fully reserved VM that powers on is smaller than free host memory; vmware.log, VMMEM) and Cluster admission control (reservations, not usage; overhead always checked); vSphere 9.1 documentation, vSphere Resource Management, Overhead Memory on Virtual Machines and VMX Swap Files (p. 1839), Admission Control; Troubleshooting > The Reservable Memory is Lower than Expected (p. 1958: a 256 GB VM has an overhead of about 4.5% of its size; the overhead must be considered for the largest VM that powers on with full reservation).
@@ -46,7 +46,6 @@ technology: [memory, system]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [B]
 misconception: [A]
 input: [text]
 object: [vm, esxi]

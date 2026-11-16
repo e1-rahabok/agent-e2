@@ -20,11 +20,10 @@ Which statements are correct?
 - K. The 5-minute latency of that cycle is what the mail service felt, so one cycle like this is harmless.
 - L. In that cycle the 5-minute read latency is far above the write latency, so only one of the six disks can have been involved.
 
-## Likely wrong answer
-- A: "A 20-second peak can only be 15 times the 5-minute average, so about 60 times means the metric is wrong."
+## Answers
+B, C, D, G, H, I, J
 
-## Expected key points
-- Answer: B, C, D, G, H, I, J.
+## Explanation
 - A is wrong: the gap can exceed 15 times, because the peak is one point of one disk and one direction, and the average is not. Here 4,180 ms against 71 ms is about 59 times.
 - B is correct: a Peak ... within collection cycle metric is the highest of the 15 twenty-second averages in the 5-minute cycle.
 - C is correct: the peak is taken across instances, all virtual disks, read and write.
@@ -37,6 +36,7 @@ Which statements are correct?
 - J is correct: the peak does not name the disk or direction; per disk, the read value is the one that moved at 14:35.
 - K is wrong: the 5-minute read latency of 71 ms averages the cycle; the 20-second peak inside it was about 4.2 seconds.
 - L is wrong: the 5-minute read latency is a VM-level value and the peak does not name the disk, so the export cannot tell how many of the six disks were slow; read and write latency often move apart, so a high read value says nothing about the disk count.
+- Misconception: A: "A 20-second peak can only be 15 times the 5-minute average, so about 60 times means the metric is wrong."
 
 ## Notes
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: the screenshot and the 40-column table replaced by one small export; the vCommunity KPI file removed from `knowledge`. Counts only after author approval.
@@ -54,7 +54,6 @@ technology: [storage]
 task: read-metric
 level: 400
 answer_type: deterministic
-answer: [B, C, D, G, H, I, J]
 misconception: [A]
 input: [table]
 object: [vm]

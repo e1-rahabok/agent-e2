@@ -22,12 +22,10 @@ Which statements are correct?
 - J. Until the refresh ends, keep the VM on hosts with the same NUMA layout: a DRS VM/Host rule, or a separate cluster.
 - K. Sizing the VM to 12 vCPUs or fewer avoids the mismatch on both kinds of host.
 
-## Likely wrong answer
-- C: "vMotion rebuilds the virtual NUMA layout for the new host, so the guest is always right."
-- G: "The variation must come from storage."
+## Answers
+A, B, D, J, K
 
-## Expected key points
-- Answer: A, B, D, J, K.
+## Explanation
 - A true: the layout comes from the NUMA topology of the host at power-on, the VM's vCPU count and its memory; a VM that fits one node is presented as one node.
 - B true: the layout stays through the move.
 - C false: vMotion does not rebuild the layout.
@@ -39,6 +37,7 @@ Which statements are correct?
 - I false: by default virtual NUMA is active on VMs with more than 8 vCPUs; the one node comes from the host the VM first started on.
 - J true: clusters of hosts with the same NUMA layout give the best results.
 - K true: 12 vCPUs and 160 GB fit one node of either host, so the VM is never wide; a change of the vCPU count rebuilds the layout.
+- Misconception: C: "vMotion rebuilds the virtual NUMA layout for the new host, so the guest is always right." - G: "The variation must come from storage."
 
 ## Notes
 - Changed in the 2026-11-15 audit: D (the wide VM's remote memory, tested in 0063 and 0114) replaced by the manual vNUMA Topology fact, with the hardware version added to the stem; K without its hedge; misconception type threshold-transplanted replaced by layer-confusion (guest view against ESXi placement).
@@ -54,7 +53,6 @@ technology: [cpu, memory]
 task: decide-capacity
 level: 400
 answer_type: deterministic
-answer: [A,B,D,J,K]
 misconception: [C,G]
 input: [text]
 object: [vm, esxi, cluster]

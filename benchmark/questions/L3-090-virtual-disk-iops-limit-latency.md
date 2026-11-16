@@ -17,11 +17,10 @@ Which statements are correct?
 - I. The limit also applies to the VM's snapshot files and swap file.
 - J. Latency that comes from the VM's own IOPS limit does not slow the application.
 
-## Likely wrong answer
-C: the latency is high, so the array is slow. Or J, the overshoot: a wait the VM's own setting causes is harmless.
+## Answers
+A, B, E
 
-## Expected key points
-- Answer: A, B, E.
+## Explanation
 - A is correct: IO above the limit waits in the ESXi kernel queue: esxtop shows high QAVG, inside KAVG and GAVG (Broadcom KB 426790).
 - B is correct: the array is not what holds the IO; DAVG stays normal.
 - C is wrong: the misconception. An IOPS limit shows as high QAVG and KAVG with normal DAVG; check the disk's limit.
@@ -32,6 +31,7 @@ C: the latency is high, so the array is slow. Or J, the overshoot: a wait the VM
 - H is wrong: the wrong action. The wait is in the ESXi kernel queue, set by the disk's own limit, which moves with the disk: on a faster datastore the cap of 200 reads per second stays. Remove or raise the limit instead.
 - I is wrong: a limit is not possible for snapshots or swap files.
 - J is wrong: the over-correction. The wait is real contention for the VM: it shows in GAVG and in the VM's disk latency, and the application waits for every IO held.
+- Misconception: C: the latency is high, so the array is slow. Or J, the overshoot: a wait the VM's own setting causes is harmless.
 
 ## Notes
 - Theory half of pair D6 with 0425 (practical; design.md, section 3.9). Different limit and IO size from 0425.
@@ -61,7 +61,6 @@ knowledge_main: vsphere/technology/storage/metrics/virtual-motherboard/iops
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D6"
-answer: [A, B, E]
 misconception: [C]
 misconception_type: [consumption-as-contention]
 pair: "0425"

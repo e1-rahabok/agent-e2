@@ -16,11 +16,10 @@ Which statements are correct?
 - G. Reboot the host before it leaves maintenance mode, so that it gives back the 41 GB.
 - H. On a host with vSAN and NSX, hypervisor memory use can grow past the kernel's memory reservation.
 
-## Likely wrong answer
-B: expecting Consumed to equal the kernel reservation. Or F, the over-correction: all that remains is vSAN.
+## Answers
+A, C, H
 
-## Expected key points
-- Answer: A, C, H.
+## Explanation
 - A is true: host Consumed counts pages in physical DIMM: VMs, VM overhead and all kernel processes (user and kernel space), including vSAN and NSX. With 0 VMs it is the kernel and its services.
 - B is false: Consumed includes actual kernel use, not the kernel reservation.
 - C is true: reservation and use are different metric types; the reservation is a minimum guaranteed to the kernel, not pages set aside, and its use can stay below it (here about 41 against 49 GB). Admission control still withholds the full reservation from VM reservations, used or not.
@@ -29,6 +28,7 @@ B: expecting Consumed to equal the kernel reservation. Or F, the over-correction
 - F is false: the kernel and its other services consume memory too; a host with no VMs does not show 0 Consumed, with or without vSAN.
 - G is false: the 41 GB is the normal use of the kernel and its services, not a leak, so there is nothing for a reboot to recover.
 - H is true: the kernel reservation is a minimum, not a cap, and it covers host/system only; the NSX agents and the vSAN services run in other resource groups outside it, so hypervisor use can pass it.
+- Misconception: B: expecting Consumed to equal the kernel reservation. Or F, the over-correction: all that remains is vSAN.
 
 ## Notes
 - Revised 2026-11-12: option E added; tags added.
@@ -56,7 +56,6 @@ knowledge_main: vsphere/technology/memory/metrics/host/consumed
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A, C, H]
 misconception: [B]
 misconception_type: [provider-vs-consumer]
 pair: "0390"

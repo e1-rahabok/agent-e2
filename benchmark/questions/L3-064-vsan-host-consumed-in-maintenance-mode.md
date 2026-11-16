@@ -19,11 +19,10 @@ Which statements are correct?
 - H. Restart the host before it returns to service, so that it starts again with Consumed at 0.
 - I. The VMs took their overhead memory with them when they moved to the other hosts.
 
-## Likely wrong answer
-D: "With no VMs, Consumed should show what the kernel has reserved." Or F: "An empty host should consume almost nothing: a leak."
+## Answers
+A, C, E, I
 
-## Expected key points
-- Answer: A, C, E, I.
+## Explanation
 - A true: `Consumed for esx-v14` steps down in the rows of 2026-11-12 01:00-02:00 UTC, from above 620 GB to about 25.6 GB, and every row from 02:00 to the end stays within 10% of that level, with no upward trend.
 - B false: with 0 VMs, `Consumed for esx-v14` stays above 24 GB in every row.
 - C true: host Consumed counts every ESXi page in use: VMs, VM overhead and all kernel processes, vSAN included. With 0 VMs it is the kernel and its services.
@@ -33,6 +32,7 @@ D: "With no VMs, Consumed should show what the kernel has reserved." Or F: "An e
 - G false: over-correction. Without vSAN the kernel, its processes and NSX still consume memory; an empty host does not read 0.
 - H false: the wrong action. Nothing leaks; after a restart the kernel and vSAN take their memory again.
 - I true: VM overhead is part of host Consumed while the VMs run and leaves with them; what stays is the host's own use.
+- Misconception: D: "With no VMs, Consumed should show what the kernel has reserved." Or F: "An empty host should consume almost nothing: a leak."
 
 ## Notes
 - Paired with 0056 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item C16.
@@ -65,7 +65,6 @@ attachments:
   - 0390/vcenter-host-memory-3-days.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C16"
-answer: [A, C, E, I]
 misconception: [D, F]
 misconception_type: [provider-vs-consumer]
 pair: "0056"

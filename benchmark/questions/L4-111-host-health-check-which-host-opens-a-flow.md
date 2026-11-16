@@ -20,15 +20,15 @@ Which readings of the check are correct?
 - C. esx-03 opens the memory flow because Consumed is 94%, and esx-02 is a capacity issue because its average Ready is low.
 - D. No host opens a flow: every host Ready average is below 1%, so the four hosts are healthy and only esx-01 needs a capacity note.
 
-## Likely wrong answer
-A: the hosts with no waiting VM are read as healthy, and the capacity readings of esx-01 and esx-04 are dropped.
+## Answers
+B
 
-## Expected key points
-- Answer: B.
+## Explanation
 - A is wrong: no wait is present health only; esx-01 at 88% Core Utilization is a capacity reading and esx-04, reclaiming memory (Balloon, soft state), goes to the capacity step as a warning. Capacity and configuration are risk, read apart from present health.
 - B is correct: esx-02 has the lowest utilization and the only contention (worst VM 22% Ready against 30% Run), so the cause is not load: the flow starts at the CPU limit or resource pool of that VM, then shares, then NUMA placement. esx-04's balloon and soft state are reclamation, not a wait (worst VM memory Contention 0%): a capacity warning. esx-01 works hard and serves its VMs (1.2% Ready against 92% Run), a capacity reading handed to the cluster check; esx-03 has no finding. Neither opens a troubleshooting flow.
 - C is wrong: Memory Consumed holds guest cache, so 94% alone is not a problem; and esx-02's low average hides one VM at 22% Ready, a contention finding.
 - D is wrong: a host is a provider and its Ready is an average of its VMs; esx-02's 0.8% hides one VM at 22% Ready, about 42% of the time it wanted to run.
+- Misconception: A: the hosts with no waiting VM are read as healthy, and the capacity readings of esx-01 and esx-04 are dropped.
 
 ## Notes
 - Public source: Performance Best Practices for VMware vSphere 9.1 (revision 20260624) on esxtop CPU load readings as utilization levels; Broadcom TechDocs vSphere 9.1 Monitoring and Performance for the ESXi memory states and counters; the esxtop %RDY description (the ready time includes time held back by a CPU limit, shown as %MLMTD). Soft state: ballooning starts.
@@ -59,7 +59,6 @@ knowledge_main: vsphere/object-types/esxi/esxi-health-check
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-13"
-answer: [B]
 misconception: [A]
 misconception_type: [average-hides-worst, consumption-as-contention, provider-vs-consumer]
 status: draft

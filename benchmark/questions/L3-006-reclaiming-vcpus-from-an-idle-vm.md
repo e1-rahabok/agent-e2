@@ -16,11 +16,10 @@ Choose all the correct statements:
 - F. Reducing the idle VM's vCPU count also frees its memory on the host.
 - G. A VM busy 2 hours each Monday and quiet the rest of the week counts as idle: it is idle 98.8% of the week.
 
-## Likely wrong answer
-B (vCPUs × GHz counted as freed cycles) or E (IO assumed to cost no CPU). Also A (an idle threshold relative to VM size) and G (idle judged over the whole week).
+## Answers
+C, D
 
-## Expected key points
-- Answer: C, D.
+## Explanation
 - A is wrong: idle is absolute, a CPU Usage threshold in MHz (the policy row `idle-vm-cpu`), not relative to VM size; 5% of a 32-vCPU VM is 32 times the cycles of 5% of a 1-vCPU VM.
 - B is wrong: idle vCPUs used almost no cycles, so no cycles are freed; reclaiming them frees allocation only. A busy VM placed in that "room" adds real load.
 - C is correct: an idle or oversized VM gives back allocation, which lowers the cluster's overcommit ratio, counted per physical thread.
@@ -28,6 +27,7 @@ B (vCPUs × GHz counted as freed cycles) or E (IO assumed to cost no CPU). Also 
 - E is wrong: every IO costs CPU cycles (packets processed, data copied to memory), so CPU idleness implies low disk and network activity, and idle is defined on CPU alone.
 - F is wrong: reducing vCPUs frees allocation, not memory; only power-off returns the consumed pages.
 - G is wrong: idle is evaluated every day, not over the whole window; a VM used 2 hours a week does business work and is not idle.
+- Misconception: B (vCPUs × GHz counted as freed cycles) or E (IO assumed to cost no CPU). Also A (an idle threshold relative to VM size) and G (idle judged over the whole week).
 
 ## Notes
 - Changed in the 2026-11-15 audit: evidence stem (VCF Operations values instead of "idle for weeks"); A replaced (was a throwaway: idle as half of the vCPUs) by the relative-threshold misconception; G added (idle over the week); C names the ratio per physical thread.
@@ -53,7 +53,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q11 Reclamation"
 answer_type: deterministic
 level: 300                      # author 2026-11-05
-answer: [C, D]
 misconception: [A, B, E, G]
 misconception_type: [unit-and-normalization, rollup-and-interval]
 status: draft

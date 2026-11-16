@@ -21,13 +21,10 @@ Which statements about the datastores most at risk and the overcommit ratio are 
 - M. The ratio that fits depends on how fast the thin disks fill against the lead time to expand or reclaim.
 - N. Powering off the VMs on DS-APP-04 frees the space that their thin disks can still claim later.
 
-## Likely wrong answer
-- B: "DS-ARCH-01 is the only datastore at risk: it is 95% full. The others are below 80%."
-- G: "vSAN used space is the VM data; the mirror copy is kept elsewhere."
-- N: "Power off the VMs to free their space."
+## Answers
+A, C, D, E, F, H, I, L, M
 
-## Expected key points
-- Answer: A, C, D, E, F, H, I, L, M.
+## Explanation
 - A is correct: thin disks can claim their unwritten space at any time; a datastore at 60% used with thin disks provisioned well above capacity can fill before a nearly full datastore of thick disks.
 - B is wrong: DS-ARCH-01 cannot grow by itself, and three thin datastores below 70% used can fill with no new VM added.
 - C is correct: compare what can still grow with free space, not used %.
@@ -42,6 +39,7 @@ Which statements about the datastores most at risk and the overcommit ratio are 
 - L is correct: multiply the provisioned size by the copies before comparing it with capacity: 32,000 GB claims 64,000 GB, about 104% of VSAN-PROD-A.
 - M is correct: there is no ratio that fits every datastore.
 - N is wrong: powering off a VM frees only its swap file; its disks stay until the VM is deleted.
+- Misconception: B: "DS-ARCH-01 is the only datastore at risk: it is 95% full. The others are below 80%." - G: "vSAN used space is the VM data; the mirror copy is kept elsewhere." - N: "Power off the VMs to free their space."
 
 ## Notes
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Revised 2026-11-12 for question set 1.0: 200 datastores reduced to 30 so the export is read in the prompt; vSAN provisioned shown before the policy, so the three thin VMFS and NFS datastores stay the most overcommitted. Counts only after author approval.
@@ -58,7 +56,6 @@ technology: [storage]
 task: decide-capacity
 level: 400
 answer_type: deterministic
-answer: [A,C,D,E,F,H,I,L,M]
 misconception: [B, G, N]
 input: [table]
 object: [datastore]

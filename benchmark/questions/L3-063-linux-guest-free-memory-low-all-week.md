@@ -31,11 +31,10 @@ Which statements are correct?
 - H. Linux counts the page cache it holds in MemFree.
 - I. Memory that Linux leaves free is waste, not safe headroom.
 
-## Likely wrong answer
-A: "Free memory near 0 for a week, so Linux is out of memory: add memory." Or F: more memory taken to stop the free memory alerts.
+## Answers
+B, C, E, I
 
-## Expected key points
-- Answer: B, C, E, I.
+## Explanation
 - A false: Linux fills free memory with page cache. Read the memory available to applications (MemAvailable), swap activity and memory pressure, not free memory.
 - B true: page cache is given back to applications on demand; free memory near 0 with healthy other counters means no waste.
 - C true: reading. `si` and `so` are the swap-in and swap-out columns of vmstat; both are 0 in every line, and `swpd` is 0.
@@ -45,6 +44,7 @@ A: "Free memory near 0 for a week, so Linux is out of memory: add memory." Or F:
 - G false: over-correction. The page cache is in use: nginx serves files from it. The new size is the peak of Needed Memory plus headroom, so the result lands in the green band, not at 100%; a cut goes in steps with a check after each.
 - H false: MemFree excludes the page cache; that is why free memory is low while plenty is available.
 - I true: memory is cache, and unused memory is waste; free memory is not safe headroom. Guest OS sizing uses Needed Memory as VMware Tools reports it, plus headroom.
+- Misconception: A: "Free memory near 0 for a week, so Linux is out of memory: add memory." Or F: more memory taken to stop the free memory alerts.
 
 ## Notes
 - Paired with 0263 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item C10.
@@ -76,7 +76,6 @@ attachments:
   - 0387/vcf-operations-web-vms-memory-7-days.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C10"
-answer: [B, C, E, I]
 misconception: [A]
 misconception_type: [consumption-as-contention]
 pair: "0263"

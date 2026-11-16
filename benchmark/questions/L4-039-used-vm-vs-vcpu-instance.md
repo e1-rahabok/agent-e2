@@ -29,11 +29,10 @@ Which statements are correct?
 - I. Add a vCPU to the VM: the file service is short of CPU in this sample.
 - J. The High Performance policy holds the cores at their base clock, with Turbo off.
 
-## Likely wrong answer
-E: System time is charged to vCPU 0. Or H: the gap read as the Turbo gain counted twice.
+## Answers
+A, C, F, G
 
-## Expected key points
-- Answer: A, C, F, G.
+## Explanation
 - A is correct: VM-level Used = Run - Overlap ± frequency and Hyper-Threading effect + System + VMX + MKS + helper worlds. Per-vCPU Used has no System part. 58,140 - 55,160 = 2,980 ms: System (2,900 ms) and the other VM worlds.
 - B is wrong: Used subtracts Overlap at both levels (Run - Overlap ± E, plus System and the VM worlds at VM level); and Overlap is about 20 ms per vCPU, far from the gap of about 2,980 ms.
 - C is correct: Used counts work and converts it to ms at the base (nominal) frequency. 13,800 / 12,000 is about 1.15: the cores ran about 15% above base, with Turbo. Overlap is too small to matter, and the host is not busy, so Hyper-Threading does not pull Used down.
@@ -44,6 +43,7 @@ E: System time is charged to vCPU 0. Or H: the gap read as the Turbo gain counte
 - H is wrong: the Turbo gain is already in each vCPU's Used; the 2,980 ms gap matches System (2,900 ms) plus the other VM worlds.
 - I is wrong: Run is about 60% per vCPU and Ready and Co-stop are near 0; nothing shows a shortage.
 - J is wrong: High Performance does not turn Turbo off; it keeps the whole socket boosted while the VM is busy, and Turbo was seen even with the BIOS static high performance setting. Used about 15% above Run on every vCPU shows the cores ran above base in this sample.
+- Misconception: E: System time is charged to vCPU 0. Or H: the gap read as the Turbo gain counted twice.
 
 ## Notes
 - From the author's samples: "Why does the formula state VM level, and not individual vCPU level?" and "How will Used compare with Run in general?"
@@ -73,7 +73,6 @@ knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/used
 attachments: []
 origin: book
 source_path: "Author samples (docx, 2026-11-12) > Used at VM level vs vCPU level; Used vs Run"
-answer: [A, C, F, G]
 misconception: [E, H]
 misconception_type: [same-name-other-object, frequency-and-hyper-threading]
 status: draft

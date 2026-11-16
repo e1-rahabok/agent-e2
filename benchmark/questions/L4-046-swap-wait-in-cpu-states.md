@@ -17,11 +17,10 @@ Which statements are correct?
 - F. A faster swap location for the VM would lower its Swap wait as pages come back.
 - G. ESXi counts Swap wait inside Ready, so this VM's Ready includes the swap stalls.
 
-## Likely wrong answer
-B: a high CPU counter read as a CPU shortage: "the CPU counter is high, so give it more CPU."
+## Answers
+A, C, D, F
 
-## Expected key points
-- Answer: A, C, D, F.
+## Explanation
 - A is correct: Swap wait is time a vCPU waits for a page to come in from ESXi swap. The VM-level ms are summed over the 4 vCPUs (80,000 ms per sample), so about 4,100-9,200 ms is about 5-11% per vCPU. It is a CPU state with a memory cause.
 - B is wrong: more vCPUs do not bring the pages back faster.
 - C is correct: Ready below 1% and Co-stop below 0.1% per vCPU.
@@ -30,6 +29,7 @@ B: a high CPU counter read as a CPU shortage: "the CPU counter is high, so give 
 - F is correct: each wait is the time to read a page back from swap; a faster swap location (like more host memory for the VM) lowers Swap Wait, so Run goes up.
 - G is wrong: Swap Wait is part of the Wait state, not of Ready; the export shows it too, with Swap wait far above Ready in every sample.
 - What to do: keep the host out of memory pressure. Swapped pages stay in swap until the guest touches them, so the wait fades only as the guest reads them back (Swapped falls, Consumed rises); more vCPUs or a reservation set now do not bring the 6 GB back.
+- Misconception: B: a high CPU counter read as a CPU shortage: "the CPU counter is high, so give it more CPU."
 
 ## Notes
 - 2026-11-15 audit: the stem no longer gives the normalisation ("summed over the 4 vCPUs (80,000 ms is 100%)" interpreted the value); the column headers are the product's own. Old C ("the host has free memory now, so pages swapped last week can no longer slow the VM") dropped: past swapping read as harmless is tested by the pair 0025/0391 and four more questions (redundancy #38). F added (faster swap location, swap-wait Mechanism; no other question tests it); G added (Swap wait read as part of Ready; swap-wait, Meaning). Letters: A->A, B->B, C dropped, D->C, E->D, F->E, new F. The proposed unit option (7,000 ms read as a third of a sample) was not added: VM-level ms summed over vCPUs is at the two-question cap (0105/0369).
@@ -57,7 +57,6 @@ attachments:
   - 0109/erp-db-02-cpu-real-time.csv
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, C, D, F]
 misconception: [B]
 misconception_type: [reclamation-as-contention, same-name-other-object]
 pair: "0367"

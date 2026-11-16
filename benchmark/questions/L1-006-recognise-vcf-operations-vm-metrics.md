@@ -13,15 +13,15 @@ Which statements about the screen are correct?
 ## Screenshot
 ![VCF Operations Metrics tab of a VM: metric tree with CPU, Guest, Memory, Virtual Disk groups](0037/vcf-operations-vm-metrics-tab.png)
 
-## Likely wrong answer
-B: taking the VCF Operations metric tree for the vCenter performance chart.
+## Answers
+A, C
 
-## Expected key points
-- Answer: A, C.
+## Explanation
 - A true: the metric tree with groups such as CPU, Memory, Guest and Virtual Disk is the VCF Operations Metrics tab.
 - B false: the vSphere Client shows Chart Options and Advanced Performance, not a metric tree; vCenter is the administrative tool, VCF Operations the operations tool.
 - C true: the tree has groups only a VM has, such as Guest, Guest File System and Virtual Disk.
 - D false: an ESXi host has no Guest group; its tree differs.
+- Misconception: B: taking the VCF Operations metric tree for the vCenter performance chart.
 
 ## Notes
 - Review 2026-11-15: plural stem; one fact per option (tool, object). Key changed from A to A, C. The blank row left by the removed vCommunity group is closed in the screenshot.
@@ -44,7 +44,6 @@ attachments:
   - 0037/vcf-operations-vm-metrics-tab.png
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05"
-answer: [A, C]
 misconception: [B]
 object: [vm]
 tool: [vcf-operations]

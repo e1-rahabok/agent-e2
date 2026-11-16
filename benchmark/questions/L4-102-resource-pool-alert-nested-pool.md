@@ -14,16 +14,16 @@ Which statements about the red alerts of the resource pools are correct?
 - D. Only Prod goes red: a parent pool reports the contention of everything below it, and the alert of the nested pool is merged into it.
 - E. Prod-DB goes red and Prod goes orange: the 2 hit VMs of Prod also meet the lower orange values, which take the nested VMs into account.
 
-## Likely wrong answer
-B: a pool is assumed to include the VMs of the pools inside it, as in the resource allocation tree. The share is then 57.5% and the parent goes red too.
+## Answers
+A
 
-## Expected key points
-- Answer: A.
+## Explanation
 - A is correct: Child is one level below the base object, so the VMs of Prod-DB are children of Prod-DB, not of Prod. Prod-DB: 21 of 30 = 70%, over 25%, with both conditions met by the same VMs: red. Prod: only its 10 directly held VMs count, 2 of 10 = 20%: quiet.
 - B is wrong: the share does not roll up through the nesting; Prod's population is its own 10 VMs, not 40. A set defined on Descendant would reach the nested VMs, but the alert is built on Child.
 - C is wrong: the share is of the pool's own VMs, never of the cluster's VMs.
 - D is wrong: a parent pool does not report the contention of the pools below it, and no alert is merged upward; a pool alert does not work with nested pools.
 - E is wrong: the orange values use the same child population; 2 of 10 = 20% is under 25%, so Prod gets no orange alert either.
+- Misconception: B: a pool is assumed to include the VMs of the pools inside it, as in the resource allocation tree. The share is then 57.5% and the parent goes red too.
 
 ## Notes
 - Public source: VMware Aria Operations 8.18, "Creating Alert Definitions" (https://techdocs.broadcom.com/us/en/vmware-cis/aria/aria-operations/8-18/vmware-aria-operations-configuration-guide-8-18/configuring-alerts-and-actions/alert-definitions/creating-alert-definitions.html), last updated 2026-05-20: Child is "an object type that is one level below the base object type"; Descendant is at any level below; Percent is the percentage of the total related objects. vSphere API ResourcePool: the pool's vm property is the set of VMs associated with that pool, and a pool is subdivided by child pools (https://developer.broadcom.com/xapis/vsan-management-api/8.0u3/vim.ResourcePool.html).
@@ -53,7 +53,6 @@ knowledge_main: vsphere/object-types/resource-pool/resource-pool-alerts
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-13"
-answer: [A]
 misconception: [B]
 misconception_type: [average-hides-worst]
 status: draft

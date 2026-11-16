@@ -25,12 +25,10 @@ Which statements are correct?
 - I. 14 VMs hit in the same 20-second sample point to one common cause on the hosts, not a steady CPU shortage.
 - J. The remedy is to add vCPUs to the 14 VMs hit at 11:02:40, so they ride out the next such sample.
 
-## Likely wrong answer
-- A: "Red fires: 35% of the VMs had 80% Ready, far over 24%."
-- D: "Nothing fires: once averaged over 5 minutes the storm is gone."
+## Answers
+B, E, G, H, I
 
-## Expected key points
-- Answer: B, E, G, H, I.
+## Explanation
 - A is wrong: the misconception; red also needs CPU Contention above 6%, and the 14 VMs reach only about 5.3% (Contention is Ready plus Co-stop, Overlap and Other Wait, all negligible here). No VM meets both red conditions: 0 of 40.
 - B is correct: the 14 VMs hit at 11:02:40 meet both orange conditions (peak 80% above 12%, Contention about 5.3% above 3%): 14 of 40 = 35%, over 25%. For red, 5.3% is below 6%.
 - C is wrong: their highest sample, 11%, is below the red 24% (and the orange 12%), so they fail the peak condition. A condition on the 5-minute value alone would count them and miss the burst.
@@ -41,6 +39,7 @@ Which statements are correct?
 - H is correct: the sustained condition shows the burst was big enough to move the cycle's value, so a one-off frozen sample alone does not fire the alert.
 - I is correct: many VMs hit in the same sample point to a burst on the hosts (a batch job, a vMotion or backup storm, another pool); check the time alignment, the hosts and the busiest VMs of that sample, and follow the VM CPU contention flow for the VMs hit.
 - J is wrong: adding vCPUs to a VM with CPU contention makes co-scheduling harder and can raise Ready and Co-stop; the cause is a common burst, not the VM size.
+- Misconception: A: "Red fires: 35% of the VMs had 80% Ready, far over 24%." - D: "Nothing fires: once averaged over 5 minutes the storm is gone."
 
 ## Notes
 - 2026-11-16 re-review: the stem no longer calls the event "a short CPU storm on their hosts" (an interpretation that handed over I); it gives the sample time and the host count only.
@@ -60,7 +59,6 @@ technology: [cpu, system]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [B, E, G, H, I]
 misconception: [A, D]
 input: [text]
 object: [resource-pool, vm]

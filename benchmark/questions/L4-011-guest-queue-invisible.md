@@ -17,11 +17,10 @@ Which statements about the storage team's conclusion are correct?
 - G. Windows Disk Queue Length counts only the I/O that Windows has not yet sent to the virtual disk.
 - H. Windows does not see where ESXi holds its I/O; it only sees each I/O take longer.
 
-## Likely wrong answer
-- B: "vSphere metrics are normal, so the storage path is healthy."
+## Answers
+A, D, H
 
-## Expected key points
-- Answer: A, D, H.
+## Explanation
 - A is correct: queues inside the Guest OS (disk queue, driver queue) are not visible to the hypervisor. The I/O has not been sent down yet, so VM-level IOPS can under-report real demand.
 - B is wrong: the queue inside the guest is invisible to vCenter, so normal VM metrics leave part of the path unchecked. Look inside the Guest OS too.
 - C is wrong: the vCenter virtual disk latency starts at the virtual disk; the wait in the guest before it is not in it.
@@ -30,6 +29,7 @@ Which statements about the storage team's conclusion are correct?
 - F is wrong: VMware Tools adds new metrics inside the guest; it does not change the existing Windows counters, which stay unaware of virtualization.
 - G is wrong: the counter also counts requests in service at the device and requests on their way back up the stack. It is a Little's Law value: I/O rate times time per I/O.
 - H is correct: Windows cannot see where ESXi holds its I/O; it feels the hold only as a longer time per I/O.
+- Misconception: B: "vSphere metrics are normal, so the storage path is healthy."
 
 ## Notes
 - Tests: visibility of the layers.
@@ -56,7 +56,6 @@ attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Visibility (layers A–D diagram)."
 answer_type: deterministic
-answer: [A, D, H]
 misconception: [B]
 level: 400                      # author 2026-11-05
 misconception_type: [layer-confusion]
