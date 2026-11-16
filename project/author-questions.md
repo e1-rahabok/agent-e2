@@ -43,15 +43,6 @@ Each entry:
 - Recommended: confirm A (it uses no vendor metric); add no formula. Add the vendor metric names to the file, say the denominator is not documented, and say a per-direction share is computed from the rate metrics (`dropped_tx_pkts` over `tx_pkts`), not a vendor metric. A lab check (compare `dropped_pkts_pct` with dropped / (rx + tx) and dropped / (rx + tx + dropped)) can come later.
 - Answer:
 
-### Q253 · Network > esxtop units · The misconception line points the wrong way
-
-- Files: [esxtop network units against the vSphere Client](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/network-units-vs-vsphere-client.md) (section Misconceptions); question 0412 (option K).
-- Now: the line reads "esxtop shows 125 times more traffic than vCenter, so one tool is wrong". The same file's conversion (esxtop Mbps ≈ vSphere Client KBps × 8 / 1,000) makes the vCenter number about 125 times larger than the esxtop number, so the observation in the quote is reversed. A reader who trusts the line picks 0412 K.
-- Research (2026-11-16): checked. 1,000 Mbps is 125,000 KBps, so the vCenter number is 125 times larger than the esxtop number; the file's own conversion and 0412's key point K say the same.
-- Question: reword the quote to "vCenter shows 125 times more traffic than esxtop, so one tool is wrong"?
-- Recommended: yes.
-- Answer:
-
 ## Future release
 
 ### Q244 · Cluster > HA admission control · Three vendor facts for the percentage policy
