@@ -2,9 +2,10 @@
   "benchmark_id": "20261116-claude-opus-5.5",
   "started": "2026-11-16T10:36:09",
   "resumed": [
-    "2026-11-16T12:24:41"
+    "2026-11-16T12:24:41",
+    "2026-11-16T13:00:25"
   ],
-  "index_version": "c364e1cc4c8f7de7abaa7830bbf3cb1b1c63a140",
+  "index_version": "7f4787d83b62ee94ce1267d864b4fca42b5b83fe",
   "primer": {
     "rules": true,
     "terms": true

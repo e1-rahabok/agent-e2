@@ -2,9 +2,10 @@
   "benchmark_id": "20261116-gemma-4-31b-it",
   "started": "2026-11-16T10:36:11",
   "resumed": [
-    "2026-11-16T11:21:32"
+    "2026-11-16T11:21:32",
+    "2026-11-16T13:00:26"
   ],
-  "index_version": "df3753c40057fa366eeb9893ac32125d99315663",
+  "index_version": "7f4787d83b62ee94ce1267d864b4fca42b5b83fe",
   "primer": {
     "rules": true,
     "terms": true
