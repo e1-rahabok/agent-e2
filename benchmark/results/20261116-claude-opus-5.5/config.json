@@ -1,8 +1,10 @@
 {
   "benchmark_id": "20261116-claude-opus-5.5",
   "started": "2026-11-16T10:36:09",
-  "resumed": [],
-  "index_version": "ee0114b9ca38d656b21181f3ac256de34f2393c8",
+  "resumed": [
+    "2026-11-16T12:24:41"
+  ],
+  "index_version": "c364e1cc4c8f7de7abaa7830bbf3cb1b1c63a140",
   "primer": {
     "rules": true,
     "terms": true
@@ -378,16 +380,7 @@
     "0467",
     "0468"
   ],
-  "skipped_questions": [
-    "0015",
-    "0275",
-    "0435",
-    "0072",
-    "0274",
-    "0330",
-    "0340",
-    "0345"
-  ],
+  "skipped_questions": [],
   "groups": {
     "0029": {
       "answer_type": "deterministic",
@@ -2445,21 +2438,6 @@
     "runs": 5,
     "temperature": null,
     "sampling": {
-      "google/gemma-4-31b-it": {
-        "temperature": 1.0,
-        "top_p": 0.95,
-        "top_k": 64
-      },
-      "meta/muse-glimmer-30b": {
-        "temperature": 1.0,
-        "top_p": 0.95,
-        "top_k": 64
-      },
-      "alibaba/qwen3.8-27b": {
-        "temperature": 1.0,
-        "top_p": 0.95,
-        "top_k": 20
-      },
       "anthropic/claude-opus-5.5": {}
     },
     "max_tokens": 4000,
