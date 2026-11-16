@@ -18,6 +18,7 @@ sampling:                     # per model: the settings of its own card (generat
   meta/muse-glimmer-30b: {temperature: 1.0, top_p: 0.95, top_k: 64}
   alibaba/qwen3.8-27b: {temperature: 1.0, top_p: 0.95, top_k: 20}
   anthropic/claude-opus-5.5: {}   # frontier reference: nothing sent, the provider's default, as a chat user meets it
+gateway_retry_minutes: 5      # a failing call (HTTP 408, 429, 5xx, a dropped connection) is retried this long before the answer fails (harness/llm.py, GatewayClient). 2026-11-16: a 2-minute outage failed 54 answers with the older rule (5 tries, about 1 minute)
 max_tokens: 4000              # per answer, thinking included: a reasoning model that thinks past it is cut off before the ANSWER line (the health check stops such a run)
 concurrency: 12               # proven parallel requests per model. The floor: the runner never goes below it
 concurrency_by_model:         # the proven value of a model that rate-limits earlier than 12
@@ -27,12 +28,10 @@ model_params:                 # per model, a list of request settings in order o
                               # Fields: reasoning (sent to the gateway as is), max_tokens (replaces max_tokens above). The gateway lists what a model accepts
                               # in /v1/models, field reasoning_options (benchmark/models.md, section 5).
   alibaba/qwen3.8-27b:        # reasoning model: 3,700-4,300 tokens per answer with the default, 85% of baseline answers cut at the 4,000 cap
-    - {reasoning: {effort: none}}
-    - {reasoning: {effort: low}}
-    - {reasoning: {effort: low}, max_tokens: 8000}
+    - {reasoning: {effort: none}}                          # round of 2026-11-16: 0.8% unreadable, 4% reach the cap (hidden thinking)
+    - {reasoning: {effort: low}, max_tokens: 8000}         # effort low with 4,000 tokens was cut off on 17% of the answers: not listed
   meta/muse-glimmer-30b:      # reasoning model: 2,000-3,000 tokens per answer with the default
     - {reasoning: {enabled: false}}
-    - {reasoning: {effort: low}}
     - {reasoning: {effort: low}, max_tokens: 8000}
   google/gemma-4-31b-it:      # 160-380 tokens per answer with the default
     - {}
@@ -94,6 +93,14 @@ primer:                       # up-front blocks in Agent E2's answer prompt (har
 # Pin providers per model when known, e.g. openai/gpt-oss-20b: [groq]
 provider_order: {}
 
+spread_runs_over_providers: true   # the five runs of a question prefer different hosts of the model (provider_hosts_per_model.py): the score is pooled, the host of every answer is recorded
+concurrency_per_provider: false    # true: the proven concurrency counts per host (3 hosts, 3 times the value). Off until measured: a 429 returns to the proven value, which is then the floor
+snapshots:                    # run_all_models_in_one_round.py pushes the answers, configs and reports to a separate branch (push_snapshots_to_branch.py)
+  enabled: true
+  every_minutes: 15           # a lost machine then costs at most this much of the round
+  branch_prefix: snapshots/round-   # + the date; never merged: the author deletes it after the round
+  remote: origin
+
 release:                      # the final round: benchmark/RUN.md. One run folder per entry, all started together (run_all_models_in_one_round.py)
   runs:
     - {model: google/gemma-4-31b-it, modes: [baseline, agent-e2]}
@@ -109,3 +116,5 @@ release:                      # the final round: benchmark/RUN.md. One run folde
     min_parse_rate: 0.95      # share of multiple-choice sample answers with a readable letter
     max_token_share: 0.5      # mean completion tokens of the sample must stay below this share of max_tokens
   retries: 2                  # relaunches of a run that crashed (exit 1), each with --resume
+  outage_waits: 12            # a run stopped by a gateway or provider failure (exit 8) waits and resumes its own folder this many times
+  outage_wait_seconds: 180    # the wait before each of those resumes

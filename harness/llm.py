@@ -15,32 +15,40 @@ class LLMError(Exception):
 
 
 class GatewayClient:
-    def __init__(self, base_url=GATEWAY, api_key=None, timeout=180, max_retries=5):
+    def __init__(self, base_url=GATEWAY, api_key=None, timeout=180, max_retries=5, retry_seconds=None):
+        """retry_seconds: keep retrying a failing call (HTTP 408, 429, 5xx, a dropped connection) for this long, waiting 2 s, 4 s, 8 s ...
+        at most 60 s between tries. None: the older rule, max_retries tries with a doubling wait (about 1 minute in all).
+        The benchmark sets minutes (config.yaml, gateway_retry_minutes): a gateway outage of 2 minutes on 2026-11-16 failed 54 answers."""
         self.base = base_url.rstrip('/')
         self.key = api_key or os.environ.get('AI_GATEWAY_API_KEY') or os.environ.get('VERCEL_OIDC_TOKEN')
-        self.timeout, self.max_retries = timeout, max_retries
+        self.timeout, self.max_retries, self.retry_seconds = timeout, max_retries, retry_seconds
 
     def _post(self, path, body):
         if not self.key:
             raise LLMError('AI_GATEWAY_API_KEY is not set')
-        delay = 2.0
-        for attempt in range(self.max_retries + 1):
+        delay, first_failure, attempt = 2.0, None, 0
+        while True:
             t0 = time.time()
             try:
                 r = requests.post(self.base + path, json=body, timeout=self.timeout,
                                   headers={'Authorization': f'Bearer {self.key}'})
             except requests.RequestException as e:
-                err = str(e)
+                err = f'{type(e).__name__}: {e}'
             else:
                 if r.status_code == 200:
                     return r.json(), r.headers, time.time() - t0
-                err = f'HTTP {r.status_code}: {r.text[:300]}'
+                err = f'HTTP {r.status_code}: {r.text[:2000]}'   # the body names the provider that failed (it was cut at 300 characters before)
                 if r.status_code not in (408, 429, 500, 502, 503, 504):
                     raise LLMError(err)
-            if attempt == self.max_retries:
+            first_failure = first_failure or time.time()
+            if self.retry_seconds is None:
+                if attempt >= self.max_retries:
+                    raise LLMError(err)
+            elif time.time() - first_failure + delay > self.retry_seconds:
                 raise LLMError(err)
             time.sleep(delay + random.random())
-            delay *= 2
+            delay = delay * 2 if self.retry_seconds is None else min(delay * 2, 60)
+            attempt += 1
 
     def chat(self, model, messages, tools=None, temperature=0.2, max_tokens=4000, provider_order=None, reasoning=None,
              top_p=None, top_k=None, deterministic=False):
@@ -123,7 +131,8 @@ def _provider(data, headers):
             return data[k]
         if headers.get(k):
             return headers[k]
-    meta = data.get('providerMetadata') or data.get('provider_metadata') or {}
+    msg = ((data.get('choices') or [{}])[0].get('message')) or {}   # the gateway puts the routing in the message (2026-11-16)
+    meta = data.get('providerMetadata') or data.get('provider_metadata') or msg.get('provider_metadata') or {}
     gw = meta.get('gateway') if isinstance(meta, dict) else None
     if isinstance(gw, dict):
         routing = gw.get('routing') or {}
@@ -145,7 +154,7 @@ class MockClient:
             return {'content': json.dumps({'kind': 'metric-meaning', 'objects': ['VM'], 'claims': [],
                                            'metrics': [{'name': 'CPU Ready', 'object': 'VM', 'value': None, 'unit': None}]}),
                     'tool_calls': [], 'finish_reason': 'stop', 'prompt_tokens': 300, 'completion_tokens': 60, 'latency': 0.01,
-                    'served_model': model, 'provider': 'mock'}
+                    'served_model': model, 'provider': (provider_order[0] if provider_order else 'mock')}
         if tools and tool_turns == 0:
             q = next(m['content'] for m in messages if m['role'] == 'user')
             q = q if isinstance(q, str) else q[0]['text']
@@ -155,7 +164,7 @@ class MockClient:
         pick = sorted(self.rng.sample(letters, k=1 if letters else 0)) or ['A']
         return {'content': f'ANSWER: {", ".join(pick)}\nREASON: mock', 'tool_calls': [], 'finish_reason': 'stop',
                 'prompt_tokens': 500, 'completion_tokens': 20, 'latency': 0.01,
-                'served_model': model, 'provider': 'mock'}
+                'served_model': model, 'provider': (provider_order[0] if provider_order else 'mock')}
 
     def _tool(self, name, args):
         return {'content': '', 'finish_reason': 'tool_calls', 'tool_calls': [{'id': f'call_{self.rng.randint(0, 10**9)}', 'type': 'function',

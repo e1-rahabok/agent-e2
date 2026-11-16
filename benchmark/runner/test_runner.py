@@ -16,6 +16,10 @@ import run_folder_names as N  # noqa: E402
 import sample_check_before_round as P  # noqa: E402
 import run_all_models_in_one_round as RA  # noqa: E402
 import summary_of_all_runs as S  # noqa: E402
+import check_round_is_alive as CA  # noqa: E402
+import push_snapshots_to_branch as SN  # noqa: E402
+import provider_hosts_per_model as PH  # noqa: E402
+import resume_unfinished_round_if_any as RS  # noqa: E402
 from llm import MockClient, ParamClient  # noqa: E402
 
 
@@ -359,6 +363,36 @@ class StopRunOnBadAnswersTest(unittest.TestCase):
         self.assertIn('402', reason)
         self.assertEqual(h.code, X.BUDGET)
 
+    def test_a_burst_of_gateway_errors_stops_with_the_gateway_code_not_the_settings_code(self):
+        # 2026-11-16: 54 answers failed with HTTP 503 in two minutes; the check read them as invalid settings and the runner restarted two runs from zero.
+        h = H.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
+        reason = None
+        for _ in range(30):
+            reason = h.record(self.row(error='HTTP 503: {"error":{"message":"Service temporarily unavailable."}}'))
+        self.assertIn('gateway', reason)
+        self.assertEqual(h.code, X.GATEWAY_DOWN)
+        self.assertNotEqual(h.code, X.UNHEALTHY)
+
+    def test_gateway_errors_do_not_count_against_the_settings(self):
+        h = H.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
+        for i in range(200):
+            e = 'HTTP 503: unavailable' if i % 10 == 0 else ''        # 10% gateway errors: below the gateway limit
+            self.assertIsNone(h.record(self.row(error=e)))
+
+    def test_gateway_error_kinds(self):
+        for e in ('HTTP 503: x', 'HTTP 502: x', 'HTTP 429: rate', 'HTTP 408: t', 'ReadTimeout: x', 'ConnectionError: x', 'Connection reset by peer'):
+            self.assertTrue(H.StopRunOnBadAnswers.is_gateway_error(self.row(error=e)), e)
+        for e in ('', 'HTTP 400: bad request', 'HTTP 404: model', 'HTTP 402: budget'):
+            self.assertFalse(H.StopRunOnBadAnswers.is_gateway_error(self.row(error=e)), e)
+
+    def test_request_errors_still_count_against_the_settings(self):
+        h = H.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
+        reason = None
+        for _ in range(30):
+            reason = h.record(self.row(error='HTTP 400: context too long'))
+        self.assertEqual(h.code, X.UNHEALTHY)
+        self.assertIn('invalid', reason)
+
     def test_each_model_has_its_own_window(self):
         h = H.StopRunOnBadAnswers(min_answers=20)
         for _ in range(30):
@@ -516,7 +550,7 @@ class RoundRecoveryTest(unittest.TestCase):
         self.addCleanup(__import__('shutil').rmtree, d, True)
         open(os.path.join(d, 'child.py'), 'w').write(self.FAKE)
         json.dump(seq, open(os.path.join(d, 'seq.json'), 'w'))
-        env = dict(os.environ, AI_GATEWAY_API_KEY='x', RUN_ALL_CHILD=os.path.join(d, 'child.py'),
+        env = dict(os.environ, AI_GATEWAY_API_KEY='x', RUN_ALL_FAST='1', RUN_ALL_CHILD=os.path.join(d, 'child.py'),
                    FAKE_SEQ=os.path.join(d, 'seq.json'), FAKE_LOG=os.path.join(d, 'log.txt'))
         out = os.path.join(d, 'out')
         os.makedirs(out)
@@ -532,6 +566,23 @@ class RoundRecoveryTest(unittest.TestCase):
         self.assertIn('--resume', calls[1])
         self.assertEqual(p.returncode, X.UNHEALTHY, p.stdout + p.stderr)
         self.assertIn('NOT complete', p.stdout)
+
+    def test_a_gateway_outage_waits_and_resumes_the_same_folder_without_new_settings(self):
+        p, calls, out = self.round_('alibaba/qwen3.8-27b', [X.GATEWAY_DOWN, X.GATEWAY_DOWN, X.STOPPED])
+        self.assertEqual(len(calls), 3, p.stdout + p.stderr)
+        self.assertNotIn('--resume', calls[0])
+        self.assertIn('--resume', calls[1])
+        self.assertIn('--resume', calls[2])
+        self.assertEqual(calls[1][calls[1].index('--resume') + 1], calls[2][calls[2].index('--resume') + 1])   # the same folder
+        self.assertFalse([n for n in os.listdir(out) if 'invalid' in n])      # nothing restarted, nothing archived
+        self.assertEqual(p.returncode, X.STOPPED)
+
+    def test_an_outage_that_never_ends_fails_the_run_after_the_waits_and_keeps_the_answers(self):
+        p, calls, out = self.round_('google/gemma-4-31b-it', [X.GATEWAY_DOWN] * 30)
+        self.assertEqual(len(calls), 13)                                  # the first launch and release.outage_waits (12) resumes
+        self.assertEqual(p.returncode, X.UNHEALTHY)
+        self.assertIn('NOT complete', p.stdout)
+        self.assertFalse([n for n in os.listdir(out) if 'invalid' in n])
 
     def test_invalid_answers_restart_the_run_with_the_next_settings_and_keep_the_folder_as_evidence(self):
         p, calls, out = self.round_('alibaba/qwen3.8-27b', [X.UNHEALTHY, X.STOPPED])
@@ -559,6 +610,241 @@ class RoundRecoveryTest(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(out, '.round.json')))
 
 
+class ResumeOnSessionStartTest(unittest.TestCase):
+    """The SessionStart hook resumes an interrupted round, and does nothing otherwise."""
+
+    CFG = {'runs': 1}
+
+    def setUp(self):
+        import tempfile
+        self.d = tempfile.mkdtemp()
+        self.addCleanup(__import__('shutil').rmtree, self.d, True)
+
+    def state(self, runs):
+        import json
+        json.dump({'started': '2026-11-16T10:00:00', 'runs': runs}, open(os.path.join(self.d, RA.STATE), 'w'))
+
+    def folder(self, name, good):
+        os.makedirs(os.path.join(self.d, name), exist_ok=True)
+        with open(os.path.join(self.d, name, 'answers.csv'), 'w') as f:
+            f.write('model,mode,question_id,track,run,error\n')
+            for i in range(good):
+                f.write(f'm,baseline,q{i},text,1,\n')
+
+    def entry(self, name, status='running'):
+        return {'model': 'm', 'modes': ['baseline'], 'folder': name, 'status': status}
+
+    def test_no_round_no_action(self):
+        self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'nothing')
+
+    def test_an_unfinished_run_with_no_process_is_resumed(self):
+        self.state([self.entry('r1')])
+        self.folder('r1', 2)
+        self.assertEqual(RS.decide(self.d, self.CFG, 4, []), ('resume', ['r1']))
+
+    def test_a_run_with_a_live_process_is_left_alone(self):
+        self.state([self.entry('r1')])
+        self.folder('r1', 2)
+        ps = ['python3 benchmark/runner/answer_questions_for_one_model.py --resume benchmark/results/r1']
+        self.assertEqual(RS.decide(self.d, self.CFG, 4, ps)[0], 'nothing')
+
+    def test_a_state_file_whose_folders_are_gone_is_left_alone(self):
+        self.state([self.entry('renamed-or-archived')])
+        self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'nothing')
+
+    def test_a_finished_round_is_left_alone(self):
+        self.state([self.entry('r1', 'complete')])
+        self.folder('r1', 4)
+        self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'nothing')
+
+    def test_a_run_that_waits_for_the_author_is_not_resumed(self):
+        self.state([self.entry('r1', 'invalid')])
+        self.folder('r1', 2)
+        self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'nothing')
+
+    def test_a_refused_or_stopped_run_is_resumed(self):
+        for status in ('refused', 'stopped', 'outage', 'failed'):
+            self.state([self.entry('r1', status)])
+            self.folder('r1', 1)
+            self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'resume', status)
+
+    def test_the_hook_script_does_nothing_outside_a_remote_session_or_without_a_round(self):
+        import subprocess
+        hook = os.path.join(os.path.dirname(__file__), '..', '..', '.claude', 'hooks', 'resume_unfinished_benchmark_round.sh')
+        for env in ({'CLAUDE_CODE_REMOTE': ''}, {'CLAUDE_CODE_REMOTE': 'true', 'CLAUDE_PROJECT_DIR': self.d}):
+            p = subprocess.run(['bash', hook], capture_output=True, text=True, env=dict(os.environ, **env), timeout=60)
+            self.assertEqual(p.returncode, 0, p.stderr)
+            self.assertEqual(p.stdout.strip(), '')
+
+
+class SnapshotBranchTest(unittest.TestCase):
+    """Snapshots go to their own branch, built with a temporary index: the working branch is not touched."""
+
+    def sh(self, repo, *args):
+        import subprocess
+        return subprocess.run(['git', '-C', repo, *args], capture_output=True, text=True, check=True).stdout.strip()
+
+    def setUp(self):
+        import tempfile
+        self.d = tempfile.mkdtemp()
+        self.addCleanup(__import__('shutil').rmtree, self.d, True)
+        self.remote, self.repo = os.path.join(self.d, 'remote.git'), os.path.join(self.d, 'repo')
+        os.makedirs(self.remote)
+        os.makedirs(self.repo)
+        self.sh(self.remote, 'init', '-q', '--bare')
+        self.sh(self.repo, 'init', '-q', '-b', 'work')
+        self.sh(self.repo, 'config', 'user.name', 't')
+        self.sh(self.repo, 'config', 'user.email', 't@x')
+        open(os.path.join(self.repo, 'README.md'), 'w').write('x')
+        self.sh(self.repo, 'add', 'README.md')
+        self.sh(self.repo, 'commit', '-q', '-m', 'first')
+        self.sh(self.repo, 'remote', 'add', 'origin', self.remote)
+        self.results = os.path.join(self.repo, 'benchmark', 'results')
+        run = os.path.join(self.results, 'r1')
+        os.makedirs(run)
+        for n, t in (('answers.csv', 'a'), ('config.json', '{}'), ('report.md', '# r'), ('traces.jsonl', 'big'), ('run.log', 'log')):
+            open(os.path.join(run, n), 'w').write(t)
+
+    def test_a_snapshot_holds_the_answers_configs_and_reports_but_not_the_traces(self):
+        c = SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
+        self.assertTrue(c)
+        files = self.sh(self.remote, 'ls-tree', '-r', '--name-only', 'snapshots/round-x').splitlines()
+        self.assertIn('benchmark/results/r1/answers.csv', files)
+        self.assertIn('benchmark/results/r1/config.json', files)
+        self.assertIn('benchmark/results/r1/report.md', files)
+        self.assertNotIn('benchmark/results/r1/traces.jsonl', files)
+        self.assertNotIn('benchmark/results/r1/run.log', files)
+        self.assertIn('README.md', files)                                  # the tree of HEAD is kept
+
+    def test_the_working_branch_index_and_files_are_not_touched(self):
+        head = self.sh(self.repo, 'rev-parse', 'HEAD')
+        SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
+        self.assertEqual(self.sh(self.repo, 'rev-parse', 'HEAD'), head)
+        self.assertEqual(self.sh(self.repo, 'branch', '--show-current'), 'work')
+        self.assertEqual(self.sh(self.repo, 'diff', '--cached', '--name-only'), '')           # nothing staged
+        self.assertTrue(os.path.exists(os.path.join(self.results, 'r1', 'traces.jsonl')))
+
+    def test_no_change_gives_no_new_commit_and_a_change_chains_on_the_previous_snapshot(self):
+        c1 = SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
+        self.assertIsNone(SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin'))
+        open(os.path.join(self.results, 'r1', 'answers.csv'), 'w').write('a,b')
+        c2 = SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
+        self.assertNotEqual(c1, c2)
+        self.assertEqual(self.sh(self.repo, 'rev-parse', f'{c2}^'), c1)
+        self.assertEqual(self.sh(self.remote, 'rev-parse', 'snapshots/round-x'), c2)
+
+    def test_folders_outside_the_repository_are_skipped(self):
+        import tempfile
+        other = tempfile.mkdtemp()
+        self.addCleanup(__import__('shutil').rmtree, other, True)
+        os.makedirs(os.path.join(other, 'r'))
+        open(os.path.join(other, 'r', 'config.json'), 'w').write('{}')
+        self.assertIsNone(SN.snapshot(self.repo, other, 'snapshots/round-y', 'origin'))
+
+
+class CheckRoundIsAliveTest(unittest.TestCase):
+    """The progress check must not read stale counts as progress (2026-11-16: a machine restart killed two runs unseen for 25 minutes)."""
+
+    def setUp(self):
+        import tempfile
+        self.d = tempfile.mkdtemp()
+        self.addCleanup(__import__('shutil').rmtree, self.d, True)
+        self.now = __import__('datetime').datetime(2026, 11, 16, 14, 0, 0)
+
+    def folder(self, name, good, minutes_ago, total_q=4):
+        import json
+        import time
+        f = os.path.join(self.d, name)
+        os.makedirs(f)
+        json.dump({'questions': [f'q{i}' for i in range(total_q)], 'runs': 1, 'modes': ['baseline']}, open(os.path.join(f, 'config.json'), 'w'))
+        with open(os.path.join(f, 'answers.csv'), 'w') as fh:
+            fh.write('model,mode,question_id,track,run,error,cost_usd\n')
+            for i in range(good):
+                fh.write(f'm,baseline,q{i},text,1,,0.5\n')
+        t = time.mktime((self.now - __import__('datetime').timedelta(minutes=minutes_ago)).timetuple())
+        os.utime(os.path.join(f, 'answers.csv'), (t, t))
+        return f
+
+    PS = ['python3 benchmark/runner/answer_questions_for_one_model.py --out o --resume benchmark/results/run-a']
+
+    def status(self, f, ps, boot=None):
+        return CA.run_status(f, self.now, ps, boot)
+
+    def test_a_finished_folder_is_done(self):
+        self.assertEqual(self.status(self.folder('run-a', 4, 90), [])['verdict'], 'DONE')
+
+    def test_a_process_and_a_recent_write_is_alive(self):
+        self.assertEqual(self.status(self.folder('run-a', 2, 1), self.PS)['verdict'], 'ALIVE')
+
+    def test_a_process_with_no_write_for_minutes_is_stalled(self):
+        self.assertEqual(self.status(self.folder('run-a', 2, 12), self.PS)['verdict'], 'STALLED')
+
+    def test_no_process_and_an_unfinished_folder_is_dead(self):
+        self.assertEqual(self.status(self.folder('run-a', 2, 3), [])['verdict'], 'DEAD')
+
+    def test_a_boot_after_the_last_write_says_machine_restarted(self):
+        import datetime
+        boot = self.now - datetime.timedelta(minutes=5)
+        self.assertEqual(self.status(self.folder('run-a', 2, 30), [], boot)['verdict'], 'MACHINE RESTARTED')
+
+    def test_the_process_of_another_folder_does_not_count(self):
+        self.assertEqual(self.status(self.folder('run-b', 2, 1), self.PS)['verdict'], 'DEAD')
+
+    def test_the_old_script_name_counts_as_a_process(self):
+        self.assertTrue(CA.processes_for('run-a', ['python3 benchmark/runner/run.py --resume benchmark/results/run-a']))
+
+    def test_good_answers_and_cost_are_counted(self):
+        r = self.status(self.folder('run-a', 3, 1), self.PS)
+        self.assertEqual((r['good'], r['total']), (3, 4))
+        self.assertAlmostEqual(r['cost'], 1.5)
+
+
+class ReconcileWithFoldersTest(unittest.TestCase):
+    """A resume starts from the folders: what the state file says can be out of date (a run finished by hand, a key topped up)."""
+
+    def setUp(self):
+        import tempfile
+        self.d = tempfile.mkdtemp()
+        self.addCleanup(__import__('shutil').rmtree, self.d, True)
+        self.cfg = {'runs': 1}
+
+    def folder(self, name, rows):
+        os.makedirs(os.path.join(self.d, name))
+        with open(os.path.join(self.d, name, 'answers.csv'), 'w') as f:
+            f.write('model,mode,question_id,track,run,error\n')
+            for q, e in rows:
+                f.write(f'm,baseline,{q},text,1,{e}\n')
+
+    def entry(self, name, status):
+        return {'model': 'm', 'modes': ['baseline'], 'folder': name, 'status': status, 'retries': 2, 'outage_waits': 3}
+
+    def test_a_finished_folder_is_complete_whatever_the_state_says(self):
+        self.folder('a', [('q1', ''), ('q2', '')])
+        st = {'runs': [self.entry('a', 'invalid')]}
+        RA.reconcile_with_folders(st, self.d, self.cfg, 2)
+        self.assertEqual(st['runs'][0]['status'], 'complete')
+
+    def test_every_stop_but_a_real_settings_failure_becomes_pending(self):
+        for status in ('refused', 'stopped', 'running', 'failed', 'outage', 'pending'):
+            self.folder(status, [('q1', '')])
+            st = {'runs': [self.entry(status, status)]}
+            RA.reconcile_with_folders(st, self.d, self.cfg, 2)
+            self.assertEqual(st['runs'][0]['status'], 'pending', status)
+            self.assertEqual((st['runs'][0]['retries'], st['runs'][0]['outage_waits']), (0, 0))
+
+    def test_a_run_with_unresolved_failures_is_not_complete(self):
+        self.folder('b', [('q1', ''), ('q2', 'HTTP 503: x')])
+        st = {'runs': [self.entry('b', 'stopped')]}
+        RA.reconcile_with_folders(st, self.d, self.cfg, 2)
+        self.assertEqual(st['runs'][0]['status'], 'pending')
+
+    def test_a_run_marked_invalid_for_its_settings_stays_invalid(self):
+        self.folder('c', [('q1', '')])
+        st = {'runs': [self.entry('c', 'invalid')]}
+        RA.reconcile_with_folders(st, self.d, self.cfg, 2)
+        self.assertEqual(st['runs'][0]['status'], 'invalid')
+
+
 class RoundMockTest(unittest.TestCase):
     """The whole round offline: runs in parallel, one folder per model, README, earlier folders archived."""
 
@@ -583,6 +869,72 @@ class RoundMockTest(unittest.TestCase):
             for m in ('gemma-4-31b-it', 'qwen3.8-27b', 'muse-glimmer-30b', 'claude-opus-5.5'):
                 self.assertIn(m, text)
             self.assertIn('## Reading', text)
+
+
+class ProviderHostsTest(unittest.TestCase):
+    """The five runs of a question prefer different provider hosts; a host that fails is left out."""
+
+    REPLY = {'choices': [{'message': {'content': 'OK', 'provider_metadata': {'gateway': {'routing': {
+        'finalProvider': 'novita', 'fallbacksAvailable': ['friendli', 'gmicloud', 'parasail']}}}}}]}
+
+    class Fake:
+        def __init__(self, reply, down=()):
+            self.reply, self.down, self.calls = reply, set(down), []
+
+        def _post(self, path, body):
+            only = ((body.get('providerOptions') or {}).get('gateway') or {}).get('only')
+            self.calls.append(only)
+            if only and only[0] in self.down:
+                raise RuntimeError('HTTP 503: Service temporarily unavailable')
+            return self.reply, {}, 0.1
+
+    def test_the_routing_names_the_host_and_the_others(self):
+        self.assertEqual(PH.hosts_in(PH.routing_of(self.REPLY)), ['novita', 'friendli', 'gmicloud', 'parasail'])
+
+    def test_a_reply_without_routing_gives_no_hosts(self):
+        self.assertEqual(PH.hosts_in(PH.routing_of({'choices': [{'message': {'content': 'OK'}}]})), [])
+
+    def test_each_run_prefers_another_host_and_the_others_follow(self):
+        hosts = ['a', 'b', 'c']
+        self.assertEqual([PH.order_for_run(hosts, r)[0] for r in (1, 2, 3, 4, 5)], ['a', 'b', 'c', 'a', 'b'])
+        self.assertEqual(PH.order_for_run(hosts, 2), ['b', 'a', 'c'])
+        self.assertEqual(sorted(PH.order_for_run(hosts, 3)), ['a', 'b', 'c'])      # every host stays as a fallback
+
+    def test_one_host_means_no_spreading(self):
+        self.assertEqual(PH.order_for_run(['a'], 3), [])
+        self.assertEqual(PH.order_for_run([], 1), [])
+
+    def test_a_host_that_fails_is_left_out_of_the_round(self):
+        client, lines = self.Fake(self.REPLY, down={'gmicloud'}), []
+        good = PH.choose_hosts(client, 'google/gemma-4-31b-it', log=lines.append)
+        self.assertEqual(good, ['novita', 'friendli', 'parasail'])
+        self.assertTrue([x for x in lines if 'gmicloud' in x])
+
+    def test_fewer_than_two_working_hosts_means_the_gateway_chooses(self):
+        client = self.Fake(self.REPLY, down={'friendli', 'gmicloud', 'parasail'})
+        self.assertEqual(PH.choose_hosts(client, 'm', log=lambda s: None), [])
+
+    def test_a_model_with_one_host_is_not_spread(self):
+        one = {'choices': [{'message': {'provider_metadata': {'gateway': {'routing': {'finalProvider': 'x', 'fallbacksAvailable': []}}}}}]}
+        self.assertEqual(PH.choose_hosts(self.Fake(one), 'm', log=lambda s: None), [])
+
+    def test_a_run_gets_its_hosts_and_records_the_preferred_host_offline(self):
+        import csv
+        import json
+        import subprocess
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            out = os.path.join(d, 'out')
+            os.makedirs(out)
+            hosts = json.dumps({'google/gemma-4-31b-it': ['a', 'b', 'c']})
+            p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'answer_questions_for_one_model.py'), '--out', out, '--mock',
+                                '--models', 'google/gemma-4-31b-it', '--modes', 'baseline', '--runs', '3', '--questions', 'L1-001', '--hosts', hosts],
+                               capture_output=True, text=True, env=dict(os.environ, AI_GATEWAY_API_KEY='x'), timeout=120)
+            self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+            run_dir = os.path.join(out, os.listdir(out)[0])
+            rows = sorted(csv.DictReader(open(os.path.join(run_dir, 'answers.csv'), encoding='utf-8')), key=lambda r: r['run'])
+            self.assertEqual([r['provider'] for r in rows], ['a', 'b', 'c'])        # run 1, 2, 3 prefer a, b, c
+            self.assertEqual(json.load(open(os.path.join(run_dir, 'config.json')))['hosts'], {'google/gemma-4-31b-it': ['a', 'b', 'c']})
 
 
 class SummarizeTest(unittest.TestCase):
