@@ -24,7 +24,7 @@
 - The CPU cannot read or write NVMe directly. A page on tier 1 is fetched back to DRAM when it becomes active; the vCPU that touched it waits for the fetch.
 - So a guest write to a cold page waits too: an access to a page on NVMe raises a page fault, and the page is fetched to DRAM before the access completes (vSphere 9.1 documentation, pp. 1848, 1872). The fetch shows as NVMe read bandwidth, which counts pages fetched from NVMe when they become active; NVMe write bandwidth counts cold pages moved down (p. 1848).
 - NVMe write bandwidth is demotion: cold pages moved down in the background, off the vCPU's path. It costs device endurance and device time: under heavy writes the device's garbage collection can raise read latency.
-- One fetch costs about 1,000x a DRAM access: about 100-200 µs against about 100 ns. Many fetches at a healthy latency still slow a VM; one fetch at a high latency on an idle device does not.
+- One fetch costs about 1,000x a DRAM access: about 100-200 µs against about 100 ns. Each fetch delays the touching vCPU once, for the full fetch (a wake-up delay of an idle device included). A few fetches cost little, not nothing; many fetches at a healthy latency still slow a VM.
 - Compared with host swapping (including swap to host cache):
   - trigger: swapping is reactive, a last resort under severe memory pressure; tiering is proactive and runs continuously once DRAM consumption passes about 80%;
   - selection: swapping picks pages at random, so active pages go out too and the application stalls; tiering ages pages by recency and frequency and moves only cold ones;
@@ -60,8 +60,8 @@
   - demand beyond DRAM + NVMe: swap stays as the last resort, for correctness, for example during evacuations at 3x-4x overcommit.
 - Broadcom does not state that compression and swap now wait until tier 1 is full. The host's total memory is tier 0 + tier 1, and new pages are allocated from tier 1 once DRAM passes 80%, so host-wide reclamation is expected only when both tiers are nearly full.
 - Do not combine memory overcommit with memory tiering: ballooning and swapping on top of NVMe pages degrade performance.
-- Memory reservations (not pinned memory) can be split between DRAM and NVMe when the reserved VMs together exceed DRAM.
-- A memory reservation does not keep a tiered VM in DRAM: its reservation can be served from NVMe; only its overhead memory always sits in DRAM. To keep a VM in DRAM, turn tiering off for it and reserve all its memory (vSphere 9.1 documentation, pp. 1871, 1873, 1969).
+- Memory reservations (not pinned memory) are served from both tiers. The vendor example, reserved VMs that together exceed DRAM, shows the split; it is not a condition for it.
+- A memory reservation is a floor against reclamation (balloon, compression, swap), not a DRAM placement lock. Once DRAM consumption passes about 80%, cold pages of a reserved tiered VM go to NVMe, whatever the total of the reservations. Only its overhead memory always sits in DRAM. To keep a VM in DRAM, turn tiering off for it and reserve all its memory (vSphere 9.1 documentation, pp. 1871, 1873, 1969).
 - vMotion of a tiered VM takes 1.5x to 2x longer: pages are fetched from NVMe first. The running VM is barely affected.
 - After vMotion the destination host starts tiering the VM from scratch: page heat is not transferred (planned for a future release).
 - Measured (VCF 9.0 performance study): evacuating 4 Oracle VMs took 82 s with tiering against 23.5 s DRAM only; downtime stayed below 1 s and the guest penalty below 5%. The extra time is in the precopy, reading cold pages from NVMe.
@@ -147,6 +147,7 @@ memstats -r vmtier-stats -u mb -s name:memSize:active:tier1Target:tier1Consumed
 - "Any SSD works for memory tiering" → Performance Best Practices for vSphere 9.1 (p. 14) specifies a high-performance NVMe device with the write rate and endurance above.
 - "Active memory at 75% of DRAM is the limit" → 75% is the point where some workloads begin to suffer. The ideal is 50%.
 - "High consumed memory on a tiered host is a problem" → consumed may exceed DRAM by design; active memory against DRAM decides performance.
+- "A memory reservation keeps a tiered VM in DRAM" → it keeps the VM from being ballooned or swapped; its cold pages still go to NVMe, also when the reservations fit in DRAM. Turn tiering off for the VM and reserve all its memory.
 - "Disable tiering for a VM and it gets DRAM" → only with a full memory reservation; otherwise it can be swapped.
 - "Tier 1 shows 0 consumed, so tiering is broken" → by design below about 80% DRAM consumption; also 0 for Fault Tolerance and PCI passthrough VMs, which stay in DRAM.
 - "Tiering doubles memory, so plan capacity on Consumed" → plan on Active against DRAM; Consumed may exceed DRAM.
