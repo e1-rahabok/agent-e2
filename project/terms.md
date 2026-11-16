@@ -37,6 +37,7 @@ English words carry a general meaning and a VMware operations meaning. A word is
 | reading plan | The code that builds the reading set: tiers of named files, search hits, mechanism links and one search per claim ([`harness/AGENT.md`](../harness/AGENT.md), section 4.2) (author, 2026-11-14, Q210) | retrieval (alone), routing |
 | harness | The execution environment and guardrails around the model (`harness/`): search engine, catalog, calculator, flow executor, budgets, the verifier. The agent runs on it and uses its tools | wrapper |
 | runner | The benchmark code ([`benchmark/runner/`](../benchmark/runner)) | - |
+| Enterprise Readiness | The category of mandatory-by-policy components an enterprise requires (availability, recoverability, security, observability, governance, IT operations management, dev/test/QA copies). Not virtualization overhead (author, 2026-11-16) | enterprise requirement cost, enterprise overhead |
 | judge | The model that scored free-text answers 0-3; archived 2026-11-14 (Q199): every question is multiple choice | grader |
 | candidate | A model in the benchmark | model under test, AI under test |
 | test | A code test only: [`harness/test_tools.py`](../harness/test_tools.py), [`benchmark/runner/test_runner.py`](../benchmark/runner/test_runner.py) | the benchmark |

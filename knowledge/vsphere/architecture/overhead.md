@@ -1,31 +1,35 @@
 # Overhead
 
 ## Definition
-- The word "overhead" takes on a different meaning in enterprise-grade system. Many components that are not 100% technically required just to run system become mandatory. These components cover availability, recoverability, security, observability, governance, and IT operations management. It also includes additional copy of the environments for development, test and QA.
-- Virtualization, being a layer in between Operating Systems and physical hardware, logically brings its own unique overhead. 
-- Do not label every additional load as overhead.
-- Overhead: mandatory (cannot be avoided) AND has negative impact (slower performance or more resource required).
-- Not overhead: optional. You choose to use it. Typically brings a capability not possible without virtualization. The capability typically consumes resource, which is often mistaken as overhead.
+- Virtualization overhead: what the virtualization layer adds. Three conditions, all true: mandatory (cannot be avoided), has a negative impact (slower performance or more resource required), and added by virtualization (a physical server has no equivalent).
+- Enterprise Readiness: the architectural, operational, security and governance maturity an enterprise requires before it runs a system at scale. It is mandatory by policy, not by technology: availability, recoverability, security, observability, governance, IT operations management, and extra copies of the environment for development, test and QA. It consumes capacity and money, but it is not virtualization overhead: a physical server needs it too.
+- Not overhead: optional. You choose to use it. Typically brings a capability not possible without virtualization. The capability typically consumes resource, which is often mistaken for overhead.
+- Do not label every additional load as overhead. Name the category, so the person who can change the cost knows who owns it.
+- Enterprise Readiness is negotiable at the level of the requirement (N+1 or N+2 for HA, how many test copies, how long to keep logs and backups); virtualization overhead is not.
 
-## Overhead
+## Virtualization overhead
 | Item | Note |
 |---|---|
 | ESXi kernel | Delivers value, but not optional and not negligible. Reduces usable capacity. |
 | IO processing by the hypervisor | Extra processing by the kernel. Can cause the IO blender effect. Does not reduce the resources allocated to the Guest OS. |
 | VM CPU and memory overhead for the VM Monitor (VMM) | Small. Operationally negligible. |
 | vSAN processes | ESXi memory consumed and CPU used by vSAN processes. |
-| VM log files | The VM is a layer of its own; its logs provide necessary observability. It is not however, an additional overhead as physical servers will have their equivalent log files.|
+| VM swap file (`.vswp`) | Created at power-on whether or not the host is overcommitted; size is configured memory minus reservation (zero when all memory is reserved). Costs datastore space. A physical server has none. Overcommit is the capability it enables, not a reason the file is optional. |
+
+## Enterprise Readiness
+| Item | Requirement it serves | Note |
+|---|---|---|
+| vSphere HA spare capacity | Availability | Extra ESXi hosts provide availability protection. A physical cluster needs spare servers too. |
+| VM log files | Observability | The VM is a layer of its own; its logs provide necessary observability. Physical servers have their equivalent log files, so the logs replace something and add nothing new. vSphere 9.1 lets VM logging be turned off, but the vendor says not to (it makes support difficult or impossible; p. 228, `logging`), so the logs are mandatory in practice and cost disk space and IO. |
 
 ## Not overhead
 | Item | Note |
 |---|---|
 | VM snapshot | Optional. Delivers functionality not available in the Guest OS. |
-| VM swap file (`.vswp`) | Enables memory overcommit at ESXi level. |
-| vSphere HA spare capacity | Extra ESXi hosts provide availability protection. |
 | vSAN Failures-to-Tolerate (FTT) policy | Availability protection, because vSAN does not use hardware-level redundancy. For transient VMs with a master template, FTT can be 0 (no protection). |
 
 ## Buffers
-- Buffers are a separate category, in addition to overhead. Four types:
+- Buffers are a separate category, in addition to overhead and Enterprise Readiness. Four types:
 
 | Buffer | Effect |
 |---|---|
@@ -163,7 +167,8 @@
 - Moved to [`vsphere/object-types/esxi/esxi-health-check`](../object-types/esxi/esxi-health-check.md), section Documentation guidance (esxtop).
 
 ## Misconceptions
-- "Snapshots, HA spare hosts and vSAN FTT are virtualization overhead" → they are optional capabilities that consume resources; overhead is mandatory and brings no capability.
+- "Snapshots, HA spare hosts and vSAN FTT are virtualization overhead" → snapshots and vSAN FTT are optional capabilities that consume resources; the HA spare host is Enterprise Readiness (required by policy, needed on physical servers too). Virtualization overhead is mandatory, costs resources and is added by virtualization.
+- "VM log files are virtualization overhead" → they are mandatory in practice, but a physical server has its own logs: Enterprise Readiness (observability).
 - "All hypervisor work for a VM outside the guest is overhead" → that work (area C in [`vsphere/architecture/vm-vs-guest-os`](vm-vs-guest-os.md)) includes optional capabilities such as snapshot work, which are not overhead.
 - "Use kernel reservation as overhead" → it does not follow use: hypervisor use can pass it (CPU at high load; NSX agents and vSAN services outside host/system) or stay far below it.
 - "The kernel reservation is memory VMs can never use" → admission control withholds it from VM reservations, used or not; the pages the kernel has not consumed stay free, and VMs can consume them.

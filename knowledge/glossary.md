@@ -195,6 +195,9 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
   - File: [`sp5-framework/concepts/modelling`](sp5-framework/concepts/modelling.md)
 - **Saturation**: The part of consumption beyond utilization: ballooned, compressed and swapped memory, and the NVMe tier in use. Consumption = Utilization + Saturation. Not contention: nothing is slow yet.
   - File: [`vsphere/object-types/cluster/models/cluster-consumption`](vsphere/object-types/cluster/models/cluster-consumption.md)
+- **Enterprise Readiness**: The architectural, operational, security and governance maturity an enterprise requires before it runs a system at scale: availability, recoverability, security, observability, governance, IT operations management, and extra environment copies for development, test and QA. Mandatory by policy, not by technology; it consumes capacity but is not virtualization overhead, because a physical server needs it too.
+  - Not to confuse with virtualization overhead: overhead is added by the virtualization layer and cannot be negotiated; Enterprise Readiness is set by a requirement (N+1 or N+2, number of test copies, retention) and can be tuned.
+  - File: [`vsphere/architecture/overhead`](vsphere/architecture/overhead.md)
 - **Usable capacity**: Total capacity minus HA, buffer and hypervisor overhead. Performance management is never measured against Usable Capacity numbers.
 
 ### Operations management

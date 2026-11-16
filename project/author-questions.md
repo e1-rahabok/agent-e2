@@ -66,15 +66,6 @@ Each entry:
 - Recommended: pair 1 B (the touching vCPU waits for the fetch; reword the first line to "delays the vCPU once; a few fetches cost little, not nothing"); pair 2 B (drop "only when": keep the vendor example as an example). 0384 H stays false; key A, C unchanged.
 - Answer:
 
-### Q250 · Overhead · VM logging as overhead
-
-- Files: [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md); question [0017](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-010-overhead-classification.md).
-- Now: the file counts VM log files as overhead; vSphere 9.1 (p. 1024, Enable logging) makes VM logging a setting. 0017 B rests on the file's definition. The vSAN half of this question moved to Future release (Q254, author, 2026-11-16); 0017 no longer tests vSAN.
-- Research (2026-11-16): the vSphere 9.1 PDF, p. 228, advanced configuration parameters: the `logging` option disables all VM logging and "Do not use this setting, because disabling virtual machine logging makes it difficult or impossible to get support for virtual machine problems." So logging is on by default and the vendor says to keep it on.
-- Question: keep VM log files as overhead (0017 B stays)?
-- Recommended: yes. Add one line to overhead.md: logging can be switched off but the vendor says not to (p. 228), so it is mandatory in practice and costs disk space and IO.
-- Answer:
-
 ### Q253 · Network > esxtop units · The misconception line points the wrong way
 
 - Files: [esxtop network units against the vSphere Client](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/network-units-vs-vsphere-client.md) (section Misconceptions); question 0412 (option K).
@@ -119,7 +110,7 @@ Each entry:
 
 ### Q254 · Overhead · vSAN as overhead (after 1.0)
 
-- Moved to Future release by the author, 2026-11-16 (from Q250). Impact: 0017 no longer tests vSAN (E and K replaced; key A, B, F, K unchanged).
+- Moved to Future release by the author, 2026-11-16 (from Q250). Impact: 0017 no longer tests vSAN (E and K replaced).
 - Files: [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) (vSAN processes, FTT policy, the Misconceptions line on FTT).
 - Now: the file counts vSAN processes as overhead and the FTT copy as not overhead. Other questions lean on vSAN too and still run: 0390 (vSAN host Consumed in maintenance mode), 0056 (host Consumed with no VMs), 0080 (datastores running out of space: four options on vSAN space), 0215, 0217, 0296, 0409, 0069. They are not changed: Q250 named 0017 only.
 - Question: when vSAN content is written, check the overhead lines against it, and decide for the questions above whether they move to after 1.0 too (0390 and 0080 are the most vSAN-keyed).
