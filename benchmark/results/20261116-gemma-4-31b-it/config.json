@@ -4,9 +4,10 @@
   "resumed": [
     "2026-11-16T11:21:32",
     "2026-11-16T13:00:26",
-    "2026-11-16T13:32:45"
+    "2026-11-16T13:32:45",
+    "2026-11-16T13:55:02"
   ],
-  "index_version": "6c422ed54d447c004c0af693a15b06d3f6f11e4c",
+  "index_version": "89ffa8d47073588e1d68393d60ecb792570a1ea1",
   "primer": {
     "rules": true,
     "terms": true
