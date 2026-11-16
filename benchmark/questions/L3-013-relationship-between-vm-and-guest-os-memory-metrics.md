@@ -2,9 +2,9 @@
 
 ## Prompt
 - Two VMs on an ESXi 9.1 host, with VMware Tools installed and running on both. vCenter and VCF Operations collect their metrics.
-- app-win-11, Windows Server 2022, 96 GB configured: VCF Operations shows its memory Utilization at 104% of configured memory and Guest|Physically Usable Memory at about 64 GB. Task Manager inside Windows shows 50 GB in use, 3 GB of it compressed.
+- app-win-11, Windows Server 2022, 96 GB configured: VCF Operations shows its memory Utilization at 92% of configured memory and Guest|Physically Usable Memory at about 64 GB. Task Manager inside Windows shows 50 GB in use, 3 GB of it compressed.
 - db-lnx-04, Red Hat Enterprise Linux 9, 48 GB configured: its owner plans to stop the VMware Tools service (vmtoolsd) for a day.
-- The team asks whether the 104% is a data error, how ESXi can take memory back from these VMs, and whether a limit could take back the memory the guests do not use.
+- The team asks whether 92% (about 88 GB) against the 50 GB Windows uses is a data error, how ESXi can take memory back from these VMs, and whether a limit could take back the memory the guests do not use.
 
 Which statements are correct?
 
@@ -22,7 +22,7 @@ C: a Guest OS counter and a VM counter with the same name read as one. Or F, the
 
 ## Expected key points
 - Answer: A, B, D, E.
-- A is true: VCF Operations VM memory Utilization adds guest page-in (rate × page size) and the memory the guest cannot use to Guest Needed Memory, so it can exceed 100%; the 104% of app-win-11 is not an error.
+- A is true: VCF Operations VM memory Utilization adds guest page-in (rate × page size) and the memory the guest cannot use to Guest Needed Memory, so it can exceed 100%. The 92% of app-win-11 is not an error either: 32 GB the guest cannot use plus a Needed Memory of about 56 GB (In Use, part of the cache and the 5% buffer).
 - B is true: the formula adds Memory Total Capacity minus Guest Physically Usable Memory, here 96 - 64 = 32 GB.
 - C is false: Windows compresses its In Use pages inside the guest, a Guest OS counter; VM Compressed is ESXi's compression of VM pages. Different layers, different counters.
 - D is true: the balloon driver is the only way for ESXi to ask the guest for memory, and on Windows it ships with VMware Tools. Without it ESXi can only compress or swap.
@@ -36,6 +36,7 @@ C: a Guest OS counter and a VM counter with the same name read as one. Or F, the
 - Option D was "If VMware Tools is not running, the hypervisor cannot balloon the VM". The knowledge base (ballooning; Broadcom KB 313773) says the driver is a kernel driver: on Linux `vmw_balloon` is in the kernel and not part of open-vm-tools, so a Linux VM keeps ballooning while vmtoolsd is stopped. D states the Windows case; H the Linux case.
 - Review 2026-11-15: the quiz's options A (the two layers are managed independently), B (the values and patterns differ) and C (a page freed in the guest is freed in ESXi) are tested by 0095 (B, C, D, E); they are replaced by facts 0095 lacks: VCF Operations Utilization above 100% (A), unusable guest memory (B) and the two compression counters (C). D and E, the quiz's own facts, stay.
 - Changed in the 2026-11-15 audit: the definition prompt became a case with two VMs (F5); B, C and H now read the case; E (Utilization falls back to Consumed without guest data, tested by the pair 0396/0397) replaced by the 5% buffer inside Needed Memory; key point G gives the limit's enforcement order (a limit balloons first).
+- Changed in the 2026-11-16 re-review: Utilization of app-win-11 lowered from 104% to 92%. Needed Memory cannot pass the 64 GB the guest can use, so 104% of 96 GB needed a page-in term of about 4 GB (about a million 4 KB pages per second), which the stem did not give. 92% fits without paging: 32 GB unusable plus Needed Memory of about 56 GB. No option depends on the value.
 
 ## Metadata
 ```yaml

@@ -12,7 +12,7 @@ Which statements are correct?
 - D. The cluster cannot take the 40 VMs: one host at 100% means the cluster is full.
 - E. Add hosts before placing the 40 VMs, since one of the six hosts reached 100%.
 - F. Check why the load stays on one host: VM-Host rules, DRS automation level, VMs that cannot move.
-- G. Outside weekday business hours, esx-b23 runs no hotter than the other five hosts.
+- G. In the rows outside 09:00 to 17:00 on weekdays, esx-b23 runs at about the level of the other five hosts.
 - H. DRS at its default threshold balances the hosts whenever one runs hotter than the others.
 
 ## Likely wrong answer
@@ -26,7 +26,7 @@ A: the cluster peak read as a ceiling for every host. Or E: one host at 100% rea
 - D is wrong: the over-correction. Capacity is planned per cluster, from the cluster average against usable capacity; the hot host is a placement and risk finding, not the capacity input.
 - E is wrong: the wrong action. The other five hosts stay below 75% in every row; the load that stays on one host is a pocket (affinity rules, host groups) that more hosts do not spread.
 - F is correct: affinity rules and host groups act as sub-clusters and hold a pocket of load that DRS cannot spread.
-- G is correct: outside 09:00-17:00 on weekdays esx-b23 stays at about 50% or below, like the other hosts; the hot spot is a daytime load held on one host, which fits a pocket (F).
+- G is correct: in the 123 rows outside 09:00 to 17:00 on weekdays, esx-b23 stays at 49.3% or below against at most 50.0% for the other hosts, with a mean of 30.3% against 30.1%. It is the hottest host in 21 of those rows, about one in six, as any one of six similar hosts would be. The hot spot is a daytime load held on one host, which fits a pocket (F).
 - H is wrong: since vSphere 7.0 DRS works on each VM's DRS Score (VM happiness), not on even host utilization; a hot host whose VMs are served, or whose load a rule or setting holds, is left as it is.
 
 ## Notes
@@ -34,6 +34,7 @@ A: the cluster peak read as a ceiling for every host. Or E: one host at 100% rea
 - Converted to an export 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md, row 0438): a seeded VCF Operations list view, one row per hour for 7 days, the cluster and its six hosts; the cluster equals the mean of the identical hosts in every row. The export does not show the cause of the hot host (F stays open). A, B, C and H reworded from chart and line to the export's values. The list view CSV format is assumed (project/tools/exportgen/README.md). The key holds for the generated export; the generator checks every condition against the rows.
 - Practical half of the new pair D3; theory half: 0437 (design.md, section 3.9).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item D3). Counts only after the author's approval.
+- Changed in the 2026-11-16 re-review: G said esx-b23 "runs no hotter than" the others off-hours, false in the 21 rows where it is the hottest (by up to 7 points); G now says "at about the level of", and option and key point name the same window (rows 09:00 to 17:00 on weekdays, as the generator's check uses). Still true; the export is unchanged.
 
 ## Metadata
 ```yaml

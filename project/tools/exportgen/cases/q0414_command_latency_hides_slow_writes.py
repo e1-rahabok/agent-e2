@@ -63,7 +63,7 @@ class Q0414(core.Case):
                 fails.append(f"{k}: A: reads / writes {rq[i] / wq[i]:.1f}")
             self._keys(fails, k, rd[i], wr[i], cmd[i])
         if sum(x > 0 for x in ker) > 0.10 * N:
-            fails.append("Kernel latency above 0 in more than 10% of rows")
+            fails.append("H false: Kernel latency above 0 in more than 10% of rows")
         m = lambda v: sum(v) / len(v)
         self._keys(fails, "means", m(rd), m(wr), m(cmd))
         return fails[:20]
@@ -79,4 +79,4 @@ class Q0414(core.Case):
         if not cm > r:
             fails.append(f"{k}: E false: Command not above Read")
         if not (cm - r) < (w - cm) or cm - r > 2 or w - cm < 8:
-            fails.append(f"{k}: H false: Command - Read, Write - Command")
+            fails.append(f"{k}: A, D: Command not near Read: Command - Read, Write - Command")

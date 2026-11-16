@@ -2,7 +2,7 @@
 
 ## Prompt
 - A site has vCenter 9.1 and no VCF Operations. The statistics level is at its default for every interval.
-- On Monday at 10:00 an owner reports that the 8-vCPU VM erp-batch-04 was slow on Sunday between 03:20 and 03:40.
+- On Sunday at 21:00 an owner reports that the 8-vCPU VM erp-batch-04 was slow earlier that day, between 03:20 and 03:40.
 - You run the VM health check for that window from the vSphere Client performance charts. The check reads, in order, CPU Ready and Co-stop, memory Latency, disk latency, and dropped packets.
 
 Which statements are correct?
@@ -22,8 +22,8 @@ A or D: the health-check counters are assumed to exist in the chart history, or 
 ## Expected key points
 - Answer: C, F.
 - A is wrong: at the default level 1 a VM keeps no Co-stop, no memory Latency and no dropped packets; they need a higher statistics level, set before the event.
-- B is wrong: Real-time data (20-second samples) is kept for one hour only; Sunday's window is long gone from it.
-- C is correct: CPU Ready is one of the level 1 counters of a VM, so the 1 Day chart (5-minute points, kept for a day) holds it for the window.
+- B is wrong: Real-time data (20-second samples) is kept for one hour only; at 21:00 the 03:20 window is long gone from it.
+- C is correct: CPU Ready is one of the level 1 counters of a VM, and the 1 Day chart keeps 5-minute points for a day; the window ended about 17 hours before the check (and more than the 30-minute 1 Day delay), so the chart holds it.
 - D is wrong: Minimum and Maximum rollups are stored only at statistics level 4; at level 1 the 1 Day point of Ready is a summation of its 15 samples and the latency point uses Latest.
 - E is wrong: CPU Ready and Disk Highest Latency are contention counters kept at level 1.
 - F is correct: Highest Latency (maxTotalLatency) has the Latest rollup: the 5-minute point is the last 20-second sample, not the worst, so it cannot be read as a peak.
@@ -37,6 +37,7 @@ A or D: the health-check counters are assumed to exist in the chart history, or 
 - Rests on: vendor documentation (retention, rollups, levels), and the health-check counter list of the VM check file.
 - Background for a reviewer: this is why the health check is run in VCF Operations, which stores the 20-second peak of each 5-minute cycle; vCenter does not keep it in its history.
 - Changed in the 2026-11-15 audit: old C (Ready and Highest Latency kept, Highest Latency is the last sample, the other three not stored: three facts in the only true option) split into C (Ready kept) and F (Latest rollup); its third part was dropped because A already tests it. D now states that maximum rollups exist at every level (false; the old D read a chart point as a peak, which 0047 and 0432 test). G (balloon and swap rates read as memory Latency) and H (per-disk latency) added. Key changed from C to C, F. Level 400 to 300: each option is one stored counter or one rollup type.
+- Changed 2026-11-16: the report moved from Monday 10:00 to Sunday 21:00, so the window (03:20 to 03:40) is within the 1 Day archive of one day; at Monday 10:00 it was about 31 hours old and C was false.
 
 ## Metadata
 ```yaml

@@ -31,9 +31,10 @@ A: two half-height points read as a long job at half load. Or D: the split read 
 
 ## Notes
 - Changed in the 2026-11-15 audit: G replaced (a misread of the export, given away by the owner's claim) by the Real-time retention (false; vcenter-statistics); D reworded from "open a support case" to a wrong reading; E without "never" (still false); H added, the arithmetic of the split (true). Answer B, C, F -> B, C, F, H.
-- Converted to an export 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md, row 0440): a seeded vCenter Real-time export (30 minutes, 20-second rows, Usage plus the Readiness columns of the CPU % view) and a VCF Operations chart export (2 hours, 5-minute values); every VCF Operations value is the mean of its 15 twenty-second samples. The owner's question no longer says that VCF Operations never shows the full peak, so G is read from the export. A, B, C, F, G reworded from chart and points to the exports' values. The key holds for the generated exports; the generator checks every condition against the rows.
+- Converted to an export 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md, row 0440): a seeded vCenter Real-time export (30 minutes, 20-second rows, Usage plus the Readiness columns of the CPU % view) and a VCF Operations chart export (2 hours, 5-minute values); every VCF Operations value is the mean of its 15 twenty-second samples. The owner's question no longer says that VCF Operations never shows the full peak, so the full-height plateau is read from the vCenter export (A, F). A, B, C, F reworded from chart and points to the exports' values (G was later replaced, see the audit line above). The key holds for the generated exports; the generator checks every condition against the rows.
 - Practical half of the new pair D9; theory half: 0439 (design.md, section 3.9).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item D9). Counts only after the author's approval.
+- Changed in the 2026-11-16 re-review: the export note no longer says G is read from the export; G tests Real-time retention.
 
 ## Metadata
 ```yaml

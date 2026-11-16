@@ -1,4 +1,4 @@
-# A cluster above 90% CPU and a request for hosts
+# A week of cluster CPU and a request for hosts
 
 ## Prompt
 - The capacity manager sends [the VCF Operations export of cluster prod-cl03](0431/vcf-operations-cluster-cpu-7-days.csv) for the past week, one row per hour: "Look at the cluster's CPU this week. The VMs must be suffering. Order two hosts now to fix the performance."
@@ -31,14 +31,15 @@ A: high utilization read as a performance problem, and C, the action that follow
 
 ## Notes
 - Changed in the 2026-11-15 audit: H replaced (a misread of the usage column) by the average-across-VMs reading (aggregation, Depth and breadth); the generator's check that usage passes 80% still holds but no option rests on it now.
-- Converted to an export 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md, row 0431): a seeded VCF Operations list view of the cluster, one row per hour for 7 days (Avg and Max of the 5-minute values, plus the cluster's average contention), and a list of the cluster's 140 VMs with the weekly Max of CPU Contention and CPU Usage, sorted by contention. The manager's quote no longer states the level ("very high all week"), so H is read from the export. A, F, G, H reworded from chart and list to the export's values. The list view CSV format is assumed (project/tools/exportgen/README.md). The key holds for the generated export; the generator checks every condition against the rows.
+- Converted to an export 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md, row 0431): a seeded VCF Operations list view of the cluster, one row per hour for 7 days (Avg and Max of the 5-minute values, plus the cluster's average contention), and a list of the cluster's 140 VMs with the weekly Max of CPU Contention and CPU Usage, sorted by contention. The manager's quote no longer states the level ("very high all week"), so the level is read from the export (E). A, F, G, H reworded from chart and list to the export's values. The list view CSV format is assumed (project/tools/exportgen/README.md). The key holds for the generated export; the generator checks every condition against the rows.
 - Practical half of 0019 (pair: design.md, section 3.9).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C7). Counts only after the author's approval.
+- Changed in the 2026-11-16 re-review: the title no longer states the level ("above 90%"), which the stem leaves to the export; the note on the quote now names E, the option that reads the level.
 
 ## Metadata
 ```yaml
 id: "0431"
-title: "A cluster above 90% CPU and a request for hosts"
+title: "A week of cluster CPU and a request for hosts"
 product: [vcf-operations, vsphere]
 technology: [cpu, system]
 task: decide-capacity

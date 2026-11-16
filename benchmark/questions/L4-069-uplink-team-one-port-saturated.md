@@ -4,19 +4,19 @@
 - ESXi 9.1 host esx-14 has four 10 GbE uplinks, vmnic0 to vmnic3, in one team on a distributed switch.
 - Port group pg-backup uses load balancing "Route based on originating virtual port". All four uplinks are active.
 - A backup proxy VM, bkp-01, has one VMXNET3 adapter. Every night it streams to a single backup target at one IP address.
-- The backup now runs over its window. Its throughput never goes above about 9.4 Gb/s.
+- The backup now runs over its window. Its throughput never goes above about 9.3 Gb/s.
 - esxtop network panel during the backup, columns selected:
 
 ```text
    PORT-ID USED-BY              TEAM-PNIC  MbTX/s   MbRX/s
-  67108866 vmnic0               -         9512.40   210.33
-  67108868 vmnic1               -          402.17   388.90
-  67108870 vmnic2               -          366.02   351.48
-  67108872 vmnic3               -          298.55   305.12
-  67108890 2471102:bkp-01.eth0  vmnic0    9398.71   140.62
+  67108866 vmnic0               -         9455.20   214.07
+  67108868 vmnic1               -         1618.44  1502.31
+  67108870 vmnic2               -          976.85  1120.40
+  67108872 vmnic3               -         1349.63  1288.92
+  67108890 2471102:bkp-01.eth0  vmnic0    9341.58   140.62
 ```
 
-- The team's capacity report says the uplink team averages 26% transmit utilization, so the network has room.
+- The team's capacity report says the uplink team averages 34% transmit utilization, so the network has room.
 
 Which statements are correct?
 
@@ -25,19 +25,19 @@ Which statements are correct?
 - C. Physical NIC load teaming moves the busy port whole, so the port still sends on one uplink.
 - D. IP hash with a static EtherChannel spreads this backup stream over all four uplinks.
 - E. A second adapter on bkp-01, with its port on another vmnic, carries a second stream on that uplink.
-- F. The team averages 26% transmit, so the network is not what limits bkp-01's nightly backup.
+- F. The team averages 34% transmit, so the network is not what limits bkp-01's nightly backup.
 
 ## Likely wrong answer
-B: "more uplinks, more bandwidth for the VM". Or F, the capacity report's view: "26% average utilization means the network has room."
+B: "more uplinks, more bandwidth for the VM". Or F, the capacity report's view: "34% average utilization means the network has room."
 
 ## Expected key points
 - Answer: A, C, E.
-- A is correct: route based on originating virtual port maps each virtual port to one uplink. One virtual NIC is pinned to one vmnic (here vmnic0), so its ceiling is one 10 GbE link, about 9.4 Gb/s of payload.
+- A is correct: route based on originating virtual port maps each virtual port to one uplink. One virtual NIC is pinned to one vmnic (here vmnic0), so its ceiling is one 10 GbE link, about 9.3 Gb/s of payload here.
 - B is wrong: new uplinks add capacity for other ports, not for a port already pinned to one uplink.
 - C is correct: physical NIC load (load-based teaming) checks the uplinks every 30 seconds and moves a port when an uplink stays above 75%. It balances ports between uplinks; it does not split one port's traffic.
 - D is wrong: IP hash chooses the uplink from the source and destination IP. One VM talking to one target IP hashes to one uplink, so this backup would still use one link. IP hash also needs a static EtherChannel on the physical switch.
 - E is correct: each adapter has its own virtual port, which can map to a different uplink, so two streams over two adapters can use two links.
-- F is wrong: the 26% team average hides one saturated uplink: bkp-01's port is pinned to vmnic0 at about 95% of 10 Gb/s, so the network caps its backup. Read each uplink, not the team average.
+- F is wrong: the 34% team average ((9,455 + 1,618 + 977 + 1,350) / 40,000) hides one saturated uplink: bkp-01's port is pinned to vmnic0 at about 95% of 10 Gb/s, so the network caps its backup. Read each uplink, not the team average.
 
 ## Notes
 - Keyed from the vendor documents below. Outside the knowledge base when written; since 2026-11-14 the NIC teaming file covers it (vSphere 9.1 documentation, teaming and failover) and is the main file.

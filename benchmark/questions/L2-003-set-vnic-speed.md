@@ -11,7 +11,7 @@ Which statements are correct?
 - B. The 10 Gbps that Windows shows is a label the virtual adapter reports; it caps nothing.
 - C. The VMX option that changes the reported link speed accepts no value below 10 Gbps.
 - D. A traffic shaping policy on the port group, with average and peak bandwidth, caps the VM's bandwidth.
-- E. A Network I/O Control limit set on the VM's network adapter caps its bandwidth.
+- E. A Network I/O Control limit set on the VM's network adapter caps the bandwidth the VM sends.
 - F. A Network I/O Control limit takes effect only when the uplink is saturated.
 - G. A Network I/O Control limit on the adapter caps both the traffic the VM sends and the traffic it receives.
 - H. On a distributed switch, traffic shaping is set separately for traffic into and out of the VM.

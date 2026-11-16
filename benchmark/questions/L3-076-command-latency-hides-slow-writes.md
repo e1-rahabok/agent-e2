@@ -14,7 +14,7 @@ Which statements are correct?
 - E. Command latency counts only the reads of the LUN and leaves the writes out.
 - F. With Command latency healthy, the slow writes must come from inside the database, not from the LUN.
 - G. If the workload turned write-heavy, Command latency would move toward Write latency.
-- H. In the export, Command latency sits closer to Write latency than to Read latency.
+- H. In the export, most of Command latency is time in the host's kernel rather than at the device.
 
 ## Likely wrong answer
 B: Command latency is (read + write) / 2. Or F: Command latency is healthy, so the LUN is not the cause.
@@ -28,7 +28,7 @@ B: Command latency is (read + write) / 2. Or F: Command latency is healthy, so t
 - E is wrong: the writes are in it, weighted by their share of the commands; that is why it sits above Read latency.
 - F is wrong: the misconception. The combined value hides the slow side; the LUN's Write latency is 4 to 6 times its Read latency.
 - G is correct: a weighted average moves toward the side that carries most commands.
-- H is wrong: reading. In every row Command latency is 1-2 ms above Read latency and at least 8 ms below Write latency.
+- H is wrong: reading. Command latency is Physical device command latency plus Kernel command latency, and Kernel command latency is 0 in at least 90% of the rows: the time is at the device, with the slow side being the writes.
 
 ## Notes
 - Paired with the theory question 0044 (theory and practical; design.md, section 3.9).
@@ -36,6 +36,7 @@ B: Command latency is (read + write) / 2. Or F: Command latency is healthy, so t
 - Review 2026-11-15: the condition could not be met (with 6-10 reads per write and writes 4-6 times slower, Command latency is 1.27-1.71 times Read latency); it is now 1.2-1.8 times. Options reworded away from 0044; I (a false screen reading) added. Key unchanged: A, C, G, H.
 - 2026-11-15: the screenshot replaced by a generated export (project/practical-questions-as-exports-2026-11-15.md); the generator meets the condition the capture could not (Command latency recomputed per row as the request-weighted mean).
 - Audit 2026-11-15 (redundancy): old G (read and write latency read separately; kept by the pair 0081/0405) dropped; old H and I are now G and H (letter map: A-F unchanged, G dropped, H to G, I to H; the generator case still labels the H condition "I"). A, B, D and E reworded for length (truth unchanged). Key changed from A, C, G, H to A, C, G (same options).
+- Re-review 2026-11-16: H (Command latency closer to Write than to Read) was the reverse of A on this data; it now reads the kernel and device split of Command latency (still false). Case labels follow. Key unchanged: A, C, G.
 
 ## Metadata
 ```yaml

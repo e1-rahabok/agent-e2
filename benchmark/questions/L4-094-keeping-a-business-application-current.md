@@ -20,7 +20,7 @@ The operations team wants new production web VMs to show in the business applica
 - H. The group workspace can show which objects the rules match before the group is saved.
 - I. Keeping a manually created business application current needs a script against the VCF Operations API.
 - J. The owner can be promised that a new VM shows in the group within one 5-minute collection cycle of its creation.
-- K. The dynamic group goes inside the Web tier; the application reads its VMs from its tiers.
+- K. A custom group can be nested in a business application, but a business application cannot be nested in a custom group.
 
 ## Likely wrong answer
 - B: "Tiers are dynamic; the VM appears once vCenter reports it."
@@ -39,7 +39,7 @@ The operations team wants new production web VMs to show in the business applica
 - H is correct: Preview in the group workspace lists the objects the rules match, before the group is saved.
 - I is wrong: a dynamic custom group added to the application does it without a script.
 - J is wrong: how soon a dynamic group picks up a new VM is not documented, so no collection-cycle delay can be promised.
-- K is wrong: a custom group can be connected to the application without a tier, dropped on it directly or nested; the application does not read its VMs only from tiers.
+- K is wrong: custom groups and business applications can be nested in each other, in both directions.
 
 ## Notes
 - Public source: Broadcom TechDocs, VCF 9.1, "Add Business Application" (page last updated 2026-11-12): tier objects are static if the application is created manually; custom groups can be dragged onto the application without a tier, nested, or added to applications. https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/workload-monitoring-and-observability/configuring-business-applications/add-business-application.html
@@ -49,6 +49,7 @@ The operations team wants new production web VMs to show in the business applica
 - Key point not made an option: an application created by VCF Operations itself also follows changes without manual edits (optional in the old key).
 - G rests on a line of vcf-operations/dashboards/business-applications that still has an open review note (one custom group rule matching VMs of several vCenter adapter instances). If a live 9.1 instance shows a rule per adapter instance, G flips.
 - Changed in the 2026-11-15 audit: level 400 to 300 (product behaviour, no metric mechanism); A, C, G, H paraphrased away from the knowledge-file sentences; I, J, K reworded without the only/must/because cues (J is now a promise the knowledge base says not to make); misconception_type same-name-other-object removed (no label has two meanings here).
+- Changed 2026-11-16: K replaced. The old K (group inside the Web tier; the application reads its VMs from its tiers) was not decidable: the knowledge base never says a group cannot sit in a tier, and its second clause was true as written. The new K tests the nesting of groups and applications, false as before.
 
 ## Metadata
 ```yaml

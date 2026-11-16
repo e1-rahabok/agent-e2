@@ -14,13 +14,13 @@
 Which statements are correct?
 
 - A. The memory Demand of 610 GB on the capacity page is the host's Memory|Utilization metric.
-- B. Utilization is lower as it builds on each VM's Guest OS need, which leaves out cache and inactive pages.
+- B. Utilization is lower as it builds on each VM's Guest OS need, which leaves out the guest's free pages and much of its cache.
 - C. Consumed at 92% shows that esx-31 is short of memory.
 - D. Utilization adds the kernel's reservation, 48 GB, not the 21 GB the kernel consumes.
 - E. ESX System Usage should match the 21 GB the kernel consumes, so the 610 GB of Utilization is inflated by an error.
 - F. db-01 counts in host Utilization at no less than its 256 GB reservation, not at its 140 GB.
 - G. Utilization of 610 GB means the VMs hold 610 GB of the host's physical memory.
-- H. Because Utilization leaves out guest cache and inactive pages, it can never read above Consumed on any host.
+- H. Because Utilization leaves out much of the guest cache, it can never read above Consumed on any host.
 - I. With every VM on esx-31 powered off, its Utilization would sit at about 48 GB.
 - J. Order more memory for esx-31, since Consumed is above 90%.
 - K. Machine Demand of 562 GB plus ESX System Usage of 48 GB gives the 610 GB of Utilization.
@@ -31,7 +31,7 @@ C: "92% Consumed means the host is nearly out of memory." E: "Utilization should
 ## Expected key points
 - Answer: A, B, D, F, I, K.
 - A is correct: the VCF Operations capacity pages show host Memory|Utilization under the name Demand (Broadcom KB 439253).
-- B is correct: VM Memory Utilization comes from Guest OS Needed Memory, read through VMware Tools; it removes cache and inactive pages that ESXi Memory Consumed holds. The two tools measure different things; neither is wrong.
+- B is correct: VM Memory Utilization comes from Guest OS Needed Memory, read through VMware Tools; it removes the free pages and most of the cache that ESXi Memory Consumed holds (Needed Memory keeps part of the cache, to be conservative, plus a 5% buffer). The two tools measure different things; neither is wrong.
 - C is wrong: the misconception of ESXi Memory Consumed and Utilization ("ESXi Memory Consumed near 100% means the host is out of memory"). Consumed holds guest cache and inactive pages; the saturation counters (Ballooned, Compressed, Swapped) are 0 and Memory Contention is 0 for every VM.
 - D is correct: ESX System Usage is the kernel reservation, taken whether consumed or not, the same rule as a VM reservation.
 - E is wrong: the misconception "Host memory Utilization adds what the kernel consumes". It adds the reservation (ESX System Usage), not the 21 GB the kernel consumes.
@@ -44,6 +44,7 @@ C: "92% Consumed means the host is nearly out of memory." E: "Utilization should
 
 ## Notes
 - Sources: the knowledge base, ESXi Memory Utilization (Formula; Reason; Misconceptions), Memory capacity (section Demand: the three formulas that share the word Demand), ESXi Memory Consumed (cache and inactive pages; read the saturation counters). VCF Operations 9.1 documentation, Host System Metrics (Mem|Utilization based on the VMs' utilization, including reservations, limits and overhead); Broadcom KB 439253.
+- Changed in the 2026-11-16 re-review: B said Needed Memory leaves out all cache, while the knowledge base keeps part of the cache in it (and L3-060 G keys that as true); B and H now say "much of" the cache. Same truth values.
 - F is worded "at no less than its reservation": the published description includes reservations but gives no formula, and the option holds under any formula that includes the reservation.
 
 ## Metadata

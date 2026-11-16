@@ -11,9 +11,9 @@ Which statements are correct?
 - C. High latency on the virtual disk shows that the array is slow.
 - D. Raising the device queue depth removes the wait an IOPS limit creates.
 - E. With 96 KB reads, the disk completes about 200 reads per second.
-- F. The limit caps the disk's throughput in MB per second rather than its number of IOs.
+- F. With 8 KB reads instead, the disk would complete about 2,400 reads per second.
 - G. The limit applies to the whole VM, across all its virtual disks.
-- H. Open a case with the array vendor for the virtual disk latency.
+- H. Moving the virtual disk to a faster datastore removes the wait.
 - I. The limit also applies to the VM's snapshot files and swap file.
 - J. Latency that comes from the VM's own IOPS limit does not slow the application.
 
@@ -27,9 +27,9 @@ C: the latency is high, so the array is slow. Or J, the overshoot: a wait the VM
 - C is wrong: the misconception. An IOPS limit shows as high QAVG and KAVG with normal DAVG; check the disk's limit.
 - D is wrong: a high QAVG means a VMkernel limit holds the commands (the device queue depth DQLEN, DSNRO on a device that several virtual disks share, or an IOPS limit on a virtual disk). Here the IOPS limit, in the ESXi IO scheduler, holds the IO; each limit holds the requests above it, so a deeper device queue holds the same IO and the cap stays.
 - E is correct: mClock, the ESXi IO scheduler, counts an IO above 32 KB as several: a 96 KB read counts as 3, so 600 / 3 = 200 reads per second.
-- F is wrong: a disk IOPS limit exists; a disk throughput limit does not.
+- F is wrong: mClock counts only an IO above 32 KB as several; an 8 KB read counts as one, so the disk still completes at most 600 reads per second. 2,400 reads would follow from a cap of 600 x 32 KB = 19.2 MB per second, but a disk throughput limit does not exist.
 - G is wrong: the limit is set per virtual disk, not per VM.
-- H is wrong: the wrong action. The wait is in the host, set by the VM's own configuration.
+- H is wrong: the wrong action. The wait is in the ESXi kernel queue, set by the disk's own limit, which moves with the disk: on a faster datastore the cap of 200 reads per second stays. Remove or raise the limit instead.
 - I is wrong: a limit is not possible for snapshots or swap files.
 - J is wrong: the over-correction. The wait is real contention for the VM: it shows in GAVG and in the VM's disk latency, and the application waits for every IO held.
 
@@ -39,6 +39,7 @@ C: the latency is high, so the array is slow. Or J, the overshoot: a wait the VM
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item D6 (origin: synthetic). Counts only after author approval.
 - Review 2026-11-15: D replaced (it was close to 0425 G); J is the over-correction now. Key unchanged: A, B, E.
 - Audit 2026-11-15: D key point cites the VMkernel limits behind a high QAVG (esxi-storage-io-path, added to `knowledge`). Key unchanged: A, B, E.
+- Re-review 2026-11-16: F (the limit caps MB per second) was arguable against E's own mechanism (above 32 KB, the cap acts on bytes); it now tests that an IO of 32 KB or less counts as one. H (open a case with the array vendor) repeated C's misconception; it is now the wrong action of moving the disk. Key unchanged: A, B, E.
 
 ## Metadata
 ```yaml

@@ -9,10 +9,10 @@ Which statements about the VM's CPU shares are correct?
 
 - A. At Normal, default CPU shares are 1,000 per vCPU, so the VM held 12,000 shares before the change.
 - B. After the resize in the vSphere Client, the VM holds 6,000 CPU shares in total.
-- C. Each remaining vCPU gets fewer shares than before, so every downsize makes each vCPU wait longer.
+- C. Each remaining vCPU gets fewer shares than before, so a downsize makes each vCPU wait longer.
 - D. For the same work, the VM now competes with half its shares, so at the busy hour it can get less CPU than it demands.
 - E. Shares decide the split only when the host cannot meet the demand of every VM.
-- F. After the downsize, Ready and Co-stop will fall: 6 vCPUs find free threads at once more easily than 12.
+- F. After the downsize, Ready and Co-stop should fall: 6 vCPUs find free threads at once more easily than 12.
 - G. If Ready rises and Usage falls below Demand after the change, add the 6 vCPUs back.
 - H. Shares set by hand (Custom) keep their number when the VM is resized.
 - I. If other VMs reserve 80% of the host and use it at the busy hour, this VM's shares still divide the whole host.
@@ -37,6 +37,7 @@ C: a smaller VM gets fewer shares per vCPU, so a downsize makes each vCPU wait l
 - Vendor sources: VMware vSphere 9.1 product documentation (project/sources/vmware-vsphere-9-1.pdf), vSphere Resource Management > CPU Virtualization: "With the default resource allocation settings, all virtual machines associated with the same ESX host receive an equal share of CPU per virtual CPU." vSphere Automation API (developer.broadcom.com, latest), Shares, level NORMAL: "For CPU: Shares = 1000 * number of virtual CPUs" (https://developer.broadcom.com/xapis/vsphere-automation-api/latest/appliance/data-structures/Vcenter_Settings_V1_Config_Components_Managementcluster_Shares/); vSphere Resource Management, Resource Allocation Shares (Normal: 1,000 shares per virtual CPU).
 - Drafted 2026-11-14 for the question pairing plan (item B12). Counts only after the author's approval.
 - Changed in the 2026-11-15 audit: F reworded without "always" and "because" (still false); I replaced ("shares guarantee CPU", weak at Level 300) by shares dividing only what reservations leave, with the reserving VMs using their reservations (breaker: a CPU reservation applies only on demand); stale note on the per-VM shares line removed (ready.md is corrected).
+- Changed in the 2026-11-16 re-review: C "every downsize" -> "a downsize" and F "will fall" -> "should fall", so the hedge no longer sits only in a true option and the absolutes only in false ones. Truth values unchanged.
 
 ## Metadata
 ```yaml

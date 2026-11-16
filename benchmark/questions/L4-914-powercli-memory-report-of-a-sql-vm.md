@@ -2,7 +2,7 @@
 
 ## Prompt
 - sql-07 is a Windows Server VM running SQL Server, with 32,768 MB of memory configured, no reservation and no limit. Its host, esx-22, stays at 71% memory Consumed all week, in the esxtop memory state high.
-- A capacity script in PowerCLI collects, as Past day averages, the VM's quick statistics (`ExtensionData.Summary.QuickStats`) and vCenter performance counters (`Get-Stat`):
+- A capacity script in PowerCLI reads the VM's quick statistics (`ExtensionData.Summary.QuickStats`) every hour of the past day and averages them, and takes the Past day averages of vCenter performance counters (`Get-Stat`):
 
 | Field | Value |
 |---|---|
@@ -51,6 +51,7 @@ B: "GuestMemoryUsage is what Windows uses." D: "A VM cannot use more than its co
 ## Notes
 - Sources: the knowledge base, VM Memory Consumed (Formula: the API quick statistics `guestMemoryUsage` and `hostMemoryUsage`; Consumed excludes overhead and cannot exceed configured memory), VM Memory Active (sampled ESXi estimate), VM Memory Entitlement (scheduler value; below configured memory is no fault without reclamation or Latency; does not follow a reservation; no formula).
 - Author decision Q230 (2026-11-15): Entitlement is tested here only as the knowledge base now defines it, a scheduler value with one troubleshooting use.
+- Changed in the 2026-11-16 re-review: quick statistics are point-in-time values, so the script now samples them hourly and averages them; only the `Get-Stat` counters are Past day averages.
 - The overhead of 1,140 MB is about 3.5% of 32 GB, inside the range of documented per-VM overhead.
 
 ## Metadata
