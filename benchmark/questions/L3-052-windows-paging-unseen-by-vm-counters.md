@@ -13,10 +13,10 @@ Which statements about what the VM memory counters show in this case are correct
 - E. ESXi gives a paging guest extra memory from the host's free memory.
 - F. When Windows is short of memory, the VM memory counters can neither rule the host in nor out.
 - G. Paging in both directions at once, while the disk queue is high, points to a memory shortage inside Windows.
-- H. Set a full memory reservation on the VM, so that Windows stops paging to its page file.
+- H. A full memory reservation on the VM would stop Windows paging to its page file.
 
 ## Likely wrong answer
-B: "Memory Latency is 0%, so Windows is not paging." Or C: the guest page file taken for the VM swap file.
+B: "A stall on the Windows page file counts as VM Memory Latency." Or C: the guest page file taken for the VM swap file.
 
 ## Expected key points
 - Answer: A, D, G.
@@ -32,7 +32,6 @@ B: "Memory Latency is 0%, so Windows is not paging." Or C: the guest page file t
 ## Notes
 - Paired with 0265 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item B13.
 - `knowledge_main` is guest-os-vs-vm-memory, not windows-memory as the plan proposed: the blind spot (guest page file) and the counter map (guest paging has no VM counter) that decide B, C and D are in that file.
-- Review fixes 2026-11-15: B reworded (it was close to 0265 G); F made one fact. Key unchanged: A, D, G.
 - Written 2026-11-14 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
 ## Metadata

@@ -9,26 +9,24 @@
 
 Which statements are correct?
 
-- A. The warning says that if a host fails, the five that remain could not carry the current usage without the VMs slowing down: about 108% of their CPU.
+- A. The warning means the five hosts left after a failure would need about 108% of their CPU for today's load.
 - B. With the setting at 0%, HA admission control blocks new power-ons until usage falls back below the failover capacity.
-- C. The failover capacity of one host counts reservations, so on its own it does not warn about usage; the degradation setting is the check that compares usage with what survives a failure.
-- D. At 100%, the default, this setting gives no warning at all.
-- E. The setting also works with DRS turned off: HA computes it from the hosts' usage.
+- C. At 100%, the default, this setting stays silent however high the cluster's CPU usage climbs.
+- D. At a threshold of 20% instead of 0%, the same cluster at 90% usage would still raise the warning.
 
 ## Likely wrong answer
 B: reading the warning as a block on power-ons.
 
 ## Expected key points
-- Answer: A, C, D.
-- A: 90% of 6 hosts is 5.4 hosts' worth of load; on 5 hosts that is 108%. VMs restart after a failure, but then contend.
-- B is wrong: the setting raises a warning; it does not stop power-ons.
-- C: the percentage policy checks reservations (plus overhead) against the capacity left after the failover hosts; VMs without reservations fill the cluster past what survives a failure. The degradation threshold is the setting that looks at usage.
-- D: 100% turns the warning off; 0% warns when the usage would exceed the capacity left after a failure.
-- E is wrong: the setting needs vSphere DRS to be on.
+- Answer: A, C.
+- A is correct: 90% of 6 hosts is 5.4 hosts of load; on the 5 hosts left that is 108%. The VMs restart after a failure, then contend.
+- B is wrong: the degradation setting only raises a configuration warning; it does not block power-ons, migrations or reservation changes.
+- C is correct: the default 100% tolerates any reduction, so it never warns.
+- D is wrong: at 20% the tolerated reduction is 20% of the current usage: 5.4 x 0.8 = 4.32 hosts of load, below the 5 hosts left, so no warning.
 
 ## Notes
-- Drafted 2026-11-12. Outside the knowledge base: the knowledge base has HA admission control but not this setting. Keyed from the vendor documents.
-- vSphere HA Admission Control, Performance degradation VMs tolerate: not available unless DRS is on; default 100% gives no warnings; at 0% a warning is generated when cluster usage exceeds the available capacity (vSphere 9.1 Availability, vSphere HA Admission Control, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control.html).
+- Synthetic, 2026-11-12. The setting is in admission-control-and-cluster-state, section HA performance degradation threshold (vSphere 9.1 Availability, vSphere HA Admission Control, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control.html).
+- 2026-11-15 audit: old C (the failover capacity counts reservations, not usage) dropped, as that fact is kept by 0290 and 0355; old E (needs DRS) replaced by D, the 20% case, which only the reduction formula decides. Letters: A, B unchanged; D -> C; E -> D (new text).
 
 ## Metadata
 ```yaml
@@ -47,8 +45,8 @@ knowledge:
 knowledge_main: vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12, outside the knowledge base"
-answer: [A, C, D]
+source_path: "Synthetic, 2026-11-12"
+answer: [A, C]
 misconception: [B]
 misconception_type: [consumption-as-contention]
 status: draft

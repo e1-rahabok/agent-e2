@@ -14,25 +14,28 @@ Which statements are correct?
 - E. With the VMs gone, Consumed equals the VM overhead memory that was reserved before the move.
 - F. On a host without vSAN, Consumed would fall to 0 once the VMs leave.
 - G. Reboot the host before it leaves maintenance mode, so that it gives back the 41 GB.
+- H. On a host with vSAN and NSX, hypervisor memory use can grow past the kernel's memory reservation.
 
 ## Likely wrong answer
 B: expecting Consumed to equal the kernel reservation. Or F, the over-correction: all that remains is vSAN.
 
 ## Expected key points
-- Answer: A, C.
+- Answer: A, C, H.
 - A is true: host Consumed counts pages in physical DIMM: VMs, VM overhead and all kernel processes (user and kernel space), including vSAN and NSX. With 0 VMs it is the kernel and its services.
 - B is false: Consumed includes actual kernel use, not the kernel reservation.
-- C is true: reservation and use are different metric types; the reservation is a minimum guaranteed to the kernel, not pages set aside, and its use can stay below it (here about 41 against 49 GB).
+- C is true: reservation and use are different metric types; the reservation is a minimum guaranteed to the kernel, not pages set aside, and its use can stay below it (here about 41 against 49 GB). Admission control still withholds the full reservation from VM reservations, used or not.
 - D is false: the kernel, vSAN and NSX keep memory with no VMs; it is normal use, not a leak.
 - E is false: VM overhead leaves with the VMs; what stays is the kernel's own use.
 - F is false: the kernel and its other services consume memory too; a host with no VMs does not show 0 Consumed, with or without vSAN.
 - G is false: the 41 GB is the normal use of the kernel and its services, not a leak, so there is nothing for a reboot to recover.
+- H is true: the kernel reservation is a minimum, not a cap, and it covers host/system only; the NSX agents and the vSAN services run in other resource groups outside it, so hypervisor use can pass it.
 
 ## Notes
 - Revised 2026-11-12: option E added; tags added.
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Counts only after author approval.
+- Changed in the 2026-11-15 audit: option H added (the reservation is a minimum, not a cap). The cap misconception is also in L4-011 E: two questions, at the cap; do not add it to the pair 0390.
 - Rewritten 2026-11-14 (design.md 3.9; project/question-pairing-2026-11-14.md): the stem no longer copies the knowledge example (new numbers: 512 GB host, 470 to 41 GB, 49 GB reservation); A one fact; F the over-correction and G the wrong action added. Key unchanged: A, C.
-- No option names ESX System Usage; the reservation is read from the host's System Resource Reservation page. Q215 is answered (2026-11-15): ESX System Usage is a VCF Operations metric; the page shows the host/system allocation minimum, a reservation and not use (lab: 4.17 GiB reservation, 2.1 GiB consumed), which supports C. Key unchanged.
+- No option names ESX System Usage (a VCF Operations metric); the reservation is read from the host's System Resource Reservation page, the host/system allocation minimum.
 
 ## Metadata
 ```yaml
@@ -52,8 +55,8 @@ tool: [vcenter]
 knowledge_main: vsphere/technology/memory/metrics/host/consumed
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05"
-answer: [A, C]
+source_path: "Synthetic, 2026-11-05"
+answer: [A, C, H]
 misconception: [B]
 misconception_type: [provider-vs-consumer]
 pair: "0390"

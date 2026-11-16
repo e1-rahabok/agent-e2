@@ -19,7 +19,7 @@ from . import core
 
 def _select(cases, which):
     if which == "all":
-        return list(cases.values())
+        return [c for c in cases.values() if c.question_id.isdigit()]  # examples: by id only
     if which not in cases:
         raise SystemExit(f"unknown case {which!r}; known: {', '.join(sorted(cases))}")
     return [cases[which]]

@@ -407,7 +407,8 @@ class CpuClusterCases(unittest.TestCase):
         self.assertTrue(c.check_inline({1: "bad", 2: block}, {}))
         c = cases["0376"]
         block = c.generate_inline()[1]
-        self.assertTrue(c.check_inline({1: block.replace("vmx-vcpu-2", "vmx-vcpu-9")}, {}))
+        dropped = "\n".join(ln for ln in block.split("\n") if "vmx-vcpu-2" not in ln)
+        self.assertTrue(c.check_inline({1: dropped}, {}))
         c = cases["0379"]
         self.assertTrue(c.check_inline({1: "Name : other"}, {}))
 

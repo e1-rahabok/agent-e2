@@ -26,7 +26,7 @@ Which statements are correct?
 - A is false: there is no mapping; the two layers count different things, so no timing fix makes them agree.
 - B is true: the Guest OS cannot see host memory and runs its memory as if on a physical server; ESXi cannot see the guest's lists.
 - C is true: how the guest classifies pages (Standby is Windows' cache list) and its page file are ESXi blind spots; ESXi sees only reads and writes (Active: recently touched; Consumed: touched and still backed).
-- D is true: ESXi maps a guest physical page at the first touch (a fault in the second-level page tables); later freeing and reuse are ordinary memory writes that never reach ESXi.
+- D is true: ESXi maps a VM page at the first touch (a fault in the second-level page tables); later freeing and reuse are ordinary memory writes that never reach ESXi.
 - E is true: the ESXi page stays mapped after the guest frees it, so Consumed does not drop; Consumed is not the guest's utilization.
 - F is false: Consumed is ESXi memory mapped to the VM (Granted minus sharing savings); VMware Tools plays no part in it.
 - G is false: Windows In Use = VM Active is the same mistake on another counter; Active is a sampled estimate for the kernel.

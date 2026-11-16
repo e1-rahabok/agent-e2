@@ -39,6 +39,7 @@ python3 -m unittest project/tools/test_exportgen.py
 ## Format assumptions (not settled by the templates)
 
 - VCF Operations List view CSV: assumed, not captured. A `Name` column, then one column per metric labelled as the picker shows it (`CPU|Ready (%)`) and `<label> (Max)`, `(Min)`, `(First)`, `(Last)` columns. Replace when a real export is captured.
+- vSphere Client data grid CSV (VM DRS Score list): assumed, not captured. Header and every cell quoted, cells as the grid prints them (`"41%"`, `"7.84%"`, `"32 GB"`), LF line ends. Replace when a real export is captured.
 - `/proc/pressure/memory`: standard PSI text; the Photon kernel had none.
 - `mpstat -P ALL`, `vmstat`, `top` summary (`%Cpu(s)` line with `st`; the template's `top` ran in a graph mode without it), `sar -u ALL` columns: standard procps/sysstat layouts, not captured.
 - vCenter rollup stamps: the writer takes any time axis. Whether a Past day point is stamped at the start or the end of its 15-sample window is not settled by the sample; `core.rollup_stamps(label=...)` supports both, default start.
