@@ -11,7 +11,7 @@
 
 Which statements are correct?
 
-- A. The most likely cause is a 40 GHz CPU limit on RP-Web, not on RP-Batch: CHG-4471 hit the wrong pool.
+- A. The data points to a 40 GHz CPU limit on RP-Web, not on RP-Batch: CHG-4471 hit the wrong pool.
 - B. RP-Web CPU usage sits flat at about 39.8-40.0 GHz in every 5-minute sample, which is the shape of a ceiling.
 - C. RP-Batch varies between about 28.6 and 32.7 GHz, so nothing in the data shows it held at 40 GHz.
 - D. The batch jobs take CPU from the web VMs: a limit on RP-Batch starves its sibling pool.

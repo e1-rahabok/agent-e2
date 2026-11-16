@@ -101,7 +101,7 @@ class Q0417(core.Case):
                 fails.append(f"{ds}: Read Latency not within 10% of the IOPS-weighted host mean")
         mx = d[DS[0]]["Datastore I/O|Read IOPS (Max)"]
         hmx = [h[x]["Datastore:ds-shared-07|Read IOPS (Max)"] for x in HOSTS]
-        if not max(hmx) <= mx <= 1.05 * sum(hmx):
+        if not max(hmx) <= mx <= 1.05 * sum(hmx):                   # I
             fails.append("datastore Read IOPS (Max) outside host max .. 1.05 x sum of host max")
         for x in HOSTS:
             if h[x]["Datastore:ds-shared-07|Read IOPS (Max)"] < h[x]["Datastore:ds-shared-07|Read IOPS"]:
@@ -112,8 +112,8 @@ class Q0417(core.Case):
         a = h[HOST_A]["Datastore:ds-shared-07|Read IOPS"]
         if not 0.25 * ds07 <= a <= 0.40 * ds07:                     # C
             fails.append(f"C: host A share {a / ds07:.3f} outside 0.25-0.40")
-        if not a < ds07 or not a < 0.5 * ds07:                      # E, I
-            fails.append("E/I: host A not below the datastore / half of it")
+        if not a < ds07 or not a < 0.5 * ds07:                      # E
+            fails.append("E: host A not below the datastore / half of it")
         if a != max(h[x]["Datastore:ds-shared-07|Read IOPS"] for x in HOSTS):
-            fails.append("I: host A is not the largest of the four hosts")
+            fails.append("C: host A is not the largest of the four hosts")
         return fails[:20]

@@ -100,6 +100,14 @@ Each entry:
 - Recommended: yes, to "Active shows what the application touched, not its configured limit".
 - Answer:
 
+### Q253 · Network > esxtop units · The misconception line points the wrong way
+
+- Files: [esxtop network units against the vSphere Client](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/network-units-vs-vsphere-client.md) (section Misconceptions); question 0412 (option K).
+- Now: the line reads "esxtop shows 125 times more traffic than vCenter, so one tool is wrong". The same file's conversion (esxtop Mbps ≈ vSphere Client KBps × 8 / 1,000) makes the vCenter number about 125 times larger than the esxtop number, so the observation in the quote is reversed. A reader who trusts the line picks 0412 K.
+- Question: reword the quote to "vCenter shows 125 times more traffic than esxtop, so one tool is wrong"?
+- Recommended: yes.
+- Answer:
+
 ## Future release
 
 ### Q241 · CPU > VM Demand · Demand under a limit (lab check)

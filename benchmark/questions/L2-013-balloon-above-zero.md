@@ -7,7 +7,7 @@
 Which statements are correct?
 
 - A. Ballooned at 2 GB shows that ESXi is reclaiming memory from the VM now.
-- B. Ballooned counts memory the balloon took at some time, possibly long before this hour.
+- B. Ballooned counts the pages the balloon still holds, whenever it took them.
 - C. Inside Linux, the 2 GB held by the balloon driver counts as used memory, not as free.
 - D. VM Memory Latency (Memory Contention in VCF Operations) shows whether the VM waits for memory.
 - E. VM Memory Latency includes the time Linux spends paging out to fill the balloon.
@@ -23,7 +23,7 @@ Which statements are correct?
 ## Expected key points
 - Answer: B, C, D, F.
 - A is false: Ballooned is an amount the balloon holds, not a rate of reclamation; flat for the hour, it shows nothing taken in that hour. The balloon can date from earlier host pressure or from a limit.
-- B is true: Ballooned is past tense; the balloon deflates when ESXi lowers the VM's Balloon Target, so it can date from pressure long gone.
+- B is true: Ballooned is past tense: the pages reclaimed earlier, possibly days ago, that the balloon still holds; it deflates only when ESXi lowers the VM's Balloon Target.
 - C is true: the driver's pinned pages are neither free nor cache to the guest, so the guest's used memory includes the balloon.
 - D is true: Memory Latency is the share of time a vCPU waits for a page fault (mostly swap-in, plus decompression); VCF Operations Memory Contention maps to it.
 - E is false: Latency excludes balloon activity; the hypervisor cannot see what the guest does to fill the balloon.
@@ -34,6 +34,7 @@ Which statements are correct?
 - J is false: the Linux balloon driver is the kernel module `vmw_balloon`, not part of open-vm-tools; ballooning goes on while vmtoolsd is stopped.
 
 ## Notes
+- Changed in the 2026-11-16 re-review: B lost its hedge ("possibly long before"): it now states that Ballooned is an amount held, whenever taken; same truth value.
 - Revised 2026-11-12: situation and the owner's claim added; key points aligned with the knowledge files.
 - Changed in the 2026-11-15 audit: A reworded to the held-amount reading of its pair 0388 B (the balloon-is-a-wait fact stays in 0149 and 0392); C replaced (the flat line was a near-tautology from the stem) by the balloon counted as used inside the guest (also in 0141 D: two questions). Key points B and H follow the target-driven deflate. A new option on the deflate ("stays until Linux asks for it back") was left out: the knowledge base still says the VM initiates the reallocation (balloon-target), so it is not decidable yet.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): A one fact; B and C no longer negate A; H the over-correction and I the wrong action added.

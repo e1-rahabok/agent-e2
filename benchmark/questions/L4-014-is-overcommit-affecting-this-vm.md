@@ -11,12 +11,12 @@
 
 Which statements are correct?
 
-- A. Swap activity inside Linux is, on its own, proof that host overcommit affects the VM.
+- A. Swap activity inside Linux is enough to show that host overcommit affects the VM.
 - B. The balloon pushed Linux to page Java memory out to its own swap; the threads wait on the page-ins.
-- C. The 6 GB in the balloon may have freed less than 6 GB of host memory, if some of those pages were shared.
-- D. Linux gave the balloon its free and cache pages first; it paged out used memory only when those ran short.
+- C. A balloon page whose host page was shared with other pages frees less than its own size on the host.
+- D. Linux filled the balloon first from free memory and cache; paging used memory out came as those ran short.
 - E. The guest is sized too small for Java; adding 8 GB to the VM removes the cause.
-- F. Swapped and Compressed at 0 prove the host has enough physical memory, since ESXi would compress before it balloons.
+- F. With Swapped and Compressed at 0, the host had enough physical memory all day.
 
 ## Likely wrong answer
 A: "Linux is swapping, so the host is overcommitted: that settles it."
@@ -25,13 +25,14 @@ A: "Linux is swapping, so the host is overcommitted: that settles it."
 - Answer: B, C, D.
 - A is wrong: swap inside the guest can have other causes (another guest issue, a guest sized too small), so the host indicators come first: ballooning, host swap or compression, then swap inside the Guest OS. Here the balloon at 09:00 ties the guest swap to the host.
 - B is correct: the balloon driver allocates memory inside Linux; when free and cache pages are not enough, Linux pages out used memory, and every page-in is a wait the application feels. Memory Latency stays at 0% because it counts only waits on ESXi (swap-in, decompression), not paging inside the guest.
-- C is correct: a balloon page whose ESXi page was shared with other pages frees less than its size; a 6 GB balloon can free less than 6 GB.
-- D is correct: the Guest OS hands the balloon free pages first, then cache, then modified and in-use pages. Paging of used memory starts only when the first two run short.
+- C is correct: a balloon page whose ESXi page was shared with other pages frees less than its size; so the 6 GB balloon can free less than 6 GB of host memory.
+- D is correct: the Guest OS hands the balloon free pages first, then cache, then modified and in-use pages; used memory is paged out as free and cache pages run short. (Linux balances cache and anonymous pages by `vm.swappiness`, so the order is not strict, which the option does not claim.)
 - E is wrong: the cause is host overcommit, a provider event; the fix for the balloon is on the provider side. Before 09:00 the same 32 GB guest did not page.
-- F is wrong: ballooning comes before compression and swap; 0 there does not mean there is no pressure.
+- F is wrong: ballooning comes before compression and swap; the 6 GB balloon from 09:00 shows host pressure (or a limit) although Swapped and Compressed stay at 0.
 
 ## Notes
 - Changed in the 2026-11-15 audit: C (VM Memory Latency cannot see guest paging, redundancy #36, homed in 0265/0383) replaced by the shared-pages fact (ballooning, Mechanism); A (the same fact as the misconception) replaced by the decision tree's misconception "Guest swap activity proves host overcommitment" ("No ballooning means no memory problem", the report's proposal, is arguable on a VM whose driver demonstrably works); E (undecidable: adding memory to a ballooned VM) rewritten to the guest-too-small belief, false by guest-os-sizing ("The fix for the balloon is on the provider side"); B shortened.
+- Changed in the 2026-11-16 re-review: the hedge left C (now a plain fact about shared pages), the absolutes and the reason clause left A and F (F now states the reading only), D no longer says "only when" (Linux reclaim is not that strict).
 
 ## Metadata
 ```yaml

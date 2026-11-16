@@ -14,7 +14,7 @@ What explains the change at 21:30, and what do you check? Which statements are c
 - D. Usage carries the Hyper-Threading charge for a shared core; Demand does not.
 - E. Latency also counts the clock-speed effect, so it sits near 28% while Demand minus Usage is about 12 points.
 - F. Demand minus Usage, about 12 points, is the CPU time the VM asked for and was denied: its unmet demand.
-- G. With Readiness below 1% in every point, the host cannot be what slows the VM down after 21:30.
+- G. A vCPU whose sibling thread is busy is counted in Readiness, as time it waits for its core.
 - H. Latency rising from about 1.5% to about 28% means the vCPUs now wait about a quarter of the time to be scheduled.
 - I. A CPU limit applied at 21:30 fits the pattern: a limit holds Usage down while Demand keeps rising.
 - J. Adding vCPUs to etl-worker-14 would win back the throughput it lost at 21:30, since its Demand rose.
@@ -22,7 +22,7 @@ What explains the change at 21:30, and what do you check? Which statements are c
 
 ## Likely wrong answer
 - F: "Demand minus Usage is the unmet demand: the VM lost about 12% of its CPU."
-- G: "Readiness is below 1%, so there is no CPU contention."
+- G: "A busy sibling thread puts the vCPU in Ready, so Readiness below 1% rules out Hyper-Threading."
 - H: "CPU Latency rose, so the VM now waits for CPU."
 - J: "The VM is starved of CPU: give it more vCPUs."
 
@@ -34,7 +34,7 @@ What explains the change at 21:30, and what do you check? Which statements are c
 - D is correct: Usage is charged 37.5% when both threads of a core run; Demand assumes the VM does not share the core. So Demand minus Usage holds only that charge.
 - E is correct: Latency includes the Hyper-Threading effect and power saving below nominal frequency; Demand minus Usage includes only Hyper-Threading. After 21:30 Latency is 26.7-29.0% against a gap of about 12 points.
 - F is wrong: Demand minus Usage is not unmet demand; a limit, for example, leaves Demand equal to Usage. It holds only the Hyper-Threading charge.
-- G is wrong: Ready does not register Hyper-Threading or frequency; the VM loses throughput while it runs.
+- G is wrong: Ready does not register Hyper-Threading: a busy sibling thread does not put a vCPU into Ready, and the vCPU keeps running at a lower throughput.
 - H is wrong: a rise in CPU Latency does not mean waiting: Latency also counts the sibling-thread and frequency effects, while time waiting for a physical thread shows in Readiness, which stays below 1%.
 - I is wrong: the time a limit holds back is counted in Ready (Max Limited), and Readiness stays below 1% in every point; nobody changed the VM either.
 - J is wrong: more vCPUs change neither the sibling-thread load nor the clock speed; the VM uses about a quarter of its capacity.

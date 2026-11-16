@@ -17,7 +17,7 @@ Which statements are correct?
 - F. With vSphere HA on and VMs running, DPM keeps at least two hosts of the cluster powered on.
 - G. ESX can reclaim the per-VM overhead of the over-allocated memory through ballooning when hosts run short.
 - H. DRS uses granted memory as a VM's memory demand for vMotion recommendations, so the 256 GB VMs constrain migrations.
-- I. VMs with less memory and fewer vCPUs give DRS more chances to find a migration.
+- I. DPM weighs both CPU and memory demand, but it reacts mostly to changes in CPU demand.
 - J. DRS bases its memory decisions on Active memory, so it sees only the 40 GB working set of each VM.
 - K. Under-allocating below the 40 GB working set would hurt more than over-allocating, as the guest would thrash.
 - L. Over-allocation costs nothing, because the Guest OS uses the extra memory only as file system cache.
@@ -39,7 +39,7 @@ Which statements are correct?
 - F is correct: in a cluster with HA active and at least one VM powered on, DPM keeps at least two hosts powered on, even with HA admission control deactivated.
 - G is wrong: ESX can reclaim over-allocated memory but not the memory overhead associated with it.
 - H is correct: since vSphere 7.0 DRS uses granted memory for the memory demand in vMotion recommendations; over-provisioned memory constrains migration options more than before.
-- I is correct: smaller VMs give DRS more migration opportunities; with granted memory as demand since vSphere 7.0, 64 GB VMs fit on more hosts than 256 GB VMs.
+- I is correct: DPM considers CPU and memory demand but mostly responds to changes in CPU demand; granted memory, its memory input since vSphere 7.0, is typically stable, which is also why the 256 GB VMs hold memory demand high (B).
 - J is wrong: DRS and DPM read granted memory since vSphere 7.0, not Active.
 - K is correct: under-allocation is the more damaging error; a VM that cannot hold its working set thrashes, with a dramatic effect on performance. 64 GB, above the 40 GB working set, is safe for the VM.
 - L is wrong: the colleague's claim; the overhead, the granted-memory effect on DRS and DPM, and the swap file space remain.
@@ -47,7 +47,7 @@ Which statements are correct?
 - N is wrong: the swap file is created at power-on with its full size, whether or not the host ever swaps.
 
 ## Notes
-- Changed in the 2026-11-16 re-review: I (power-on time of a swap file above 100 GB) was in no knowledge file; replaced by another true fact from DRS overview (VM size and memory: smaller VMs give DRS more migration opportunities), tested nowhere else.
+- Changed in the 2026-11-16 re-review: I (power-on time of a swap file above 100 GB) was in no knowledge file; replaced by another true fact from DPM (Demand inputs: DPM mostly responds to changes in CPU demand), tested nowhere else.
 - Public source: Performance Best Practices for VMware vSphere 9.1, revision 20260624, "Memory Sizing" (p. 33: under-allocation causes thrashing; over-allocated memory is used for file system caches; ESX cannot reclaim the overhead of over-allocated memory), DRS and DPM sections (pp. 76-79: since vSphere 7.0 DRS considers granted memory for vMotion recommendations, "over-provisioning a virtual machine's memory could even more significantly constrain the DRS migration options"; DPM calculates memory demand from granted memory and puts hosts into standby only if memory demand is low), "Memory Swapping Optimizations" (p. 35). VMware vSphere 9.1 PDF (build of 2026-11-02): "The Reservable Memory is Lower than Expected" (overhead 4.5% for 256 GB, 5.5% for 64 GB, 6% for 16 GB, representative values).
 - Why one answer: each effect is a documented statement; the question asks for the effects and for the comparison, with numbers that follow from them.
 - Debatable risk: how much margin above the working set is right is a design choice, so the key does not give one. The overhead percentages are the documentation's representative values, so the figures are "about". The growth of Granted by guest page cache is a general Linux behavior, given in the prompt as values.

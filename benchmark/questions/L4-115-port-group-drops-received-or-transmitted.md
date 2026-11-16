@@ -1,7 +1,7 @@
 # Port group drops: received or transmitted
 
 ## Prompt
-- VCF Operations. The distributed port group PG-App has 10 VMs. The red alert of the port group fires when more than 10% of the packets are dropped. The alert is owned by the infrastructure team, above all the network team.
+- VCF Operations. The distributed port group PG-App has 10 VMs. The red alert of the port group fires when more than 10% of the packets are dropped. The alert notifies the network team's queue.
 - Measured in a 5-minute cycle, summed over the 10 VMs:
   - Transmitted: 38.0 million packets, of which 0.19 million were dropped.
   - Received: 41.0 million packets, of which 6.15 million were dropped.

@@ -7,7 +7,7 @@ The application team of a Windows Server VM asks how much memory the VM should b
 - B. VM Memory Active
 - C. Guest OS Needed Memory minus VM Memory Ballooned
 - D. VM Memory Active + Balloon + Swapped + Zipped
-- E. Guest OS memory in use plus part of the Guest OS cache
+- E. Guest OS memory in use plus the Guest OS cache that Windows ranks high
 - F. Guest OS memory in use plus the page file in use
 
 ## Likely wrong answer
@@ -26,6 +26,7 @@ A or B (VM-level counters), or D (VM counters added up). Or C: the balloon taken
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Hint: the VM is virtual hardware. What you size is the OS running on it."
 - Changed in the 2026-11-15 audit: stem names a Windows Server VM and a situation (Needed Memory is defined for Windows); throwaway C replaced in place by the balloon-deduction misconception (guest-os-sizing, Misconceptions line 6); key point E names the Needed Memory rule. D stays false: its base is VM Active, not Needed Memory. Key unchanged: E.
 - Paired with 0079 (theory and practical; design.md, section 3.9).
+- Changed on 2026-11-16 (re-review): E names the cache Windows ranks high instead of the hedge "part of", which only the correct option carried. Key unchanged.
 
 ## Metadata
 ```yaml

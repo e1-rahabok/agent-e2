@@ -16,7 +16,7 @@ Which statements about the 12 VMs and the health check of this cluster are corre
 - D. Powering on the twelve VMs in two batches, an hour apart, lets all twelve pass admission control.
 - E. Memory Consumed plays no part in HA admission control with the percentage policy.
 - F. Nine VMs at 14% to 18% Ready show the cluster is short of CPU, so it needs a host before any new VM.
-- G. The nine dev-pool VMs wait because the pool's 12 GHz CPU limit is below the 19 GHz its VMs demand.
+- G. Raising the dev-pool CPU limit to about 20 GHz would lower the nine VMs' Ready without adding a host.
 - H. A CPU Utilization of 39% shows that no VM in the cluster can be waiting for CPU.
 - I. Lowering the new VMs' reservations below 16 GB would let more of them pass admission control.
 - J. A fifth identical host would add about 375 GB of reservable memory at the 25% setting.
@@ -36,7 +36,7 @@ Which statements about the 12 VMs and the health check of this cluster are corre
 - D is wrong: the reservations of powered-on VMs keep counting; the first batch's reservations still hold when the second batch powers on, so the tenth VM fails whatever the timing.
 - E is correct: the percentage policy sums reservations plus overhead of the powered-on VMs; usage plays no part.
 - F is wrong: nine of 180 VMs (5%) in one pool wait, the other 171 show no wait, and utilization is 39%. The wait follows the pool, not the hosts: a limit, not a lack of cluster capacity. It is not a reason to refuse the new VMs.
-- G is correct: the pool limit (12 GHz) is below its demand (19 GHz). Check resource pools and limits in the configuration step.
+- G is correct: the pool limit (12 GHz) is below its VMs' demand (19 GHz), and Ready includes the time a limit holds back; with the cluster at 39% the hosts have spare CPU, so a limit above the demand removes that wait. Check resource pools and limits in the configuration step.
 - H is wrong: cluster utilization is an average; the dev-pool VMs wait at 39% utilization because of their pool limit.
 - I is correct: admission control charges each VM's reserved memory; a smaller reservation leaves room for more VMs in the 156 GB.
 - J is correct: 500 GB x 75% = 375 GB of reservable memory with 25% kept (more with a lower percentage).

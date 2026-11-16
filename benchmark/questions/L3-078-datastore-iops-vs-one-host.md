@@ -8,30 +8,30 @@
 
 Which statements are correct?
 
-- A. The datastore value counts the reads of every mounting host; host A's counts only its own.
+- A. The datastore's value counts the reads of every host that mounts it.
 - B. One of the two values is wrong, since both count reads on the same datastore.
-- C. Host A sends about 40% or less of the datastore's reads in this window.
-- D. Adding the same value over every mounting host gives about the datastore's value.
+- C. Host A sends between a quarter and two fifths of the datastore's reads in this window.
+- D. The four hosts' Read IOPS for ds-shared-07 add up to the datastore's Read IOPS within 10%.
 - E. Host A's value also counts the reads of VMs on other hosts that use the same datastore.
 - F. Open a case: VCF Operations under-reports host A's datastore IO.
 - G. With Storage I/O Control on, ds-shared-07's Aggregate IOPs seen from host A counts only host A's reads.
 - H. The datastore value and the per-host values cannot be compared.
-- I. Host A carries most of the datastore's reads in this window.
+- I. Host A's highest 5-minute Read IOPS for ds-shared-07 is above the datastore's highest.
 
 ## Likely wrong answer
 B: the datastore and host A's view of it must match, so a value is wrong. Or F: open a case.
 
 ## Expected key points
 - Answer: A, C, D.
-- A is correct: a host's datastore metrics are that host's view only; the datastore object spans all hosts that mount it.
+- A is correct: the datastore object spans all hosts that mount it; a host's datastore metrics are that host's view only.
 - B is wrong: the misconception. Each value is correct from its own vantage point; the gap is the other hosts' IO.
-- C is correct: reading. `Datastore:ds-shared-07|Read IOPS` of esx-c3-02 in the hosts export is 40% or less (about a third) of `Datastore I/O|Read IOPS` of ds-shared-07 in the datastores export.
-- D is correct: the datastore object spans the hosts that mount it, all four in this vCenter, so the four hosts' `Datastore:ds-shared-07|Read IOPS` add up to the datastore's `Datastore I/O|Read IOPS` within 10% (the same holds for Write IOPS and for ds-shared-08).
+- C is correct: reading. `Datastore:ds-shared-07|Read IOPS` of esx-c3-02 in the hosts export, 780.5, is 34.6% of `Datastore I/O|Read IOPS` of ds-shared-07 in the datastores export, 2,254.3: host A is the largest of the four hosts but sends about a third.
+- D is correct: the datastore object spans the hosts that mount it, all four in this vCenter, so the four hosts' `Datastore:ds-shared-07|Read IOPS` add up to the datastore's `Datastore I/O|Read IOPS` within 10%: 2,262.6 against 2,254.3 (the same holds for Write IOPS and for ds-shared-08).
 - E is wrong: a host counts only the IO it sends.
 - F is wrong: nothing is missing; esx-c3-01, esx-c3-03 and esx-c3-04 carry the rest.
 - G is wrong: Storage I/O Control Aggregate IOPs is a datastore-wide counter, summed over all hosts and VMs on the datastore, whichever host's chart shows it; only the host's own datastore counters show its share.
 - H is wrong: the over-correction. The datastore object spans the hosts that mount it; their values add up to it.
-- I is wrong: reading. Host A is the largest of the four hosts, but its Read IOPS for ds-shared-07 is 40% or less of the datastore's.
+- I is wrong: reading. Host A's `Read IOPS (Max)` for ds-shared-07 is 1,387.8, the datastore's 3,956.6. In each 5-minute point the datastore counts host A's reads plus the other hosts', so its peak cannot fall below one host's.
 
 ## Notes
 - Paired with the theory question 0049 (theory and practical; design.md, section 3.9).
@@ -39,6 +39,7 @@ B: the datastore and host A's view of it must match, so a value is wrong. Or F: 
 - Review 2026-11-15: H (over-correction) and I (a false screen reading) added; knowledge_main is host/datastore. Key unchanged: A, C, D.
 - 2026-11-15: screenshots replaced by generated exports (project/practical-questions-as-exports-2026-11-15.md); the exports carry the key's condition.
 - Audit 2026-11-15: G (reads from other datastores counted in this datastore's value, which no operator believes) replaced by Storage I/O Control Aggregate IOPs read from one host (storage-io-control Misconceptions; added to `knowledge`); A shortened (truth unchanged). Key unchanged: A, C, D.
+- Re-review 2026-11-16: A and E negated each other, and C and I were exclusive readings of one share; A now states only the datastore side (E tests the host side), I reads the (Max) columns instead of the share. "about" removed from the correct C and D (C names the 25-40% range the case checks, D the 10% the case checks). Key unchanged: A, C, D.
 
 ## Metadata
 ```yaml

@@ -21,7 +21,7 @@ E: "Memory usage fell, so the application needed less memory for half an hour." 
 ## Expected key points
 - Answer: A, B, C.
 - A true: Needed Memory comes from VMware Tools inside the guest; the Guest|Needed Memory export has blank values in the six rows (30 minutes) where Memory|Usage (%) dips, and values in every other row.
-- B true: without guest data, VCF Operations Usage (%) falls back to active memory: in the six dip rows, Memory|Usage (%) is within 2 points of Memory|Non Zero Active (KB) / Memory|Total Capacity (KB) × 100 (about 9-12%, against 75-79% before).
+- B true: without guest data, VCF Operations Usage (%) falls back to active memory: in the six dip rows, Memory|Usage (%) is within 2 points of Memory|Non Zero Active (KB) / Memory|Total Capacity (KB) × 100 (11.75-12.52%, against 75-79% before).
 - C true: without guest data, VM memory Utilization falls back to Consumed: in the dip rows Memory|Utilization (KB) is within 5% of Memory|Consumed (KB), above every value it had before the dip.
 - D false: Memory|Consumed (KB) stays within 5% of one level in every row of the two hours.
 - E false: the guest did not change; the source of the metric changed. Usage comes back as soon as guest data does.

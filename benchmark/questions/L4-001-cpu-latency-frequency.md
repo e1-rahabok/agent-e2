@@ -14,7 +14,7 @@ Which statements are correct?
 - E. Like Disk Latency and Memory Latency, CPU Latency measures time the VM waits to be served.
 - F. If the guest runs Linux, its Steal Time would rise by about the same amount as CPU Latency.
 - G. CPU Latency includes Max Limited, the time a CPU limit holds a vCPU back, so a limit explains the rise.
-- H. Work inside the guest takes as long as before, because only the reported Latency changed.
+- H. CPU Latency and CPU Ready track each other closely, so a Latency rise with a flat Ready points to a counting error.
 - I. Add two vCPUs to the VM to bring its CPU Latency back to where it was.
 - J. At the same Run, the VM's CPU Usage (MHz) is now about 15% lower than before.
 
@@ -31,7 +31,7 @@ Which statements are correct?
 - E is wrong: Disk Latency and Memory Latency do mean the VM waits; CPU Latency does not always mean a performance problem (same name, different meaning).
 - F is wrong: Linux Steal Time includes only Ready; VM CPU Latency includes more factors, frequency among them. Ready is flat, so Steal Time stays flat.
 - G is wrong: CPU Latency excludes Max Limited; the time a limit holds a vCPU back shows in Ready, not in Latency. The prompt also rules out a new limit.
-- H is wrong: the VM runs slower at the lower clock, so the same work takes longer; it is a speed change, not contention.
+- H is wrong: CPU Latency and Ready correlate poorly, since they are built for different purposes; Latency counts Hyper-Threading and frequency, which Ready does not, so Latency can rise with Ready flat (and fall while Ready rises).
 - I is wrong: more vCPUs change neither the clock speed nor the Latency of each vCPU, and they make scheduling harder.
 - J is correct: Usage (MHz) counts cycles completed and is scaled by frequency; Run counts time only. With %A/MPERF down from about 100% to about 85%, the same run time completes about 15% fewer cycles.
 
@@ -41,6 +41,7 @@ Which statements are correct?
 - Sharpened stem: no resource setting changed on the VM (rules out a limit for option G). The %A/MPERF line (actual against nominal frequency, named in the latency knowledge file) gives the frequency drop that options C and H need as evidence, not as an inference.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): C and D no longer negate B; I (the wrong action) added. Key unchanged, A, C, D (author approved, 2026-11-14).
 - Paired with 0102 (theory and practical, design.md 3.9).
+- 2026-11-16 re-review: H (the same work takes as long) negated C; replaced by a false option of its own fact (Latency and Ready correlate poorly, latency, Use). Key unchanged.
 - 2026-11-15 audit: the stem gives the Latency values ("up by about 15%" read as points or as relative); J added (Usage scales with frequency, Run does not), which joins the frequency reading to a second counter.
 
 ## Metadata

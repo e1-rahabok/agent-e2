@@ -22,7 +22,7 @@ Which statements about the four columns, the two disks and the two engineers are
 - D. %util of 100% says only that each disk always had a request in flight; for a parallel device it shows no limit.
 - E. On a device that serves one request at a time, %util near 100% would show saturation.
 - F. sdc has the same queue as sdb and a higher await, so the cause of its await is its Linux queue.
-- G. await is the response time of the device, so the array behind sdc answers in about 40 ms.
+- G. await is the response time of the device, so all 50 ms of sdc are spent in the array.
 - H. The device queue depth vmw_pvscsi uses on this VM can be read in /sys/module/vmw_pvscsi/parameters/.
 - I. The vCenter virtual disk latency includes the time a request waits in Linux before it is issued.
 - J. aqu-sz in iostat counts only the requests still waiting to be sent to the driver.
@@ -60,6 +60,7 @@ Which statements about the four columns, the two disks and the two engineers are
 - Prepared with author question Q194 (the reading of the guest disk queue).
 - The prompt states that vmw_pvscsi runs with its default queue depths, so option L is decidable. The Linux vmw_pvscsi default cmd_per_lun is 254 (PVSCSI_DEFAULT_QUEUE_DEPTH in drivers/scsi/vmw_pvscsi.c, kernel 5.0 and later); the 64 per device of Broadcom KB 343323 is the Windows driver default. L stays false under either value, because about 31 requests are at the virtual disk.
 - Changed in the 2026-11-15 audit: the iostat and vCenter numbers changed so they are no longer the knowledge-base example (aqu-sz 32 kept for L); the requests at the virtual disk are given in the stem as vCenter outstanding IO (redundancy #45: the Little's Law fact stays with 0028/0416), and old E (time at or below the virtual disk) and H (1.6 requests wait in Linux) were replaced in place by two true facts no question tests: %util near 100% does show saturation on a serial device (from the retired 0419), and where the vmw_pvscsi parameters in use are read.
+- Changed on 2026-11-16 (re-review): G used "about 40 ms", a number no value in the stem gives; it now claims the whole 50 ms await for the array (still false). Key unchanged.
 
 ## Metadata
 ```yaml

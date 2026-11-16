@@ -4,7 +4,7 @@
 - A DRS cluster of 4 identical hosts. DRS is fully automated, the migration threshold is at the default (3), there are no VM-host rules and no host is in maintenance mode. vSphere HA admission control is turned off.
 - Each host has 1,024 GB of memory, of which 1,000 GB are available to VMs.
 - Host 1 shows high CPU Ready on several VMs. Hosts 2 and 3 are in the same state. Host 4 runs at 20% CPU utilization, and DRS has produced no recommendation for a long time.
-- Reserved memory per host: host 1 holds 998 GB, host 2 holds 996 GB, host 3 holds 995 GB, host 4 holds 850 GB.
+- Reserved memory per host, as vCenter shows it: host 1 holds 998 GB, host 2 holds 996 GB, host 3 holds 995 GB, host 4 holds 850 GB.
 - A vMotion to host 4 is possible for every VM in the cluster: CPU compatibility, networks, datastores and hardware versions all match.
 - The VMs on host 1 that DRS considers moving, with the VM overhead that vmware.log prints at power-on (VMMEM):
 

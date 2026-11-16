@@ -11,7 +11,7 @@ Which statements are correct?
 - A. The VM's Consumed rises to 12 GB, because ESXi now backs the whole reservation with host memory.
 - B. The host's Total reservation rises by 12 GB, the amount the VM now reserves.
 - C. The VM's Consumed and Granted stay at their level when the task completes.
-- D. The host's Reservation consumed rises and its Reservation available falls by the same amount.
+- D. The host's Reservation available falls when the task completes.
 - E. The VM's Overhead consumed rises by the 12 GB the VM now reserves.
 - F. The reservation is recorded in the VM's configuration and in the reconfigure task event.
 - G. The host's Consumed rises by about 3 GB, the part of the reservation the VM has not touched yet.
@@ -28,7 +28,7 @@ Which statements are correct?
 - A is wrong: Consumed counts the pages the VM has touched; a reservation alone does not back pages, so Consumed rises only as the guest touches memory.
 - B is wrong: Total reservation is the host's reservable capacity (Reservation consumed plus Reservation available). It does not follow the VMs' reservations.
 - C is correct: a reservation changes no page, so Consumed and Granted keep their level.
-- D is correct: the host's reservation counters take the change: Reservation consumed rises, and Reservation available falls by the same amount because Total reservation stays the same.
+- D is correct: the host's reservation counters take the change at once: Reservation available falls by as much as Reservation consumed rises, because Total reservation stays the same.
 - E is wrong: Overhead consumed is the memory of the VM's virtualization data structures; a reservation does not change it (flat in the lab test).
 - F is correct: the reservation is a VM setting, recorded in the VM's configuration and in the reconfigure task event (`config.memoryAllocation.reservation: old -> new`).
 - G is wrong: host Consumed counts pages in use, and the reservation backs none of them; it does not rise by the untouched part either.
@@ -40,6 +40,7 @@ Which statements are correct?
 - Pair with 0442 (practical: the same fact on a VM chart and the task list). A fact gets two questions at most (design.md, section 3.9).
 - Reservation consumed counts the reservation as set (host/reservation, lab test of two VMs): I rests on it. No option uses Entitlement, a kernel value with no operations use.
 - Changed in the 2026-11-15 audit: I (admission control counts the full reservation, redundancy #1, homed in 0048/0085) replaced by the as-set fact; J (kernel reservation, a throwaway) replaced by the untouched-pages misconception (with 0442 H, the pair: two questions); F without the UI names.
+- Changed in the 2026-11-16 re-review: D now names only Reservation available, so it no longer repeats I (Reservation consumed takes the full 12 GB).
 - Distinct from 0014 (a memory reservation is backed as pages are touched, with a CPU reservation as the contrast): this question asks which counters take a reservation change.
 - Evidence behind C, D, E and F (E: Overhead consumed): the author's lab test of 2026-11-15, one VM, the reservation set and later removed (knowledge: vm-memory-metrics, section VM reservation across counters; host-memory-metrics, section VM reservation across counters).
 - Written 2026-11-15 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).

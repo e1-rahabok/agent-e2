@@ -3,25 +3,26 @@
 ## Prompt
 - The vSphere Client shows a CPU Ready counter on a VM and on an ESXi host.
 
-On which object does Ready measure that object's own wait for a physical CPU?
+Which statements about CPU Ready on these objects are correct?
 
-- A. The VM: a vCPU waits for a physical thread.
-- B. The ESXi host: the host waits for its physical cores.
-- C. Both: each object waits for its own CPU.
-- D. The Guest OS: its processes wait for a free vCPU.
+- A. On the VM, Ready counts time a vCPU wanted to run and had no physical thread to run on.
+- B. On the ESXi host, Ready counts time the host waits for its own physical cores.
+- C. The ESXi host's Ready value is measured on its own, apart from the Ready of its VMs.
+- D. The Guest OS accounts Ready as time its processes wait for a free vCPU.
 
 ## Likely wrong answer
-B or C: reading the host-level Ready as the host waiting.
+B: reading the host-level Ready as the host waiting. Or C: reading it as a measurement of its own, not of its VMs.
 
 ## Expected key points
 - Answer: A.
 - A is correct: Ready applies to a consumer: a vCPU of a VM that wants to run and has no physical thread to run on.
 - B is wrong: a physical core or thread is always ready, so the host has no Ready of its own. The host-level value is a sum of its VMs' Ready.
-- C is wrong: only the VM waits; the host value sums the VMs' Ready (B).
+- C is wrong: the ESXi Ready counter is an aggregate: it sums the Ready of the VMs on the host, so it rises and falls with them.
 - D is wrong: Ready is counted by the ESXi scheduler per vCPU of the VM. The Guest OS does not account it (for the guest it is frozen time); a guest process waiting for a vCPU shows in the guest's run queue.
 
 ## Notes
 - Revised 2026-11-12: the stem no longer gives the answer away ("a consumer waiting"); option D replaces the cluster, which has no Ready counter in the vSphere Client.
+- 2026-11-16 re-review: singular stem ("On which object ...") made plural; the options are now four separate statements (C was "A and B": now the host value as a sum of its VMs, provider-consumer, CPU Ready on ESXi). Key unchanged.
 - 2026-11-15 audit: D ("Neither: Ready is a DRS value of the cluster", a throwaway) replaced by the Guest OS, a layer a Level 100 reader can take for the owner of the wait.
 
 ## Metadata
