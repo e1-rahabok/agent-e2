@@ -15,7 +15,7 @@ Script: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent
 - Input: every benchmark question that lists `knowledge` ids, the files a correct answer depends on ([benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md)).
 - For each question it builds Agent E2's reading set ([harness/planner.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/planner.py)) from the code-only reading of the question (no model call), on the same `## Prompt` text the model sees, options included:
   1. Search: the top 6 files (`--k`, default 6).
-  2. Reading set: the tiers of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.2 (flow, named files, search, mechanism links, one search per claim, the rest), cut to the context budget (`context_tokens: 16000`). Settings: [benchmark/runner/config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/config.yaml).
+  2. Reading set: the tiers of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.2 (flow, named files, search, mechanism links, one search per claim, the rest), cut to the context budget (`context_tokens: 32000`). Settings: [benchmark/runner/config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/config.yaml).
 - It never drops an unknown id: a needed file that no longer exists (moved, renamed) stops the check, because dropping it would raise recall falsely. Moved files go in [project/tools/moved.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/moved.yaml).
 
 ```bash
@@ -46,7 +46,8 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 - Limits:
   - the needed files are the question writer's judgment; a missing id in a question makes recall look better than it is;
   - a file counted as in the reading set can be there as its best sections only (tiers 4-6), or cut by the budget;
-  - the model's case (stage 1) can add files the code-only reading does not; it is not in this check yet (`--case-model`, planned);
+  - the model's case (stage 1) can add files the code-only reading does not; it is not in this check yet (`--case-model`, planned). A screenshot-only stem, such as 0037, has no words to search: the check reports its main file as missing, and the case model's reading of the image is what brings it in a run;
+  - questions with status `deferred`, `retired` or `awaiting-input` are skipped, as in the run (291 on 2026-11-16);
   - BM25 and hybrid give different numbers. Compare like with like, and record the mode.
 - Current numbers and history: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3.
 

@@ -80,9 +80,20 @@ rows:
   means: VM Memory Ballooned Swapped
   note: 'Ballooned memory was reclaimed through the Guest OS, in the past; it is not current pressure by itself. Swapped is paged out by ESXi at random.'
   files: [vsphere/technology/memory/metrics/virtual-motherboard/ballooned]
+- id: swap-file
+  match: ['\.vswp\b', '\bswap files?\b']
+  unless: 'swap partition|pagefile'
+  means: swap file .vswp
+  note: 'The regular swap file (.vswp) is created at power-on, deleted at power-off, and sized configured memory minus the memory reservation; a powered-off VM holds none.'
+  files: [vsphere/technology/memory/configuration/host-level-swapping, vsphere/technology/memory/concepts/memory-overhead]
+- id: resource-pool-alert
+  match: ['resource pool[^.?\n]{0,40}\balerts?\b', '\bpool alerts?\b', '\balerts?\b[^.?\n]{0,30}resource pool']
+  means: resource pool alert CPU contention memory contention share of VMs symptom set
+  note: 'A resource pool alert is read on a share of the pool''s VMs: a burst (VM Peak vCPU Ready, 20 seconds) and sustained contention (VM CPU Contention, 5 minutes) together; the pool''s usage is never alerted.'
+  files: [vsphere/object-types/resource-pool/resource-pool-alerts, vcf-operations/features/peak-20-second-metrics]
 - id: swap
   match: ['\bswap(ping|ped)?\b']
-  unless: 'swap partition|pagefile'
+  unless: 'swap partition|pagefile|swap files?|\.vswp'
   means: VM Memory Swapped Swap In Rate contention
   note: 'Swapped is the past; the VM waits only when pages are read back (swap-in rate, Swap Wait).'
   files: [vsphere/technology/memory/metrics/virtual-motherboard/swapped]
@@ -105,7 +116,7 @@ rows:
   match: ['%rdy', '%cstp', '%mlmtd', '%swpwt', '%used', '%run']
   means: VM CPU Ready Co-stop Run Used esxtop
   note: 'esxtop CPU fields are per world and summed over vCPUs; %RDY includes %MLMTD (time held back by a limit).'
-  files: [vsphere/tools/esxtop/overview, vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics]
+  files: [vsphere/tools/esxtop/cpu, vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics, vsphere/tools/esxtop/overview]
 - id: iops-high
   match: ['iops (is |are )?(high|too high|maxed)', 'high iops', 'throughput (is )?(high|maxed)']
   means: IOPS throughput latency storage

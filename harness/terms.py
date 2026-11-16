@@ -77,12 +77,14 @@ def rows(path=PATH, glossary_path=GLOSSARY):
 
 
 def match(question, table=None):
-    """Rows whose patterns appear in the question, in table order."""
+    """Rows whose patterns appear in the question, the most hits first, table order within a tie."""
     hits = []
     for r in table if table is not None else rows():
-        if any(p.search(question) for p in r['_match']) and not (r['_unless'] and r['_unless'].search(question)):
-            hits.append(r)
-    return hits
+        n = sum(len(p.findall(question)) for p in r['_match'])
+        if n and not (r['_unless'] and r['_unless'].search(question)):
+            hits.append((n, dict(r, _n=n)))
+    hits.sort(key=lambda x: -x[0])   # stable: a row the question hits many times (the esxtop CPU fields) outranks one incidental word
+    return [r for _, r in hits]
 
 
 def case_labels(case, matched, table=None):
@@ -102,8 +104,11 @@ def query(question, hits):
 
 
 def files(hits, docs=None, n=3):
-    """Files of the hits, first file of each hit first, at most n, only ids that exist."""
+    """Files of the hits: the first two of a clearly strongest hit, then the first file of each hit, at most n, only ids that exist."""
     out = []
+    for i in ((hits[0].get('files') or [])[:2] if hits and hits[0].get('_n', 0) >= 2 * (hits[1].get('_n', 0) if len(hits) > 1 else 0) else []):   # a row the question hits at least twice as often as any other gives its two files first
+        if i not in out and (docs is None or i in docs):
+            out.append(i)
     for depth in range(3):
         for h in hits:
             f = (h.get('files') or [])[depth:depth + 1]
