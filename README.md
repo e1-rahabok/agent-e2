@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/model-open%20weights%2C%20local-6e7781?labelColor=3d444d" alt="Model: open weights, local">
   <img src="https://img.shields.io/badge/runs-locally%20%28data%20stays%20on%20site%29-6e7781?labelColor=3d444d" alt="Runs locally">
   <img src="https://img.shields.io/badge/knowledge%20files-286-6e7781?labelColor=3d444d" alt="Knowledge files: 286">
-  <img src="https://img.shields.io/badge/benchmark%20questions-226-6e7781?labelColor=3d444d" alt="Benchmark questions: 226">
+  <img src="https://img.shields.io/badge/benchmark%20questions-296-6e7781?labelColor=3d444d" alt="Benchmark questions: 296">
   <img src="https://img.shields.io/badge/target-99%25%20final%20score-6e7781?labelColor=3d444d" alt="Target: 99% final score">
 </p>
 
@@ -97,21 +97,21 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 ## Status
 
 - Goal not achieved yet. Agent E2, the neuro-symbolic expert system, was built on 2026-11-14 and has not run a round. The next round runs two runs per candidate model, Base (the model alone) and Agent E2, and the frontier reference ([`benchmark/RUN.md`](benchmark/RUN.md)).
-- Benchmark questions (2026-11-15): 226 run, and 47 screenshot questions wait for the author's captures (Level 300: 21, Level 400: 26). The run set by area and level:
+- Benchmark questions (2026-11-16): 296 run, 3 deferred (not run). 8 of the run set are screenshot questions. The run set by area and level:
 
 | Area | Level 100 | Level 200 | Level 300 | Level 400 | Total |
 |---|---|---|---|---|---|
-| CPU | 1 | 2 | 26 | 61 | 90 |
-| Memory | 1 | 5 | 21 | 46 | 73 |
-| Storage | 3 | 5 | 17 | 33 | 58 |
-| Network | 1 | 4 | 9 | 23 | 37 |
-| System (cluster, resource pools, capacity, statistics) | 3 | 6 | 14 | 43 | 66 |
-| Guest OS layer (Windows, Linux) | 1 | 6 | 17 | 31 | 55 |
+| CPU | 1 | 2 | 39 | 77 | 119 |
+| Memory | 1 | 4 | 35 | 59 | 99 |
+| Storage | 3 | 5 | 21 | 41 | 70 |
+| Network | 1 | 4 | 19 | 22 | 46 |
+| System (cluster, resource pools, capacity, statistics) | 3 | 6 | 25 | 41 | 75 |
+| Guest OS layer (Windows, Linux) | 1 | 6 | 25 | 45 | 77 |
 | GPU | 0 | 1 | 0 | 0 | 1 |
-| Questions | 8 | 18 | 70 | 130 | 226 |
+| Questions | 8 | 18 | 105 | 165 | 296 |
 
-- A question counts in every area it touches, so the area rows add up to more than 226. Current counts: `python3 project/tools/coverage.py`.
-- Retrieval check (2026-11-15, keyword search, 275 questions, 32K reading set): Agent E2's reading set holds 91% of the needed files (207 complete; main file missing on 8); with the question text only, 74% (133 complete; 34). Hybrid search last measured at 80% (117 of 196) before the structure review of 2026-11-14 ([output](benchmark/results/retrieval-2026-11-14/hybrid.md)).
+- A question counts in every area it touches, so the area rows add up to more than 296. Current counts: `python3 project/tools/coverage.py`.
+- Retrieval check (2026-11-16, BM25 with options, 299 questions): needed files found for 92% (228 complete, 76%; main file missing on 4). Question text only: 77% (158 complete, 53%; main file missing on 34). Source: [question bank audit](project/question-bank-audit-2026-11-15.md), section 7. Hybrid search last measured at 80% (117 of 196) before the structure review of 2026-11-14 ([output](benchmark/results/retrieval-2026-11-14/hybrid.md)).
 - Earlier generations (classic and agentic modes) and their results are archived in [`project/archive/`](project/archive) and not compared.
 - Plan, milestones and decisions: [`project/plan.md`](project/plan.md).
 

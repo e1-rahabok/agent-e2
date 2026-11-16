@@ -25,7 +25,7 @@ When the round is complete: merge it to main, then give me the summary.
 
 ## Expect
 
-Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the frontier reference in one mode, `web` (search available, Opus decides whether to use it); every question of the run set (226 on 2026-11-15; questions with status `awaiting-input` do not run), 5 runs each. No judge: every question is multiple choice (Q199). Projected from the validity sample of 2026-11-14 (Gemma, 9 questions: US$ 0.0026 and 33 s per Agent E2 answer on the gateway, 2 model calls each) and the model prices; Opus from the round of 2026-11-13. Read these as plus or minus 30%; the preflight gives the real numbers before the round starts.
+Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the frontier reference in one mode, `web` (search available, Opus decides whether to use it); every question of the run set (296 on 2026-11-16; questions with status `awaiting-input` do not run), 5 runs each. No judge: every question is multiple choice (Q199). Projected from the validity sample of 2026-11-14 (Gemma, 9 questions: US$ 0.0026 and 33 s per Agent E2 answer on the gateway, 2 model calls each) and the model prices; Opus from the round of 2026-11-13. Read these as plus or minus 30%; the preflight gives the real numbers before the round starts.
 
 | Run folder | Modes | Answers | Request settings | Time | Cost US$ |
 |---|---|---|---|---|---|
