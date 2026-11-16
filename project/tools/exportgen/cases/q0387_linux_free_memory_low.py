@@ -49,10 +49,11 @@ class LinuxFreeMemoryLow(core.Case):
         _, rows = formats.parse_vcf_list_csv(self.generate(seed)[FILE])
         _, fmin, fmax, nmin, nmax, _ = dict(rows)[SUBJECT]
         vm = []
+        free0, buff0 = rng.randint(round(fmin * 1.2), round(fmax * 0.8)), rng.randint(180_000, 320_000)
+        used = round(rng.uniform(nmin, nmax))
         for _ in range(3):                                # free inside the week's range, si and so 0
-            free = rng.randint(round(fmin * 1.1), round(fmax * 0.9))
-            buff = rng.randint(180_000, 320_000)
-            cache = T - free - buff - round(rng.uniform(nmin, nmax))
+            free, buff = round(free0 * rng.uniform(0.97, 1.03)), buff0 + rng.randint(0, 400)
+            cache = T - free - buff - used
             us, sy = rng.randint(1, 4), rng.randint(1, 2)
             vm.append((rng.randint(0, 1), 0, 0, free, buff, cache, 0, 0, rng.randint(0, 180), rng.randint(4, 40),
                        rng.randint(300, 900), rng.randint(500, 1500), us, sy, 100 - us - sy, 0, 0))

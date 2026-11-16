@@ -9,11 +9,11 @@
 
 Which statements are correct?
 
-- A. The default threshold is tuned for mostly stable workloads, so not chasing 4-minute bursts is designed behaviour.
+- A. Level 2 would move the ETL VMs even less often: it recommends vMotion only when the cluster is at or close to contention.
 - B. Level 4 is tuned for bursty workloads with occasional spikes and fits this ETL group better than the default.
 - C. Level 1 makes DRS the most responsive to load changes, so setting it moves the ETL VMs during each burst.
 - D. At the default threshold DRS reacts to every load change, so two moves in a day show that DRS is not working.
-- E. Since vCenter 8.0 Update 3 the default no longer moves a VM only because it became incompatible with its current host.
+- E. Under the default of releases before vCenter 8.0 Update 3, DRS would have begun moving the esx-06 VMs after about 10 minutes.
 - F. DRS tolerates 600 seconds of incompatibility and then evacuates, so the VMs on esx-06 should have moved by about 09:20.
 - G. DRS evaluates the cluster about once an hour, so no threshold can react to a burst of 4 minutes.
 - H. The VM Distribution option spreads the CPU load of the bursts across the hosts, so turning it on removes the hot spot.
@@ -23,16 +23,17 @@ D and F: "The default threshold reacts to every spike, and DRS evacuates incompa
 
 ## Expected key points
 - Answer: A, B, E.
-- A is correct: since vSphere 7.0 the threshold is workload-focused; level 3, the default, is tuned for mostly stable workloads.
+- A is correct: level 2 is tuned for highly stable workloads and recommends vMotion only when the cluster is at or close to contention; level 3, the default, is tuned for mostly stable workloads, so neither chases 4-minute bursts.
 - B is correct: level 4 is for bursty workloads, where occasional spikes may require DRS to react to sudden load changes (level 5 for workloads whose utilization varies significantly).
 - C is wrong: level 1 makes only mandatory moves (rule violations, maintenance mode); DRS then makes no move to improve resource availability.
 - D is wrong: reacting to workload changes every time is level 5, not the default.
-- E is correct: since vCenter 8.0 Update 3 the default of CompatCheckTransientFailureTimeSeconds is -1, so incompatibility with the current host alone no longer triggers a move; no advanced option was set here.
-- F is wrong: 600 seconds was the default tolerance before vCenter 8.0 Update 3.
+- E is correct: before vCenter 8.0 Update 3 the default tolerance was 600 seconds, after which a VM incompatible with its current host triggered DRS migrations to compatible hosts.
+- F is wrong: since vCenter 8.0 Update 3 the default of CompatCheckTransientFailureTimeSeconds is -1, so incompatibility with the current host alone no longer triggers a move; no advanced option was set here. 600 seconds was the earlier default.
 - G is wrong: DRS scans the cluster every minute for load-balancing recommendations.
 - H is wrong: VM Distribution spreads the number of VMs evenly across hosts, for availability; it does not balance their CPU load.
 
 ## Notes
+- 2026-11-16 re-review: A (default tuned for stable workloads) and E (no move on incompatibility since 8.0 Update 3) negated D and F; reworded in place to level 2 (A, true) and the pre-8.0 Update 3 default (E, true). Truth values unchanged; D and F still carry the colleague's claims.
 - Source of the incompatibility default: vSphere 9.1 documentation, VM migrations initiated by DRS due to incompatibility (pp. 1954-1955). Threshold levels: Performance Best Practices for vSphere 9.1 (revision 20260624), DRS Performance Tuning (pp. 78-79).
 
 ## Metadata

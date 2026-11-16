@@ -8,7 +8,7 @@
 Choose all the correct statements:
 
 - A. A host's total CPU reservation is capped at base clock × cores, not at the Turbo clock.
-- B. A CPU reservation comes into play only when there is contention.
+- B. A CPU reservation changes the CPU a running VM receives only when there is contention.
 - C. CPU that a VM reserves but does not use is available to other VMs at once.
 - D. A CPU reservation is set in MHz, not in vCPUs like allocation.
 - E. The total CPU reservation of all VMs on a host can exceed the host's capacity.
@@ -22,7 +22,7 @@ E (non-sticky read as overcommittable), F (kernel assumed to need no reservation
 ## Expected key points
 - Answer: A, B, C, D.
 - A is correct: only the base frequency is guaranteed, because Turbo is not: here 48 × 2.4 = 115.2 GHz, not 48 × 3.1. A conservative design.
-- B is correct: if there is enough CPU for every VM, each gets its runtime with or without a reservation.
+- B is correct: at runtime, if there is enough CPU for every VM, each gets its runtime with or without a reservation; the reservation still counts at power-on and migration (admission control, as in E and F).
 - C is correct: CPU is transient: reserved CPU that the VM does not use is used by other VMs.
 - D is correct: a CPU reservation is in hertz (MHz in Edit Settings), like CPU utilization; vCPUs are the unit of allocation.
 - E is wrong: a reservation is a guarantee, so it cannot be overcommitted; only allocation can. Host, DRS and HA admission control check it before a VM powers on or moves; here 98 + 12 = 110 GHz does not fit what is left.
@@ -32,6 +32,7 @@ E (non-sticky read as overcommittable), F (kernel assumed to need no reservation
 
 ## Notes
 - Changed in the 2026-11-15 audit: the stem was two lines of definitions (design.md 6.2: no definitions); it now gives a host, the reserved total and a failed power-on, so A, E and F rest on numbers. H added (admission control ignores CPU affinity; second question on it after 0048/L2-010 H).
+- Changed in the 2026-11-16 re-review: B now names the runtime effect; "comes into play only under contention" was contradicted by the stem, where the reservation blocks a power-on at 35% Usage.
 
 ## Metadata
 ```yaml

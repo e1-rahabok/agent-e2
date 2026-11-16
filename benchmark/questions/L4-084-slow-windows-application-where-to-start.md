@@ -35,7 +35,7 @@ Which statements are correct?
 - F true: with no wait in Windows, or every vCPU busy, or a disk queue with high VM disk latency, the wait is below Windows: read the VM.
 - G true: the queue is the fact; per-vCPU % Processor Time (imbalance, one busy vCPU) and % Privileged Time (kernel or driver work), with DPC, interrupt time and context switches, explain it.
 - H true: hypervisor work for the VM (CPU System, MKS, VMX, snapshot IO) is visible to ESXi only; the Guest OS cannot see it.
-- I false: a queue with idle vCPUs does not drain through more vCPUs and can grow (more context switching); read the queues before any change.
+- I false: the flow quantifies first (step 1: which transaction, how slow, when; the window and the slow transaction steer every later check) and reads the counters in that window before any change. A change made before measuring leaves no measured slowness to compare with. Added vCPUs can also make a queue worse (J).
 - J false: queue high with idle vCPUs means locks, threads that cannot run in parallel or kernel work; more vCPUs do not shorten it and can lengthen it.
 - K false: binaries, memory-mapped files and prefetch cause page-in; look for page-in and page-out together with a high disk queue.
 - L false: IO waiting in the Windows queue (filter driver, antivirus, application) never reaches the VM, so VM disk latency stays low.
@@ -44,6 +44,7 @@ Which statements are correct?
 - Follows the Windows slow flow (knowledge_main). The key does not require the flow's order of Windows counters: that order is a design choice of the flow.
 - No option uses a queue band. Guest Peak vCPU Queue in VCF Operations is per vCPU (Q217, settled 2026-11-15).
 - Changed in the 2026-11-15 audit: D names the network sign as the flow's step 6 has it (receive drops on the vNIC, read in vSphere). E (a guest wait the VM does not share, redundancy #44), G (Windows cannot see Ready, #27) and H (ESXi cannot see Windows queues, #44) were third copies; each was replaced in place by a true fact of the cited files: the verdict still checks VM contention (ms-windows-slow step 7), the queue is explained by per-vCPU and privileged time (step 3; processor-time), and hypervisor work is invisible to the guest (vm-vs-guest-os, area C). Level stays 400 (the breaker held it: a two-layer flow with misleading readings).
+- Changed on 2026-11-16 (re-review): key point I gives I's own reason (quantify before any change) instead of J's. Key unchanged. The re-review found the level partly 300 (A, B, C, I, K, L follow from common troubleshooting sense; E, G, H carry the 400 content); not changed.
 
 ## Metadata
 ```yaml
