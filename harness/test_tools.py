@@ -475,6 +475,19 @@ class TermMapTest(unittest.TestCase):
         self.assertIn('vsphere/technology/cpu/metrics/virtual-motherboard/ready', terms.files(hits, DOCS))
         self.assertIn('Terms in this question', terms.block(hits))
 
+    def test_strongest_row_first_and_gives_two_files(self):
+        import terms
+        q = 'esxtop shows %RDY 6.1 %CSTP 3.8 %SWPWT 1.4 %USED 24 %RUN 35 on the vcpu worlds. Is the host overloaded?'
+        hits = terms.match(q)
+        self.assertEqual('esxtop-cpu', hits[0]['id'])
+        self.assertIn('vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics', terms.files(hits, DOCS, 2))
+
+    def test_swap_file_is_not_the_swapped_counter(self):
+        import terms
+        ids = [h['id'] for h in terms.match('How much space does the swap file (.vswp) need at power-on?')]
+        self.assertIn('swap-file', ids)
+        self.assertNotIn('swap', ids)
+
     def test_unless_blocks_a_match(self):
         import terms
         ids = [h['id'] for h in terms.match('ESXi host CPU usage is 100%')]

@@ -14,7 +14,7 @@ from kb import split, NOT_INDEXED, FILE_LINK  # noqa: E402  (the parser the harn
 
 # Old id -> current id for moved knowledge files. A repository tool, not product: the harness never reads it.
 MOVED_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'moved.yaml')
-MOVED = (yaml.safe_load(open(MOVED_FILE)) or {}) if os.path.exists(MOVED_FILE) else {}
+MOVED = (yaml.safe_load(open(MOVED_FILE, encoding='utf-8')) or {}) if os.path.exists(MOVED_FILE) else {}
 
 TERMS = 'project/tools/tags.yaml'
 REQUIRED = ['id', 'retriever_guide', 'scope', 'technology', 'pillar', 'product',
@@ -24,7 +24,7 @@ LINK_FIELDS = ['related', 'internal_derive', 'same_name', 'same_meaning']
 OLD_FIELDS = ['type', 'resources', 'objects', 'derived_from', 'same_name_as', 'kind']
 
 def load_allowed():
-    return yaml.safe_load(open(TERMS))
+    return yaml.safe_load(open(TERMS, encoding='utf-8'))
 
 def main():
     allowed = load_allowed()
@@ -143,7 +143,7 @@ def main():
 
     seen_ids, level_numbers, pairs = {}, {}, {}
     for f in sorted(glob.glob('benchmark/questions/**/*.md', recursive=True)):
-        t = open(f).read()  # benchmark questions: metadata at the end, like knowledge files
+        t = open(f, encoding='utf-8').read()  # benchmark questions: metadata at the end, like knowledge files
         if t.startswith('---\n'): bad(f, 'front matter at the top: move it to a ## Metadata section at the end')
         fm, _ = split(f)
         if fm is None: bad(f, 'missing ## Metadata section with one yaml block at the end'); fm = {}
@@ -273,10 +273,10 @@ def main():
     for f in others():
         for r in bare_ids(f): bad(f, f'`{r}` should be a link [`{r}`](relative/path.md) (run project/tools/link_refs.py)')
     for d in LINKED_DOCS:
-        for ref in re.findall(r'benchmark/questions/(L\d-\d+-[\w-]+\.md)', open(d).read()):
+        for ref in re.findall(r'benchmark/questions/(L\d-\d+-[\w-]+\.md)', open(d, encoding='utf-8').read()):
             if not os.path.exists(os.path.join('benchmark', 'questions', ref)): bad(d, f'link to a question that does not exist: {ref}')
     for f in files + sorted(glob.glob('benchmark/questions/*.md')):
-        text = open(f).read()
+        text = open(f, encoding='utf-8').read()
         for pat in allowed.get('injection_patterns', []):
             if re.search(pat, text): bad(f, f'possible prompt injection or hidden text (pattern {pat})')
     import kb as _kb, primer  # agent up-front blocks: sources present, size within budget (harness/AGENT.md, section 3)
@@ -318,7 +318,7 @@ def check_repo_terms(allowed, bad):
     for f in sorted(glob.glob('**/*.md', recursive=True)):
         if f in skip or f.startswith(records):
             continue
-        for i, line in enumerate(open(f).read().split('\n'), 1):
+        for i, line in enumerate(open(f, encoding='utf-8').read().split('\n'), 1):
             for pat, use in (allowed.get('avoid_repo_terms') or {}).items():
                 if re.search(pat, line):
                     bad(f, f'line {i}: repository term "{re.search(pat, line).group(0)}": use "{use}" (project/terms.md)')
@@ -381,7 +381,7 @@ def check_moved(ids, bad):
     for f in sorted(glob.glob('**/*.md', recursive=True)):
         if f.startswith(records):
             continue
-        for i, line in enumerate(open(f).read().split('\n'), 1):
+        for i, line in enumerate(open(f, encoding='utf-8').read().split('\n'), 1):
             for m in pat.finditer(line):
                 o = m.group(1) or m.group(2)
                 bad(f, f'line {i}: moved id "{o}": use "{MOVED[o]}" (run project/tools/link_refs.py for links)')
@@ -389,7 +389,7 @@ def check_moved(ids, bad):
 
 def check_flow_map(bad):
     """REPOSITORY-MAP.md, section Flows, lists every flow file."""
-    text = open('REPOSITORY-MAP.md').read() if os.path.exists('REPOSITORY-MAP.md') else ''
+    text = open('REPOSITORY-MAP.md', encoding='utf-8').read() if os.path.exists('REPOSITORY-MAP.md') else ''
     for f in sorted(glob.glob('knowledge/**/*.md', recursive=True)):
         guide = (split(f)[0] or {}).get('retriever_guide')
         if guide in ('health-check', 'troubleshooting', 'decision-tree'):
@@ -409,7 +409,7 @@ def check_titles(bad):
     """Short titles and headings: the title is prefixed to every chunk (harness/kb.py), so a list of contents in it repeats in every chunk."""
     opener = re.compile(r'(How|Why|What|When|Where|Which|Who)\b')
     for f in sorted(glob.glob('knowledge/**/*.md', recursive=True)):
-        text = open(f).read()
+        text = open(f, encoding='utf-8').read()
         question_title = 'retriever_guide: decision-tree' in text  # a decision tree title is the question users ask
         for i, line in enumerate(text.split('\n'), 1):
             m = re.match(r'(#{1,3}) (.*)', line)
@@ -429,7 +429,7 @@ def check_tables(bad):
     for f in sorted(glob.glob('**/*.md', recursive=True)):
         if f.startswith('benchmark/results/') or f.startswith('project/archive/'):
             continue
-        lines, fence = open(f).read().split('\n'), False
+        lines, fence = open(f, encoding='utf-8').read().split('\n'), False
         for i, line in enumerate(lines):
             if line.startswith('```'):
                 fence = not fence
@@ -584,7 +584,7 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
             bad(path, f'{where}: kb "{ref}" does not exist')
     for path in sorted(glob.glob(f'{CATALOG}/*.yaml')):
         try:
-            data = yaml.safe_load(open(path))
+            data = yaml.safe_load(open(path, encoding='utf-8'))
         except yaml.YAMLError as e:
             bad(path, f'yaml error: {e}'); continue
         meta = data.get('meta') or {}
@@ -710,7 +710,7 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
         bad(f'knowledge/{b["kb"]}.md', f'colour-band table row "{b["metric"]}": thresholds live only in knowledge/catalog/thresholds-*.yaml')
     for lv in kpi_all:
         if lv.get('kb') not in ids: bad('knowledge/catalog/thresholds-performance.yaml', f'kpi line "{lv.get("metric")}": kb "{lv.get("kb")}" does not exist')
-        elif os.path.exists(f'knowledge/{lv["kb"]}.md') and str(lv.get('metric')).replace('|', '\\|') not in open(f'knowledge/{lv["kb"]}.md').read():
+        elif os.path.exists(f'knowledge/{lv["kb"]}.md') and str(lv.get('metric')).replace('|', '\\|') not in open(f'knowledge/{lv["kb"]}.md', encoding='utf-8').read():
             bad(f'knowledge/{lv["kb"]}.md', f'KPI table: no cell names the catalog kpi line "{lv.get("metric")}" (column Catalog row (KPI))')
 
 def check_source_document(docs, bad):

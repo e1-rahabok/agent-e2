@@ -18,22 +18,24 @@ When the round is complete: merge it to main, then give me the summary.
 
 ## Before you start (only you can do these)
 1. `AI_GATEWAY_API_KEY` is set in the environment of the session.
-2. Credits: at least US$ 80. The preflight reads the balance and refuses the round if it does not cover the projected cost times 1.3.
-3. Key budget: room for US$ 80 beyond what the key has used. The budget of a key is cumulative and cannot be read by the runner; it shows as HTTP 402. (On 2026-11-13 the key had used US$ 150.43 of 150.)
+2. Credits: at least US$ 100 (projected US$ 77 with the safety factor). The preflight reads the balance and refuses the round if it does not cover the projected cost times 1.3.
+3. Key budget: room for US$ 100 beyond what the key has used. The budget of a key is cumulative and cannot be read by the runner; it shows as HTTP 402. (On 2026-11-13 the key had used US$ 150.43 of 150.)
 4. Everything is committed. The index version is the commit SHA: the questions, `knowledge/` and `harness/` must not change during the round. A resume after a change mixes two versions in one run.
 5. The session works on its own branch, started from `main`.
+6. This is a development round, not the release round: the held-out set of 30 ([benchmark/design.md](design.md), section 7.5) is drawn at release and does not exist yet, so that gate is not read. The run set is every question with status `draft` or `reviewed`; on 2026-11-16 288 are drafts and 3 reviewed, so the scores are read before the author's review of the questions (Q256).
+7. Commands use `python3`; on a machine where only `python` exists (Windows), use `python`.
 
 ## Expect
 
-Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the frontier reference in one mode, `web` (search available, Opus decides whether to use it); every question of the run set (291 on 2026-11-16; questions with status `awaiting-input` do not run), 5 runs each. No judge: every question is multiple choice (Q199). Projected from the validity sample of 2026-11-14 (Gemma, 9 questions: US$ 0.0026 and 33 s per Agent E2 answer on the gateway, 2 model calls each) and the model prices; Opus from the round of 2026-11-13. Read these as plus or minus 30%; the preflight gives the real numbers before the round starts.
+Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the frontier reference in one mode, `web` (search available, Opus decides whether to use it); every question of the run set (291 on 2026-11-16; questions with status `awaiting-input`, `retired` or `deferred` do not run), 5 runs each. No judge: every question is multiple choice (Q199). Projected from the validity sample of 2026-11-14 (Gemma, 9 questions: US$ 0.0026 and 33 s per Agent E2 answer on the gateway, 2 model calls each) and the model prices; Opus from the round of 2026-11-13. Scaled from the 226-question projection to 291 questions (x 1.29). Read these as plus or minus 30%; the preflight gives the real numbers before the round starts.
 
 | Run folder | Modes | Answers | Request settings | Time | Cost US$ |
 |---|---|---|---|---|---|
-| `<date>-gemma-4-31b-it` | baseline, agent-e2 | 2,260 | default | about 60 min | about 3.5 |
-| `<date>-qwen3.8-27b` | baseline, agent-e2 | 2,260 | reasoning off | about 60 min | about 3.5 |
-| `<date>-muse-glimmer-30b` | baseline, agent-e2 | 2,260 | reasoning off | about 70 min | about 8 |
-| `<date>-claude-opus-5.5` | web | 1,130 | effort medium, 8,000 tokens | about 80 min | about 31 |
-| Total | | 7,910 | | 1.5 to 2 hours | about 46 (60 with the safety factor) |
+| `<date>-gemma-4-31b-it` | baseline, agent-e2 | 2,910 | default | about 80 min | about 4.5 |
+| `<date>-qwen3.8-27b` | baseline, agent-e2 | 2,910 | reasoning off | about 80 min | about 4.5 |
+| `<date>-muse-glimmer-30b` | baseline, agent-e2 | 2,910 | reasoning off | about 90 min | about 10 |
+| `<date>-claude-opus-5.5` | web | 1,455 | effort medium, 8,000 tokens | about 105 min | about 40 |
+| Total | | 10,185 | | about 2 hours | about 59 (77 with the safety factor) |
 
 - The four runs go in parallel, so the round takes as long as the slowest run (Opus, at its starting concurrency of 3; the runner raises it while the provider allows).
 - An Agent E2 answer sends about 17,000 input tokens over its 2 model calls (the case call about 1,500, the answer call about 15,000 with the reading set), against about 400 for Base.

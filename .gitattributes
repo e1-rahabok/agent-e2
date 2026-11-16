@@ -1,0 +1,8 @@
+# Line endings: LF where the tools parse text (a Windows checkout otherwise adds CR and the question and export parsers fail).
+# Archived run outputs keep the bytes the runner wrote.
+benchmark/questions/** text eol=lf
+project/tools/** text eol=lf
+knowledge/** text eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary

@@ -56,6 +56,8 @@ def main():
         ret = Retriever(docs, chunks, expand=cfg.get('query_expansion', False), **rr)
     rows = []
     for c in C.load(a.questions):
+        if not c.scorable:
+            continue  # deferred, retired or awaiting input: the run does not read them
         need = list(c.knowledge)
         unknown = [i for i in need if i not in docs]
         if unknown:  # never drop a needed file silently: that would raise recall
