@@ -54,15 +54,6 @@ Each entry:
 - Recommended: pair 1 B (the touching vCPU waits for the fetch; reword the first line to "delays the vCPU once; a few fetches cost little, not nothing"); pair 2 B (drop "only when": keep the vendor example as an example). 0384 H stays false; key A, C unchanged.
 - Answer:
 
-### Q253 · Network > esxtop units · The misconception line points the wrong way
-
-- Files: [esxtop network units against the vSphere Client](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/network-units-vs-vsphere-client.md) (section Misconceptions); question 0412 (option K).
-- Now: the line reads "esxtop shows 125 times more traffic than vCenter, so one tool is wrong". The same file's conversion (esxtop Mbps ≈ vSphere Client KBps × 8 / 1,000) makes the vCenter number about 125 times larger than the esxtop number, so the observation in the quote is reversed. A reader who trusts the line picks 0412 K.
-- Research (2026-11-16): checked. 1,000 Mbps is 125,000 KBps, so the vCenter number is 125 times larger than the esxtop number; the file's own conversion and 0412's key point K say the same.
-- Question: reword the quote to "vCenter shows 125 times more traffic than esxtop, so one tool is wrong"?
-- Recommended: yes.
-- Answer:
-
 ## Future release
 
 ### Q244 · Cluster > HA admission control · Three vendor facts for the percentage policy

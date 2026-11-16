@@ -2934,4 +2934,13 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 - Question: the key has empty explanations for A, B and D. What is the reason each is wrong? Which pricing date and source should the case record?
 - Written as now: answer C only; no reasons for the others.
 - Answer: Author (2026-11-03): tracked as a to-do in project/todo.md. Closed 2026-11-04: case removed (see [Q039](#q039--auto-test--golden-case-vendor-neutral-general-001--hyperscaler-cost-not-in-the-knowledge-base)).
+### Q253 · Network > esxtop units · The misconception line points the wrong way
+
+- Files: [esxtop network units against the vSphere Client](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/network-units-vs-vsphere-client.md) (section Misconceptions); question 0412 (option K).
+- Now: the line reads "esxtop shows 125 times more traffic than vCenter, so one tool is wrong". The same file's conversion (esxtop Mbps ≈ vSphere Client KBps × 8 / 1,000) makes the vCenter number about 125 times larger than the esxtop number, so the observation in the quote is reversed. A reader who trusts the line picks 0412 K.
+- Research (2026-11-16): checked. 1,000 Mbps is 125,000 KBps, so the vCenter number is 125 times larger than the esxtop number; the file's own conversion and 0412's key point K say the same.
+- Question: reword the quote to "vCenter shows 125 times more traffic than esxtop, so one tool is wrong"?
+- Recommended: yes.
+- Answer: Author (2026-11-16): 1 Mbps = 128 KBps (a megabit is 2^20 bits, a KB is 1,024 bytes). The small variation in the lab (130 to 134) is a collection issue, not a major problem. Applied: [network-units-vs-vsphere-client](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/network-units-vs-vsphere-client.md) now gives 1 Mbps = 128 KBps; the misconception line now reads "vCenter shows 128 times the number esxtop shows, so one tool is wrong" (the earlier 125 wording had the direction reversed); the units differ, and neither tool is wrong. The 125 decimal reading and the open megabit question are removed from review_notes.
+
 - None yet. Earlier resolved questions are recorded in each file's `review_notes`.
