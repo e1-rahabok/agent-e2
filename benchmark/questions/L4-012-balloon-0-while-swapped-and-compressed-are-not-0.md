@@ -9,7 +9,7 @@
 
 Which statements are correct?
 
-- A. With Balloon at 0, nothing can be swapped or compressed, since ballooning always comes first.
+- A. With Balloon at 0 all day, the swapped and compressed amounts point to a counter error.
 - B. Swapping and compression happened earlier, and the VMs have not touched those pages since.
 - C. The host is not under memory pressure now, so ESXi has no reason to inflate balloons.
 - D. Pages left from past swapping and compression can no longer slow any VM.
@@ -38,6 +38,7 @@ Which statements are correct?
 - Theory half of 0391 (VCF Operations list of the same pattern). Facts shared with 0391 (past reclamation, the over-correction, the wrong action) are two questions each; E with L3-025 C is two.
 - Level 400 is the author's (Q056, 2026-11-05).
 - Changed in the 2026-11-15 audit: the stem gives vCenter values instead of "Consumed is not high. There is clearly capacity to deploy another VM" (an interpretation); old D ("because of memory tiering", undecidable) replaced by the over-correction; E (cumulative totals), F (amount vs rate), G (no measurable wait, true) and H (wrong action) added; A and B reworded without the absolutes and the length cue. Key B, C kept; G added.
+- Changed in the 2026-11-16 re-review: A lost its last absolute and reason clause ("since ballooning always comes first"); same fact, still the misconception.
 
 ## Metadata
 ```yaml

@@ -35,7 +35,8 @@ F: "The vCLS VMs hold reservations, so they are a real capacity cost, like a fai
 
 ## Notes
 - The prompt carries the vendor evidence on both sides (the 9.1 Fault Tolerance note and KB 312147), so the conflict between the knowledge base and the 9.1 documentation is decidable from public documents (benchmark/design.md, sections 3.7 and 6.1 F3).
-- misconception_type: the dependency statement of an older release (7.0 Update 1) applied to 9.1; the closest listed type is threshold-transplanted.
+- misconception_type: F reads a few hundred MHz and MB as a cost of the order of a whole host; the closest listed type is unit-and-normalization. The older-release dependency (the change board's first objection) is tested through A and B, which a reader who holds it marks false.
+- 2026-11-16 re-review: C (DRS stops) and G (Embedded vCLS disks on a datastore) negated A and D; replaced in place with the pre-9.0 Retreat Mode behaviour (C, false) and the Embedded vCLS host condition (G, false). Truth values unchanged.
 - Not tested: the vCLS default state in vCenter 9.1 (open review note of the knowledge file).
 - Sources: Broadcom KB 312147, https://knowledge.broadcom.com/external/article/312147; KB 316514 (Retreat Mode per cluster), https://knowledge.broadcom.com/external/article/316514.
 
@@ -58,7 +59,7 @@ attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/object-types/cluster/concepts/vcls"
 answer: [A, B, D, E]
-misconception: [C, F, G]
-misconception_type: [threshold-transplanted]
+misconception: [F]
+misconception_type: [unit-and-normalization]
 status: draft
 ```

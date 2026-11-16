@@ -1,4 +1,4 @@
-# Swapped and Compressed moving in opposite directions
+# Nightly reports slow on a VM with free host memory
 
 ## Prompt
 - A Windows Server VM with 24 GB of memory runs SQL Server for the nightly reports.
@@ -19,7 +19,7 @@ Why do the reports slow down, and what do you change? Which statements are corre
 - H. Configuring the VM with more than 24 GB stops the swapping.
 - I. Remove the limit, or raise it to what the guest needs, after finding out why it was set.
 - J. A Consumed value that stays flat for 3 days shows that memory is not the cause of the slow reports.
-- K. With the cap in place, the VM waits for memory all day, not only during the runs.
+- K. With the cap in place, the VM waits for memory as much outside the runs as during them.
 - L. Memory|Balloon at 0 in every sample rules out a limit, since a limit always balloons first.
 - M. The gap of about 0.4 GB between Consumed and Memory|Effective limit is room the VM can still grow into.
 
@@ -41,7 +41,7 @@ Why do the reports slow down, and what do you change? Which statements are corre
 - H is wrong: the limit, not the configured size, caps Consumed; more configured memory changes nothing while the limit stays.
 - I is correct: the limit is the cause; removing it or raising it to the guest's need is the fix.
 - J is wrong: Consumed is flat because the limit caps it; the guest keeps touching pages that ESXi swaps and compresses.
-- K is wrong: outside the runs Contention stays at 0.05% or less, mostly 0; swapped pages the guest does not touch cost no wait. This is the over-correction of A: a limit read as a wait at every moment.
+- K is wrong: outside the runs Contention stays at 0.05% or less, mostly 0, against about 3.2-6.2% in the runs; swapped pages the guest does not touch cost no wait. This is the over-correction of A: a limit read as a wait at every moment.
 - L is wrong: the balloon goes first under a limit only when the driver runs; `sched.mem.maxmemctl = 0` switches it off, so ESXi compresses and swaps instead.
 - M is wrong: the configured limit caps Consumed; Memory|Effective limit adds the VM overhead, which the limit does not cap, so the gap is not room to grow.
 
@@ -51,11 +51,12 @@ Why do the reports slow down, and what do you change? Which statements are corre
 - Under a limit the balloon goes first when the driver runs (memory-limit, Enforcement order). The CSV has Granted + Swapped + Compressed near 24 GB and no balloon, so the stem gives the driver switched off (`sched.mem.maxmemctl = 0`) and Memory|Balloon 0.
 - From the author's samples (docx, 2026-11-12): a 64 GB VM, heavy swap and compression over 7 days, Consumed flat under the effective limit; the knowledge base keeps that example.
 - Changed in the 2026-11-15 audit: stem gives the balloon setting and Balloon 0; E (Contention is the swap-in wait, redundancy #37, homed in 0149/0392) replaced by the decompression-vs-swap-in fact; L and M added.
+- Changed in the 2026-11-16 re-review: K reworded ("as much outside the runs as during them"): the export shows Contention of 0.01-0.05% in some samples outside the runs, so "not only during the runs" read true. Title no longer states the observation behind C.
 
 ## Metadata
 ```yaml
 id: "0140"
-title: "Swapped and Compressed moving in opposite directions"
+title: "Nightly reports slow on a VM with free host memory"
 product: [vsphere, vcf-operations, windows]
 technology: [memory]
 task: troubleshoot
