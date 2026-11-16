@@ -15,11 +15,10 @@ Which statements are correct?
 - F. Every Usage (%) value in these exports, before and after the dip too, comes from active memory.
 - G. Plan the VM's new size on the lowest Memory|Usage (%) value.
 
-## Likely wrong answer
-E: "Memory usage fell, so the application needed less memory for half an hour." Or G: downsizing on the dip.
+## Answers
+A, B, C
 
-## Expected key points
-- Answer: A, B, C.
+## Explanation
 - A true: Needed Memory comes from VMware Tools inside the guest; the Guest|Needed Memory export has blank values in the six rows (30 minutes) where Memory|Usage (%) dips, and values in every other row.
 - B true: without guest data, VCF Operations Usage (%) falls back to active memory: in the six dip rows, Memory|Usage (%) is within 2 points of Memory|Non Zero Active (KB) / Memory|Total Capacity (KB) × 100 (11.75-12.52%, against 75-79% before).
 - C true: without guest data, VM memory Utilization falls back to Consumed: in the dip rows Memory|Utilization (KB) is within 5% of Memory|Consumed (KB), above every value it had before the dip.
@@ -27,6 +26,7 @@ E: "Memory usage fell, so the application needed less memory for half an hour." 
 - E false: the guest did not change; the source of the metric changed. Usage comes back as soon as guest data does.
 - F false: over-correction. Only the rows without guest data use the fallback; before and after the dip, Usage (%) matches Needed Memory over Total Capacity within 2 points, far from Non Zero Active over Total Capacity.
 - G false: the wrong action. Without guest data there is no Needed Memory and so no sizing; the dip shows active memory, which does not stand in for the guest's need.
+- Misconception: E: "Memory usage fell, so the application needed less memory for half an hour." Or G: downsizing on the dip.
 
 ## Notes
 - Paired with 0396 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D8.
@@ -66,7 +66,6 @@ attachments:
   - 0397/vcf-operations-memory-total-capacity.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D8"
-answer: [A, B, C]
 misconception: [E]
 misconception_type: [layer-confusion, tool-confusion]
 pair: "0396"

@@ -16,17 +16,17 @@ Which definitions implement the requirement, stay silent on esx-07 and keep work
 - E. One symptom set Defined on Child (Virtual Machine), value type All, with both conditions in the set and the conditions combined with All.
 - F. One symptom set Defined on Self (the host), with the host's own CPU and memory contention metrics above the same values, combined with All.
 
-## Likely wrong answer
-B or the first version itself (two sets, each with its own population): each set counts its own VMs, so 14 of 40 (35%) and 15 of 40 (37.5%) both pass and the sets are true together although only 5 VMs (12.5%) have both problems. Or D (a fixed count that does not follow the host size). Or F: the host's own contention metrics look like the simple way to watch the host.
+## Answers
+A
 
-## Expected key points
-- Answer: A.
+## Explanation
 - A is correct: Percent is the share of the related objects that meet the criteria of the whole symptom set. With both conditions in one set and All inside it, a VM counts only if it meets both. On esx-07 that is 5 of 40 = 12.5%, not over 25%, so the alert stays silent; a share scales with any host size.
 - B is wrong: two separate sets each build their own population. The first version passed on 35% and 37.5%, which are different VMs; Any between the sets fires even more easily.
 - C is wrong: Any inside the set counts a VM with either problem: 14 + 15 - 5 = 24 of 40 VMs on esx-07 (60%), so it fires.
 - D is wrong: Count is an exact number of VMs. More than 10 is 27.5% on a 40-VM host, 55% on a 20-VM host and 2.5% on a 400-VM host, so it does not follow host size or DRS moves.
 - E is wrong: value type All needs every VM on the host to meet the set, far stricter than 25%; the alert would almost never fire.
 - F is wrong: a host's own contention metric is an average over its running VMs. It hides the VMs that suffer and cannot tell whether the two problems sit on the same VM; the host alerts read a share of the VMs instead.
+- Misconception: B or the first version itself (two sets, each with its own population): each set counts its own VMs, so 14 of 40 (35%) and 15 of 40 (37.5%) both pass and the sets are true together although only 5 VMs (12.5%) have both problems. Or D (a fixed count that does not follow the host size). Or F: the host's own contention metrics look like the simple way to watch the host.
 
 ## Notes
 - Public source: VMware Aria Operations 8.18, "Creating Alert Definitions" (https://techdocs.broadcom.com/us/en/vmware-cis/aria/aria-operations/8-18/vmware-aria-operations-configuration-guide-8-18/configuring-alerts-and-actions/alert-definitions/creating-alert-definitions.html), last updated 2026-05-20: Child is "an object type that is one level below the base object type"; value types Count ("exact number of related objects meet the symptom/condition set criteria"), Percent ("percentage of total related objects meet the symptom/condition set criteria"), Any, All; All and Any inside a set are a Boolean AND and OR; several sets combine with their own All or Any. The condition names CPU Contention (%) and Memory Contention (%) are the VM metrics of VCF Operations.
@@ -56,7 +56,6 @@ knowledge_main: vcf-operations/alert-definitions
 attachments: []
 origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
-answer: [A]
 misconception: [B, D, F]
 misconception_type: [average-hides-worst]
 status: draft

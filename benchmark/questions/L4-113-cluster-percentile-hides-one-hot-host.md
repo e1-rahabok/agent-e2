@@ -19,11 +19,10 @@ Which readings are correct?
 - F. With 22 VMs at 6% and 178 at 0.3%, the team's 90th percentile alert would have fired.
 - G. The 90th percentile of VM Ready here is above the cluster's average Ready.
 
-## Likely wrong answer
-A or E: the cluster aggregates are read as the verdict, with a small share of VMs treated as a minor issue.
+## Answers
+C, F
 
-## Expected key points
-- Answer: C, F.
+## Explanation
 - A is wrong: a percentile cannot see a group smaller than the share it leaves out: 14 of 200 is 7%, under the 10% the 90th percentile ignores, so it reads the unaffected VMs. No alert is not a healthy cluster.
 - B is wrong: the cluster runs at 46% utilization and 186 VMs show no wait; the wait is confined to one host, so it is not a cluster capacity shortage and a host does not fix it.
 - C is correct: 14 of the 22 VMs on esx-04 (64%) wait; the cluster figures dilute a host finding. The next step is that host's VMs: why only there (balance, CPU limits or a resource pool on those VMs, NUMA placement).
@@ -31,6 +30,7 @@ A or E: the cluster aggregates are read as the verdict, with a small share of VM
 - E is wrong: the mean dilutes the 14 VMs the same way; aggregate the VMs by worst and by percentile, and look at the host.
 - F is correct: 22 of 200 is 11%, more than the 10% the 90th percentile leaves out, so the 90th percentile becomes 6%, above the 1% alert level.
 - G is wrong: here the 90th percentile (0.3%) is below the cluster average Ready (0.6%), because the few high values lift the average but stay inside the ignored 10%.
+- Misconception: A or E: the cluster aggregates are read as the verdict, with a small share of VMs treated as a minor issue.
 
 ## Notes
 - Synthetic, 2026-11-13, for the coverage gap (project/plan.md).
@@ -60,7 +60,6 @@ knowledge_main: vsphere/object-types/cluster/cluster-health-check
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-13"
-answer: [C, F]
 misconception: [A, E]
 misconception_type: [average-hides-worst, provider-vs-consumer]
 status: draft

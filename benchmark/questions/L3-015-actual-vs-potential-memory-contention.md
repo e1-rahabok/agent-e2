@@ -18,11 +18,10 @@ Which statements are correct?
 - F. Since the host was not reclaiming memory, the swap-in at 02:05 cost the VM no time.
 - G. Add memory to the host: Swapped and Compressed above 0 show that it is short of memory now.
 
-## Likely wrong answer
-D: the swapped amount read as the VM being slow. Or F, the over-correction: with no host pressure, swap-in is harmless.
+## Answers
+A, B, C
 
-## Expected key points
-- Answer: A, B, C.
+## Explanation
 - A is true: at 02:05 the guest touched swapped and compressed pages; each page read back is a wait for the vCPU that touched it, and Latency rose to 0.8% with the swap-in. That is the actual problem; the amounts are only potential.
 - B is true: a compressed page is not directly accessible to the VM, so VM Granted excludes it; the guest's next touch makes ESXi decompress it, and that is a wait.
 - C is true: Latency, Swap in rate and Decompression rate are 0 at 14:00, so the VM did not wait on ESXi for memory then; look elsewhere for the slowness.
@@ -30,6 +29,7 @@ D: the swapped amount read as the VM being slow. Or F, the over-correction: with
 - E is false: swap-in means the guest asked for a page swapped out earlier; it does not mean the host is under pressure now. Here no page went out all day.
 - F is false: the guest still waits for each page it reads back, whatever the host's state; Latency at 02:05 shows it. This is the over-correction of D.
 - G is false: Swapped or Compressed above 0 does not show the host short of memory now (Swap out rate and Compression rate are 0 all day, so no page went out); the cause was high host Consumed or a limit, and the pages can be guest cache. Check for a limit on the VM or its pools before host capacity: a limit reclaims on a host with free memory too.
+- Misconception: D: the swapped amount read as the VM being slow. Or F, the over-correction: with no host pressure, swap-in is harmless.
 
 ## Notes
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Do not select counters that indicate risk but not actual slowness." Stem made plural (Q199); was "Which metric best indicates".
@@ -61,7 +61,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q3 VM Memory Contention"
 answer_type: deterministic
 level: 300
-answer: [A, B, C]
 misconception: [D]
 misconception_type: [reclamation-as-contention, cumulative-vs-current]
 status: draft

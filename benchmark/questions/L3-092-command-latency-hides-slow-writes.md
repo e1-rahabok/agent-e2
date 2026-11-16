@@ -16,11 +16,10 @@ Which statements are correct?
 - G. If the workload turned write-heavy, Command latency would move toward Write latency.
 - H. In the export, most of Command latency is time in the host's kernel rather than at the device.
 
-## Likely wrong answer
-B: Command latency is (read + write) / 2. Or F: Command latency is healthy, so the LUN is not the cause.
+## Answers
+A, C, G
 
-## Expected key points
-- Answer: A, C, G.
+## Explanation
 - A is correct: Command latency is the average over all commands, so each side counts by its number of commands. In the export `Average read requests per second` is 6 to 10 times `Average write requests per second` in every row, and `Command latency` stays at 1.2 to 1.8 times `Read latency` (4-5 ms against 3 ms).
 - B is wrong: the misconception. With `Write latency` at 4 to 6 times `Read latency`, the plain mean of the two is 2.5 to 3.5 times Read latency, above the export's Command latency (1.8 times at most).
 - C is correct: reading. `Write latency` is 4 to 6 times `Read latency` in every row (13-17 ms against 3 ms), while `Command latency` stays below half of Write latency.
@@ -29,6 +28,7 @@ B: Command latency is (read + write) / 2. Or F: Command latency is healthy, so t
 - F is wrong: the misconception. The combined value hides the slow side; the LUN's Write latency is 4 to 6 times its Read latency.
 - G is correct: a weighted average moves toward the side that carries most commands.
 - H is wrong: reading. Command latency is Physical device command latency plus Kernel command latency, and Kernel command latency is 0 in at least 90% of the rows: the time is at the device, with the slow side being the writes.
+- Misconception: B: Command latency is (read + write) / 2. Or F: Command latency is healthy, so the LUN is not the cause.
 
 ## Notes
 - Paired with the theory question 0044 (theory and practical; design.md, section 3.9).
@@ -58,7 +58,6 @@ attachments:
   - 0414/vcenter-host-disk-lun-realtime.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C19"
-answer: [A, C, G]
 misconception: [B, F]
 misconception_type: [average-hides-worst, unit-and-normalization]
 pair: "0044"

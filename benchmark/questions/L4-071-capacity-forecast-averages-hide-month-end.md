@@ -24,12 +24,10 @@ Which statements are correct?
 - M. The project should go on this cluster only after new capacity is added or other load is moved out before the November close.
 - N. Since the October close the daily highest values fell from 97.8 to about 80, so Time Remaining will grow as the trend turns down.
 
-## Likely wrong answer
-- A: "Capacity Remaining is 24% and Time Remaining is 210 days, and the trend gives a year, so there is room for the project."
-- N: "Load has fallen since the close, so the runway gets longer."
+## Answers
+B, C, D, F, G, I, K, M
 
-## Expected key points
-- Answer: B, C, D, F, G, I, K, M.
+## Explanation
 - A is wrong: the daily averages hide the month-end peaks, which already reach 98%; the project is not in any projection.
 - B is correct: export, highest 5-minute values on 31 August 93.4, 30 September 95.6, 30 October 97.8.
 - C is correct: every other day peaks at 80.9 or less; the risk is the periodic month-end close, not the daily trend.
@@ -44,6 +42,7 @@ Which statements are correct?
 - L is wrong: the 9.1.1 engine fits one time-decay weighted line with no periodic term; a periodic peak counts only through the upper bound.
 - M is correct: the cluster is full at its month-end peaks before the project; place it only after new capacity or after moving load out.
 - N is wrong: the fall after 30 October is the end of the periodic close, not a trend; and the 9.1.1 engine flattens a downward trend to zero growth, so a falling series never gives a growing runway.
+- Misconception: A: "Capacity Remaining is 24% and Time Remaining is 210 days, and the trend gives a year, so there is room for the project." - N: "Load has fallen since the close, so the runway gets longer."
 
 ## Notes
 - Drafted 2026-11-12. Capacity Remaining looks 3 days ahead; Time Remaining reads the long projection; a conservative risk setting keeps peaks in the forecast (VCF Operations 9.1 documentation, capacity analytics). The key holds for both engines. Before 9.1.1 the engine could project the month-end pattern; the 9.1.1 engine (VCF blog, 2026-10-20) fits one time-decay weighted line to up to 90 days, the length of this export, and keeps a periodic peak only through the upper quantile bound. Capacity Remaining as the smallest remaining capacity: TechDocs 9.1 Capacity Analytics Generated Metrics ("the maximum point") and VCF blog 2025-08-12 ("the minimum capacity left").
@@ -60,7 +59,6 @@ technology: [system, cpu]
 task: decide-capacity
 level: 400
 answer_type: deterministic
-answer: [B, C, D, F, G, I, K, M]
 misconception: [A, N]
 input: [table]
 object: [cluster]

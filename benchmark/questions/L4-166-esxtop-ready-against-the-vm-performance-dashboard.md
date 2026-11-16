@@ -29,11 +29,10 @@ Which statements are correct?
 - G. Open a case with the vendor, since VCF Operations under-reports this VM's Ready by about a factor of 3 at the peak.
 - H. Use the VM Contention dashboard instead, which VCF Operations 9.1 maintains as the current dashboard for this check.
 
-## Likely wrong answer
-C and D: "esxtop showed 16%, so the dashboard should show 16%; VCF Operations missed it." G is the action that follows from that reading.
+## Answers
+A, B, F
 
-## Expected key points
-- Answer: A, B, F.
+## Explanation
 - A is correct: esxtop fields are sampled every few seconds per world (5 seconds by default); the VM Performance dashboard shows VCF Operations metrics on the VM object per 5 minutes, as an average and as the 20-second peak. The values are not comparable.
 - B is correct: vcpu-2 had 17.1% of 5 seconds in Ready, about 0.86 seconds. Spread over a 20-second sample with no other Ready, that is 0.86 / 20 = about 4.3%, under the 5.6% peak. A burst that lasts seconds is diluted in a 20-second average.
 - C is wrong: the misconception that esxtop %RDY and the dashboard values are the same reading. A peak of the 20-second averages can sit far below a 5-second esxtop value.
@@ -42,6 +41,7 @@ C and D: "esxtop showed 16%, so the dashboard should show 16%; VCF Operations mi
 - F is correct: the Real-time chart keeps the 20-second samples for about an hour, with Ready per vCPU whatever the statistics level; VCF Operations takes the peak of the same 15 samples of each cycle. At 10:40 the 10:02 samples are still there.
 - G is wrong: nothing is under-reported; the action follows from C.
 - H is wrong: in VCF Operations 9.1 VM Contention is marked (DEP), deprecated, and superseded by VM Performance; it also shows VCF Operations metrics, not esxtop fields.
+- Misconception: C and D: "esxtop showed 16%, so the dashboard should show 16%; VCF Operations missed it." G is the action that follows from that reading.
 
 ## Notes
 - The esxtop rows are per vCPU world (the VM expanded with e), so no option rests on the summed group row.
@@ -67,7 +67,6 @@ knowledge_main: vcf-operations/dashboards/vm-performance-dashboard
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vcf-operations/dashboards/vm-performance-dashboard"
-answer: [A, B, F]
 misconception: [C, D]
 misconception_type: [tool-confusion, rollup-and-interval]
 status: draft

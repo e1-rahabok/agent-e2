@@ -20,12 +20,10 @@ Which statements about the plan and the CPU footprint of db-01 are correct?
 - J. db-01 needs at least 7 vCPUs in cluster B, before any headroom is added.
 - K. Whether the Guest OS has enough vCPUs (its run queue) is a separate check from the footprint.
 
-## Likely wrong answer
-- B: "Run is the time the vCPUs ran, so 100,000 ms is 5 vCPUs; the clock speed does not matter."
-- D: "Use Used only: 96,000 ms, about 5 vCPUs."
+## Answers
+A, C, E, G, I, J, K
 
-## Expected key points
-- Answer: A, C, E, G, I, J, K.
+## Explanation
 - A is correct: Run counts time, not work. On a slower clock the same work takes more time.
 - B is wrong: Run does not see frequency or Hyper-Threading; 5 vCPUs at 2.0 GHz deliver less than 5 vCPUs at 2.5 GHz.
 - C is correct: Used is converted to ms at the nominal clock and adjusted for the actual frequency and for Hyper-Threading, so it scales with work, not time.
@@ -37,6 +35,7 @@ Which statements about the plan and the CPU footprint of db-01 are correct?
 - I is correct: (96,000 Used + 100 Overlap + 2,000 Co-stop + 8,000 Ready + 100 Other Wait + 4,000 System) ÷ (20,000 × 8) = 0.689 of 8 vCPUs, about 5.5 vCPUs; × 2.5 GHz (the nominal clock) is about 13.8 GHz. Overlap and Other Wait are small here, so leaving them out (13.75 GHz) changes nothing.
 - J is correct: about 13.8 ÷ 2.0 is about 6.9, rounded up to 7 before headroom, not 5.
 - K is correct: the footprint is the load on the infrastructure; the Guest OS run queue is checked apart.
+- Misconception: B: "Run is the time the vCPUs ran, so 100,000 ms is 5 vCPUs; the clock speed does not matter." - D: "Use Used only: 96,000 ms, about 5 vCPUs."
 
 ## Notes
 - Synthetic. The key rests on public counters and their mechanism (Used is adjusted for frequency and Hyper-Threading; Ready and Co-stop are unmet demand; System is charged at VM level), not on a named formula (benchmark/design.md, section 6.1, F3).
@@ -52,7 +51,6 @@ technology: [system, cpu]
 task: decide-capacity
 level: 400
 answer_type: deterministic
-answer: [A,C,E,G,I,J,K]
 misconception: [B,D]
 input: [table]
 object: [vm, cluster]

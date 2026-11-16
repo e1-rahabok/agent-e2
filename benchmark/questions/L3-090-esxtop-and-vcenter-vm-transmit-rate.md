@@ -37,11 +37,10 @@ Which statements are correct?
 - K. The number in the vCenter export is about 125 times smaller than the number in esxtop.
 - L. The VM port's PKTTX/s and MbTX/s in esxtop give an average packet size near 1,500 bytes.
 
-## Likely wrong answer
-B: the numbers are about 125 times apart, so one tool must be wrong. Or F: only bits against bytes, a factor of 8. The overshoot is J: the tools cannot be compared.
+## Answers
+A, C, H, L
 
-## Expected key points
-- Answer: A, C, H, L.
+## Explanation
 - A is correct: esxtop network throughput is megabits per second: the MbTX/s column of the VM's port row reads 2,800-3,200.
 - B is wrong: the misconception. Both are right: vCenter VM network throughput (Data transmit rate) is kilobytes per second, as the API stores it; after conversion the two agree within 10%.
 - C is correct: `Data transmit rate for rpt-lnx-14` in the last rows is 340,000-390,000; KBps x 8 is kilobits per second, divided by about 1,000 it is megabits per second: about 2,900-3,000, within 10% of MbTX/s.
@@ -54,6 +53,7 @@ B: the numbers are about 125 times apart, so one tool must be wrong. Or F: only 
 - J is wrong: the over-correction. A steady stream gives the same rate in both tools once kilobytes per second are turned into megabits per second.
 - K is wrong: the reading. The vCenter number (340,000-390,000) is about 125 times larger than the esxtop number (2,800-3,200), because kilobytes are a smaller unit than megabits.
 - L is correct: packet size is throughput over packet count: 2,945 Mb/s × 1,000,000 / 8 / 243,153 packets/s is about 1,514 bytes, as PSZTX shows; a full-size Ethernet frame for a bulk TCP stream.
+- Misconception: B: the numbers are about 125 times apart, so one tool must be wrong. Or F: only bits against bytes, a factor of 8. The overshoot is J: the tools cannot be compared.
 
 ## Notes
 - Paired with the theory question 0029 (theory and practical; design.md, section 3.9).
@@ -87,7 +87,6 @@ attachments:
   - 0412/rpt-lnx-14-network-realtime.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C13"
-answer: [A, C, H, L]
 misconception: [B]
 misconception_type: [tool-confusion, unit-and-normalization]
 pair: "0029"

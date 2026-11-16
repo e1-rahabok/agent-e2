@@ -32,14 +32,10 @@ Which statements about where the 25 ms is spent, what limits the I/O rate and th
 - N. Of the 100 requests Windows counts, about 32 are at the device and about 31 wait in the VMkernel queue.
 - O. Once both limits are raised, success shows as ACTV above 32, QUED near 0 and Windows latency close to GAVG.
 
-## Likely wrong answer
-- D: "KAVG of 8 ms means the VMkernel is slow."
-- E: "The array is slow (DAVG 8 ms): open a case with the vendor."
-- G: "The Paravirtual SCSI queue is too small, so raise it to 254."
-- H: "Raise Disk.SchedNumReqOutstanding so the VM gets more commands to the LUN."
+## Answers
+A, B, C, F, K, L, M, N, O
 
-## Expected key points
-- Answer: A, B, C, F, K, L, M, N, O.
+## Explanation
 - A is correct: 25 ms in Windows minus 16 ms of GAVG (vCenter and esxtop) is 9 ms in the guest queue: 36 / 4,000 = 9 ms.
 - B is correct: 4,000 x 0.016 = 64 requests at the virtual disk, the default device queue depth; the other 100 - 64 = 36 wait in Windows.
 - C is correct: with one VM and one virtual disk on the device, the device queue depth (DQLEN) and the adapter queue depth limit the commands; the adapter queue holds the commands of all its devices, so a raised DQLEN helps only within it.
@@ -55,6 +51,7 @@ Which statements about where the 25 ms is spent, what limits the I/O rate and th
 - M is correct: KAVG 8.0 minus QAVG 7.8 = 0.2 ms; about 1 request at 4,000 per second.
 - N is correct: 4,000 x 0.008 = 32 at the device, 4,000 x 0.0078 = 31 in the VMkernel queue, about 1 in the stack and 36 in the guest queue: 100 in all.
 - O is correct: check with the same figures: ACTV above 32, QUED near 0, a higher IOPS rate at a similar DAVG, and Windows latency close to GAVG. Windows latency close to GAVG needs the guest wait gone too, hence both limits.
+- Misconception: D: "KAVG of 8 ms means the VMkernel is slow." - E: "The array is slow (DAVG 8 ms): open a case with the vendor." - G: "The Paravirtual SCSI queue is too small, so raise it to 254." - H: "Raise Disk.SchedNumReqOutstanding so the VM gets more commands to the LUN."
 
 ## Notes
 - Public source: esxtop storage device panel, vSphere Monitoring and Performance 9.1 (last updated 2026-11-09): DQLEN, ACTV, QUED, %USD, LOAD, DAVG/cmd, KAVG/cmd, GAVG/cmd, QAVG/cmd. Broadcom KB 344099 (legacy 1008205): GAVG = DAVG + KAVG. Broadcom KB 343323 (legacy 2053145): the Paravirtual SCSI default queue depth is 64 for a device and 254 for an adapter (the Windows driver). Broadcom KB 344706 (legacy 1268): Disk.SchedNumReqOutstanding does not apply when one VM with one virtual disk is active on the LUN, as here. Microsoft Learn, "Using Storage-related Parameters and Performance Counters": Avg. Disk Queue Length = Disk Transfers/sec x Disk sec/Transfer, and the requests include those waiting in a Storport queue.
@@ -73,7 +70,6 @@ technology: [storage]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,B,C,F,K,L,M,N,O]
 misconception: [D,E,G,H]
 input: [text]
 object: [vm, esxi, datastore, guest-os]

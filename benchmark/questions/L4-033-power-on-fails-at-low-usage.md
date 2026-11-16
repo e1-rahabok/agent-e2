@@ -27,13 +27,10 @@ Why does the power-on fail when the cluster is at 25%, what do you change, and w
 - Q. Lowering the CPU reservation of fin-erp-app01 from 2,400 to 1,800 MHz lets fin-batch02 power on.
 - R. The export shows that each VM of RP-TEST reserves 4,000 MHz of CPU.
 
-## Likely wrong answer
-- B: "The cluster is short of CPU: add a host."
-- N: "The cluster is at 25% CPU, so it is a glitch: retry, or restart vCenter."
-- D: "batch01 is idle, so its reservation is free for batch02."
+## Answers
+A, C, E, F, I, K, M, P
 
-## Expected key points
-- Answer: A, C, E, F, I, K, M, P.
+## Explanation
 - A is correct: admission control counts reservations, not usage.
 - B is wrong: the cluster root has well over 800 GHz unreserved; the walk stops at the fixed reservation of RP-FIN, so a host adds nothing that RP-FIN can reach.
 - C is correct: RP-FIN-BATCH reserves 3,200 MHz and fin-batch01 holds all of it; an expandable pool asks its parent for the rest.
@@ -52,6 +49,7 @@ Why does the power-on fail when the cluster is at 25%, what do you change, and w
 - P is correct: the documented advice is at least 10% unreserved; near 100% reserved, reservation changes and pool edits fail and DRS cannot migrate VMs.
 - Q is wrong: RP-FIN would then have 9,600 - 4,200 - 3,200 = 2,200 MHz unreserved, still less than the 2,400 MHz asked; lowering the reservations of RP-FIN's own VMs by 800 MHz or more in total would work.
 - R is wrong: the 4,000 MHz of the RP-TEST VMs is in the CPU limit column; their CPU reservation is 0.
+- Misconception: B: "The cluster is short of CPU: add a host." - N: "The cluster is at 25% CPU, so it is a glitch: retry, or restart vCenter." - D: "batch01 is idle, so its reservation is free for batch02."
 
 ## Notes
 - Review 2026-11-15: H reworded (it copied 0048 F); R added as a false reading of the export; title follows the 25% in the prompt. Key unchanged.
@@ -71,7 +69,6 @@ technology: [system, cpu]
 task: judge-setting
 level: 400
 answer_type: deterministic
-answer: [A,C,E,F,I,K,M,P]
 misconception: [B,D,N]
 input: [table]
 object: [resource-pool, cluster, vm]

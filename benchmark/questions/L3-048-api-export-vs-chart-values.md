@@ -18,11 +18,10 @@ Which statements are correct?
 - F. The 4 ms is the value at the end of the 10:05 interval; an earlier spike is not in it.
 - G. The 4 ms is the average latency of all the VM's virtual disks over the 5 minutes.
 
-## Likely wrong answer
-B: reading the API value in the chart's unit, so Consumed reads about 32 TB and the script looks broken.
+## Answers
+A, F
 
-## Expected key points
-- Answer: A, F.
+## Explanation
 - A is correct: 33,554,432 KB = 32 GB.
 - B is wrong: the API returns memory in KB; the chart converts to MB, so an API value read as MB is 1,024 times too large.
 - C is wrong: the value is right in KB; the script reads the right counter in the API's unit.
@@ -30,6 +29,7 @@ B: reading the API value in the chart's unit, so Consumed reads about 32 TB and 
 - E is wrong: the Advanced chart and its CSV export plot the network counters as stored, in KBps, the same unit as the API; only memory and space are converted.
 - F is correct: rollup latest keeps one point in time, not the worst value of the interval; use the real-time interval or a peak metric for spikes.
 - G is wrong: Highest latency is the highest value across the VM's disks, and with rollup latest it is one point in time, not an average over the 5 minutes.
+- Misconception: B: reading the API value in the chart's unit, so Consumed reads about 32 TB and the script looks broken.
 
 ## Notes
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): one fact per option (the old A and B split into a reading and a unit); wrong action C, unit error E and over-correction F added. Key changed from A, C, D to A, D, G (same facts, relettered). The author reviewed the earlier options; the rewrite follows the approved plan.
@@ -56,7 +56,6 @@ knowledge_main: vsphere/tools/vsphere-client/vcenter-statistics
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, F]
 misconception: [B]
 misconception_type: [tool-confusion, unit-and-normalization]
 status: draft   # options rewritten 2026-11-14: back to draft for the author's review

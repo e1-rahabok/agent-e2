@@ -20,13 +20,10 @@ Do you add the vCPUs, and what do you check instead? Which statements are correc
 - K. Used cannot be compared with Run, because Used is converted to milliseconds at the actual clock speed.
 - L. Against the 1,200,000 ms of 5 minutes for 4 vCPUs, Run of about 25,000 ms is 2%: the VM is nearly idle.
 
-## Likely wrong answer
-- G: "Used is less than half of Run, so the VM gets less than half the CPU it needs: add the 4 vCPUs."
-- H: "The missing Used is time the VM waited."
-- L: "A 5-minute point of 4 vCPUs is 1,200,000 ms, so 25,000 ms is next to nothing."
+## Answers
+A, B, C, D, E, F
 
-## Expected key points
-- Answer: A, B, C, D, E, F.
+## Explanation
 - A is correct: Run is about 24,300-25,700 ms in every point, 30-32% of 80,000 ms. A VCF Operations 5-minute ms value is the average of the 15 20-second values, so 100% is 20,000 ms per vCPU, 80,000 ms for 4 vCPUs; the 2-hour points average the 5-minute values and keep that base. Read against 1,200,000 ms (the vCenter Past Day sum), Run would look like 2%.
 - B is correct: Ready 0.25-0.6%, Co-stop 0-0.04%.
 - C is correct: Used averages about 11,000 ms against 25,000 ms of Run; Used counts the work done and converts it to ms at the base (nominal) frequency, so a ratio of 0.44 is less work per millisecond of run. System (about 200 ms) and Overlap (about 110 ms) are too small to move it.
@@ -39,6 +36,7 @@ Do you add the vCPUs, and what do you check instead? Which statements are correc
 - J is wrong: Run is time only; Used (and Usage) count the work done, adjusted for frequency and Hyper-Threading.
 - K is wrong: Used counts cycles but is converted to ms at the static (nominal) frequency, so it compares directly with Run.
 - L is wrong: 1,200,000 ms is the base of a vCenter Past Day point, which sums its 15 samples. VCF Operations stores their average, so its 100% is 80,000 ms for 4 vCPUs and Run is about 31%.
+- Misconception: G: "Used is less than half of Run, so the VM gets less than half the CPU it needs: add the 4 vCPUs." - H: "The missing Used is time the VM waited." - L: "A 5-minute point of 4 vCPUs is 1,200,000 ms, so 25,000 ms is next to nothing."
 
 ## Notes
 - From the author's samples: a 4-vCPU 64-bit Ubuntu VM with Used about 44% of Run, minimal System and Overlap; Used lowered by power saving and SMT; if Run is far from 100% and the team wants faster performance, the answer is not to add vCPUs. Values reproduced in the export.
@@ -58,7 +56,6 @@ technology: [cpu]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,B,C,D,E,F]
 misconception: [G,H,L]
 input: [table]
 object: [vm, esxi]

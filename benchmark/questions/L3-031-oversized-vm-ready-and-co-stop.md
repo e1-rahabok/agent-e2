@@ -16,17 +16,17 @@ Which statements are correct?
 - E. Other VMs compete for the host's threads: move some off the host before touching this VM.
 - F. Ready of 5% and Co-stop of 3% are too small to matter, so the VM needs no change.
 
-## Likely wrong answer
-B: more vCPUs to cure a CPU wait. Or E: the host is short of CPU.
+## Answers
+A, D
 
-## Expected key points
-- Answer: A, D.
+## Explanation
 - A is correct: a VM with many vCPUs needs many threads free at about the same time; when one vCPU waits in Ready, its siblings are co-stopped to stay in step. Downsizing lowers both. The guest uses about 3 CPUs, so 24 is far more than it needs. The host is not contended (about 55%, other VMs below 0.5% Ready), so the case where a smaller VM on a contended host gets less than it needs per vCPU does not apply.
 - B is wrong: Net Run of 9% per vCPU is far from saturated, and more vCPUs make scheduling harder and can raise both Ready and Co-stop.
 - C is wrong: Co-stop is a wait in the ESXi scheduler: a vCPU held back to stay in step with a sibling vCPU. The guest's short run queue shows its threads are not waiting.
 - D is correct: the effect of Co-stop on the Guest OS is the same as Ready, a freeze; the guest cannot tell which of the two caused it.
 - E is wrong: the small VMs on the same host barely wait and the host is at about 55%. The wait is the VM's own size.
 - F is wrong: the over-correction. Ready is read against Run (about Net Run here, since Overlap is small): 5% Ready on 9% per vCPU is a wait of more than half the run time, and Co-stop in a high-performing environment stays below 1%.
+- Misconception: B: more vCPUs to cure a CPU wait. Or E: the host is short of CPU.
 
 ## Notes
 - Options rewritten 2026-11-14 (design.md 3.9; project/question-pairing-2026-11-14.md): old D (default shares per vCPU after a downsize) removed because it repeats option G of 0236; new D tests the Co-stop mechanism; B now carries the misreading of Net Run; F (the over-correction) added. Key changed from A to A, D.
@@ -52,7 +52,6 @@ knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, D]
 misconception: [B, E]
 misconception_type: [provider-vs-consumer]
 pair: "0373"

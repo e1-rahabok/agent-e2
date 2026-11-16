@@ -16,11 +16,10 @@ Which statements are correct?
 - G. Memory Contention counts reads from the swap file and no other kind of wait.
 - H. Remove the balloon driver so that the VM stops waiting for memory.
 
-## Likely wrong answer
-E: "The balloon is memory the VM is waiting for, so it drives contention." Or F: the percentage read as a share of memory.
+## Answers
+A, B
 
-## Expected key points
-- Answer: A, B.
+## Explanation
 - A true: `Memory|Contention (%)` is above 0 only in the rows where `Memory|Swap In Rate (KBps)` is above 0 (three short intervals, 09:30, 14:30 and 18:45); it is 0 in every other row, including the rows where only `Memory|Swap Out Rate (KBps)` is above 0.
 - B true: Memory Contention is the share of time a vCPU waits for a page fault ESXi resolves; a swap-in is such a fault, so the counter tracks swap-in closely.
 - C false: Contention is above 0 in 9 of the 96 rows and 0 in all the others.
@@ -29,6 +28,7 @@ E: "The balloon is memory the VM is waiting for, so it drives contention." Or F:
 - F false: the counter is a share of time, not of memory space, and not a latency in nanoseconds.
 - G false: over-correction. The counter covers decompression of a compressed page too (and copy-on-write breaks); swap-in is most of it.
 - H false: the wrong action. The balloon is not what the VM waits on, and without the balloon driver ESXi can only compress or swap, blind to which pages the guest uses: it can take pages the guest needs, and the VM waits when it touches them.
+- Misconception: E: "The balloon is memory the VM is waiting for, so it drives contention." Or F: the percentage read as a share of memory.
 
 ## Notes
 - Paired with 0149 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item C27.
@@ -61,7 +61,6 @@ attachments:
   - 0392/vcf-operations-vm-memory-15min.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C27"
-answer: [A, B]
 misconception: [E, F]
 misconception_type: [reclamation-as-contention, unit-and-normalization]
 pair: "0149"

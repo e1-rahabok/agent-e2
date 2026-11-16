@@ -194,7 +194,7 @@ def main():
         prompt_t = prompt_m.group(1) if prompt_m else ''
         if st not in ('retired', 'deferred', 'awaiting-input'):  # every question that runs
             seen = '\n'.join([t.split('\n', 1)[0], prompt_t] + [m.group(1) for m in re.finditer(
-                r'^## (?:Likely wrong answer|Expected key points)\n(.*?)(?=^## |\Z)', t, re.S | re.M)])
+                r'^## (?:Answers|Explanation)\n(.*?)(?=^## |\Z)', t, re.S | re.M)])
             for pat, hint in allowed['question_fairness'].items():
                 m = re.search(pat, seen)
                 if m: bad(f, f'fairness: "{m.group(0)}" is not public vocabulary ({hint}; benchmark/design.md, section 6.1)')
@@ -236,10 +236,22 @@ def main():
         if at == 'deterministic':
             prompt = re.search(r'## Prompt\n(.*?)\n## ', t, re.S)
             letters = set(re.findall(r'^(?:[-*]\s+)?([A-Y])\.\s', prompt.group(1), re.M)) if prompt else set()
-            for k in ('answer', 'misconception'):
-                for x in fm.get(k) or []:
-                    if str(x) not in letters: bad(f, f'{k} letter {x} is not an option in ## Prompt')
-            if not fm.get('answer'): bad(f, 'deterministic question has no answer')
+            if 'answer' in fm: bad(f, 'metadata "answer" is no longer used: the key is the section ## Answers (benchmark/README.md)')
+            am = re.search(r'^## Answers\n(.*?)(?=^## |\Z)', t, re.S | re.M)
+            if not am or not re.fullmatch(r'[A-Y](, [A-Y])*', am.group(1).strip()):
+                bad(f, '## Answers must hold the correct letters only, e.g. "A, C, D" (benchmark/README.md)')
+            else:
+                for x in am.group(1).strip().split(', '):
+                    if x not in letters: bad(f, f'## Answers letter {x} is not an option in ## Prompt')
+            em = re.search(r'^## Explanation\n(.*?)(?=^## |\Z)', t, re.S | re.M)
+            if not em: bad(f, 'no ## Explanation: one bullet per option, why it is right or wrong (benchmark/README.md)')
+            else:
+                for x in sorted(letters):
+                    if not re.search(rf'^- {x}\b', em.group(1), re.M): bad(f, f'## Explanation has no bullet for option {x}')
+            for x in fm.get('misconception') or []:
+                if str(x) not in letters: bad(f, f'misconception letter {x} is not an option in ## Prompt')
+            for old_h in ('Expected key points', 'Likely wrong answer'):
+                if re.search(rf'^## {old_h}$', t, re.M): bad(f, f'section ## {old_h} is replaced by ## Answers and ## Explanation')
         for att in (fm or {}).get('attachments') or []:
             if not os.path.exists(os.path.join('benchmark', 'questions', att)) and (fm or {}).get('status') not in ('awaiting-input', 'deferred'):
                 bad(f, f'attachment not found: {att}')

@@ -25,17 +25,17 @@ Ignore the extra memory that a vMotion operation itself needs. Considering only 
 - E. VM-3 alone.
 - F. VM-1, VM-2, VM-3 and VM-4.
 
-## Likely wrong answer
-A, because the overhead is left out of the check. Or C and E: the check is read as a comparison with configured memory, or a reservation is read as pinning the VM.
+## Answers
+B
 
-## Expected key points
-- Answer: B.
+## Explanation
 - A is wrong: it compares each reservation alone with the 150 GB unreserved on host 4 and leaves out the overhead, which counts as reserved: VM-1 needs 144 + 23 = 167 GB and VM-5 needs 150 + 9 = 159 GB, both over 150 GB.
 - B is correct: a migration is admitted at the destination like a power-on, reservation plus overhead against unreserved memory (1,000 - 850 = 150 GB). VM-2 needs 128 + 6.5 = 134.5 GB, VM-3 only its 11.5 GB overhead, VM-4 32 + 3.5 = 35.5 GB: all fit.
 - C is wrong: it compares configured memory with the unreserved memory; configured memory plays no part in the admission check, so VM-3 (256 GB configured, no reservation) fits.
 - D is wrong: it keeps 100 GB (10%) unreserved on host 4; leaving 10% unreserved is planning advice, not a rule DRS applies when it picks a destination, so VM-2 also fits.
 - E is wrong: it reads a reservation as pinning the VM; a reserved VM moves when the destination can admit it.
 - F is wrong: it keeps VM-1 by leaving out its 23 GB overhead (167 GB needed) and drops VM-5 on its reservation alone; with overhead VM-1 does not fit either.
+- Misconception: A, because the overhead is left out of the check. Or C and E: the check is read as a comparison with configured memory, or a reservation is read as pinning the VM.
 
 ## Notes
 - Public source: VMware vSphere 9.1 PDF (build of 2026-11-02), Resource Management, "Resource Allocation Settings Suggestions": "plan to leave at least 10% unreserved" and "reservations that fully commit the capacity of the cluster or of individual ESX hosts in the cluster can prevent DRS from migrating virtual machines between ESX hosts". Same PDF, "Overhead Memory on Virtual Machines" (overhead printed to vmware.log, search VMMEM). Performance Best Practices for VMware vSphere 9.1, revision 20260624, p. 36: ESX keeps enough host memory to fulfil all reservations, both for VMs and for overhead, and does not power on a VM if that would reduce the available memory below the reserved amount.
@@ -66,7 +66,6 @@ knowledge_main: vsphere/object-types/cluster/concepts/admission-control-and-clus
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-13"
-answer: [B]
 misconception: [A, E]
 misconception_type: []
 status: draft

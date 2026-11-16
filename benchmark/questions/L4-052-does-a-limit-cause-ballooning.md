@@ -14,17 +14,17 @@ Which statements are correct?
 - E. Consumed stays near 2 GB because the balloon's 10 GB are counted inside it.
 - F. A balloon flat for 7 days cannot come from a limit, which would keep reclaiming memory.
 
-## Likely wrong answer
-B: Granted above the limit read as the limit not working. Or E: ballooned memory counted in Consumed. Or F: "a limit would keep squeezing the VM, so a flat balloon must come from somewhere else".
+## Answers
+A, C, D
 
-## Expected key points
-- Answer: A, C, D.
+## Explanation
 - A: Memory|Effective limit of a VM with a limit reads the configured limit plus the VM overhead (2.12 GB here); the limit caps Consumed, not the overhead, so Consumed stays at or just under 2 GB (1.83-1.99 GB) and the gap to 2.12 GB is not room to grow.
 - B is wrong: the limit caps the physical memory ESXi gives the VM, which is Consumed. Consumed stays at the limit; Granted ignores it.
 - C: Granted is the VM's view of mapped pages; shared and zero pages, once shared, cost little physical memory. It ignores the limit; Consumed does not.
 - D: the balloon driver is a kernel driver inside Linux, so its 63.66% of 16 GB (about 10.2 GB) counts as used in the Guest OS counters, and Needed Memory already contains it. Guest OS sizing keeps it with no deduction; the fix for the balloon is the limit, not the guest size.
 - E is wrong: ballooned pages have no ESXi page behind them, so they are not in Consumed.
 - F is wrong: a limit is enforced at all times, also on a host with free memory, and ESXi reclaims the excess with the balloon first, up to its 65% default ceiling (63.66% here is just under it). Once the balloon holds what the limit requires, it stays: a flat balloon near 65% of configured memory on a limited VM is the limit at work.
+- Misconception: B: Granted above the limit read as the limit not working. Or E: ballooned memory counted in Consumed. Or F: "a limit would keep squeezing the VM, so a flat balloon must come from somewhere else".
 
 ## Notes
 - From the author's samples (docx, 2026-11-12): a 16 GB MySQL VM on RHEL with a 2 GB limit (effective limit 2.12 GB); Guest Needed Memory 13.4-13.6 GB; Granted about 2.8-3.0 GB; Consumed just under 2 GB; Balloon flat at 63.66% for 7 days. The CSV is generated to reproduce those values.
@@ -56,7 +56,6 @@ attachments:
   - 0141/vm-memory-limit-7-days.csv
 origin: book
 source_path: "Author samples (docx, 2026-11-12) > Does limit result in balloon"
-answer: [A, C, D]
 misconception: [B, E, F]
 misconception_type: [layer-confusion]
 status: draft

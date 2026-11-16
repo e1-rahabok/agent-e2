@@ -18,12 +18,10 @@ Which statements are correct?
 - I. Add two vCPUs to the VM to bring its CPU Latency back to where it was.
 - J. At the same Run, the VM's CPU Usage (MHz) is now about 15% lower than before.
 
-## Likely wrong answer
-- B: "Latency went up, so the VM is waiting for CPU."
-- E: "Latency is latency: for CPU it means the same as for disk and memory."
+## Answers
+A, C, D, J
 
-## Expected key points
-- Answer: A, C, D, J.
+## Explanation
 - A is correct: CPU Latency (%LAT_C) includes power saving below nominal frequency; lower frequency raises it.
 - B is wrong: the misconception; the rise of about 15 points is a frequency effect, not time spent waiting. Waiting shows in Ready and Co-Stop, which are flat.
 - C is correct: %A/MPERF at about 85% shows the cores run below nominal frequency; at a lower clock the VM runs slower but is not waiting to be served, like on an older CPU.
@@ -34,6 +32,7 @@ Which statements are correct?
 - H is wrong: CPU Latency and Ready correlate poorly, since they are built for different purposes; Latency counts Hyper-Threading and frequency, which Ready does not, so Latency can rise with Ready flat (and fall while Ready rises).
 - I is wrong: more vCPUs change neither the clock speed nor the Latency of each vCPU, and they make scheduling harder.
 - J is correct: Usage (MHz) counts cycles completed and is scaled by frequency; Run counts time only. With %A/MPERF down from about 100% to about 85%, the same run time completes about 15% fewer cycles.
+- Misconception: B: "Latency went up, so the VM is waiting for CPU." - E: "Latency is latency: for CPU it means the same as for disk and memory."
 
 ## Notes
 - Tests: Same name, different meaning (CPU Latency vs Disk / Memory Latency).
@@ -65,7 +64,6 @@ attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity (Same name, different meaning; Same name, same purpose, different formula)."
 answer_type: deterministic
-answer: [A, C, D, J]
 misconception: [B, E]
 level: 400                      # author 2026-11-05
 misconception_type: [frequency-and-hyper-threading]

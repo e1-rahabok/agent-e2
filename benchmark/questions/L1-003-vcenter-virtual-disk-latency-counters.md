@@ -14,15 +14,15 @@ Which of the counters in the chart measure latency? Choose all that apply.
 ## Screenshot
 ![vCenter advanced performance chart of one VM, metric group Virtual disk, with four counters in the legend](0034/vcenter-vm-virtual-disk-chart.png)
 
-## Likely wrong answer
-C or D: taking the rate (KBps) for latency.
+## Answers
+A, B
 
-## Expected key points
-- Answer: A, B.
+## Explanation
 - A is correct: Read latency is in milliseconds, the time per read.
 - B is correct: Write latency is in milliseconds, the time per write.
 - C is wrong: Read rate is in kilobytes per second: read throughput, not latency.
 - D is wrong: Write rate is in kilobytes per second: write throughput, not latency.
+- Misconception: C or D: taking the rate (KBps) for latency.
 
 ## Notes
 - 2026-11-14 (project/question-pairing-2026-11-14.md, section 3.B): in the screenshot, the VM name masked in the title and the legend (every VM name is masked); the stale `## Input to supply` removed.
@@ -46,7 +46,6 @@ attachments:
   - 0034/vcenter-vm-virtual-disk-chart.png
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A, B]
 misconception: [C]
 object: [vm]
 tool: [vcenter]

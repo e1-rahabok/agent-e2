@@ -51,11 +51,10 @@ Which statements are correct?
 - H. `top` shows `wa` above 10%, so the guest is waiting on storage.
 - I. Add 2 vCPUs to the VM so that it can absorb the wait for physical threads.
 
-## Likely wrong answer
-A: `st` is 0.0, so the hypervisor takes nothing from this VM. Or D: the tools disagree, so vCenter is wrong.
+## Answers
+B, E, F, G
 
-## Expected key points
-- Answer: B, E, F, G.
+## Explanation
 - A false: the misconception. Without the steal clock `st` cannot show the wait at all; the vCenter export shows it (`Readiness for app-lnx-03` 20.46-26.11% in every row, while `st` and sar `%steal` are 0.0 and 0.00).
 - B true: reading. `Ready for app-lnx-03` divided by `Run for app-lnx-03` is above 0.2 in every row (Ready 16,370-20,887 ms against Run 40,000-45,751 ms; the ratio stays at 0.36-0.47): the vCPUs wait a large share of the time they run.
 - C false: reading. `Readiness for app-lnx-03` stays between 20.46% and 26.11% in every row.
@@ -65,6 +64,7 @@ A: `st` is 0.0, so the hypervisor takes nothing from this VM. Or D: the tools di
 - G true: reading and mechanism. A frozen vCPU stays in the state it was in, so a busy vCPU's frozen time counts as us or sy: `us` + `sy` in `top` is 60 or more, and sar `%usr` + `%sys` stays near Run plus Ready of the vCenter export, above Run alone.
 - H false: reading. `wa` in `top` and sar `%iowait` stay below 2.
 - I false: wrong action. The vCPUs wait for physical threads on a busy host; more vCPUs add demand and tend to raise Ready.
+- Misconception: A: `st` is 0.0, so the hypervisor takes nothing from this VM. Or D: the tools disagree, so vCenter is wrong.
 
 ## Reasoning path
 1. vCenter: Readiness of 20-26%: the vCPUs wait.
@@ -101,7 +101,6 @@ attachments:
   - 0381/vcenter-vm-cpu-realtime.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D12"
-answer: [B, E, F, G]
 misconception: [A, D]
 misconception_type: [layer-confusion, tool-confusion]
 pair: "0380"

@@ -17,11 +17,10 @@ Which statements are correct?
 - F. Bandwidth is never what limits a VM's network; only the packet rate is.
 - G. Move dns-02 to a port group on a less busy uplink.
 
-## Likely wrong answer
-C: reading bandwidth utilization as network load. A low share of the link says nothing about a high packet rate.
+## Answers
+A, B, E
 
-## Expected key points
-- Answer: A, B, E.
+## Explanation
 - A is true: in the real-time chart, Packets received is a count per 20-second sample: 5,400,000 ÷ 20 = 270,000 packets per second.
 - B is true: 26,400 KBps is kilobytes per second; 26,400 × 1,024 bytes ÷ 270,000 ≈ 100 bytes per packet, against about 1,500 bytes for full frames.
 - C is false: with small packets the load is the packet rate, not the bandwidth. Each packet costs CPU in the host and in the guest to receive, whatever its size.
@@ -29,6 +28,7 @@ C: reading bandwidth utilization as network load. A low share of the link says n
 - E is true: the packet counts exclude dropped packets; drops have their own counters.
 - F is false: the uplink is shared and often oversubscribed, so bandwidth can limit a VM too; throughput and packets per second are both consumption to read.
 - G is false: the uplink is at 1.2%; the limit is the per-packet work at 270,000 packets per second, which a quieter uplink does not change. The next check is dns-02's receive drops and the CPU of the vCPU that drains its receive ring.
+- Misconception: C: reading bandwidth utilization as network load. A low share of the link says nothing about a high packet rate.
 
 ## Notes
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): over-correction F and wrong action G added. Key unchanged: A, B.
@@ -56,7 +56,6 @@ knowledge_main: vsphere/technology/network/metrics/virtual-motherboard/packets
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, B, E]
 misconception: [C, G]
 misconception_type: [unit-and-normalization]
 pair: "0415"

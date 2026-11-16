@@ -25,12 +25,10 @@ Which statements are correct?
 - I. Configure more RSS receive queues than vCPUs, for example 16 queues on 8 vCPUs, to leave headroom for traffic growth.
 - J. Moving rp-02 to a less busy host leaves its receive drops as they are, as long as the adapter keeps one receive queue.
 
-## Likely wrong answer
-- B: "The VM is short of CPU: give it 8 more vCPUs."
-- C: "The physical network drops the packets: ask the network team."
+## Answers
+A, D, E, F, H, J
 
-## Expected key points
-- Answer: A, D, E, F, H, J.
+## Explanation
 - A true: % DPC Time is deferred procedure call time, kernel and driver work; here the VMXNET3 receive processing lands on one vCPU (Processor(0) at 100%, 72% DPC) while Processor(1) to (7) sit at 4-7%. That vCPU cannot drain the ring fast enough, so the ring fills.
 - B false: with a single receive queue, the receive processing stays on one vCPU whatever the vCPU count (Broadcom KB 440347). More vCPUs add nothing to that one queue.
 - C false: a full guest receive ring drops the frame inside the host, not in the physical network; the guest's CPU, the vCPU's Ready and the ring decide it.
@@ -41,6 +39,7 @@ Which statements are correct?
 - H true: RSS in the guest with several receive queues spreads receive processing over several vCPUs (vnic-rx-drops, section Single receive queue; KB 440347).
 - I false: the number of receive queues a VM can use is capped by its vCPU count (vnic-rx-drops; KB 440347).
 - J true: with a single receive queue the ring fills because one vCPU inside the guest drains it; another host changes nothing in the guest, so the drops stay (vnic-rx-drops, Single receive queue; KB 440347).
+- Misconception: B: "The VM is short of CPU: give it 8 more vCPUs." - C: "The physical network drops the packets: ask the network team."
 
 ## Notes
 - Differs from 0060 (receive ring too small for bursts): here the ring is already large and one vCPU cannot drain it.
@@ -61,7 +60,6 @@ tool: [vcenter, guest-os-tools]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A, D, E, F, H, J]
 misconception: [B, C]
 input: [text]
 knowledge:

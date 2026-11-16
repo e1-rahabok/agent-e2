@@ -26,11 +26,10 @@ Which statements are correct?
 - H. The CPU Latency of the VM on old-01 shows the work per cycle it lost on the older processor.
 - I. A vCPU at 2.0 GHz and one at 3.0 GHz that both ran the whole sample show the same Run.
 
-## Likely wrong answer
-"The new hosts have a lower clock, so each vCPU does less (B), and the Run is the same, so performance is the same (E)." B and E are the misconceptions.
+## Answers
+A, C, F, I
 
-## Expected key points
-- Answer: A, C, F, I.
+## Explanation
 - A is correct: cycles = Usage × time. old-01: 8,000 MHz × 4 h = 32,000 MHz-hours; new-01: 7,500 MHz × 3.33 h = 25,000 MHz-hours; 25,000 / 32,000 = 0.78, about 22% fewer, for the same job. Each cycle on new-01 did about 1.28 times the work.
 - B is wrong: the same job finished 40 minutes sooner on the same 4 vCPUs at about the same Run, so each vCPU completed more work per second. A newer generation does more work per cycle (efficacy), so a lower clock can still run faster.
 - C is correct: the cycle count mixes frequency and the Hyper-Threading charge; efficacy, the work per cycle from the core architecture (cache, pipelines, branch prediction), is in no counter.
@@ -40,6 +39,7 @@ Which statements are correct?
 - G is wrong: the job already runs faster on new-01 with Readiness at 0.2%; nothing calls for more vCPUs.
 - H is wrong: no metric accounts for efficacy; CPU Latency counts the Hyper-Threading and frequency effects only.
 - I is correct: Run is binary per moment (running or not) and counts duration only; the clock speed changes the cycles in Usage, not Run.
+- Misconception: "The new hosts have a lower clock, so each vCPU does less (B), and the Run is the same, so performance is the same (E)." B and E are the misconceptions.
 
 ## Metadata
 ```yaml
@@ -63,7 +63,6 @@ knowledge_main: vsphere/technology/cpu/concepts/run-time-vs-run-quality
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/cpu/concepts/run-time-vs-run-quality"
-answer: [A, C, F, I]
 misconception: [B, E]
 misconception_type: [frequency-and-hyper-threading, unit-and-normalization]
 status: draft

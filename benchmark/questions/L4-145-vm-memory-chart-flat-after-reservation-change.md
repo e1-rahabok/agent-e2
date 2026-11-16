@@ -19,13 +19,10 @@ Which statements are correct?
 - I. The host side of the reservation sits in the host's reservation counters, not in this VM chart.
 - J. No step of Consumed between neighbouring rows reaches 1% in the hour, 04:06 and 04:22 included.
 
-## Likely wrong answer
-- A: "Consumed should jump to the reservation; it did not, so the reservation failed."
-- C: "Removing a reservation lets ESXi take the memory back."
-- H: "A reservation sets its memory aside for the VM, so no other VM can use it."
+## Answers
+B, D, F, I, J
 
-## Expected key points
-- Answer: B, D, F, I, J.
+## Explanation
 - A false: a reservation does not back pages, so VM Consumed does not rise with it; the tasks completed.
 - B true: the task events show `config.memoryAllocation.reservation: 0 -> 8192` and later `8192 -> 0`, both Completed.
 - C false: with free host memory ESXi has no reason to reclaim, and removing a reservation does not take memory back; the mapping of a touched page stays until ESXi reclaims it. The export shows a 0.34% dip one row after 04:22 (5,814,256 to 5,794,752 KB), inside the hour's normal noise of up to 0.44%.
@@ -36,6 +33,7 @@ Which statements are correct?
 - H false: until the VM touches its reserved memory, the untouched part can back other VMs' pages; a reservation is held as pages only once used. Admission control is what counts the full amount at power-on.
 - I true: a reservation is a host-side guarantee; Reservation consumed and Reservation available of the host take it, while the VM's memory counters measure pages.
 - J true: the largest change of Consumed between two neighbouring rows in the hour is 0.44% (at 03:47); the steps at 04:06 and 04:22 are 0.38% and 0.20%, so no step shows at either change.
+- Misconception: A: "Consumed should jump to the reservation; it did not, so the reservation failed." - C: "Removing a reservation lets ESXi take the memory back." - H: "A reservation sets its memory aside for the VM, so no other VM can use it."
 
 ## Notes
 - Pair with 0441 (theory). Wrong on both: a knowledge gap. Right on theory and wrong on practical: a reading failure (the time zone, the unit, or taking a flat chart for a failed change).
@@ -69,7 +67,6 @@ attachments:
   - 0442/vm-memory-trend.csv
 origin: synthetic
 source_path: "Author's lab capture 2026-11-15"
-answer: [B, D, F, I, J]
 misconception: [A, C, H]
 misconception_type: [provider-vs-consumer]
 pair: "0441"

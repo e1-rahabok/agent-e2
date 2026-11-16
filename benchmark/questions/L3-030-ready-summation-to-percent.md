@@ -14,11 +14,10 @@ Which statements are correct?
 - E. Ready (ms) on the 1 Day chart cannot be compared with the Real-time value: the two use different units.
 - F. A Ready of 4% per vCPU in one sample calls for two more vCPUs to spread the wait.
 
-## Likely wrong answer
-B: the milliseconds of all 4 vCPUs read against one vCPU.
+## Answers
+A, C
 
-## Expected key points
-- Answer: A, C.
+## Explanation
 - A is correct: Ready (ms) is a summation over the sample, added up over all vCPUs; 100% for one vCPU is the sample length. 3,200 / (20,000 × 4) = 4%.
 - B is wrong: 3,200 ms is the sum over the 4 vCPUs. 16% is the VM-level sum (as the VMware conversion of 3,200 / 20,000 gives); per vCPU it is 4%. The VM has 80,000 vCPU-ms per 20-second sample.
 - C is correct: the 1 Day chart sums 15 Real-time samples over 300 seconds: 12,000 / (300,000 × 4) = 1%.
@@ -26,6 +25,7 @@ B: the milliseconds of all 4 vCPUs read against one vCPU.
 - E is wrong: both are milliseconds summed over the interval; divided by the interval length (20,000 or 300,000 ms per vCPU) they compare directly.
 - F is wrong: more vCPUs make co-scheduling harder and can raise Ready; a single 4% sample is no reason to resize.
 - The Readiness (%) counter is already per vCPU and avoids the conversion.
+- Misconception: B: the milliseconds of all 4 vCPUs read against one vCPU.
 
 ## Notes
 - Options F (the over-correction) and G (the wrong action) added 2026-11-14 (design.md 3.9; project/question-pairing-2026-11-14.md). Key unchanged, A, C.
@@ -52,7 +52,6 @@ knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/ready
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, C]
 misconception: [B]
 misconception_type: [unit-and-normalization, rollup-and-interval]
 pair: "0369"

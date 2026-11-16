@@ -179,7 +179,7 @@ python3 benchmark/runner/retrieval_eval.py
 ## What it does
 1. Loads `knowledge/` exactly as `ARCHITECTURE.md`, section Local LLM use: metadata split off, body chunked by `##` heading.
 2. Builds the index: BM25, plus embeddings (`embedding_model`) when the API key is set. Embeddings are cached in `harness/.cache/`.
-3. Loads every question with an answer key (`answer` letters, or `## Expected key points`). Questions without one are listed as skipped.
+3. Loads every question with an answer key (`## Answers` letters). Questions without one are listed as skipped.
 4. For each model, mode, question and run:
    - multiple choice: shuffles the options (same order for every model and mode within a run) and appends "Unsure"; free text: sends the prompt as written;
    - answers in the mode:
@@ -206,13 +206,12 @@ python3 benchmark/runner/retrieval_eval.py
 | `answer_type` | `deterministic` (letters); the only type since 2026-11-14 (Q199) |
 | `level` | `100`, `200`, `300`, `400` |
 | `input` | `text`, `table`, `screenshot`; checked against the attachments by lint |
-| `answer` | Correct option letters, as in `## Prompt` |
 | `misconception` | Option letters that are the known wrong answer |
 | `knowledge` | Files the answer should come from; used for retrieval recall |
 
 - Options in `## Prompt` are lines starting with `A. ` to `H. `. Text after the options (for example `Hint:`) is kept below them.
 - The prompt states the problem in words; the images supply the values.
-- `## Expected key points` and `## Likely wrong answer` are the key for reviewers; never sent to a candidate.
+- `## Answers` (the correct letters) and `## Explanation` are the key; never sent to a candidate. The runner reads only `## Answers`.
 - [project/tools/lint.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/lint.py) checks these fields.
 
 ## Limits

@@ -20,11 +20,10 @@ Which statements about vCPU Usage Disparity and these two VMs are correct?
 - J. When the busiest vCPU changes between samples, the guest is likely moving its work around.
 - K. On a 16-vCPU VM the minimum among the vCPUs carries little information.
 
-## Likely wrong answer
-D: a disparity above 100% is impossible, so the data is wrong. Or E: the VM averages 6-8%, so no vCPU can be busy.
+## Answers
+A, C, F, I, J, K
 
-## Expected key points
-- Answer: A, C, F, I, J, K.
+## Explanation
 - A is correct: VCF Operations builds the metric from per-vCPU usage: the peak among vCPUs minus the minimum.
 - B is wrong: the same vCPUs always busier is the CPU-affinity pattern, which is not normal and is worth investigating in the guest.
 - C is correct: the metric exists to show owners of large VMs how their vCPUs are used, when cost and refund do not convince them to downsize; vm-x and vm-y fit that case.
@@ -36,6 +35,7 @@ D: a disparity above 100% is impossible, so the data is wrong. Or E: the VM aver
 - I is correct: only the guest can show why (its CPU count, its threads, affinity).
 - J is correct: the jumping-process pattern: frequent start and stop, or a process moving between vCPUs, each move costing a context switch and cache warm-up.
 - K is correct: on a large VM one vCPU is bound to be near 0%, so the minimum says little; the peak and the gap carry the information.
+- Misconception: D: a disparity above 100% is impossible, so the data is wrong. Or E: the VM averages 6-8%, so no vCPU can be busy.
 
 ## Notes
 - Paired with the practical question 0101 (theory and practical; design.md, section 3.9). Situation numbers differ from 0101 and from the knowledge example on purpose.
@@ -64,7 +64,6 @@ knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/usage-dispari
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B14"
-answer: [A, C, F, I, J, K]
 misconception: [D, E]
 misconception_type: [average-hides-worst, frequency-and-hyper-threading]
 pair: "0101"

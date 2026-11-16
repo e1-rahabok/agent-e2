@@ -24,11 +24,10 @@ Which statements are correct?
 - F. Cut the VM to 12 GB: the 22.9 GB available is memory Linux does not use.
 - G. The 4 GB of swap is below what vSphere asks the guest to have for ballooning.
 
-## Likely wrong answer
-A or C: free memory near 0, or swap in use, read as a current shortage.
+## Answers
+B, G
 
-## Expected key points
-- Answer: B, G.
+## Explanation
 - A is wrong: Linux fills free memory with page cache. Read `available` (MemAvailable), swap activity and memory pressure, not `free`.
 - B is correct: swap-in and swap-out were 0 for a week and memory pressure is 0, so no task waited for memory; about 22.9 GB is available. The 1.2 GB in swap are pages moved out earlier and not touched since.
 - C is wrong: swap used is an amount left by past activity. Pages stay in swap until they are touched again; a current shortage shows as swap-in and swap-out rates and memory pressure.
@@ -36,6 +35,7 @@ A or C: free memory near 0, or swap in use, read as a current shortage.
 - E is wrong: it forces the 1.2 GB back into RAM for nothing and removes the safety net for a real peak; the guest also needs swap space configured for ballooning.
 - F is wrong: `available` is mostly page cache (23.5 GB of buff/cache) that Linux is using for the database files; it can give it back on demand, which is why it counts as available, but a cut to 12 GB removes that cache and sends the reads to disk. For memory, unused is waste, but this memory is used. This is the over-correction of A.
 - G is correct: for ballooning, the guest needs swap space of at least configured memory minus the memory reservation: 32 GB here, against 4 GB.
+- Misconception: A or C: free memory near 0, or swap in use, read as a current shortage.
 
 ## Notes
 - The Windows free memory question (0264) tests the same concept on another Guest OS (benchmark/design.md, section 5).
@@ -63,7 +63,6 @@ knowledge_main: guest-os/system/troubleshooting/linux-os-slow
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [B, G]
 misconception: [A, C]
 misconception_type: [consumption-as-contention, reclamation-as-contention]
 pair: "0387"

@@ -31,11 +31,10 @@ Which statements are correct?
 - H. If a second host fails at the busiest hour, the three left would face about 110% of their CPU and 120% of their memory.
 - I. Changing the rule to "Should run on hosts in group" for the window lets DRS move the two licensed VMs with the others.
 
-## Likely wrong answer
-B: "The cluster runs at two thirds, so a host can go without effect." G is the over-correction of turning HA off to get the evacuation through.
+## Answers
+A, C, E, H, I
 
-## Expected key points
-- Answer: A, C, E, H, I.
+## Explanation
 - A is correct: the five hosts carry 66 + 64 + 68 + 65 + 67 = 330 points of CPU utilization and 73 + 70 + 74 + 71 + 72 = 360 points of memory consumed. Spread over four identical hosts: 330 / 4 = 82.5% and 360 / 4 = 90%. The hosts that stay carry the whole load.
 - B is wrong: the misconception "the cluster is at 50%, so any host can go": the remaining hosts carry the whole load (5/4 of it each), and rules and pinned VMs decide too.
 - C is correct: DRS never violates a required VM-Host rule, so it leaves those VMs on the host and maintenance mode does not complete.
@@ -45,6 +44,7 @@ B: "The cluster runs at two thirds, so a host can go without effect." G is the o
 - G is wrong: the documented way through is to deactivate HA admission control temporarily so vMotion can proceed, and to turn it back on after; turning HA off removes restart protection for the whole cluster.
 - H is correct: 330 / 3 = 110% CPU and 360 / 3 = 120% memory of the three hosts left, more than they hold: the window runs at a stated risk, which is the owner's decision.
 - I is correct: the decision tree's way out for a pinned VM is to power it off for the window or change the rule to a preferential "should run on" rule, which DRS may break.
+- Misconception: B: "The cluster runs at two thirds, so a host can go without effect." G is the over-correction of turning HA off to get the evacuation through.
 
 ## Notes
 - 2026-11-16 re-review: D (maintenance mode overrides a required rule) negated C; replaced in place with HA leaving a host in maintenance mode out of the failover count (false). Truth values unchanged.
@@ -70,7 +70,6 @@ knowledge_main: vsphere/object-types/cluster/decision-tree/can-cluster-take-a-ho
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out"
-answer: [A, C, E, H, I]
 misconception: [B]
 misconception_type: [unit-and-normalization]
 status: draft

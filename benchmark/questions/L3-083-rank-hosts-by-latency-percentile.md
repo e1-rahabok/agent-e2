@@ -16,11 +16,10 @@ Which statements are correct?
 - H. A single value for the whole host can hide one slow adapter or one slow path.
 - I. The 95th percentile separates a one-off spike from a recurring problem as well as the 99th does.
 
-## Likely wrong answer
-C: rank by the maximum, since it catches everything. Or the reverse: drop the maximum altogether.
+## Answers
+A, B, E, G, H
 
-## Expected key points
-- Answer: A, B, E, G, H.
+## Explanation
 - A is correct: the maximum is the value of one 5-minute sample; one outlier dominates it.
 - B is correct: 1% of 2,016 samples is about 20: the 99th percentile stays low unless more than about 20 samples of the week (about 100 minutes) are high.
 - C is wrong: the maximum catches outliers too, so one bad sample ranks a host first; pair it with a percentile.
@@ -30,6 +29,7 @@ C: rank by the maximum, since it catches everything. Or the reverse: drop the ma
 - G is correct: read and write latency are checked separately; write-only latency is common when reads hit cache.
 - H is correct: one bad path hides in the host total, so the drill-down goes per adapter and path.
 - I is wrong: a problem that fills 1-5% of the samples (about 20 to 100 of the 2,016) leaves the 95th percentile low and the 99th percentile high, so only the 99th tells it from a one-off.
+- Misconception: C: rank by the maximum, since it catches everything. Or the reverse: drop the maximum altogether.
 
 ## Notes
 - Theory half of the pair with 0081 (practical; design.md, section 3.9). Different numbers from 0081.
@@ -56,7 +56,6 @@ knowledge_main: sp5-framework/observability/aggregation
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B7"
-answer: [A, B, E, G, H]
 misconception: [C, I]
 misconception_type: [average-hides-worst]
 pair: "0081"

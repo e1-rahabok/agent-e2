@@ -20,11 +20,10 @@ Which statements are correct?
 - K. In the exports, Net Run reaches 100% at the afternoon peaks.
 - L. At the afternoon peaks, Usage sits 20 points or more above Net Run.
 
-## Likely wrong answer
-B or H: Usage at about 100% means the VM is at its limit, so add vCPUs.
+## Answers
+A, C, D, G, J, L
 
-## Expected key points
-- Answer: A, C, D, G, J, L.
+## Explanation
 - A true: Usage (MHz and %) counts cycles completed, against the base clock; Turbo pushes it above the time-based counters. On a lightly loaded host the Hyper-Threading charge does not pull it down, so the gap is frequency.
 - B false: the misconception. Net Run peaks at 72-82%: the vCPUs were idle a fifth to a quarter of the time while Usage read 100% or more.
 - C true: Net Run = Run - Overlap; it counts time, not speed.
@@ -37,6 +36,7 @@ B or H: Usage at about 100% means the VM is at its limit, so add vCPUs.
 - J true: the guest run queue is the primary sign that the guest cannot keep up; it decides whether more vCPUs help.
 - K false: reading. CPU|Net Run (%) peaks at 72-82%, in the afternoon file and in every day's maximum.
 - L true: reading. In the afternoon files every 5-minute point with Usage at or above 100 has Net Run 20 points or more below it; each day's Usage maximum is 20 points or more above that day's Net Run maximum, from the same 5-minute point.
+- Misconception: B or H: Usage at about 100% means the VM is at its limit, so add vCPUs.
 
 ## Reasoning path
 1. Compare Usage with Net Run at the peaks: the gap is frequency.
@@ -74,7 +74,6 @@ attachments:
   - 0371/fin-rpt-05-cpu-net-run-afternoon.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C6"
-answer: [A, C, D, G, J, L]
 misconception: [B, H]
 misconception_type: [frequency-and-hyper-threading]
 pair: "0008"

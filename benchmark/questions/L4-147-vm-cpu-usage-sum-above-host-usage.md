@@ -23,11 +23,10 @@ Which statements are correct?
 - I. Host Usage (%) carries the Hyper-Threading charge for a shared core in the same way as VM Usage (%).
 - J. Host Usage of 87.5% shows that 12.5% of the host's CPU is still free to place new VMs on.
 
-## Likely wrong answer
-"The VMs cannot use more CPU than the host has, so vCenter double-counts (F); or the host is the one over-counting, at 125% per busy core (E)." E and F are the misconceptions.
+## Answers
+A, B, C, G, H
 
-## Expected key points
-- Answer: A, B, C, G, H.
+## Explanation
 - A is correct: VM CPU Used and VM CPU Usage carry the 1.25x Hyper-Threading charge, 62.5% of the core per vCPU while the sibling thread runs; ESXi CPU Used, behind host Usage, gives each thread of a busy pair half the core, so the pair adds to 100%.
 - B is correct: busy threads = busy cores + cores with both threads busy, and the averages keep that relation: 0.75 × 64 = 48 threads, 0.875 × 32 = 28 cores, 48 − 28 = 20 cores with both threads busy.
 - C is correct: each such core is charged 2 × 62.5% = 125% to the VMs and 100% to the host, a quarter of a core more: 20 × 2,500 × 0.25 = 12,500 MHz, against the 82,450 − 70,000 = 12,450 MHz gap (the system worlds account for the rest).
@@ -38,6 +37,7 @@ Which statements are correct?
 - H is correct: host Usage (%) is 70,000 / 80,000 = 87.5%; with a static clock it equals Core Utilization, as a core counts once whether one or two threads run.
 - I is wrong: VM Usage (%) is Hyper-Threading aware; host Usage (%) is not, and a second thread on a busy core adds nothing to it.
 - J is wrong: host Usage (%) is not a capacity reading; space for vCPUs is counted in threads (Utilization 75%), and Usage moves with frequency.
+- Misconception: "The VMs cannot use more CPU than the host has, so vCenter double-counts (F); or the host is the one over-counting, at 125% per busy core (E)." E and F are the misconceptions.
 
 ## Metadata
 ```yaml
@@ -61,7 +61,6 @@ knowledge_main: vsphere/technology/cpu/metrics/host/used
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/cpu/metrics/host/used"
-answer: [A, B, C, G, H]
 misconception: [E, F]
 misconception_type: [frequency-and-hyper-threading, same-name-other-object]
 status: draft

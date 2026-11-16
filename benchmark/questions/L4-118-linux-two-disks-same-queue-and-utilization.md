@@ -32,12 +32,10 @@ Which statements about the four columns, the two disks and the two engineers are
 - N. Next for sdc: the latency of DS-ARCH split into device, kernel and queue latency, and the load of the array.
 - O. On sdb, about 30 of the 32 requests wait in Linux, a backlog in front of the virtual disk.
 
-## Likely wrong answer
-- B: "Both disks have 100% utilization and an aqu-sz of 32, so both are saturated: raise the queue size on both."
-- F: "Same queue, ten times the await on sdc: the Linux queue of sdc is the problem; tune it."
+## Answers
+A, C, D, E, H, K, N
 
-## Expected key points
-- Answer: A, C, D, E, H, K, N.
+## Explanation
 - A true: Little's Law: sdb 6,400 x 0.005 = 32 and sdc 640 x 0.050 = 32.
 - B false: aqu-sz alone does not show a backlog, and %util at 100% does not show a limit for a device that serves requests in parallel. Neither engineer is right.
 - C true: 32 requests in service at 6,400 I/Os per second, against 32 requests on a slow device at 640 I/Os per second.
@@ -53,6 +51,7 @@ Which statements about the four columns, the two disks and the two engineers are
 - M false: await rising with the I/O rate flat is the sign of saturation; spare capacity shows as the I/O rate rising with await flat. For sdb, nothing to tune unless the database needs a response time below 5 ms.
 - N true: read device, kernel and queue latency of DS-ARCH in esxtop, the array load and the schedule of the backups; ask whether the archive workload needs better than 48 ms.
 - O false: 5.0 ms against 4.8 ms, so Linux adds about 0.2 ms; 6,400 x 0.0048 = 30.7 of the 32 requests are at the virtual disk, in service, and only about 1.3 are in Linux. Not a backlog.
+- Misconception: B: "Both disks have 100% utilization and an aqu-sz of 32, so both are saturated: raise the queue size on both." - F: "Same queue, ten times the await on sdc: the Linux queue of sdc is the problem; tune it."
 
 ## Notes
 - Public source: Linux kernel documentation, I/O statistics fields: field 9 counts requests in progress, field 10 the time with at least one request in progress, field 11 the weighted time. sysstat iostat(1) manual page: aqu-sz is the average queue length of the requests issued to the device; await includes the time in the queue and the time in service; %util for devices serving requests in parallel, such as RAID arrays and modern SSDs, does not reflect their performance limits. aqu-sz = I/O rate x await is Little's Law.
@@ -71,7 +70,6 @@ technology: [storage]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,C,D,E,H,K,N]
 misconception: [B,F]
 input: [text]
 object: [vm, guest-os]

@@ -13,17 +13,17 @@ Which statements about where the latency is added, and what to check, are correc
 - E. Compare the queue depth of 32 with the HBA and the array's per-LUN guidance.
 - F. In the window, CMDS/s × QAVG gives about QUED: those commands wait in the kernel.
 
-## Likely wrong answer
-B: blaming the array.
+## Answers
+A, E, F
 
-## Expected key points
-- Answer: A, E, F.
+## Explanation
 - A is correct: from 10:20 to 10:40 ACTV equals DQLEN (32), so %USD = ACTV / DQLEN = 100%: the device queue is full. LOAD = (ACTV + QUED) / DQLEN is about 2.8 to 3.5: about twice as many commands wait in the kernel as the device accepts. KAVG (and QAVG inside it) carries the added time: GAVG about 3.3 ms = KAVG 2.3 ms + DAVG 1.1 ms on average. The other LUN, naa.624a9370b2, has no queue at the same time.
 - B is wrong: DAVG (the HBA, the fabric and the array) stays near 1 ms through the window. The array serves each command as fast as before; the commands wait before they get there.
 - C is wrong: GAVG = KAVG + DAVG accounts for the whole rise; the added time is in the kernel, below the Guest OS, whose queues esxtop does not see.
 - D is wrong: a request above the virtual SCSI adapter's queue depth waits in the Guest OS, before the virtual device, and adds nothing to KAVG or QAVG. A high QAVG means a VMkernel limit holds the commands; here ACTV at DQLEN shows it is the device queue.
 - E is correct: the device queue depth is the limit here, and queue depths must match along the stack (HBA, device, array). Spreading the busy disks over more LUNs also gives more device queues.
 - F is correct: Little's law at the kernel layer: at 10:20, 30,770.6 commands/s × 2.5 ms = 77 = QUED (and 30,770.6 × 1.04 ms = 32 = ACTV at the device). The queued commands are held in the VMkernel.
+- Misconception: B: blaming the array.
 
 ## Notes
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Revised 2026-11-12 for question set 1.0: the screenshot removed; the batch output reduced to two devices, one-minute samples and the panel's field names; the Storage I/O Control option removed (deprecated in VCF 9.0). Counts only after author approval.
@@ -55,7 +55,6 @@ attachments:
   - 0086/esx-07-esxtop-batch-disk-devices-1-hour.csv
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A, E, F]
 misconception: [B]
 misconception_type: [layer-confusion]
 pair: "0043"

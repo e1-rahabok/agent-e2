@@ -16,11 +16,10 @@ Which statements are correct?
 - G. Raise the vCenter statistics level for the cluster so that the three sums line up.
 - H. To leave PROD-C's IO out, compare with the datastore counters of the 8 PROD-B hosts: each holds only its own share.
 
-## Likely wrong answer
-C: concluding that a metric is broken.
+## Answers
+A, B, D, E, H
 
-## Expected key points
-- Answer: A, B, D, E, H.
+## Explanation
 - A is correct: a VM's IO on a datastore outside the 12 (a local datastore, another shared one) counts for the VM, not for the 12.
 - B is correct: the hosts of PROD-C add IO to the 12 datastores that is in neither the PROD-B VM sum nor the PROD-B host sum.
 - C is wrong: the relationships are many-to-many (a VM spans datastores, a datastore holds many VMs and is mounted by hosts of more than one cluster), so totals across VM, datastore, host and cluster do not reconcile, and each value is still correct from its vantage point.
@@ -29,6 +28,7 @@ C: concluding that a metric is broken.
 - F is wrong: the gap has known causes that tell something; for example a datastore read IOPS consistently above the virtual disk read IOPS on VMFS points to a snapshot on that VM.
 - G is wrong: a gap between vantage points is expected and is no fault of the statistics collection; a statistics level changes which counters vCenter keeps, not how the objects relate.
 - H is correct: a host's datastore counters show only that host's share of a shared datastore, while the datastore object spans every host that mounts it, PROD-C's included.
+- Misconception: C: concluding that a metric is broken.
 
 ## Notes
 - 2026-11-16 (author, Q251): level 200 to 300, as the reviewers read it. A new Level 200 basics question for the guard is still to write.
@@ -56,7 +56,6 @@ knowledge_main: vsphere/architecture/object-relationships
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A, B, D, E, H]
 misconception: [C]
 misconception_type: [same-name-other-object]
 pair: "0417"

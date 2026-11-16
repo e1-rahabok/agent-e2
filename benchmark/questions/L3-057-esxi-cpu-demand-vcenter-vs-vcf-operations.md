@@ -16,11 +16,10 @@ Which statements are correct?
 - I. ESXi CPU Usage (MHz) in VCF Operations also adds the kernel's CPU reservation.
 - J. ESXi CPU Demand (MHz) in VCF Operations adds each running VM's CPU reservation to that VM's demand.
 
-## Likely wrong answer
-A: the same name means the same counter, so ESXi CPU Demand matches between the tools. Or the reverse, I: both counters differ. Only Demand differs.
+## Answers
+B, C, E, F, H
 
-## Expected key points
-- Answer: B, C, E, F, H.
+## Explanation
 - A false: ESXi CPU Demand has one name and two formulas.
 - B true: vCenter Demand sums what the VMs ask for, while Usage also holds the kernel's own work, so on a quiet host Demand sits below Usage.
 - C true: VCF Operations takes the operations view (what the host must be able to deliver), so it adds the kernel's reservation.
@@ -31,6 +30,7 @@ A: the same name means the same counter, so ESXi CPU Demand matches between the 
 - H true: Usage is actual use by VMs and the kernel; a host with no VMs has Usage above 0.
 - I false: Usage is the same counter in both tools; only Demand counts reservations.
 - J false: per running VM, VCF Operations counts the higher of the VM's demand and its CPU reservation, not the sum. A VM demanding 4 GHz with a 5 GHz reservation counts 5 GHz, not 9 GHz.
+- Misconception: A: the same name means the same counter, so ESXi CPU Demand matches between the tools. Or the reverse, I: both counters differ. Only Demand differs.
 
 ## Notes
 - Paired with the screenshot question 0363 (theory and practical; author, 2026-11-14). Reading the pair: design.md, section 3.9.
@@ -58,7 +58,6 @@ knowledge_main: vsphere/technology/cpu/metrics/host/demand
 attachments: []
 origin: synthetic
 source_path: "Author's sample, 2026-11-14 (Q218)"
-answer: [B, C, E, F, H]
 misconception: [A, G, I]
 misconception_type: [tool-confusion, consumption-as-contention]
 pair: "0363"

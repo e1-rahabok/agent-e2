@@ -20,11 +20,10 @@ Which statements are correct?
 - J. Compute below 5% shows that frame buffer is free on these GPUs for another vGPU VM.
 - K. Buy more GPUs now: these workloads have outgrown the two GPUs.
 
-## Likely wrong answer
-- A: "GPU memory is at 90%, the GPUs are full of work: we need more GPUs."
+## Answers
+B, C, D, E, F
 
-## Expected key points
-- Answer: B, C, D, E, F.
+## Explanation
 - A is false: the per-device Memory used is allocation, not workload use; with compute below 5% the workloads are idle.
 - B is true: the host per-device counter shows the frame buffer allocated to vGPUs, so a host can show high GPU memory while its VMs are idle.
 - C is true: NVIDIA allocates the profile's whole frame buffer on the physical GPU at power-on and frees it at power-off (Broadcom KB 439680), so it stays high while the VMs idle.
@@ -36,6 +35,7 @@ Which statements are correct?
 - I is false: a passthrough GPU bypasses the NVIDIA vGPU Manager, so the host does not count its memory; read it inside the guest with nvidia-smi.
 - J is false: the frame buffer is allocated whole at power-on and never overcommitted; only compute is shared, so idle compute frees no frame buffer (here 88-94% of it is allocated). This is the over-correction of A: having learned that the memory reading is not work, the reader takes idle compute as free memory.
 - K is false: the workloads are idle; the frame buffer is held by the profiles of the powered-on VMs, not by work. Whether another vGPU VM fits is a placement question per GPU and per profile, not this percentage.
+- Misconception: A: "GPU memory is at 90%, the GPUs are full of work: we need more GPUs."
 
 ## Notes
 - 2026-11-16 (author, Q251): level 200 to 300, as the reviewers read it. A new Level 200 basics question for the guard is still to write.
@@ -56,7 +56,6 @@ technology: [gpu, system]
 task: read-metric
 level: 300                      # Q251, author 2026-11-16: relabelled as written (was 200)
 answer_type: deterministic
-answer: [B, C, D, E, F]
 misconception: [A]
 input: [text]
 object: [esxi, vm]

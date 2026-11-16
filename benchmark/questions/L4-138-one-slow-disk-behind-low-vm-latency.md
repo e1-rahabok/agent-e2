@@ -16,11 +16,10 @@ Which statements are correct?
 - G. Next, check that disk: read and write latency, errors, outstanding IO, datastore.
 - H. The slow disk carried most of the VM's read IOPS during the hour of the report.
 
-## Likely wrong answer
-B or E: the VM's disk latency is low all day, so storage is fine and the ticket can be closed. Or D, the overshoot: no VM-level metric could show it.
+## Answers
+A, C, G
 
-## Expected key points
-- Answer: A, C, G.
+## Explanation
 - A is correct: reading. In the list view, `Virtual Disk:scsi1:2|Read Latency (ms) (Min)` is 15 ms or more for 02:00 to 03:00, while `Virtual Disk:Aggregate of all instances|Read Latency (ms) (Max)` is 3 ms or less; the VM-level read latency export stays at 3 ms or less at every point from 01:00 to 04:00.
 - B is wrong: the misconception. A VM aggregate hides the one slow disk; read each virtual disk.
 - C is correct: reading. The Peak Latency export is 15 ms or more at every point from 02:05 to 03:00 and below 10 ms at every other point: the peak takes the highest 20-second value across all virtual disks, read and write, so the slow disk sets it.
@@ -29,6 +28,7 @@ B or E: the VM's disk latency is low all day, so storage is fine and the ticket 
 - F is wrong: queues add latency at any load; the report waited on every one of that disk's IOs.
 - G is correct: the flow goes per virtual disk, read and write, then errors, then IOPS and outstanding IO, then the backing device and the configuration.
 - H is wrong: reading. `Virtual Disk:scsi1:2|Read IOPS` is under 10% of `Virtual Disk:Aggregate of all instances|Read IOPS` for 02:00 to 03:00, and under 10% of the sum of the eight disks' Read IOPS.
+- Misconception: B or E: the VM's disk latency is low all day, so storage is fine and the ticket can be closed. Or D, the overshoot: no VM-level metric could show it.
 
 ## Notes
 - Practical half of pair D4 with 0422 (theory; design.md, section 3.9).
@@ -62,7 +62,6 @@ attachments:
   - 0423/vcf-operations-vm-virtual-disks-0200-0300.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D4"
-answer: [A, C, G]
 misconception: [B, E]
 misconception_type: [average-hides-worst]
 pair: "0422"

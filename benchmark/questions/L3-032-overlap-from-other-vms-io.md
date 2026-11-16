@@ -18,11 +18,10 @@ Which statements about Overlap are correct?
 - I. In this sample, the VM's Net Run comes to about 62% per vCPU.
 - J. Overlap of 2,400 ms is 12% of the VM's time in this sample.
 
-## Likely wrong answer
-B: Overlap is always caused by the VM's own IO. Or D: Overlap is counted in Ready. Or J: the VM-level ms read against one vCPU's 20 seconds.
+## Answers
+A, C, E, I
 
-## Expected key points
-- Answer: A, C, E, I.
+## Explanation
 - A is correct: with no free core, the kernel runs IO work (for example incoming packets) on a core that is running a vCPU, and interrupts it.
 - B is wrong: the work can be for the host or for other VMs. Here the neighbours drive the IO.
 - C is correct: Overlap happens inside the Run state. VCF Operations shows Net Run = Run - Overlap.
@@ -33,6 +32,7 @@ B: Overlap is always caused by the VM's own IO. Or D: Overlap is counted in Read
 - H is wrong: the over-correction of B. The kernel service that interrupts a vCPU can be on behalf of the interrupted VM or of another VM.
 - I is correct: VM-level ms in vCenter are summed over the vCPUs, 20,000 ms per vCPU per sample, so 80,000 ms here. Net Run = Run - Overlap = 49,600 ms, about 62% per vCPU.
 - J is wrong: 2,400 ms is summed over 4 vCPUs (80,000 ms), so Overlap is about 3% per vCPU, not 12%.
+- Misconception: B: Overlap is always caused by the VM's own IO. Or D: Overlap is counted in Ready. Or J: the VM-level ms read against one vCPU's 20 seconds.
 
 ## Notes
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): E no longer compares Overlap with Ready (Linux steal time counts Ready and not Overlap); F (Used), G (the wrong action) and H (the over-correction of B) added. Key unchanged, A, C, E.
@@ -58,7 +58,6 @@ knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/overlap
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, C, E, I]
 misconception: [B, D, J]
 misconception_type: [provider-vs-consumer, unit-and-normalization]
 status: draft

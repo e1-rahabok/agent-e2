@@ -29,11 +29,10 @@ Which statements are correct?
 - I. With IP hash on both sides, each TCP stream to bkrepo-01 is split over the member ports packet by packet.
 - J. A move to Load Based Teaming also means removing the static EtherChannel, which pairs only with IP hash.
 
-## Likely wrong answer
-"We set IP hash with an EtherChannel, so ESXi balances the backup over all four links" (E), and its fix, "switch to Load Based Teaming so ESXi balances the load" (F).
+## Answers
+A, B, C, D, J
 
-## Expected key points
-- Answer: A, B, C, D, J.
+## Explanation
 - A is correct: the virtual switch balances transmit traffic only. The transmit rows are spread (176-206 Mb/s each); IP hash spreads esx-31's own frames across different IP pairs.
 - B is correct: receive traffic arrives on the port the physical switch picks; its own policy decides.
 - C is correct: bkrepo-01 has one IP address, so a hash on the destination IP alone gives the same member port for every frame to it, whatever the source. vmnic1 receives 23,817 Mb/s, about 95% of 25 Gb/s, while the other uplinks receive about 600 Mb/s each.
@@ -44,6 +43,7 @@ Which statements are correct?
 - H is wrong: each source host's team decides only the uplink its own frames leave on. The switch in front of esx-31 picks the member port toward esx-31.
 - I is wrong: one source-destination pair always hashes to the same uplink; IP hash does not split a stream.
 - J is correct: mixing IP hash with no EtherChannel, or an EtherChannel with another policy, disrupts the network: the physical switch sees one MAC on several ports. Load Based Teaming needs no physical switch change.
+- Misconception: "We set IP hash with an EtherChannel, so ESXi balances the backup over all four links" (E), and its fix, "switch to Load Based Teaming so ESXi balances the load" (F).
 
 ## Notes
 - The port channel hash on destination IP only is a case fact. A source-and-destination hash is the usual alternative on switches that offer it; the exact options depend on the switch vendor.
@@ -67,7 +67,6 @@ knowledge_main: vsphere/technology/network/concepts/nic-teaming
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/network/concepts/nic-teaming"
-answer: [A, B, C, D, J]
 misconception: [E, F]
 misconception_type: []
 status: draft

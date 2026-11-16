@@ -22,13 +22,10 @@ Will that work in vSphere 9.1, and what do you advise instead? Which statements 
 - K. Throttling the IO of rpt-07 with the QoS of the array is another control that protects db-11.
 - L. A 1,000 IOPS limit loads the array the same on rpt-07 as on a VM doing 4 KB random reads.
 
-## Likely wrong answer
-- A: "Yes. Enable Storage I/O Control and set db-11 to High shares: SIOC throttles rpt-07 when the datastore latency crosses its threshold."
-- B: "High shares give db-11 priority on the datastore."
-- L: "1,000 IOPS is 1,000 IOPS, whatever VM it is set on."
+## Answers
+C, E, H, J, K
 
-## Expected key points
-- Answer: C, E, H, J, K.
+## Explanation
 - A is wrong: from VCF 9.0 Storage I/O Control honours only limits; shares no longer decide which VM gets the IO (Broadcom KB 385396).
 - B is wrong: from VCF 9.0 disk shares are ignored altogether; only the IOPS limit is honoured. Even before, the scheduler of one host saw only its own IO, and rpt-07 runs on another host: its reads load the array, not db-11's host queue.
 - C is correct: Storage I/O Control is deprecated; its storage policies honour only limits from VCF 9.0. High shares will not protect db-11.
@@ -41,6 +38,7 @@ Will that work in vSphere 9.1, and what do you advise instead? Which statements 
 - J is correct: DAVG 24 ms with KAVG 0.1 ms places db-11's wait beyond the HBA, in the fabric or the array; no setting on db-11's host alone fixes it.
 - K is correct: outside vSphere the array is a point of control of its own; its QoS acts on the IO of every initiator, so it can hold back rpt-07's reads.
 - L is wrong: the cost of an IO varies with block size, read/write mix and pattern; rpt-07's 512 KB sequential reads cost the array far more per IO than 4 KB random reads, and mClock counts each of them as 16 against the limit.
+- Misconception: A: "Yes. Enable Storage I/O Control and set db-11 to High shares: SIOC throttles rpt-07 when the datastore latency crosses its threshold." - B: "High shares give db-11 priority on the datastore." - L: "1,000 IOPS is 1,000 IOPS, whatever VM it is set on."
 
 ## Notes
 - Synthetic, 2026-11-12. Counts only after author approval.
@@ -58,7 +56,6 @@ technology: [storage]
 task: judge-setting
 level: 400
 answer_type: deterministic
-answer: [C,E,H,J,K]
 misconception: [A,B,L]
 input: [text]
 object: [vm, datastore]

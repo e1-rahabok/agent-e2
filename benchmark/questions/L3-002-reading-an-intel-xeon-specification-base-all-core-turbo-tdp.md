@@ -16,11 +16,10 @@ Choose all the correct statements about the Xeon 6530P:
 - H. Under load on every core, the cores run near the 4.1 GHz Max Turbo most of the time.
 - I. Turn Turbo Boost off in the BIOS to keep the processor within its 225 W.
 
-## Likely wrong answer
-B (TDP read as maximum power draw), D (base frequency read as the speed a loaded CPU runs at), or E (power read as rising with the highest clock).
+## Answers
+A, C, F
 
-## Expected key points
-- Answer: A, C, F.
+## Explanation
 - A is true: All-Core Turbo is the frequency every core can hold at the same time; 3.7 GHz is 61% above base.
 - B is false: TDP is Thermal Design Power: the average power the processor dissipates at Base Frequency with all cores active under an Intel-defined high-complexity workload. It is not the maximum draw.
 - C is true: Total Capacity (GHz) counts every core at the base (nominal) frequency: the capacity at base clock, with no Turbo or Hyper-Threading in it. Intel does not expose All-Core Turbo through an API, so vSphere could not count it anyway.
@@ -30,6 +29,7 @@ B (TDP read as maximum power draw), D (base frequency read as the speed a loaded
 - G is false: Hyper-Threading delivers about 1.25 times the work of one thread per core, not 2 times.
 - H is false: the over-correction of D. Single-Core Turbo is reached only when few cores are active and the rest are idle; with every core loaded the ceiling is All-Core Turbo, 3.7 GHz.
 - I is false: Turbo works within the socket's power envelope; under heavy instructions the processor lowers its frequency to stay under the limit, so turning Turbo off only gives up throughput.
+- Misconception: B (TDP read as maximum power draw), D (base frequency read as the speed a loaded CPU runs at), or E (power read as rising with the highest clock).
 
 ## Notes
 - The Intel web page image holds the specification of the Xeon 6 6520P, the product of the original quiz. It is not sent to the candidate: it is not a product screenshot (author, 2026-11-05).
@@ -60,7 +60,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q4 ESXi CPU Frequency"
 answer_type: deterministic
 level: 300                      # author 2026-11-05
-answer: [A, C, F]
 misconception: [B, D, E]
 misconception_type: [frequency-and-hyper-threading]
 status: draft

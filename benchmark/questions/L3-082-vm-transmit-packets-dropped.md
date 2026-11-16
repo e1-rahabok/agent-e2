@@ -15,11 +15,10 @@ Which statements about this counter and its effect are correct?
 - H. 2,400 transmit drops of full-size frames mean about 3.6 MB that TCP has to send again.
 - I. Across a large estate of VMs, there are far more transmit drops than receive drops.
 
-## Likely wrong answer
-C: nobody complains, so the transmit drops do not matter. Or the reverse: every transmit drop is an application error.
+## Answers
+A, B, H
 
-## Expected key points
-- Answer: A, B, H.
+## Explanation
 - A true: transmitted packets are dropped after they leave the Guest OS, so the guest counted them as sent and its counters do not match the VM counter.
 - B true: TCP in the guest gets no acknowledgement (the retransmission timer expires or duplicate acknowledgements arrive) and resends the payload in a new frame.
 - C false: TCP hides the drops through retransmission; the application sees higher latency, not an error, so no complaint does not mean no impact.
@@ -29,6 +28,7 @@ C: nobody complains, so the transmit drops do not matter. Or the reverse: every 
 - G false: regular patterns of transmit drops are worth raising with the network team; a rhythm points to a cause on the path.
 - H true: each dropped packet is resent; at about 1.5 KB per full-size frame, 2,400 drops are about 3.6 MB of data sent again.
 - I false: receive drops are far more common than transmit drops across VMs (3,938 VMs over a month in the knowledge base's data).
+- Misconception: C: nobody complains, so the transmit drops do not matter. Or the reverse: every transmit drop is an application error.
 
 ## Notes
 - Theory half of the pair with 0074 (practical; design.md, section 3.9). Different situation and numbers from 0074, so one does not give away the other.
@@ -54,7 +54,6 @@ knowledge_main: vsphere/technology/network/metrics/virtual-motherboard/packets-d
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B6"
-answer: [A, B, H]
 misconception: [C]
 misconception_type: [layer-confusion]
 pair: "0074"

@@ -11,16 +11,16 @@ Which of these counters are better inputs for the vCPU count the guest needs tha
 - D. VM CPU System (ms), from vCenter
 - E. CPU Net Run (%), from VCF Operations
 
-## Likely wrong answer
-C: Demand read as the CPU the guest asks for, unmet demand included. Or A: Usage read as the work the guest needs.
+## Answers
+E
 
-## Expected key points
-- Answer: E.
+## Explanation
 - A is wrong: Usage counts cycles. Turbo, power saving and Hyper-Threading move it, and it carries load charged at VM level; the guest sees none of these.
 - B is wrong: VM Used includes System and the VMX, MKS and helper worlds, hypervisor overhead that is not guest demand, and it is scaled by frequency and Hyper-Threading.
 - C is wrong: Demand is an internal counter of the kernel scheduler, and like Usage it moves with frequency and Hyper-Threading.
 - D is wrong: System is the time the hypervisor spends on the VM's IO and privileged instructions, charged at VM level; the guest never sees it, so it is hypervisor overhead, not guest demand.
 - E is correct: the best of the list. Net Run is Run minus Overlap: run time, blind to frequency and Hyper-Threading. It still leaves out Ready, Co-stop and the non-idle waits the guest demanded; the fuller Guest OS formula is configured vCPU - Idle + a run queue factor (no single counter; build it as a super metric).
+- Misconception: C: Demand read as the CPU the guest asks for, unmet demand included. Or A: Usage read as the work the guest needs.
 
 ## Notes
 - Author (Q186, 2026-11-12): "VM sizing" in an administrator's words almost always means Guest OS sizing. Agent E2 names that reading (term map row vm-sizing).
@@ -51,7 +51,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q5 VM CPU Rightsize"
 answer_type: deterministic
 level: 400                      # author 2026-11-05
-answer: [E]
 misconception: [C]
 misconception_type: [frequency-and-hyper-threading]
 pair: "0371"

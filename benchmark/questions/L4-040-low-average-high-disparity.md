@@ -22,12 +22,10 @@ How can the average be so low while the disparity is above 100%, is the owner ri
 - K. The eleven idle vCPUs can go without slowing the appliance, unless the vendor changes the guest to use them.
 - L. Net Run follows the clock speed like Usage does and can pass 100% for one vCPU with Turbo.
 
-## Likely wrong answer
-- D: "8% means the VM is mostly idle, so it is not the bottleneck."
-- I: "The vendor says 12 vCPUs; give it more if the reports are slow."
+## Answers
+A, B, E, H, J, K
 
-## Expected key points
-- Answer: A, B, E, H, J, K.
+## Explanation
 - A is correct: in every 5-minute point vCPU 0 is at about 2,680-2,730 MHz and the others are at 0-1.5 MHz; one busy vCPU of 12 gives about 8.3%.
 - B is correct: 2,705 / 2,200 = about 123%; Turbo pushes one vCPU above 100% of base, and the disparity (busiest minus least busy) follows.
 - C is wrong: the disparity is the busiest vCPU minus the least busy one (Max - Min), not their sum; it passes 100% here because vCPU 0 alone is above 100% of base (B) while the minimum is near 0.
@@ -40,6 +38,7 @@ How can the average be so low while the disparity is above 100%, is the owner ri
 - J is correct: frequency sets throughput (work per second), and Usage (MHz) counts the cycles completed; the reports run on one saturated vCPU, so a faster clock does more of their work per second.
 - K is correct: the idle vCPUs do no work today.
 - L is wrong: Net Run is time-based and cannot pass 100%; it does not see frequency, so vCPU 0 counts as fully busy (about 8.3% for the VM) and Turbo shows only in the MHz counters.
+- Misconception: D: "8% means the VM is mostly idle, so it is not the bottleneck." - I: "The vendor says 12 vCPUs; give it more if the reports are slow."
 
 ## Notes
 - From the author's samples: average utilization 12.5%, Usage Disparity above 100%; plotting each vCPU showed only the first one busy (uniprocessor kernel), and Turbo above 100%. The export keeps this pattern with its own numbers (below).
@@ -57,7 +56,6 @@ technology: [cpu]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,B,E,H,J,K]
 misconception: [D,I]
 input: [table]
 object: [vm, guest-os]

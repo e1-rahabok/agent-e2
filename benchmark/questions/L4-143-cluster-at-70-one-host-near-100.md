@@ -15,11 +15,10 @@ Which statements are correct?
 - G. In the rows outside 09:00 to 17:00 on weekdays, esx-b23 runs at about the level of the other five hosts.
 - H. DRS at its default threshold balances the hosts whenever one runs hotter than the others.
 
-## Likely wrong answer
-A: the cluster peak read as a ceiling for every host. Or E: one host at 100% read as a cluster short of capacity.
+## Answers
+B, C, F, G
 
-## Expected key points
-- Answer: B, C, F, G.
+## Explanation
 - A is wrong: the misconception. In the rows where the cluster's `CPU|Usage (%) (Avg)` is highest (65% to 72%), esx-b23 reads 95% or more.
 - B is correct: at the cluster's busiest hours (weekday business hours, cluster peak between 65% and 72%), esx-b23 reads 95% or more.
 - C is correct: with identical hosts, the cluster's value in every row is the mean of the six host values; for it to reach about 70%, at least one host was higher.
@@ -28,6 +27,7 @@ A: the cluster peak read as a ceiling for every host. Or E: one host at 100% rea
 - F is correct: affinity rules and host groups act as sub-clusters and hold a pocket of load that DRS cannot spread.
 - G is correct: in the 123 rows outside 09:00 to 17:00 on weekdays, esx-b23 stays at 49.3% or below against at most 50.0% for the other hosts, with a mean of 30.3% against 30.1%. It is the hottest host in 21 of those rows, about one in six, as any one of six similar hosts would be. The hot spot is a daytime load held on one host, which fits a pocket (F).
 - H is wrong: since vSphere 7.0 DRS works on each VM's DRS Score (VM happiness), not on even host utilization; a hot host whose VMs are served, or whose load a rule or setting holds, is left as it is.
+- Misconception: A: the cluster peak read as a ceiling for every host. Or E: one host at 100% read as a cluster short of capacity.
 
 ## Notes
 - Changed in the 2026-11-15 audit: G replaced (per-VM contention rather than host usage is tested by the pair 0019/0431) by a true reading of the export (esx-b23 outside weekday business hours at most 49.3%, the others at most 50.0%); H replaced (a misread of the host column, the negation of B) by a DRS misconception, worded without rules so that it is not F's reason (drs-migration-levels: VM DRS Score). Key unchanged: B, C, F, G.
@@ -58,7 +58,6 @@ attachments:
   - 0438/vcf-operations-cluster-hosts-cpu-usage-7-days.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D3"
-answer: [B, C, F, G]
 misconception: [A, E]
 misconception_type: [average-hides-worst, consumption-as-contention]
 pair: "0437"

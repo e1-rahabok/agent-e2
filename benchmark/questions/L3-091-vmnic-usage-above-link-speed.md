@@ -28,11 +28,10 @@ Which statements are correct?
 - H. Usage is the higher of the receive and transmit rates.
 - I. In the export, vmnic2 transmits closer to its link speed than it receives.
 
-## Likely wrong answer
-B: a port cannot carry more than its link speed, so the counter is wrong. Or F: add a port because Usage passed the link speed.
+## Answers
+A, C, D, G
 
-## Expected key points
-- Answer: A, C, D, G.
+## Explanation
 - A true: Usage rate = receive + transmit, and full duplex is 100% in each direction, so Usage can reach twice the link speed with no fault.
 - B false: the misconception. Usage counts both directions of a full-duplex port (esxcli: Speed 10000, Duplex Full); the counter is right.
 - C true: Usage for vmnic2 equals Data receive rate for vmnic2 plus Data transmit rate for vmnic2 in every row (the same holds for every vmnic and for the host).
@@ -42,6 +41,7 @@ B: a port cannot carry more than its link speed, so the counter is wrong. Or F: 
 - G true: the highest Data receive rate for vmnic2 is 1,155,000 KBps, under the 1,220,700 KBps of 10 Gb/s; Usage passes the link speed only because transmit is added.
 - H false: Usage is the sum of receive and transmit, not the higher of the two; in every row it is above both.
 - I false: Data transmit rate for vmnic2 stays between 480,000 and 577,316 KBps (39-47% of the link speed), below the receive rate in every row.
+- Misconception: B: a port cannot carry more than its link speed, so the counter is wrong. Or F: add a port because Usage passed the link speed.
 
 ## Notes
 - Paired with the theory question 0040 (theory and practical; design.md, section 3.9).
@@ -71,7 +71,6 @@ attachments:
   - 0413/esx-17-network-real-time.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C18"
-answer: [A, C, D, G]
 misconception: [B, F]
 misconception_type: [unit-and-normalization]
 pair: "0040"

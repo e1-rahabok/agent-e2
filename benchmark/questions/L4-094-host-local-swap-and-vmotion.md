@@ -25,13 +25,10 @@ Which statements are correct?
 - N. Pages already swapped to the source host's local swap file must be sent across the network during vMotion.
 - O. Thin-provisioned storage suits swap files well, because they stay mostly empty while memory is not overcommitted.
 
-## Likely wrong answer
-- B: "15.36 TB of local space is more than the 14 TB of swap files, so it fits."
-- F: "The swap file is empty when memory is not overcommitted, so the location has no effect."
-- H: "Local NVMe is faster than the SAN, so swap and vMotion both get faster."
+## Answers
+A, C, E, G, I, J, K, M, N
 
-## Expected key points
-- Answer: A, C, E, G, I, J, K, M, N.
+## Explanation
 - A is correct: when the swap datastore a host specifies cannot hold the swap file, ESXi stores it in the VM's folder; the power-on, an HA restart included, fails only when that folder cannot hold it either.
 - B is wrong: the misconception; the limit is per host (average 1.75 TB per host against 1.92 TB, about 9% to spare in total), and with one host out the total no longer fits.
 - C is correct: with one common location both ends of a vMotion use the same location, so the file is not copied.
@@ -47,6 +44,7 @@ Which statements are correct?
 - M is correct: changing the setting does not move a running VM's swap file; it moves at the next power-on or with a vMotion copy, so the SAN frees space gradually.
 - N is correct: the documentation: host-local swap can degrade vMotion because pages swapped to the local swap file on the source host must be transferred to the destination host.
 - O is wrong: swap files should not be on thin-provisioned storage (performance and the risk of running out of space); the empty-file argument fails because the file takes its full size.
+- Misconception: B: "15.36 TB of local space is more than the 14 TB of swap files, so it fits." - F: "The swap file is empty when memory is not overcommitted, so the location has no effect." - H: "Local NVMe is faster than the SAN, so swap and vMotion both get faster."
 
 ## Notes
 - The stem names the host swap datastores in the plan, because the vSphere 9.1 documentation (Configure Virtual Machine Swapfile Properties for the Host, PDF p. 1875) says the host swap file location cannot be edited while the cluster setting is Virtual machine directory.
@@ -65,7 +63,6 @@ technology: [memory, storage]
 task: judge-setting
 level: 400
 answer_type: deterministic
-answer: [A, C, E, G, I, J, K, M, N]
 misconception: [H, F, B]
 input: [text]
 object: [cluster, esxi, datastore]

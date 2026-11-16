@@ -17,11 +17,10 @@ Which statements are correct?
 - J. The memory copy phase of a vMotion, which can take minutes, is time when the VM is unavailable.
 - K. Since the virtual hardware is up, the services hosted on this VM are up as well.
 
-## Likely wrong answer
-- B: "Linux panicked, so the VM is down." Or the over-correction K: "the virtual hardware is up, so the services on it are up."
+## Answers
+C, D, E, F, G
 
-## Expected key points
-- Answer: C, D, E, F, G.
+## Explanation
 - A is false: the wrong action. The VM stayed available (its BIOS runs); the outage belongs to the Guest OS and the services on it, and counting it against the VM mixes the layers.
 - B is false: it mixes the two layers; the Guest OS is down, the VM is not.
 - C is true: the Linux kernel is the layer that failed.
@@ -33,6 +32,7 @@ Which statements are correct?
 - I is false: `degraded` means the kernel and main system are up and at least one service has failed.
 - J is false: the VM is frozen only during the actual switch-over downtime, not during the copy time.
 - K is false: the over-correction. The services run on the Guest OS, which is down; an available VM says nothing about the layers above it.
+- Misconception: B: "Linux panicked, so the VM is down." Or the over-correction K: "the virtual hardware is up, so the services on it are up."
 
 ## Notes
 - Deferred 2026-11-15: availability is not in release 1.0 (author, exports review 2026-11-15, section 9).
@@ -56,7 +56,6 @@ attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: What, exactly, is a VM?"
 answer_type: deterministic
-answer: [C, D, E, F, G]
 misconception: [B, K]
 level: 300                      # author 2026-11-05
 object: [vm, guest-os]

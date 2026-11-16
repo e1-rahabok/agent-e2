@@ -26,17 +26,17 @@ Which statements are correct?
 - E. Guest OS Processor Time (70%) and VM CPU Usage (35%) can differ: Windows and the VMkernel calculate them independently.
 - F. VM CPU Ready and the Guest|CPU Queue measure the same queue, seen from two angles.
 
-## Likely wrong answer
-B (data stored on the VM object read as a VM metric) or D (Guest OS counters assumed to come from the hypervisor).
+## Answers
+A, C, E
 
-## Expected key points
-- Answer: A, C, E.
+## Explanation
 - A is correct: VM disk latency starts at the virtual disk; IO queued inside Windows has not been sent to the hypervisor yet, so a guest queue of 40 at 1 ms means most of those requests wait above the virtual disk (40 requests at 1 ms would need about 40,000 IOPS at the virtual disk).
 - B is wrong: a counter belongs to the layer that produces it, not to the object that stores it; Windows produces the run queue and VMware Tools carries it to the VM object.
 - C is correct: VCF Operations shows the guest CPU queue per vCPU, the guest's total divided by the vCPU count; 3 on 8 vCPUs is about 24 threads in the Windows queue (PerfMon would show the total).
 - D is wrong: Guest OS counters come from inside Windows through VMware Tools; without Tools they have no data, and ESXi cannot derive them from vCPU activity.
 - E is correct: two kernels compute them independently from different views; VM CPU Usage also moves with Hyper-Threading and frequency, which Windows does not see.
 - F is wrong: the run queue is threads waiting for a vCPU inside Windows; Ready is a vCPU waiting for a physical thread in ESXi. Different queues at different layers.
+- Misconception: B (data stored on the VM object read as a VM metric) or D (Guest OS counters assumed to come from the hypervisor).
 
 ## Notes
 - Changed in the 2026-11-15 audit: the run queue row reads the VCF Operations value per vCPU (3, about 24 threads; the old 25 read as 200 threads, Q217); key points one bullet per option with an Answer line; C replaced (the Guest OS cannot see Ready is tested by the pair 0266/0368) by the per-vCPU queue reading (true); the stem's closing instruction dropped (the runner adds it). Needs the author's review.
@@ -63,7 +63,6 @@ origin: synthetic
 source_path: "Opening chapter: Think virtual motherboard, not virtual machine; 2026-11-03"
 answer_type: deterministic
 level: 400                      # author 2026-11-05
-answer: [A, C, E]
 misconception: [B, D]
 misconception_type: [layer-confusion]
 status: draft

@@ -38,11 +38,10 @@ Which statements are correct?
 - J. %RDY is above 0 on every vcpu world: add vCPUs to the VM.
 - K. %SWPWT reads 0 on every vcpu world, so memory plays no part in the wait here.
 
-## Likely wrong answer
-I: %USED read as the time the vCPUs stopped. Or F: all of %WAIT is time lost to the VM. Or G: swap wait read as CPU contention because it is a vCPU state.
+## Answers
+A, B, C, D, E, H
 
-## Expected key points
-- Answer: A, B, C, D, E, H.
+## Explanation
 - A true: Ready is demanded run time the kernel could not give. The vcpu worlds show %RDY of 3.01-7.07.
 - B true: Co-stop holds a vCPU that ran ahead of a sibling.
 - C true: the vCPU stalls until the page is read back; the guest sees a freeze.
@@ -54,6 +53,7 @@ I: %USED read as the time the vCPUs stopped. Or F: all of %WAIT is time lost to 
 - I false: the misconception. %USED is consumption and moves with frequency and Hyper-Threading; it does not measure stopped time.
 - J false: wrong action. More vCPUs tend to raise Ready on a busy host.
 - K false: reading. %SWPWT is 1.24-1.82 on the four vcpu worlds: the vCPUs stall on pages coming back from swap.
+- Misconception: I: %USED read as the time the vCPUs stopped. Or F: all of %WAIT is time lost to the VM. Or G: swap wait read as CPU contention because it is a vCPU state.
 
 ## Notes
 - Changed 2026-11-16 (re-review): G (swap wait not a stop) was the near-negation of C; G now tests where VCF Operations counts swap wait (swap-wait, Mechanism), still false. Key points A and K quote the panel's ranges. Key unchanged.
@@ -86,7 +86,6 @@ knowledge_main: vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C29"
-answer: [A, B, C, D, E, H]
 misconception: [I]
 misconception_type: [consumption-as-contention]
 pair: "0009"

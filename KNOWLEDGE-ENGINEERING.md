@@ -228,7 +228,7 @@ This is the one definition of the levels; the benchmark uses it ([`benchmark/des
 ### Use
 - Retrieval: a misconception line holds the wrong conclusion in the user's own words, so a question that carries it retrieves the file that corrects it.
 - `same_name` links bring in the other object's meaning of the same label. They are the main guard against the first type.
-- Benchmark: every multiple-choice question names its misconception option in `## Likely wrong answer` (metadata `misconception`). The misconception rate, the share of answers that pick it, shows whether a model holds the Level 300 belief.
+- Benchmark: every multiple-choice question names its misconception option in metadata `misconception`, and its wording in `## Explanation`. The misconception rate, the share of answers that pick it, shows whether a model holds the Level 300 belief.
 - A misconception needs a mechanism and a source, like any other fact.
 
 ## 5. Structure rationale

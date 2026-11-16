@@ -16,16 +16,16 @@ Which changes remove the false alarm on DS-FAST in a way that keeps working when
 - D. Lengthen the wait from 1 to 3 cycles, because only a datastore with persistent latency should alert and a spike on DS-FAST is not persistent.
 - E. Use the VM peak disk latency of the 20-second samples instead of the 5-minute value, because the peak isolates the slow disk.
 
-## Likely wrong answer
-B (a higher share) or C (a peak condition on the VMs): both keep the VM figure as the evidence, though a VM and a datastore are many-to-many and the VM figure cannot say which datastore is slow.
+## Answers
+A
 
-## Expected key points
-- Answer: A.
+## Explanation
 - A is correct: VMs and datastores are many-to-many, and a VM with disks on two datastores has one VM-level latency that mixes both; the 18 slow VMs of DS-FAST are slow on their DS-SLOW disk. The datastore's own latency (1.5 ms on DS-FAST, 22 ms on DS-SLOW) belongs to one datastore: above 5 ms as an extra condition, it removes DS-FAST and keeps DS-SLOW.
 - B is wrong: it works only by luck of the numbers (45% against 50%); three more VMs with a data disk on DS-SLOW and it alerts again. The VM population stays the wrong measuring point.
 - C is wrong: DS-FAST has VMs at 55 ms (the ones using DS-SLOW), so the highest-VM condition passes on DS-FAST as well.
 - D is wrong: the cause is persistent, not a spike: the same 18 VMs stay slow.
 - E is wrong: the 20-second peak is still a VM-level value, the highest across all the VM's disks, read and write together; the 18 VMs peak on their DS-SLOW disk, so DS-FAST still alerts.
+- Misconception: B (a higher share) or C (a peak condition on the VMs): both keep the VM figure as the evidence, though a VM and a datastore are many-to-many and the VM figure cannot say which datastore is slow.
 
 ## Notes
 - Public source: the many-to-many relation is vSphere itself: a virtual disk lives on one datastore, a VM can have disks on several, so a VM-level disk latency counter averages across its disks (vSphere Monitoring and Performance, "Virtual Machine Disk Performance" counters, Broadcom TechDocs, vSphere 9.0; VCF Operations 9.1 VM metrics Disk | Total Latency). The datastore-level latency is a counter of the datastore object. No vendor page found that states the sentence "a VM-level latency cannot be assigned to a datastore", so the answer rests on the knowledge file's design logic and on the metric definitions.
@@ -57,7 +57,6 @@ knowledge_main: vsphere/object-types/datastore/datastore-alerts
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-13"
-answer: [A]
 misconception: [B, C]
 misconception_type: [same-name-other-object, average-hides-worst]
 status: draft

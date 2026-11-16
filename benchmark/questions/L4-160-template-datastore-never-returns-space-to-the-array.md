@@ -20,11 +20,10 @@ Which statements are correct?
 - H. The Unmap Size of DS-TPL01 read on one host is the datastore's total for all four hosts.
 - I. The provisioned-to-capacity ratio of each datastore can also cover the space risk of pool P2.
 
-## Likely wrong answer
-"DS-TPL01 shows 13.6 TB free, so space is not our problem" (B). Or the storage team's reading of the unmap counter: "1,800 unmap commands is IO load on the array" (G).
+## Answers
+A, C, E
 
-## Expected key points
-- Answer: A, C, E.
+## Explanation
 - A is correct: on thin LUNs (thin on thin), read the array's free space too; the datastore can show room the array no longer has. 6% of 120 TB is 7.2 TB free on the pool, while the ten LUNs present 160 TB.
 - B is wrong: the misconception. VMFS free space is the datastore's view; the array pool behind the thin LUN is nearly full.
 - C is correct: a VMFS 6 datastore releases blocks only while at least one of its files is open, for example the files of a powered-on VM. Templates and powered-off VMs keep no file open, so nothing is unmapped.
@@ -34,6 +33,7 @@ Which statements are correct?
 - G is wrong: the misconception. An unmap command asks the array to release blocks; no data is read or written. A host sending unmap regularly is normal on a thin-provisioned array.
 - H is wrong: Unmap IO and Unmap Size exist per host and datastore only; the datastore total is the sum over the hosts that mount it.
 - I is wrong: the datastore ratio counts the datastore's capacity; with thin LUNs, the array pool can fill first, so read the pool's free space too.
+- Misconception: "DS-TPL01 shows 13.6 TB free, so space is not our problem" (B). Or the storage team's reading of the unmap counter: "1,800 unmap commands is IO load on the array" (G).
 
 ## Metadata
 ```yaml
@@ -54,7 +54,6 @@ knowledge_main: vsphere/technology/storage/metrics/host/datastore
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/storage/metrics/host/datastore"
-answer: [A, C, E]
 misconception: [B, G]
 misconception_type: [layer-confusion]
 status: draft

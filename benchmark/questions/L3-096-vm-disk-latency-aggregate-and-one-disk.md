@@ -14,11 +14,10 @@ Which statements are correct?
 - G. The peak metric keeps last week's 20-second peaks after vCenter drops its samples.
 - H. The vSphere Client offers the same VM-level aggregate of virtual disk read latency.
 
-## Likely wrong answer
-B: the VM's latency is low, so every disk is fine. Or C, the overshoot: no VM-level metric can show a slow disk.
+## Answers
+A, D, G
 
-## Expected key points
-- Answer: A, D, G.
+## Explanation
 - A is correct: a VM aggregate blends the disks and hides the one slow disk; the check is per virtual disk, read and write.
 - B is wrong: the misconception. The aggregate does not bound each disk.
 - C is wrong: the over-correction. Peak Latency within collection cycle takes the peak across all virtual disks, read and write, so a slow disk raises it.
@@ -27,6 +26,7 @@ B: the VM's latency is low, so every disk is fine. Or C, the overshoot: no VM-le
 - F is wrong: the wrong action. A low aggregate does not clear any single disk.
 - G is correct: VCF Operations computes the peak at collection time from the 15 samples of 20 seconds that vCenter holds for about an hour, and stores it as a metric of its own, so it stays after the samples are gone.
 - H is wrong: the vSphere Client has no VM-level aggregate for virtual disks; its objects are the individual scsiM:N disks. Its VM Disk and Datastore charts do have a VM-level Highest latency, but that is the device and datastore layer, not virtual disk latency, and it is the latest value of the period (rollup Latest), not an aggregate of the disks. VCF Operations has the aggregate of all instances.
+- Misconception: B: the VM's latency is low, so every disk is fine. Or C, the overshoot: no VM-level metric can show a slow disk.
 
 ## Notes
 - Theory half of pair D4 with 0423 (practical; design.md, section 3.9). Different VM and numbers from 0423.
@@ -58,7 +58,6 @@ knowledge_main: vsphere/technology/storage/troubleshooting/vm-storage-performanc
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D4"
-answer: [A, D, G]
 misconception: [B]
 misconception_type: [average-hides-worst]
 pair: "0423"

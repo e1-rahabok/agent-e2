@@ -16,17 +16,17 @@ Which statements are correct?
 - D. The received drops are harmless: TCP resends every dropped segment, so the data arrives in full and the backup VM is not slowed.
 - E. ESXi cannot see a full receive ring inside the guest, so the backup VM's 5.9 million received drops were lost on the physical network.
 
-## Likely wrong answer
-B or E: a dropped packet on a port group is read as a network fault whatever the direction, as the port group is a network object.
+## Answers
+A
 
-## Expected key points
-- Answer: A.
+## Explanation
 - A is correct: transmit 0.19 / 38.0 = 0.5%, far under 10%, and transmit drops are what the infrastructure team owns. 0.5% is below the alert, not proof of a clean network: a data center network should be free of drops. 5.9 of the 6.15 million received drops come from one VM whose host counter shows "running out of buffers" and whose Guest OS has a long CPU queue: a full receive ring, caused and fixed in the Guest OS, so it does not belong in the network team's port group alert.
 - B is wrong: 15% (6.15 / 41.0) is real, but the uplinks are clean and the drops sit on one VM's receive ring; checking the upstream fabric first sends the case to the wrong team. Not every received drop on a port group is a network fault.
 - C is wrong: (0.19 + 6.15) / (38.0 + 41.0) = 8.0% is the right arithmetic, but the combined share hides one VM's real receive problem.
 - D is wrong: TCP resends, so the data arrives, but the cost is time (a smaller congestion window, retransmit timeouts), so the VM loses speed; UDP is not resent.
 - E is wrong: ESXi counts a full VMXNET3 receive ring at the port and on the VM (droppedRx, %DRPRX), and the guest sees it too; the host counter "running out of buffers" shows it here, and the uplinks show no errors.
 - Action for the Guest OS owner: first the vCPU that drains the ring (the Guest OS CPU queue, VM CPU Ready and Co-stop), then RSS if the adapter has one receive queue, and only then a larger ring; a larger ring only delays the drops while the vCPU is starved (Broadcom KB 312565, KB 440347).
+- Misconception: B or E: a dropped packet on a port group is read as a network fault whatever the direction, as the port group is a network object.
 
 ## Notes
 - Public source: Broadcom KB 312565 "The output of esxtop shows dropped receive packets at the virtual switch" (https://knowledge.broadcom.com/external/article?articleNumber=312565): drops happen between the virtual switch and the guest driver when the receive ring is full, so esxtop shows them at the switch. Broadcom KB 324556 "Packet loss in the guest OS using VMXNET3 in ESXi" (https://knowledge.broadcom.com/external/article/324556/packet-loss-in-the-guest-os-using-vmxnet.html): the vsish counters "running out of buffers" and "# of times the 1st ring is full"; Windows ring and buffer settings; larger buffers use more host memory. Broadcom KB 440347 "Mitigating VMXNET3 adapter packet drops due to single receive queue": RSS in the guest.
@@ -55,7 +55,6 @@ knowledge_main: vsphere/object-types/distributed-port-group/distributed-port-gro
 attachments: []
 origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
-answer: [A]
 misconception: [B, E]
 misconception_type: [layer-confusion, average-hides-worst]
 status: draft

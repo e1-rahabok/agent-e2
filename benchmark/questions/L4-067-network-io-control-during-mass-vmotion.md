@@ -22,12 +22,10 @@ Which statements are correct?
 - J. Per-VM adapter reservations draw on the bandwidth reserved for virtual machine traffic on the host, which is 0 here.
 - K. Per-VM adapter reservations are only a scheduling hint to the host; DRS and HA ignore them when they place or restart VMs.
 
-## Likely wrong answer
-- A: "A limit costs nothing; it only acts when the uplink is busy."
-- B: "The reservations guarantee each VM 2 Gb/s."
+## Answers
+C, D, F, G, H, J
 
-## Expected key points
-- Answer: C, D, F, G, H, J.
+## Explanation
 - A false: a Network I/O Control limit is enforced even when the switch is not saturated, so every evacuation is held to 5 Gb/s and takes longer.
 - B false: total reservations are capped at 75% of each physical adapter: 2 × 18.75 = 37.5 Gb/s per host, against 40 × 2 = 80 Gb/s.
 - C true: shares divide the link only among consumers that want bandwidth; unused bandwidth goes to the others.
@@ -39,6 +37,7 @@ Which statements are correct?
 - I false: Network I/O Control does not limit receive traffic.
 - J true: with DRS, the total of VM reservations on a host must stay within the bandwidth reserved for virtual machine system traffic on its physical adapters (vSphere 9.1 Networking); that reservation is 0 today.
 - K false: DRS includes Network I/O Control bandwidth reservations in its calculations, and admission control and HA placement use them.
+- Misconception: A: "A limit costs nothing; it only acts when the uplink is busy." - B: "The reservations guarantee each VM 2 Gb/s."
 
 ## Notes
 - 2026-11-16 re-review: E (400 shares hold VM traffic to an eighth) negated C; replaced in place with the version 3 allocation level (false; netioc, section Version). J stays: it is decided by the vSphere 9.1 Networking page below, not by the knowledge base.
@@ -57,7 +56,6 @@ tool: [vcenter]
 task: judge-setting
 level: 400
 answer_type: deterministic
-answer: [C, D, F, G, H, J]
 misconception: [A, B]
 input: [text]
 knowledge:

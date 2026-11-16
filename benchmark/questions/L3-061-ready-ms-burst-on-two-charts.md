@@ -17,11 +17,10 @@ Which statements are correct?
 - H. Raise the vCenter statistics level to 4 so that the Last day export keeps the burst at full height.
 - I. Judge Ready from the Last day export: a single 20-second sample is mostly noise.
 
-## Likely wrong answer
-B: 4,000 of 20,000 ms puts the VM in Ready a fifth of the time. Or E: every 5-minute row adds up its samples, whatever the counter.
+## Answers
+A, C, D, G
 
-## Expected key points
-- Answer: A, C, D, G.
+## Explanation
 - A is correct: Ready (ms) is summed over the 8 vCPUs; one 20-second sample holds 8 x 20,000 = 160,000 ms. The highest `Ready for erp-app-03` value in the Real-time export, 3,500-4,500 ms, is about 2.2-2.8% per vCPU.
 - B is wrong: the misconception. 20,000 ms is the base of one vCPU; the VM value is the sum of eight.
 - C is correct: Ready is a summation counter; the rollup sums the 15 samples (300,000 ms per vCPU). In the exports each Last day Ready row equals the sum of its 15 Real-time samples, while the Usage row is their mean.
@@ -31,6 +30,7 @@ B: 4,000 of 20,000 ms puts the VM in Ready a fifth of the time. Or E: every 5-mi
 - G is correct: a sum of 15 samples exceeds its largest sample, while its per-vCPU percentage is far lower.
 - H is wrong: wrong action. A level applies from the moment it is set, so the past burst cannot be rebuilt; and Ready is stored as a summation: a higher level adds minimum and maximum rollups of aggregated values, not the raw 20-second samples, so the 5-minute row stays diluted.
 - I is wrong: over-correction. Ready is read at the 20-second sample: a wait that lasts seconds shows there and is diluted in 5-minute rows.
+- Misconception: B: 4,000 of 20,000 ms puts the VM in Ready a fifth of the time. Or E: every 5-minute row adds up its samples, whatever the counter.
 
 ## Reasoning path
 1. Divide the Real-time peak by 20,000 ms x 8 vCPUs.
@@ -69,7 +69,6 @@ attachments:
   - 0369/erp-app-03-cpu-last-day.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C2"
-answer: [A, C, D, G]
 misconception: [B, E]
 misconception_type: [unit-and-normalization, rollup-and-interval]
 pair: "0105"

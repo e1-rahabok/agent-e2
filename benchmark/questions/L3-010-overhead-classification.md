@@ -17,11 +17,10 @@ Which statements are correct?
 - J. The VM swap file (.vswp) belongs in such a report as overhead.
 - K. The CPU and memory that the VM Monitor uses for each VM are overhead.
 
-## Likely wrong answer
-- G: "Everything on that list is overhead: it all eats capacity."
+## Answers
+A, B, F, K
 
-## Expected key points
-- Answer: A, B, F, K.
+## Explanation
 - A is correct: the ESXi kernel is not optional and not negligible; it reduces usable capacity.
 - B is correct: the VM is a layer of its own, and its logs give necessary observability.
 - C is wrong: a snapshot is optional; you choose it for a capability the Guest OS does not have.
@@ -33,6 +32,7 @@ Which statements are correct?
 - I is wrong: vMotion is not overhead to the VM. It can change VM metrics on the destination (swapped or compressed pages can become regular pages), which is a metric effect, not overhead.
 - J is wrong: the swap file enables memory overcommit at ESXi level; it is not overhead.
 - K is correct: the VM Monitor's CPU and memory for each VM are mandatory and cost resources, although small.
+- Misconception: G: "Everything on that list is overhead: it all eats capacity."
 
 ## Notes
 - Tests: principle, overhead vs not overhead.
@@ -54,7 +54,6 @@ attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Overhead vs Not Overhead."
 answer_type: deterministic
-answer: [A, B, F, K]
 misconception: [G]
 level: 300                      # author 2026-11-05
 object: [cluster, esxi]

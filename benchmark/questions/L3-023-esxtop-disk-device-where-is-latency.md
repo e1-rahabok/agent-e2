@@ -14,16 +14,16 @@ Look at the device with the highest GAVG. Which statements about its latency are
 ## Screenshot
 ![esxtop disk device panel with three NFS datastores and two NVMe devices](0050/esxtop-disk-device-panel.png)
 
-## Likely wrong answer
-D: assuming an NFS datastore does not show in the device panel and has no DAVG.
+## Answers
+A
 
-## Expected key points
-- Answer: A.
+## Explanation
 - A is correct: the device with the highest GAVG is {NFS}vcf-m02-sup01-ds-nfs: GAVG 37.24 ms = KAVG 0.02 ms + DAVG 37.22 ms. For an NFS row, DAVG is the time beyond the host NFS client: network latency plus NAS processing time. KAVG near 0 shows no wait in the host's storage stack. Next: check the NFS server latency and the storage network (drops, MTU) to that server.
 - B is wrong: KAVG is 0.02 ms on that row; the commands do not wait in the VMkernel.
 - C is wrong: queues add latency at any load; 152 commands per second at 37 ms each is a slow datastore, not noise.
 - D is wrong: esxtop shows an NFS datastore as an {NFS} pseudo-device at the File System Switch layer, with DAVG, KAVG and GAVG. It is not a physical device, and the vSphere Client lists no device for it, because NFS bypasses the Pluggable Storage Architecture.
 - E is wrong: NFS has no SCSI device queue in the host (no DQLEN, no QAVG); the queue columns show - for that reason, and KAVG is 0.02 ms.
+- Misconception: D: assuming an NFS datastore does not show in the device panel and has no DAVG.
 
 ## Notes
 - Changed in the 2026-11-15 audit: throwaway C (the Guest OS) replaced by the low-IOPS over-correction; E added (a device queue NFS does not have); A reworded away from "outside the host" (the host's network stack sits beyond the NFS client); B made a full sentence; key points per option. Key unchanged: A. Needs the author's review.
@@ -51,7 +51,6 @@ attachments:
   - 0050/esxtop-disk-device-panel.png
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A]
 misconception: [D]
 object: [esxi, datastore]
 tool: [esxtop]

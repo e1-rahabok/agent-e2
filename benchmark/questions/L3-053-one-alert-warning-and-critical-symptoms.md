@@ -21,16 +21,16 @@ Which configurations of the new alert definition give that behaviour?
 - D. Set 1 with S1 and S2 that matches Any, and set 2 with S3; the alert needs all sets; the alert criticality is fixed to Warning.
 - E. Set 1 with S1 and S2 that matches Any, and set 2 with S3; the alert needs any set; the alert criticality is Symptom Based.
 
-## Likely wrong answer
-B or A. B: All is read as "the strongest evidence" and the Warning and Critical symptoms are put in one set. A: the vendor pattern for Warning plus Critical (one set, Any, Symptom Based) is copied without the contention condition.
+## Answers
+C
 
-## Expected key points
-- Answer: C.
+## Explanation
 - A is wrong: Any over S1, S2 and S3 is an OR, so usage alone or CPU Ready alone creates an alert; the backup job at 97% would alert.
 - B is wrong: All in one set needs S1, S2 and S3 together. Usage between 80 and 95 with high CPU Ready never creates the Warning alert.
 - C is correct: set 1 (S1 or S2, Any) covers the usage side and set 2 (S3) the CPU Ready side; needing all sets is a Boolean AND, so the expression is (S1 OR S2) AND S3. Symptom Based criticality takes the most critical triggered symptom: with S1 and S3 (both Warning) the alert is Warning, with S2 it is Critical. S1, S2 and S3 are reused unchanged.
 - D is wrong: a fixed criticality ignores the severity of the symptoms, so the case above 95 never shows Critical.
 - E is wrong: the sets are combined with Any, so usage alone or CPU Ready alone creates an alert.
+- Misconception: B or A. B: All is read as "the strongest evidence" and the Warning and Critical symptoms are put in one set. A: the vendor pattern for Warning plus Critical (one set, Any, Symptom Based) is copied without the contention condition.
 
 ## Notes
 - Deferred 2026-11-16 (author, Q245: alert-definition content moves to after 1.0): the key rests on vendor facts about alert definitions that the knowledge base does not hold (Symptom Based criticality (the most critical triggered symptom) and the All and Any operators of symptom sets). Runs again when the alert definitions content is written (plan.md, After 1.0, VCF Operations alert mastery). Key unchanged: C.
@@ -62,7 +62,6 @@ knowledge_main: vcf-operations/alert-definitions
 attachments: []
 origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
-answer: [C]
 misconception: [A, B]
 misconception_type: [consumption-as-contention]
 status: deferred

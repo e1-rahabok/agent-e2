@@ -25,11 +25,10 @@ Which statements are correct?
 - I. Granted is the figure to plan this host's capacity on, because it shows the memory the VMs hold on the host right now.
 - J. Move VMs off esx-12 with vMotion until its Granted falls below the 768 GB of physical memory.
 
-## Likely wrong answer
-A: "Granted cannot be larger than the memory in the host, so the counter is broken." E: "Shared is the memory sharing saves."
+## Answers
+B, D, F, H
 
-## Expected key points
-- Answer: B, D, F, H.
+## Explanation
 - A is wrong: the misconception of ESXi Memory Granted ("Granted above capacity is impossible"). Granted is the VMs' view and can exceed total capacity.
 - B is correct: Granted counts VM pages that have an ESXi page mapped, zero and shared pages included; it ignores physical savings, so the sum over VMs can pass the host's memory.
 - C is wrong: over-correction. Host Consumed is physical memory minus free memory, ESXi pages in DIMM; it cannot pass 768 GB.
@@ -40,6 +39,7 @@ A: "Granted cannot be larger than the memory in the host, so the counter is brok
 - H is correct: host Granted is the sum of the running VMs' Granted plus non-VM user worlds; the management agents (host/vim) are in it. 1,025 - 1,024 = 1 GB.
 - I is wrong: Granted has no use for capacity; it is the VMs' view. Capacity reads ESXi Memory Consumed (or ESXi Memory Utilization in the VCF Operations capacity engine).
 - J is wrong: the wrong action. Granted above physical memory is no fault to fix; nothing is ballooned, compressed or swapped.
+- Misconception: A: "Granted cannot be larger than the memory in the host, so the counter is broken." E: "Shared is the memory sharing saves."
 
 ## Notes
 - Sources: the knowledge base, ESXi Memory Granted (VMs' view, can exceed capacity, excludes kernel space, includes the management agents), VM Memory Shared (input, not savings; savings = Granted - Consumed), VM Memory Consumed (Consumed = Granted - sharing savings; excludes overhead), ESXi Memory Consumed (physical minus free; includes the kernel and VM overhead).
@@ -68,7 +68,6 @@ knowledge_main: vsphere/technology/memory/metrics/host/granted
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/memory/metrics/host/granted"
-answer: [B, D, F, H]
 misconception: [A, E]
 misconception_type: [provider-vs-consumer, same-name-other-object]
 status: draft

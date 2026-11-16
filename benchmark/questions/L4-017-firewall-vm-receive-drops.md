@@ -21,12 +21,10 @@ Which statements about the cause, the fix and the checks before the fix are corr
 - I. The vSphere performance charts show that packets were dropped, not why; the reason is in the vsish rxSummary.
 - J. Receive drops on the vNIC belong to the network team, since the packets arrived over the uplinks.
 
-## Likely wrong answer
-- B: "The physical network is congested: ask for a faster uplink, or ask the network team to check the switch."
-- J: "Receive drops are a network problem, so the network team owns them."
+## Answers
+A, C, D, E, H, I
 
-## Expected key points
-- Answer: A, C, D, E, H, I.
+## Explanation
 - A true: the uplinks show nothing; the drop happens between the virtual switch and the guest driver.
 - B false: the uplinks show no drops and no errors, and every drop matches a full guest ring.
 - C true: the drop count matches "running out of buffers", the 1st ring is full hundreds of times, and all other drop reasons are 0.
@@ -37,6 +35,7 @@ Which statements about the cause, the fix and the checks before the fix are corr
 - H true: RSS in the guest adapter spreads the receive queues over several vCPUs for network-intensive appliances, at some CPU cost; the VM's request for host-side NetQ RSS (`ethernetX.pNicFeatures`) is a separate setting.
 - I true: the charts count drops (droppedRx, %DRPRX) without a reason; the rxSummary counters in vsish tell a full ring from the other causes.
 - J false: a full VMXNET3 ring is caused and fixed in the Guest OS driver, so the Guest OS owner fixes it.
+- Misconception: B: "The physical network is congested: ask for a faster uplink, or ask the network team to check the switch." - J: "Receive drops are a network problem, so the network team owns them."
 
 ## Notes
 - Revised 2026-11-12: the ring size advice no longer cites the book; Ready and per-vCPU saturation added to the stem so the ring, not CPU, is the cause. After the independent review: vsish counters read as increases; Broadcom KB 2039495 (VMXNET3 loss in high bursts when buffers run out) moved here from the key.
@@ -55,7 +54,6 @@ tool: [vcenter, esxtop]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,C,D,E,H,I]
 misconception: [B,J]
 input: [text]
 knowledge:

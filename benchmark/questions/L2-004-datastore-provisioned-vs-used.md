@@ -11,15 +11,15 @@ Is DS01 already out of space, so that no new VM can be placed on it? Choose all 
 - C. Thin disks count at full size in provisioned space: DS01 fills if they grow.
 - D. DS01's free space is its 10 TB minus the provisioned space of its VMs.
 
-## Likely wrong answer
-A: reading provisioned space as used space.
+## Answers
+B, C
 
-## Expected key points
-- Answer: B, C.
+## Explanation
 - A is wrong: provisioned space is not space in use; the part above used is unwritten thin space, an overcommit risk, not fullness.
 - B is correct: Virtual Machine Used adds up to 6,177 GB, about 6 TB (VCF Operations GB are 1024³ bytes), under the 10 TB capacity; the datastore's own Used Space of 6.3 TB, which includes every file on it, agrees.
 - C is correct: Provisioned Space counts thin disks at their full configured size (14,100 GB, about 13.8 TB). All 29 VMs are thin: the datastore is overcommitted, a risk if the disks grow.
 - D is wrong: free space is capacity minus used space (here about 3.7 TB). Provisioned minus used is the unwritten thin space that can still claim part of it.
+- Misconception: A: reading provisioned space as used space.
 
 ## Notes
 - Synthetic, 2026-11-05. Counts only after author approval.
@@ -47,7 +47,6 @@ attachments:
   - 0046/datastore-ds01-vm-disk-space.csv
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [B, C]
 misconception: [A]
 misconception_type: []
 status: draft

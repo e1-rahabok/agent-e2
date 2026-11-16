@@ -25,11 +25,10 @@ Which statements are correct?
 - I. The Side-Channel-Aware Scheduler turns on by itself once the sequential-context updates are installed.
 - J. SCAv1 and SCAv2 cost about the same performance, since both keep different VMs off a shared core.
 
-## Likely wrong answer
-"The hosts were patched, so this was only a formality (B); mitigations cost nothing on current hardware (G); and Utilization fell to 48%, so half the host is now free (E)." B, E and G are the misconceptions.
+## Answers
+A, C, D, F
 
-## Expected key points
-- Answer: A, C, D, F.
+## Explanation
 - A is correct: `hyperthreadingMitigation` TRUE enables the Side-Channel-Aware Scheduler after a reboot; `hyperthreadingMitigationIntraVM` defaults to TRUE, which gives SCAv1, and SCAv1 limits the scheduler to one thread per core.
 - B is wrong: for L1TF the updates address the sequential-context vector automatically, but the concurrent-context vector only once the Side-Channel-Aware Scheduler is enabled, which is not the default in any release, 9.x included.
 - C is correct: `hyperthreadingMitigationIntraVM` FALSE gives SCAv2 (from ESXi 6.7 Update 2): it keeps multithreading but never schedules threads of different VMs on the same core at the same time.
@@ -40,6 +39,7 @@ Which statements are correct?
 - H is wrong: more vCPUs add demand on the halved number of usable threads and raise Ready further; the cause is the scheduler mode.
 - I is wrong: the Side-Channel-Aware Scheduler stays off until `VMkernel.Boot.hyperthreadingMitigation` is set to TRUE; the sequential-context updates do not enable it.
 - J is wrong: SCAv2 has a lower performance penalty than SCAv1 in nearly all cases, because it keeps both threads of a core in use.
+- Misconception: "The hosts were patched, so this was only a formality (B); mitigations cost nothing on current hardware (G); and Utilization fell to 48%, so half the host is now free (E)." B, E and G are the misconceptions.
 
 ## Notes
 - Broadcom KB 317621 (legacy 55806) is the current guidance for the ESX scheduler (ESXi 5.5 to 9.x), cited in the knowledge file.
@@ -65,7 +65,6 @@ knowledge_main: vsphere/technology/cpu/configuration/side-channel-scheduling
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/cpu/configuration/side-channel-scheduling"
-answer: [A, C, D, F]
 misconception: [B, E, G]
 misconception_type: [frequency-and-hyper-threading]
 status: draft

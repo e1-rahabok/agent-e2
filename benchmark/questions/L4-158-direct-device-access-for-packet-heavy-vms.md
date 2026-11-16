@@ -24,11 +24,10 @@ Which statements are correct?
 - K. At 1.4 million packets per second, direct device access brings the routers nothing over VMXNET3.
 - L. With SR-IOV, the routers can keep taking part in the cluster's memory overcommit.
 
-## Likely wrong answer
-"SR-IOV is just DirectPath I/O again, one NIC per VM" (C). "The DPU does the work, so no reservation is needed" (G). "We are on VCF 9.1 now, so Enhanced Data Path is on" (I). Or the passthrough enthusiasm of J: if it helps the routers, it helps every VM.
+## Answers
+A, D, F, H
 
-## Expected key points
-- Answer: A, D, F, H.
+## Explanation
 - A is correct: SR-IOV has the same incompatible list as DirectPath I/O, vMotion included.
 - B is wrong: snapshots are on the incompatible list of SR-IOV and DirectPath I/O, so the snapshot-based backup cannot cover the routers.
 - C is wrong: the misconception. The incompatible lists are the same, but SR-IOV lets one physical device be shared by several guests; DirectPath I/O does not.
@@ -41,6 +40,7 @@ Which statements are correct?
 - J is wrong: Performance Best Practices for vSphere 9.1 says typical VMs do not require DirectPath I/O; the gain is limited, and the VMs would lose vMotion, snapshots, Fault Tolerance and Network I/O Control.
 - K is wrong: the over-correction. Very network-intensive workloads with high packet rates are the candidates; the gain is some throughput and a lower CPU cost for networking.
 - L is wrong: memory overcommit is on the incompatible list of SR-IOV.
+- Misconception: "SR-IOV is just DirectPath I/O again, one NIC per VM" (C). "The DPU does the work, so no reservation is needed" (G). "We are on VCF 9.1 now, so Enhanced Data Path is on" (I). Or the passthrough enthusiasm of J: if it helps the routers, it helps every VM.
 
 ## Notes
 - Every fact is in the knowledge base (passthrough-and-offload, from Performance Best Practices for vSphere 9.1, pp. 46-49; resource-controls for SR-IOV with Network I/O Control version 3).
@@ -64,7 +64,6 @@ knowledge_main: vsphere/technology/network/concepts/passthrough-and-offload
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/network/concepts/passthrough-and-offload"
-answer: [A, D, F, H]
 misconception: [C, G, I]
 misconception_type: []
 status: draft

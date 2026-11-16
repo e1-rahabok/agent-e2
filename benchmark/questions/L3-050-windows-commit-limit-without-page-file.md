@@ -20,11 +20,10 @@ Which statements are correct?
 - G. With no page file, the Commit Limit is about the size of the RAM.
 - H. Re-enabling the page file raises the Commit Limit.
 
-## Likely wrong answer
-B: Available memory read as headroom for new allocations. Or E: the page file growth taken to work without a page file.
+## Answers
+A, G, H
 
-## Expected key points
-- Answer: A, G, H.
+## Explanation
 - A is true: committed virtual memory must be backed by RAM or the page file. At 98% committed, new allocations fail even with memory available.
 - B is wrong: Available is physical memory free or in standby; it is not commit headroom.
 - C is wrong: ESXi shows no reclamation and no latency, and the host has free memory; the limit is inside Windows.
@@ -33,6 +32,7 @@ B: Available memory read as headroom for new allocations. Or E: the page file gr
 - F is wrong: re-enabling the page file also raises the limit, and Microsoft advises keeping it and letting Windows manage its size. This is the over-correction of B.
 - G is true: Commit Limit = RAM + the current page file size; with no page file it is about the RAM (15.9 GB here).
 - H is true: the page file adds to the Commit Limit; a system-managed page file also grows when the commit charge passes 90% of the limit.
+- Misconception: B: Available memory read as headroom for new allocations. Or E: the page file growth taken to work without a page file.
 
 ## Notes
 - Changed in the 2026-11-15 audit: throwaway E replaced by the page-file growth misconception; F without the absolute "only".
@@ -57,7 +57,6 @@ knowledge_main: guest-os/memory/windows-memory
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, G, H]
 misconception: [B, E]
 misconception_type: [consumption-as-contention, layer-confusion]
 pair: "0393"

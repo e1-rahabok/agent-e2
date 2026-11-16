@@ -15,11 +15,10 @@ Which statements are correct?
 - F. Started at 14:10:00, the same job would fill the 14:10-14:15 point at about 100%.
 - G. Within an hour of the job, the vCenter Real-time chart shows it as about 18 samples near 100%.
 
-## Likely wrong answer
-B: the two points read as a long job at a steady 60%. Or D: the split read as a collection fault.
+## Answers
+A, E, F, G
 
-## Expected key points
-- Answer: A, E, F, G.
+## Explanation
 - A is correct: each cycle averages its 15 samples of 20 seconds; 3 of the 5 minutes of each cycle were busy.
 - B is wrong: the misconception. The points come from one full-height burst that straddles a cycle boundary; a 5-minute average says nothing about the shape inside the cycle.
 - C is wrong: the over-correction. Equal adjacent points only show that the busy time was split evenly; here the job ran 6 minutes, longer than one cycle.
@@ -27,6 +26,7 @@ B: the two points read as a long job at a steady 60%. Or D: the split read as a 
 - E is correct: a spike may have to last 10 minutes to cover one whole cycle wherever it starts.
 - F is correct: aligned with a cycle, 5 of the 6 busy minutes fill the 14:10-14:15 point.
 - G is correct: the Real-time chart holds 20-second points for the last hour; 6 minutes are 18 samples.
+- Misconception: B: the two points read as a long job at a steady 60%. Or D: the split read as a collection fault.
 
 ## Notes
 - Changed in the 2026-11-15 audit: the stem states nominal clock (Turbo off), since CPU|Usage (%) counts cycles and Turbo would lift the 60% and 100% readings; D no longer reads "Open a support case" (a wording false in every question that uses it). C stays: it is the over-correction of the split pattern.
@@ -52,7 +52,6 @@ knowledge_main: sp5-framework/observability/collection-interval
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D9"
-answer: [A, E, F, G]
 misconception: [B, D]
 misconception_type: [rollup-and-interval]
 pair: "0440"

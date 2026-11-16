@@ -14,16 +14,16 @@ Which statements are correct?
 - D. vNUMA presents two NUMA nodes to the guest, so the database can keep each thread near its memory.
 - E. With `numa.vcpu.preferHT` set, ESXi keeps the VM on one node with local memory, its vCPUs sharing cores.
 
-## Likely wrong answer
-B: placement counted in hardware threads. Or C: the VM fits because its memory fits one node.
+## Answers
+A, D, E
 
-## Expected key points
-- Answer: A, D, E.
+## Explanation
 - A: by default, the NUMA scheduler sizes a NUMA client by physical cores per node, not threads. 40 vCPUs > 32 cores, so the VM is split into clients on both nodes.
 - B is wrong: threads count only with `numa.vcpu.preferHT`.
 - C is wrong: the vCPUs sit on two nodes. A vCPU on one node reading memory on the other node reads remotely; memory size alone does not decide locality.
 - D: vNUMA is on by default for VMs with more than 8 vCPUs and follows the host topology: the 40 vCPUs split evenly as 20 + 20 and the 300 GB as 150 + 150, so a NUMA-aware guest keeps threads and memory together.
 - E: preferHT places the 40 vCPUs on the 64 threads of one node with local memory. The vCPUs then share cores, so each gets less than a full core when its sibling thread is busy.
+- Misconception: B: placement counted in hardware threads. Or C: the VM fits because its memory fits one node.
 
 ## Notes
 - Changed in the 2026-11-15 audit: A without its reason clause and E without its hedge (the two longest options were the correct ones); no option added: the proposed "NRMEM above 0 means ESXi keeps moving the VM" is already L4-025 B and 0113 F.
@@ -49,7 +49,6 @@ knowledge_main: vsphere/technology/cpu/concepts/numa
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, D, E]
 misconception: [B, C]
 misconception_type: [frequency-and-hyper-threading]
 status: draft

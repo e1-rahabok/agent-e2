@@ -16,11 +16,10 @@ Which statements are correct?
 - G. Balloon and swap-in rates are kept at level 1, so memory Latency can be rebuilt from them.
 - H. The per-disk read and write latency of erp-batch-04 is in the 1 Day chart for the window.
 
-## Likely wrong answer
-A or D: the health-check counters are assumed to exist in the chart history, or a maximum is assumed to be kept by default.
+## Answers
+C, F
 
-## Expected key points
-- Answer: C, F.
+## Explanation
 - A is wrong: at the default level 1 a VM keeps no Co-stop, no memory Latency and no dropped packets; they need a higher statistics level, set before the event.
 - B is wrong: Real-time data (20-second samples) is kept for one hour only; at 21:00 the 03:20 window is long gone from it.
 - C is correct: CPU Ready is one of the level 1 counters of a VM, and the 1 Day chart keeps 5-minute points for a day; the window ended about 17 hours before the check (and more than the 30-minute 1 Day delay), so the chart holds it.
@@ -29,6 +28,7 @@ A or D: the health-check counters are assumed to exist in the chart history, or 
 - F is correct: Highest Latency (maxTotalLatency) has the Latest rollup: the 5-minute point is the last 20-second sample, not the worst, so it cannot be read as a peak.
 - G is wrong: balloon and swap rates are reclamation counters, not the wait; memory Latency is a counter of its own and has no history at level 1.
 - H is wrong: per-device storage latency has history only from level 3; at level 1 the VM keeps only Highest Latency across its disks.
+- Misconception: A or D: the health-check counters are assumed to exist in the chart history, or a maximum is assumed to be kept by default.
 
 ## Notes
 - Public source: VMware vSphere 9.1 Monitoring and Performance, Data Counters, Data Collection Intervals, Statistics Levels (Real-time 20 seconds; 1 Day 5 minutes; levels 1 to 4); counter list and levels from the vCenter 9.1.0 API export (build 25370922) in the knowledge catalog. Broadcom KB 444403: "vCenter only retains real-time 20-second granularity data for a limited time (typically 1 hour)."
@@ -59,7 +59,6 @@ knowledge_main: vsphere/tools/vsphere-client/vcenter-statistics
 attachments: []
 origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
-answer: [C, F]
 misconception: [A, D]
 misconception_type: [rollup-and-interval, tool-confusion]
 status: draft

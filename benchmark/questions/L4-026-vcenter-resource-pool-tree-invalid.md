@@ -30,12 +30,10 @@ Which statements about the red state, the risk to the running VMs and the fix ar
 - I. Editing pool reservations while VMs fail over can turn a cluster red.
 - J. Once the failed host came back an hour later, the cluster should have returned to green by itself.
 
-## Likely wrong answer
-- B: "Red means the cluster is short of capacity, so add a host."
-- C: "The usage is below 40%, so the red state is a false alarm."
+## Answers
+A, D, E, F, G, I
 
-## Expected key points
-- Answer: A, D, E, F, G, I.
+## Explanation
 - A is correct: the resource pool tree is inconsistent: 70 + 45 = 115 GHz of children under a Fixed 100 GHz.
 - B is wrong: red does not depend on cluster capacity: 480 GHz with usage below 40% is plenty, and the tree is still invalid. Adding a host does not fix red.
 - C is wrong: the state is about reservations in the tree, not usage; it has a real effect on the running VMs.
@@ -46,6 +44,7 @@ Which statements about the red state, the risk to the running VMs and the fix ar
 - H is wrong: Test's 20 GHz fits easily in the 480 GHz root; the conflict is under Prod.
 - I is correct: a failing-over VM is not charged to its pool until the failover completes; the likely origin here, as reservations changed during the failover.
 - J is wrong: red is an inconsistency in the tree; it stays until the reservations are fixed, whatever the host count.
+- Misconception: B: "Red means the cluster is short of capacity, so add a host." - C: "The usage is below 40%, so the red state is a false alarm."
 
 ## Notes
 - Revised 2026-11-12: the screenshot became the tree as text. A DRS cluster turns red (Invalid) when the tree is inconsistent; yellow (Overcommitted) when capacity no longer covers the reservations (vSphere 9.1 Resource Management, Valid, Overcommitted and Invalid DRS clusters).
@@ -60,7 +59,6 @@ technology: [system]
 task: judge-setting
 level: 400
 answer_type: deterministic
-answer: [A,D,E,F,G,I]
 misconception: [B,C]
 input: [text]
 object: [cluster, resource-pool]

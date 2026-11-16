@@ -25,11 +25,10 @@ Which statements about the panel and the next checks are correct?
 - J. Next: path state per LUN on vmhba3, its driver and firmware, the cable, the SFP, the switch port and the zoning.
 - K. The paths of vmhba3 can be listed in a separate esxtop panel for paths, one row per path.
 
-## Likely wrong answer
-- B: "Latency is normal, so the storage is healthy: nothing to do."
+## Answers
+A, C, D, H, J
 
-## Expected key points
-- Answer: A, C, D, H, J.
+## Explanation
 - A is correct: 10 LUNs x 2 paths per HBA = 20 paths per HBA by design; vmhba3 has 10.
 - B is wrong: normal latency now does not mean safe: redundancy is reduced and vmhba3 shows failed commands and aborts.
 - C is correct: I/O still flows on the remaining paths.
@@ -41,6 +40,7 @@ Which statements about the panel and the next checks are correct?
 - I is wrong: every LUN has paths on both HBAs and Round Robin spreads I/O over the paths that remain; 20 paths against 10 gives the 2:1 command ratio (4,150 against 2,072): fewer paths, not a lighter load.
 - J is correct: the errors and the lost paths are on vmhba3 only: its HBA, its link and its fabric.
 - K is wrong: esxtop has no path panel (its storage panels are Disk VM, Disk Adapter and Disk Device); the paths of a LUN show when its device is expanded in the Disk Device panel, where NPH gives the path count per device.
+- Misconception: B: "Latency is normal, so the storage is healthy: nothing to do."
 
 ## Notes
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Revised 2026-11-12 for question set 1.0: the screenshot replaced by an esxtop excerpt in text. Counts only after author approval.
@@ -57,7 +57,6 @@ technology: [storage]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,C,D,H,J]
 misconception: [B]
 input: [text]
 object: [esxi]

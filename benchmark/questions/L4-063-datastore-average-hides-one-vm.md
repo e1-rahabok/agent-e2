@@ -15,17 +15,17 @@ Which statements are correct?
 - E. Ranking the 24 VMs by read latency, rather than averaging them, finds fin-rpt-03.
 - F. A snapshot on fin-rpt-03 is the first thing to check, before the host or the array.
 
-## Likely wrong answer
-B: the datastore average stands for every VM on it.
+## Answers
+A, C, E, F
 
-## Expected key points
-- Answer: A, C, E, F.
+## Explanation
 - A is correct: the datastore latency is an average over the VMs on the datastore, so one slow VM hides in it. fin-rpt-03 issues 41 of about 17,900 reads per second; the datastore reads 1.1 ms while the VM itself sees 35 ms. In the export, the 24 VMs' read latencies weighted by their read IOPS give 1.15 ms, the datastore's 1.1 ms; the plain mean of the 24 VM values would be 2.5 ms.
 - B is wrong: the misconception. The datastore average hides the one VM that suffers. The VM's own virtual disk latency is 35 ms, below the Guest OS.
 - C is correct: 23 VMs on the same datastore read at 0.7-1.4 ms; the array serves them well, so the cause sits with the one slow VM.
 - D is wrong: the misconception. Queues and the snapshot chain add latency at any load; fin-rpt-03 issues only 41 read IOPS and still sees 35 ms.
 - E is correct: the worst member gives the depth of a problem, which an average blends away; sorted by read latency, fin-rpt-03 (35.2 ms) stands at the top.
 - F is correct: latency on one VM only, with a snapshot (fin-rpt-03 is the only VM with one, 312 GB): the snapshot first. Latency on many VMs of a datastore would point to the host or the array.
+- Misconception: B: the datastore average stands for every VM on it.
 
 ## Notes
 - Synthetic, 2026-11-12. Counts only after author approval.
@@ -59,7 +59,6 @@ attachments:
   - 0184/ds-fin01-vms-disk-24-hours.csv
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, C, E, F]
 misconception: [B, D]
 misconception_type: [average-hides-worst]
 status: draft

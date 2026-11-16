@@ -13,18 +13,17 @@ Which statements are correct?
 - E. Once the guest has touched its reserved pages and then idles for days, ESXi hands those pages to other VMs.
 - F. A CPU reservation comes into play only when VMs on the host compete for CPU.
 
-## Likely wrong answer
-- B: "Both counters show the reserved amounts: 16 GB of memory and 6 GHz of CPU."
-- E: "Reserved memory goes back to the other VMs once the VM idles."
+## Answers
+A, F
 
-## Expected key points
-- Answer: A, F.
+## Explanation
 - A is correct: a memory reservation is on demand; until the VM has touched all memory within its reservation, the VMkernel can give the untouched part to other VMs.
 - B is wrong: Run, Used, Demand and Usage do not include a CPU reservation; with no OS running they are 0 or near 0.
 - C is wrong: a reservation guarantees the VM runtime when it asks for it; it holds no cycles back. The other VMs run on the cycles the idle VM leaves unused, so lowering the reservation frees nothing now.
 - D is wrong: Consumed grows only as the VM touches memory; a VM at the BIOS has touched little, so Consumed stays low.
 - E is wrong: once a reserved page has been touched, ESXi keeps it held for the VM, even if the VM is idle for days. This is the over-correction of "reservations are on demand".
 - F is correct: a CPU reservation matters only under contention; without it each VM gets its runtime with or without a reservation.
+- Misconception: B: "Both counters show the reserved amounts: 16 GB of memory and 6 GHz of CPU." - E: "Reserved memory goes back to the other VMs once the VM idles."
 
 ## Notes
 - Tests: same name, different behaviour (CPU and memory reservations differ in nature).
@@ -47,7 +46,6 @@ attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Resource Management."
 answer_type: deterministic
-answer: [A, F]
 misconception: [B, E]
 level: 300                      # author 2026-11-05
 object: [vm]

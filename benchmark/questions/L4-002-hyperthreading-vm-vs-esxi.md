@@ -18,14 +18,10 @@ Which statements are correct?
 - J. The 62.5% is a reporting error: a fully busy single-vCPU VM should show 100% CPU Usage.
 - K. Each VM gets as much work done as it would with the whole core to itself.
 
-## Likely wrong answer
-- A: "The VMs are under-utilised."
-- G: "The VMs cannot be charged more than the host used."
-- J: "62.5% on a busy VM is a reporting bug."
-- K: "Hyper-Threading costs a VM nothing" (the over-correction).
+## Answers
+B, D, E, F, H
 
-## Expected key points
-- Answer: B, D, E, F, H.
+## Explanation
 - A is wrong: the VMs are fully busy (Run about 100%); the 62.5% is the charge for the shared core, not idle capacity.
 - B is correct: ESXi CPU Used accounts the core's time: with both threads running each thread (PCPU) is charged half the core, so the pair adds up to 100% of it.
 - C is wrong: ESXi CPU Used gives each thread of a busy pair half the core, so the core's Usage (MHz) is its clock speed (times the frequency ratio), not twice it; the 1.25x core gain shows only in the charge to the two VMs.
@@ -37,6 +33,7 @@ Which statements are correct?
 - I is wrong: no esxtop field adds the two threads of a core: PCPU UTIL(%) reads 100% on each thread and CORE UTIL(%) 100% for the core. 200% is a group value, such as the %RUN of a 2-vCPU VM.
 - J is wrong: not a bug; a different vantage point from the host. The VM cannot see the core or its threads; ESXi can.
 - K is wrong: the shared core delivers about 1.25 times one thread's work in total, so each VM does about 62.5% of what it would do alone.
+- Misconception: A: "The VMs are under-utilised." - G: "The VMs cannot be charged more than the host used." - J: "62.5% on a busy VM is a reporting bug." - K: "Hyper-Threading costs a VM nothing" (the over-correction).
 
 ## Notes
 - Tests: Same name, different meaning (consumer vs provider vantage point).
@@ -68,7 +65,6 @@ attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Other Nuances (Formula)."
 answer_type: deterministic
-answer: [B, D, E, F, H]
 misconception: [G, J, A]
 level: 400                      # author 2026-11-05
 misconception_type: [same-name-other-object, frequency-and-hyper-threading]

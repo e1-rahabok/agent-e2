@@ -18,12 +18,10 @@ Which statements are correct?
 - K. Capacity planning should read the 20-second peak metrics rather than the 5-minute or 15-minute averages.
 - L. Collecting more often has a cost at the source too: vCenter or the host pays in performance or capacity.
 
-## Likely wrong answer
-- A: "Yes, collect everything at 20 seconds; storage is cheap and you never know what you will need."
-- F: "Without 20-second collection you cannot see 20-second problems."
+## Answers
+B, C, D, E, G, H, J, L
 
-## Expected key points
-- Answer: B, C, D, E, G, H, J, L.
+## Explanation
 - A is wrong: everything at 20 seconds is not needed to explain incidents, and it costs a lot; every metric collected should serve a purpose.
 - B is correct: more metrics and more often multiply.
 - C is correct: 3 × 15 = 45 times (20-second collection is 15 times the points of 5-minute collection); a jump of that size has to justify its benefit.
@@ -36,6 +34,7 @@ Which statements are correct?
 - J is correct: 1-20 second data is required for contention metrics; utilization and the other metrics are fine at 5 minutes.
 - K is wrong: capacity uses about 15-minute averages, not peaks.
 - L is correct: the source may not produce the data, or pays a performance or capacity cost to produce it; high vCenter statistics levels raise vpxd load and database size.
+- Misconception: A: "Yes, collect everything at 20 seconds; storage is cheap and you never know what you will need." - F: "Without 20-second collection you cannot see 20-second problems."
 
 ## Notes
 - The stem is a real message, kept as written (grammar included). An operations expert works back from what can fail; an architecture view alone is not enough.
@@ -61,7 +60,6 @@ attachments: []
 origin: real-ticket
 source_path: "Real exchange, 2026-11-10"
 answer_type: deterministic
-answer: [B, C, D, E, G, H, J, L]
 misconception: [A, F]
 level: 300
 misconception_type: [rollup-and-interval]

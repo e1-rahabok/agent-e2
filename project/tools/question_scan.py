@@ -75,9 +75,8 @@ def parse_question(path):
         elif cur is None:
             stem_lines.append(line)
     stem = '\n'.join(stem_lines).strip()
-    answer = meta.get('answer') or []
-    if isinstance(answer, str):
-        answer = [x.strip() for x in re.split(r'[,\s]+', answer) if x.strip()]
+    am = re.search(r'^## Answers\n(.*?)(?=^## |\Z)', body, re.S | re.M)
+    answer = re.findall(r'[A-Y]', am.group(1)) if am else []
     answer = [str(a).strip().upper() for a in answer]
     letters = [o['letter'] for o in options]
     if not options:

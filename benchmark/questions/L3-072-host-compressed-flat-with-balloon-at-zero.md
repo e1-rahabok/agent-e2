@@ -16,11 +16,10 @@ Which statements are correct?
 - G. Move VMs off the host to stop ESXi from compressing their memory.
 - H. The compressed amount at the end of the quarter is less than half of what it was at the start.
 
-## Likely wrong answer
-A: "Ballooning comes before compression, so compressed memory without a balloon must be a fault." Or D: the steady amount read as compression going on now.
+## Answers
+B, C, E
 
-## Expected key points
-- Answer: B, C, E.
+## Explanation
 - A is wrong: Compressed is an amount held now, from compression in the past. The order balloon, then compression applies while pressure rises; with `Memory|Usage (%) (Max)` below 90 there is no host pressure to balloon now.
 - B is correct: compressed and swapped data stays out until the guest asks for it, because bringing it back costs CPU.
 - C is correct: Compressed is the compressed result held in the compression cache in DRAM; the cache pages are ESXi pages in use, so they count inside host Consumed. Only the memory the compression freed is outside it.
@@ -29,6 +28,7 @@ A: "Ballooning comes before compression, so compressed memory without a balloon 
 - F is wrong: over-correction. A VM that touches one of those pages waits for the decompression; the risk stays while the pages stay compressed.
 - G is wrong: the wrong action. Nothing is being compressed now (Compression Rate 0) and nothing waits (Decompression Rate 0); moving VMs changes neither.
 - H is wrong: reading. `Memory|Compressed (KB) (First)`, `(Last)`, `(Min)` and `(Max)` are the same value, 2,083,753 KB: nothing was added or removed during the quarter.
+- Misconception: A: "Ballooning comes before compression, so compressed memory without a balloon must be a fault." Or D: the steady amount read as compression going on now.
 
 ## Notes
 - Paired with 0025 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item C17.
@@ -62,7 +62,6 @@ attachments:
   - 0391/vcf-operations-cluster-hosts-memory-90-days.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C17"
-answer: [B, C, E]
 misconception: [A, D]
 misconception_type: [cumulative-vs-current, reclamation-as-contention]
 pair: "0025"

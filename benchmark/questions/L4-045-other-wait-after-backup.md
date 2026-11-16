@@ -24,12 +24,10 @@ Which VM is really waiting, why, and what do you do? Which statements are correc
 - L. Updating jump-01's host to ESXi 8.0 Update 3j or later should move its Other Wait back into Idle.
 - M. VCF Operations CPU Contention for jump-01 includes its 15% Other Wait in full.
 
-## Likely wrong answer
-- D: "Other Wait is IO wait: storage is slow, and both VMs have the same problem."
-- F: "jump-01 has the highest Other Wait, so it is the worst VM."
+## Answers
+A, B, C, I, J, L
 
-## Expected key points
-- Answer: A, B, C, I, J, L.
+## Explanation
 - A is correct: 45% Net Run with 14% Other Wait: a busy VM whose vCPUs are blocked. Its host runs ESXi 8.0 Update 3j, where the idle-accounting issue is fixed, so the 14% is not halted time.
 - B is correct: 1% + 84% + 15% = 100%: when Run is low, Idle and Other Wait add up to about 100% by accounting. jump-01's host runs ESXi 8.0 Update 2, inside the range of the known accounting issue (ESXi 7.0 Update 2 and later, fixed in 8.0 Update 3j; Broadcom KB 338438, legacy 85393), where halted time is not always counted as Idle.
 - C is correct: snapshots are a common cause of Other Wait, and every IO now walks the snapshot chain.
@@ -43,6 +41,7 @@ Which VM is really waiting, why, and what do you do? Which statements are correc
 - K is wrong: jump-01 is not waiting for anything, and Other Wait does not follow disk latency.
 - L is correct: the fix in ESXi 8.0 Update 3j counts halted vCPU time as Idle again, so the idle jump host's Other Wait falls and its Idle rises.
 - M is wrong: CPU Contention adds Other Wait only when it is below 1%, a condition set for exactly this accounting issue on idle VMs.
+- Misconception: D: "Other Wait is IO wait: storage is slow, and both VMs have the same problem." - F: "jump-01 has the highest Other Wait, so it is the worst VM."
 
 ## Notes
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). Dropped from the old key: "consolidation briefly stuns the VM" (no knowledge file states it).
@@ -57,7 +56,6 @@ technology: [cpu, storage]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,B,C,I,J,L]
 misconception: [D,F]
 input: [text]
 object: [vm]

@@ -20,11 +20,10 @@ Which statements about the VMs to take memory from, and the counters to use, are
 - L. Active misses the cache that SQL Server, the Java heap and PostgreSQL work from.
 - M. Consumed near configured on most VMs shows that the cluster is short of memory.
 
-## Likely wrong answer
-- B: "Take it from the VMs with the largest gap between configured memory and Active: db-sql-01 alone gives back more than 200 GB."
+## Answers
+A, C, D, F, G, H, I, K, L
 
-## Expected key points
-- Answer: A, C, D, F, G, H, I, K, L.
+## Explanation
 - A true: size from what the Guest OS needs: Guest Needed Memory, with page-out and memory contention as the checks that the guest and the VM are not short already.
 - B false: db-sql-01 has low Active, but its guest needs 241.2 of its 256 GB. Active is a sampled estimate of recently touched pages and misses the buffer pool.
 - C true: each needs less than a third of its configured memory, with no page-out and no contention. Illustrative, at 25% headroom rounded up to 4 GB: bi-report-02 about 76, dev-build-05 about 68, file-svc-01 about 44, app-crm-01 about 40, app-hr-02 about 32, web-portal-03 about 24: about 284 GB. Small trims on other VMs on top are fine.
@@ -38,6 +37,7 @@ Which statements about the VMs to take memory from, and the counters to use, are
 - K true: an application that keeps its own cache grows into the memory its own limit allows and keeps it, so Windows In Use and the process working set show that limit, not the need; size from the application's limit first (SQL Server max server memory), then from Needed Memory.
 - L true: SQL Server, the Java heap and PostgreSQL hold caches they depend on; Active is a sample of recently touched pages and does not see how the application uses its cache.
 - M false: Consumed holds guest cache; memory used as cache is not demand. Six VMs need less than a third of their configured memory.
+- Misconception: B: "Take it from the VMs with the largest gap between configured memory and Active: db-sql-01 alone gives back more than 200 GB."
 
 ## Notes
 - 2026-11-16 (author, Q247 and Q252 moved to after 1.0): no Linux option here, so Q247 changes nothing. Option L rests on active.md and sql-server-memory.md (VM Active shows what was touched, not a limit); guest-os-sizing, section Applications that manage their own memory, still says VM Active "shows the limit" (author question Q252, Future release). Key unchanged.
@@ -57,7 +57,6 @@ technology: [memory]
 task: decide-capacity
 level: 400
 answer_type: deterministic
-answer: [A,C,D,F,G,H,I,K,L]
 misconception: [B]
 pair: "0021"
 input: [table]

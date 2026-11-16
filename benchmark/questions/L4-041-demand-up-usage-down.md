@@ -20,14 +20,10 @@ What explains the change at 21:30, and what do you check? Which statements are c
 - J. Adding vCPUs to etl-worker-14 would win back the throughput it lost at 21:30, since its Demand rose.
 - K. Check what changed on the host at 21:30: sibling load, a migration, the power policy, the clock.
 
-## Likely wrong answer
-- F: "Demand minus Usage is the unmet demand: the VM lost about 12% of its CPU."
-- G: "A busy sibling thread puts the vCPU in Ready, so Readiness below 1% rules out Hyper-Threading."
-- H: "CPU Latency rose, so the VM now waits for CPU."
-- J: "The VM is starved of CPU: give it more vCPUs."
+## Answers
+A, B, C, D, E, K
 
-## Expected key points
-- Answer: A, B, C, D, E, K.
+## Explanation
 - A is correct: Demand averages about 6,850 MHz before and 9,200 MHz after (27.2% and 36.5% of 25,200 MHz); Usage about 26.6% before and 24.3% after.
 - B is correct: Readiness is 0.22-0.61% in every point, before and after: the vCPUs were not waiting for a physical thread.
 - C is correct: the vCPUs are not waiting, yet they get less done: they run slower, from Hyper-Threading and frequency.
@@ -39,6 +35,7 @@ What explains the change at 21:30, and what do you check? Which statements are c
 - I is wrong: the time a limit holds back is counted in Ready (Max Limited), and Readiness stays below 1% in every point; nobody changed the VM either.
 - J is wrong: more vCPUs change neither the sibling-thread load nor the clock speed; the VM uses about a quarter of its capacity.
 - K is correct: Demand rose and Usage fell at once with no change on the VM: something changed on the host it runs on.
+- Misconception: F: "Demand minus Usage is the unmet demand: the VM lost about 12% of its CPU." - G: "A busy sibling thread puts the vCPU in Ready, so Readiness below 1% rules out Hyper-Threading." - H: "CPU Latency rose, so the VM now waits for CPU." - J: "The VM is starved of CPU: give it more vCPUs."
 
 ## Notes
 - From the author's samples: Demand jumped while Usage dropped, and the contention line jumped more than Demand minus Usage, because it accounts for both frequency and Hyper-Threading. Since Aria Operations 8.18 the VCF Operations CPU Contention metric no longer counts frequency and Hyper-Threading, so the question uses the vSphere CPU Latency counter, which does.
@@ -58,7 +55,6 @@ technology: [cpu]
 task: explain-mechanism
 level: 400
 answer_type: deterministic
-answer: [A,B,C,D,E,K]
 misconception: [F,G,H,J]
 input: [table]
 object: [vm, esxi]

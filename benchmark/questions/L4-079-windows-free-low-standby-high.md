@@ -17,11 +17,10 @@ Which statements are correct?
 - F. Free below 300 MB all day means Windows will soon page heavily.
 - G. After 8 GB more, Free will rise above 300 MB and the alert will clear.
 
-## Likely wrong answer
-F: low Free read as a shortage. Or E: the guest sized on In Use, with the cache left out as if it were not needed.
+## Answers
+A, B, C, D
 
-## Expected key points
-- Answer: A, B, C, D.
+## Explanation
 - A is correct: Available = Standby + Free, ready for use at once. Standby holds cached file pages that Windows hands out at once; low Free with high Standby is normal and means no waste.
 - B is correct: Needed Memory keeps the cache Windows ranks high plus a 5% buffer; below it, the guest may page.
 - C is correct: committed virtual memory is under half of the commit limit.
@@ -29,6 +28,7 @@ F: low Free read as a shortage. Or E: the guest sized on In Use, with the cache 
 - E is wrong: sizing on In Use alone leaves no cache, and the guest pages and runs slower. Guest OS sizing includes the cache Windows ranks high (Needed Memory), not In Use only.
 - F is wrong: the alert reads the wrong counter. Watch Available, paging with the disk queue, and % Committed.
 - G is wrong: Windows fills added memory with more standby cache, so Free stays low and the alert keeps firing.
+- Misconception: F: low Free read as a shortage. Or E: the guest sized on In Use, with the cache left out as if it were not needed.
 
 ## Notes
 - Paired with the Windows theory question 0382 (benchmark/design.md, section 3.9).
@@ -55,7 +55,6 @@ attachments:
   - 0264/perfmon-fs-03-memory-24h.csv
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, B, C, D]
 misconception: [E, F]
 misconception_type: [consumption-as-contention]
 pair: "0382"

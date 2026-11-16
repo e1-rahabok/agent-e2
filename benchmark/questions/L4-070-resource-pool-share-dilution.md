@@ -18,11 +18,10 @@ Which statements are correct?
 - G. Moving the 4 Test VMs out of their pool, beside Prod at the root, gives each of them the same CPU as a Prod VM.
 - H. Giving every Prod VM High CPU shares (8,000 each) lifts each Prod VM above each Test VM.
 
-## Likely wrong answer
-B: reading the pool's High shares as the priority of each of its VMs.
+## Answers
+A, C, D, E
 
-## Expected key points
-- Answer: A, C, D, E.
+## Explanation
 - A is correct: under contention the pools split the cluster 8,000 : 4,000, so Prod gets 2/3 and Test 1/3. Prod divides 2/3 among 40 VMs (1/60 each); Test divides 1/3 among 4 VMs (1/12 each). A Prod VM gets 1/5 of a Test VM.
 - B is wrong: a pool's shares belong to the pool and are divided among its VMs. The more VMs in a pool, the less each gets: dilution.
 - C is correct: shares act only when demand exceeds supply, and they are applied on each host.
@@ -31,6 +30,7 @@ B: reading the pool's High shares as the priority of each of its VMs.
 - F is wrong: with Scalable Shares on, the pools split 640,000 : 32,000, about 20:1, because Prod holds ten times the VMs.
 - G is wrong: at the root, with Scalable Shares off, each Test VM keeps its own 4,000 shares beside Prod's 8,000 (24,000 in all): a Test VM gets 1/6 of the cluster, a Prod VM 1/3 divided by 40 = 1/120. Resource pools and VMs as siblings are a design error.
 - H is wrong: with Scalable Shares off, VM shares only divide the pool's entitlement among its VMs; Prod still gets 2/3 for 40 VMs, so each Prod VM stays at 1/60 against 1/12 for a Test VM.
+- Misconception: B: reading the pool's High shares as the priority of each of its VMs.
 
 ## Notes
 - Synthetic, 2026-11-12.
@@ -57,7 +57,6 @@ knowledge_main: vsphere/object-types/resource-pool/resource-pool-design
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, C, D, E]
 misconception: [B]
 misconception_type: [same-name-other-object]
 status: draft

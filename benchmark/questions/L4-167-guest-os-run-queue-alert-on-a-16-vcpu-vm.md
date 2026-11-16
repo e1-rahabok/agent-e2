@@ -26,11 +26,10 @@ Which statements are correct?
 - H. Threads blocked on a lock (a mutex or semaphore) wait in the processor queue, so a lock alone can explain the 400.
 - I. A peak of 26 per vCPU is within the normal range for a 16-vCPU Windows VM, so the alert is a false positive to suppress.
 
-## Likely wrong answer
-B: "20 is a total, so VCF Operations and PerfMon disagree and the metric is broken." G reads the Guest OS queue as an ESXi shortage; F is the action that follows; I is the over-correction.
+## Answers
+A, C, D, E
 
-## Expected key points
-- Answer: A, C, D, E.
+## Explanation
 - A is correct: both VCF Operations queue metrics are the guest's total queue divided by the vCPU count. 22 × 16 = 352 and 26 × 16 = 416, the PerfMon range.
 - B is wrong: the symptom reads the per-vCPU value, so 20 means 20 × 16 = 320 threads on this VM; the value is set high on purpose so that the alert fires only on an extreme queue.
 - C is correct: Guest|CPU Queue is the mean of the 15 twenty-second samples, per vCPU: 9 × 16 = 144 and 12 × 16 = 192 threads.
@@ -40,6 +39,7 @@ B: "20 is a total, so VCF Operations and PerfMon disagree and the metric is brok
 - G is wrong: Peak vCPU Ready is under 1%, so ESXi gave the vCPUs their time; the queue is a Guest OS reading and the cause lies there.
 - H is wrong: a thread blocked on a lock is in the Wait state; it joins the queue only when the lock is released.
 - I is wrong: about 400 ready threads on 16 vCPUs is an extreme queue; PerfMon's own text treats under 10 per processor as normally acceptable.
+- Misconception: B: "20 is a total, so VCF Operations and PerfMon disagree and the metric is broken." G reads the Guest OS queue as an ESXi shortage; F is the action that follows; I is the over-correction.
 
 ## Notes
 - The alert values are the team's rule, given in the prompt (benchmark/design.md, section 6.1 F3).
@@ -65,7 +65,6 @@ knowledge_main: guest-os/guest-os-alerts
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: guest-os/guest-os-alerts"
-answer: [A, C, D, E]
 misconception: [B, G]
 misconception_type: [unit-and-normalization, layer-confusion]
 status: draft

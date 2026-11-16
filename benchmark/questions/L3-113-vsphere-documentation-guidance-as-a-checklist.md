@@ -18,11 +18,10 @@ Which statements are correct?
 - G. For DS-AF03 the documentation's remedy comes first: move the busiest virtual disk to a volume with more spindles behind it, then watch DAVG.
 - H. The vSphere Client offers a network latency chart for web-07's vNIC, so the team can confirm the drops slow its traffic there.
 
-## Likely wrong answer
-A: "8-10 ms is under the documentation's 15 ms, so the datastore is fine." D is the over-correction; C and G are the wrong actions the documentation text invites.
+## Answers
+B, E
 
-## Expected key points
-- Answer: B, E.
+## Explanation
 - A is wrong: the documentation's 15 ms for device latency dates from spinning-disk arrays; a flash array runs far lower, so DAVG is compared with the array's own baseline. 8-10 ms is more than ten times this array's normal latency.
 - B is correct: DAVG is the time below the ESXi kernel. High DAVG with low KAVG points to the array; if the array's own latency stays low, to the fabric or the HBA configuration.
 - C is wrong: shares are relative. With every VM at High the proportions stay the same, and shares give one VM more chances to run only at the cost of the others: they add no CPU, so a host short of CPU keeps its total Ready.
@@ -31,6 +30,7 @@ A: "8-10 ms is under the documentation's 15 ms, so the datastore is fine." D is 
 - F is wrong: idle vCPUs still cost host CPU, since the hypervisor maintains them; right-size to the vCPUs the workload runs.
 - G is wrong: the spindle remedy belongs to spinning-disk arrays; the first step is to locate the latency (array, fabric or HBA) against the array's own statistics.
 - H is wrong: vSphere has no network latency counter; the documentation points to an external tool.
+- Misconception: A: "8-10 ms is under the documentation's 15 ms, so the datastore is fine." D is the over-correction; C and G are the wrong actions the documentation text invites.
 
 ## Notes
 - vSphere 9.1 documentation, vSphere Monitoring and Performance, Chart Analysis and Troubleshoot and Enhance Performance (pp. 2033-2123). Broadcom KB 312565, https://knowledge.broadcom.com/external/article/312565.
@@ -55,7 +55,6 @@ knowledge_main: vsphere/tools/vsphere-client/performance-guidance
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/tools/vsphere-client/performance-guidance"
-answer: [B, E]
 misconception: [A]
 misconception_type: [threshold-transplanted]
 status: draft

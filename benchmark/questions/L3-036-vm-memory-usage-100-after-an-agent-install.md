@@ -17,17 +17,17 @@ Which statements are correct?
 - E. At 14:00 the chart's Usage (%) matches the share of memory that Linux reports as used.
 - F. No VM counter in vCenter can show whether this VM waited for memory during the job.
 
-## Likely wrong answer
-- A: "Memory usage is near 100% every night: the VM runs out of memory. Add the 8 GB."
+## Answers
+B, C
 
-## Expected key points
-- Answer: B, C.
+## Explanation
 - A is false: the guest counters show no shortage; the nightly 100% is the Active estimate of recently touched pages, not memory the guest lacks.
 - B is true: in all 288 rows Active is below Consumed (at 02:00, 7,875,853 KB against about 8.06 million KB). Active is a sampled estimate of recently touched pages; Consumed holds every page the guest touched, so Active is usually far lower.
 - C is true: about 2.4 GB stayed available during the job and Linux swapped nothing in or out; free memory near 0 is normal, since Linux uses it as page cache.
 - D is false: Consumed holds every page the guest has touched, cache included, and does not drop when the guest frees memory; it is not the guest's need.
 - E is false: at 14:00 Usage (%) reads 13.69% while Linux reports 4,436 of 7,962 MB used (about 56%). vCenter VM Usage (%) is an ESXi estimate (Active over configured memory); it does not read Linux counters.
 - F is false: VM memory Latency (Memory Contention in VCF Operations) is the share of time the VM waited for memory; it shows the wait that Usage does not.
+- Misconception: A: "Memory usage is near 100% every night: the VM runs out of memory. Add the 8 GB."
 
 ## Notes
 - Rewritten 2026-11-14 (project/question-pairing-2026-11-14.md, pair A2): the old scenario (a domain controller, an agent collecting every 5 minutes, Active at 100% for over 12 hours, a vCenter alarm) was a near-copy of the knowledge example in Guest OS memory vs VM memory, section Example: Guest OS more accurate. New scenario and a new CSV from a seeded script (seed 15120261114): a nightly ETL job on a Linux database VM.
@@ -45,7 +45,6 @@ technology: [memory]
 task: troubleshoot
 level: 300
 answer_type: deterministic
-answer: [B, C]
 misconception: [A]
 input: [table]
 object: [vm, guest-os]

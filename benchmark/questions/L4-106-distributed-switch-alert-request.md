@@ -18,17 +18,17 @@ What would the switch-level alert show in this cycle, and is the alert worth bui
 - E. About 0.35%, so the switch is healthy: PG-Backup's 15% is a short spike to close without opening a ticket.
 - F. The switch alert adds nothing: the port groups and hosts it groups already have alerts of their own.
 
-## Likely wrong answer
-B or D: "The network team owns the switch, so the switch needs an alert of its own, and it will show the bad port group."
+## Answers
+A, F
 
-## Expected key points
-- Answer: A, F.
+## Explanation
 - A is correct: a share of packets is weighted by traffic: 2% x 15% + 98% x 0.05% = 0.30% + 0.049% = about 0.35%, far below 10%, while the port group alert on PG-Backup already fires at 15%. The switch value hides the one faulty port group.
 - B is wrong: a ratio of totals is weighted by packets, not the worst member; the switch reads about 0.35%, not 15%.
 - C is wrong: 0.55% is the plain average of the 30 shares, (15 + 29 x 0.05) / 30; the alert divides all drops by all packets, so it does not compute that, and a port group alert already gives the warning.
 - D is wrong: a switch alert at 0.3% sits within 6x of the 0.05% background of the healthy port groups, so it would fire on noise; owning the switch is no reason, because the switch only groups hosts and port groups that have their own alerts.
 - E is wrong: a low switch share does not clear a port group; PG-Backup is red on its own alert, and the switch total dilutes it.
 - F is correct: a distributed switch is a group of ESXi hosts and port groups, already covered by their alerts; a switch alert would duplicate them or hide the fault in the total.
+- Misconception: B or D: "The network team owns the switch, so the switch needs an alert of its own, and it will show the bad port group."
 
 ## Notes
 - Public source: no vendor page defines this design. The arithmetic (a ratio of totals is weighted by packets) is mathematics. A distributed switch is the set of hosts and distributed port groups it connects (vSphere Networking, "vSphere Distributed Switch Architecture", Broadcom TechDocs, vSphere 9.0).
@@ -58,7 +58,6 @@ knowledge_main: vsphere/object-types/distributed-switch/distributed-switch-alert
 attachments: []
 origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
-answer: [A, F]
 misconception: [B, D]
 misconception_type: [average-hides-worst, same-name-other-object]
 status: draft

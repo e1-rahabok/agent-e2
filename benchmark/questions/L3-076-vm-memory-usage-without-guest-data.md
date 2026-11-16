@@ -15,11 +15,10 @@ Which statements about the VM's memory metrics during that hour are correct?
 - F. Downsize the VM to the Memory Usage (%) value seen during that hour.
 - G. vCenter VM Memory Usage (%) also changes its source while VMware Tools is stopped.
 
-## Likely wrong answer
-D: "Memory usage dropped, so the application released memory." Or F: sizing on the low value.
+## Answers
+A, B, C
 
-## Expected key points
-- Answer: A, B, C.
+## Explanation
 - A true: VCF Operations VM Memory Usage (%) comes from Guest Needed Memory and falls back to Active when guest data is not available, so it usually drops.
 - B true: VCF Operations VM memory Utilization starts from Guest Needed Memory and falls back to Consumed when guest data is missing, so it usually jumps up: Consumed holds every page the VM has touched and ESXi still backs.
 - C true: Needed Memory is derived by VMware Tools inside the guest; with the service stopped there is nothing to collect.
@@ -27,6 +26,7 @@ D: "Memory usage dropped, so the application released memory." Or F: sizing on t
 - E false: over-correction. Only the metrics built on guest data change source, and only for the points without it: Needed Memory itself has no values (C), and metrics that already come from ESXi keep their source.
 - F false: the wrong action. Without guest data there is no Needed Memory and so no sizing; Active and Consumed do not stand in for it. Restore the data first.
 - G false: vCenter VM Memory Usage (%) is always Active; VMware Tools plays no part in it.
+- Misconception: D: "Memory usage dropped, so the application released memory." Or F: sizing on the low value.
 
 ## Notes
 - Paired with 0397 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D8.
@@ -56,7 +56,6 @@ knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/usage
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D8"
-answer: [A, B, C]
 misconception: [D]
 misconception_type: [layer-confusion, tool-confusion]
 pair: "0397"

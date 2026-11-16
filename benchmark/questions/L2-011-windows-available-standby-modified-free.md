@@ -15,11 +15,10 @@ Which statements about these Windows memory counters are correct?
 - G. No Windows counter can show that the guest is short of memory.
 - H. Modified pages are part of Available: Windows can hand them to a process at once.
 
-## Likely wrong answer
-E: "Free is almost 0 and the alert fires all day, so Windows is out of memory."
+## Answers
+A, B, C, D
 
-## Expected key points
-- Answer: A, B, C, D.
+## Explanation
 - A true: Available is the memory Windows can use at once without saving a page first: Standby plus Free.
 - B true: Modified pages hold changed data no process uses now; Windows writes them to disk, in batches, before it reuses them, so they are not Available.
 - C true: Standby is cache; Windows hands those pages out at once, so low Free with high Standby is normal and means no waste.
@@ -28,6 +27,7 @@ E: "Free is almost 0 and the alert fires all day, so Windows is out of memory."
 - F false: In Use is not a minimum: Windows compresses In Use pages it does not use, even with plenty of memory free.
 - G false: over-correction. Low Free alone is not a shortage, but page-in and page-out together with a high disk queue are the Windows sign of a memory performance problem.
 - H false: Modified pages hold changed data that must be written to disk before reuse, so they are in Cached, not in Available (Standby plus Free).
+- Misconception: E: "Free is almost 0 and the alert fires all day, so Windows is out of memory."
 
 ## Notes
 - Paired with 0264 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item B2.
@@ -52,7 +52,6 @@ knowledge_main: guest-os/memory/windows-memory
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B2"
-answer: [A, B, C, D]
 misconception: [E]
 misconception_type: [consumption-as-contention]
 pair: "0264"

@@ -15,11 +15,10 @@ Which statements about these counters are correct?
 - G. The host counts TCP retransmits of its own VMkernel traffic, such as vSAN and vMotion.
 - H. vCenter keeps a TCP retransmit counter for each vmnic, next to its two error counters.
 
-## Likely wrong answer
-A: a small error rate is normal background. The overshoot is B: every error is a driver fault.
+## Answers
+C, D, E, G
 
-## Expected key points
-- Answer: C, D, E, G.
+## Explanation
 - A false: the misconception. Error, unknown and dropped packets are expected to be 0 at all times; any count is a fault to find.
 - B false: the over-correction. Errors have several causes: damaged frames, typically a bad cable (CRC and checksum errors), wrong sizes (length errors), a NIC that cannot keep up at its ring size (FIFO, missed errors), its hardware buffer (over errors).
 - C true: an average across members hides the outlier until the problem is widespread; read the worst vmnic.
@@ -28,6 +27,7 @@ A: a small error rate is normal background. The overshoot is B: every error is a
 - F false: the wrong action. The count is cumulative and may be old, and the error type points to the cause: a CRC error is typically a bad cable, a FIFO or missed error a ring too small for the traffic.
 - G true: the VMkernel TCP/IP stack carries the host's own traffic (vSAN, vMotion, NFS, iSCSI) and counts its retransmits (vSAN Performance for Support, `net-stats`); they point to loss in the physical network.
 - H false: vCenter shows only a receive and a transmit error total per vmnic; the host's retransmits are read in vSAN Performance for Support or with `net-stats`, and VM traffic retransmits only inside the Guest OS.
+- Misconception: A: a small error rate is normal background. The overshoot is B: every error is a driver fault.
 
 ## Notes
 - Theory half of the pair with 0088 (practical; design.md, section 3.9). One host, not a cluster as in 0088.
@@ -54,7 +54,6 @@ knowledge_main: vsphere/technology/network/metrics/host/errors
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B11"
-answer: [C, D, E, G]
 misconception: [A]
 misconception_type: [average-hides-worst, cumulative-vs-current]
 pair: "0088"

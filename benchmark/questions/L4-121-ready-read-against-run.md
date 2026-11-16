@@ -18,11 +18,10 @@ Which statements about CPU Ready and these two readings are correct?
 - H. Read Ready from the 5-minute average: a Ready problem builds up over several minutes.
 - I. Readiness (%) is normalized by vCPU count, so the 8-vCPU and 2-vCPU VMs compare on one scale.
 
-## Likely wrong answer
-E: db-07 is over the alert level and web-14 is well below it, so db-07 is the VM that suffers.
+## Answers
+A, B, C, D, I
 
-## Expected key points
-- Answer: A, B, C, D, I.
+## Explanation
 - A is correct: every wake-up is a scheduling event, and Ready includes scheduling cost, so a guest that keeps waking and sleeping collects more Ready than one that stays busy.
 - B is correct: the guest is not told; its clock jumps when the vCPU runs again, so the work takes longer.
 - C is correct: Ready is read against Run. A flat threshold reads the same wait as equally bad on a busy and a quiet VM.
@@ -32,6 +31,7 @@ E: db-07 is over the alert level and web-14 is well below it, so db-07 is the VM
 - G is wrong: wrong action. Read against Run, db-07's wait is low (about 5 ms per 100 ms of run, like Ready 5% on Run 95%); web-14 is the VM whose work is delayed. Reservations and limits are kept to a minimum: they make operations more complex.
 - H is wrong: Ready usually lasts seconds; the 20-second peak shows it, a 5-minute average dilutes it.
 - I is correct: the % counter divides by the vCPU count; Ready (ms) sums over the vCPUs and does not compare across VM sizes.
+- Misconception: E: db-07 is over the alert level and web-14 is well below it, so db-07 is the VM that suffers.
 
 ## Notes
 - 2026-11-16 (author, Q251): level 300 to 400 (the Level 400 example of KNOWLEDGE-ENGINEERING.md section 4).
@@ -61,7 +61,6 @@ knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/ready
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B1"
-answer: [A, B, C, D, I]
 misconception: [E]
 misconception_type: [threshold-transplanted]
 pair: "0106"

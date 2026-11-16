@@ -21,12 +21,10 @@ Is the capacity manager right, and what changes for the existing VMs, in normal 
 - K. After a host failure, ESXi can balloon the vGPU VMs to make room for the existing VMs they share hosts with.
 - L. Running the vGPU VMs in a cluster of their own keeps their reservations out of the memory the existing VMs share.
 
-## Likely wrong answer
-- F: "Yes: 1.8 TB is free, the new VMs need 1.5 TB, and admission control is green, so the cluster has room."
-- J: "The vGPU VMs reserve 1.5 TB, more than the 1 TB kept for failover, so HA admission control refuses them."
+## Answers
+A, C, D, E, G, H, L
 
-## Expected key points
-- Answer: A, C, D, E, G, H, L.
+## Explanation
 - A true: a VM with a vGPU (a PCI device) is fully reserved automatically; the device reads and writes guest memory directly, so every page is backed from power-on. Unlike an ordinary reservation, which is backed as the guest touches pages, it shows as Consumed whatever the guest uses.
 - B false: the full reservation of a vGPU VM counts in full against host, resource pool and HA admission control.
 - C true: reserved memory leaves the reclaimable pool; only the unreserved VMs can be reclaimed.
@@ -39,6 +37,7 @@ Is the capacity manager right, and what changes for the existing VMs, in normal 
 - J false: with the percentage policy the reservations are compared with the capacity left after the failover percentage (3 TB), not with the percentage itself; 1.5 TB fits.
 - K false: vGPU VMs are fully reserved; nothing is reclaimed from them.
 - L true: a separate cluster keeps the reservations out of the reclaimable pool of the existing VMs (hosts kept apart by rules inside one HA cluster are weaker, as HA failover can still mix them); one of the options, with more memory or fewer existing VMs.
+- Misconception: F: "Yes: 1.8 TB is free, the new VMs need 1.5 TB, and admission control is green, so the cluster has room." - J: "The vGPU VMs reserve 1.5 TB, more than the 1 TB kept for failover, so HA admission control refuses them."
 
 ## Notes
 - Sources: the knowledge base, GPU monitoring, section vGPU and host memory (full reservation, never reclaimed, counted in full by admission control, excluded from memory tiering); vSphere 9.1 documentation, vSphere Resource Management (PCI passthrough and vGPU VMs require a full memory reservation) and vSphere Availability, Cluster Resources Percentage.
@@ -56,7 +55,6 @@ technology: [memory, system]
 task: decide-capacity
 level: 400
 answer_type: deterministic
-answer: [A,C,D,E,G,H,L]
 misconception: [F,J]
 input: [text]
 object: [cluster, vm]

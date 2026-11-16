@@ -17,11 +17,10 @@ Which statements are correct?
 - I. VM CPU Wait is the same measure as the Guest OS's own IO wait, such as Linux iowait.
 - J. Size the VM's vCPUs with all of Wait counted as demand: the guest asked for that time.
 
-## Likely wrong answer
-- B: "Wait is 90%, so the VM is waiting on disk or memory almost all the time."
+## Answers
+A, C, D, E
 
-## Expected key points
-- Answer: A, C, D, E.
+## Explanation
 - A is correct: Wait includes idle; a vCPU the guest halts (HLT or MWAIT) is de-scheduled and counted in Wait.
 - B is wrong: most of the 90% is idle time; ESXi cannot tell an idle guest from one blocked on IO.
 - C is correct: Run + Ready + Co-stop + Wait = 100% per vCPU; most VMs do not run at 100%, so Wait is naturally high.
@@ -32,6 +31,7 @@ Which statements are correct?
 - H is wrong: a halted vCPU holds no physical thread; another VM can run on it.
 - I is wrong: Guest OS IO wait can show as VM Run (guest IO processing) or as VM Wait.
 - J is wrong: Idle is excluded from sizing; only Swap Wait and Other Wait count as demand.
+- Misconception: B: "Wait is 90%, so the VM is waiting on disk or memory almost all the time."
 
 ## Notes
 - Tests: Confusing name (distinction).
@@ -59,7 +59,6 @@ attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity (Confusing name)."
 answer_type: deterministic
-answer: [A, C, D, E]
 misconception: [B]
 level: 300                      # author 2026-11-05
 misconception_type: [layer-confusion]

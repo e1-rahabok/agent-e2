@@ -17,11 +17,10 @@ Which statements are correct?
 - F. Add a second vCPU to give the VM more CPU.
 - G. Used above Run shows the VM gets more than its 1,200 MHz limit.
 
-## Likely wrong answer
-B: equal Demand and Usage read as a VM that gets all it asks for. Or D: Run at 36% read as spare CPU.
+## Answers
+A, E
 
-## Expected key points
-- Answer: A, E.
+## Explanation
 - A: Usage stays at 1,181-1,197 MHz for 30 minutes, and Max limited is about 12,500-12,900 ms of each 20,000 ms sample: almost two thirds of the time the vCPU was ready but held back by the limit.
 - B is wrong: Max limited, not Demand, shows whether a limit holds the VM back. Here Demand stays equal to Usage while the limit is active.
 - C is wrong: System is about 25 ms, far too small for a gap of about 1,300 ms between Used and Run.
@@ -29,6 +28,7 @@ B: equal Demand and Usage read as a VM that gets all it asks for. Or D: Run at 3
 - E: the limit holds Usage at its value in MHz whatever the guest demands.
 - F is wrong: a second vCPU would share the same 1,200 MHz; the limit, not the vCPU count, caps this VM.
 - G is wrong: Usage stays just under 1,200 MHz. Used counts work at the actual clock and converts it to ms at the base clock, so a core above base (Turbo) puts Used above Run within the limit.
+- Misconception: B: equal Demand and Usage read as a VM that gets all it asks for. Or D: Run at 36% read as spare CPU.
 
 ## Notes
 - From the author's samples: a single-vCPU VM under a CPU limit whose Demand equals Usage. Export regenerated 2026-11-14 with new numbers and a new VM (seeded script; project/question-pairing-2026-11-14.md, decision 3): the old export reproduced the example of run-vs-used-gap. Option A states the reading only (its old clause negated B); F (the wrong action) added; on review 2026-11-15 the stem gained the developers' complaint and G (the Used gap read as CPU beyond the limit) was added. Key unchanged (author approved, 2026-11-14).
@@ -56,7 +56,6 @@ attachments:
   - 0103/build-runner-03-cpu-real-time.csv
 origin: book
 source_path: "Author samples (docx, 2026-11-12) > Single vCPU VM with a 2 GHz limit: Demand vs Usage"
-answer: [A, E]
 misconception: [B, D]
 misconception_type: [consumption-as-contention]
 pair: "0066"

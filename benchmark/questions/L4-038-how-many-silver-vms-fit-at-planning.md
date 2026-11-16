@@ -18,17 +18,17 @@ How many Silver VMs can the cluster take?
 - E. 120
 - F. 126
 
-## Likely wrong answer
-D or E: the overcommit ratio (allocation) taken as the capacity. Allocation is one of six numbers, and at planning it is often not the one that binds.
+## Answers
+B
 
-## Expected key points
-- Answer: B.
+## Explanation
 - A is wrong: it counts the overcommit per core: (56 - 8) × 2 / 8 = 12 per host, 60 in all. The ratio is per physical thread.
 - B is correct: 5 of the 6 hosts carry load (HA is not capacity). Supply per host: 112 threads - 16 = 96 threads; 640 - 48 = 592 GB; reservable CPU 56 × 2.4 - 12 = 122.4 GHz (a reservation is held in MHz at the base clock, per core: Hyper-Threading adds no reservable MHz). VMs per host: CPU allocation 96 × 2 / 8 = 24; memory allocation 592 × 1.2 / 32 = 22.2; CPU reservation 122.4 / (8 × 2.4 × 25%) = 25.5; memory reservation 592 / 16 = 37; CPU utilization 96 / (8 × 50%) = 24; memory utilization 592 / 27.2 = 21.8. Memory utilization binds at 21 whole VMs per host (a 22nd would need 598 GB of 592), so 5 × 21 = 105.
 - C is wrong: 5 × 592 / 27.2 = 108.8 treats the cluster as one pool; on each host the 22nd VM passes 100%.
 - D is wrong: memory allocation, 22 per host, taken as the capacity.
 - E is wrong: CPU allocation, 24 per host, taken as the capacity.
 - F is wrong: the HA host counted as load capacity, 6 × 21.
+- Misconception: D or E: the overcommit ratio (allocation) taken as the capacity. Allocation is one of six numbers, and at planning it is often not the one that binds.
 
 ## Reasoning path
 1. Count the hosts that carry load: 6 - 1 = 5.
@@ -61,7 +61,6 @@ knowledge_main: sp5-framework/capacity/class-of-service-planning
 attachments: []
 origin: synthetic
 source_path: "Capacity Planning Stage.xlsx, sheet Read Me; Capacity Management > Capacity Model > Planning Phase"
-answer: [B]
 misconception: [D, E]
 misconception_type: [unit-and-normalization]
 status: draft

@@ -17,11 +17,10 @@ Which statements are correct?
 - I. Host Usage (%) rests on the host's cores as a whole, so it hides one busy core in the same way.
 - J. Host Utilization should be dropped from capacity planning, since it hides busy threads.
 
-## Likely wrong answer
-C: if the host stays below 80%, no single thread can be saturated, so the alert catches the jobs.
+## Answers
+A, B, D, G, H, I
 
-## Expected key points
-- Answer: A, B, D, G, H, I.
+## Explanation
 - A true: each thread has its own 100%; the host value is their average.
 - B true: 100 / 112 is about 0.9 points.
 - C false: the misconception. An average over 112 threads hides one or a few threads at 100%.
@@ -32,6 +31,7 @@ C: if the host stays below 80%, no single thread can be saturated, so the alert 
 - H true: threads can take turns being the hot one; the reading is the same.
 - I true: host Usage is summed over physical cores and based on Core Utilization, an average over cores, adjusted for frequency.
 - J false: over-correction. Thread Utilization is the host's capacity reading (space); it only cannot show the speed of one thread.
+- Misconception: C: if the host stays below 80%, no single thread can be saturated, so the alert catches the jobs.
 
 ## Notes
 - Paired with the practical question 0379 (theory and practical; design.md, section 3.9). Situation numbers differ from 0379 on purpose.
@@ -64,7 +64,6 @@ knowledge_main: vsphere/technology/cpu/metrics/host/peak-core-usage
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D5"
-answer: [A, B, D, G, H, I]
 misconception: [C]
 misconception_type: [average-hides-worst]
 pair: "0379"

@@ -22,11 +22,10 @@ Which statements are correct?
 - F. Raising the PVSCSI device queue depth and ring pages, then restarting, would shorten the wait in Windows.
 - G. The adapter queue limit of 254, shared by its disks, is what holds these requests back in Windows.
 
-## Likely wrong answer
-A or C: the Windows response time is read as the latency of the storage, or the queue of 300 is read as normal parallelism on flash. D: the Linux driver default of 254 per device taken for the Windows one.
+## Answers
+B, F
 
-## Expected key points
-- Answer: B, F.
+## Explanation
 - A is wrong: the 3.2 ms in vCenter is the storage side, and it is healthy; the 15 ms in Windows includes the wait inside Windows. Requests at the virtual disk are the I/O rate x the vCenter latency: 20,000 x 0.0032 = 64, not 300.
 - B is correct: Avg. Disk Queue Length is derived, 20,000 x 0.015 = 300, and counts every request below the partition manager. 64 are at the virtual disk, the default Paravirtual SCSI depth of 64 per device in Windows, so the device is full. The remainder, 300 - 64 = 236, waits in Storport and the adapter driver for a free slot: 236 / 20,000 = 11.8 ms of each I/O, the gap between 15 ms and 3.2 ms.
 - C is wrong: if all 300 requests were in service, the vCenter latency would be 15 ms, not 3.2 ms.
@@ -34,6 +33,7 @@ A or C: the Windows response time is read as the latency of the storage, or the 
 - E is wrong: Processor Time is 38% and Ready 0.2%; the 11.8 ms is queueing for a slot, not CPU time.
 - F is correct: the Windows registry value DriverParameter (MaxQueueDepth up to 254, RequestRingPages 32), applied after a restart, gives the disk more slots; spreading the files over more virtual disks is the other fix.
 - G is wrong: the adapter default of 254 is shared by its disks, and this one disk holds only 64; the per-device depth is the limit.
+- Misconception: A or C: the Windows response time is read as the latency of the storage, or the queue of 300 is read as normal parallelism on flash. D: the Linux driver default of 254 per device taken for the Windows one.
 
 ## Notes
 - Public source: Microsoft Learn, "Using Storage-related Parameters and Performance Counters" (Windows Server 2012 R2 archive page): the counters represent the requests active below the driver that takes the statistics, including requests in service; Avg. Disk Queue Length = Disk Transfers/sec x Disk sec/Transfer (Little's Law); physical disk statistics are tracked by the partition manager. Broadcom KB 343323 (legacy 2053145, no Updated On date): the Paravirtual SCSI default queue depth is 64 for a device and 254 for an adapter, and the Windows registry values. 
@@ -63,7 +63,6 @@ knowledge_main: guest-os/storage/windows-storage-io-path
 attachments: []
 origin: synthetic
 source_path: "Drafted 2026-11-13 for author question Q194 (project/plan.md)"
-answer: [B, F]
 misconception: [C, D]
 misconception_type: [layer-confusion, threshold-transplanted]
 status: draft

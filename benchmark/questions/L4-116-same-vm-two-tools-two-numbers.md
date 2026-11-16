@@ -26,12 +26,10 @@ Which statements about the two pairs of numbers and the next step are correct?
 - N. History and analysis of contention are read in VCF Operations; vCenter keeps a short, averaged history.
 - O. A CPU Contention of 9.8% at 14:15 calls for another host in the cluster of app-07.
 
-## Likely wrong answer
-- B: "The tools disagree on Usage, so the VCF Operations data is wrong or delayed."
-- F: "Contention is the vSphere Ready counter under another name, so 9.8% against 2.9% shows an error."
+## Answers
+A, C, E, G, I, L, M, N
 
-## Expected key points
-- Answer: A, C, E, G, I, L, M, N.
+## Explanation
 - A is correct: a co-stopped vCPU is paused while the guest wants to run it; that is runtime the guest demanded, so Co-stop counts in Guest OS CPU sizing.
 - B is wrong: (40 + 38 + 42 + 96 + 92 + 40) / 6 = 58%, exactly the 30-minute point. The difference is the interval and the rollup (average), not collection.
 - C is correct: the effect of Co-stop on the Guest OS is the same as Ready, a freeze; the guest cannot tell which of the two held it.
@@ -47,6 +45,7 @@ Which statements about the two pairs of numbers and the next step are correct?
 - M is correct: snapshots are a known cause of Co-stop (Broadcom KB 2000058), next to Ready on a sibling vCPU and the VM's size against the NUMA node; they belong to the VM, not to the host, and are checked on the VM.
 - N is correct: vCenter is the administrative tool, with a short history that rolls peaks away; capacity and performance analysis are done in VCF Operations.
 - O is wrong: Contention says that the VM waited, not why. Before capacity, the flow reads the VM's width against its work, the siblings' Ready, limits and shares, and the host's load in the same cycles; most of this 9.8% is Co-stop, which the VM's width and its siblings' Ready drive.
+- Misconception: B: "The tools disagree on Usage, so the VCF Operations data is wrong or delayed." - F: "Contention is the vSphere Ready counter under another name, so 9.8% against 2.9% shows an error."
 
 ## Notes
 - Public source: Broadcom KB 394770, How is CPU Contention (%) calculated (Aria/VCF Operations 8.x; no updated date shown): "Value is the sum of CPU overlap, ready, co-stop and other wait", from the 15 20-second points of each 5-minute cycle. vSphere 9.1 Monitoring and Performance: Data Collection Intervals (1 Week: 30-minute points; 6 points of 1 Day); Usage rollup is an average. The knowledge file states that Other Wait is added only when below 1% and that from VCF Operations 8.18 the formula includes limit time; the KB does not say so, and neither fact is used in the key (Other Wait is 0.3% and the VM has no limit in the scenario).
@@ -68,7 +67,6 @@ technology: [cpu, system]
 task: explain-mechanism
 level: 400
 answer_type: deterministic
-answer: [A,C,E,G,I,L,M,N]
 misconception: [B,F]
 input: [text]
 object: [vm]

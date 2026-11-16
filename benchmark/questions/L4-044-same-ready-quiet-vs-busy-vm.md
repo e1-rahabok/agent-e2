@@ -20,12 +20,10 @@ Which VMs lose the most to CPU Ready, why did the alert not catch them, and what
 - K. Readiness (%) is not normalized by the vCPU count, so the values of the 8-vCPU batch VMs are overstated.
 - L. More vCPUs on the web VMs would likely lower their Ready by spreading the load.
 
-## Likely wrong answer
-- G: "No VM passed 5%, so CPU Ready is not the cause."
-- H: "batch-01 at 4.6% is the worst VM."
+## Answers
+A, B, C, D, E, F
 
-## Expected key points
-- Answer: A, B, C, D, E, F.
+## Explanation
 - A is correct: 3.1/6.2, 2.9/5.8 and 3.0/6.5: about 1 ms of wait for every 2 ms of run. "1.5 times" takes the delayed work as equal to the run time, the reading of "2% Ready on 10% Run delays 20% of the work".
 - B is correct: 2.4/12.0 = 20%.
 - C is correct: 4.6/94.0 and 4.2/95.5 are about 5%.
@@ -38,6 +36,7 @@ Which VMs lose the most to CPU Ready, why did the alert not catch them, and what
 - J is wrong: a busy sibling thread does not put a vCPU into Ready; Ready means no physical thread was free to run it.
 - K is wrong: Readiness (%) is normalized by the vCPU count; Ready (ms) is the summed value.
 - L is wrong: all else equal, larger VMs show more Ready; a busy host is less likely to run many vCPUs at once.
+- Misconception: G: "No VM passed 5%, so CPU Ready is not the cause." - H: "batch-01 at 4.6% is the worst VM."
 
 ## Notes
 - 2026-11-16 re-review: A no longer says the web VMs "lose the most", which excluded H (batch-01 loses the most); A now states their wait against run. Key unchanged.
@@ -54,7 +53,6 @@ technology: [cpu]
 task: read-metric
 level: 400
 answer_type: deterministic
-answer: [A,B,C,D,E,F]
 misconception: [G,H]
 input: [table]
 object: [vm]

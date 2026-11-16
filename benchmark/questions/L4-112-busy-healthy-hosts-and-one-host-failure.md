@@ -19,11 +19,10 @@ Which statements about the hosts, the two colleagues and the loss of one host ar
 - H. The load after a host failure is judged in each host's own health check, since it is each host's 72% that rises.
 - I. The figure to scale for a host failure is the busy end of the hourly values, not the four-week average.
 
-## Likely wrong answer
-- B: "72% is under the 80% ceiling, so the hosts are fine: no action."
+## Answers
+A, C, D, E, F, I
 
-## Expected key points
-- Answer: A, C, D, E, F, I.
+## Explanation
 - A is correct: the worst VM waits about 1% against 80% or more of Run, so the VMs get what they ask for. High utilization with no VM waiting is a capacity reading, not a performance one.
 - B is wrong: the ceiling is for normal operation; after a failure the three hosts left run at 4 x 72% / 3 = 96%, above both esxtop levels. Contention is expected after the failure, even though none exists now.
 - C is correct: 4 x 72% / 3 = 96%. With Hyper-Threading off, Core Utilization is the share of cores in use.
@@ -33,6 +32,7 @@ Which statements about the hosts, the two colleagues and the loss of one host ar
 - G is wrong: today's Ready is read in normal operation; it says nothing about the load of 96% after a failure.
 - H is wrong: a host is sized as part of its cluster. The ESXi health check hands capacity over to the cluster check, where the N / (N - 1) arithmetic belongs.
 - I is correct: a capacity decision reads the worst end of the period (the 95th percentile, at the concurrent peak), not the average: 4 x 74% / 3 is about 99% after a failure, against 96% from the average.
+- Misconception: B: "72% is under the 80% ceiling, so the hosts are fine: no action."
 
 ## Notes
 - Public source: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX CPU Considerations: PCPU 80% reasonable ceiling, 90% warning, organizations set their own target. Cluster Resources Percentage Admission Control, vSphere 9.1 (TechDocs, page updated 2026-11-09): failover capacity is computed from reservations plus overhead. vSphere HA "Performance degradation VMs tolerate" default 100%.
@@ -51,7 +51,6 @@ technology: [cpu, system]
 task: decide-capacity
 level: 400
 answer_type: deterministic
-answer: [A,C,D,E,F,I]
 misconception: [B]
 input: [text]
 object: [esxi, cluster]

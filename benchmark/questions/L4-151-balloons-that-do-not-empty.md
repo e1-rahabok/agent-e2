@@ -29,11 +29,10 @@ Which statements are correct?
 - J. A balloon that stays flat for days can only come from a limit; host pressure would have deflated it by now.
 - K. Restart the VMware Tools service in app-01, so that the balloon driver releases its pages.
 
-## Likely wrong answer
-B: "Linux has plenty available and will ask for the ballooned memory when the application needs it." F and H: "The balloon counters do not match what the host and the target show, so they are wrong."
+## Answers
+A, C, E, G, I
 
-## Expected key points
-- Answer: A, C, E, G, I.
+## Explanation
 - A is correct: deflating is driven by the target. The balloon deflates when the scheduler lowers the Balloon Target below the balloon size; a target equal to Ballooned, flat for 4 days, means ESXi still wants those pages. The guest's free memory does not move it.
 - B is wrong: the misconception of ballooning ("Ballooned stays above 0 after the pressure, so the guest has not asked for the pages back"). The guest asking for memory does not deflate the balloon; only a lower target does.
 - C is correct: the allocation target follows shares and the working set and taxes idle memory. An idle VM (Active about 0.9 GB of 24 GB) on a host that stays overcommitted (700 GB configured on 512 GB, Consumed 97-99%, soft every day) keeps its balloon.
@@ -45,6 +44,7 @@ B: "Linux has plenty available and will ask for the ballooned memory when the ap
 - I is correct: a target below Ballooned means the VMkernel deflates the balloon; the target is 0 since 10:20 and Ballooned falls 2.0, 1.8, 1.6 GB.
 - J is wrong: over-correction. A flat balloon means the target held: by host pressure, by a limit, or on an idle VM on an overcommitted host, which is app-01's case.
 - K is wrong: the wrong action. The driver holds the pages because the target holds; on Linux the balloon driver is the kernel module vmw_balloon, which keeps working with the VMware Tools service stopped, so a restart of the service changes nothing.
+- Misconception: B: "Linux has plenty available and will ask for the ballooned memory when the application needs it." F and H: "The balloon counters do not match what the host and the target show, so they are wrong."
 
 ## Notes
 - Sources: the knowledge base, VM Memory Balloon Target (target above or below Ballooned, a target of 0 with Ballooned still above 0, a limit as the cause on a host with free memory) and Ballooning (deflate driven by the target, idle memory tax, shares, the 65% ceiling, the Linux driver). vSphere 9.1 documentation, Memory (MB) counters, Balloon Target (pp. 2073, 2104); How ESX Hosts Allocate Memory (p. 1838).
@@ -69,7 +69,6 @@ knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/balloon-ta
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/memory/metrics/virtual-motherboard/balloon-target"
-answer: [A, C, E, G, I]
 misconception: [B, F, H]
 misconception_type: [layer-confusion, provider-vs-consumer]
 status: draft

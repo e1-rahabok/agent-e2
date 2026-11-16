@@ -17,11 +17,10 @@ Which statements are correct?
 - G. To find who waited, rank the host's VMs by their own memory Latency or Memory Contention.
 - H. The VM's peak value is the part of its memory that ESXi had put on disk.
 
-## Likely wrong answer
-B: "The host's memory latency stayed low, so no VM waited: not a memory problem."
+## Answers
+A, C, G
 
-## Expected key points
-- Answer: A, C, G.
+## Explanation
 - A true: host memory Latency is a normalized average of the running VMs' Latency; one VM's wait among 24 is diluted: `Latency for esx-c22` rises only slightly in the rows where `Latency for ord-api-03` peaks, and stays at 0.5% or less.
 - B false: the average hides the VM that suffers: `Latency for ord-api-03` reaches 5% or more while the host stays low.
 - C true: `Latency for ord-api-03` is between 5% and 10% in six consecutive 5-minute rows (30 minutes) and 0 in every other row: its vCPUs waited for page faults ESXi resolves, mostly swap-in (`Swap in rate for ord-api-03` is above 0 in the same rows).
@@ -30,6 +29,7 @@ B: "The host's memory latency stayed low, so no VM waited: not a memory problem.
 - F false: the wrong action from B. The VM waited on memory in the window the users report.
 - G true: the worst VM decides; read the maximum VM memory Latency (VCF Operations Memory Contention) across the host's VMs.
 - H false: Latency is a share of time, not of memory space.
+- Misconception: B: "The host's memory latency stayed low, so no VM waited: not a memory problem."
 
 ## Notes
 - Paired with 0402 (theory and practical; benchmark/design.md, section 3.9). Pairing plan 2026-11-14, item D13.
@@ -63,7 +63,6 @@ attachments:
   - 0403/vcenter-vm-memory-12h.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D13"
-answer: [A, C, G]
 misconception: [B]
 misconception_type: [average-hides-worst]
 pair: "0402"

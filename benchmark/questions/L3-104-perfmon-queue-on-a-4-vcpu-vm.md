@@ -17,11 +17,10 @@ Which statements are correct?
 - I. The Processor Queue Length is at 0 for most of the hour.
 - J. % Processor Utility above 100% shows vCPUs running above nominal frequency, not more busy vCPUs.
 
-## Likely wrong answer
-F: the queue read as proof that more vCPUs are needed, without the VM's view. Or C: the context switch rate read as a CPU shortage.
+## Answers
+A, D, E, J
 
-## Expected key points
-- Answer: A, D, E, J.
+## Explanation
 - A true: reading. `System\Processor Queue Length` is above 8 (2 per vCPU) in at least 50 of the 60 rows. Windows excludes running threads from the queue, so a queue sustained above about 2 per processor means threads wait for a processor (MSDN reads above 2 sustained as congestion).
 - B false: Windows counts threads in the Ready, Standby and Deferred Ready states; running threads are not in the queue (Linux counts them).
 - C false: the misconception. A high or rising switch rate is not a CPU shortage on its own; the queue is the counter to read, and more vCPUs can raise switching.
@@ -32,6 +31,7 @@ F: the queue read as proof that more vCPUs are needed, without the VM's view. Or
 - H false: the over-correction. Busy processors alone do not show that threads wait; the queue is the primary Guest OS counter for whether the CPU keeps up.
 - I false: reading. The queue is 0 in no row; it stays above 8 for most of the hour.
 - J true: Windows 8 and later report usage above 100% when the processor runs above its nominal frequency (Turbo); in the export `% Processor Utility` passes 100 in most rows (it is `% Processor Time` scaled by the frequency ratio), while `% Processor Time` cannot pass 100.
+- Misconception: F: the queue read as proof that more vCPUs are needed, without the VM's view. Or C: the context switch rate read as a CPU shortage.
 
 ## Notes
 - Changed in the 2026-11-15 audit: F reworded without "Add ... now ... settles it" (still the wrong action); J added (true: % Processor Utility above 100% is frequency above nominal; windows-cpu-scheduling), a fact the theory half lacks. Key A, D, E -> A, D, E, J.
@@ -63,7 +63,6 @@ attachments:
   - 0434/typeperf-cpu.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C30"
-answer: [A, D, E, J]
 misconception: [C, F]
 misconception_type: [layer-confusion, consumption-as-contention]
 pair: "0010"

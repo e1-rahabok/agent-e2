@@ -15,11 +15,10 @@ Which of these counters still have data for those three days?
 - G. VM Memory Swapped.
 - H. VM Memory Ballooned.
 
-## Likely wrong answer
-C, D or F: counters from inside Linux, stored on the VM object, assumed to come from the hypervisor. Or the over-correction: leaving out G or H, as if memory reclamation needed VMware Tools.
+## Answers
+A, B, E, G, H
 
-## Expected key points
-- Answer: A, B, E, G, H.
+## Explanation
 - A is correct: Ready is CPU scheduling time the VMkernel measures itself, outside the guest.
 - B is correct: Consumed counts the host pages the VMkernel backs for the VM; no guest component takes part.
 - C is wrong: the run queue is a Linux counter; VMware Tools collects it inside the guest. Without Tools it does not exist in vSphere.
@@ -28,6 +27,7 @@ C, D or F: counters from inside Linux, stored on the VM object, assumed to come 
 - F is wrong: the context switch rate is a Guest OS counter that VMware Tools collects inside the guest.
 - G is correct: ESXi swaps the VM's pages itself, at random and blind to guest free memory; no guest component takes part, so Swapped keeps its data.
 - H is correct: Ballooned is a VMkernel counter, so it has data whatever the guest does (it would read 0 with no driver). It can stay above 0 here because on Linux the balloon driver is the kernel module `vmw_balloon`, not part of open-vm-tools, so ballooning goes on while vmtoolsd is stopped.
+- Misconception: C, D or F: counters from inside Linux, stored on the VM object, assumed to come from the hypervisor. Or the over-correction: leaving out G or H, as if memory reclamation needed VMware Tools.
 
 ## Notes
 - 2026-11-16 (author, Q251): level 200 to 300, as the reviewers read it. A new Level 200 basics question for the guard is still to write.
@@ -57,7 +57,6 @@ knowledge_main: vsphere/architecture/vm-vs-guest-os
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12"
-answer: [A, B, E, G, H]
 misconception: [C, D, F]
 misconception_type: [layer-confusion]
 status: draft

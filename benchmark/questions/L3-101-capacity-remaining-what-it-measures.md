@@ -20,11 +20,10 @@ Which statements about Capacity Remaining are correct?
 - J. For the cluster, it is the value of its most constrained resource.
 - K. It is the largest gap between usable capacity and projected utilization in the next 3 days.
 
-## Likely wrong answer
-B: Capacity Remaining read as free capacity now, so 31% looks like room for the month-end. Or E, the decision that follows from it. Or K: the documentation wording "the largest difference between usable capacity and projected utilization" read literally.
+## Answers
+A, C, D, H, I, J
 
-## Expected key points
-- Answer: A, C, D, H, I, J.
+## Explanation
 - A is correct: it is set by the tightest projected point of the next 3 days, so it fluctuates when the load regularly touches usable capacity (and drops to 0 when a projected point passes it).
 - B is wrong: the misconception. Capacity Remaining is a projection over the next 3 days, set by its tightest point, not the share of usable capacity in use now.
 - C is correct: projected utilization above 100% of usable capacity at any point gives 0.
@@ -36,6 +35,7 @@ B: Capacity Remaining read as free capacity now, so 31% looks like room for the 
 - I is correct: usable capacity is total capacity minus what vSphere HA admission control reserves for failover, minus the policy buffer.
 - J is correct: on a container, Capacity Remaining Percentage is the value of the most constrained resource.
 - K is wrong: it is the smallest remaining capacity, usable capacity minus the highest projected point; the largest gap would be the quietest point of the window.
+- Misconception: B: Capacity Remaining read as free capacity now, so 31% looks like room for the month-end. Or E, the decision that follows from it. Or K: the documentation wording "the largest difference between usable capacity and projected utilization" read literally.
 
 ## Notes
 - Review 2026-11-15: B, D and E reworded away from the options of 0235. Key unchanged.
@@ -65,7 +65,6 @@ knowledge_main: vcf-operations/features/capacity-forecast
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B5"
-answer: [A, C, D, H, I, J]
 misconception: [B, E, K]
 misconception_type: [rollup-and-interval]
 pair: "0235"

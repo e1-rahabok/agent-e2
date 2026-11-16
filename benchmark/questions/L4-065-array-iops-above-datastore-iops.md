@@ -22,13 +22,10 @@ Why does the array report about twice the IOPS vCenter shows at night, and what 
 - K. The esxtop row at 23:30 places the wait in the VMkernel of the host, not in the array or fabric.
 - L. The fix lies with the storage team: find what hits the LUN from 22:00, then move or throttle it.
 
-## Likely wrong answer
-- B: "One of the two tools miscounts: the IOPS should match."
-- D: "The VMs must be doing more IO at night than vCenter shows."
-- G: "The VMs do less IO at night, so the array cannot be busy."
+## Answers
+A, C, E, H, L
 
-## Expected key points
-- Answer: A, C, E, H, L.
+## Explanation
 - A is correct: each tool is right from its own vantage point; vCenter sees only its hosts.
 - B is wrong: the array counts every initiator and its own jobs; vCenter counts only the IO of its hosts.
 - C is correct: a LUN IOPS / datastore IOPS ratio above 1 means the LUN serves IO that no host in vCenter sends: another initiator (a SAN-mode backup proxy, a host of another vCenter) or the array's own jobs (replication, array snapshots, rebuilds).
@@ -41,6 +38,7 @@ Why does the array report about twice the IOPS vCenter shows at night, and what 
 - J is wrong: snapshot IO passes through the hosts and shows in the datastore counters; vCenter counts it.
 - K is wrong: it is the reverse: DAVG 8.7 ms with KAVG 0.1 ms places the time beyond the HBA, in the fabric or the array; the commands do not wait in the host's kernel. GAVG 8.8 ms matches the latency the VMs see in the export.
 - L is correct: the cause is outside vSphere: ask which initiators and jobs hit the LUN at 22:00, move or throttle them, or move the batch window; track the ratio over time.
+- Misconception: B: "One of the two tools miscounts: the IOPS should match." - D: "The VMs must be doing more IO at night than vCenter shows." - G: "The VMs do less IO at night, so the array cannot be busy."
 
 ## Notes
 - Synthetic, 2026-11-12: the backing device ratio. Counts only after author approval.
@@ -57,7 +55,6 @@ technology: [storage]
 task: explain-mechanism
 level: 400
 answer_type: deterministic
-answer: [A,C,E,H,L]
 misconception: [B,D,G]
 input: [table]
 object: [datastore, esxi]

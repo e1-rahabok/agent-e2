@@ -20,11 +20,10 @@ Which statements are correct?
 - J. The Packets received column also counts the packets that ESXi dropped before delivery.
 - K. In the export, the VM receives about 2 to 4 million packets per second.
 
-## Likely wrong answer
-E: a few percent of the bandwidth, so the network cannot be the problem. Or K: reading the count per sample as packets per second.
+## Answers
+A, C, D, I
 
-## Expected key points
-- Answer: A, C, D, I.
+## Explanation
 - A true: packet counters are totals per sample interval, not per second; the Real-time interval is 20 seconds (the rows are 20 seconds apart).
 - B false: Usage is receive plus transmit, so Usage x 1,024 / (Packets received / 20) gives 260-486 bytes here, overstating the received packet; the size comes from Data receive rate.
 - C true: Packets received is between 2,469,827 and 3,701,169 per 20-second sample: about 123,000 to 185,000 packets per second.
@@ -36,6 +35,7 @@ E: a few percent of the bandwidth, so the network cannot be the problem. Or K: r
 - I true: each packet costs CPU to receive; bandwidth can remain while packets per second saturate.
 - J false: packet counts exclude dropped packets; drops have their own counters (Receive packets dropped).
 - K false: 2.5 to 3.7 million is the count per 20-second sample, about 123,000 to 185,000 per second.
+- Misconception: E: a few percent of the bandwidth, so the network cannot be the problem. Or K: reading the count per sample as packets per second.
 
 ## Notes
 - Paired with the theory question 0211 (theory and practical; design.md, section 3.9).
@@ -67,7 +67,6 @@ attachments:
   - 0415/lb-web-01-network-real-time.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C20"
-answer: [A, C, D, I]
 misconception: [E, K]
 misconception_type: [unit-and-normalization, consumption-as-contention]
 pair: "0211"

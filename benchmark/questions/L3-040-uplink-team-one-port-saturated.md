@@ -27,17 +27,17 @@ Which statements are correct?
 - E. A second adapter on bkp-01, with its port on another vmnic, carries a second stream on that uplink.
 - F. The team averages 34% transmit, so the network is not what limits bkp-01's nightly backup.
 
-## Likely wrong answer
-B: "more uplinks, more bandwidth for the VM". Or F, the capacity report's view: "34% average utilization means the network has room."
+## Answers
+A, C, E
 
-## Expected key points
-- Answer: A, C, E.
+## Explanation
 - A is correct: route based on originating virtual port maps each virtual port to one uplink. One virtual NIC is pinned to one vmnic (here vmnic0), so its ceiling is one 10 GbE link, about 9.3 Gb/s of payload here.
 - B is wrong: new uplinks add capacity for other ports, not for a port already pinned to one uplink.
 - C is correct: physical NIC load (load-based teaming) checks the uplinks every 30 seconds and moves a port when an uplink stays above 75%. It balances ports between uplinks; it does not split one port's traffic.
 - D is wrong: IP hash chooses the uplink from the source and destination IP. One VM talking to one target IP hashes to one uplink, so this backup would still use one link. IP hash also needs a static EtherChannel on the physical switch.
 - E is correct: each adapter has its own virtual port, which can map to a different uplink, so two streams over two adapters can use two links.
 - F is wrong: the 34% team average ((9,455 + 1,618 + 977 + 1,350) / 40,000) hides one saturated uplink: bkp-01's port is pinned to vmnic0 at about 95% of 10 Gb/s, so the network caps its backup. Read each uplink, not the team average.
+- Misconception: B: "more uplinks, more bandwidth for the VM". Or F, the capacity report's view: "34% average utilization means the network has room."
 
 ## Notes
 - Keyed from the vendor documents below. Outside the knowledge base when written; since 2026-11-14 the NIC teaming file covers it (vSphere 9.1 documentation, teaming and failover) and is the main file.
@@ -68,7 +68,6 @@ knowledge_main: vsphere/technology/network/concepts/nic-teaming
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, C, E]
 misconception: [B, D, F]
 misconception_type: [average-hides-worst]
 status: draft

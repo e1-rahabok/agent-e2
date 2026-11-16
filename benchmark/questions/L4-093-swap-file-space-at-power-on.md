@@ -25,11 +25,10 @@ Which values match the space on DS-A that the regular swap (.vswp) files need af
 - F. 0 GB
 - G. 6,272 GB
 
-## Likely wrong answer
-B (the old reservation of G3), C (G4 counted at its configured memory), D (G5 counted although its swap is on DS-B), E (G6 counted although it is on vSAN) or F ("no swapping is expected, so the swap files are empty").
+## Answers
+A
 
-## Expected key points
-- Answer: A.
+## Explanation
 - A is correct: ESX creates the swap file at each power-on with the size of the configured memory minus the reservation then in force. G1: 12 x 128 GB = 1,536 GB. G2: 10 x (256 - 256) = 0 GB. G3: 16 x (64 - 48) = 256 GB. G4: the vGPU device forces a full memory reservation, so 0 GB. G5: the swap files are on DS-B. G6: the default location is the VM directory, on vSAN, so not DS-A. G7: powered off, no swap file. Total on DS-A: 1,536 + 256 = 1,792 GB.
 - B is wrong: 2,048 GB takes G3 at its old reservation of 32 GB (16 x 32 = 512 GB); after the power cycle the file follows the 48 GB reservation.
 - C is wrong: 2,944 GB adds G4 at 6 x 192 = 1,152 GB; a VM with a vGPU gets a full memory reservation automatically.
@@ -37,6 +36,7 @@ B (the old reservation of G3), C (G4 counted at its configured memory), D (G5 co
 - E is wrong: 4,352 GB adds G6 at 20 x 128 = 2,560 GB; with the default location the swap file sits in the VM directory on vSAN.
 - F is wrong: the swap file takes its full size from power-on, whether or not the host ever swaps; an empty swap file still takes its space.
 - G is wrong: 6,272 GB counts G1-G4 at their configured memory; the size is configured memory minus the reservation.
+- Misconception: B (the old reservation of G3), C (G4 counted at its configured memory), D (G5 counted although its swap is on DS-B), E (G6 counted although it is on vSAN) or F ("no swapping is expected, so the swap files are empty").
 
 ## Notes
 - Public source: Performance Best Practices for VMware vSphere 9.1, revision 20260624, "Memory Swapping Optimizations" (p. 35): swap file "equal in size to the difference between the virtual machine's configured memory size and its memory reservation", created when the VM is first powered on. VMware vSphere 9.1 PDF (build of 2026-11-02), Resource Management, "Swap File Location" (created at power-on; on vSAN and vVols "the swap file is created as a separate vSAN or vVols object"; per-VM override of the location); "Using Swap Files": do not store swap files on thin-provisioned LUNs; the vGPU configuration topic of the vSphere documentation: "Full memory reservation will be applied automatically, it's required for PCI device". Broadcom KB 342554, "All guest OS memory reserved when disabling VM swap file" (swap size formula; 16 GB VM: 0% reservation gives 16 GB, 50% gives 8 GB, 100% gives 0 bytes; the VM must be powered off for the swap file size to change with the reservation; Updated On field empty).
@@ -65,7 +65,6 @@ knowledge_main: vsphere/technology/memory/configuration/host-level-swapping
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-13, for the coverage gap (project/plan.md)"
-answer: [A]
 misconception: [B, E, F]
 misconception_type: []
 status: draft

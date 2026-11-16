@@ -18,11 +18,10 @@ Which statements about outstanding IO and latency are correct?
 - I. A queue of outstanding IO is harmless at any length, as long as the disk keeps a high IOPS.
 - J. Another disk with 2 outstanding writes at 50 writes per second has a low write latency.
 
-## Likely wrong answer
-D (bytes instead of commands), or E and H: "A long queue means the disk is slow." Or J, the reverse: "A short queue means the disk is fast."
+## Answers
+B, F
 
-## Expected key points
-- Answer: B, F.
+## Explanation
 - A is wrong: at a fixed IOPS, outstanding IO grows with latency (Little's law): 16,000 per second × 0.006 s = 96 writes, not 24.
 - B is correct: IOPS (per second) × latency (seconds) = commands in flight.
 - C is wrong: at a fixed latency, outstanding IO rises with IOPS: 32,000 per second × 0.003 s = 96 writes.
@@ -33,6 +32,7 @@ D (bytes instead of commands), or E and H: "A long queue means the disk is slow.
 - H is wrong: the queue follows the IO rate; at about 3 ms the writes complete quickly, so the array is keeping up.
 - I is wrong: at a fixed IOPS a longer queue means a higher latency (latency = outstanding IO / IOPS); a long queue is acceptable only while latency stays low.
 - J is wrong: latency = outstanding IO / IOPS = 2 / 50 per second = 0.04 s, about 40 ms. At a low IOPS a long latency still gives a small count, so the latency is read, not the count.
+- Misconception: D (bytes instead of commands), or E and H: "A long queue means the disk is slow." Or J, the reverse: "A short queue means the disk is fast."
 
 ## Notes
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): plural stem with the operator's values; options A-D of the quiz kept; misconception E, over-correction G and wrong action H added (approved 2026-11-14). Key changed from B to B, F.
@@ -61,7 +61,6 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (2026-11-03) > Storage > Q1 Latency vs OIO"
 answer_type: deterministic
 level: 300
-answer: [B, F]
 misconception: [D, E, H, J]
 misconception_type: [unit-and-normalization]
 pair: "0416"

@@ -33,14 +33,14 @@ benchmark/
 - Deleted on author request: `vendor-neutral-general-001` (hyperscaler VM cost; out of scope, Q039).
 
 ## Question fields
-- Each question file: `# Title`, then `## Prompt`, `## Attachments` (when the question has any), `## Likely wrong answer`, `## Expected key points`, and a `## Metadata` section at the end with one yaml block. No front matter at the top.
+- Each question file: `# Title`, then `## Prompt`, `## Attachments` (when the question has any), `## Answers`, `## Explanation`, and a `## Metadata` section at the end with one yaml block. No front matter at the top.
 - `## Prompt` layout, for the human reviewer: context facts as bullets, one fact per bullet; the question or instruction as its own paragraph; options as a bullet list, `- A. text`. The candidate gets the same text: the runner rebuilds the option list (shuffled, `A. text` per line), and a model reads bullets as well as prose. Consecutive `A. text` lines without bullets render on GitHub as one paragraph.
 - `## Input to supply` (only while `status: awaiting-input`): what the author captures or exports, exactly enough for the answer key to hold. Removed when the file is added.
 - In `## Prompt`, the words that refer to an attachment link to it: `[the attached chart export](0123/vm-cpu.csv)`. A reviewer clicks through on GitHub (a CSV renders as a table). The runner sends the words only, not the path, so the link costs no tokens. Lint checks that every attachment is linked and every link is an attachment ([design.md](design.md), section 6.3).
 - No leak through the knowledge base: an attachment is never a knowledge-base image (lint compares the bytes), and the knowledge base never states the values of an attachment. The question sends the screenshot; the knowledge base holds the mechanism, with its own examples.
 - `## Attachments` (optional) shows an image inline with alt text, for the reviewer. It is never sent to the model: the runner sends the files listed in `attachments`, images as images and CSV files as text after the prompt.
 - Only `## Prompt` (plus attachments) is ever sent to the AI.
-- Fairness: the title, prompt, likely wrong answer and key points use public vocabulary only: no Agent E2 terms, no vCommunity management pack metrics ([design.md](design.md), section 6.1; lint list `question_fairness`).
+- Fairness: the title, prompt, answers and explanation use public vocabulary only: no Agent E2 terms, no vCommunity management pack metrics ([design.md](design.md), section 6.1; lint list `question_fairness`).
 
 ### Metadata tags
 The tags in each question's `## Metadata` block, grouped by what they describe. Values are the complete set; lint rejects any other.
@@ -72,7 +72,6 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 |---|---|---|
 | `level` | Expertise level ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.2) | `100`, `200`, `300`, `400` |
 | `answer_type` | How the answer is scored (section 3.3). Every question of the run set is `deterministic` since 2026-11-14 (Q199) | `deterministic` (option letters, compared by the runner), `judged` (free text, scored 0-3 by the judge) |
-| `answer` | The correct letters, as written in `## Prompt`: one, several or all. Deterministic only. Never sent to the candidate | Letters `A`-`Y` (no fixed option count; Unsure is appended by the runner) |
 | `misconception` | The letters a Level 300 reader would pick. Deterministic only. Never sent to the candidate | Letters `A`-`Y` |
 | `misconception_type` | The misconception types the question tests, from `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400. A list; may be empty at Level 100-200 | Values in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml), `misconception_type` |
 
@@ -100,8 +99,8 @@ One tag per concept ([project/terms.md](https://github.com/e1-rahabok/agent-e2/b
 
 ## Scoring
 - Classes, Stable correct and the final score: `design.md`, section 7. Runner details: `runner/README.md`, section Methodology.
-- Writing the answer key of a multiple-choice question: `## Expected key points` starts with `- Answer: <letters>.`, then one bullet per option with the reason it is true or false (for reviewers; never sent to a model). Options: as many as the question needs, one fact each, similar in length; the false ones wrong for a reason the knowledge base states ([design.md](design.md), sections 3.8 and 6.2).
-- Writing the answer key of a judged question (none in the run set since 2026-11-14):
-  - `## Expected key points` is the judge's answer key: the facts a correct answer must state, one per bullet, as many as the question takes; not the wording the candidate must use;
-  - write `## Likely wrong answer` in the words a user would use: the judge flags an answer that states it.
+- Writing the answer key:
+  - `## Answers` holds the correct letters and nothing else, e.g. `A, C, D, E`: one, several or all of the options in `## Prompt` (letters `A`-`Y`; the runner appends Unsure). It is the only key the runner reads. Scoring is set arithmetic on the letters; no LLM judges an answer. Metadata has no `answer` field.
+  - `## Explanation` has one bullet per option, starting with its letter and saying whether it is true or false and why, one sentence each (lint checks that every option has a bullet) (for reviewers; never sent to a model). The last bullet, `- Misconception: <the option and the belief, in the words a user would use>`, names the misconception (metadata `misconception` holds its letters).
+  - Options: as many as the question needs, one fact each, similar in length; the false ones wrong for a reason the knowledge base states ([design.md](design.md), sections 3.8 and 6.2).
 

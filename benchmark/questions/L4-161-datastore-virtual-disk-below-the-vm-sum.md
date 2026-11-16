@@ -29,11 +29,10 @@ Which statements are correct?
 - H. DS-ERP01's Virtual Disk Used also includes the swap files and logs of the three VMs on DS-ERP01.
 - I. Moving Hard disk 2 of erp-db-01 to DS-ERP01, still thin, adds 900 GB to DS-ERP01 and nothing to the VM.
 
-## Likely wrong answer
-"The VMs on the datastore add up to 3,124 GB, so the datastore figure is wrong" (B), and the plan built on it, "size DS-ERP01 for 3,124 GB" (D).
+## Answers
+A, C, G, I
 
-## Expected key points
-- Answer: A, C, G, I.
+## Explanation
 - A is correct: the datastore counts the VMDKs it holds and leaves out the VMs' disks on other datastores and their RDMs.
 - B is wrong: the misconception. The VM value includes RDMs and the disks on other datastores. The gap is erp-db-01's Hard disk 2 on DS-ERP02 (900 GB) and its RDM (1,024 GB): 900 + 1,024 = 1,924 GB.
 - C is correct: the VM's virtual disk value includes RDMs; the RDM's data is on an external LUN, and the datastore holds only the pointer file. 140 + 900 + 1,024 = 2,064 GB.
@@ -43,6 +42,7 @@ Which statements are correct?
 - G is correct: Disk Space | <Datastore Name> | Virtual Machine Used counts only the VM's files on that datastore, swap, logs and other files included.
 - H is wrong: Virtual Disk Used counts the virtual disk files only; swap files, logs and other files are counted in Virtual Machine Used.
 - I is correct: the disk moves into the datastore's vantage point, while it stays one of erp-db-01's virtual disks wherever it sits.
+- Misconception: "The VMs on the datastore add up to 3,124 GB, so the datastore figure is wrong" (B), and the plan built on it, "size DS-ERP01 for 3,124 GB" (D).
 
 ## Notes
 - The RDM's LUN is stated thick on purpose: the knowledge base differs on how an RDM on a thin-provisioned array LUN is counted in VM Virtual Disk Used (disk-space: configured size unless the array thin-provisions the LUN; vm-files: always configured size). With a thick LUN both give 1,024 GB.
@@ -69,7 +69,6 @@ knowledge_main: vsphere/technology/storage/metrics/datastore/virtual-disk
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/storage/metrics/datastore/virtual-disk"
-answer: [A, C, G, I]
 misconception: [B, D]
 misconception_type: [same-name-other-object]
 status: draft

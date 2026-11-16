@@ -19,11 +19,10 @@ Which statements about what these screens show are correct?
 ![vCenter performance chart of the same host: Demand average 199 MHz, Usage average 342 MHz, Usage maximum 2,326 MHz](0363/vcenter-esxi-cpu-demand-usage.png)
 ![vCenter host Configure > System > System Resource Reservation: Memory 4.21 GB, CPU 2.72 GHz](0363/vcenter-system-resource-reservation.png)
 
-## Likely wrong answer
-G: the counters are the same, and rollup and the collection cycle explain the gap. Or A: a rollup bug in VCF Operations. Or C: the kernel reservation read as CPU in use.
+## Answers
+B, D, H
 
-## Expected key points
-- Answer: B, D, H.
+## Explanation
 - A false: no bug; the formulas differ by design, since vRealize Operations.
 - B true: 2,915 − 2,720 = 195 MHz, against a vCenter Demand average of 199 MHz (182-223). The third screenshot holds the 2,720.
 - C false: a reservation is capacity set aside, not CPU in use. Usage is about 330 MHz in both tools, far below the 2,720 MHz.
@@ -32,6 +31,7 @@ G: the counters are the same, and rollup and the collection cycle explain the ga
 - F false: Usage is about 330 MHz in both tools; it is one counter, with kernel work.
 - G false: Usage is the same counter; Demand is not. A 5-minute average cannot exceed the largest 20-second sample: vCenter Demand never passes 223 MHz, while VCF Operations shows about 2,915 MHz.
 - H true: vCenter takes the administration view (what the scheduler wants now); VCF Operations the operations view (what the host must be able to deliver).
+- Misconception: G: the counters are the same, and rollup and the collection cycle explain the gap. Or A: a rollup bug in VCF Operations. Or C: the kernel reservation read as CPU in use.
 
 ## Reasoning path
 1. Compare Usage: about equal in both tools (one 20-second spike of 2,326 MHz averages to about 484 MHz over 15 samples).
@@ -67,7 +67,6 @@ attachments:
   - 0363/vcenter-system-resource-reservation.png
 origin: synthetic
 source_path: "Author's sample, 2026-11-14 (Q218)"
-answer: [B, D, H]
 misconception: [C, G]
 misconception_type: [tool-confusion, rollup-and-interval, consumption-as-contention]
 pair: "0362"

@@ -19,11 +19,10 @@ Which statements are correct?
 - I. Adding `numa.allowHotadd = TRUE` in Advanced Parameters gives this VM two virtual nodes and keeps CPU Hot Plug.
 - J. Upgrading the VM to hardware version 20 alone still leaves one virtual node while CPU Hot Plug is on.
 
-## Likely wrong answer
-B: virtual NUMA is exposed to every VM with more than 8 vCPUs, so the Guest OS sees the host layout. Or D: hot add costs nothing until it is used. Or I: the hot-add NUMA parameter taken to work on any hardware version.
+## Answers
+A, E, F, G, J
 
-## Expected key points
-- Answer: A, E, F, G, J.
+## Explanation
 - A is true: enabling CPU Hot Plug deactivates virtual NUMA at power-on, whether or not a vCPU is ever added; the guest sees a flat layout.
 - B is false: a VM with more than 8 vCPUs gets virtual NUMA by default, but not with hot add enabled.
 - C is false: cores per socket does not set the virtual NUMA topology on current ESX versions.
@@ -34,6 +33,7 @@ B: virtual NUMA is exposed to every VM with more than 8 vCPUs, so the Guest OS s
 - H is false: 20 vCPUs do not fit the 16 cores of one node, and affinity takes the VM out of NUMA management (no rebalancing, no memory migration). The fix is to turn CPU Hot Plug off (or size the VM to fit one node) and power-cycle it.
 - I is false: `numa.allowHotadd` keeps virtual NUMA with CPU Hot Add only on virtual hardware 20 and later; on version 19 the guest still sees one node. The Advanced Parameters tab accepts any key without validating it, so an accepted key is no proof that ESX honors it.
 - J is true: even on virtual hardware 20 and later, a VM with CPU Hot Plug gets one NUMA node by default; a virtual NUMA layout with hot plug needs a manual NUMA configuration (`numa.allowHotadd`).
+- Misconception: B: virtual NUMA is exposed to every VM with more than 8 vCPUs, so the Guest OS sees the host layout. Or D: hot add costs nothing until it is used. Or I: the hot-add NUMA parameter taken to work on any hardware version.
 
 ## Notes
 - Public source: vSphere 9.1 documentation (VMware vSphere 9.1 PDF, build of 2026-11-02), vSphere Resource Management, "Using Virtual NUMA" ("Enabling CPU HotAdd deactivates virtual NUMA", virtual NUMA is active by default above eight vCPUs, topology not influenced by cores per socket), and vSphere Virtual Machine Administration, "CPU Hot Plug" and "Virtual Topology in ESX". Broadcom KB 321931 (ESXi 7.x and 8.x; "Updated On" field empty).
@@ -60,7 +60,6 @@ knowledge_main: vsphere/object-types/vm/configuration/vm-configuration-review
 attachments: []
 origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
-answer: [A, E, F, G, J]
 misconception: [B, D, I]
 misconception_type: [layer-confusion]
 status: draft

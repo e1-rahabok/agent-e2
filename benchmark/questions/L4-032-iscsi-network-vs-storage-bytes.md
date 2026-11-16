@@ -23,12 +23,10 @@ Which statements about the two counters and the busiest sample are correct?
 - M. The export matches the frame model: receive and transmit at 10:00 are within 1% of the expected values.
 - N. Each data frame adds about 106 bytes of Ethernet, IP, TCP and iSCSI headers to the 8 KB payload.
 
-## Likely wrong answer
-- B: "Reads go out as network transmit, because the host sends the data request."
-- C: "The extra receive bytes are retransmissions or a counter error."
+## Answers
+A, D, E, G, H, I, L, M, N
 
-## Expected key points
-- Answer: A, D, E, G, H, I, L, M, N.
+## Explanation
 - A is correct: receive counts 8,362 bytes per read against 8,192 of storage payload, about 170 bytes of headers and acknowledgement per read at MTU 9,000. The gap is about 335 KBps at 08:00 (1,837 reads per second), about 604 KBps at 10:00 (3,333) and about 305 KBps at 11:55 (1,781): 1.9-2.3% of the read rate in every sample, about 170 bytes per read within the export's noise.
 - B is wrong: only the command is transmit; the data returns as receive.
 - C is wrong: the extra is headers and the acknowledgement of each command; network bytes are not storage throughput.
@@ -43,6 +41,7 @@ Which statements about the two counters and the busiest sample are correct?
 - L is correct: MTU 1,500 allows a TCP segment of up to 1,460 bytes; 8,192 bytes of data plus the 48-byte iSCSI header are 8,240 bytes, which need six segments (8,240 / 1,460 is about 5.6), each with its own headers.
 - M is correct: 27,270 KBps against about 27,220, and 553.8 against about 553: the export matches.
 - N is correct: 14 + 20 + 20 + 48 + 4 = 106 bytes; the data frame is 8,298 bytes.
+- Misconception: B: "Reads go out as network transmit, because the host sends the data request." - C: "The extra receive bytes are retransmissions or a counter error."
 
 ## Notes
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Counts only after author approval.
@@ -62,7 +61,6 @@ tool: [vcenter]
 task: explain-mechanism
 level: 400
 answer_type: deterministic
-answer: [A,D,E,G,H,I,L,M,N]
 misconception: [B,C]
 input: [table]
 knowledge:

@@ -15,17 +15,17 @@ Which statements are correct?
 - E. Lowering its reservation to 64 GB keeps the 1 GB pages and frees about 192 GB of the host for other VMs.
 - F. DRS takes the 1 GB page backing into account and places the VM on a host that can still provide it.
 
-## Likely wrong answer
-B: Consumed above Active read as idle memory that ESXi can take back.
+## Answers
+A, C, D
 
-## Expected key points
-- Answer: A, C, D.
+## Explanation
 - A is correct: 1 GB pages are opt-in per VM and need a full reservation. All memory is preallocated at power-on and is never reclaimed: Consumed equals configured for the VM's lifetime, whatever the guest uses.
 - B is wrong: the reservation and the 1 GB pages keep all of it; nothing is ballooned or swapped. Whether SQL Server needs it is read in the guest, not from Consumed or Active.
 - C is correct: 1 GB page VMs are excluded from memory tiering and stay in DRAM. A full reservation in DRAM also lowers the DRAM left for tiered VMs.
 - D is correct: backing with 1 GB pages is best effort; host memory fragments over time, so a freshly booted host is the most likely to provide them, and after a vMotion part of the memory may be backed by smaller pages.
 - E is wrong: a VM with 1 GB pages powers on only with a full reservation. To free memory, resize the VM from what SQL Server needs, or drop the 1 GB pages.
 - F is wrong: DRS and HA ignore 1 GB page capability in placement; that is why the backing after a vMotion is best effort.
+- Misconception: B: Consumed above Active read as idle memory that ESXi can take back.
 
 ## Notes
 - Sources: vSphere 9.1 documentation, Backing Guest vRAM with 1 GB Pages (full reservation, preallocation, best effort, vMotion, DRS and HA placement), and Memory Tiering over NVMe (VMs kept in DRAM); the knowledge base, Large memory pages, section 1 GB pages.
@@ -51,7 +51,6 @@ knowledge_main: vsphere/technology/memory/concepts/large-memory-pages
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, C, D]
 misconception: [B]
 misconception_type: [consumption-as-contention]
 status: draft

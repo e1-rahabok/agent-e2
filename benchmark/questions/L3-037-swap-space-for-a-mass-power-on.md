@@ -14,17 +14,17 @@ Which statements are correct?
 - E. The swap files stay on the datastore while the VMs are powered off, so the test needs no new space.
 - F. The swap files are created later, once the hosts run short of memory, so the free space can wait.
 
-## Likely wrong answer
-B: swap equals configured memory. Or E: powered-off VMs already hold their swap files.
+## Answers
+A, C, D
 
-## Expected key points
-- Answer: A, C, D.
+## Explanation
 - A is correct: the swap file (.vswp) is configured memory minus the memory reservation: 64 − 16 = 48 GB.
 - B is wrong: the reserved part never needs swap, so the file is 48 GB, not 64 GB.
 - C is correct: 60 × 48 GB = 2,880 GB, more than the 2,048 GB free: a VM whose swap file cannot be created does not power on.
 - D is correct: with a full reservation, the swap file is 0 GB; the hosts must then reserve 64 GB for each VM, and admission control checks it.
 - E is wrong: a swap file is created at power-on and deleted at power-off.
 - F is wrong: the file is created at power-on, whatever the memory pressure.
+- Misconception: B: swap equals configured memory. Or E: powered-off VMs already hold their swap files.
 
 ## Notes
 - Synthetic, 2026-11-12. Counts only after author approval.
@@ -49,7 +49,6 @@ knowledge_main: vsphere/technology/storage/concepts/vm-files
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, C, D]
 misconception: [B, E]
 misconception_type: []
 status: draft

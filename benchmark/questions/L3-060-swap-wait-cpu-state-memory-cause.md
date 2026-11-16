@@ -17,11 +17,10 @@ Which statements about CPU Swap Wait are correct?
 - I. When Swap Wait falls, Run rises, because the vCPUs spend less time stalled.
 - J. esxtop %VMWAIT and VCF Operations Other Wait both hold this Swap Wait.
 
-## Likely wrong answer
-C: a CPU counter is above 0, so the VM needs more CPU. Or F: the wait belongs to memory, so it does not affect the CPU.
+## Answers
+A, B, D, E, I
 
-## Expected key points
-- Answer: A, B, D, E, I.
+## Explanation
 - A is correct: the vCPU needs data that sits in ESXi swap and stalls until the page comes back.
 - B is correct: Wait = Idle + Swap Wait + Other Wait; Ready is time with work and no physical thread.
 - C is wrong: the misconception. Ready below 0.5% and Co-stop 0 show the vCPUs get threads; the stall is a memory cause in a CPU state.
@@ -32,6 +31,7 @@ C: a CPU counter is above 0, so the VM needs more CPU. Or F: the wait belongs to
 - H is wrong: wrong action. More vCPUs do not bring pages back faster; the remedy is memory for the VM: less overcommit on the host, a reservation, or a faster swap location.
 - I is correct: with fewer stalls the vCPU runs more of its time.
 - J is wrong: esxtop %VMWAIT includes %SWPWT, but VCF Operations Other Wait is Wait - Idle - Swap Wait: it leaves Swap Wait out, because the remedy differs.
+- Misconception: C: a CPU counter is above 0, so the VM needs more CPU. Or F: the wait belongs to memory, so it does not affect the CPU.
 
 ## Notes
 - Paired with the practical question 0109 (theory and practical; design.md, section 3.9). Situation numbers differ from 0109 on purpose.
@@ -61,7 +61,6 @@ knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/swap-wait
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B16"
-answer: [A, B, D, E, I]
 misconception: [C]
 misconception_type: [reclamation-as-contention, tool-confusion]
 pair: "0109"

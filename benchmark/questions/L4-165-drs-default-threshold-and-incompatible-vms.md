@@ -18,11 +18,10 @@ Which statements are correct?
 - G. DRS evaluates the cluster about once an hour, so no threshold can react to a burst of 4 minutes.
 - H. The VM Distribution option spreads the CPU load of the bursts across the hosts, so turning it on removes the hot spot.
 
-## Likely wrong answer
-D and F: "The default threshold reacts to every spike, and DRS evacuates incompatible VMs after 600 seconds, so DRS failed twice." C and H are the wrong fixes; G is the over-correction.
+## Answers
+A, B, E
 
-## Expected key points
-- Answer: A, B, E.
+## Explanation
 - A is correct: level 2 is tuned for highly stable workloads and recommends vMotion only when the cluster is at or close to contention; level 3, the default, is tuned for mostly stable workloads, so neither chases 4-minute bursts.
 - B is correct: level 4 is for bursty workloads, where occasional spikes may require DRS to react to sudden load changes (level 5 for workloads whose utilization varies significantly).
 - C is wrong: level 1 makes only mandatory moves (rule violations, maintenance mode); DRS then makes no move to improve resource availability.
@@ -31,6 +30,7 @@ D and F: "The default threshold reacts to every spike, and DRS evacuates incompa
 - F is wrong: since vCenter 8.0 Update 3 the default of CompatCheckTransientFailureTimeSeconds is -1, so incompatibility with the current host alone no longer triggers a move; no advanced option was set here. 600 seconds was the earlier default.
 - G is wrong: DRS scans the cluster every minute for load-balancing recommendations.
 - H is wrong: VM Distribution spreads the number of VMs evenly across hosts, for availability; it does not balance their CPU load.
+- Misconception: D and F: "The default threshold reacts to every spike, and DRS evacuates incompatible VMs after 600 seconds, so DRS failed twice." C and H are the wrong fixes; G is the over-correction.
 
 ## Notes
 - 2026-11-16 re-review: A (default tuned for stable workloads) and E (no move on incompatibility since 8.0 Update 3) negated D and F; reworded in place to level 2 (A, true) and the pre-8.0 Update 3 default (E, true). Truth values unchanged; D and F still carry the colleague's claims.
@@ -54,7 +54,6 @@ knowledge_main: vsphere/object-types/cluster/configuration/drs-migration-levels
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/object-types/cluster/configuration/drs-migration-levels"
-answer: [A, B, E]
 misconception: [D, F]
 misconception_type: [threshold-transplanted]
 status: draft

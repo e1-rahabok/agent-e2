@@ -19,11 +19,10 @@ Which statements are correct?
 - I. Move the VM to a faster datastore to remove the extra read IOPS.
 - J. A VM snapshot on NFS with no array-native snapshots would show the same read IOPS gap.
 
-## Likely wrong answer
-- B: "The counters don't agree, so one of them is broken."
+## Answers
+A, D, J
 
-## Expected key points
-- Answer: A, D, J.
+## Explanation
 - A is correct: with a redo-log snapshot (VMFS delta disk), reads must check the files of the chain, so the datastore sees extra read IOs. Confirm in Snapshot Manager or with Disk Space | Snapshot in VCF Operations; without a snapshot the two read IOPS lines overlap.
 - B is wrong: the two counters sit at different levels; the datastore level includes snapshot IO, the virtual disk level does not.
 - C is wrong: virtual disk counters exclude snapshot IO and space; the VM's datastore counters include them.
@@ -34,6 +33,7 @@ Which statements are correct?
 - H is wrong: a datastore value below the virtual disk value comes from RDM disks, which the virtual disk counters include and the datastore counters do not.
 - I is wrong: the extra reads come from the snapshot chain, not from a slow datastore; removing the snapshot once the change is validated removes them.
 - J is correct: on NFS without array snapshots a VM snapshot is a redo-log chain, as on VMFS, and the VM's datastore counters cover NFS: the same extra reads with equal throughput.
+- Misconception: B: "The counters don't agree, so one of them is broken."
 
 ## Notes
 - 2026-11-16 (author, Q251): level 200 to 300, as the reviewers read it. A new Level 200 basics question for the guard is still to write.
@@ -50,7 +50,6 @@ technology: [storage]
 task: troubleshoot
 level: 300                      # Q251, author 2026-11-16: relabelled as written (was 200)
 answer_type: deterministic
-answer: [A, D, J]
 misconception: [B]
 input: [text]
 object: [vm, datastore]

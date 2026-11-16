@@ -61,11 +61,10 @@ Which statements are correct?
 - G. The large VM fits the host's one NUMA node: a NUMA span does not explain its %CSTP.
 - H. The %RDY on some vcpu worlds and the %CSTP on their siblings come from separate causes.
 
-## Likely wrong answer
-B: Co-stop means the host had no free threads. Or E: the VM stalls, so give it more vCPUs.
+## Answers
+A, C, D, G
 
-## Expected key points
-- Answer: A, C, D, G.
+## Explanation
 - A is correct: the PCPU UTIL(%) line ends with NUMA and AVG between 45 and 55 (one NUMA node, so the node the VM runs in is also about half busy), while several vcpu worlds of ora-db-07 show %CSTP above 2. Threads were free; co-stopped vCPUs are held back to stay in step with a sibling, even when a thread is free for them.
 - B is wrong: the misconception. Waiting for a thread is Ready; Co-stop holds a vCPU that ran ahead of a sibling, and half the threads were free.
 - C is correct: for a vcpu world the four states fill the interval: 100% = %RUN + %RDY + %CSTP + %WAIT (for example vcpu-0: 67.83 + 2.53 + 3.67 + 25.97).
@@ -74,6 +73,7 @@ B: Co-stop means the host had no free threads. Or E: the VM stalls, so give it m
 - F is wrong: reading. jump-01, dns-02 and ntp-03 show %CSTP 0.00: Co-stop needs sibling vCPUs.
 - G is correct: the causes of Co-stop are Ready on a sibling, snapshots, and VM size against the NUMA boundary; 16 vCPUs fit the 24-core node, so the NUMA cause is out and sibling Ready remains.
 - H is wrong: over-correction. Ready on one vCPU is the usual cause of Co-stop on its siblings; the vcpu worlds with %RDY above 0 sit next to siblings in %CSTP.
+- Misconception: B: Co-stop means the host had no free threads. Or E: the VM stalls, so give it more vCPUs.
 
 ## Notes
 - Paired with the theory question 0053 (theory and practical; design.md, section 3.9).
@@ -102,7 +102,6 @@ knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C28"
-answer: [A, C, D, G]
 misconception: [B]
 misconception_type: [provider-vs-consumer]
 pair: "0053"

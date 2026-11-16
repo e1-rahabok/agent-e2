@@ -60,11 +60,10 @@ Which statements are correct?
 - H. A downsize mainly lowers Co-stop; this VM's Ready follows the load of the host.
 - I. Net Run in the hourly export matches the busy CPUs in `mpstat`: about a third of 16 vCPUs.
 
-## Likely wrong answer
-B: the VM waits for CPU, so give it more vCPUs. Or D: Co-stop means the application's threads block each other.
+## Answers
+A, C, E, I
 
-## Expected key points
-- Answer: A, C, E, I.
+## Explanation
 - A is correct: reading. In the `mpstat` block, 5 or 6 CPU rows have %idle below 20 and the other rows above 80.
 - B is wrong: the misconception and wrong action. More vCPUs need more threads free at about the same time: Ready and Co-stop tend to rise.
 - C is correct: the guest uses about a third of its vCPUs; a narrower VM needs fewer threads free at once and fits free threads more easily.
@@ -74,6 +73,7 @@ B: the VM waits for CPU, so give it more vCPUs. Or D: Co-stop means the applicat
 - G is wrong: reading. In the host list every other VM has CPU|Ready (%) (Max) below 0.5, against more than 2 for app-java-04: the wait comes from this VM's width, not the host.
 - H is wrong: over-correction. Downsizing usually lowers Ready too: fewer vCPUs fit free threads more easily, and the other VMs' low Ready shows the host load is not what drives this VM's Ready.
 - I is correct: CPU|Net Run (%) is normalised to the whole VM (16 vCPUs = 100%). At the peak hours it reads 28-40%, about 4.5-6.5 vCPUs of work; in the hour of the `mpstat` sample the busy CPUs add up to Net Run x 16 within about one CPU (the guest also counts Ready and Co-stop time as busy, so it reads slightly higher).
+- Misconception: B: the VM waits for CPU, so give it more vCPUs. Or D: Co-stop means the application's threads block each other.
 
 ## Reasoning path
 1. `mpstat` and Net Run: about a third of the 16 vCPUs work.
@@ -110,7 +110,6 @@ attachments:
   - 0373/host-vms-cpu-ready-7-days.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C11"
-answer: [A, C, E, I]
 misconception: [B, D]
 misconception_type: [provider-vs-consumer]
 pair: "0107"

@@ -27,11 +27,10 @@ Which statements are correct?
 - H. In the host export the saturated thread changes once, from one instance to another.
 - I. The VM's Usage (%) of about 30% shows that the VM has CPU to spare for the job.
 
-## Likely wrong answer
-C: the host is under 15%, so the CPU cannot be the bottleneck. Or I: the VM is at 30%, so it has CPU to spare. Or G: move the VM to a quieter host.
+## Answers
+A, E, F, H
 
-## Expected key points
-- Answer: A, E, F, H.
+## Explanation
 - A true: host Utilization is the average of thread utilization; with 48 threads (24 cores, Hyper-Threading active), one thread at 100% moves it by about 2 points (100 / 48). `Utilization for esx-rpt-03` stays below 10 in every row and equals the mean of the 48 instance columns.
 - B false: reading. `Utilization for 13` is 95-100 in the first part of the window and `Utilization for 37` in the rest: the hot thread moved once.
 - C false: the misconception. The host average hides the hot threads that the per-instance columns show.
@@ -41,6 +40,7 @@ C: the host is under 15%, so the CPU cannot be the bottleneck. Or I: the VM is a
 - G false: wrong action. The VM does not wait for a thread (Readiness below 1%, E), so an emptier host has no CPU time to add; the job already gets the one thread it uses.
 - H true: reading. `Utilization for 13` is the busiest instance until about 01:26 and `Utilization for 37` after it: the vCPU moved to another thread once, and the reading (one saturated thread) stays the same.
 - I false: the misconception. The VM value averages its four vCPUs: `Usage in MHz for 0` runs above the 3,000 MHz base clock (Turbo on an otherwise idle core) while the other three stay below 300 MHz, so `Usage for rpt-db-02` near 30% hides one saturated vCPU.
+- Misconception: C: the host is under 15%, so the CPU cannot be the bottleneck. Or I: the VM is at 30%, so it has CPU to spare. Or G: move the VM to a quieter host.
 
 ## Reasoning path
 1. Host average below 10%, yet one or two instances at 95-100%: the average hides the hot thread.
@@ -80,7 +80,6 @@ attachments:
   - 0379/vcenter-vm-cpu-realtime.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D5"
-answer: [A, E, F, H]
 misconception: [C, I]
 misconception_type: [average-hides-worst]
 pair: "0378"

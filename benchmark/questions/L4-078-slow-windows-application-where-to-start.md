@@ -21,12 +21,10 @@ Which statements are correct?
 - K. High page-in on its own proves Windows is short of memory, even without any page-out or a high disk queue.
 - L. If the VM's virtual disk latency is fine, the application inside Windows cannot be seeing a storage delay.
 
-## Likely wrong answer
-- C: "CPU averages 25% and memory 62%, so the VM has headroom."
-- I: "Give it more vCPUs and memory to be safe."
+## Answers
+A, B, D, E, F, G, H
 
-## Expected key points
-- Answer: A, B, D, E, F, G, H.
+## Explanation
 - A true: quantify first; the team describes the symptom in Windows terms.
 - B true: the window found by quantifying steers every later step; a daily average or a morning screenshot hides the slow minutes.
 - C false: a daily average and one snapshot outside the slow window cannot show a wait; no slow window was found yet.
@@ -39,6 +37,7 @@ Which statements are correct?
 - J false: queue high with idle vCPUs means locks, threads that cannot run in parallel or kernel work; more vCPUs do not shorten it and can lengthen it.
 - K false: binaries, memory-mapped files and prefetch cause page-in; look for page-in and page-out together with a high disk queue.
 - L false: IO waiting in the Windows queue (filter driver, antivirus, application) never reaches the VM, so VM disk latency stays low.
+- Misconception: C: "CPU averages 25% and memory 62%, so the VM has headroom." - I: "Give it more vCPUs and memory to be safe."
 
 ## Notes
 - Follows the Windows slow flow (knowledge_main). The key does not require the flow's order of Windows counters: that order is a design choice of the flow.
@@ -55,7 +54,6 @@ technology: [system, cpu, memory, storage]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A, B, D, E, F, G, H]
 misconception: [C, I]
 input: [text]
 object: [guest-os, vm]

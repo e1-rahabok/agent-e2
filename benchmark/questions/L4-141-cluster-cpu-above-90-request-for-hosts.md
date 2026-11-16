@@ -15,11 +15,10 @@ Which statements are correct?
 - G. The cluster's CPU usage reads the provider; the VMs' contention reads the consumers.
 - H. The VMs' average contention is the fairer reading: the top VM's value overstates the cluster.
 
-## Likely wrong answer
-A: high utilization read as a performance problem, and C, the action that follows from it. Or F, the over-correction.
+## Answers
+B, D, E, G
 
-## Expected key points
-- Answer: B, D, E, G.
+## Explanation
 - A is wrong: the misconception. Usage is consumption; a performance problem exists only when the VMs face contention, and the top row of the VM export, `CPU|Contention (%) (Max)`, is below 1%. Many VMs read `CPU|Usage (%) (Max)` near 100%: busy, not waiting.
 - B is correct: the VM export's highest `CPU|Contention (%) (Max)` over the week is below 1%; the worst VM is the depth of the cluster's performance, so no VM waits for long.
 - C is wrong: the wrong action. Hosts do not fix a performance problem that does not exist; the capacity question is separate.
@@ -28,6 +27,7 @@ A: high utilization read as a performance problem, and C, the action that follow
 - F is wrong: the over-correction. The cluster's usage answers the capacity question (E); utilization also serves troubleshooting, for example to find the busiest host.
 - G is correct: utilization is the provider view; contention per VM is the consumer view.
 - H is wrong: an average across the VMs hides the worst; the worst VM gives the depth of the cluster's performance and the average says nothing about it. Here the top VM is below 1% anyway, so the reading changes no conclusion.
+- Misconception: A: high utilization read as a performance problem, and C, the action that follows from it. Or F, the over-correction.
 
 ## Notes
 - Changed in the 2026-11-15 audit: H replaced (a misread of the usage column) by the average-across-VMs reading (aggregation, Depth and breadth); the generator's check that usage passes 80% still holds but no option rests on it now.
@@ -58,7 +58,6 @@ attachments:
   - 0431/vcf-operations-cluster-vms-cpu-7-days.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C7"
-answer: [B, D, E, G]
 misconception: [A, C]
 misconception_type: [consumption-as-contention, provider-vs-consumer]
 pair: "0019"

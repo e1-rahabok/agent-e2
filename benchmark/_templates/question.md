@@ -9,11 +9,13 @@
 - A. <Option, one per bullet (multiple choice only).>
 - B. <Option.>
 
-## Likely wrong answer
-<The Level 300 misconception a generic AI holds.>
+## Answers
+<The correct letters only, e.g. A, C, D. The runner reads this and nothing else.>
 
-## Expected key points
-- <One point per bullet. Scoring checks these.>
+## Explanation
+- A true: <one sentence: why.>
+- B false: <one sentence: why.>
+- Misconception: <the option letter and the Level 300 belief, in the words a user would use.>
 
 ## Reasoning path
 <Optional. Order of checks the answer should follow.>
@@ -39,7 +41,6 @@ knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/ready   # the
 attachments: []                   # paths relative to benchmark/questions/, e.g. <id>/<file>.png
 origin: book                      # book | quiz | real-ticket | synthetic
 source_path: "<heading path in the source document>"
-answer: [B]                       # deterministic only
 misconception: [A]                # deterministic only
 misconception_type: [layer-confusion]   # project/tools/tags.yaml, misconception_type
 pair: "<nnnn>"                    # optional: the paired question (benchmark/design.md, section 3.9); delete if none

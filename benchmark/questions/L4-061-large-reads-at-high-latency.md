@@ -22,17 +22,17 @@ Which statements are correct?
 - E. db-02 is barely affected by the backup: 1.2 ms read latency against 1.1 ms on nights without it.
 - F. With Storage I/O Control on, DS-PROD07's Normalized Latency would read about 7 ms for this hour.
 
-## Likely wrong answer
-C: comparing the latency of large and small IOs as if they were the same work.
+## Answers
+A, B, D, E
 
-## Expected key points
-- Answer: A, B, D, E.
+## Explanation
 - A is correct: block size = throughput ÷ IOPS: 200 MB/s ÷ 400 = 0.5 MB; 24 MB/s ÷ 3,000 = 8 KB.
 - B is correct: Storage I/O Control's Normalized Latency discounts the high latency that large IOs cause, so large-block workloads do not make a datastore look slower than it is. High latency on 512 KB reads is expected, not a fault; judge it against bkp-01's own past nights, not against db-02's 8 KB reads.
 - C is wrong: the misconception. It compares unlike IOs.
 - D is correct: low IOPS with high throughput means large blocks (200 MB/s ÷ 400 = 512 KB); compare that with the block size planned for the backup, which tells whether the 7 ms comes from the job's own design.
 - E is correct: the VM that matters for performance, db-02, sees almost no change: no sign of contention on the array.
 - F is wrong: Normalized Latency is device latency weighted by IO count over all hosts and VMs, and adjusted for IO size. Even unadjusted, 400 reads at 7 ms against 3,000 at 1.2 ms give about 1.9 ms ((400 × 7 + 3,000 × 1.2) ÷ 3,400); the size adjustment lowers it further, and it leaves out kernel queuing.
+- Misconception: C: comparing the latency of large and small IOs as if they were the same work.
 
 ## Notes
 - Synthetic, 2026-11-12. Counts only after author approval.
@@ -60,7 +60,6 @@ knowledge_main: vsphere/technology/storage/metrics/virtual-motherboard/iops
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, B, D, E]
 misconception: [C]
 misconception_type: [unit-and-normalization]
 status: draft

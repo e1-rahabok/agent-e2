@@ -12,15 +12,15 @@ Which statements about the cause are correct?
 - C. The VMs on esx03 have CPU shares set too low for this host.
 - D. A USB device mounted on one VM of esx03 keeps DRS from moving any VM off the host.
 
-## Likely wrong answer
-B: concluding that the cluster is short when only one host is hot.
+## Answers
+A
 
-## Expected key points
-- Answer: A.
+## Explanation
 - A is correct: contention on one host while the others are idle points to a DRS blocker: a VM/VM or VM/Host rule, DRS disabled for a VM, a mounted host device, a reservation too large for other hosts, incompatibility, vMotion not configured, a conservative threshold or unstable load. Remove the blocker, or move the threshold toward Aggressive, and check again.
 - B is wrong: contention on all hosts would point to cluster capacity; here five hosts are lightly used, so balancing, not a host, is missing.
 - C is wrong: shares act only under contention and decide who gets what; low shares do not create a host-wide wait, and the question is why DRS leaves the load on esx03.
 - D is wrong: a mounted host device blocks the move of that VM only; DRS can still move the other VMs of esx03, so one such VM does not explain a week of contention on the host.
+- Misconception: B: concluding that the cluster is short when only one host is hot.
 
 ## Notes
 - Synthetic, 2026-11-05. Counts only after author approval.
@@ -45,7 +45,6 @@ knowledge_main: vsphere/object-types/cluster/troubleshooting/vm-insufficient-res
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"
-answer: [A]
 misconception: [B]
 misconception_type: [average-hides-worst]
 status: draft

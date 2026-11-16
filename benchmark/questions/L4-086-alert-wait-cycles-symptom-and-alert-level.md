@@ -17,17 +17,17 @@ Which changes, each made alone, meet the request?
 - E. Set the alert-level Cancel Cycle to 3 and leave every other setting.
 - F. Move the test into a condition of the alert definition, with the same cycles.
 
-## Likely wrong answer
-A: the vendor guidance is to keep the alert-level wait cycle at 1 and tune sensitivity on the symptom, so it looks like the fix. Or B: a shorter wait looks like more sensitivity.
+## Answers
+C
 
-## Expected key points
-- Answer: C.
+## Explanation
 - A is wrong: today two cycles above 90 meet the symptom Wait Cycle of 2 and the one cycle below 90 meets its Cancel Cycle of 1, so the symptom is triggered one cycle at a time. With an alert-level Wait Cycle of 1 the alert is generated at each trigger and cancelled with the symptom a cycle later: a new alert every 15 minutes, not one per job.
 - B is wrong: with symptom Wait Cycle 1 the symptom is triggered for two cycles and cancelled for one, so it never stays triggered for the 3 cycles the alert-level Wait Cycle needs. No alert.
 - C is correct: with symptom Cancel Cycle 2, one cycle below 90 does not cancel the symptom and the next cycle above 90 resets the count. The symptom stays triggered through the window, the alert-level Wait Cycle of 3 is met, and one alert stays open. After the job two cycles below 90 cancel the symptom and the alert-level Cancel Cycle of 1 closes the alert, about 10 to 15 minutes later. The cancel cycle of the symptom bridges the one-cycle dip.
 - D is wrong: the condition holds for at most 2 cycles in a row, so a symptom Wait Cycle of 3 never triggers the symptom.
 - E is wrong: the alert-level Cancel Cycle acts only on an alert that exists. The symptom still never stays triggered for 3 cycles, so no alert is generated and the change does nothing.
 - F is wrong: a condition has its own Wait Cycle and Cancel Cycle, as a symptom definition does. With Wait Cycle 2 and Cancel Cycle 1 it is triggered one cycle at a time, as the symptom is now, so the alert-level Wait Cycle of 3 is still never met.
+- Misconception: A: the vendor guidance is to keep the alert-level wait cycle at 1 and tune sensitivity on the symptom, so it looks like the fix. Or B: a shorter wait looks like more sensitivity.
 
 ## Notes
 - Deferred 2026-11-16 (author, Q245: alert-definition content moves to after 1.0): the key rests on vendor facts about alert definitions that the knowledge base does not hold (the alert-level Wait and Cancel Cycle stacked on the symptom cycles, and the Cancel Cycle counting consecutive cycles). Runs again when the alert definitions content is written (plan.md, After 1.0, VCF Operations alert mastery). Key unchanged: C.
@@ -58,7 +58,6 @@ knowledge_main: vcf-operations/alert-definitions
 attachments: []
 origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
-answer: [C]
 misconception: [A, B]
 misconception_type: []
 status: deferred

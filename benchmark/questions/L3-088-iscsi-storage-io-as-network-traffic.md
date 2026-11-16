@@ -14,11 +14,10 @@ Which statements about the two sets of counters are correct?
 - F. With MTU 1,500, a 4 KB write leaves the host in three or more frames.
 - G. Network receive above the adapter's read rate shows a fault in one of the two counters.
 
-## Likely wrong answer
-C: reads go out as network transmit because the host issues the command. Or E, the overshoot: reads are pure receive, with no transmit at all.
+## Answers
+A, B, D, F
 
-## Expected key points
-- Answer: A, B, D, F.
+## Explanation
 - A is correct: a write reverses the read pattern: the data goes out as transmit.
 - B is correct: the array returns the read data in receive frames.
 - C is wrong: the misconception. Only the read command and the acknowledgement of the data go out as transmit; the data returns as receive, so a read-heavy workload is mostly receive.
@@ -26,6 +25,7 @@ C: reads go out as network transmit because the host issues the command. Or E, t
 - E is wrong: the read command and the acknowledgement of the data frame go out as transmit, so a read-only workload still transmits small frames.
 - F is correct: MTU 1,500 allows a TCP segment of up to 1,460 bytes (as MTU 9,000 allows 8,960); 4,096 bytes of data plus the 48-byte iSCSI header need three segments, each with its own Ethernet, IP and TCP headers.
 - G is wrong: the gap is headers and acknowledgements; network bytes are not storage throughput.
+- Misconception: C: reads go out as network transmit because the host issues the command. Or E, the overshoot: reads are pure receive, with no transmit at all.
 
 ## Notes
 - Theory half of the pair with 0084 (practical; design.md, section 3.9). Different MTU and block size from 0084.
@@ -51,7 +51,6 @@ knowledge_main: vsphere/technology/storage/concepts/ip-storage-network-accountin
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B15"
-answer: [A, B, D, F]
 misconception: [C]
 misconception_type: [unit-and-normalization]
 pair: "0084"

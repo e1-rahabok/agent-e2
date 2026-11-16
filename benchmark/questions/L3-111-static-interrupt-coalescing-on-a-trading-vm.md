@@ -19,11 +19,10 @@ Which statements are correct?
 - H. The static scheme batches only received packets; packets the VM sends leave at once.
 - I. The adaptive scheme raises the interrupt rate when the host is busy, to keep latency low under load.
 
-## Likely wrong answer
-"Coalescing costs microseconds, it cannot be our milliseconds" (B). Or the opposite rule of thumb: "coalescing only adds latency, turn it off everywhere" (G).
+## Answers
+A, C, E, F
 
-## Expected key points
-- Answer: A, C, E, F.
+## Explanation
 - A is correct: the static scheme queues a set number of packets (1 to 64, here 64) before it interrupts the VM or transmits, and ESX waits no longer than 4 ms. Other events, such as the VM going idle, can trigger the interrupt earlier.
 - B is wrong: the misconception. Coalescing can add from a few hundred microseconds to a few milliseconds of network latency, depending on the workload.
 - C is correct: with coalescing disabled, the VM gets more interrupts and uses more CPU, and network latency is typically lower. Workloads with a low packet rate or few active threads are the ones that might gain.
@@ -33,6 +32,7 @@ Which statements are correct?
 - G is wrong: the over-correction. Many workloads are not affected by the added latency, coalescing saves CPU so more VMs fit on a host, and workloads with many outstanding network requests can lose performance with it disabled.
 - H is wrong: the static scheme queues packets before interrupting the VM or before transmitting; both directions are batched.
 - I is wrong: the adaptive scheme lowers the interrupt rate at high load and raises it at low load.
+- Misconception: "Coalescing costs microseconds, it cannot be our milliseconds" (B). Or the opposite rule of thumb: "coalescing only adds latency, turn it off everywhere" (G).
 
 ## Metadata
 ```yaml
@@ -53,7 +53,6 @@ knowledge_main: vsphere/technology/network/configuration/rss-and-interrupt-coale
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/network/configuration/rss-and-interrupt-coalescing"
-answer: [A, C, E, F]
 misconception: [B, G]
 misconception_type: []
 status: draft

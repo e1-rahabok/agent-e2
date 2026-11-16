@@ -16,11 +16,10 @@ Which statements are correct?
 - H. The outstanding reads include the requests still waiting in the Guest OS before the virtual disk.
 - I. Read latency in the export sits at several milliseconds, which explains the long queue.
 
-## Likely wrong answer
-C: a long queue of outstanding reads means slow storage, so move the VM. Or E: move the VM to a faster datastore.
+## Answers
+A, B, G
 
-## Expected key points
-- Answer: A, B, G.
+## Explanation
 - A true: reading. Little's law: outstanding IO = IOPS x latency. In every row `Average read requests per second for scsi0:1` x `Read Latency (us) for scsi0:1` / 1,000,000 is within 20% of `Average number of outstanding read requests for scsi0:1` (about 27,000 x 0.0007 s = 19).
 - B true: `Read Latency (us)` stays below 1,000 us while 16 or more reads are in flight: the device serves them in parallel. A long queue is acceptable while latency stays low.
 - C false: the misconception. High outstanding IO needs a check of latency; here latency is below 1 ms.
@@ -30,6 +29,7 @@ C: a long queue of outstanding reads means slow storage, so move the VM. Or E: m
 - G true: at a given IOPS, a longer time per IO means more IOs in flight.
 - H false: IO queued inside the Guest OS has not reached the hypervisor; the virtual disk counters start at the virtual disk.
 - I false: reading. `Read Latency (us) for scsi0:1` is 600-900 us (0.6-0.9 ms) in every row; the queue comes from the read rate.
+- Misconception: C: a long queue of outstanding reads means slow storage, so move the VM. Or E: move the VM to a faster datastore.
 
 ## Notes
 - Paired with the theory question 0028 (theory and practical; design.md, section 3.9).
@@ -59,7 +59,6 @@ attachments:
   - 0416/vcenter-vm-virtual-disk-realtime.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item C21"
-answer: [A, B, G]
 misconception: [C, E]
 misconception_type: [unit-and-normalization, consumption-as-contention]
 pair: "0028"

@@ -15,17 +15,17 @@ Which statements are correct?
 - E. Adding vCPUs to the Linux VM spreads the work and removes its steal time.
 - F. Steal time also covers the slowdown from Hyper-Threading and a lower clock speed.
 
-## Likely wrong answer
-D or F: steal read as work done, or as every hypervisor effect. Or E: more vCPUs as the cure for host contention. C looks for one VM counter that equals the Windows figure.
+## Answers
+A, B
 
-## Expected key points
-- Answer: A, B.
+## Explanation
 - A is correct: Linux `top` usage figures count time spent, not the speed of the run. The guest does not see Hyper-Threading, and in many versions not the clock either, so `us` and `sy` count a second on a shared or slower core the same as a second alone at full clock.
 - B is correct: Windows does not account frozen time; it stays in whatever state the vCPU was in, so Windows reads above vSphere: 75% is about Run 65% plus Ready 10%.
 - C is wrong: two kernels count independently, and none of vCenter's VM CPU utilization metrics maps directly onto Windows or Linux utilization; here the Windows figure sits near Run plus Ready, two counters.
 - D is wrong: steal is time the vCPU did not run at all, frozen because no physical thread was free. `st` 10% matches Ready 10% per vCPU because this VM's steal clock works.
 - E is wrong: the wait is for physical CPUs on a busy host; more vCPUs add demand, and usually more Ready.
 - F is wrong: steal counts frozen time only. The guest does not see Hyper-Threading or the clock speed; those effects show in VM counters such as Usage and Latency, not in steal.
+- Misconception: D or F: steal read as work done, or as every hypervisor effect. Or E: more vCPUs as the cure for host contention. C looks for one VM counter that equals the Windows figure.
 
 ## Notes
 - Overlap (not in Linux steal time: latency, Contrast with Linux Steal Time) is tested in 0380 F, not here.
@@ -53,7 +53,6 @@ knowledge_main: vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
-answer: [A, B]
 misconception: [D, E, F]
 misconception_type: [layer-confusion, frequency-and-hyper-threading]
 pair: "0368"

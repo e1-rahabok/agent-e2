@@ -31,11 +31,10 @@ Which statements are correct?
 - J. A 32 GB reservation can lift Entitlement to 32 GB, because Entitlement follows the reservation.
 - K. Cut sql-07 to 4 GB of memory, as the guest uses about 2 GB.
 
-## Likely wrong answer
-B: "GuestMemoryUsage is what Windows uses." D: "A VM cannot use more than its configured memory, so those rows are bad data." G: "Entitlement below configured means ESXi gives the VM less than it needs."
+## Answers
+A, C, F, H
 
-## Expected key points
-- Answer: A, C, F, H.
+## Explanation
 - A is correct: in the vSphere API quick statistics, Guest memory usage (`guestMemoryUsage`) is active guest memory: the Active estimate, a sampled ESXi estimate, not Consumed and not a Guest OS counter.
 - B is wrong: layer confusion. The value comes from ESXi's sampling, not from Windows; Windows shows 29.4 GB in use.
 - C is correct: Host memory usage (`hostMemoryUsage`) is consumed host memory including the VM's overhead, so it reads above Consumed, which excludes overhead.
@@ -47,6 +46,7 @@ B: "GuestMemoryUsage is what Windows uses." D: "A VM cannot use more than its co
 - I is wrong: the misconception "Entitlement = Granted + Overhead". The API gives no formula; the scheduler computes it from estimated demand and the reservation, limit and shares.
 - J is wrong: Entitlement does not follow a reservation; setting and removing a reservation left it where it was.
 - K is wrong: the wrong action. GuestMemoryUsage is Active, a kernel estimate that misses the buffer pool SQL Server holds; Windows has 29.4 GB in use.
+- Misconception: B: "GuestMemoryUsage is what Windows uses." D: "A VM cannot use more than its configured memory, so those rows are bad data." G: "Entitlement below configured means ESXi gives the VM less than it needs."
 
 ## Notes
 - Sources: the knowledge base, VM Memory Consumed (Formula: the API quick statistics `guestMemoryUsage` and `hostMemoryUsage`; Consumed excludes overhead and cannot exceed configured memory), VM Memory Active (sampled ESXi estimate), VM Memory Entitlement (scheduler value; below configured memory is no fault without reclamation or Latency; does not follow a reservation; no formula).
@@ -74,7 +74,6 @@ knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/entitlemen
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/memory/metrics/virtual-motherboard/entitlement"
-answer: [A, C, F, H]
 misconception: [B, D, G]
 misconception_type: [layer-confusion, consumption-as-contention]
 status: draft

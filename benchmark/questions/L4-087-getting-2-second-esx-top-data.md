@@ -24,13 +24,10 @@ Which statements are correct?
 - K. A 2-second Ready value can be judged against the alert bands that were set on 20-second Ready peaks of the same VMs.
 - L. The 2-second tier carries every metric of the 20-second tier for hosts and VMs, at ten times the resolution.
 
-## Likely wrong answer
-- A: "Select the ESX Top view in the Overview, set a range around 03:00, and read the 2-second values."
-- F: "Use the Top N tab for the 2-second values."
-- G: "Read the cluster chart for the 2-second values."
+## Answers
+C, D, E, H, I, J
 
-## Expected key points
-- Answer: C, D, E, H, I, J.
+## Explanation
 - A is wrong: ESX Top is a collection setting; 2-second data exists only from its activation at 09:00. The 03:00 freeze cannot be shown at 2 seconds.
 - B is wrong: the chart was 20-second data; a burst of 1-3 seconds averages away. No 2-second data is not proof that no burst happened.
 - C is correct: Real-Time Metrics is deployed and the policy for H7 had ESX Top Activated, for hosts and VMs, from 09:00.
@@ -43,6 +40,7 @@ Which statements are correct?
 - J is correct: each 20-second point is an average; 5-minute data averages the burst away even more.
 - K is wrong: shorter samples read higher; bands set on 20-second peaks do not apply to 2-second values.
 - L is wrong: the 2-second tier is an esxtop subset of about 21 metrics.
+- Misconception: A: "Select the ESX Top view in the Overview, set a range around 03:00, and read the 2-second values." - F: "Use the Top N tab for the 2-second values." - G: "Read the cluster chart for the 2-second values."
 
 ## Notes
 - Public source: Broadcom TechDocs, VCF Operations 9.1, "Real-time Data in the Workbench" (page last updated 2026-11-12): ESX Top view must be selected explicitly and needs ESX Top activated in the policy; a range above 6 hours in that view gives an error; Host System and VM objects; Top N always 20-second even when ESX Top is enabled; Cluster and Datacenter 60 s and 5 min; Custom Query feature='ESX_TOP' and feature='TROUBLESHOOTING', two lines when a metric has both tiers. https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/troubleshooting-workbench-home-page/real-time-data-in-troubleshooting-workbench.html
@@ -63,7 +61,6 @@ technology: [cpu, system]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [C, D, E, H, I, J]
 misconception: [A, F, G]
 input: [text]
 object: [esxi, vm, cluster]

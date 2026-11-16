@@ -17,13 +17,10 @@ Which statements give the CPU capacity of the two hosts correctly?
 - G. ESXi 01: 72 GHz; ESXi 02: 72 GHz (threads x nominal speed).
 - H. No fixed figure for either host: the capacity changes with Turbo and the power policy.
 
-## Likely wrong answer
-- A: "36 GHz each: cores times the nominal GHz, the number vCenter shows."
-- C: "Add the Hyper-Threading gain to the GHz."
-- F: "Count the All Cores Turbo and the Hyper-Threading gain."
+## Answers
+B
 
-## Expected key points
-- Answer: B.
+## Explanation
 - A is false: 36 GHz is the Total Capacity (GHz) label that vCenter and VCF Operations show: cores × base clock, the capability at base clock only. The host's capacity is counted in physical threads, 48 and 24, so the two hosts hold different numbers of vCPUs.
 - B is true: capacity measures space, not speed. It is counted in physical threads, where a vCPU can run: 48 on ESXi 01, 24 on ESXi 02. Performance and capacity do not correlate: on ESXi 02 a vCPU runs about 2x faster, but only half as many fit.
 - C is false: a GHz figure with a Hyper-Threading factor is still throughput; it changes with load, while the thread count does not.
@@ -32,6 +29,7 @@ Which statements give the CPU capacity of the two hosts correctly?
 - F is false: Turbo and Hyper-Threading are performance factors; GHz mixes performance and capacity.
 - G is false: threads × base clock is still a GHz figure, and two threads of one core do not each deliver the core's clock (each gets about 62.5% of the core while both run).
 - H is false: hardware capacity is fixed by the hardware and the Hyper-Threading setting; Turbo and power policy change throughput only.
+- Misconception: A: "36 GHz each: cores times the nominal GHz, the number vCenter shows." - C: "Add the Hyper-Threading gain to the GHz." - F: "Count the All Cores Turbo and the Hyper-Threading gain."
 
 ## Notes
 - The second hint pushes toward GHz on purpose. It is a distractor.
@@ -64,7 +62,6 @@ attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q3 ESXi Total Capacity"
 answer_type: deterministic
-answer: [B]
 misconception: [A, C, F]
 level: 400                      # author 2026-11-05
 misconception_type: [frequency-and-hyper-threading, label-read-as-model]

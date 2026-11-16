@@ -15,11 +15,10 @@ Which statements are correct?
 - G. VM snapshot IO is the usual reason the array counts more IO than vCenter for the same datastore.
 - H. When the array shows more IOPS than vCenter, lower the IO of the VMs on the datastore.
 
-## Likely wrong answer
-C: the datastore and its only LUN see the same IO, so vCenter must under-report.
+## Answers
+A, B, E, F
 
-## Expected key points
-- Answer: A, B, E, F.
+## Explanation
 - A is correct: vCenter sees only its own hosts; a host of another vCenter or a non-ESXi initiator is invisible to it.
 - B is correct: the array counts the LUN's IO from every initiator and from its own jobs (replication, array snapshots, rebuilds).
 - C is wrong: the misconception. The array counts every initiator and its own jobs; vCenter counts only its hosts. Each is right from its vantage point.
@@ -28,6 +27,7 @@ C: the datastore and its only LUN see the same IO, so vCenter must under-report.
 - F is correct: a SAN-mode backup proxy is another initiator on the LUN.
 - G is wrong: VM snapshot IO passes through the hosts and is counted in the datastore metrics, which include every file on the datastore; it cannot open a gap to the array. The gap is another initiator or the array's own jobs.
 - H is wrong: the extra IO is not the VMs' IO; find the other initiator or array job with the storage team.
+- Misconception: C: the datastore and its only LUN see the same IO, so vCenter must under-report.
 
 ## Notes
 - Theory half of the pair with 0188 (practical; design.md, section 3.9). Different situation and numbers from 0188.
@@ -56,7 +56,6 @@ knowledge_main: vsphere/technology/storage/concepts/storage-layers
 attachments: []
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item B10"
-answer: [A, B, E, F]
 misconception: [C]
 misconception_type: [provider-vs-consumer]
 pair: "0188"

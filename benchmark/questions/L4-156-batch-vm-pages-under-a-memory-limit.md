@@ -24,11 +24,10 @@ Which statements are correct?
 - I. The VM's compression cache is full, which is why ESXi swaps the remaining pages.
 - J. Moving the VM swap file to a faster device can shorten each swap-in while the limit stays.
 
-## Likely wrong answer
-B: "The disk latency shows a storage problem." C: "Restart Windows to clear the swap."
+## Answers
+A, D, F, J
 
-## Expected key points
-- Answer: A, D, F, J.
+## Explanation
 - A is correct: double paging. If the guest pages out a page ESXi swapped, ESXi first reads it from the host swap file and the guest writes it back to guest swap: one page costs two reads and a write, on both swap devices. That is why the page-file disk and the swap datastore are both busy.
 - B is wrong: the slow batch comes from the limit. Host swapping is the result of the limit on a host with free memory; the page-file and swap-file I/O is the load that memory pressure on both layers adds, not a storage fault.
 - C is wrong: a restart of the Guest OS keeps the VM running and its swap file; the swapped pages stay there until the guest touches them.
@@ -39,6 +38,7 @@ B: "The disk latency shows a storage problem." C: "Restart Windows to clear the 
 - H is wrong: swap in is contention: the guest touched swapped pages and the vCPU waited; Latency is 9%. In and out run at the same time on different pages.
 - I is wrong: the compression cache is capped at 10% of the VM's memory by default (Mem.MemZipMaxPct): 1.6 GB for 16 GB, and 0.9 GB is below it. Pages that do not compress to 2 KB or smaller are swapped.
 - J is correct: putting the VM swap file on faster, lower-latency storage (such as host swap cache) is one of the actions for VM memory latency; it shortens each wait but does not remove the cause.
+- Misconception: B: "The disk latency shows a storage problem." C: "Restart Windows to clear the swap."
 
 ## Notes
 - Sources: the knowledge base, Swap and compression (Cost of a swapped page: double paging; compression cache 10%; swap in vs swap out), VM memory latency high (actions: faster swap storage; power-cycle deletes the swap file, a Guest OS restart keeps it; vSphere 9.1 documentation, Delete Swap Files, p. 1876), Memory limit (enforcement order: balloon, then compression, then swap).
@@ -64,7 +64,6 @@ knowledge_main: vsphere/technology/memory/concepts/swap-and-compression
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-15, question bank audit gap: vsphere/technology/memory/concepts/swap-and-compression"
-answer: [A, D, F, J]
 misconception: [B, C]
 misconception_type: [layer-confusion]
 status: draft
