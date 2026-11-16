@@ -2,7 +2,7 @@
 
 ## Prompt
 - ESXi 9.1 host: 2 sockets of 16 cores, Hyper-Threading on, 768 GB of DRAM (384 GB per NUMA node). Advanced settings at their defaults.
-- The database VM `db-ora-07` has 12 vCPUs and 512 GB of memory. Its owner reports that query times vary from day to day, worse since the memory was raised from 320 GB to 512 GB last month.
+- The database VM `db-ora-07` has 12 vCPUs and 512 GB of memory. Its owner reports that query times vary from day to day.
 - esxtop, memory panel (m) with the NUMA fields added, at 14:00:
 
 ```text
@@ -39,7 +39,7 @@ Which statements about the NUMA columns of `db-ora-07`, their cause and the fix 
 - J. Size the memory to fit one node, from what the database needs inside the guest.
 - K. For a database that needs more memory than one node, split the VM into NUMA clients that each fit a node.
 - L. A VM with manual CPU or memory affinity gets no NUMA rebalancing and no memory migration.
-- M. The raise from 320 GB to 512 GB caused the remote memory: 320 GB fitted in one node.
+- M. Configured with 320 GB of memory, the same VM would fit one node, with no remote memory.
 
 ## Likely wrong answer
 - B: "The remote memory means ESXi keeps moving the VM between nodes."
@@ -59,7 +59,7 @@ Which statements about the NUMA columns of `db-ora-07`, their cause and the fix 
 - J is correct: size from the guest's need, not from the configured 512 GB.
 - K is correct: two NUMA clients, each with local memory, and two vNUMA nodes the database can use. Size it to split evenly across as few nodes as possible.
 - L is correct: manual CPU or memory affinity removes the VM from NUMA scheduling.
-- M is correct: before the raise, 320 GB fitted in one 384 GB node.
+- M is correct: 320 GB fits in one 384 GB node (with the 24 GB of the other VMs on node 0), so a VM of 12 vCPUs and 320 GB stays local; remote memory starts when memory is raised past one node's capacity.
 
 ## Notes
 - NMIG left out (author, Q191 e: its meaning is unsure; not in the benchmark before 1.0).
@@ -68,6 +68,7 @@ Which statements about the NUMA columns of `db-ora-07`, their cause and the fix 
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). No option names a `numa.*` setting or the vNUMA rebuild at power cycle (open author question Q216).
 - Changed in the 2026-11-15 audit: K lost its hedge ("If the database needs ...") and stays an action; misconception_type cumulative-vs-current removed (no option reads a running total as current).
 - A, E, G, H and M rest on the numa line for a VM whose vCPUs fit one node but whose memory does not (vsphere/technology/cpu/concepts/numa, open review note: lab test on a 9.1 host); vsphere/tools/esxtop/memory (NRMEM) states the same reading as settled.
+- Changed 2026-11-16: the stem no longer tells the story of the raise from 320 GB to 512 GB (it restated the knowledge base's typical cause and pointed at E and M). M now asks whether the same VM at 320 GB would fit one node, true as before.
 
 ## Metadata
 ```yaml

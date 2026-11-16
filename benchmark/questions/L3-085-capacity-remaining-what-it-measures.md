@@ -8,7 +8,7 @@
 
 Which statements about Capacity Remaining are correct?
 
-- A. It is usable capacity minus the highest projected utilization over the next 3 days.
+- A. It swings from day to day on a cluster whose load regularly reaches usable capacity.
 - B. 31% means 69% of usable capacity is in use at this moment.
 - C. A projected point above usable capacity anywhere in its window sets it to 0.
 - D. 30 November lies outside the window that sets today's 31%.
@@ -25,7 +25,7 @@ B: Capacity Remaining read as free capacity now, so 31% looks like room for the 
 
 ## Expected key points
 - Answer: A, C, D, H, I, J.
-- A is correct: usable capacity minus the highest projected utilization over the next 3 days: the smallest remaining capacity in the window, at its tightest point. The 3 days are fixed.
+- A is correct: it is set by the tightest projected point of the next 3 days, so it fluctuates when the load regularly touches usable capacity (and drops to 0 when a projected point passes it).
 - B is wrong: the misconception. Capacity Remaining is a projection over the next 3 days, set by its tightest point, not the share of usable capacity in use now.
 - C is correct: projected utilization above 100% of usable capacity at any point gives 0.
 - D is correct: the window is the next 3 days (9 to 12 November); a peak further ahead is not in Capacity Remaining.
@@ -44,6 +44,7 @@ B: Capacity Remaining read as free capacity now, so 31% looks like room for the 
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item B5). Counts only after author approval.
 - I is at risk from a knowledge-base contradiction: knowledge/glossary.md (Usable capacity) adds hypervisor overhead, which vcf-operations/features/capacity-forecast and sp5-framework/capacity/supply leave out. The key follows capacity-forecast; fix the glossary line.
 - Changed in the 2026-11-15 audit: K added (the largest-gap reading of the documentation wording); E reworded from an imperative to a statement.
+- Changed 2026-11-16: A reworded. The old A (usable capacity minus the highest projected utilization) and K (the largest gap) were two readings of one definition, one the negation of the other. A now tests that the value fluctuates near usable capacity; the definition is still tested through F and K, and K keeps the documented trap.
 
 ## Metadata
 ```yaml

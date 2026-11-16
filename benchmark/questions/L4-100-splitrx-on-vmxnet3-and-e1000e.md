@@ -1,7 +1,7 @@
 # SplitRx on VMXNET3 and E1000E
 
 ## Prompt
-- An ESX 9.1 host receives one multicast stream from a single source through a 25 Gb/s physical NIC. One receive queue of the physical NIC is heavily utilized and gets about 25,000 multicast packets per second. Four VMs on the host subscribe to the stream, and every one of them receives it over that physical NIC.
+- An ESX 9.1 host receives one multicast stream from a single source through a 25 Gb/s physical NIC. The whole stream lands on one receive queue of the physical NIC, about 25,000 multicast packets per second; that queue carries 92% of the NIC's received packets, the other queues are near idle. Four VMs on the host subscribe to the stream, and every one of them receives it over that physical NIC.
 - Net.NetSplitRxMode is at its default on the host. Nothing else changed on the host.
 - The four VMs, as they are now:
   - VM 1: VMXNET3 adapter. No ethernetX.emuRxMode parameter in its .vmx file.
@@ -32,6 +32,7 @@ C left out, because a per-adapter change is assumed to apply at once. Or D: Spli
 - F is false: a VM restart, or a disconnect and reconnect of the vNIC, puts the per-adapter parameter into effect; the host need not restart.
 
 ## Notes
+- 2026-11-16 re-review: the stem no longer copies the activation wording ("heavily utilized"); it gives the queue's packet rate and share of the NIC's received packets.
 - Public source: Performance Best Practices for VMware vSphere 9.1, revision 20260624, "SplitRx Mode" (pages 49-50): automatic activation for VMXNET3 only, the 10,000 packets per second condition, the host-wide variable (immediate effect, no restart), the per-NIC variable ethernetX.emuRxMode that overrides the host-wide setting, and "The change will not take effect until the virtual machine has been restarted or the relevant vNIC is disconnected from the virtual machine and connected again." https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices (read 2026-11-13 from the saved PDF).
 - Why this key: each VM maps to one sentence of the document: automatic activation (VM 1), override with restart (VM 2), override not yet in force (VM 3), unsupported adapter type (VM 4).
 - Debatable risk: the document does not say outright what a not-yet-effective parameter does to the running state; "the change will not take effect until restart" means the earlier state (automatic) stays. The prompt states that the stream has been constant, so the activation condition holds for an hour.
