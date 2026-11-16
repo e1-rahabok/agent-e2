@@ -35,7 +35,7 @@ Which statements about the VMs to take memory from, and the counters to use, are
 - H true: memory contention of 3.4%: the VM already waits, whatever the cause. Contention is excluded from the size, not from the choice of VM.
 - I true: size on Needed Memory as VMware Tools reports it, with no deduction for the balloon; the balloon also takes in-use pages that the guest pages out and still needs.
 - J false: in the export Non Zero Active is below Guest Needed Memory on all 38 VMs that have guest data; Active is usually far below Consumed and below what the guest needs.
-- K true: an application that keeps its own cache grows into the limit it is given, so its working set and Needed Memory show the limit; size from the application's limit first (SQL Server max server memory), then from Needed Memory.
+- K true: an application that keeps its own cache grows into the memory its own limit allows and keeps it, so Windows In Use and the process working set show that limit, not the need; size from the application's limit first (SQL Server max server memory), then from Needed Memory.
 - L true: SQL Server, the Java heap and PostgreSQL hold caches they depend on; Active is a sample of recently touched pages and does not see how the application uses its cache.
 - M false: Consumed holds guest cache; memory used as cache is not demand. Six VMs need less than a third of their configured memory.
 
@@ -44,6 +44,7 @@ Which statements about the VMs to take memory from, and the counters to use, are
 - The amounts are illustrative. Headroom of 25% above Guest Needed Memory, rounded up to 4 GB, gives 284 GB. An answer with another headroom that names the six VMs and reaches 256 GB is right, with or without small trims on other VMs.
 - Option C holds for any headroom up to about 50%: 432 GB configured minus 1.5 x 111.6 GB needed leaves about 265 GB.
 - Changed in the 2026-11-15 audit: three true options over the two-question cap replaced in place by true facts from guest-os-sizing: G (guest page-out, kept by 0400/0401) by the business-cycle window; I (Consumed stays after the guest frees a page, kept by 0095/0386) by the no-deduction rule for ballooned memory (pair half 0021 C tests it as a misconception); K (cut in steps, kept by 0400/0401) by sizing from the application's own limit. mq-broker-06 (page-out 1,240/s) stays in the export as a non-donor; C does not depend on it. H key point no longer guesses a limit. Key unchanged.
+- Changed on 2026-11-16: key point K follows guest-os-sizing, section Applications that manage their own memory (In Use and the working set show the limit), instead of naming Needed Memory. Key unchanged.
 - Paired with 0021 (theory and practical; design.md, section 3.9).
 
 ## Metadata

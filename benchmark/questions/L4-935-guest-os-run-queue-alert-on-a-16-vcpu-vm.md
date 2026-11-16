@@ -36,7 +36,7 @@ B: "20 is a total, so VCF Operations and PerfMon disagree and the metric is brok
 - C is correct: Guest|CPU Queue is the mean of the 15 twenty-second samples, per vCPU: 9 × 16 = 144 and 12 × 16 = 192 threads.
 - D is correct: when the alert fires and neither the VM CPU contention nor the consumption alert did, the cause is in the guest: why the application or kernel keeps so many threads ready.
 - E is correct: high Privileged Time with low User Time means the kernel (drivers, interrupts, DPCs) uses the CPU, not the application: a driver or kernel-locking problem.
-- F is wrong: more vCPUs only divide the same queue by a larger number; they do not remove the kernel work that creates it.
+- F is wrong: the halving assumes the total queue stays the same across the resize, which it does not (Windows counts waiting threads only, and the runnable threads move too); and more vCPUs do not remove the kernel work that creates the queue.
 - G is wrong: Peak vCPU Ready is under 1%, so ESXi gave the vCPUs their time; the queue is a Guest OS reading and the cause lies there.
 - H is wrong: a thread blocked on a lock is in the Wait state; it joins the queue only when the lock is released.
 - I is wrong: about 400 ready threads on 16 vCPUs is an extreme queue; PerfMon's own text treats under 10 per processor as normally acceptable.

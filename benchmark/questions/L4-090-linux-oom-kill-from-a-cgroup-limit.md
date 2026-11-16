@@ -38,7 +38,7 @@ Which statements are correct?
 - J is wrong: VM Memory Latency reads ESXi page-fault waits, not a limit inside the guest; the service reached its cgroup limit.
 
 ## Notes
-- Outside the knowledge base: keyed from the Linux kernel documentation and the systemd documentation.
+- Outside the knowledge base (benchmark/design.md, section 3.5): no knowledge file covers Linux cgroups, `MemoryMax` or the OOM killer. Options B, C, E, F, H and the total-vm reading in I are keyed from the Linux kernel documentation (Control Group v2, mm/oom_kill.c) and the systemd documentation below; A, D, G and J are decided by the knowledge base (the guest and VM layers are separate) and the stem. The question checks that this gap does not turn into the wrong answer A.
 - Linux kernel, Control Group v2: memory.max is the hard limit of a cgroup; when usage reaches it and cannot be reduced, the OOM killer runs inside the cgroup; memory.events counts max, oom and oom_kill; going over memory.high throttles and never invokes the OOM killer. https://docs.kernel.org/admin-guide/cgroup-v2.html
 - systemd.resource-control(5), MemoryMax=: the absolute limit on memory usage of the unit's processes; the OOM killer acts inside the unit when it cannot be kept; written to the cgroup v2 attribute memory.max (unified hierarchy). https://www.freedesktop.org/software/systemd/man/latest/systemd.resource-control.html
 - Linux kernel source, mm/oom_kill.c: the kill message starts with "Memory cgroup out of memory" for a cgroup OOM and "Out of memory" otherwise; total-vm prints mm->total_vm (virtual size), anon-rss the resident anonymous pages. https://github.com/torvalds/linux/blob/master/mm/oom_kill.c

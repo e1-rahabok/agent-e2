@@ -5,7 +5,7 @@
 - vSphere HA admission control: cluster resource percentage, failover capacity of one host.
 - "Performance degradation VMs tolerate" is set to 0%.
 - Most VMs have no reservations. Cluster CPU usage is about 90%.
-- The cluster shows a configuration warning about failover performance. New VMs still power on.
+- The cluster shows a configuration warning about failover performance.
 
 Which statements are correct?
 

@@ -14,7 +14,7 @@ Why does the array report about twice the IOPS vCenter shows at night, and what 
 - C. The extra IO comes from outside the 6 hosts: another initiator, such as a backup proxy, or array jobs such as replication.
 - D. The VMs must be doing more IO at night than vCenter shows, since the array sees twice as much IO as vCenter.
 - E. With one datastore on one LUN, array IOPS divided by datastore IOPS should be about 1, as it is in the day.
-- F. A ratio of about 2 at night means the LUN serves about twice as much other IO as the 6 hosts send.
+- F. A ratio of about 2 at night means the IO from sources other than the 6 hosts is about twice what the hosts send.
 - G. The VMs do less IO at night than in the day, so the array cannot be what slows down the batch jobs.
 - H. The VMs' IO waits behind the other IO at the array: their latency rises while their own IO falls.
 - I. Set an IOPS limit on the CRM VMs' disks so that they leave room at night for the other IO on the LUN.
@@ -46,6 +46,7 @@ Why does the array report about twice the IOPS vCenter shows at night, and what 
 - Synthetic, 2026-11-12: the backing device ratio. Counts only after author approval.
 - Review 2026-11-14: options F (the ratio) and K (DAVG against KAVG) turned into near misses, so fewer options are correct; each still tests its old key point.
 - Audit 2026-11-15: an esxtop row at 23:30 added, so K reads values instead of a reversed rule; weak I (Guest OS queues) replaced by an IOPS limit on the victim VMs; L reworded without the absolute; H shortened (length cue). Key unchanged.
+- Re-review 2026-11-16: F reworded so it has one reading (other IO about twice the hosts' IO). Key unchanged.
 
 ## Metadata
 ```yaml

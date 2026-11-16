@@ -3,13 +3,13 @@
 ## Prompt
 Review [the attached screenshot](0050/esxtop-disk-device-panel.png).
 
-For the device with the highest GAVG, where does most of the latency come from? Which statements are correct?
+Look at the device with the highest GAVG. Which statements about its latency are correct?
 
-- A. On the storage network or in the NAS, not in the host's storage stack.
-- B. In the VMkernel of this host, where the commands queue (KAVG).
-- C. Nowhere that matters: at about 150 commands per second, 37 ms is noise.
-- D. It cannot be told from esxtop: an NFS datastore has no device latency in esxtop.
-- E. In the device queue: the - in QUED hides commands waiting for a free slot.
+- A. Nearly all of it is spent on the storage network or in the NAS, past the host's storage stack.
+- B. A large part of it is time the commands spend queued in the VMkernel of this host (KAVG).
+- C. It does not matter: at about 150 commands per second, 37 ms is noise.
+- D. Its source cannot be read in esxtop: an NFS datastore has no device latency in esxtop.
+- E. Part of it is hidden: the - in QUED stands for commands waiting for a free device queue slot.
 
 ## Screenshot
 ![esxtop disk device panel with three NFS datastores and two NVMe devices](0050/esxtop-disk-device-panel.png)
@@ -27,6 +27,7 @@ D: assuming an NFS datastore does not show in the device panel and has no DAVG.
 
 ## Notes
 - Changed in the 2026-11-15 audit: throwaway C (the Guest OS) replaced by the low-IOPS over-correction; E added (a device queue NFS does not have); A reworded away from "outside the host" (the host's network stack sits beyond the NFS client); B made a full sentence; key points per option. Key unchanged: A. Needs the author's review.
+- Re-review 2026-11-16: stem no longer asks where "most of the latency" comes from (it read as one answer); options reworded as separate statements about the row. Key unchanged.
 - Review 2026-11-15: A reworded so it does not restate option A of the paired theory question 0186. Key unchanged.
 - 2026-11-14 (project/question-pairing-2026-11-14.md, A15): the hand-drawn marks beside DAVG and GAVG on the answer row masked; the stale `## Input to supply` removed (screenshot supplied by the author 2026-11-05, esxtop on one ESXi 9.1 host); closing line made plural (Q199).
 - Author 2026-11-05: Level 300; the misconception is thinking an NFS datastore is not in the device panel and has no DAVG.

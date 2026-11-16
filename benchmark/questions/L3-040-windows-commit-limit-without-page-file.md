@@ -15,7 +15,7 @@ Which statements are correct?
 - B. With about 1,400 MB available, memory was not short: the errors are an application bug.
 - C. ESXi was short of memory and refused the VM's requests, though vCenter shows no reclamation.
 - D. 15.6 GB committed means 15.6 GB of RAM is in use.
-- E. Windows grows the Commit Limit by itself once the commit charge passes 90% of it.
+- E. On this VM, Windows grows the Commit Limit by itself once the commit charge passes 90% of it.
 - F. Adding RAM to the VM is required to stop the errors.
 - G. With no page file, the Commit Limit is about the size of the RAM.
 - H. Re-enabling the page file raises the Commit Limit.
@@ -36,6 +36,7 @@ B: Available memory read as headroom for new allocations. Or E: the page file gr
 
 ## Notes
 - Changed in the 2026-11-15 audit: throwaway E replaced by the page-file growth misconception; F without the absolute "only".
+- Changed on 2026-11-16: E anchored to this VM, so its general rule (true for a system-managed page file) cannot be read as the statement.
 
 ## Metadata
 ```yaml

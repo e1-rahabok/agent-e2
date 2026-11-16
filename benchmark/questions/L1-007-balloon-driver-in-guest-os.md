@@ -1,4 +1,4 @@
-# Where the balloon runs
+# Which reclamation runs in the Guest OS
 
 ## Prompt
 - An ESXi host under memory pressure reclaims memory from its VMs.
@@ -23,7 +23,7 @@ C: assuming compression happens inside the guest.
 ## Metadata
 ```yaml
 id: "0038"
-title: "Where the balloon runs"
+title: "Which reclamation runs in the Guest OS"
 product: [vsphere, windows, linux]
 technology: [memory]
 task: explain-mechanism

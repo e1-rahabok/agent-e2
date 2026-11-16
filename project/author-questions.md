@@ -20,7 +20,85 @@ Each entry:
 
 ## Release 1.0
 
-None open.
+### Q244 · Cluster > HA admission control · Three vendor facts for the percentage policy
+
+- Files: [Admission control and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md); question [0330](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-108-ha-failover-percentage-uneven-hosts.md) (deferred until answered).
+- Now: the file has none of: the 32 MHz CPU (0 MB memory) default that a powered-on VM without a reservation counts in the percentage policy; the Insufficient Failover Resources warning when a manual percentage is below the share of the largest hosts; the power-on test against the configured percentage. Its line "A VM with no reservation passes CPU and memory admission control" leads a reader away from the key of 0330.
+- Source to check: vSphere 9.1 documentation, vSphere Availability, Cluster Resources Percentage Admission Control, Computing the Current Available Capacity (project/sources/vmware-vsphere-9-1.pdf, p. 1971).
+- Question: add the three facts to the file (Claude drafts them from the vSphere 9.1 pages on your accept)?
+  - A. Yes: add them; 0330 runs again.
+  - B. No: retire 0330.
+- Recommended: A; percentage admission control is the default policy and 0330 tests the reading most operators get wrong.
+- Answer:
+
+### Q245 · VCF Operations > Alerts · Alert-level wait and cancel cycles, criticality, Child and Descendant
+
+- Files: [Alert definitions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alert-definitions.md); questions [0274](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-091-alert-wait-cycles-symptom-and-alert-level.md), [0275](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-092-one-alert-warning-and-critical-symptoms.md), [0340](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-110-resource-pool-alert-nested-pool.md).
+- Now: the body states the symptom wait and cancel cycles only; it does not state the alert-level Wait Cycle and Cancel Cycle, how they stack on the symptom cycles, Symptom Based criticality (the most critical triggered symptom), or the Child (one level below) and Descendant relationships. The keys of 0274, 0275 and 0340 rest on these vendor facts.
+- Source to check: VCF Operations 9.1 TechDocs, Alert Definition Best Practices and Defining Alerts (techdocs.broadcom.com).
+- Question: add these facts to the file?
+- Recommended: yes; until then the three keys rest on vendor documents cited in their Notes.
+- Answer:
+
+### Q246 · Storage > Adapter Highest latency · Plain or command-weighted mean of read and write
+
+- Files: [Storage adapter and path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/adapter-and-path.md), [VM disk latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/virtual-motherboard/disk-latency.md); question [0072](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-029-vcenter-adapter-highest-latency.md).
+- Now: adapter-and-path says Highest latency averages read and write per adapter first; disk-latency says a total latency is a command-weighted average, "not (read latency + write latency) / 2". If the adapter counter is command-weighted, options A, C and E of 0072 flip.
+- Source to check: vSphere Web Services API 9.1, storage adapter counters (`storageAdapter.maxTotalLatency`); a lab export with unequal read and write rates settles it.
+- Question: which is it for the adapter's Highest latency?
+  - A. Plain mean of read and write latency per adapter.
+  - B. Weighted by commands.
+- Recommended: a lab check; 0072 keeps its key (A) until then.
+- Answer:
+
+### Q247 · Guest OS > Linux memory · A Linux memory file
+
+- Files: none yet (proposed guest-os/memory/linux-memory); [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-sizing.md); questions [0272](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-090-linux-oom-kill-from-a-cgroup-limit.md), [0387](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-055-linux-guest-free-memory-low-all-week.md), [0079](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-033-memory-reclaim-from-40-vms.md).
+- Now: no knowledge file states Linux available against free memory, the page cache, cgroup v2 memory.max and memory.high, the OOM kill text, that /proc/vmstat swap counters count since boot, the meaning of /proc/pressure/memory, or how VCF Operations derives Guest Needed Memory on Linux. 0272 rests on the Linux kernel documentation (an outside-the-knowledge-base question, design.md 3.5); 0387 C and D rest on PSI and vmstat semantics.
+- Question: write a Linux memory file for 1.0 (Claude drafts from kernel.org documentation on your accept), or keep Linux after 1.0 (plan.md, After 1.0)?
+- Recommended: a short file now; three running questions lean on it.
+- Answer:
+
+### Q248 · Network > Port group drops · Option A of 0345 and the drop formula
+
+- Files: [Distributed switch packets dropped](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/metrics/distributed-switch/packets-dropped.md); question [0345](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-115-port-group-drops-received-or-transmitted.md).
+- Now: the knowledge base does not define the VCF Operations port group drop percentage (dropped / packets, or dropped / (dropped + delivered)). A first reviewer read option A of 0345 as false; an independent blind checker read it as true (the key). The audit reworded A and the stem ("of which ... were dropped") so A is true as keyed; the disagreement is recorded here as the safety rule asks.
+- Source to check: VCF Operations 9.1 metric definitions, port group network metrics.
+- Question: confirm the key of 0345 (A) as now worded, and the formula?
+- Recommended: confirm; add the formula to the file.
+- Answer:
+
+### Q249 · Memory > Tiering · Two pairs of lines disagree
+
+- Files: [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md); question [0384](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-053-vm-wait-on-the-nvme-memory-tier.md) (option H), coverage gaps left unwritten.
+- Now: section "Touching a page on NVMe" says one fetch at a high latency on an idle device does not slow the VM; a misconception line says otherwise. Section Interactions says a reservation splits between DRAM and NVMe only when the reserved VMs exceed DRAM, and elsewhere that a tiered VM is not kept in DRAM. 0384 H depends on the first pair.
+- Question: which line of each pair holds on 9.1?
+- Recommended: settle both from the vSphere 9.1 memory tiering pages (pp. 1848-1872 of project/sources/vmware-vsphere-9-1.pdf) or a lab check.
+- Answer:
+
+### Q250 · Overhead · VM logging and vSAN as overhead
+
+- Files: [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md); question [0017](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-010-overhead-classification.md).
+- Now: the file counts VM log files and vSAN space as overhead; vSphere 9.1 (p. 1024, Enable logging) makes VM logging optional, and vSAN protection is a chosen capability. 0017 B and K rest on the file's definition.
+- Question: keep the definition (0017 stays), or narrow it (0017 B and K are rewritten)?
+- Recommended: keep it with one line on why optional items still count as overhead in capacity planning.
+- Answer:
+
+### Q251 · Benchmark levels · Relabels that conflict with the pairing plan or your earlier labels
+
+- Files: question files below; [project/question-pairing-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-pairing-2026-11-14.md) (items C20, C26).
+- Now: the audit kept your labels and the pairing plan's levels where reviewers disagreed, and changed others on the merits. Kept against a reviewer: [0420](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-079-vm-receive-drops-linux-shows-none.md) at 300 (reviewer: 400), [0415](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-146-small-packets-telemetry-vm.md) at 400 (reviewer: 300), [0364](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-042-ready-read-against-run.md) at 300 (reviewer: 400; it is the Level 400 example in KNOWLEDGE-ENGINEERING.md section 4), [0362](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-041-esxi-cpu-demand-vcenter-vs-vcf-operations.md) at 300 (yours), [0025](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-012-balloon-0-while-swapped-and-compressed-are-not-0.md) at 400 (yours, Q056). Changed against the pairing plan: [0390](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-141-vsan-host-consumed-in-maintenance-mode.md) and [0403](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-145-one-vm-waits-while-host-latency-stays-low.md) 400 to 300 (practical halves). Raised from your Level 100-200 labels: [0187](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L1-008-keep-a-two-week-old-snapshot.md) 100 to 300, [0043](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-005-gavg-formula.md) and [0045](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-007-datastore-read-iops-above-virtual-disk.md) 200 to 300.
+- Question: accept, or name the ones to set back?
+- Recommended: accept; set 0364 to 400.
+- Answer:
+
+### Q252 · Guest OS sizing · "VM Active shows the limit" for applications that manage their own memory
+
+- Files: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-sizing.md) (section Applications that manage their own memory), [SQL Server memory](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/memory/sql-server-memory.md), [VM Active](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/active.md); question [0079](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-033-memory-reclaim-from-40-vms.md) (option L).
+- Now: guest-os-sizing says VM Active "shows the limit" of an application that manages its own memory; sql-server-memory and active say Active shows what was touched, not the configured limit. 0079 L is keyed on the second reading.
+- Question: correct the guest-os-sizing line?
+- Recommended: yes, to "Active shows what the application touched, not its configured limit".
+- Answer:
 
 ## Future release
 

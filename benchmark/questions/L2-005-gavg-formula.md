@@ -6,7 +6,7 @@
 Which statements about these counters are correct?
 
 - A. GAVG equals KAVG plus DAVG for the commands of this LUN.
-- B. GAVG equals KAVG plus QAVG plus DAVG for the commands of this LUN.
+- B. The commands spent 9.1 ms in the host: 4.6 ms in the VMkernel plus 4.5 ms in its queues.
 - C. GAVG is the latency that the Guest OS measures for its disk.
 - D. DAVG is the time from the host's HBA to the array and back.
 - E. A command that finds the device queue full waits in the kernel and raises QAVG.
@@ -21,7 +21,7 @@ B: adding QAVG on top of KAVG, counting the queue time twice. Or H: "Latency is 
 ## Expected key points
 - Answer: A, D, E, F.
 - A is correct: GAVG (total seen from the VM monitor) = KAVG (time in the VMkernel) + DAVG (device): 4.6 + 0.8 = 5.4 ms.
-- B is wrong: QAVG is the queue part of the kernel time, already inside KAVG; adding it again gives 9.9 ms, not the 5.4 ms shown.
+- B is wrong: QAVG is the queue part of the kernel time, already inside KAVG; the time in the host is KAVG, 4.6 ms, of which 4.5 ms is queueing. Adding QAVG again would make GAVG 9.9 ms, not the 5.4 ms shown.
 - C is wrong: Guest in GAVG means the VM, measured from the VM monitor down; the Guest OS adds its own queues above it.
 - D is correct: DAVG covers the HBA, the fabric and the array.
 - E is correct: when commands exceed the device queue depth (DQLEN), they queue in the VMkernel; QAVG tracks that delay and it shows in KAVG, while DAVG stays as it was.
@@ -35,6 +35,7 @@ B: adding QAVG on top of KAVG, counting the queue time twice. Or H: "Latency is 
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the theory half of 0086 (a full device queue). Plural stem, new values (different from 0086), one fact per option; over-correction G and wrong action H added. Key changed from A to A, D, E, F.
 - Review 2026-11-15: G no longer names a KAVG value. Key unchanged.
 - Audit 2026-11-15: F and G lose their reason clause and absolute; key point G no longer rests on the unverified VAAI claim of vsphere/tools/esxtop/storage; I added, the threshold misconception of esxi-storage-latency-stack ("fine below 10 ms", Broadcom KB 344099). Level 200 -> 300: I applies a published threshold to the values. Key unchanged: A, D, E, F.
+- Re-review 2026-11-16: B no longer a second GAVG formula beside A (knowing one decided the other); it now tests the same double count as time in the host. Key unchanged.
 
 ## Metadata
 ```yaml
