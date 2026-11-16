@@ -12,7 +12,7 @@ Which statements are correct?
 - C. The past-week chart offers no CPU Demand for sql-07 either: Demand is not kept at level 1.
 - D. Raising every interval to level 4 and leaving it there is the safe fix: it costs only database space.
 - E. The newest hour of the past-week chart can still be empty: its points arrive up to an hour late.
-- F. With Ready summed over the vCPUs, the VM's Ready history cannot show how long the vCPUs waited during the incident.
+- F. With Ready summed over the vCPUs, the VM's Ready history cannot show how long the vCPUs waited in total during the incident.
 
 ## Likely wrong answer
 B: expecting a higher level to fill in the past. Or D: level 4 everywhere, permanently.
