@@ -340,6 +340,7 @@ For the set:
 ## 12. Status
 - The run set is every question with status draft or reviewed. Its counts: `python3 project/tools/coverage.py`. Retired questions: [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
 - Every synthetic question was checked by an independent review agent, which tried to break each key against the knowledge files and the vendor documents; the defects found were fixed. Author questions from the review: all answered (Q182-Q191). Knowledge fixes found on the way: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M1.
+- Question bank audit, 2026-11-16 ([project/question-bank-audit-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-bank-audit-2026-11-15.md)): every option of every question decided again from the current knowledge base by independent reviewers, each finding challenged by a second agent, every changed key re-checked blind.
 - Status draft: each question counts after the author's review (section 6.2).
 - Status `awaiting-input`: a practical half whose screenshot the author has not captured yet (section 3.9). It does not run and is not in the counts of the run set; once the image is added and its condition checked, it becomes draft.
 
