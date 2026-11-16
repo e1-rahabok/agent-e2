@@ -7,7 +7,12 @@
 - In the same half hour, the application team ran `ip -s link show ens192` in the VM:
 
 ```text
-(generated)
+2: ens192: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+    link/ether xx:xx:xx:xx:xx:xx brd xx:xx:xx:xx:xx:xx
+    RX:     bytes    packets errors dropped  missed   mcast           
+    3340686687518 3213157552      0       0       0    7097 
+    TX:     bytes    packets errors dropped carrier collsns           
+       2325516622   13501251      0       0       0       0 
 ```
 
 - Then `ethtool -S ens192 | grep -i -E "queue|oob|drop"`:

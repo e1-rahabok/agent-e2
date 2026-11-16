@@ -1,9 +1,9 @@
 # One slow disk behind a low VM disk latency
 
 ## Prompt
-- The application team says a nightly report that reads from one of the VM's disks ran much slower yesterday.
+- The application team says the nightly report on VM rpt-db-12, which starts at 02:00 and reads from one of the VM's eight virtual disks, ran much slower yesterday.
 - The VMware team looked at the VM's disk latency in VCF Operations, found it low all day, and wants to close the ticket.
-- See [the VM-level disk latency and IOPS](0423/vcf-operations-vm-disk-aggregate-24h.png), [the read latency and IOPS of each virtual disk](0423/vcf-operations-vm-virtual-disks-24h.png) and [the VM's Peak Latency within collection cycle](0423/vcf-operations-vm-peak-latency-24h.png).
+- From VCF Operations, for yesterday 01:00 to 04:00: [the VM-level read latency](0423/vcf-operations-vm-disk-read-latency.csv) and [the VM's Peak Latency within collection cycle](0423/vcf-operations-vm-peak-latency.csv), each a chart export at 5-minute points, and [a list view of the VM for 02:00 to 03:00](0423/vcf-operations-vm-virtual-disks-0200-0300.csv) with the read latency (average, Min, Max) and read IOPS of the aggregate and of each virtual disk.
 
 Which statements are correct?
 
@@ -16,35 +16,26 @@ Which statements are correct?
 - G. The next checks follow the slow disk: its read and write latency, errors, outstanding IO and the datastore behind it.
 - H. The slow disk carried most of the VM's IO in that hour.
 
-## Input to supply
-- Product and version: VCF Operations 9.1, vSphere 9.1.
-- Object: one VM with 8 or more virtual disks.
-- How to produce it: keep 7 or more disks busy all day at low latency (1 ms or less, a few thousand IOPS in total), and for about one hour run a small read load (100-300 IOPS) on one disk that sits on a slow datastore (for example an NFS export on a small server, or a busy array), so that its read latency is 15 ms or more.
-- Screen 1, VCF Operations > the VM > Metrics: the virtual disk aggregate of all instances, Read Latency (ms) and Read IOPS, last 24 hours. Save as `0423/vcf-operations-vm-disk-aggregate-24h.png`.
-- Screen 2, the same VM, Read Latency (ms) and Read IOPS of each virtual disk instance (scsiM:N), last 24 hours, on one chart or as a list with the values for the slow hour. Save as `0423/vcf-operations-vm-virtual-disks-24h.png`.
-- Screen 3, the same VM, Peak Latency within collection cycle (ms), last 24 hours. Save as `0423/vcf-operations-vm-peak-latency-24h.png`.
-- Condition the key depends on: the aggregate read latency at 3 ms or less all day; one virtual disk at 15 ms or more for about an hour; that disk's IOPS under 10% of the VM's IOPS in that hour; Peak Latency within collection cycle at 15 ms or more in the same hour and below 10 ms the rest of the day.
-- Masking: mask every VM, host, datastore and cluster name.
-
 ## Likely wrong answer
 B or E: the VM's disk latency is low all day, so storage is fine and the ticket can be closed. Or D, the overshoot: no VM-level metric could show it.
 
 ## Expected key points
 - Answer: A, C, G.
-- A true: screen 2 shows one disk at 15 ms or more for about an hour; screen 1 shows the aggregate at 3 ms or less.
+- A true: reading. In the list view, `Virtual Disk:scsi1:2|Read Latency (ms) (Min)` is 15 ms or more for 02:00 to 03:00, while `Virtual Disk:Aggregate of all instances|Read Latency (ms) (Max)` is 3 ms or less; the VM-level read latency export stays at 3 ms or less at every point from 01:00 to 04:00.
 - B false: the misconception. A VM aggregate hides the one slow disk; read each virtual disk.
-- C true: the peak metric takes the highest 20-second value across all virtual disks, read and write; screen 3 rises in the slow hour.
+- C true: the peak metric takes the highest 20-second value across all virtual disks, read and write; the Peak Latency export is 15 ms or more at every point from 02:05 to 03:00 and below 10 ms at every other point.
 - D false: the over-correction. Peak Latency within collection cycle showed it.
 - E false: the wrong action. The report reads from the slow disk.
-- F false: latency with low IOPS points to a queue in one of the layers; the report waited on every one of that disk's IOs.
+- F false: queues add latency at any load; the report waited on every one of that disk's IOs.
 - G true: the flow goes per virtual disk, read and write, then errors, then IOPS and outstanding IO, then the backing device and the configuration.
-- H false: the slow disk did under 10% of the VM's IOPS in that hour.
+- H false: reading. `Virtual Disk:scsi1:2|Read IOPS` is under 10% of `Virtual Disk:Aggregate of all instances|Read IOPS` for 02:00 to 03:00, and under 10% of the sum of the eight disks' Read IOPS.
 
 ## Notes
 - Practical half of pair D4 with 0422 (theory; design.md, section 3.9).
 - No option computes the aggregate: the knowledge base does not say whether it weights the disks by their IO. The condition fixes the values the key reads.
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item D4 (origin: synthetic). Counts only after author approval.
 - Review 2026-11-15: F one fact; 8 or more disks, so that the aggregate can stay at 3 ms or less whatever its weighting (one disk at 15 ms among eight averages to 2.75 ms even unweighted). Key unchanged: A, C, G.
+- 2026-11-15: screenshots replaced by generated exports (project/practical-questions-as-exports-2026-11-15.md), cut to 01:00-04:00. The slow disk stays at 15-17 ms and the other seven at 1 ms or less, so the aggregate stays at 3 ms or less whether VCF Operations weights it by IO or not.
 
 ## Metadata
 ```yaml
@@ -55,7 +46,7 @@ technology: [storage]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-input: [screenshot]
+input: [table]
 object: [vm]
 tool: [vcf-operations]
 knowledge:
@@ -64,14 +55,14 @@ knowledge:
   - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 knowledge_main: vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
 attachments:
-  - 0423/vcf-operations-vm-disk-aggregate-24h.png
-  - 0423/vcf-operations-vm-virtual-disks-24h.png
-  - 0423/vcf-operations-vm-peak-latency-24h.png
+  - 0423/vcf-operations-vm-disk-read-latency.csv
+  - 0423/vcf-operations-vm-peak-latency.csv
+  - 0423/vcf-operations-vm-virtual-disks-0200-0300.csv
 origin: synthetic
 source_path: "Pairing plan 2026-11-14, item D4"
 answer: [A, C, G]
 misconception: [B, E]
 misconception_type: [average-hides-worst]
 pair: "0422"
-status: awaiting-input
+status: draft
 ```

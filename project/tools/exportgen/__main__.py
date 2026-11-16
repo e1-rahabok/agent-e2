@@ -29,8 +29,35 @@ def run_generate(cases, which, out_root):
     for case in _select(cases, which):
         files = case.generate(case.seed)
         core.write_files(files, Path(out_root) / case.question_id)
-        print(f"{case.question_id}: wrote {', '.join(files)}")
+        wrote = list(files)
+        inline = case.generate_inline(case.seed)
+        if inline:
+            qp = core.question_path(case.question_id)
+            if qp is None:
+                raise SystemExit(f"{case.question_id}: question file not found for inline blocks")
+            with open(qp, encoding="utf-8", newline="") as f:
+                md = f.read()
+            md = core.write_inline_blocks(md, inline)
+            with open(qp, "w", encoding="utf-8", newline="") as f:
+                f.write(md)
+            wrote += [f"inline:{n}" for n in sorted(inline)]
+        print(f"{case.question_id}: wrote {', '.join(wrote)}")
     return 0
+
+
+def _check_inline(case, files):
+    """Blocks on disk equal a fresh generate (generated ones), then the case's own checks."""
+    inline = case.generate_inline(case.seed)
+    qp = core.question_path(case.question_id)
+    if qp is None:
+        return ["question file not found"] if inline or type(case).check_inline is not core.Case.check_inline else []
+    with open(qp, encoding="utf-8", newline="") as f:
+        blocks = core.read_inline_blocks(f.read())
+    fails = []
+    for n, text in inline.items():
+        if blocks.get(n) != text.rstrip("\n"):
+            fails.append(f"inline:{n}: block in the question file differs from the seeded output (edited or stale)")
+    return fails + case.check_inline(blocks, files)
 
 
 def run_check(cases, which, out_root):
@@ -50,6 +77,7 @@ def run_check(cases, which, out_root):
             for name, text in files.items():
                 if text != expected[name]:
                     fails.append(f"{name}: differs from the seeded output (edited or stale)")
+        fails += _check_inline(case, files)
         print(f"{case.question_id}: {'FAIL' if fails else 'ok'}")
         for f in fails:
             print(f"  - {f}")

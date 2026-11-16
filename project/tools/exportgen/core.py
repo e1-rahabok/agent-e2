@@ -9,6 +9,7 @@ import datetime as dt
 import importlib
 import pkgutil
 import random
+import re
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -122,6 +123,17 @@ class Case:
         """Return a list of failures (strings). Empty list means pass."""
         raise NotImplementedError
 
+    def generate_inline(self, seed=None):
+        """Return {N: text} for the generated ```text blocks of the question's
+        ## Prompt (N is 1-based, the spec's inline:N). Blocks not listed are
+        hand-written and stay as they are. Default: none."""
+        return {}
+
+    def check_inline(self, blocks, files):
+        """blocks is {N: text} of every ```text block of ## Prompt as it is
+        on disk (generated and literal); files is {name: text} as in check(). Return a list of failures."""
+        return []
+
 
 CASES = {}
 
@@ -168,3 +180,52 @@ def read_files(names, in_dir):
         with open(Path(in_dir) / name, encoding="utf-8", newline="") as f:
             out[name] = f.read()
     return out
+
+
+# ---- inline text blocks of the question prompt --------------------------------
+
+def question_path(question_id, questions_dir=None):
+    """The question file whose metadata has id: "<question_id>", or None."""
+    d = Path(questions_dir or QUESTIONS_DIR)
+    needle = f'id: "{question_id}"'
+    for p in sorted(d.glob("*.md")):
+        with open(p, encoding="utf-8", newline="") as f:
+            if any(ln.rstrip("\r\n") == needle for ln in f):
+                return p
+    return None
+
+
+def _prompt_blocks(md):
+    """Spans (start, end) of the content of each ```text block inside ## Prompt:
+    start is after the opening fence line, end is the start of the closing fence line."""
+    m = re.search(r"^## Prompt[ \t]*\n", md, re.M)
+    if not m:
+        return []
+    nxt = re.search(r"^## ", md[m.end():], re.M)
+    stop = m.end() + nxt.start() if nxt else len(md)
+    spans, pos = [], m.end()
+    while True:
+        o = re.compile(r"^```text[ \t]*\n", re.M).search(md, pos, stop)
+        if not o:
+            return spans
+        c = re.compile(r"^```[ \t]*$", re.M).search(md, o.end(), stop)
+        if not c:
+            return spans
+        spans.append((o.end(), c.start()))
+        pos = c.end()
+
+
+def read_inline_blocks(md):
+    """{N: text} of every ```text block of ## Prompt, without the final newline."""
+    return {i + 1: md[a:b].rstrip("\n") for i, (a, b) in enumerate(_prompt_blocks(md))}
+
+
+def write_inline_blocks(md, blocks):
+    """md with the listed blocks ({N: text}) replaced. Raises ValueError when a block is missing."""
+    spans = _prompt_blocks(md)
+    for n in sorted(blocks, reverse=True):
+        if not 1 <= n <= len(spans):
+            raise ValueError(f"no ```text block {n} in ## Prompt ({len(spans)} found)")
+        a, b = spans[n - 1]
+        md = md[:a] + blocks[n].rstrip("\n") + "\n" + md[b:]
+    return md

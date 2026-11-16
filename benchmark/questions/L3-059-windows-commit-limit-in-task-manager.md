@@ -31,9 +31,9 @@ E: "Task Manager shows memory available, so memory is not why the builds fail." 
 ## Expected key points
 - Answer: A, C, D, G.
 - A true: reading. From 01:55 to 02:20 `Committed Bytes` is at 97% or more of `Commit Limit` in every row (`% Committed Bytes In Use` 97 or above). Every committed byte must be backed by RAM or the paging file, so a new allocation fails at the limit.
-- B false: reading. RAM in use is at most total physical memory minus available: `Available MBytes` stays at 2,500 MB or more in the failure rows (`Available Physical Memory` at 02:05 agrees), so RAM in use is at least 2 GB below `Committed Bytes`. `Virtual Memory: In Use` in `systeminfo` is the commit charge, not RAM in use: committed memory need not be in RAM.
+- B false: reading. RAM in use is at most total physical memory minus available: `Available MBytes` stays at 2,600 MB or more in the failure rows (`Available Physical Memory` at 02:05 agrees), so RAM in use is at least 2 GB below `Committed Bytes`. `Virtual Memory: In Use` in `systeminfo` is the commit charge, not RAM in use: committed memory need not be in RAM.
 - C true: reading. `Win32_PageFileUsage` returns no instance, and `Virtual Memory: Max Size` (the commit limit) equals `Total Physical Memory`.
-- D true: the commit limit is RAM plus the current paging file; with no paging file it is about the RAM: `Commit Limit` is 16,383 MB in every row, the VM's 16 GB.
+- D true: the commit limit is RAM plus the current paging file; with no paging file it is about the RAM: `Commit Limit` equals 16,383 MB in every row, the VM's 16 GB.
 - E false: Available is physical memory free or on standby, not commit headroom.
 - F false: over-correction. Available is the memory Windows can use at once without saving a page first, so it shows the room left in RAM; it is only not commit headroom.
 - G true: the commit limit includes the paging file, and Windows grows a system-managed file when the commit charge passes 90% of the limit. Microsoft advises keeping the paging file and letting Windows manage its size.
