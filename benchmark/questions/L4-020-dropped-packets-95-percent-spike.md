@@ -35,7 +35,6 @@ A: reading 88-90% as that share of the VM's normal traffic lost.
 - G is false: a near-idle VM like this one reaches 88-90% with under 300 dropped packets, while a busy VM can drop millions at a few percent; rank by a percentile and by the dropped packet count.
 
 ## Notes
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the stem gives the counters instead of the formula's terms ("delivered and dropped together") and no longer mirrors the knowledge file's example; the negation pair B/D resolved (old D dropped); over-correction E and wrong action F added. Key unchanged: B, C.
 - Review 2026-11-15: G added (a list sorted by the maximum percentage puts near-idle VMs on top), the fact its practical half 0082 shows on screen. Key unchanged: B, C.
 - Revised 2026-11-12: this question tests only the formula at low traffic. Transmit drops hidden by TCP are tested in 0074; ranking VMs by the right statistic in 0082.
@@ -58,7 +57,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05"
+source_path: "Synthetic, 2026-11-05"
 answer: [B, C]
 misconception: [A, G]
 misconception_type: [unit-and-normalization]

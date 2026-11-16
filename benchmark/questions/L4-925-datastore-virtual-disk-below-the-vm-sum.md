@@ -2,7 +2,7 @@
 
 ## Prompt
 - Capacity review of VMFS datastore DS-ERP01 in VCF Operations. No VM has a snapshot.
-- DS-ERP01, Virtual Disk Used: 1,200 GB.
+- DS-ERP01, Disk Space | Virtual Disk Used: 1,200 GB.
 - Three VMs have files on DS-ERP01. Their VM Disk Space | Virtual Disk Used: erp-app-01 800 GB, erp-db-01 2,064 GB, erp-rpt-01 260 GB.
 - Their disks, from the VM settings and the datastore browser:
 
@@ -43,6 +43,10 @@ Which statements are correct?
 - G is correct: Disk Space | <Datastore Name> | Virtual Machine Used counts only the VM's files on that datastore, swap, logs and other files included.
 - H is wrong: Virtual Disk Used counts the virtual disk files only; swap files, logs and other files are counted in Virtual Machine Used.
 - I is correct: the disk moves into the datastore's vantage point, while it stays one of erp-db-01's virtual disks wherever it sits.
+
+## Notes
+- The RDM's LUN is stated thick on purpose: the knowledge base differs on how an RDM on a thin-provisioned array LUN is counted in VM Virtual Disk Used (disk-space: configured size unless the array thin-provisions the LUN; vm-files: always configured size). With a thick LUN both give 1,024 GB.
+- The datastore label follows the knowledge base (datastore/virtual-disk: the same label as on the VM).
 
 ## Metadata
 ```yaml

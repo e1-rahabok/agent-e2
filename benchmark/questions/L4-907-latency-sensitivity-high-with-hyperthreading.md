@@ -10,15 +10,15 @@
 
 Which statements are correct?
 
-- A. The 16 vCPUs share 8 physical cores: vCPUs 0 and 1 run on the two threads of one core, 2 and 3 on the next, and so on.
+- A. The 16 vCPUs share 8 cores: vCPUs 0 and 1 on the two threads of one core, 2 and 3 on the next.
 - B. Each vCPU is locked to its thread, so the scheduler cannot move it to one of the idle cores.
 - C. High with Hyperthreading gives any workload more performance, because the guest sees the thread topology.
-- D. Performance Best Practices recommends High with Hyperthreading only for workloads known to use the hyper-threading topology.
-- E. Setting the VM to High needs the same CPU reservation it holds now, 16 GHz on this host.
-- F. Holding half as many cores costs the VM nothing while the rest of the host is idle.
+- D. Performance Best Practices advises this setting only for workloads known to use the thread topology.
+- E. Setting the VM to High needs the same CPU reservation it holds now, 16 GHz on this 2.0 GHz host.
+- F. Holding half as many cores costs the VM nothing as long as the rest of the host stays mostly idle.
 - G. Turn Hyper-Threading off in the host's BIOS, so that each vCPU of the VM gets a whole core.
 - H. Core Utilization of 40% shows that the host lacks CPU for this VM: move it to another host.
-- I. A full CPU reservation guarantees the VM exclusive threads at every power-on.
+- I. A full CPU reservation guarantees the VM exclusive threads every time it powers on, on any host.
 
 ## Likely wrong answer
 "High with Hyperthreading is High at half the price: the guest sees the topology and the host is mostly idle, so nothing is lost (C, F)." C and F are the misconceptions.

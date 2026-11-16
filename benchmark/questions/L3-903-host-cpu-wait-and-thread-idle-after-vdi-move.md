@@ -17,11 +17,11 @@
 
 Which statements are correct?
 
-- A. Host Wait is the sum of the Wait of its VMs, so the 80 mostly idle desktop vCPUs account for most of the rise.
+- A. Host Wait sums the Wait of its VMs, so the 80 mostly idle desktop vCPUs explain most of the rise.
 - B. The doubled host Wait shows that the host's physical threads now stall on storage IO.
-- C. Every VM on the host got slower on Monday, since host Wait about doubled.
+- C. Every VM on the host got slower on Monday, since host Wait about doubled when the desktops came.
 - D. PCPU 46 was idle for almost the whole sample: a fully idle thread shows at most 10,000 ms.
-- E. PCPU 46 was busy about half of the sample: 9,990 ms of Idle out of 20,000 ms.
+- E. PCPU 46 was busy for about half of the sample, since 9,990 ms of Idle is half of 20,000 ms.
 - F. With Hyper-Threading off, a fully idle core would also show at most 10,000 ms of Idle per sample.
 - G. For a wait that matters on a VM, read that VM's Swap Wait and Other Wait, not the host Wait total.
 - H. CPU Active (1 min. average) gives the same value as CPU Demand, so an alert on it adds nothing.

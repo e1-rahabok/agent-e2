@@ -37,7 +37,7 @@ Which statements are correct?
 - Tests: Same name, different formula per object (distinction).
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md) (author approved, 2026-11-14): the options on host Consumed near 100% and on the Latency wait no longer negate the 95% misconception; the Latency key point no longer lists balloon as contention; the over-correction (no use in capacity management) added; the option that VCF Operations VM Memory Usage (%) is the vCenter value removed, since the pair 0394/0395 tests it.
 - Review 2026-11-15: the Latency option reworded to the wait of the VMs whose memory the host took.
-- Changed in the 2026-11-15 audit: level 400 to 300 (one same-name fact on two objects); old B (vCenter VM Usage is Active) dropped, as the redundancy cap keeps that fact in the pair 0394/0395; I added (the sum of the VMs' Consumed read as host Consumed, host/consumed misconception); G trimmed. Letters: old C to I are now B to H; answer B, D, G, H became C, F, G; misconception E, A became D, A. Key point A no longer says "claimed" (Words to avoid).
+- Changed in the 2026-11-15 audit: level 400 to 300 (one same-name fact on two objects); old B (vCenter VM Usage is Active) dropped, as the redundancy cap keeps that fact in the pair 0394/0395; I added (the sum of the VMs' Consumed read as host Consumed, host/consumed misconception); G trimmed. Letters: old C to I are now B to H; answer B, D, G, H became C, F, G; misconception E, A became D, A. Key point A no longer uses a word from the Words to avoid table.
 - Paired with 0151 (theory and practical; design.md, section 3.9).
 
 ## Metadata

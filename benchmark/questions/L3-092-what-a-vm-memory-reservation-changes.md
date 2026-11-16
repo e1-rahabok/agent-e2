@@ -13,11 +13,11 @@ Which statements are correct?
 - C. The VM's Consumed and Granted stay at their level when the task completes.
 - D. The host's Reservation consumed rises and its Reservation available falls by the same amount.
 - E. The VM's Overhead consumed rises by the 12 GB the VM now reserves.
-- F. The reservation is a setting of the VM: Edit Settings and the reconfigure task show it.
+- F. The reservation is recorded in the VM's configuration and in the reconfigure task event.
 - G. The host's Consumed rises by about 3 GB, the part of the reservation the VM has not touched yet.
 - H. Consumed did not move, so the change was not applied; the administrator should repeat it.
-- I. Power-on of other VMs on this host is now checked against unreserved memory that is 12 GB smaller.
-- J. The host's kernel reservation, System Resource Reservation, grows by the VM's 12 GB.
+- I. The host's Reservation consumed rises by the full 12 GB, though the VM has touched only about 9 GB.
+- J. From now on the 12 GB is held back from other VMs, including the part this VM has not touched.
 
 ## Likely wrong answer
 - A: "Consumed jumps to the reservation."
@@ -33,12 +33,13 @@ Which statements are correct?
 - F true: the reservation is a VM setting, recorded in the VM's configuration and in the reconfigure task event (`config.memoryAllocation.reservation: old -> new`).
 - G false: host Consumed counts pages in use, and the reservation backs none of them; it does not rise by the untouched part either.
 - H false: the flat Consumed is the expected result of a reservation; the task completed, so the change applied. Repeating it changes nothing.
-- I true: admission control counts a running VM's full reservation, used or not, against the host's unreserved memory.
-- J false: the kernel reservation is the host/system allocation minimum, a separate reservation that stays steady whatever the VMs reserve.
+- I true: Reservation consumed counts each running VM's reservation as set, not the pages the VM has touched, so it takes the whole 12 GB.
+- J false: a memory reservation is held as pages only once used; until the VM touches it, the untouched part can back other VMs' pages. Only admission control counts the full amount.
 
 ## Notes
 - Pair with 0442 (practical: the same fact on a VM chart and the task list). A fact gets two questions at most (design.md, section 3.9).
-- No option rests on whether Reservation consumed counts the reservation as set or only the touched part (Q231, answered 2026-11-15: counted as set): D and the key hold under either reading. No option uses Entitlement, a kernel value with no operations use (Q230, answered 2026-11-15).
+- Reservation consumed counts the reservation as set (host/reservation, lab test of two VMs): I rests on it. No option uses Entitlement, a kernel value with no operations use.
+- Changed in the 2026-11-15 audit: I (admission control counts the full reservation, redundancy #1, homed in 0048/0085) replaced by the as-set fact; J (kernel reservation, a throwaway) replaced by the untouched-pages misconception (with 0442 H, the pair: two questions); F without the UI names.
 - Distinct from 0014 (a memory reservation is backed as pages are touched, with a CPU reservation as the contrast): this question asks which counters take a reservation change.
 - Evidence behind C, D, E and F (E: Overhead consumed): the author's lab test of 2026-11-15, one VM, the reservation set and later removed (knowledge: vm-memory-metrics, section VM reservation across counters; host-memory-metrics, section VM reservation across counters).
 - Written 2026-11-15 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
@@ -65,7 +66,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-15 from the author's lab test"
+source_path: "Synthetic, 2026-11-15, from the author's lab test"
 answer: [C, D, F, I]
 misconception: [A, G]
 misconception_type: [provider-vs-consumer]

@@ -18,11 +18,11 @@ Which statements are correct?
 
 - A. The job did the same work in about 22% fewer CPU cycles on new-01: 25,000 against 32,000 MHz-hours.
 - B. The lower base clock of new-01 means that each vCPU completes less work per second than it did on old-01.
-- C. VM CPU Usage (MHz) counts cycles, adjusted for frequency and Hyper-Threading, and no counter adjusts for the work per cycle.
+- C. Usage (MHz) counts cycles, adjusted for frequency and Hyper-Threading, not for the work per cycle.
 - D. The cycle saving must come from Turbo: new-01 runs further above its base clock than old-01 did.
 - E. Run of 66% and 68% shows that the VM got about the same CPU performance on both clusters.
-- F. Usage (MHz) measured on old-01 is not a like-for-like demand on new-01, as a cycle there does a different amount of work.
-- G. Add a vCPU to rpt-batch-03 on new-01 to make up for its lower base clock.
+- F. Usage (MHz) from old-01 is not a like-for-like demand on new-01: a cycle there does more work.
+- G. Add a vCPU to rpt-batch-03 on new-01 to make up for the lower base clock of the new hosts.
 - H. The CPU Latency of the VM on old-01 shows the work per cycle it lost on the older processor.
 - I. A vCPU at 2.0 GHz and one at 3.0 GHz that both ran the whole sample show the same Run.
 

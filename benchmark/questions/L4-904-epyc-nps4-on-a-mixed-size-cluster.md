@@ -13,13 +13,13 @@ Which statements are correct?
 
 - A. At NPS-4 each NUMA node holds 24 cores and 3 of the socket's 12 memory channels.
 - B. NPS-4 gives every VM local memory, because each quarter of the socket has its own memory controllers.
-- C. On this processor the NPS-4 boundaries remove no die-to-die hop: every CCD reaches every memory controller through the one I/O die.
+- C. With one I/O die, the NPS-4 node boundaries on this processor remove no die-to-die hop.
 - D. At NPS-1, db-sql-01 fits in one NUMA node whose memory is interleaved over all 12 channels.
 - E. Turn on CCX as NUMA Domain as well, so that ESX keeps each VM's vCPUs inside one L3 cache.
 - F. Even at NPS-1, the 40 vCPUs of db-sql-01 span several CCDs, so they do not share one L3 cache.
-- G. Inside one NUMA node every core reaches every other core at the same cost.
+- G. Inside one NUMA node every core reaches every other core and its cache at the same cost.
 - H. N%L of 54 in both samples shows a NUMA migration in progress that will finish without action.
-- I. Set numa.migThreshold to 50 or more, so that db-sql-01 keeps its memory local.
+- I. Set numa.migThreshold to 50 or more on the hosts, so that db-sql-01 keeps its memory local.
 - J. Return the cluster to NPS-1 with CCX as NUMA Domain off, the default for a general-purpose cluster.
 
 ## Likely wrong answer

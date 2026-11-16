@@ -10,12 +10,12 @@
 
 Which statements are correct?
 
-- A. With Use P States = 0, ESXi runs busy cores at the highest frequency available, Turbo included, so 3.3-3.5 GHz is expected.
-- B. Cores above 2.4 GHz show that the policy change did not take effect: reboot the hosts.
+- A. With Use P States = 0, busy cores run at the highest frequency available, Turbo included.
+- B. Cores above 2.4 GHz show that the policy change did not take effect, so the hosts need a reboot.
 - C. Setting Use C States = 0 as well would keep the busy cores at the 2.4 GHz base clock.
-- D. To keep the cores at or below base clock from ESXi, set Power.MaxFreqPct below 100 in the Custom policy.
-- E. Use P States = 0 also stops idle cores from entering deep C-states.
-- F. One NUMA node on a two-socket host shows that interleaving hides the NUMA layout, so ESXi cannot keep VM memory local.
+- D. To keep the cores at or below base clock from ESXi, set Power.MaxFreqPct below 100.
+- E. Use P States = 0 also keeps the idle cores out of deep C-states, so they wake faster.
+- F. One NUMA node per two-socket host shows that interleaving hides the NUMA layout from ESXi.
 - G. Performance Best Practices advises node interleaving on most hosts, because it evens out memory latency.
 - H. The BIOS factory defaults suit an ESXi host, so the rest of the BIOS needs no review.
 - I. With EPT turned off in the BIOS, ESXi 9.1 would fall back to software MMU virtualization.

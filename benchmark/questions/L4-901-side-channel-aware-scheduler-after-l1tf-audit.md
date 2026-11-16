@@ -16,12 +16,12 @@ Which statements about the change and the readings are correct?
 
 - A. The hosts now run the first version of the Side-Channel-Aware Scheduler, which uses one thread per core.
 - B. The current patches had already closed the concurrent-context vector, so the setting added no protection.
-- C. Setting `VMkernel.Boot.hyperthreadingMitigationIntraVM` to FALSE gives SCAv2, which never runs two VMs on one core at once.
+- C. `hyperthreadingMitigationIntraVM` = FALSE gives SCAv2, which never runs two VMs on one core at once.
 - D. Utilization of 48% with Core Utilization of 96% matches a scheduler that runs one thread on each core.
 - E. Utilization of 48% shows that about half of each host's thread capacity is still free for more VMs.
 - F. Readiness rose because the scheduler now has about half as many logical processors to place vCPUs on.
 - G. Side-channel mitigations in the hypervisor have no measurable performance cost on fully patched hosts.
-- H. Add vCPUs to the VMs whose Readiness rose, so that each of them gets more CPU time per second.
+- H. Add vCPUs to the VMs whose Readiness rose, so that each of them gets more CPU time in every second.
 - I. The Side-Channel-Aware Scheduler turns on by itself once the sequential-context updates are installed.
 - J. SCAv1 and SCAv2 cost about the same performance, since both keep different VMs off a shared core.
 

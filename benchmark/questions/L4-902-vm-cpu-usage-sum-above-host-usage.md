@@ -12,16 +12,16 @@
 
 Which statements are correct?
 
-- A. On a core with both threads busy, VM CPU Usage charges each vCPU 62.5% of the core; host CPU Usage gives each thread half of it.
+- A. On a core with both threads busy, VM Usage charges each vCPU 62.5% of the core; host Usage, 50% per thread.
 - B. On average about 20 cores had both threads busy: 75% of 64 threads less 87.5% of 32 cores.
 - C. The gap is about a quarter of a core for each of those cores: 20 × 2,500 MHz × 0.25, or 12,500 MHz.
 - D. The 12,450 MHz is CPU the VMkernel used for its own work, which the VM counters leave out.
-- E. Host CPU Usage counts a core with both threads busy as 125% of the core, so the host value is too high.
-- F. The VM sum and the host value have to match, so the gap is a vCenter collection error.
+- E. Host CPU Usage counts a core with both threads busy as 125% of the core, so the host value is the one too high.
+- F. The VM sum and the host value must match, so the 12,450 MHz gap points to a vCenter collection error.
 - G. With Turbo on, both counters would rise by the same frequency factor, so Turbo would not close the gap.
 - H. Host Usage (%) equals Core Utilization in this hour because the cores ran at their base clock.
 - I. Host Usage (%) carries the Hyper-Threading charge for a shared core in the same way as VM Usage (%).
-- J. Host Usage of 87.5% shows that 12.5% of the host's CPU is left for new VMs.
+- J. Host Usage of 87.5% shows that 12.5% of the host's CPU is still free to place new VMs on.
 
 ## Likely wrong answer
 "The VMs cannot use more CPU than the host has, so vCenter double-counts (F); or the host is the one over-counting, at 125% per busy core (E)." E and F are the misconceptions.

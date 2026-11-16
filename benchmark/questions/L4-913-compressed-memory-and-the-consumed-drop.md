@@ -13,7 +13,7 @@
 | Swapped | 0 | 0.8 GB |
 | Ballooned memory | 0 | 0 |
 
-- Swap in rate and Decompression rate stay at 0 from 14:05 to 14:35.
+- The appliance's load is steady all afternoon. Swap in rate and Decompression rate stay at 0 from 14:05 to 14:35.
 - The capacity manager puts "compression saved 2.0 GB on erp-app-11" on a slide. An administrator replies: "Consumed fell by 6.4 GB, but only 2.8 GB was compressed or swapped. The counters disagree."
 
 Which statements are correct?

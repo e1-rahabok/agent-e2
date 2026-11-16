@@ -5,15 +5,15 @@
 
 Which statements about this counter and its effect are correct?
 
-- A. A packet counted here had already left the Guest OS, so the guest's own counters show it as sent.
-- B. For TCP traffic, the guest sends the data again when no acknowledgement comes back for the dropped packet.
-- C. With no user complaints, transmit drops on a VM can be ignored.
+- A. A packet counted here had already left the Guest OS, so the guest's counters show it as sent.
+- B. For TCP traffic, the guest sends the data again when no acknowledgement returns for it.
+- C. With no user complaints, the transmit drops on this file server VM can be ignored.
 - D. A transmit drop reaches the application as a failed request or a connection error.
-- E. A frame discarded by a congested top-of-rack switch is counted in this counter.
-- F. A full VMXNET3 receive ring in the guest raises this counter.
-- G. Enlarge the guest's VMXNET3 receive ring to stop the transmit drops.
-- H. An NSX firewall rule that rejects outgoing packets can raise this counter.
-- I. Across a large estate, VMs show far more transmit drops than receive drops.
+- E. A frame that a congested top-of-rack switch discards is counted in this VM counter.
+- F. The VM's Packets Dropped (%) in VCF Operations counts only these transmitted drops.
+- G. A regular rhythm of transmit drops, at the same minutes each hour, is noise that needs no follow-up.
+- H. 1,000 transmit drops of full-size frames mean about 1.5 MB that TCP has to send again.
+- I. Across a large estate of VMs, there are far more transmit drops than receive drops.
 
 ## Likely wrong answer
 C: nobody complains, so the transmit drops do not matter. Or the reverse: every transmit drop is an application error.
@@ -25,14 +25,15 @@ C: nobody complains, so the transmit drops do not matter. Or the reverse: every 
 - C false: TCP hides the drops through retransmission; the application sees higher latency, not an error, so no complaint does not mean no impact.
 - D false: TCP recovers the data; the cost is delay, not a failed request.
 - E false: Ethernet does not acknowledge frames; ESXi counts a frame as sent once the physical NIC puts it on the wire. A drop in the top-of-rack switch is counted only in that switch.
-- F false: a full receive ring is a receive drop (droppedRx, %DRPRX), not a transmit drop.
-- G false: the receive ring is the fix for receive drops caused in the guest; it does nothing for packets dropped after they left the guest.
-- H true: an NSX firewall that rejects outgoing packets shows up as transmit drops on the VM (Broadcom KB 322462).
+- F false: VCF Operations Packets Dropped (%) adds received and transmitted drops and divides by dropped plus delivered packets; only the VM dropped packets alert counts transmitted drops alone.
+- G false: regular patterns of transmit drops are worth raising with the network team; a rhythm points to a cause on the path.
+- H true: each dropped packet is resent; at about 1.5 KB per full-size frame, 1,000 drops are about 1.5 MB of data sent again.
 - I false: receive drops are far more common than transmit drops across VMs (3,938 VMs over a month in the knowledge base's data).
 
 ## Notes
 - Theory half of the pair with 0074 (practical; design.md, section 3.9). Different situation and numbers from 0074, so one does not give away the other.
-- Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item B6 (origin: synthetic). Counts only after author approval.
+- Audit 2026-11-15: F (a receive ring raises a transmit counter) and G (the same mix-up as an action) were throwaways: F replaced with the VCF Operations Packets Dropped (%) formula (same-name, second question with 0061 D), G with the regular-pattern rule (shared with the pair 0074 B). H (an NSX Distributed Firewall reject; redundancy #56, over the cap: 0039/0420 keep it) replaced with the resend volume of transmit drops (packets-dropped, Profile transmit drops).
+- Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item B6 (origin: synthetic).
 
 ## Metadata
 ```yaml
