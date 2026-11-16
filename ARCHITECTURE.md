@@ -133,8 +133,8 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 | Level | What it checks | Needs a model | Command |
 |---|---|---|---|
 | Tools | Catalog, calculator, flows, verifier give exact, expected results | No | `python3 -m unittest harness/test_tools.py` |
-| Retrieval check | For every question, are the files it needs found and put in the context? | No | `python3 benchmark/runner/retrieval_eval.py` (add `--embeddings` for hybrid) |
-| Whole system | Model + harness + knowledge on the question set; recall per answer shows whether the files were found or read | Yes | `python3 benchmark/runner/run.py` |
+| Retrieval check | For every question, are the files it needs found and put in the context? | No | `python3 benchmark/runner/retrieval_check_without_model.py` (add `--embeddings` for hybrid) |
+| Whole system | Model + harness + knowledge on the question set; recall per answer shows whether the files were found or read | Yes | `python3 benchmark/runner/answer_questions_for_one_model.py` |
 
 - Current retrieval result: [`project/plan.md`](project/plan.md), M3.
 - Reading a wrong answer: needed file not in context → retrieval or knowledge problem; file in context but answer wrong → model or prompt problem; file missing from the knowledge base → knowledge gap.

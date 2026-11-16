@@ -14,10 +14,10 @@ No I/O here: the runner calls record after each answer and stops starting new on
 import threading
 from collections import deque
 
-from exitcodes import BUDGET, UNHEALTHY
+from runner_exit_codes import BUDGET, UNHEALTHY
 
 
-class Health:
+class StopRunOnBadAnswers:
     def __init__(self, window=40, max_bad=0.25, min_answers=20):
         self.window, self.max_bad, self.min_answers = window, max_bad, min_answers
         self._recent = {}

@@ -1,9 +1,9 @@
 """Per-model concurrency for the benchmark runner.
 
 Each model starts at its proven value (`concurrency`, or its entry in `concurrency_by_model`). The
-governor probes upward in small steps (proven, proven + step, proven + 2 * step) and keeps a step only
+this module probes upward in small steps (proven, proven + step, proven + 2 * step) and keeps a step only
 when the answers per minute rise by about the same ratio and the window has no error. An HTTP 429 sends
-the model back to its proven value for the rest of the run. The proven value is a floor: the governor
+the model back to its proven value for the rest of the run. The proven value is a floor: this module
 never goes below it. A model that rate-limits at the default has its own lower proven value in the config.
 
 Tasks run model by model, so at most one model probes at a time; the others wait at their proven value.
@@ -28,7 +28,7 @@ class _Probe:
         self.warned = False
 
 
-class Governor:
+class ParallelCallsPerModel:
     def __init__(self, proven, adaptive=True, step=2, max_probes=2, window=40, gain_fraction=0.5,
                  clock=time.monotonic, log=print):
         """proven: {model: proven concurrency}. gain_fraction: share of the ideal gain a step must deliver

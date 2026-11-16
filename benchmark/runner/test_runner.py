@@ -7,15 +7,15 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
-import questions as C  # noqa: E402
-import governor as G  # noqa: E402
-import report  # noqa: E402
-import exitcodes as X  # noqa: E402
-import health as H  # noqa: E402
-import naming as N  # noqa: E402
-import preflight as P  # noqa: E402
-import run_all as RA  # noqa: E402
-import summarize as S  # noqa: E402
+import question_files_and_answer_parsing as C  # noqa: E402
+import parallel_calls_per_model as G  # noqa: E402
+import score_report_for_one_run as report  # noqa: E402
+import runner_exit_codes as X  # noqa: E402
+import stop_run_on_bad_answers as H  # noqa: E402
+import run_folder_names as N  # noqa: E402
+import sample_check_before_round as P  # noqa: E402
+import run_all_models_in_one_round as RA  # noqa: E402
+import summary_of_all_runs as S  # noqa: E402
 from llm import MockClient, ParamClient  # noqa: E402
 
 
@@ -104,7 +104,7 @@ class ReleaseGateTest(unittest.TestCase):
 
 class RetrievalSummaryTest(unittest.TestCase):
     def test_main_file_misses_are_counted(self):
-        import retrieval_eval as R
+        import retrieval_check_without_model as R
         rows = [('0001', ['a', 'b'], ['a'], ['a', 'b'], 'a'),
                 ('0002', ['c', 'd'], ['c'], ['c'], 'd'),
                 ('0003', ['e'], [], [], '')]
@@ -178,12 +178,12 @@ class _Clock:
         return self.t
 
 
-class GovernorTest(unittest.TestCase):
+class ParallelCallsPerModelTest(unittest.TestCase):
     """Concurrency per model: probe above the proven value, never below it. A fake clock stands in for time."""
 
     def make(self, proven=None, **kw):
         self.clock, self.lines = _Clock(), []
-        return G.Governor(proven or {'m': 12}, window=10, clock=self.clock, log=self.lines.append, **kw)
+        return G.ParallelCallsPerModel(proven or {'m': 12}, window=10, clock=self.clock, log=self.lines.append, **kw)
 
     def drive(self, gov, n, rate_of, model='m', tag='agent-e2', error=lambda i: ''):
         """n answers finish; the time between two is 1 / rate_of(current limit) minutes."""
@@ -273,7 +273,7 @@ class GovernorTest(unittest.TestCase):
 class StopAndResumeTest(unittest.TestCase):
     """--max-minutes stops cleanly; --resume continues with the settings saved in the folder. Offline (--mock)."""
 
-    RUN = os.path.join(os.path.dirname(__file__), 'run.py')
+    RUN = os.path.join(os.path.dirname(__file__), 'answer_questions_for_one_model.py')
 
     def run_py(self, *args):
         import subprocess
@@ -324,18 +324,18 @@ class NamingTest(unittest.TestCase):
             self.assertEqual(N.run_name(['a/x', 'b/y'], out, mock=True, today=day), '20261114-x+y-mock')
 
 
-class HealthTest(unittest.TestCase):
+class StopRunOnBadAnswersTest(unittest.TestCase):
     def row(self, **kw):
         r = {'model': 'm', 'answer_type': 'deterministic', 'parse_ok': 1, 'error': '', 'truncated': 0}
         r.update(kw)
         return r
 
     def test_healthy_run_never_trips(self):
-        h = H.Health()
+        h = H.StopRunOnBadAnswers()
         self.assertTrue(all(h.record(self.row()) is None for _ in range(100)))
 
     def test_cut_off_answers_trip_the_check_after_enough_answers(self):
-        h = H.Health(window=40, max_bad=0.25, min_answers=20)
+        h = H.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
         for _ in range(15):
             self.assertIsNone(h.record(self.row(truncated=1, parse_ok=0)))         # too few answers to judge
         reason = None
@@ -345,22 +345,22 @@ class HealthTest(unittest.TestCase):
         self.assertEqual(h.code, X.UNHEALTHY)
 
     def test_a_few_wrong_or_unparsed_answers_are_not_a_problem(self):
-        h = H.Health()
+        h = H.StopRunOnBadAnswers()
         for i in range(60):
             self.assertIsNone(h.record(self.row(parse_ok=0 if i % 10 == 0 else 1)))     # 10% unparsed
 
     def test_unparsable_free_text_is_not_counted_but_an_error_is(self):
-        self.assertFalse(H.Health.is_bad(self.row(answer_type='judged', parse_ok=0)))
-        self.assertTrue(H.Health.is_bad(self.row(error='HTTP 500')))
+        self.assertFalse(H.StopRunOnBadAnswers.is_bad(self.row(answer_type='judged', parse_ok=0)))
+        self.assertTrue(H.StopRunOnBadAnswers.is_bad(self.row(error='HTTP 500')))
 
     def test_budget_refusal_trips_at_once(self):
-        h = H.Health()
+        h = H.StopRunOnBadAnswers()
         reason = h.record(self.row(error='HTTP 402: Insufficient funds'))
         self.assertIn('402', reason)
         self.assertEqual(h.code, X.BUDGET)
 
     def test_each_model_has_its_own_window(self):
-        h = H.Health(min_answers=20)
+        h = H.StopRunOnBadAnswers(min_answers=20)
         for _ in range(30):
             h.record(self.row(model='good'))
         for _ in range(25):
@@ -492,7 +492,7 @@ class RoundHelpersTest(unittest.TestCase):
 
 
 class RoundRecoveryTest(unittest.TestCase):
-    """run_all.py with a fake run.py that exits with scripted codes: recovery without any model call."""
+    """run_all_models_in_one_round.py with a fake answer_questions_for_one_model.py that exits with scripted codes: recovery without any model call."""
 
     FAKE = (
         "import sys, os, json\n"
@@ -520,7 +520,7 @@ class RoundRecoveryTest(unittest.TestCase):
                    FAKE_SEQ=os.path.join(d, 'seq.json'), FAKE_LOG=os.path.join(d, 'log.txt'))
         out = os.path.join(d, 'out')
         os.makedirs(out)
-        p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'run_all.py'), '--out', out, '--skip-preflight',
+        p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'run_all_models_in_one_round.py'), '--out', out, '--skip-preflight',
                             '--only', model, *extra], capture_output=True, text=True, env=env, timeout=120)
         calls = [json.loads(x) for x in open(os.path.join(d, 'log.txt')).read().splitlines()] if os.path.exists(os.path.join(d, 'log.txt')) else []
         return p, calls, out
@@ -569,7 +569,7 @@ class RoundMockTest(unittest.TestCase):
             out, arch = os.path.join(d, 'out'), os.path.join(d, 'arch')
             os.makedirs(os.path.join(out, '20261101-old'))
             open(os.path.join(out, '20261101-old', 'config.json'), 'w').write('{}')
-            p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'run_all.py'), '--out', out, '--archive-dir', arch,
+            p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'run_all_models_in_one_round.py'), '--out', out, '--archive-dir', arch,
                                 '--skip-preflight', '--child-args', '--mock --runs 1 --questions L1-001,L1-002'],
                                capture_output=True, text=True, env=dict(os.environ, AI_GATEWAY_API_KEY='x'), timeout=300)
             self.assertEqual(p.returncode, X.OK, p.stdout + p.stderr)
@@ -590,7 +590,7 @@ class SummarizeTest(unittest.TestCase):
         import subprocess
         import tempfile
         with tempfile.TemporaryDirectory() as out:
-            run = os.path.join(os.path.dirname(__file__), 'run.py')
+            run = os.path.join(os.path.dirname(__file__), 'answer_questions_for_one_model.py')
             for m in ('x/one', 'x/two'):
                 subprocess.run([sys.executable, run, '--mock', '--models', m, '--modes', 'baseline,agent-e2', '--runs', '1',
                                 '--questions', 'L1-001,L1-002,L2-001', '--out', out], capture_output=True, text=True, timeout=300, check=True)

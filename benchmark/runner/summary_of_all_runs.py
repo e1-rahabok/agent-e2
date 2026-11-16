@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Summarize the run folders of one benchmark round into one analysis: benchmark/results/README.md.
 
-The numbers come from the run folders (answers.csv, config.json, traces.jsonl) through report.py, the same code as each
+The numbers come from the run folders (answers.csv, config.json, traces.jsonl) through score_report_for_one_run.py, the same code as each
 run's report.md. The sentences under "Reading" are generated from the numbers by fixed rules, so a reader can check each
 one against a table. Nothing is typed in by hand.
 
-  python3 benchmark/runner/summarize.py                       # every run folder in benchmark/results
-  python3 benchmark/runner/summarize.py --folders a b c d     # these folders only
+  python3 benchmark/runner/summary_of_all_runs.py                       # every run folder in benchmark/results
+  python3 benchmark/runner/summary_of_all_runs.py --folders a b c d     # these folders only
 """
 import argparse
 import csv
@@ -18,7 +18,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
-import report as R  # noqa: E402
+import score_report_for_one_run as R  # noqa: E402
 
 REPO = 'https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results'
 E2 = 'agent-e2'
@@ -99,7 +99,7 @@ def build(folders, today=None):
     n_q = len(cfg0.get('questions') or [])
     L = [f'# Benchmark results: round of {dates[0][:4]}-{dates[0][4:6]}-{dates[0][6:]}', '',
          f'- {len(info)} runs, {n_q} questions, {cfg0.get("runs")} runs per question, sampling {json.dumps(cfg0.get("sampling")) if cfg0.get("sampling") else cfg0.get("temperature")}. '
-         f'Written by `benchmark/runner/summarize.py` from the run folders; every number below comes from them.',
+         f'Written by `benchmark/runner/summary_of_all_runs.py` from the run folders; every number below comes from them.',
          '- How to read a score: the exact value is read at plus or minus 5 points. The benchmark is a proof: Agent E2 against the release gate and the frontier reference. '
          'Method and scoring: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md).', '']
     L += ['## Runs', '', '| Run folder | Model | Modes | Request settings | Answers | Failed | Cut off | First to last answer | Cost US$ |', '|---|---|---|---|---|---|---|---|---|']
