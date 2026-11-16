@@ -1,6 +1,8 @@
 # Overhead
 
 ## Definition
+- In any IT systems, there is always an overhead. Overhead is any part that is not 100% technically mandatory for the running of the system. Many essential features such as observability and high availability will not stop a system from running if they are not in-place.
+- Virtualization, being a layer in between Operating Systems and physical hardware, logically brings its own unique overhead. 
 - Do not label every additional load as overhead.
 - Overhead: mandatory (cannot be avoided) AND has negative impact (slower performance or more resource required).
 - Not overhead: optional. You choose to use it. Typically brings a capability not possible without virtualization. The capability typically consumes resource, which is often mistaken as overhead.
@@ -12,7 +14,7 @@
 | IO processing by the hypervisor | Extra processing by the kernel. Can cause the IO blender effect. Does not reduce the resources allocated to the Guest OS. |
 | VM CPU and memory overhead for the VM Monitor (VMM) | Small. Operationally negligible. |
 | vSAN processes | ESXi memory consumed and CPU used by vSAN processes. |
-| VM log files | The VM is a layer of its own; its logs provide necessary observability. |
+| VM log files | The VM is a layer of its own; its logs provide necessary observability. It is not however, an additional overhead as physical servers will have their equivalent log files.|
 
 ## Not overhead
 | Item | Note |
