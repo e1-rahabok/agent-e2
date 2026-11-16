@@ -34,7 +34,8 @@ B: reading the gap as lost IO.
 - H is false: the RDM LUNs carry the 4,000 read IOPS; the datastore counters see only the OS disk.
 
 ## Notes
-- Drafted by Claude 2026-11-12, replacing a question on "write latency below read latency": that topic depends on the array's cache design, so its key would not be decidable from public mechanisms. Counts only after author approval.
+- Retired 2026-11-15 (question bank audit, redundancy): a near-copy of 0426. Its counted options A, C and D restate 0426 B, A and E one for one (VM datastore counters exclude RDM IO; virtual disk counters include RDMs; Disk counters cover VMFS and RDM), and its misconception B (the gap is a fault) is tested by 0426 G and 0049 C. The 0426/0427 pair keeps the RDM layer facts as theory and practical.
+- Synthetic, 2026-11-12, replacing a question on "write latency below read latency": that topic depends on the array's cache design, so its key would not be decidable from public mechanisms. Counts only after author approval.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the compatibility-mode option (old F) dropped, as the knowledge base does not name the mode; F (other VMs), over-correction G and wrong action H added. Key unchanged: A, C, D.
 
 ## Metadata
@@ -57,9 +58,9 @@ knowledge:
 knowledge_main: vsphere/technology/storage/metrics/virtual-motherboard/datastore
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
+source_path: "Synthetic, 2026-11-12"
 answer: [A, C, D]
 misconception: [B]
 misconception_type: [same-name-other-object]
-status: draft
+status: retired
 ```

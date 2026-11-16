@@ -23,7 +23,7 @@ Why does the power-on fail when the cluster is at 25%, what do you change, and w
 - M. Removing the CPU reservation of fin-batch02 lets it pass CPU admission control.
 - N. The error is transient: a retry or a restart of vCenter lets the power-on through.
 - O. An expandable reservation isolates the VMs of a pool from the demands of the sibling pools under the same parent.
-- P. Keep part of the cluster capacity unreserved; the vSphere documentation advises at least 10%.
+- P. Keep at least 10% of the cluster's capacity unreserved, as headroom for reservation changes and pool edits.
 - Q. Lowering the CPU reservation of fin-erp-app01 from 2,400 to 1,800 MHz lets fin-batch02 power on.
 - R. The export shows that each VM of RP-TEST reserves 4,000 MHz of CPU.
 
@@ -49,7 +49,7 @@ Why does the power-on fail when the cluster is at 25%, what do you change, and w
 - M true: a VM with no reservation passes CPU admission control (its overhead memory is still checked; the memory side reaches the root, every pool there is expandable for memory).
 - N false: the failure is deterministic, from the reservations in the tree.
 - O false: only a fixed reservation isolates; with an expandable one, a child can take all of the parent's spare reservation and leave none for its siblings.
-- P true: headroom for reservation changes, pool edits, overhead and DRS migrations.
+- P true: the documented advice is at least 10% unreserved; near 100% reserved, reservation changes and pool edits fail and DRS cannot migrate VMs.
 - Q false: RP-FIN would then have 9,600 - 4,200 - 3,200 = 2,200 MHz unreserved, still less than the 2,400 MHz asked; lowering the reservations of RP-FIN's own VMs by 800 MHz or more in total would work.
 - R false: the 4,000 MHz of the RP-TEST VMs is in the CPU limit column; their CPU reservation is 0.
 
@@ -57,8 +57,8 @@ Why does the power-on fail when the cluster is at 25%, what do you change, and w
 - Review 2026-11-15: H reworded (it copied 0048 F); R added as a false reading of the export; title follows the 25% in the prompt. Key unchanged.
 - Revised 2026-11-12: the tree as a CSV export, the error as text; no screenshot.
 - Expandable reservations walk up the tree while each ancestor is expandable (vSphere 9.1 Resource Management, Expandable Reservations Example).
-- Admission control questions test different facts: L2-10 (reservations, not usage), L4-30 (Invalid vs Overcommitted), this one (the walk up the tree stops at a fixed reservation).
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). Review 2026-11-14: option Q added for the old key point "lower other reservations in the fixed parent pool", as a near miss (a cut too small to be enough).
+- Admission control questions test different facts: L2-010 (reservations, not usage), L4-030 (Invalid vs Overcommitted), this one (the walk up the tree stops at a fixed reservation).
+- Option Q is a near miss: a cut in the fixed parent pool too small to be enough.
 - CSV regenerated 2026-11-14 (project/question-pairing-2026-11-14.md, section 1, item 3): the old tree carried the knowledge example's numbers (6 - 3 - 2 = 1 GHz). New cluster, pools, VMs and numbers from a seeded script; the options and key follow the new numbers. Key letters unchanged.
 - Paired with 0048 (the same mechanism as theory).
 
@@ -84,7 +84,7 @@ knowledge_main: vsphere/object-types/cluster/concepts/admission-control-and-clus
 attachments:
   - 0085/resource-pool-tree.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
+source_path: "Synthetic, 2026-11-05; revised 2026-11-12"
 misconception_type: [consumption-as-contention]
 pair: "0048"
 status: draft

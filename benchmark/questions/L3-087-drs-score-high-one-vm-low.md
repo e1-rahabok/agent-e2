@@ -4,7 +4,8 @@
 - Users of the VM pay-api-03 report slow responses this morning. The application owner sends the cluster score from PowerCLI and says: "The cluster score is green, so vSphere is fine. The problem must be inside the VM."
 
 ```text
-(generated)
+PS> (Get-Cluster cl-prod-02).ExtensionData.Summary.DrsScore
+94
 ```
 
 - You export [the VM DRS Score list of the cluster](0433/vcenter-cluster-vm-drs-scores.csv) (Monitor > vSphere DRS > VM DRS Score) and [the vCenter CPU chart of pay-api-03](0433/vcenter-vm-cpu-realtime.csv), Real-time, for the last 30 minutes.

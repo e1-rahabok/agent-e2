@@ -339,6 +339,90 @@ class ClusterCapacityCases(unittest.TestCase):
         self.assertTrue(case.check({name: "\n".join(lines)}))
 
 
+class CpuCoStopCases(unittest.TestCase):
+    IDS = ("0369", "0370", "0371", "0372", "0373", "0375")
+
+    def test_generate_check_deterministic(self):
+        cases = core.load_cases()
+        for cid in self.IDS:
+            case = cases[cid]
+            files = case.generate(case.seed)
+            self.assertEqual(files, case.generate(case.seed), cid)
+            self.assertEqual(case.generate_inline(case.seed), case.generate_inline(case.seed), cid)
+            self.assertEqual(case.check(files), [], cid)
+            self.assertEqual(core.check_size_cap(files), [], cid)
+            inline = case.generate_inline(case.seed)
+            self.assertEqual(case.check_inline(inline, files), [], cid)
+
+    def test_corrupted_cpu_files_fail(self):
+        cases = core.load_cases()
+        c = cases["0372"]
+        name, text = next(iter(c.generate().items()))
+        lines = text.split("\n")
+        parts = lines[5].split(",")
+        parts[5] = str(int(parts[5]) + 7)
+        lines[5] = ",".join(parts)
+        self.assertTrue(c.check({name: "\n".join(lines)}))
+        c = cases["0375"]
+        block = c.generate_inline()[1]
+        self.assertTrue(c.check_inline({1: block.replace("   0.00    0.00 \n", "   0.30    0.00 \n", 1)}, {}))
+        c = cases["0373"]
+        files = c.generate()
+        bad = c.generate_inline()[1].replace("Average:", "Averagx:", 1)
+        self.assertTrue(c.check_inline({1: bad}, files))
+
+
+class CpuClusterCases(unittest.TestCase):
+    """Cases 0368, 0381, 0436, 0374, 0376, 0379, 0433: generate + check, determinism, broken input fails."""
+    IDS = ("0368", "0381", "0436", "0374", "0376", "0379", "0433")
+
+    def test_generate_check_deterministic(self):
+        cases = core.load_cases()
+        for cid in self.IDS:
+            case = cases[cid]
+            files = case.generate(case.seed)
+            self.assertEqual(files, case.generate(case.seed), cid)
+            self.assertEqual(case.generate_inline(case.seed), case.generate_inline(case.seed), cid)
+            self.assertEqual(case.check(files), [], cid)
+            self.assertEqual(core.check_size_cap(files), [], cid)
+            blocks = {}
+            qp = core.question_path(cid)
+            if qp is not None:
+                blocks = core.read_inline_blocks(qp.read_text(encoding="utf-8", newline=""))
+            blocks.update({n: t.rstrip("\n") for n, t in case.generate_inline(case.seed).items()})
+            self.assertEqual(case.check_inline(blocks, files), [], cid)
+
+    def test_broken_input_fails(self):
+        cases = core.load_cases()
+        c = cases["0368"]
+        files = c.generate()
+        name = "vcenter-vm-cpu-realtime.csv"
+        lines = files[name].split("\n")
+        parts = lines[2].split(",")
+        parts[3] = str(int(parts[3]) + 500)           # Ready: state sum and Readiness break
+        lines[2] = ",".join(parts)
+        self.assertTrue(c.check({**files, name: "\n".join(lines)}))
+        c = cases["0436"]
+        block = c.generate_inline()[2].replace("      0.00 ", "   1000.00 ", 1)
+        self.assertTrue(c.check_inline({1: "bad", 2: block}, {}))
+        c = cases["0376"]
+        block = c.generate_inline()[1]
+        self.assertTrue(c.check_inline({1: block.replace("vmx-vcpu-2", "vmx-vcpu-9")}, {}))
+        c = cases["0379"]
+        self.assertTrue(c.check_inline({1: "Name : other"}, {}))
+
+    def test_numa_panel_and_grid_formats(self):
+        text = formats.esxtop_panel("m-numa", "status", [(1, "vm-a", 1.0, 1.0, 1.0, "0", 0, 0.0, 1.0, 100, 1.0, 0.5, 0.0, 0.0),
+                                                           (2, "hostd.1", 60.0, 60.0, 59.0, None, None, None, None, None, None, None, None, None)])
+        head, rows = formats.parse_esxtop_panel(text, "m-numa")
+        self.assertEqual(head[-3:], ["OVD_ND0", "GST_ND1", "OVD_ND1"])
+        self.assertEqual(rows[1][5:], ["-"] * 9)
+        grid = formats.vsphere_grid_csv(["Name", "DRS Score"], [["a", "41%"]])
+        self.assertEqual(formats.parse_vsphere_grid_csv(grid), (["Name", "DRS Score"], [["a", "41%"]]))
+        with self.assertRaises(ValueError):
+            formats.parse_vsphere_grid_csv("Name,Score\na,1\n")
+
+
 if __name__ == "__main__":
     unittest.main()
 

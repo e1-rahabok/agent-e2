@@ -15,6 +15,7 @@ Which statements are correct?
 - H. ESXi sees the Windows page file and reports its use as the VM's Swapped memory.
 - I. Once Windows counters are collected, VM Consumed has no use left.
 - J. VM Consumed near the configured size is a reason to add memory to the VM.
+- K. When Windows gives freed pages to a new process, ESXi backs them again and Consumed rises.
 
 ## Likely wrong answer
 - A: "They are the same utilization seen from two sides; the patterns differ only because they are collected at different times."
@@ -24,7 +25,7 @@ Which statements are correct?
 - Answer: B, C, D, E.
 - A is false: there is no mapping; the two layers count different things, so no timing fix makes them agree.
 - B is true: the Guest OS cannot see host memory and runs its memory as if on a physical server; ESXi cannot see the guest's lists.
-- C is true: how the guest classifies pages and its page file are ESXi blind spots; ESXi sees only reads and writes (Active: recently touched; Consumed: touched and still backed).
+- C is true: how the guest classifies pages (Standby is Windows' cache list) and its page file are ESXi blind spots; ESXi sees only reads and writes (Active: recently touched; Consumed: touched and still backed).
 - D is true: ESXi maps a guest physical page at the first touch (a fault in the second-level page tables); later freeing and reuse are ordinary memory writes that never reach ESXi.
 - E is true: the ESXi page stays mapped after the guest frees it, so Consumed does not drop; Consumed is not the guest's utilization.
 - F is false: Consumed is ESXi memory mapped to the VM (Granted minus sharing savings); VMware Tools plays no part in it.
@@ -32,14 +33,13 @@ Which statements are correct?
 - H is false: the guest page file is invisible to ESXi; Swapped is memory ESXi itself swapped out.
 - I is false: Consumed is the ESXi view of the VM; it feeds host capacity and the VM's memory footprint (for example for a migration). This is the over-correction of A.
 - J is false: Consumed stays high once the guest has touched its pages, cache included; that is not demand. Whether Windows needs more memory is read from Windows counters.
+- K is false: freed pages are still mapped, so a new process reuses the existing mapping with no EPT violation and no ESXi work; Consumed does not move.
 
 ## Notes
 - The only channel for ESXi to ask the Guest OS for memory is the balloon driver (VMware Tools on Windows; the vmw_balloon kernel module on Linux): not needed for the answer.
-- Author's prompt to Gemini 3.1 Pro (high effort), 2026-11-10. Author: Gemini's answer looks copied from the book. A parity question: Agent E2 must at least match it.
-- The prompt is the author's own words (a real exchange); the key was drafted by Claude 2026-11-10 from the knowledge files listed in `knowledge`. Counts only after author approval.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). The author's words are kept as the VM owner's message.
-- Rewritten 2026-11-14 to the theory option rules (design.md 3.9 and 6.2; project/question-pairing-2026-11-14.md) (author approved, 2026-11-14): the owner's sentence "How come there is no mapping?" removed from the prompt (it stated the key); B one fact; G no longer negates A's counter pairing with a "not Consumed" clause; old H ("Size the Guest OS from Guest OS counters, and read the VM counters for what ESXi does") removed, since the sizing fact is tested by 0021 and 0079; I the over-correction and J the wrong action added. Key changed from B, C, D, E, H to B, C, D, E.
-- Review 2026-11-15: D holds one fact (the first touch). Key unchanged.
+- Author's prompt to Gemini 3.1 Pro (high effort), 2026-11-10. A parity question: Agent E2 must at least match the frontier answer.
+- The prompt is the author's own words (a real exchange); the key was drafted 2026-11-10 from the knowledge files listed in `knowledge`. The 2026-11-14 rewrite to the theory option rules was approved by the author at Level 300; the pair 0386 is the Level 400 half.
+- K added in the 2026-11-15 audit (mechanism option: a new process reuses freed pages already mapped).
 
 ## Metadata
 ```yaml

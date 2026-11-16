@@ -12,24 +12,26 @@
 
 Which statements are correct?
 
-- A. Add the vCPUs: a queue of about 6 threads per processor is far above the guidance of 2, so Windows is short of processors.
-- B. A long queue while 7 of 8 vCPUs are mostly idle means the waiting threads cannot use the idle vCPUs (for example, processor affinity); more vCPUs do not shorten it.
+- A. Windows is short of processors: a queue of about 6 threads per vCPU is three times the guidance of 2, so 8 more vCPUs will shorten it.
+- B. The waiting threads cannot run on the 7 lightly used vCPUs (processor affinity or work bound to vCPU 0), so 8 more vCPUs will not shorten the queue.
 - C. Ready at 0.4% shows that ESXi runs the vCPUs when Windows asks; the wait is inside Windows.
 - D. Privileged time making up most of the busy time points at kernel or driver work; check the drivers and the DPC and interrupt time on vCPU 0.
 - E. The queue is vCPUs waiting for physical CPUs on the host; a CPU reservation for the VM shortens it.
 - F. Windows Processor Queue Length includes the threads running on the 8 vCPUs, so only 32-44 threads are waiting.
+- G. VCF Operations Guest|Peak vCPU Queue within collection cycle shows 40-52 for this VM in the same window.
 
 ## Likely wrong answer
-A: a long processor queue read as a vCPU shortage. Or E: the Windows queue taken for host CPU contention.
+A: a long processor queue read as a vCPU shortage. Or E: the Windows queue taken for host CPU contention. Or G: the VCF Operations queue taken for the PerfMon total.
 
 ## Expected key points
 - Answer: B, C, D.
-- A is wrong: the queue guidance holds when the processors are busy. Here 7 vCPUs sit at 15-30%. Adding vCPUs to a queue that idle vCPUs cannot drain adds context switching and can make it worse.
+- A is wrong: the threads wait while 7 vCPUs sit at 15-30%, so the queue is not a shortage of vCPUs. A long queue beside idle vCPUs points at affinity or work bound to one vCPU, and adding vCPUs adds context switching and can make it worse.
 - B is correct: Processor Queue Length counts ready threads only. Ready threads that wait while 7 vCPUs sit idle cannot be scheduled on those vCPUs (affinity, or work bound to vCPU 0): the application or its configuration, not the vCPU count. (A thread blocked on a lock waits, it is not in the queue.)
 - C is correct: Ready and Co-stop are low, so the vCPUs get physical CPU time. The queue is a Windows queue, invisible to ESXi.
 - D is correct: high privileged time with low user time points at driver or kernel locking; vCPU 0 at 100% with the others idle fits interrupt or DPC work landing on one processor.
 - E is wrong: Processor Queue Length is threads waiting for a vCPU inside Windows. Ready is the VM-side wait for a physical CPU, and it is low.
 - F is wrong: Windows excludes running threads from Processor Queue Length (Linux includes them). All 40-52 are waiting.
+- G is wrong: both VCF Operations queue metrics are the guest's total divided by the vCPU count. With 40-52 threads on 8 vCPUs the metric reads about 5-6.5; multiply by 8 to compare it with PerfMon.
 
 ## Notes
 - Paired with the Linux load average question: the Windows queue excludes running threads; the Linux run queue includes them.
@@ -54,9 +56,9 @@ knowledge:
 knowledge_main: guest-os/cpu/metrics/run-queue
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12"
+source_path: "Synthetic, 2026-11-12"
 answer: [B, C, D]
-misconception: [A, E]
-misconception_type: [layer-confusion]
+misconception: [A, E, G]
+misconception_type: [layer-confusion, unit-and-normalization]
 status: draft
 ```

@@ -49,8 +49,7 @@ Which statements about the red state, the risk to the running VMs and the fix ar
 
 ## Notes
 - Revised 2026-11-12: the screenshot became the tree as text. A DRS cluster turns red (Invalid) when the tree is inconsistent; yellow (Overcommitted) when capacity no longer covers the reservations (vSphere 9.1 Resource Management, Valid, Overcommitted and Invalid DRS clusters).
-- Admission control questions test different facts: L2-10 (reservations, not usage), this one (Invalid vs Overcommitted), L4-39 (expandable reservations walk up the tree).
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Admission control questions test different facts: L2-010 (reservations, not usage), this one (Invalid vs Overcommitted), L4-039 (expandable reservations walk up the tree).
 
 ## Metadata
 ```yaml
@@ -72,7 +71,7 @@ knowledge:
 knowledge_main: vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
+source_path: "Synthetic, 2026-11-05; revised 2026-11-12"
 misconception_type: [consumption-as-contention]
 status: draft
 ```

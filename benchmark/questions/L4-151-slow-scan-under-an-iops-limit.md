@@ -7,7 +7,11 @@
 - On the VM's host, esx-c2-07, esxtop shows the disk device panel (u) during the same minutes:
 
 ```text
-(generated)
+2:41:07am up 41 days 03:12, 1214 worlds, 18 VMs, 64 vCPUs; CPU load average: 0.20, 0.19, 0.20
+DEVICE                                PATH/WORLD/PARTITION DQLEN WQLEN ACTV QUED %USD  LOAD   CMDS/s  READS/s WRITES/s MBREAD/s MBWRTN/s DAVG/cmd KAVG/cmd GAVG/cmd QAVG/cmd 
+naa.624a93701c2d3e4f5a6b7c8d00011a02           -              64     -    1    0    1  0.02   378.66   231.94   146.71     1.81     1.15     0.72     0.02     0.74     0.01 
+naa.624a93701c2d3e4f5a6b7c8d00011a07           -              64     -    0   16    0  0.25   249.59   249.50     0.09    31.19     0.00     0.80    63.94    64.74    63.53 
+mpx.vmhba32:C0:T0:L0                           -               1     -    0    0    0  0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00 
 ```
 
 - The VM's virtual disks, from PowerCLI:
