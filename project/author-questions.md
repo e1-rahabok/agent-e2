@@ -20,17 +20,7 @@ Each entry:
 
 ## Release 1.0
 
-### Q256 · Benchmark · Do draft questions count in the round?
-
-- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 6.2 and 12); [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md) (Before you start, item 6).
-- Search strings: `Status draft: each question counts after the author's review`; `The run set is every question with status draft or reviewed`.
-- Now: design.md says a draft counts after the author's review; section 12 and the runner run every draft and reviewed question. 288 of 291 are drafts, 3 reviewed; 11 drafts changed after review (10 converted to multiple choice on 2026-11-14, 1 with rewritten options).
-- Question: what does the round measure?
-  - A. A development round on all 291 questions as they are; the scores are read as unreviewed. Review before the release round.
-  - B. Review at least the 11 changed drafts first, then run.
-  - C. Review the whole set first, then run.
-- Recommended: A for this round (it costs about US$ 77 and shows the model and harness state), B before any score is quoted, C before release.
-- Answer:
+No open question blocks release 1.0.
 
 ## Future release
 

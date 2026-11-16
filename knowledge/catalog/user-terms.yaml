@@ -52,7 +52,7 @@ rows:
   match: ['(add|more|increase|give it|bump)( more)? (v ?cpus?|cores?|processors?|cpu)\b', '(upsize|scale up) the (vm|cpu)']
   means: rightsizing Ready Co-stop Guest OS run queue NUMA
   note: 'More vCPUs can raise CPU Ready and Co-stop and break NUMA fit. Add vCPUs only when the Guest OS run queue shows a CPU bottleneck and the VM has no contention.'
-  files: [sp5-framework/capacity/rightsizing, vsphere/technology/cpu/metrics/virtual-motherboard/co-stop]
+  files: [sp5-framework/capacity/rightsizing, vsphere/technology/cpu/metrics/virtual-motherboard/co-stop, vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high]
 - id: add-memory
   premise: true
   match: ['(add|more|increase|give it)( more)? (ram|memory)\b', 'needs? more (ram|memory)']
@@ -80,6 +80,21 @@ rows:
   means: VM Memory Ballooned Swapped
   note: 'Ballooned memory was reclaimed through the Guest OS, in the past; it is not current pressure by itself. Swapped is paged out by ESXi at random.'
   files: [vsphere/technology/memory/metrics/virtual-motherboard/ballooned]
+- id: cluster-average-hides-vm
+  match: ['cluster[^.?\n]{0,50}\b(cpu|memory)\b[^.?\n]{0,30}\b(usage|utili[sz]ation|peak)', '\bdrs score\b', '\border (two|more|extra|another)[^.?\n]{0,20}hosts', '\bcluster[^.?\n]{0,20}\bsuffer']
+  means: cluster utilization VM contention worst VM average hides outlier
+  note: 'Cluster metrics are averages: one suffering VM is hidden, and low cluster utilization does not rule out VM contention. Read the worst VMs, not the cluster mean.'
+  files: [vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention, sp5-framework/observability/aggregation]
+- id: average-over-members
+  match: ['\baveraged\b', '\bone row per (hour|vm|host|vmnic)\b', '\blist view\b', '\baverage (of|across) (all )?(the )?(hosts|vms|vmnics|ports|datastores)']
+  means: aggregation average hides outlier summed counters divided by sample length
+  note: 'An average across members hides the outlier until the problem is widespread; a summed counter (Ready in ms) means nothing until divided by the sample length and the vCPU count.'
+  files: [sp5-framework/observability/aggregation]
+- id: vcenter-rollup
+  match: ['dropped packets?', '\bpackets? (dropped|receive errors|transmit errors)', '\bstatistics level\b', '\brollup\b', '20-second (average|sample)', '\breal-?time\b[^.?\n]{0,20}\bchart']
+  means: vCenter statistics real-time 20 seconds rollup collection interval
+  note: 'Real-time in the vSphere Client is a 20-second average; history is rolled into coarser points (5 minutes for 1 Day, 30 minutes for 1 Week, 2 hours for 1 Month), which smooths short bursts.'
+  files: [vsphere/tools/vsphere-client/vcenter-statistics]
 - id: swap-file
   match: ['\.vswp\b', '\bswap files?\b']
   unless: 'swap partition|pagefile'
