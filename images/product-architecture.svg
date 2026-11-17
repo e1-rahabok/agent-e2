@@ -1,0 +1,395 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1960" height="1420" viewBox="0 0 1960 1420" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<defs>
+<marker id="a-flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f5fae"/></marker>
+<marker id="a-tool" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5e35b1"/></marker>
+<marker id="a-call" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c25e00"/></marker>
+<marker id="a-data" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555555"/></marker>
+</defs>
+<rect width="1960" height="1420" fill="#ffffff"/>
+<text x="24" y="34" font-size="20" font-weight="bold" fill="#111" text-anchor="start">Agent E2, Product: how the agent and the harness drive the model and use the knowledge</text>
+<text x="24" y="54" font-size="12.5" font-weight="normal" fill="#444" text-anchor="start">Code leads, the model reads. Code decides what to read, compute and ask; the model is called 2 times in the common case, 4 at most, plus consensus samples. One pipeline for every question.</text>
+<rect x="10" y="70" width="1940" height="165" rx="10" fill="#f5fbf4" stroke="#c9c9c9"/>
+<text x="24" y="94" font-size="15" font-weight="bold" fill="#333" text-anchor="start">knowledge/</text>
+<text x="24" y="112" font-size="11" font-weight="normal" fill="#555" text-anchor="start">The only folder the harness</text>
+<text x="24" y="126" font-size="11" font-weight="normal" fill="#555" text-anchor="start">reads at run time.</text>
+<text x="24" y="140" font-size="11" font-weight="normal" fill="#555" text-anchor="start">Indexed; Level 400.</text>
+<text x="24" y="154" font-size="11" font-weight="normal" fill="#555" text-anchor="start">Text the model reads and</text>
+<text x="24" y="168" font-size="11" font-weight="normal" fill="#555" text-anchor="start">the map the code plans with.</text>
+<rect x="245" y="92" width="200" height="109" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="254" y="110" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start">Knowledge files *.md</text>
+<text x="254" y="128" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">metric, concept, mechanism, flow</text>
+<text x="254" y="143" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">body split by ## heading</text>
+<text x="254" y="158" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">## Misconceptions:</text>
+<text x="254" y="173" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">lines marked up_front</text>
+<text x="254" y="188" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">KPI files: colour bands</text>
+<rect x="470" y="92" width="260" height="109" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="479" y="110" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start">## Metadata (yaml): the map</text>
+<text x="479" y="128" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">same_name, internal_derive, related</text>
+<text x="479" y="143" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">retriever_guide: health-check,</text>
+<text x="479" y="158" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">troubleshooting, decision-tree</text>
+<text x="479" y="173" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">flows: ## Checks, in order</text>
+<text x="479" y="188" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">object, status, images</text>
+<rect x="755" y="92" width="230" height="109" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="764" y="110" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start">catalog/*.yaml</text>
+<text x="764" y="128" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">vcenter-counters, vcenter-api-counters</text>
+<text x="764" y="143" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">esxtop-fields, objects</text>
+<text x="764" y="158" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">thresholds-performance,</text>
+<text x="764" y="173" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">thresholds-capacity (planning-*),</text>
+<text x="764" y="188" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">thresholds-alerts</text>
+<rect x="995" y="92" width="205" height="94" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="1004" y="110" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start">catalog/user-terms.yaml</text>
+<text x="1004" y="128" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">user words to KB terms</text>
+<text x="1004" y="143" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">and files</text>
+<text x="1004" y="158" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">misconception note</text>
+<text x="1004" y="173" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">premise flag, product label</text>
+<rect x="1225" y="92" width="210" height="94" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="1234" y="110" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start">glossary.md</text>
+<text x="1234" y="128" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">preferred word per concept</text>
+<text x="1234" y="143" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">Also called, Not to confuse with</text>
+<text x="1234" y="158" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">Product label, Invites,</text>
+<text x="1234" y="173" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">Better name</text>
+<text x="1500" y="92" font-size="12.5" font-weight="bold" fill="#333" text-anchor="start">Legend</text>
+<rect x="1500" y="102" width="22" height="13" rx="3" fill="#e6f4e4" stroke="#2e7d32"/>
+<text x="1530" y="113" font-size="11" font-weight="normal" fill="#333" text-anchor="start">knowledge (data the harness reads)</text>
+<rect x="1500" y="121" width="22" height="13" rx="3" fill="#efe9f8" stroke="#5e35b1"/>
+<text x="1530" y="132" font-size="11" font-weight="normal" fill="#333" text-anchor="start">harness tool (code, exact)</text>
+<rect x="1500" y="140" width="22" height="13" rx="3" fill="#e4edfa" stroke="#1f5fae"/>
+<text x="1530" y="151" font-size="11" font-weight="normal" fill="#333" text-anchor="start">agent stage (code decides)</text>
+<rect x="1500" y="159" width="22" height="13" rx="3" fill="#fdebd3" stroke="#c25e00"/>
+<text x="1530" y="170" font-size="11" font-weight="normal" fill="#333" text-anchor="start">model endpoint</text>
+<rect x="1500" y="178" width="22" height="13" rx="3" fill="#f2f2f2" stroke="#666666"/>
+<text x="1530" y="189" font-size="11" font-weight="normal" fill="#333" text-anchor="start">data passed between stages</text>
+<rect x="1500" y="197" width="22" height="13" rx="3" fill="#f8f8f8" stroke="#9a9a9a" stroke-dasharray="4 3"/>
+<text x="1530" y="208" font-size="11" font-weight="normal" fill="#333" text-anchor="start">built, not yet called</text>
+<path d="M 1730 108 L 1764 108" fill="none" stroke="#1f5fae" stroke-width="1.6" marker-end="url(#a-flow)"/>
+<text x="1772" y="112" font-size="11" font-weight="normal" fill="#333" text-anchor="start">pipeline order</text>
+<path d="M 1730 127 L 1764 127" fill="none" stroke="#c25e00" stroke-width="3" marker-end="url(#a-call)"/>
+<text x="1772" y="131" font-size="11" font-weight="normal" fill="#333" text-anchor="start">model call (numbered)</text>
+<path d="M 1730 146 L 1764 146" fill="none" stroke="#5e35b1" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-tool)"/>
+<text x="1772" y="150" font-size="11" font-weight="normal" fill="#333" text-anchor="start">code calls a tool</text>
+<path d="M 1730 165 L 1764 165" fill="none" stroke="#555555" stroke-width="1.4" marker-end="url(#a-data)"/>
+<text x="1772" y="169" font-size="11" font-weight="normal" fill="#333" text-anchor="start">data flow</text>
+<path d="M 1730 184 L 1764 184" fill="none" stroke="#1f5fae" stroke-width="1.4" stroke-dasharray="7 4" marker-end="url(#a-flow)"/>
+<text x="1772" y="188" font-size="11" font-weight="normal" fill="#333" text-anchor="start">loop back (bounded)</text>
+<rect x="10" y="250" width="1940" height="265" rx="10" fill="#faf8fd" stroke="#c9c9c9"/>
+<text x="24" y="274" font-size="15" font-weight="bold" fill="#333" text-anchor="start">harness/: tools</text>
+<text x="24" y="292" font-size="11" font-weight="normal" fill="#555" text-anchor="start">Built at start-up; called</text>
+<text x="24" y="306" font-size="11" font-weight="normal" fill="#555" text-anchor="start">only by code, never the model.</text>
+<path d="M 1000 237 L 1000 252" fill="none" stroke="#555555" stroke-width="1.4" marker-end="url(#a-data)"/>
+<text x="1008" y="248" font-size="10.5" font-weight="normal" fill="#555" text-anchor="start">loaded once at start-up: files to chunks and links; YAML and KPI bands to SQLite; term rows; up-front block</text>
+<rect x="245" y="268" width="200" height="109" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="254" y="286" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">kb.py</text>
+<text x="254" y="304" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">load knowledge/**/*.md</text>
+<text x="254" y="319" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">split at ## Metadata</text>
+<text x="254" y="334" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">chunk by ##, prefix title + id</text>
+<text x="254" y="349" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">drop Mermaid and link paths</text>
+<text x="254" y="364" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">glossary entries</text>
+<rect x="470" y="268" width="260" height="109" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="479" y="286" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">retrieval.py</text>
+<text x="479" y="304" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">Retriever: BM25 + embeddings,</text>
+<text x="479" y="319" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">reciprocal rank fusion</text>
+<text x="479" y="334" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">search(query, filters, k)</text>
+<text x="479" y="349" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">links / backlinks by type</text>
+<text x="479" y="364" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">vectors cached in .cache/</text>
+<rect x="755" y="268" width="200" height="109" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="764" y="286" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">catalog.py</text>
+<text x="764" y="304" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">SQLite in memory</text>
+<text x="764" y="319" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">lookup: counter, label, esxtop</text>
+<text x="764" y="334" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">facts_for(ids): unit, rollup,</text>
+<text x="764" y="349" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">stats level, thresholds, bands</text>
+<text x="764" y="364" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">object relations and paths</text>
+<rect x="980" y="268" width="165" height="94" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="989" y="286" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">clarify.py</text>
+<text x="989" y="304" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">ASK_RULE (kind chat)</text>
+<text x="989" y="319" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">FINAL_RULE (chat_final)</text>
+<text x="989" y="334" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">parse CLARIFY:</text>
+<text x="989" y="349" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">at most 3 questions</text>
+<rect x="1185" y="268" width="220" height="79" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="1194" y="286" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">primer.py</text>
+<text x="1194" y="304" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">up-front block, 3K tokens max</text>
+<text x="1194" y="319" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">misconceptions marked up_front</text>
+<text x="1194" y="334" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">confusable pairs (glossary)</text>
+<rect x="1430" y="268" width="190" height="64" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="1439" y="286" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">llm.py</text>
+<text x="1439" y="304" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">the model client</text>
+<text x="1439" y="319" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">(see the model band)</text>
+<rect x="1645" y="268" width="285" height="94" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="1654" y="286" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">verify.py</text>
+<text x="1654" y="304" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">hard: no ANSWER line, letter not an</text>
+<text x="1654" y="319" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">option, Unsure mixed: one repair</text>
+<text x="1654" y="334" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">soft: no REASON, unknown file id,</text>
+<text x="1654" y="349" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">ungrounded number: recorded only</text>
+<rect x="470" y="392" width="210" height="79" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="479" y="410" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">terms.py</text>
+<text x="479" y="428" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">match: rows ranked by hits</text>
+<text x="479" y="443" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">case_labels: from screenshots</text>
+<text x="479" y="458" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">query words, files, notes</text>
+<rect x="755" y="392" width="160" height="94" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="764" y="410" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">calc.py</text>
+<text x="764" y="428" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">safe arithmetic (ast)</text>
+<text x="764" y="443" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">summation_to_percent,</text>
+<text x="764" y="458" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">units, cpu_states</text>
+<text x="764" y="473" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">result names its source</text>
+<rect x="980" y="392" width="150" height="64" rx="6" fill="#f8f8f8" stroke="#9a9a9a" stroke-width="1.4" stroke-dasharray="6 4"/>
+<text x="989" y="410" font-size="13" font-weight="bold" fill="#666666" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">flows.py</text>
+<text x="989" y="428" font-size="11.5" font-weight="normal" fill="#666666" text-anchor="start">steps of a flow file</text>
+<text x="989" y="443" font-size="11.5" font-weight="normal" fill="#666666" text-anchor="start">executable steps: Q166</text>
+<rect x="980" y="462" width="150" height="48" rx="6" fill="#f8f8f8" stroke="#9a9a9a" stroke-width="1.4" stroke-dasharray="6 4"/>
+<text x="989" y="480" font-size="13" font-weight="bold" fill="#666666" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">capacity.py</text>
+<text x="989" y="498" font-size="11.5" font-weight="normal" fill="#666666" text-anchor="start">planning calculator</text>
+<rect x="1185" y="392" width="220" height="94" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="1194" y="410" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">web.py</text>
+<text x="1194" y="428" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">URLs in the question: fetch</text>
+<text x="1194" y="443" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">current-fact words: vendor search</text>
+<text x="1194" y="458" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">system names dropped,</text>
+<text x="1194" y="473" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">private IPs refused, trim 2K</text>
+<rect x="30" y="330" width="190" height="94" rx="14" fill="#ffffff" stroke="#888888" stroke-width="1.4"/>
+<text x="39" y="348" font-size="13" font-weight="bold" fill="#444444" text-anchor="start">Operator</text>
+<text x="39" y="366" font-size="11.5" font-weight="normal" fill="#444444" text-anchor="start">question, screenshots, links</text>
+<text x="39" y="381" font-size="11.5" font-weight="normal" fill="#444444" text-anchor="start">benchmark runner (Proof):</text>
+<text x="39" y="396" font-size="11.5" font-weight="normal" fill="#444444" text-anchor="start">same path, kind choice,</text>
+<text x="39" y="411" font-size="11.5" font-weight="normal" fill="#444444" text-anchor="start">same budgets</text>
+<rect x="10" y="530" width="1940" height="470" rx="10" fill="#f6f9fe" stroke="#c9c9c9"/>
+<text x="24" y="554" font-size="15" font-weight="bold" fill="#333" text-anchor="start">Agent</text>
+<text x="24" y="572" font-size="11" font-weight="normal" fill="#555" text-anchor="start">harness/agent.py,</text>
+<text x="24" y="586" font-size="11" font-weight="normal" fill="#555" text-anchor="start">planner.py, modes.py</text>
+<text x="24" y="600" font-size="11" font-weight="normal" fill="#555" text-anchor="start"></text>
+<text x="24" y="614" font-size="11" font-weight="normal" fill="#555" text-anchor="start">prepare: stages 1-4,</text>
+<text x="24" y="628" font-size="11" font-weight="normal" fill="#555" text-anchor="start">once per question</text>
+<text x="24" y="642" font-size="11" font-weight="normal" fill="#555" text-anchor="start">write: stages 5-6,</text>
+<text x="24" y="656" font-size="11" font-weight="normal" fill="#555" text-anchor="start">once per sample</text>
+<rect x="30" y="680" width="190" height="124" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="39" y="698" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">modes.converse</text>
+<text x="39" y="716" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">turn 1: kind chat</text>
+<text x="39" y="731" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">turn 3: question + asked</text>
+<text x="39" y="746" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">+ reply, kind chat_final</text>
+<text x="39" y="761" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">modes.answer(agent-e2)</text>
+<text x="39" y="776" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">kind: choice, open,</text>
+<text x="39" y="791" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">chat, chat_final</text>
+<rect x="245" y="562" width="200" height="154" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="254" y="580" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">1 Understand</text>
+<text x="254" y="598" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">agent.understand</text>
+<text x="254" y="613" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">model reads question + images</text>
+<text x="254" y="628" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">into the case: JSON schema</text>
+<text x="254" y="643" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">UNDERSTAND, temperature 0</text>
+<text x="254" y="658" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">parse_case: known fields only;</text>
+<text x="254" y="673" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">not JSON: code-only case</text>
+<text x="254" y="688" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">planner.objects_in: code reads</text>
+<text x="254" y="703" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">object words, always</text>
+<rect x="470" y="562" width="260" height="274" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="479" y="580" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">2 Plan: planner.reading_set</text>
+<text x="479" y="598" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">code only; same question, same set</text>
+<text x="479" y="613" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">T1 Flow: best file of the case kind,</text>
+<text x="479" y="628" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">    filter retriever_guide; whole</text>
+<text x="479" y="643" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">T2 Named: term rows, titles, counter</text>
+<text x="479" y="658" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">    keys, case metrics; first 3 whole</text>
+<text x="479" y="673" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">T3 Search: hits 1-3, whole (k 10)</text>
+<text x="479" y="688" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">T4 Mechanism: same_name and</text>
+<text x="479" y="703" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">    internal_derive (8) of named,</text>
+<text x="479" y="718" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">    top 2 hits and the flow</text>
+<text x="479" y="733" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">T5 Claims: one search per option,</text>
+<text x="479" y="748" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">    at most 20</text>
+<text x="479" y="763" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">T6 Rest: hits 4-10, 2nd claim hit,</text>
+<text x="479" y="778" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">    related: 4 out + 4 back</text>
+<text x="479" y="793" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">Pack 32K in tier order: term notes,</text>
+<text x="479" y="808" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">catalog facts, then files whole</text>
+<text x="479" y="823" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">or best sections, 400 tokens each</text>
+<rect x="755" y="562" width="200" height="184" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="764" y="580" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">3 Compute (exact)</text>
+<text x="764" y="598" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">agent.compute, before the</text>
+<text x="764" y="613" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">model reads: counter in ms +</text>
+<text x="764" y="628" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">chart interval (20 s, 300 s,</text>
+<text x="764" y="643" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">1,800 s, 7,200 s, 1 day)</text>
+<text x="764" y="658" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">+ vCPUs: % of one vCPU and</text>
+<text x="764" y="673" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">% per vCPU, with source</text>
+<text x="764" y="688" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">agent.coverage: weak when</text>
+<text x="764" y="703" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">no flow and no named file</text>
+<text x="764" y="718" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">to build: flow path, band</text>
+<text x="764" y="733" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">verdict, capacity plan</text>
+<rect x="980" y="562" width="180" height="139" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="989" y="580" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">4 Ask? (kind chat)</text>
+<text x="989" y="598" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">allowed when the case has</text>
+<text x="989" y="613" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">a missing fact or a premise,</text>
+<text x="989" y="628" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">or a premise term row hits</text>
+<text x="989" y="643" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">yes: prompt chat, model</text>
+<text x="989" y="658" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">may reply CLARIFY:</text>
+<text x="989" y="673" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">no: prompt chat_final</text>
+<text x="989" y="688" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">choice, open: never ask</text>
+<rect x="1185" y="562" width="220" height="199" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="1194" y="580" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">Prompt</text>
+<text x="1194" y="598" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">system: rules by kind</text>
+<text x="1194" y="613" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">+ ANSWER_RULES</text>
+<text x="1194" y="628" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">+ OPEN_SHAPE (open kinds)</text>
+<text x="1194" y="643" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">+ LABEL_ORDER (label hit)</text>
+<text x="1194" y="658" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">+ up-front block</text>
+<text x="1194" y="673" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">user: case JSON, Computed</text>
+<text x="1194" y="688" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">(exact), coverage note,</text>
+<text x="1194" y="703" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">Knowledge base: reading set,</text>
+<text x="1194" y="718" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">web block (untrusted),</text>
+<text x="1194" y="733" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">question + images</text>
+<text x="1194" y="748" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">over_window: flag &gt; 64K</text>
+<rect x="1430" y="562" width="190" height="139" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="1439" y="580" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">5 Answer</text>
+<text x="1439" y="598" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">agent.write</text>
+<text x="1439" y="613" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">card sampling, 4,000</text>
+<text x="1439" y="628" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">tokens max</text>
+<text x="1439" y="643" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">ANSWER + REASON,</text>
+<text x="1439" y="658" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">a file id per claim;</text>
+<text x="1439" y="673" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">knowledge base first,</text>
+<text x="1439" y="688" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">it wins on conflict</text>
+<rect x="1645" y="562" width="285" height="139" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="1654" y="580" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">6 Check</text>
+<text x="1654" y="598" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">agent.gaps: the draft names a metric</text>
+<text x="1654" y="613" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">file not in the reading set: add its</text>
+<text x="1654" y="628" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">best sections (planner.sections_of on</text>
+<text x="1654" y="643" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">retrieval.py, at most 2 files), answer again</text>
+<text x="1654" y="658" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">verify.check (kind choice): a hard</text>
+<text x="1654" y="673" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">issue gets one repair turn</text>
+<text x="1654" y="688" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">grounding: numbers and file ids</text>
+<polygon points="1787.5,778 1927.5,830 1787.5,882 1647.5,830" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="1787.5" y="812" font-size="12.5" font-weight="bold" fill="#0d2a4d" text-anchor="middle">Consensus, kind choice</text>
+<text x="1787.5" y="828" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="middle">modes._consensus: n samples</text>
+<text x="1787.5" y="843" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="middle">on one reading set</text>
+<text x="1787.5" y="858" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="middle">same letters?</text>
+<rect x="275" y="865" width="170" height="94" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="284" y="883" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Case</text>
+<text x="284" y="901" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">kind, objects, metrics</text>
+<text x="284" y="916" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">(value, unit, interval,</text>
+<text x="284" y="931" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">tool), vcpus, symptom,</text>
+<text x="284" y="946" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">premise, claims, missing</text>
+<rect x="470" y="865" width="260" height="64" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="479" y="883" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Reading set</text>
+<text x="479" y="901" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">text within 32K tokens</text>
+<text x="479" y="916" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">ids used, tier of each id</text>
+<rect x="755" y="865" width="200" height="64" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="764" y="883" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Computed (exact)</text>
+<text x="764" y="901" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">lines with source file</text>
+<text x="764" y="916" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">coverage: weak or named</text>
+<rect x="10" y="1030" width="1940" height="200" rx="10" fill="#fffaf3" stroke="#c9c9c9"/>
+<text x="24" y="1054" font-size="15" font-weight="bold" fill="#333" text-anchor="start">Model</text>
+<text x="24" y="1072" font-size="11" font-weight="normal" fill="#555" text-anchor="start">harness/llm.py:</text>
+<text x="24" y="1086" font-size="11" font-weight="normal" fill="#555" text-anchor="start">the only place the</text>
+<text x="24" y="1100" font-size="11" font-weight="normal" fill="#555" text-anchor="start">endpoint differs between</text>
+<text x="24" y="1114" font-size="11" font-weight="normal" fill="#555" text-anchor="start">benchmark and site</text>
+<rect x="245" y="1062" width="470" height="109" rx="6" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
+<text x="254" y="1080" font-size="13" font-weight="bold" fill="#4a2400" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">llm.py client</text>
+<text x="254" y="1098" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">GatewayClient: benchmark, Vercel AI Gateway</text>
+<text x="254" y="1113" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">local OpenAI-compatible server at the site</text>
+<text x="254" y="1128" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">ParamClient: the model card sampling</text>
+<text x="254" y="1143" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">deterministic=True: temperature 0 (the case)</text>
+<text x="254" y="1158" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">MockClient: unit tests, offline</text>
+<rect x="740" y="1062" width="225" height="94" rx="16" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
+<text x="749" y="1080" font-size="13" font-weight="bold" fill="#4a2400" text-anchor="start">Open-weight vision LLM</text>
+<text x="749" y="1098" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">one GPU stretch target, up to 4</text>
+<text x="749" y="1113" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">vLLM, llama.cpp or Ollama</text>
+<text x="749" y="1128" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">context window 64K</text>
+<text x="749" y="1143" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">reads screenshot pixels</text>
+<rect x="1010" y="1062" width="175" height="79" rx="16" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
+<text x="1019" y="1080" font-size="13" font-weight="bold" fill="#4a2400" text-anchor="start">Embedding model</text>
+<text x="1019" y="1098" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">qwen3-embedding-0.6b</text>
+<text x="1019" y="1113" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">on CPU, for hybrid</text>
+<text x="1019" y="1128" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">search (retrieval.py)</text>
+<rect x="1215" y="1048" width="190" height="109" rx="14" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1224" y="1066" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Trace, per answer</text>
+<text x="1224" y="1084" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">understand, plan by tier,</text>
+<text x="1224" y="1099" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">compute, coverage, ask, web,</text>
+<text x="1224" y="1114" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">answer, gap, verify, repair,</text>
+<text x="1224" y="1129" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">consensus, context_over;</text>
+<text x="1224" y="1144" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">written by every step</text>
+<rect x="1440" y="1140" width="200" height="79" rx="6" fill="#ffffff" stroke="#888888" stroke-width="1.4"/>
+<text x="1449" y="1158" font-size="13" font-weight="bold" fill="#444444" text-anchor="start">Clarifying questions</text>
+<text x="1449" y="1176" font-size="11.5" font-weight="normal" fill="#444444" text-anchor="start">answer starts CLARIFY: (chat)</text>
+<text x="1449" y="1191" font-size="11.5" font-weight="normal" fill="#444444" text-anchor="start">one round, at most 3</text>
+<text x="1449" y="1206" font-size="11.5" font-weight="normal" fill="#444444" text-anchor="start">reply: turn 3 via converse</text>
+<rect x="1665" y="1148" width="125" height="64" rx="6" fill="#ffffff" stroke="#888888" stroke-width="1.4"/>
+<text x="1674" y="1166" font-size="13" font-weight="bold" fill="#444444" text-anchor="start">Answer</text>
+<text x="1674" y="1184" font-size="11.5" font-weight="normal" fill="#444444" text-anchor="start">file ids, computed</text>
+<text x="1674" y="1199" font-size="11.5" font-weight="normal" fill="#444444" text-anchor="start">facts, ids read</text>
+<rect x="1800" y="1148" width="125" height="64" rx="6" fill="#ffffff" stroke="#888888" stroke-width="1.4"/>
+<text x="1809" y="1166" font-size="13" font-weight="bold" fill="#444444" text-anchor="start">Unsure</text>
+<text x="1809" y="1184" font-size="11.5" font-weight="normal" fill="#444444" text-anchor="start">not settled:</text>
+<text x="1809" y="1199" font-size="11.5" font-weight="normal" fill="#444444" text-anchor="start">samples disagree</text>
+<path d="M 125.0 424 L 125.0 680" fill="none" stroke="#1f5fae" stroke-width="1.6" marker-end="url(#a-flow)"/>
+<path d="M 220 720 L 243 720" fill="none" stroke="#1f5fae" stroke-width="1.6" marker-end="url(#a-flow)"/>
+<path d="M 445 600 L 468 600" fill="none" stroke="#1f5fae" stroke-width="1.6" marker-end="url(#a-flow)"/>
+<path d="M 730 600 L 753 600" fill="none" stroke="#1f5fae" stroke-width="1.6" marker-end="url(#a-flow)"/>
+<path d="M 955 600 L 978 600" fill="none" stroke="#1f5fae" stroke-width="1.6" marker-end="url(#a-flow)"/>
+<path d="M 1160 600 L 1183 600" fill="none" stroke="#1f5fae" stroke-width="1.6" marker-end="url(#a-flow)"/>
+<path d="M 1405 600 L 1428 600" fill="none" stroke="#1f5fae" stroke-width="1.6" marker-end="url(#a-flow)"/>
+<path d="M 1620 600 L 1643 600" fill="none" stroke="#1f5fae" stroke-width="1.6" marker-end="url(#a-flow)"/>
+<path d="M 1787.5 701 L 1787.5 777" fill="none" stroke="#1f5fae" stroke-width="1.6" marker-end="url(#a-flow)"/>
+<path d="M 1647.5 830 L 1525.0 830 L 1525.0 703" fill="none" stroke="#1f5fae" stroke-width="1.4" stroke-dasharray="7 4" marker-end="url(#a-flow)"/>
+<rect x="1528" y="838" width="78" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="1531.0" y="848" font-size="10.5" font-weight="normal" fill="#1f5fae" text-anchor="start">next sample:</text>
+<rect x="1528" y="851" width="102" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="1531.0" y="861" font-size="10.5" font-weight="normal" fill="#1f5fae" text-anchor="start">stages 5-6 again</text>
+<path d="M 1747.5 870 L 1727 1146" fill="none" stroke="#1f5fae" stroke-width="1.6" marker-end="url(#a-flow)"/>
+<rect x="1664" y="925" width="102" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="1667" y="935" font-size="10.5" font-weight="normal" fill="#1f5fae" text-anchor="start">agreed, or n = 1</text>
+<path d="M 1827.5 870 L 1862 1146" fill="none" stroke="#1f5fae" stroke-width="1.6" marker-end="url(#a-flow)"/>
+<rect x="1842" y="925" width="114" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="1845" y="935" font-size="10.5" font-weight="normal" fill="#1f5fae" text-anchor="start">disagree or Unsure</text>
+<path d="M 1665 1183 L 1642 1183" fill="none" stroke="#1f5fae" stroke-width="1.6" marker-end="url(#a-flow)"/>
+<path d="M 1540 1214 L 1540 1255 L 18 1255 L 18 360 L 28 360" fill="none" stroke="#1f5fae" stroke-width="1.4" stroke-dasharray="7 4" marker-end="url(#a-flow)"/>
+<rect x="586" y="1241" width="228" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="700" y="1251" font-size="10.5" font-weight="normal" fill="#1f5fae" text-anchor="middle">user replies: turn 3, kind chat_final</text>
+<path d="M 360 716 L 360 863" fill="none" stroke="#555555" stroke-width="1.4" marker-end="url(#a-data)"/>
+<path d="M 445 885 L 468 806" fill="none" stroke="#555555" stroke-width="1.4" marker-end="url(#a-data)"/>
+<path d="M 600 836 L 600 863" fill="none" stroke="#555555" stroke-width="1.4" marker-end="url(#a-data)"/>
+<path d="M 730 895 L 753 895" fill="none" stroke="#555555" stroke-width="1.4" marker-end="url(#a-data)"/>
+<path d="M 355 959 L 355 985" fill="none" stroke="#555" stroke-width="1.4"/>
+<path d="M 600 929 L 600 985" fill="none" stroke="#555" stroke-width="1.4"/>
+<path d="M 855 929 L 855 985" fill="none" stroke="#555" stroke-width="1.4"/>
+<path d="M 355 985 L 1295 985 L 1295 763" fill="none" stroke="#555555" stroke-width="1.4" marker-end="url(#a-data)"/>
+<rect x="680" y="970" width="300" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="830" y="980" font-size="10.5" font-weight="normal" fill="#555555" text-anchor="middle">case, reading set, computed facts into the prompt</text>
+<path d="M 855 746 L 855 863" fill="none" stroke="#555555" stroke-width="1.4" marker-end="url(#a-data)"/>
+<path d="M 445 308 L 468 308" fill="none" stroke="#5e35b1" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-tool)"/>
+<path d="M 700 372 L 700 560" fill="none" stroke="#5e35b1" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-tool)"/>
+<rect x="615" y="535" width="84" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="696" y="545" font-size="10.5" font-weight="normal" fill="#5e35b1" text-anchor="end">search, links</text>
+<path d="M 570 471 L 570 560" fill="none" stroke="#5e35b1" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-tool)"/>
+<rect x="573" y="505" width="84" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="576" y="515" font-size="10.5" font-weight="normal" fill="#5e35b1" text-anchor="start">words, labels</text>
+<path d="M 930 372 L 930 500 L 722 500 L 722 560" fill="none" stroke="#5e35b1" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-tool)"/>
+<rect x="743" y="486" width="144" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="815" y="496" font-size="10.5" font-weight="normal" fill="#5e35b1" text-anchor="middle">counter keys, facts_for</text>
+<path d="M 930 500 L 930 560" fill="none" stroke="#5e35b1" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-tool)"/>
+<rect x="887" y="535" width="42" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="926" y="545" font-size="10.5" font-weight="normal" fill="#5e35b1" text-anchor="end">lookup</text>
+<path d="M 845 486 L 845 560" fill="none" stroke="#5e35b1" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-tool)"/>
+<rect x="716" y="512" width="126" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="839" y="522" font-size="10.5" font-weight="normal" fill="#5e35b1" text-anchor="end">summation_to_percent</text>
+<path d="M 1020 510 L 949 560" fill="none" stroke="#8a8a8a" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-data)"/>
+<rect x="1007" y="535" width="54" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="1010" y="545" font-size="10.5" font-weight="normal" fill="#8a8a8a" text-anchor="start">to build</text>
+<path d="M 1135 360 L 1135 560" fill="none" stroke="#5e35b1" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-tool)"/>
+<rect x="1079" y="535" width="54" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="1130" y="545" font-size="10.5" font-weight="normal" fill="#5e35b1" text-anchor="end">ask rule</text>
+<path d="M 1395 345 L 1395 560" fill="none" stroke="#5e35b1" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-tool)"/>
+<text x="1391" y="545" font-size="10.5" font-weight="normal" fill="#5e35b1" text-anchor="end">up-front</text>
+<path d="M 1285 486 L 1285 560" fill="none" stroke="#5e35b1" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-tool)"/>
+<rect x="1288" y="505" width="36" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="1291" y="515" font-size="10.5" font-weight="normal" fill="#5e35b1" text-anchor="start">pages</text>
+<path d="M 1785 360 L 1785 560" fill="none" stroke="#5e35b1" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-tool)"/>
+<rect x="1788" y="505" width="132" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="1791" y="515" font-size="10.5" font-weight="normal" fill="#5e35b1" text-anchor="start">issues, repair prompt</text>
+<path d="M 259 716 L 259 1060" fill="none" stroke="#c25e00" stroke-width="3" marker-end="url(#a-call)"/>
+<rect x="261" y="1005" width="66" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="264" y="1015" font-size="10.5" font-weight="normal" fill="#c25e00" text-anchor="start">1 the case</text>
+<path d="M 1460 701 L 1460 1005 L 665 1005 L 665 1060" fill="none" stroke="#c25e00" stroke-width="3" marker-end="url(#a-call)"/>
+<text x="1466" y="955" font-size="10.5" font-weight="bold" fill="#c25e00" text-anchor="start">2 the draft</text>
+<path d="M 1657 701 L 1657 1005 L 1460 1005" fill="none" stroke="#c25e00" stroke-width="3"/>
+<text x="1663" y="717" font-size="10.5" font-weight="bold" fill="#c25e00" text-anchor="start">3 gap, once</text>
+<text x="1663" y="730" font-size="10.5" font-weight="bold" fill="#c25e00" text-anchor="start">4 repair, once</text>
+<path d="M 715 1110 L 738 1110" fill="none" stroke="#c25e00" stroke-width="3" marker-end="url(#a-call)"/>
+<path d="M 715 1150 L 745 1150 L 745 1200 L 1090 1200 L 1090 1166" fill="none" stroke="#555555" stroke-width="1.4" marker-end="url(#a-data)"/>
+<rect x="837" y="1186" width="36" height="13" fill="#ffffff" opacity="0.9"/>
+<text x="855" y="1196" font-size="10.5" font-weight="normal" fill="#555555" text-anchor="middle">embed</text>
+<text x="24" y="1290" font-size="13" font-weight="bold" fill="#333" text-anchor="start">Notes</text>
+<text x="24" y="1310" font-size="11.5" font-weight="normal" fill="#444" text-anchor="start">- Stages 1-4 run once per question (agent.prepare), so every consensus sample reads the same reading set: a disagreement is doubt in the reasoning, not a different search.</text>
+<text x="24" y="1327" font-size="11.5" font-weight="normal" fill="#444" text-anchor="start">- The model never chooses a file or a tool. It reads the question into the case (call 1) and the reading set into the answer (call 2). Calls 3 and 4 fire only on a gap or a hard verifier issue.</text>
+<text x="24" y="1344" font-size="11.5" font-weight="normal" fill="#444" text-anchor="start">- Tiers T1-T3 are read whole (named: the first 3), the rest as their best sections; the order is the priority when the 32K budget runs out. Settings: search_k, context_tokens, plan_* in the runner config.</text>
+<text x="24" y="1361" font-size="11.5" font-weight="normal" fill="#444" text-anchor="start">- Dashed grey: flows.py (executable flow steps, Q166) and capacity.py (planning calculator) are built and unit-tested; wiring them into stage 3 is open work (harness/AGENT.md, section 7).</text>
+<text x="24" y="1378" font-size="11.5" font-weight="normal" fill="#444" text-anchor="start">- Same code for benchmark and site: only the endpoint in llm.py differs. web.py sends only public requests; customer data stays on site.</text>
+</svg>

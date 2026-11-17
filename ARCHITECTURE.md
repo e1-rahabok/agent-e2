@@ -52,6 +52,17 @@ flowchart LR
 
 - One repository, not two: the benchmark runs the harness and the knowledge base at the same commit, so a score always belongs to one exact version of the product. `lint.py` imports the parser from [`harness/kb.py`](harness/kb.py); the dependency points only from project to product.
 
+## Product
+The next level of the Product group: how the agent and the harness drive the model and use the knowledge, module by module, for one question. Four layers: `knowledge/` (what is read), `harness/` tools (built at start-up, called only by code), the agent's six stages (code decides), and the model endpoint (`llm.py`).
+
+![Agent E2 Product: knowledge, harness tools, the six agent stages and the model endpoint, with the four model calls numbered](images/product-architecture.svg)
+
+- Read it left to right through the agent band: 1 Understand, 2 Plan, 3 Compute, 4 Ask, Prompt, 5 Answer, 6 Check, Consensus. The stage view with its evidence: [`harness/AGENT.md`](harness/AGENT.md), section 3.
+- Orange lines are the model calls: 1 the case (temperature 0), 2 the draft; 3 the gap follow-up and 4 the repair fire only when code finds a gap or a hard verifier issue. Consensus repeats 5 and 6 on the same reading set.
+- Purple dashed lines: agent code calls a tool. The model calls no tool; it never chooses a file.
+- Grey dashed: built, not yet called (`flows.py` executable steps, Q166; `capacity.py` planning calculator).
+- Source: [`project/tools/draw_product_diagram.py`](project/tools/draw_product_diagram.py) draws the SVG. Change it with a change to `harness/` that the diagram shows, and run it from the repository root. Hand-laid, not Mermaid: Mermaid's automatic layout pulled the stages out of order at this size.
+
 ## 1. Parts
 | Part | What it is | Where | What it decides |
 |---|---|---|---|
