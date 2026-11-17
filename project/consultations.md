@@ -1,6 +1,6 @@
 # Consultations
 
-Agent E2 as a consultant: it leads a conversation, asks for what the advice needs, computes with code, and explains. Not indexed. Release 1.0 ships one consultation, capacity planning (C00); the others are the plan after 1.0, for the author to edit and review as one set (author, 2026-11-14).
+Agent E2 as a consultant: it leads a conversation, asks for what the advice needs, computes with code, and explains. Not indexed. Release 1.0 ships one consultation, capacity planning (C00); the others are the plan after 1.0, to be edited and reviewed as one set.
 
 How each consultation works ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.7):
 
@@ -10,12 +10,12 @@ How each consultation works ([harness/AGENT.md](https://github.com/e1-rahabok/ag
 - One shared consultation runner serves every entry: a new consultation is a checklist and its knowledge files, not new code.
 - Not in the benchmark: a benchmark question states its inputs and tests the method. The live test measures consultations ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md), step 9).
 
-Each entry: status; the user's prompt; why a consultant beats a plain LLM; the checklist; what code computes; what the model explains; the knowledge files; gaps and blockers; a line for your notes.
+Each entry has a status, the user's prompt, why a consultant beats a plain LLM, the checklist, what code computes, what the model explains, the knowledge files, gaps and blockers, and a line for notes.
 
 ## Release 1.0
 
 ### C00 · Capacity planning for a new cluster
-- Status: Release 1.0 (author, 2026-11-14). Calculator built ([harness/capacity.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/capacity.py)); the conversation to build ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.7)
+- Status: Release 1.0 (decided 2026-11-14). Calculator built ([harness/capacity.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/capacity.py)); the conversation to build ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.7)
 - Prompt: "Can you guide me over capacity planning for a vSphere cluster? What should I consider? You're my expert consultant."
 - Why a consultant: a plain LLM sizes from GHz and an overcommit ratio per core, forgets HA and what ESXi, vSAN and NSX take, and checks one model instead of six.
 - Checklist (code asks only for what is missing): host specification (cores, base clock, Hyper-Threading, DRAM, memory tiering); VM classes with overcommit per physical thread, reservation and expected concurrent peak; typical VM size per class; HA hosts; threads and memory taken by ESXi, vSAN and NSX; CPU that cannot be reserved. Each missing input is offered from the catalog default and named as one.

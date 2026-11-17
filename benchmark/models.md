@@ -22,7 +22,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 
 ### The risk: prior override
 - Public Internet text teaches Level 300 readings: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS".
-- A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base: misconception answer on 2% of multiple-choice answers and 3-4% of judged answers (benchmark 2026-11-13, 196 questions, without and with web search).
+- A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base: misconception answer on 2% of multiple-choice answers and 3-4% of judged answers (benchmark, 196 questions, without and with web search).
 - Memory is not the problem in itself: the basics come from it. The problem is how firmly the model holds a rule of thumb against the context in front of it.
 - Model size moves both ways: a larger model knows the basics better and follows long instructions better, and may hold rules of thumb more firmly. Which effect wins on this task is not known from theory or published results. It is measured.
 
@@ -30,7 +30,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - Total parameters set the memory (GPU size and how much was memorized). Active parameters set the compute per token, which drives instruction following, long-context reading and multi-step reasoning.
 - For the GPU memory paid, a dense model gives the most compute per token. A 120B MoE with 6-12B active has less compute per token than a 31B dense model, on twice the GPU memory.
 - So a dense model of about 70B is a better challenger than a 120B MoE: it fits a 48 GB GPU at 4-bit (about 40 GB), has 6-10 times the active compute, and fewer total parameters. Its cost is speed: about 0.45x the decode speed of a 32B dense model on the same GPU (section Model size and speed).
-- No current-generation dense vision model of about 70B is on the gateway (checked 2026-11-05). Llama 3.3 70B is 2024 and has no vision. When one appears, it is the first challenger to add.
+- No current-generation dense vision model of about 70B is on the gateway. Llama 3.3 70B is 2024 and has no vision. When one appears, it is the first challenger to add.
 - The 120B MoE models were dropped: less compute per token than the dense candidates, on twice the GPU memory. A later MoE candidate must pass the rule below.
 
 ### What we prefer
@@ -95,7 +95,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 ## 3. Selection criteria
 Two limits decide:
 - Fit for the goal: the model knows vSphere basics and can become a narrow Level 400 VMware expert with this harness. Criteria 1, 4, 5 and 7 test this; the benchmark decides the rest.
-- Hardware cost: the less GPU the better, weighed against the score. One GPU is the stretch target, not a cut-off (author, 2026-11-13). Criterion 3.
+- Hardware cost: the less GPU the better, weighed against the score. One GPU is the stretch target, not a cut-off. Criterion 3.
 
 Country of origin is not a criterion. Parameter count is not a criterion; memory and speed are.
 
@@ -112,9 +112,9 @@ All are required. A model that fails one is not a candidate.
 | A | 48 GB | dense up to about 70B at 4-bit or 35B at 8-bit; MoE up to about 70B total |
 | B | 96 GB | MoE up to about 150B total, for example 120B with 6-12B active |
 
-   - Tier C, two to four GPUs: allowed since 2026-11-13. It doubles or quadruples the hardware cost, so it must earn its place by the challenger rule in section 1.
-4. Structured output (a JSON schema) for the case ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.1). Tool calling is no longer needed: in the expert-led agent (2026-11-14) the model makes no tool calls. The frontier reference uses tool calling for web search.
-5. Context window of at least 64K tokens: system prompt + up-front blocks (3K) + the 32K reading set + images + answer (author, 2026-11-15). The three candidates take 128K or more.
+   - Tier C, two to four GPUs: allowed. It doubles or quadruples the hardware cost, so it must earn its place by the challenger rule in section 1.
+4. Structured output (a JSON schema) for the case ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.1). Tool calling is no longer needed: in the expert-led agent the model makes no tool calls. The frontier reference uses tool calling for web search.
+5. Context window of at least 64K tokens: system prompt + up-front blocks (3K) + the 32K reading set + images + answer. The three candidates take 128K or more.
 6. Available both on the benchmark gateway and as downloadable weights, so the tested model is the deployed model.
 7. Latest generation only: one model per family and generation. An older generation or a smaller sibling of the same generation is a duplicate.
 
@@ -124,19 +124,19 @@ Preferred, not required:
 ## 4. Candidates
 | Model | Tier | Size, licence | Why in the benchmark | Result so far |
 |---|---|---|---|---|
-| google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | Round of 2026-11-16, default settings: Agent E2 79% (Level 400 74%), Base 40%, confident wrong 21% |
-| alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | Round of 2026-11-16, reasoning off: Agent E2 67% (Level 400 61%), Base 20%, confident wrong 32% |
-| meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for multi-turn tool use (weights 2026-08) | Round of 2026-11-16, effort low: Agent E2 84% (Level 400 83%), Base 41%, confident wrong 15% |
+| google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | Round, default settings: Agent E2 79% (Level 400 74%), Base 40%, confident wrong 21% |
+| alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | Round, reasoning off: Agent E2 67% (Level 400 61%), Base 20%, confident wrong 32% |
+| meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for multi-turn tool use (weights 2026-08) | Round, effort low: Agent E2 84% (Level 400 83%), Base 41%, confident wrong 15% |
 
 - 3 candidates from 3 vendors (Google, Alibaba, Meta), all dense, all tier A (one 48 GB GPU at 4-bit or 8-bit).
 - Next challenger: a current-generation dense vision model of about 70B, after 1.0 (author, 2026-11-13; none on the gateway on 2026-11-14: only Llama 3.1 and 3.3 70B, text only; [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Milestones, list After 1.0).
-- Vision tags checked in the gateway model list on 2026-11-05.
+- Vision tags checked in the gateway model list.
 - Muse-Glimmer-30B: the gateway does not tag it `open-weights`; the weights and the Apache 2.0 licence are on Hugging Face (`meta-models/Muse-Glimmer-30B`, 29.8B parameters, checked 2026-11-05).
 - mistral-small (removed, section 7): the gateway description says the id serves Mistral Small 4 (2026-03, `mistralai/Mistral-Small-4-119B-2603`), the latest Mistral Small in the Mistral model list (https://docs.mistral.ai/models, checked 2026-11-05). The gateway's 2024-09 release date is older than the model the id now serves; the description is the authority. It is 119B MoE, not 24B dense as this file said before.
-- Licences checked on Hugging Face 2026-11-05. The Gemma licence allows commercial use; read it before deployment.
+- Licences checked on Hugging Face. The Gemma licence allows commercial use; read it before deployment.
 - Request settings (`model_params` in `config.yaml`; [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md), section Request settings per model): qwen3.8-27b and muse-glimmer-30b are reasoning models. With the default settings they spend 2,000-4,300 tokens per answer thinking, are cut off at the 4,000-token cap, and take 3-8 times longer than gemma-4-31b-it. The final round sends reasoning off (`effort: none` for Qwen, `enabled: false` for Muse). That is a choice: it measures the model without thinking, and a deployment with thinking on needs its own run. The next entries of each list (effort low, with room for 8,000 tokens) are the fallback when the preflight or the health check finds cut-off answers.
 
-### Measured impact of the reasoning setting (Qwen3.8-27B, round of 2026-11-16, partial runs)
+### Measured impact of the reasoning setting (Qwen3.8-27B, round, partial runs)
 - Read as a rough comparison, not a controlled test: each attempt is a different, unfinished slice of the run (the first two were stopped by the health check after a gateway 503 burst), and gateway load differed. Reasoning off is the first attempt (2,179 of 2,910 answers, mostly baseline then part of Agent E2); effort low is the later attempts. Answer sets differ, so compare the shape, not the second decimal.
 
 | Setting | Answers read | Mean completion tokens | Mean latency per call | Speed | Reached the token cap |
@@ -148,8 +148,8 @@ Preferred, not required:
 - Effort low makes each call about 2.7 times slower and writes about 3.3 times as many tokens (measured on Qwen only; Muse's own numbers come with the round's results). A full run of 2,910 answers takes about 26 minutes with reasoning off and an estimated 60 to 75 minutes at effort low with 8,000 tokens; the cost rises with the tokens (about US$ 6 to 8 more for Qwen).
 - Reasoning off is not free of thinking tokens: 4% of its answers still reached the 4,000-token cap, 85 of the 88 in baseline mode. The visible answer is short (an ANSWER line and a REASON line, about 290 characters), so the cap was spent on hidden thinking that `effort: none` did not fully suppress. 70 of the 88 still had a readable letter. Why it happens on some questions is not known.
 - A cap of 4,000 tokens does not fit effort low: 17% reach it and 14% have no readable letter. Effort low needs 8,000, where 1.4% still reach the cap.
-- The scored round of 2026-11-16 ran Gemma at its default, Qwen with reasoning off and Muse at effort low. A gateway 503 burst stopped Qwen's and Muse's first runs (reasoning off) and the runner restarted both at effort low; Qwen's effort-low runs then stopped on cut-off answers, so Qwen's reasoning-off run was resumed and finished. Muse's reasoning-off run (1,875 of 2,910 answers) and Qwen's two effort-low runs (803 and 191 answers) are archived as stopped runs in `project/archive/benchmark-results-2026-11-16-stopped-runs/`. The scores are in `benchmark/results/README.md`.
-- Paired comparison, Base mode only (author asked, 2026-11-16): the same 803 question and run pairs (162 questions, 5 runs each, in id order, Level 100 to 400), Qwen reasoning off against effort low with 8,000 tokens. Sources: the Qwen effort-low run of 803 answers in `project/archive/benchmark-results-2026-11-16-stopped-runs/` and the Qwen reasoning-off run in `benchmark/results/`. Exact-match (every correct letter and no wrong one):
+- The scored round of 2026-11-16 ran Gemma at its default, Qwen with reasoning off and Muse at effort low. A gateway 503 burst stopped Qwen's and Muse's first runs (reasoning off) and the runner restarted both at effort low; Qwen's effort-low runs then stopped on cut-off answers, so Qwen's reasoning-off run was resumed and finished. Muse's reasoning-off run (1,875 of 2,910 answers) and Qwen's two effort-low runs (803 and 191 answers) are archived as stopped runs in [project/archive/benchmark-results-2026-11-16-stopped-runs](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-2026-11-16-stopped-runs). The scores are in [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md).
+- Paired comparison, Base mode only (author asked, 2026-11-16): the same 803 question and run pairs (162 questions, 5 runs each, in id order, Level 100 to 400), Qwen reasoning off against effort low with 8,000 tokens. Sources: the Qwen effort-low run of 803 answers in [project/archive/benchmark-results-2026-11-16-stopped-runs](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-2026-11-16-stopped-runs) and the Qwen reasoning-off run in [benchmark/results](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results). Exact-match (every correct letter and no wrong one):
 
 | | Reasoning off | Effort low, 8,000 |
 |---|---|---|
@@ -168,7 +168,7 @@ Preferred, not required:
 - Run it with `--models anthropic/claude-opus-5.5`: its proven concurrency is 3 in `concurrency_by_model` (`config.yaml`); the provider rate-limits above that in a short trial, and `adaptive_concurrency.py` probes upward from 3.
 - Effort: `model_params` in `config.yaml` sends `reasoning: {effort: medium}` and `max_tokens: 8000` (room for the thinking). The gateway accepts it (tested live 2026-11-13).
 - Mode `web`: search available, Opus decides. The baseline prompt plus two tools, web search and page fetch, offered with `tool_choice: auto` and no instruction to search; at most 5 tool calls ([harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py), `web_search_on`). Opus may answer from its own knowledge without a search, as in a chat product with search on. `tools_used` in `answers.csv` records each search and fetch it chose.
-- No run with the tools removed: a user cannot switch search off in a chat product by typing a prompt, so that run measures nothing a user meets (author, 2026-11-13). The result without tools of 2026-11-13 (67%) stays in the archive as history.
+- No run with the tools removed: a user cannot switch search off in a chat product by typing a prompt, so that run measures nothing a user meets. The result without tools (67%) stays in the archive as history.
 
 ## 6. Judge (archived)
 - Archived 2026-11-14 (author): every benchmark question is multiple choice (Q199), so nothing is graded by a model. Code: [project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14/judge.py). In the real world the VMware administrator is the judge: answers are rated in the product and in the live test.
@@ -176,20 +176,20 @@ Preferred, not required:
 ## 7. Removed
 | Model | Date | Reason |
 |---|---|---|
-| alibaba/qwen-3-32b | 2026-11-05 | No vision. Was the reference dense model of the class (48%). |
-| alibaba/qwen-3-14b | 2026-11-05 | No vision (42%). |
-| openai/gpt-oss-20b | 2026-11-05 | No vision (48%; often broke the answer format in agentic mode). |
-| nvidia/nemotron-3-nano-30b-a3b | 2026-11-05 | No vision (25%). |
-| zai/glm-4.7-flash | 2026-11-05 | No vision. Added 2026-11-04, never run. |
-| alibaba/qwen3.6-27b | 2026-11-05 | Previous generation of qwen3.8-27b: duplicate (rule 7). Added 2026-11-04, never run. |
-| google/gemma-4-26b-a4b-it | 2026-11-05 | Smaller sibling of gemma-4-31b-it: duplicate (rule 7). Was the speed option (26B MoE, 4B active). |
-| mistral/mistral-small | 2026-11-05 | Serves Mistral Small 4: 119B MoE, 6.5B active. Less compute per token than the dense candidates on twice the GPU memory (section 1). |
-| inclusionai/ling-3.0-flash-vl | 2026-11-05 | 125B MoE, MIT. Same reason. Added and removed the same day, never run. |
-| nvidia/nemotron-3.5-super-vl | 2026-11-05 | 120B MoE, 12B active, OpenMDW 1.1. Same reason. Added and removed the same day, never run. |
-| mistral/ministral-8b | 2026-11-03 | Weakest of the first 8 candidates. |
+| alibaba/qwen-3-32b | | No vision. Was the reference dense model of the class (48%). |
+| alibaba/qwen-3-14b | | No vision (42%). |
+| openai/gpt-oss-20b | | No vision (48%; often broke the answer format in agentic mode). |
+| nvidia/nemotron-3-nano-30b-a3b | | No vision (25%). |
+| zai/glm-4.7-flash | | No vision. Added, never run. |
+| alibaba/qwen3.6-27b | | Previous generation of qwen3.8-27b: duplicate (rule 7). Added, never run. |
+| google/gemma-4-26b-a4b-it | | Smaller sibling of gemma-4-31b-it: duplicate (rule 7). Was the speed option (26B MoE, 4B active). |
+| mistral/mistral-small | | Serves Mistral Small 4: 119B MoE, 6.5B active. Less compute per token than the dense candidates on twice the GPU memory (section 1). |
+| inclusionai/ling-3.0-flash-vl | | 125B MoE, MIT. Same reason. Added and removed the same day, never run. |
+| nvidia/nemotron-3.5-super-vl | | 120B MoE, 12B active, OpenMDW 1.1. Same reason. Added and removed the same day, never run. |
+| mistral/ministral-8b | | Weakest of the first 8 candidates. |
 
 ## 8. Not chosen
-- Rows rejected only for size (more than one GPU) are open again since 2026-11-13: two to four GPUs are allowed (criterion 3, tier C). Re-check them for vision, tool use and licence before the next round.
+- Rows rejected only for size (more than one GPU) are open again : two to four GPUs are allowed (criterion 3, tier C). Re-check them for vision, tool use and licence before the next round.
 
 | Model | Reason |
 |---|---|
@@ -207,6 +207,6 @@ Preferred, not required:
 | InternVL2-26B | Released 2024-06: two generations old (InternVL2.5, then InternVL3.5 in 2025-08). Not on the gateway. Its latest sibling in the size range, InternVL3.5-30B-A3B, is not on the gateway either (rule 6). |
 
 ## 9. History
-- 2026-11-05: vision made a basic requirement; 5 text-only models removed; judge added. Then latest generation only: qwen3.6-27b and gemma-4-26b-a4b-it removed; muse-glimmer-30b added. Then the size rule changed from 24-35B parameters to one GPU of at most 96 GB (the only limits are fit for the goal and hardware cost); mistral-small identified as Mistral Small 4; ling-3.0-flash-vl and nemotron-3.5-super-vl added. All open-weight vision models on the gateway were checked; reasons in section 8. Then the selection reasoning (section 1) and the override rate were added. Then corrected: the model brings vSphere basics from training; the knowledge base holds Level 400 only. Dense about 70B named as a better challenger than 120B MoE; none available on the gateway. Then the 3 MoE models dropped; 3 dense candidates remain. Section 2 (gateway vs site) added.
-- 2026-11-04: added qwen3.8-27b, qwen3.6-27b and glm-4.7-flash. Licences and sizes checked on Hugging Face: Qwen/Qwen3.8-27B and Qwen/Qwen3.6-27B Apache 2.0, 27.8B parameters; zai-org/GLM-4.7-Flash MIT, 31.2B parameters.
+- : vision made a basic requirement; 5 text-only models removed; judge added. Then latest generation only: qwen3.6-27b and gemma-4-26b-a4b-it removed; muse-glimmer-30b added. Then the size rule changed from 24-35B parameters to one GPU of at most 96 GB (the only limits are fit for the goal and hardware cost); mistral-small identified as Mistral Small 4; ling-3.0-flash-vl and nemotron-3.5-super-vl added. All open-weight vision models on the gateway were checked; reasons in section 8. Then the selection reasoning (section 1) and the override rate were added. Then corrected: the model brings vSphere basics from training; the knowledge base holds Level 400 only. Dense about 70B named as a better challenger than 120B MoE; none available on the gateway. Then the 3 MoE models dropped; 3 dense candidates remain. Section 2 (gateway vs site) added.
+- : added qwen3.8-27b, qwen3.6-27b and glm-4.7-flash. Licences and sizes checked on Hugging Face: Qwen/Qwen3.8-27B and Qwen/Qwen3.6-27B Apache 2.0, 27.8B parameters; zai-org/GLM-4.7-Flash MIT, 31.2B parameters.
 - 2026-11-03: the 7 earlier models kept until 100 questions; ministral-8b dropped. Candidate list was in [project/archive/solution-design.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/solution-design.md), section 5, until 2026-11-05.

@@ -62,7 +62,7 @@ python3 benchmark/runner/retrieval_check.py
 - Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.4. Report table `Final score`; code `score_report.py`, function `final`.
 
 ### Free text
-- Not in the benchmark: every question is multiple choice (author, Q199, 2026-11-14), and `answer_questions.py` refuses a question without options. The judge is archived in [project/archive/legacy/judge-2026-11-14](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14).
+- Not in the benchmark: every question is multiple choice, and `answer_questions.py` refuses a question without options. The judge is archived in [project/archive/legacy/judge-2026-11-14](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14).
 
 ### Screenshots
 - Questions with image attachments are sent with all their images (track `vision`). There is no text-only track.
@@ -72,10 +72,10 @@ python3 benchmark/runner/retrieval_check.py
 - A multiple-choice question has one or more correct options.
 - A run asks every question once, per model and mode.
 - 5 runs per question. The answer is sampled at the model card's temperature (1.0), so one run is one draw; the case of Agent E2 is read at temperature 0, the answer is not. The 5 runs give the mean (final score), the consensus-of-3 projection and consistency. Reason: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.2.
-- Every question says: "Choose all the correct options. There can be more than one." One option is appended: "Unsure". There is no "Not covered" option: the system answers from the knowledge base first and from the model's own knowledge where it is silent (author, Q038, 2026-11-05).
+- Every question says: "Choose all the correct options. There can be more than one." One option is appended: "Unsure". There is no "Not covered" option: the system answers from the knowledge base first and from the model's own knowledge where it is silent.
 - Exact: answer letters match the key exactly. 1 or 0 per answer.
 - Classes: correct (exact letters), Unsure (chosen alone), confident wrong (anything else, including unparseable). The model is told a wrong answer is worse than Unsure. No points: see [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.1.
-- Stable correct: share of multiple-choice questions answered exactly right in all 5 runs. Report table `Multiple choice: luck-free scores`. Reported as consistency; the final score uses the mean of the runs (since 2026-11-13).
+- Stable correct: share of multiple-choice questions answered exactly right in all 5 runs. Report table `Multiple choice: luck-free scores`. Reported as consistency; the final score uses the mean of the runs.
 - Luck: share of questions right in some runs only. Counted as not known.
 - Override (table `Final score`): share of knowledge base answers that state the misconception although every needed file was in the context. Prior override, not a retrieval miss.
 - Confident-wrong rate: share of answers that are wrong and not Unsure. Accuracy when answered: exact share among non-Unsure answers.
@@ -95,10 +95,10 @@ python3 benchmark/runner/retrieval_check.py
 | What the model gets | The prompt only | The case, computed facts, catalog facts, the reading set (32K), the up-front blocks, the prompt | The prompt and the pages it chose to read |
 | Runs on | Every candidate | Every candidate | The frontier reference only |
 
-- Two runs per candidate (author, 2026-11-14): Base and Agent E2. Agent E2 is the shipped system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)); Base is the same model alone. The frontier reference runs one mode, `web`: search is available and Opus decides whether to use it, as in a chat product. There is no run with search removed: a user cannot switch it off, so that run measures nothing a user meets (author, 2026-11-13).
+- Two runs per candidate: Base and Agent E2. Agent E2 is the shipped system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)); Base is the same model alone. The frontier reference runs one mode, `web`: search is available and Opus decides whether to use it, as in a chat product. There is no run with search removed: a user cannot switch it off, so that run measures nothing a user meets.
 - Agent E2 answers pass the answer verifier ([harness/verify.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/verify.py)): a missing ANSWER line, a letter that is not an option, or Unsure mixed with other letters gets one repair turn. Baseline and web are not verified.
 - Recall column: the needed files whose text reached the model (the reading set and any gap follow-up). Agent E2 only: Base and web read no knowledge base.
-- Classic and agentic modes were removed on 2026-11-14; `answer_questions.py` refuses them.
+- Classic and agentic modes were removed ; `answer_questions.py` refuses them.
 
 ### Index version
 - The knowledge base changes with every commit. A score is only meaningful next to the knowledge that produced it.
@@ -144,21 +144,21 @@ python3 benchmark/runner/retrieval_check.py
 
 ### Request settings per model (reasoning)
 - A reasoning model spends tokens thinking before it writes the `ANSWER:` line. `max_tokens` counts the thinking. When the thinking uses all of it, the answer is cut off, no letter is found and the answer scores as wrong: the run measures the cap, not the model.
-- Measured on 2026-11-12 with the default settings: alibaba/qwen3.8-27b used 3,700-4,300 tokens per answer in every mode (85% of its baseline answers hit the 4,000 cap, 549 of its 1,350 multiple-choice answers had no readable letter) and took 25-38 s per answer; google/gemma-4-31b-it used 160-380 tokens and 9-20 s.
+- Measured with the default settings: alibaba/qwen3.8-27b used 3,700-4,300 tokens per answer in every mode (85% of its baseline answers hit the 4,000 cap, 549 of its 1,350 multiple-choice answers had no readable letter) and took 25-38 s per answer; google/gemma-4-31b-it used 160-380 tokens and 9-20 s.
 - `model_params` in `config.yaml` lists, per model, the request settings in order of preference. Fields: `reasoning` (sent to the gateway as is: `{effort: none}`, `{enabled: false}`; the model's `reasoning_options` in the gateway `/v1/models` list what it accepts) and `max_tokens`. `answer_questions.py` without `--params` uses the first entry; `preflight_check.py` picks the first entry that answers cleanly. The choice is saved in the run folder's `config.json` under `model_params`, and a resume keeps it.
-- Measured live on 2026-11-13: `{effort: none}` cut a Qwen answer from 303 to 41 tokens; `{enabled: false}` removed Muse's thinking; Opus accepts `{effort: medium}`.
+- Measured live : `{effort: none}` cut a Qwen answer from 303 to 41 tokens; `{enabled: false}` removed Muse's thinking; Opus accepts `{effort: medium}`.
 - The setting is part of the measurement: a model with reasoning off may score differently from the same model with it on. The summary README lists the settings of every run.
 
 ### Health check (during a run)
 - [stop_on_bad_answers.py](stop_on_bad_answers.py) watches the last 40 answers of each model. A bad answer is an API error, a multiple-choice answer with no readable letter, or an answer cut off at `max_tokens` (the gateway's `finish_reason` is `length`; column `truncated`). When 25% of them are bad (after 20 answers) the run stops starting new answers, writes no report and exits with code 5. The answers stay in the folder.
-- A failure of the gateway or of a provider (HTTP 408, 429, 5xx after the retries, a dropped connection) is not a bad answer. It has its own window (the same 40 and 25%) and stops the run with code 8, `GATEWAY_DOWN`: not a setting problem, so nothing restarts with other settings. `run_round.py` waits `release.outage_wait_seconds` and resumes the same folder, up to `release.outage_waits` times. The client keeps retrying a failing call for `gateway_retry_minutes` (5) first. Why: on 2026-11-16 a 2-minute burst of HTTP 503 counted as invalid answers, stopped two runs and restarted both from zero.
+- A failure of the gateway or of a provider (HTTP 408, 429, 5xx after the retries, a dropped connection) is not a bad answer. It has its own window (the same 40 and 25%) and stops the run with code 8, `GATEWAY_DOWN`: not a setting problem, so nothing restarts with other settings. `run_round.py` waits `release.outage_wait_seconds` and resumes the same folder, up to `release.outage_waits` times. The client keeps retrying a failing call for `gateway_retry_minutes` (5) first. Why: a 2-minute burst of HTTP 503 counted as invalid answers, stopped two runs and restarted both from zero.
 - An HTTP 402 (credits or key budget) or 401 or 403 (key) stops the run at once with code 6: every further answer would fail the same way. The 402 text names the budget that ran out: the key's or the team's.
 - `--no-health` turns it off (the preflight uses that: it judges the sample itself). Tested in `test_runner.py`, class StopRunOnBadAnswersTest.
 
 ### Preflight (before a round)
 - [preflight_check.py](preflight_check.py) answers a sample (6 multiple-choice text questions and 1 screenshot question) in every mode of every run of the round, through `answer_questions.py`: the code and the settings of the real run. It tries a model's `model_params` entries in order until one passes: no API error, 95% of letters readable, no answer cut off, mean completion tokens under half of `max_tokens`, every mode answered.
 - It reads the credits (`/v1/credits`), projects time and cost of the whole round from the sample, and refuses the round when the projected cost times `release.cost_safety` is above the credits or `release.max_cost_usd`, or the time is above `release.max_hours`. The key's own budget cannot be read; it shows only as an HTTP 402.
-- The projection is rough: seven questions per mode. Live on 2026-11-13: 1.5 to 2.5 minutes of wall time for two models at once, about US$ 0.55 for all four.
+- The projection is rough: seven questions per mode. Live : 1.5 to 2.5 minutes of wall time for two models at once, about US$ 0.55 for all four.
 
 ### A whole round: run_round.py
 - [run_round.py](run_round.py) runs `release.runs` of `config.yaml` (one answer_questions.py per model, all at once, each in `benchmark/results/<date>-<model>/`): preflight, runs, recovery, summary. Playbook, approvals and expectations: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
@@ -168,15 +168,15 @@ python3 benchmark/runner/retrieval_check.py
 - Hosts: with `spread_runs_over_providers`, [provider_hosts.py](provider_hosts.py) reads a model's provider hosts from the gateway's own reply (`message.provider_metadata.gateway.routing`), drops a host that fails a tiny call pinned to it, and gives run r the preferred host r mod n, the others as fallback. The host of every answer is in the column `provider`; scores are pooled over the hosts. `concurrency_per_provider` (off) would count the proven concurrency per host.
 - Starting runs: start each run with one background command, with no wrapper shell, `nohup` or `&`: the system then reports the run's own end (a wrapper reports its own end after seconds).
 - [check_round_alive.py](check_round_alive.py): per run, whether a process works on the folder, good answers against the total, the time of the last written answer and the cost. Verdicts: DONE, ALIVE, STALLED (no answer for `--stall-minutes`), DEAD, MACHINE RESTARTED; LOW BUDGET at 80% of `--budget`. A progress report says "running" only when it says ALIVE and the counts moved. Exit 0 when every run is DONE or ALIVE, 2 otherwise.
-- [resume_round.py](resume_round.py), called by the SessionStart hook `.claude/hooks/resume_unfinished_benchmark_round.sh`: when a round is in progress, a run is unfinished and no process works on it, it starts `run_round.py --resume` detached. It does nothing otherwise. Not tested live: whether a machine restart starts a session (and so the hook) without a message is not known.
+- [resume_round.py](resume_round.py), called by the SessionStart hook [.claude/hooks/resume_unfinished_benchmark_round.sh](https://github.com/e1-rahabok/agent-e2/blob/main/.claude/hooks/resume_unfinished_benchmark_round.sh): when a round is in progress, a run is unfinished and no process works on it, it starts `run_round.py --resume` detached. It does nothing otherwise. Not tested live: whether a machine restart starts a session (and so the hook) without a message is not known.
 - When every run is complete it writes [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md) with [summary_all_runs.py](summary_all_runs.py) (one analysis of all runs, every number from the run folders) and moves earlier run folders to `project/archive/benchmark-results-before-<date>/`. It does not commit or merge.
 - Exit codes ([exit_codes.py](exit_codes.py)): 0 done; 1 crashed; 3 stopped at `--max-minutes`, relaunch with `--resume`; 4 preflight failed; 5 invalid answers; 6 credits, key or team budget refused; 7 some runs done, others failed; 8 the gateway or a provider kept failing (wait, then resume the same folder).
 
 ### Temperature
 - Temperature controls randomness in the model's word choice. 0 = always the most likely word. Higher = more varied.
-- Each model runs with the sampling settings of its own card (`generation_config.json` on Hugging Face): `config.yaml`, key `sampling` (author, 2026-11-13).
+- Each model runs with the sampling settings of its own card (`generation_config.json` on Hugging Face): `config.yaml`, key `sampling`.
   - Gemma 4 31B and Muse Glimmer 30B: temperature 1.0, top_p 0.95, top_k 64. Qwen 3.8 27B: temperature 1.0, top_p 0.95, top_k 20.
-  - Reason: a local server (vLLM, and others that read the card) applies these by default, so the benchmark sees what a user sees. Until 2026-11-13 every model ran at 0.2.
+  - Reason: a local server (vLLM, and others that read the card) applies these by default, so the benchmark sees what a user sees. Until every model ran at 0.2.
   - The frontier reference sends none: the provider's default, as a chat user meets it.
   - Agent E2's case call (stage 1) runs at temperature 0: a reading step, not an answer.
   - The gateway accepted top_p and top_k for all three candidates (one call each, 2026-11-13). Whether every provider honours top_k is not known.
@@ -209,7 +209,7 @@ python3 benchmark/runner/retrieval_check.py
 ## Question fields used
 | Field | Meaning |
 |---|---|
-| `answer_type` | `deterministic` (letters); the only type since 2026-11-14 (Q199) |
+| `answer_type` | `deterministic` (letters); the only type (Q199) |
 | `level` | `100`, `200`, `300`, `400` |
 | `input` | `text`, `table`, `screenshot`; checked against the attachments by lint |
 | `misconception` | Option letters that are the known wrong answer |

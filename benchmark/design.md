@@ -4,17 +4,17 @@ For human experts who check that the benchmark is valid and complete. Not indexe
 Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md). Question format: [benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md). Models and judge: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md). Misconception definition: `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 
 ## 1. Claim
-- Claim: a local open-weight model on customer hardware with this harness + agent + knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
-- System under test: model + agent + harness + knowledge base. The model is frozen; the benchmark does not test it for its own sake (`MISSION.md`, section 1). It measures:
+- Claim: a local open-weight model on customer hardware, with this harness, agent and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model does without them.
+- The system under test is the model, agent, harness and knowledge base together. The model is frozen, and the benchmark does not test it for its own sake (`MISSION.md`, section 1). The benchmark measures:
   - which frozen model to ship;
   - the score delta of each change to the knowledge base, harness or agent, with everything else fixed;
   - the gap to the frontier model.
-- Base (the model alone) is the zero point: Agent E2 minus Base is what our work adds.
-- The benchmark is a proof, not a goal ([CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md), Evaluation). The real test is the field: the live test with the author's real questions ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md)) and the operators who use Agent E2. The question set has no target size and no allocation to fill: questions are added, rewritten and retired as the knowledge base and the field show what matters.
-- The benchmark must:
+- Base (the model alone) is the zero point. Agent E2 minus Base is what our work adds.
+- The benchmark is a proof, not a goal ([CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md), Evaluation). The real test is the field: the live test with the author's real questions ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md)) and the operators who use Agent E2. The question set has no target size and no allocation to fill. Questions are added, rewritten and retired as the knowledge base and the field show what matters.
+- The benchmark has three jobs:
   1. rank candidate models against each other, on Agent E2 and on Base;
   2. show whether a configuration clears the release gate (section 7.5);
-  3. show how close it is to 99%, and state what the number proves.
+  3. show how close it is to 99%, and say what the number proves.
 
 ## 2. Scope
 | Measured | Not measured (and where it is measured instead) |
@@ -74,7 +74,7 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 |---|---|---|
 | Deterministic | One or more option letters (A, B, C, ...). Exactly right or not | The runner, by comparing letters |
 
-- Every question of the run set is deterministic (author, Q199 F, 2026-11-14): exact, cheap, free of scorer bias, and covered by consensus of samples. The judge scored free text unreliably: a 250-word answer scored 0 when one side sentence contradicted a key point, and judged answers carried most of the confident-wrong rate.
+- Every question of the run set is deterministic. Scoring is exact, cheap, free of scorer bias, and covered by consensus of samples. The judge scored free text unreliably: a 250-word answer scored 0 when one side sentence contradicted a key point, and judged answers carried most of the confident-wrong rate.
 - What options lose, and where it is measured instead: a real administrator asks without options, and options can reward recognition. The guard in the set: many plausible false options, each wrong for a reason the knowledge base states, the Level 300 misconception among them, and exact match of the whole set (section 3.8). The free-text answer itself is measured in the live test, judged by the author.
 - Example, deterministic ([CPU reservation behaviour](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-005-cpu-reservation-behaviour.md)): "Choose all the correct statements" about CPU reservation, options A to G. Key: A, B, C, D. Any other set of letters is wrong.
 - Metadata: `answer_type: deterministic` (lint rejects any other value).
@@ -86,7 +86,7 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 | Table | A CSV file: a vCenter performance chart export, a VCF Operations metric chart or list view export, or esxtop batch output | As text, after the prompt (section 13.1) |
 | Screenshot | An image of a product UI | As an image, to a vision model |
 
-- Screenshots are in 1.0 (author, 2026-11-14). Administrators send screenshots far more often than exports, and vision is a hard requirement of Agent E2 (MISSION.md, Non-functional). Reading the screen is part of what is tested.
+- Screenshots are in 1.0. Administrators send screenshots far more often than exports, and vision is a hard requirement of Agent E2 (MISSION.md, Non-functional). Reading the screen is part of what is tested.
 - Screenshot or table: use the evidence the administrator would send. A screenshot when they would look at the screen (a chart that looks wrong, two tools that disagree, a configuration page). A CSV export when the answer needs exact values over many rows or objects, which a chart cannot show legibly.
 - Leak guard: a screenshot is never a knowledge-base image, and the knowledge base never states a screenshot's values (section 13).
 - A question can combine input types; it counts for each input type it includes. Every question has a prompt, so text as an input type means the prompt alone.
@@ -104,9 +104,9 @@ Each question lists every area it touches in `technology` (values from [project/
 | Network | drops, throughput, packet rate, units, teaming, offload |
 | System | the object as a whole: cluster, DRS, admission control, resource pools, statistics and rollups, capacity, availability |
 | Guest OS layer | Windows and Linux counters, and where they meet the VM counters |
-| Outside the knowledge base | A few questions answered from the model's own knowledge (knowledge base first, own knowledge where it is silent: author, Q038). They check that a gap does not turn into a wrong answer |
+| Outside the knowledge base | A few questions answered from the model's own knowledge (knowledge base first, own knowledge where it is silent: Q038). They check that a gap does not turn into a wrong answer |
 
-- Per-area scores rest on a few dozen questions each (margin about ±12-17 points): diagnostic only. Decisions use the total.
+- Per-area scores rest on a few dozen questions each (margin about ±12-17 points), so they are a diagnostic only. Decisions use the total.
 
 ### 3.6 Mix
 - No group can carry the score alone: every question weighs the same (section 7.4), so the mix of the set is what weighs each group. Coverage keeps it honest: every area, object, tool and misconception type is tested, and none dominates by accident.
@@ -127,17 +127,17 @@ Each question lists every area it touches in `technology` (values from [project/
 - `coverage.py` prints each count and marks a zero. The review rules are checked by the reviewer (section 11).
 
 ### 3.8 Answer-key shape (deterministic)
-- Options: as many as the question needs, no fixed count limit or target. Since the reader is an LLM model, not a person, so a long list is no burden. The runner takes up to 25 written options (letters A-Y) and appends Unsure as the next letter. No Not covered option since 2026-11-05 (Q038).
+- Options: as many as the question needs, no fixed count limit or target. The reader is a model, not a person, so a long list is no burden. The runner takes up to 25 written options (letters A-Y) and appends Unsure as the next letter. No Not covered option (Q038).
 - The number of correct options varies from one to all of them (1 correct and 19 wrong is valid). The model is never told how many: every question carries the same instruction, "Choose all the correct options. There can be more than one."
 - A model that learns "usually one answer" or "usually all but one" gains nothing, and with many options a guess is almost never exactly right (6 options plus Unsure: about 1 in 64).
 
 ### 3.9 Paired questions
-An administrator rarely questions a counter in the abstract. The question comes when the screen does not match what they expect, and a model that does not know the counter is then misled by the screen. A pair asks one fact two ways (author, 2026-11-14):
+An administrator rarely questions a counter in the abstract. The question comes when the screen does not match what they expect, and a model that does not know the counter is then misled by the screen. A pair asks one fact two ways:
 
 | Type | Tests | Input |
 |---|---|---|
 | Theory | The counter: what it counts, its formula, how it differs from its namesakes | Text |
-| Practical | The same fact in tool output that disagrees with what the administrator expects | An export: CSV or tool text; a screenshot only where the misreading is visual (2026-11-15) |
+| Practical | The same fact in tool output that disagrees with what the administrator expects | An export: CSV or tool text; a screenshot only where the misreading is visual |
 
 - Both questions carry `pair` with the other's id; lint checks that it exists and points back.
 - Reading the pair: wrong on both is a knowledge gap (fix the knowledge base); right on theory and wrong on practical is a reading failure (check the trace: the export or screen misread, the file missed, or the model ignored it); wrong on theory and right on practical is a guess.
@@ -159,7 +159,7 @@ An administrator rarely questions a counter in the abstract. The question comes 
 - Author time is the constraint: every key is checked by hand.
 
 ## 5. Set design
-The set must measure one thing (Level 400 operations knowledge on public mechanisms) evenly, so the total has meaning.
+The set measures one thing, Level 400 operations knowledge on public mechanisms, and it has to measure it evenly for the total to mean anything.
 - Coverage: every area, object, layer and misconception type is tested (section 3.7). No area can carry the score alone.
 - Balance of difficulty: Level 100-200 questions anchor the scale. If they fail, the problem is the model's basics or retrieval, and Level 400 failures are not interpreted (section 3.2).
 - Paired questions: the same concept on two objects. A model that answers both right understands the vantage point; one that answers one right was lucky or pattern-matched.
@@ -173,13 +173,13 @@ The frontier model must be able to answer every question from public knowledge. 
 - F2. No vCommunity management pack metrics: Cluster Performance, Cluster Consumption and Cluster Risk, Close for Business, VM, Guest OS and ESXi Performance (%), inter-host imbalance, any `vCommunity|` key. Native VCF Operations metrics are allowed: CPU Contention (%), Memory Contention (%), the 20-second peak metrics, Capacity Remaining.
 - F3. Decidable from mechanisms and public documents. A strong expert without Agent E2 could answer it. An author threshold appears only when the prompt states it ("your team alerts at 10 ms").
 - F4. The rules hold for the title, the prompt, the options, `## Answers` and `## Explanation`: reviewers read the explanation as the reasons of the key.
-- F5. Evidence first. A Level 300-400 stem is an operator's situation with the data a tool shows: values, a table, a time window. Not a knowledge-file sentence turned into a question (the 2026-11-11 review found most synthetic questions tested recall of the knowledge base).
+- F5. Evidence first. A Level 300-400 stem is an operator's situation with the data a tool shows: values, a table, a time window. Not a knowledge-file sentence turned into a question (the review found most synthetic questions tested recall of the knowledge base).
 - F6. No question is picked or dropped because the frontier model fails it. An adversarial set, if ever used, is declared and reported apart.
 - Lint checks F1, F2 and F4 against the list `question_fairness` in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml). F3, F5 and F6 are review items (section 11).
 
 ### 6.2 Stem, options, key
 - Stem: a realistic situation with the values an operator would see (counter names, numbers, units, time window, tool). Not a definition prompt, except at Level 100-200.
-- No hints in the prompt (author, 2026-11-14): no line that explains a mechanism, defines a counter, interprets a value or points to the answer ("Hint:", "Be aware of", "Do not select", "the cores run below the base clock"). A frontier model uses a hint; a local model does not, so a hint measures the model, not the knowledge base. A hint that helps a reviewer goes in `## Notes`. Case facts stay: values, settings, versions, what changed, and limits on scope ("ignore the VMX swap file").
+- No hints in the prompt. A prompt has no line that explains a mechanism, defines a counter, interprets a value or points to the answer ("Hint:", "Be aware of", "Do not select", "the cores run below the base clock"). A frontier model uses a hint and a local model does not, so a hint measures the model, not the knowledge base. A hint that helps a reviewer goes in `## Notes`. Case facts stay: values, settings, versions, what changed, and limits on scope ("ignore the VMX swap file").
 - The stem never tells how many options are correct (Q199): plural wording ("Which statements are correct?"), matching the runner's closing line "Choose all the correct options. There can be more than one."
 - Lint checks both against `question_prompt_hints` in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml).
 - Options:
@@ -208,7 +208,7 @@ The frontier model must be able to answer every question from public knowledge. 
 | Unsure, chosen alone | Unsure | Not correct; not counted as wrong |
 | Anything else: wrong, partly right, Unsure mixed with other letters, unparseable | Confident wrong | Confident-wrong rate |
 
-- Two numbers are reported for deterministic questions: **Stable correct** (absolute, against the fixed set: correct in every run; reported as consistency since 2026-11-13, when the final score moved to the mean of the runs, section 7.4) and **confident-wrong rate** (share of answers that are wrong and not Unsure; target near 0).
+- Two numbers are reported for deterministic questions: **Stable correct** (absolute, against the fixed set: correct in every run; reported as consistency, when the final score moved to the mean of the runs, section 7.4) and **confident-wrong rate** (share of answers that are wrong and not Unsure; target near 0).
 - The model is told: a wrong answer is worse than Unsure, because an operator would act on it; if it cannot decide every option, choose Unsure.
 
 ### 7.1 No points, no -1
@@ -223,7 +223,7 @@ The frontier model must be able to answer every question from public knowledge. 
 ### 7.2 Five runs
 - One run is one draw of the answer, not the answer. Agent E2 makes two model calls (stage 1 and stage 5 of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)):
   - the case (stage 1) is asked at temperature 0, so the same question reads into the same case and gets the same reading set;
-  - the answer (stage 5) is sampled with the settings of the model's own card (temperature 1.0 for the three candidates, `sampling` in `config.yaml`), because a local server applies them by default and the operator meets that answer (author, 2026-11-13). Two runs of the same question can give different letters.
+  - the answer (stage 5) is sampled with the settings of the model's own card (temperature 1.0 for the three candidates, `sampling` in `config.yaml`), because a local server applies them by default and the operator meets that answer. Two runs of the same question can give different letters.
 - Base and the frontier reference also sample (the card's settings; the provider's default for Opus).
 - Temperature 0 would not make one run enough either: hosted models do not answer the same way twice even at temperature 0 (batching on shared GPUs, provider routing, silent serving updates).
 - So each question runs 5 times. The 5 runs give:
@@ -254,13 +254,13 @@ The frontier model must be able to answer every question from public knowledge. 
 
 ### 7.4 Final score
 - One number, 0-100%, for each model and mode (Base, Agent E2, web). Sub-scores support it: by answer type, by input type, by level.
-- Question credit, 0 to 1, the mean of the 5 runs (author, 2026-11-13):
+- Question credit, from 0 to 1, is the mean of the 5 runs:
   - the share of runs with exactly the right letters.
 - Worst run: the same score with each question on its lowest run. Reported next to the final score as consistency; not a gate.
 - Final score = sum of question credits / number of questions. Every question weighs the same, whatever its level, answer type or input type.
 - Sub-score = the same mean within one group. A question counts for every input type it includes. The mix of the set (section 3.6) sets how much each group weighs in the final score.
 - Reasons:
-  - mean, not worst run: an operator asks once and gets one answer; the mean of the runs is the best estimate of that answer's quality. The worst run measures something else (does it never fail?) and stays in the report as consistency. Until 2026-11-13 the worst run counted;
+  - mean, not worst run: an operator asks once and gets one answer, so the mean of the runs is the best estimate of that answer's quality. The worst run measures something else (does it never fail?) and stays in the report as consistency. Until the worst run counted;
   - one weight per question: no group can carry the score by a formula choice; coverage keeps the mix honest (section 3.7);
   - no part credit: a partly right set of letters is a wrong answer an operator would act on.
 - Confident-wrong rate: wrong letters that are not Unsure.
@@ -268,8 +268,8 @@ The frontier model must be able to answer every question from public knowledge. 
 - Runner: [benchmark/runner/score_report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/score_report.py), function `final`. Report table `Final score`.
 
 ### 7.5 Release gate
-- Read on Agent E2 as shipped: the local model running the one pipeline of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (author, 2026-11-14), with the deployment profile (section 8). The retrieval levels (section 9) are read on its reading set.
-- All must hold. One number alone can be carried by easy questions or bought with confident guesses.
+- Read on Agent E2 as shipped: the local model running the one pipeline of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), with the deployment profile (section 8). The retrieval levels (section 9) are read on its reading set.
+- All of these must hold. Easy questions can carry one number alone, and confident guesses can buy it.
 
 | Gate | Limit | Why |
 |---|---|---|
@@ -284,19 +284,19 @@ The frontier model must be able to answer every question from public knowledge. 
 - Why 85%, not 90%: at about 200 questions 85 and 90 still overlap inside the margin (±5); the confident-wrong limit does more for the operator than 5 more points.
 - Reading the gap: within the margin (printed in the report) it is a tie; the paired test says whether a larger gap is more than luck.
 - Held-out set:
-  - 30 questions drawn at release in the proportions of the run set at that time (level, answer type, input; `coverage.py`). No field set of real operator questions in 1.0 (Q207, 2026-11-15).
+  - 30 questions drawn at release in the proportions of the run set at that time (level, answer type, input; `coverage.py`). No field set of real operator questions in 1.0.
   - Written by a session that does not edit the knowledge base, reviewed by the author, never committed to the repository. Run once, on the release configuration.
   - Why drawn at release, not now: a question that exists while the knowledge base is still edited can leak into it. A fresh draw cannot.
   - Why the 11-point limit replaces "within 5 points": on 20-30 questions the noise alone is about ±13 points, so a 5-point rule fails or passes by luck.
-- Expected frontier score: about 80%. Measured on 2026-11-13 (Claude Opus 5.5 with web search, previous state of the question set, archived): final 81%, Level 400 79%, confident-wrong 12%. It fails the gate too. The expert estimate of 2026-11-12 (about 70%) was too low: the frontier model knows each public mechanism, and loses mostly on the vantage point, the combination of readings and the Level 300 rule of thumb.
+- Expected frontier score: about 80%. Measured (Claude Opus 5.5 with web search, previous state of the question set, archived): final 81%, Level 400 79%, confident-wrong 12%. It fails the gate too. The expert estimate (about 70%) was too low: the frontier model knows each public mechanism, and loses mostly on the vantage point, the combination of readings and the Level 300 rule of thumb.
 - Target: 99%, a direction. The set cannot prove it (section 4).
 - Runner: [benchmark/runner/score_report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/score_report.py), functions `gate` and `mcnemar`, report table `Release gate`: final score, Level 400 and confident-wrong as the gate; the gap and the paired test as outcomes. The misconception check and the held-out set are read outside the report.
 
 ## 8. Comparison design
-- Agent E2 has one pipeline (author, 2026-11-14): the benchmark runs it as shipped, not modes of it. The benchmark is a proof, not a goal ([CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md), Evaluation). Why classic and agentic mode were removed: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 2.
+- Agent E2 has one pipeline. The benchmark runs it as shipped, not modes of it. The benchmark is a proof, not a goal ([CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md), Evaluation). Why classic and agentic mode were removed: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 2.
 - The release score uses the deployment profile of the harness: same prompt, reading plan, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 5.
-- Two runs per candidate (author, 2026-11-14): Base, the model alone (`baseline`), and Agent E2 as shipped (`agent-e2`) ([benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md)). Scores of earlier generations (classic and agentic modes) are archived and not compared.
-- Reference: the frontier model as an administrator uses it: Claude Opus 5.5 with web search available (mode `web`), effort medium, no knowledge base (Q164). The model gets the baseline prompt and two tools, web search and page fetch, offered with `tool_choice: auto` and no instruction to search: it decides whether to search, and can answer with no search at all, as in a chat product with search on. At most 5 tool calls. The mode name says what is available, not what is forced. No run with the tools removed: a user cannot switch search off in a chat product by typing, so that run measures nothing a user meets (author, 2026-11-13). The report records the tool calls per answer (`tools_used`), so how often Opus chose to search is read from the results. The report gives the gap to it and a one-sided exact McNemar test at α 0.05: an outcome, not a gate (section 7.5).
+- Two runs per candidate: Base, the model alone (`baseline`), and Agent E2 as shipped (`agent-e2`) ([benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md)). Scores of earlier generations (classic and agentic modes) are archived and not compared.
+- Reference: the frontier model as an administrator uses it: Claude Opus 5.5 with web search available (mode `web`), effort medium, no knowledge base (Q164). The model gets the baseline prompt and two tools, web search and page fetch, offered with `tool_choice: auto` and no instruction to search: it decides whether to search, and can answer with no search at all, as in a chat product with search on. At most 5 tool calls. The mode name says what is available, not what is forced. No run with the tools removed: a user cannot switch search off in a chat product by typing, so that run measures nothing a user meets. The report records the tool calls per answer (`tools_used`), so how often Opus chose to search is read from the results. The report gives the gap to it and a one-sided exact McNemar test at α 0.05: an outcome, not a gate (section 7.5).
 - Paired comparison: models are compared question by question on the same set, not only by totals.
 - Between candidate models, a gap smaller than the margin is a tie; the smaller model wins a tie. Against the frontier model, a gap within the margin is a tie.
 - Run matrix of a round: 3 candidates x 2 modes (Base, Agent E2) plus the frontier reference x 1 mode (`web`), every question of the run set, 5 runs. Time and cost: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md), projected by the preflight sample. Prices, rate limits and a model's thinking change both numbers: run the preflight before each round.
@@ -346,7 +346,7 @@ For the set:
 
 ## 13. Screenshot questions
 - Purpose: administrators upload screenshots and ask the agent to explain the problem, often several at once, from different tools.
-- Screenshots stay few, as customers send them (2026-11-15): the 8 running screenshot questions and the author's field screenshots. The practical halves of pairs are exports, not screenshots ([project/practical-questions-as-exports-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/practical-questions-as-exports-2026-11-15.md)): a key rests on values, not pixels, and screen reading is checked apart, in stage 1 of the harness, against the true values of each image.
+- Screenshots stay few, as customers send them: the 8 running screenshot questions and the author's field screenshots. The practical halves of pairs are exports, not screenshots ([project/practical-questions-as-exports-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/practical-questions-as-exports-2026-11-15.md)): a key rests on values, not pixels, and screen reading is checked apart, in stage 1 of the harness, against the true values of each image.
 - Reading screenshots stays a basic requirement: a model without vision is not a candidate ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md)).
 - A screenshot question carries all its images in `attachments`; every image is sent with the same prompt. The prompt states the problem in words; the images supply the values.
 - No leak: an attachment is never a knowledge-base image (lint), and the knowledge base never states an attachment's values; a knowledge example of the same mechanism uses its own numbers.
@@ -356,25 +356,25 @@ For the set:
 - Purpose: administrators export data and ask about it: a vCenter chart export, a VCF Operations list or metric export, esxtop batch output.
 - 1.0 tables: at most 24,000 characters, about 6,000 tokens (`question_csv_max_chars` in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml), checked by lint; 2026-11-15). Each period is cut to the event; multi-day cases use a VCF Operations list view with Max, Min, First and Last, or daily rows. The runner puts the CSV after the prompt as text (`Question.tables`); the context window is 64,000 tokens.
 - Tool text (esxtop panels, `top`, `sar`, `iostat`, `mpstat`, `ip -s link`, `systeminfo`, PowerCLI output) goes inside the prompt in a fenced `text` block, as an operator pastes it; only CSV files and images are attachments.
-- Wide exports are the point: the misleading neighbour counter sits in the same file (Readiness next to Ready, Wait next to Idle, Total next to non-Total drops), so the model must choose the counter.
+- Wide exports are intended. The misleading neighbour counter sits in the same file (Readiness next to Ready, Wait next to Idle, Total next to non-Total drops), so the model has to choose the counter.
 - Larger exports (hundreds of rows) need a table tool in the harness (filter, sort, aggregate, top-N). After 1.0.
 - Column names are the product's metric names (for example `CPU|Ready (%)`, `Usage for vm-01 (Percent)`), so the reading follows the product, not the header's English.
 - Every CSV and every generated tool-text block comes from a seeded case in [project/tools/exportgen/](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/exportgen/README.md) (one module per question): the case writes the files in the real export format (templates in project/sources/export-templates/) and `check` re-reads them and asserts every condition the key rests on. `python3 -m project.tools.exportgen check all` and `python3 -m unittest project/tools/test_exportgen.py` must pass. Time stamps, object names and noise are realistic; names are invented, never a customer's or the lab's; no lab values.
 
 ## 14. Free-text answers
-- Not in the benchmark (author, Q199 F, 2026-11-14). The judge model that scored them 0-3 is archived with its rubric ([project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14/judge.py)); this section's earlier rules are in git history.
+- Not in the benchmark. The judge model that scored them 0-3 is archived with its rubric ([project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14/judge.py)); this section's earlier rules are in git history.
 - Free-text answers are measured in the field: the author judges real questions in the live test ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md), step 9) and operators rate every answer in the product ([MISSION.md](https://github.com/e1-rahabok/agent-e2/blob/main/MISSION.md), section 5, Feedback).
 
 ## 15. Target history
 - Goal: the local model with the knowledge base answers better than the best frontier model without it.
 - Target: 99% final score on Agent E2. See section 7.4.
-- Minimum: the release gate, section 7.5 (Q130, 2026-11-12; set size and held-out rule revised 2026-11-12, question set 1.0).
+- Minimum: the release gate, section 7.5 (Q130, ; set size and held-out rule revised, question set 1.0).
 - No candidate is dropped on a partial run or a small sample.
 - What 99% requires: at about 200 questions, 99% allows 2 wrong questions; proving 99% needs about 300 questions with none wrong (section 4). Answer keys must be correct: every wrong answer from the best model gets an author check.
 - Status: no round on Agent E2 yet (built 2026-11-14). The previous generation and the frontier reference both failed the gate (archived: [analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md)).
 
 ## 16. Decision rules
-- Mode: one pipeline, Agent E2, the neuro-symbolic expert system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)), carries the release gate (author, 2026-11-14; replaces Q130, agentic as the shipped mode). No fallback mode: the model makes no tool calls.
+- Mode: one pipeline, Agent E2, the neuro-symbolic expert system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)), carries the release gate (decided 2026-11-14; replaces Q130, agentic as the shipped mode). No fallback mode: the model makes no tool calls.
 - Pick the model: highest final score on Agent E2; then lowest confident-wrong rate; ties go to the smaller model.
 - A model that breaks the answer format on more than 10% of answers is dropped. (An unreadable case does not count: the code-only case takes its place.)
 - Knowledge base lift: Agent E2 must beat Base in every area. An area with no lift is a knowledge or retrieval problem, not a model problem.
