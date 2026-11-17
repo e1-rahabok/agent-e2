@@ -21,12 +21,12 @@ Rules: T1 one fact per option; T2 no A / not-A (also a clause that negates anoth
 
 - By field frequency: high 26, medium 51, low 5 (section 6).
 
-## 1. Decisions (author, 2026-11-14)
+## 1. Decisions (2026-11-14)
 1. Scope: every change of this plan, the author's questions included (book, quiz, real ticket). Executed as one change set: writers per technology in parallel, each reading this whole plan; one independent review; lint, tests and the retrieval check before and after.
 2. Retired: 0276 (same fact as 0277), 0278 (inside 0279).
 3. Leaks: each CSV whose values a knowledge file states (0081, 0085, 0102, 0103, 0142) or copies (0089, 0101, 0140, 0151) is regenerated with new numbers; the knowledge examples stay. 0104: its knowledge example (run-vs-used-gap) loses its number instead, since 0104's base is an open question (item 6).
 4. Facts over the two-question cap: as recommended (0002 with 0102; 0003 with 0104; 0059 keeps what Contention counts; 0066 with 0103; 0331 J dropped; 0356 with 0089; option-level copies removed from the weaker question).
-5. 0022: the author says the balloon driver comes from the VMware Tools service, so "Tools not running" stops ballooning. The knowledge base (ballooning, Broadcom KB 313773) says the driver is a kernel driver (Linux `vmw_balloon` is in the kernel; open-vm-tools does not contain it). Option D is reworded to the case both agree on (VMware Tools not installed on a Windows VM); key A,B,D,E holds. Raised as an author question.
+5. 0022: the author's view is that the balloon driver comes from the VMware Tools service, so "Tools not running" stops ballooning. The knowledge base (ballooning, Broadcom KB 313773) says the driver is a kernel driver (Linux `vmw_balloon` is in the kernel; open-vm-tools does not contain it). Option D is reworded to the case both agree on (VMware Tools not installed on a Windows VM); key A,B,D,E holds. Raised as an author question.
 6. 0104: a VCF Operations 5-minute ms value averages the 15 values of 20 seconds, so 100% is 20,000 ms per vCPU (Q224, settled 2026-11-15 from Broadcom KB 315941 and KB 444403). 0104's export was rescaled to that base; pair D1 is no longer held.
 7. 0004: the values come from the chart, not the typed approximations. 0016 and 0140: changed as proposed.
 8. Masking: every VM name is masked, in existing and new screenshots.
@@ -241,7 +241,7 @@ Medium
 | D11 | after a memory downsize, guest Free falls by design; too far shows as sustained page-out or contention | rightsizing, guest-os-sizing | undo the downsize / paging never matters / restore on Free alone | T300, P400 | VCF Operations VM 4 weeks across 32 → 16 GB: Guest Free, Needed, Usage, page-in/out, Contention | m |
 | D12 | Linux `st` reports Ready only with the steal clock enabled | guest-os-vs-vm-cpu | st 0 means never frozen / Linux never reports steal / add vCPUs | T300, P400 | Linux VM, default advanced settings, host contention: `top` with 0.0 st; vCenter Readiness 10%+ same window. Needs a vSphere source (only KB 434983, written for Tanzu) | m |
 | D13 | host Memory Latency averages its VMs: one waiting VM hides | host/latency | host 0.3% so no VM waits / rises only when all wait / close the ticket | T300, P400 | host Latency (%) Past day 0.5% or less; one VM at 5%+ for 30 min (limit below its working set) | m |
-| D14 | a VM memory reservation moves no VM counter (Consumed, Granted, Entitlement, Overhead); it shows in the host reservation counters and in the VM's settings and task log | vm-memory-metrics, host-memory-metrics, host/reservation | Consumed should jump to the reservation / the change failed / reserve every VM at no cost | T300 (0441), P400 (0442) | vSphere Client VM chart export and task list (author's lab, 2026-11-15) | added 2026-11-15, both halves written and running |
+| D14 | a VM memory reservation moves no VM counter (Consumed, Granted, Entitlement, Overhead); it shows in the host reservation counters and in the VM's settings and task log | vm-memory-metrics, host-memory-metrics, host/reservation | Consumed should jump to the reservation / the change failed / reserve every VM at no cost | T300 (0441), P400 (0442) | vSphere Client VM chart export and task list (lab, 2026-11-15) | added 2026-11-15, both halves written and running |
 - Deferred: knowledge gap or open author question. vSphere Client "Guest memory" label (consumed.md vs the vSphere API); Reclaimable Idle vs Idleness Indicator (idle-vm review notes); VCF Operations "Total" packet metrics (labels); ESXi Memory Utilization (Q215, Q221); cluster Consumed vs the sum of hosts (review note); VM Used above the vCPU sum (system.md note); Other Wait on an idle VM (needs a field screenshot).
 - Not proposed (cap reached): host Ready as a sum (0016 + 0115); Latency vs Contention (four questions); 20-second peaks (0089 + 0356).
 
@@ -292,7 +292,7 @@ One change set. Each writer reads this whole plan, writes only its own files and
 - 98 existing questions rewritten (69 synthetic, 29 the author's); 49 keys changed letters, some only relettered.
 - Changed from the plan: D1 held for Q224; 0184 unpaired from 0062 (0062 tests another fact); 0145 keeps no over-correction (a setting question; the candidate repeated 0146 G); 0140 stays paired with 0291 (0291's options hold whichever way Q214 is answered); 0104 keeps its base (Q224).
 - Independent review: seven agents decided every option from the knowledge files before reading the key; every key letter matched; the options that could not be decided and the give-aways between pair halves were fixed (project/plan.md, decision of 2026-11-15).
-- Added 2026-11-15 (author asked): pair D14, 0441 (theory, Level 300) and 0442 (practical, Level 400: the author's VM chart export and the reconfigure task list). Run set 228. 82 pairs: 35 with both halves running.
+- Added 2026-11-15: pair D14, 0441 (theory, Level 300) and 0442 (practical, Level 400: the author's VM chart export and the reconfigure task list). Run set 228. 82 pairs: 35 with both halves running.
 - Author questions raised: Q223-Q228 ([project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md)).
 
 ### Screenshots to capture (47)

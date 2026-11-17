@@ -3,9 +3,9 @@
 Review of the 47 practical halves that wait for screenshots ([question-pairing-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-pairing-2026-11-14.md), section Screenshots to capture). Not indexed. Status: done 2026-11-16 in the question bank audit ([question-bank-audit-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-bank-audit-2026-11-15.md)): 44 converted, 0389 and 0419 retired, 0435 and 0015 deferred.
 
 ## 1. The question
-- The author: a practical question does not need a screenshot. Practical means a case to apply the fact to, not an image. The readers are AI only; humans need screenshots because they cannot digest much text, a model can.
+- A practical question does not need a screenshot. Practical means a case to apply the fact to, not an image. The readers are AI only. Humans need screenshots because they cannot take in much text, and a model can.
 - Example: [0368](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-131-task-manager-full-vcenter-ready-high.md) (Task Manager at 100%, vCenter Ready high) and its theory half [0266](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-087-linux-steal-time-and-windows-busy-time.md). The key of 0368 needs the values, not the pixels.
-- The author added: customers send long CSV files with dozens of columns, so that the expert does not have to ask again. A screenshot carries one screen; customers rarely take extra ones. A CSV carries the misleading counters in the same file.
+- Customers also send long CSV files with dozens of columns, so that the expert does not have to ask again. A screenshot carries one screen, and customers rarely take extra ones. A CSV carries the misleading counters in the same file.
 
 ## 2. Design considerations
 1. One construct per question. The practical half tests two things at once: applying the fact and reading the image. A wrong answer cannot tell which failed; design.md 3.9 names three causes for "right on theory, wrong on practical". Item-writing practice calls the image part construct-irrelevant variance when the item targets the fact ([ASC Item Writing Guide 2025](https://assess.com/docs/ASC_Item-Writing-Guide_2025.pdf)).
@@ -89,7 +89,7 @@ Format: CSV = generated export; TEXT = tool text (esxtop panel, `top`, `sar`, `i
 | Practical | Theory | Format | Evidence | Notes |
 |---|---|---|---|---|
 | [0432](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-086-two-minute-burst-real-time-vs-past-day.md) | 0047 | CSV | vCenter Real-time and Past day | Past day point = mean of its 15 Real-time samples |
-| [0435](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-089-powered-on-vm-with-a-crashed-windows.md) | 0015 | DEFER | - | Availability is not in 1.0 (author, 2026-11-15); 0015 deferred with it |
+| [0435](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-089-powered-on-vm-with-a-crashed-windows.md) | 0015 | DEFER | - | Availability is not in 1.0; 0015 deferred with it |
 
 ## 5. Impact
 ### Practical halves (47 questions, 90 images)
@@ -103,7 +103,7 @@ Format: CSV = generated export; TEXT = tool text (esxtop panel, `top`, `sar`, `i
 | Need a screenshot for the key | 0 |
 
 - No lab capture is needed. 44 questions run in 1.0 as exports.
-- 0386 runs as CSV (author, 2026-11-15). A Task Manager screenshot question is deferred: the knowledge-base images of that screen cannot be reused (an attachment is never a knowledge-base image, and the knowledge files state those images' values), and it needs a Windows VM in the lab, not a laptop.
+- 0386 runs as CSV. A Task Manager screenshot question is deferred: the knowledge-base images of that screen cannot be reused (an attachment is never a knowledge-base image, and the knowledge files state those images' values), and it needs a Windows VM in the lab, not a laptop.
 
 ### Theory partners (47)
 | Effect | Questions |
@@ -137,11 +137,11 @@ Format: CSV = generated export; TEXT = tool text (esxtop panel, `top`, `sar`, `i
 - Only names and formats are used. Lab values do not enter questions or knowledge files.
 
 ## 9. Decisions and the change set
-Decided (author, 2026-11-15):
+Decided 2026-11-15:
 1. Practical halves become exports (CSV or tool text), not screenshots.
 2. 0386 runs as CSV; the Task Manager screenshot question is deferred.
 3. 0435 and 0015 deferred: availability is not in 1.0.
-4. CSV cap: decided by Claude on the author's leave: 24,000 characters, periods cut to the event (section 7.1).
+4. CSV cap: 24,000 characters, periods cut to the event (section 7.1). Set without waiting for an answer.
 
 Conflicts with earlier decisions, changed by the change set:
 - design.md 3.9 (2026-11-14): practical input "Screenshot, sometimes a table" becomes "an export: CSV or tool text; a screenshot only where the trap is visual".

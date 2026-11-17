@@ -8,7 +8,7 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | [README.md](README.md) | What Agent E2 is, in one page |
 | [MISSION.md](MISSION.md) | Why a small local model can win; requirements; risks |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | The whole system: repository, parts, modes, query flow |
-| [`images/`](images) | Diagrams of the root documents: `product-architecture.svg` (ARCHITECTURE.md, section Product), drawn by `project/tools/draw_product_diagram.py`. Not indexed |
+| [`images/`](images) | Diagrams of the root documents: `product-architecture.svg` (ARCHITECTURE.md, section Product), drawn by [`project/tools/draw_product_diagram.py`](project/tools/draw_product_diagram.py). Not indexed |
 | [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | The knowledge design: where knowledge lives, forms, Level 400 and misconceptions. Rules: [`project/knowledge-rules/`](project/knowledge-rules) |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to add or change a file |
 | [CLAUDE.md](CLAUDE.md) | How Claude works in this repository |
