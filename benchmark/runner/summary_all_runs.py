@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Summarize the run folders of one benchmark round into one analysis: benchmark/results/README.md.
 
-The numbers come from the run folders (answers.csv, config.json, traces.jsonl) through score_report_for_one_run.py, the same code as each
+The numbers come from the run folders (answers.csv, config.json, traces.jsonl) through score_report.py, the same code as each
 run's report.md. The sentences under "Reading" are generated from the numbers by fixed rules, so a reader can check each
 one against a table. Nothing is typed in by hand.
 
-  python3 benchmark/runner/summary_of_all_runs.py                       # every run folder in benchmark/results
-  python3 benchmark/runner/summary_of_all_runs.py --folders a b c d     # these folders only
+  python3 benchmark/runner/summary_all_runs.py                       # every run folder in benchmark/results
+  python3 benchmark/runner/summary_all_runs.py --folders a b c d     # these folders only
 """
 import argparse
 import csv
@@ -18,12 +18,12 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
-import score_report_for_one_run as R  # noqa: E402
+import score_report  # noqa: E402
 
 REPO = 'https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results'
 E2 = 'agent-e2'
 MODE_ORDER = {'baseline': 0, E2: 1, 'web': 2}
-LEVEL_KEYS = [f'level:{x}' for x in R.LEVELS]
+LEVEL_KEYS = [f'level:{x}' for x in score_report.LEVELS]
 
 
 def _pts(x):
@@ -81,7 +81,7 @@ def reading(fin, rows, info, ref):
             gap = fin[(best, E2)]['final'] - fin[ref]['final']
             out.append(f'Best local model with Agent E2: {best}, {fin[(best, E2)]["final"]:.0%}; the frontier model without the knowledge base '
                        f'scores {fin[ref]["final"]:.0%}, a gap of {_pts(gap)} points (an outcome, not a gate).')
-    passed = [m for m in locals_ if (m, E2) in fin and all(g[3] for g in R.gate(fin, rows, m, E2, ref)[:3])]
+    passed = [m for m in locals_ if (m, E2) in fin and all(g[3] for g in score_report.gate(fin, rows, m, E2, ref)[:3])]
     out.append('Release gate on Agent E2 (final score, Level 400, confident wrong): ' +
                (f'passed by {", ".join(passed)}.' if passed else 'passed by no model.'))
     bad = [i for i in info if i['failed'] or i['truncated'] or i['unparsed']]
@@ -92,14 +92,14 @@ def reading(fin, rows, info, ref):
 
 def build(folders, today=None):
     rows, info = load(folders)
-    fin = R.final(rows)
-    ref = R.REFERENCE
+    fin = score_report.final(rows)
+    ref = score_report.REFERENCE
     dates = sorted({i['folder'][:8] for i in info})
     cfg0 = info[0]['cfg']
     n_q = len(cfg0.get('questions') or [])
     L = [f'# Benchmark results: round of {dates[0][:4]}-{dates[0][4:6]}-{dates[0][6:]}', '',
          f'- {len(info)} runs, {n_q} questions, {cfg0.get("runs")} runs per question, sampling {json.dumps(cfg0.get("sampling")) if cfg0.get("sampling") else cfg0.get("temperature")}. '
-         f'Written by `benchmark/runner/summary_of_all_runs.py` from the run folders; every number below comes from them.',
+         f'Written by `benchmark/runner/summary_all_runs.py` from the run folders; every number below comes from them.',
          '- How to read a score: the exact value is read at plus or minus 5 points. The benchmark is a proof: Agent E2 against the release gate and the frontier reference. '
          'Method and scoring: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md).', '']
     L += ['## Runs', '', '| Run folder | Model | Modes | Request settings | Answers | Failed | Cut off | First to last answer | Cost US$ |', '|---|---|---|---|---|---|---|---|---|']
@@ -114,7 +114,7 @@ def build(folders, today=None):
               f'gap follow-up: {"on" if cfg0.get("gap_followup", True) else "off"}.', '']
     L += ['## Final score', '', '| Model | Mode | Final | ± margin | Level 100 | Level 200 | Level 300 | Level 400 | Confident wrong |', '|---|---|---|---|---|---|---|---|---|']
     for (m, mode), s in sorted(fin.items(), key=lambda x: (x[0][0] == ref[0], x[0][0], MODE_ORDER.get(x[0][1], 9))):
-        L.append(f'| {m} | {mode} | **{s["final"]:.0%}** | {100 * s["margin"]:.0f} | ' + ' | '.join(R._pct(s[k]) for k in LEVEL_KEYS) + f' | {R._pct(s["confident_wrong"])} |')
+        L.append(f'| {m} | {mode} | **{s["final"]:.0%}** | {100 * s["margin"]:.0f} | ' + ' | '.join(score_report._pct(s[k]) for k in LEVEL_KEYS) + f' | {score_report._pct(s["confident_wrong"])} |')
     L += ['', 'Final = mean over the questions of the mean credit over the runs. Levels: the same mean within one level. The worst-run score is in each run folder\'s report.md (consistency; not a gate).', '']
     L += ['## Lift', '', 'Points of the final score. A difference is outside the margin when it is larger than the two margins combined.', '',
           '| Model | Agent E2 over the model alone |', '|---|---|']
@@ -128,15 +128,15 @@ def build(folders, today=None):
     if ref in fin:
         L += ['## Release gate (Agent E2)', '', f'Reference: {ref[0]}, {ref[1]} mode. Limits: benchmark/design.md, section 7.5.', '', '| Model | Gate | Value | Limit | Pass |', '|---|---|---|---|---|']
         for m in sorted({m for m, mode in fin if mode == E2 and m != ref[0]}):
-            for name, v, limit, ok in R.gate(fin, rows, m, E2, ref):
+            for name, v, limit, ok in score_report.gate(fin, rows, m, E2, ref):
                 L.append(f'| {m} | {name} | {v:.0%} | {limit} | {"-" if ok is None else "yes" if ok else "no"} |' if not name.startswith('Paired') else
                          f'| {m} | {name} | p {v:.3f} | {limit} | {"-" if ok is None else "yes" if ok else "no"} |')
         L += ['', 'Not read here: no up-front misconception (lines marked `up_front`) stated as true (author check of the answers), and the held-out set at most 11 points below the development set (a separate run).', '']
     if (cfg0.get('consensus_samples') or 1) <= 1 and (cfg0.get('runs') or 0) >= 3:
-        L += R.consensus_table(fin, R.consensus(rows))[1:] + ['']
+        L += score_report.consensus_table(fin, score_report.consensus(rows))[1:] + ['']
     L += ['## Reading', ''] + [f'- {x}' for x in reading(fin, rows, info, ref)] + ['']
     L += ['## Time and tokens', '', '| Model | Mode | Mean latency s | Mean model calls | Mean tokens |', '|---|---|---|---|---|']
-    agg = R.aggregate(rows)
+    agg = score_report.aggregate(rows)
     best = {}
     for (m, mode, tr), a in agg.items():
         best.setdefault((m, mode), []).append(a)

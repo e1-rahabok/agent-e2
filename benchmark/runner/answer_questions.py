@@ -2,13 +2,13 @@
 """Benchmark runner.
 
 Examples:
-  python3 benchmark/runner/answer_questions_for_one_model.py --dry-run
-  python3 benchmark/runner/answer_questions_for_one_model.py --mock --runs 2
-  AI_GATEWAY_API_KEY=... python3 benchmark/runner/answer_questions_for_one_model.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-004
-  AI_GATEWAY_API_KEY=... python3 benchmark/runner/answer_questions_for_one_model.py              # full matrix from config.yaml
-  python3 benchmark/runner/answer_questions_for_one_model.py --resume benchmark/results/<benchmark-id>   # models, modes, runs and questions come from the folder
-  python3 benchmark/runner/answer_questions_for_one_model.py --models <id> --max-minutes 110            # stops cleanly after 110 minutes (exit code 3)
-Exit codes: benchmark/runner/runner_exit_codes.py. A whole benchmark round: benchmark/RUN.md.
+  python3 benchmark/runner/answer_questions.py --dry-run
+  python3 benchmark/runner/answer_questions.py --mock --runs 2
+  AI_GATEWAY_API_KEY=... python3 benchmark/runner/answer_questions.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-004
+  AI_GATEWAY_API_KEY=... python3 benchmark/runner/answer_questions.py              # full matrix from config.yaml
+  python3 benchmark/runner/answer_questions.py --resume benchmark/results/<benchmark-id>   # models, modes, runs and questions come from the folder
+  python3 benchmark/runner/answer_questions.py --models <id> --max-minutes 110            # stops cleanly after 110 minutes (exit code 3)
+Exit codes: benchmark/runner/exit_codes.py. A whole benchmark round: benchmark/RUN.md.
 """
 import argparse
 import csv
@@ -25,14 +25,14 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
-import provider_hosts_per_model as PH  # noqa: E402
-import runner_exit_codes as X  # noqa: E402
-import question_files_and_answer_parsing as C  # noqa: E402
+import provider_hosts  # noqa: E402
+import exit_codes  # noqa: E402
+import question_files  # noqa: E402
 import kb  # noqa: E402
 import modes  # noqa: E402
-import score_report_for_one_run as report  # noqa: E402
-from parallel_calls_per_model import ParallelCallsPerModel  # noqa: E402
-from stop_run_on_bad_answers import StopRunOnBadAnswers  # noqa: E402
+import score_report  # noqa: E402
+from adaptive_concurrency import AdaptiveConcurrency  # noqa: E402
+from stop_on_bad_answers import StopRunOnBadAnswers  # noqa: E402
 from llm import GatewayClient, LLMError, MockClient, ParamClient  # noqa: E402
 from run_folder_names import run_name  # noqa: E402
 from retrieval import Retriever  # noqa: E402
@@ -64,10 +64,10 @@ def main():
                     'print the resume command and exit with code 3 (default: config max_minutes, or no limit)')
     ap.add_argument('--out', default=os.path.join(kb.ROOT, 'benchmark', 'results'))
     ap.add_argument('--name', help='folder name inside --out (default: <date>-<model>, run_folder_names.py)')
-    ap.add_argument('--hosts', help='JSON {model: [provider hosts]}: the five runs of a question prefer different hosts (provider_hosts_per_model.py); '
+    ap.add_argument('--hosts', help='JSON {model: [provider hosts]}: the five runs of a question prefer different hosts (provider_hosts.py); '
                                     'a resumed run keeps the hosts of its config.json')
     ap.add_argument('--params', help='JSON {model: {"reasoning": {...}, "max_tokens": N}}: settings sent with every request of that model. '
-                    'Default: the first entry of the model\'s list in config model_params (benchmark/runner/sample_check_before_round.py picks the entry that works)')
+                    'Default: the first entry of the model\'s list in config model_params (benchmark/runner/preflight_check.py picks the entry that works)')
     ap.add_argument('--no-health', action='store_true', help='do not stop a run whose answers are cut off, unparsable or failing')
     a = ap.parse_args()
 
@@ -93,18 +93,18 @@ def main():
     modes_ = a.modes.split(',') if a.modes else (saved.get('modes') or cfg['modes'])
     limit = a.max_minutes if a.max_minutes is not None else cfg.get('max_minutes')
     deadline = time.monotonic() + limit * 60 if limit is not None else None
-    # Concurrency per model: the proven value is the floor; parallel_calls_per_model.py probes above it (parallel_calls_per_model.py).
+    # Concurrency per model: the proven value is the floor; adaptive_concurrency.py probes above it (adaptive_concurrency.py).
     by_model = {} if a.concurrency is not None else (cfg.get('concurrency_by_model') or {})
     ac = cfg.get('adaptive_concurrency') or {}
     hosts = json.loads(a.hosts) if a.hosts else (saved.get('hosts') or {})
     # concurrency_per_provider: the proven value counts per host, so a model spread over 3 hosts starts at 3 times the value
     factor = {m: (len(hosts.get(m) or []) or 1) if cfg.get('concurrency_per_provider') else 1 for m in models_}
-    gov = ParallelCallsPerModel({m: by_model.get(m, cfg['concurrency']) * factor[m] for m in models_},
+    gov = AdaptiveConcurrency({m: by_model.get(m, cfg['concurrency']) * factor[m] for m in models_},
                    adaptive=bool(ac.get('enabled')) and not a.no_adaptive and not a.mock,
                    step=ac.get('step', 2), max_probes=ac.get('max_probes', 2), window=ac.get('window', 40),
                    gain_fraction=ac.get('gain_fraction', 0.5), log=lambda s: print(f'  {s}', flush=True))
 
-    all_questions = C.load(a.questions)
+    all_questions = question_files.load(a.questions)
     skipped = [c.id for c in all_questions if not c.scorable]
     questions_ = [c for c in all_questions if c.scorable]
     if not questions_:
@@ -197,11 +197,11 @@ def main():
                'temperature': sampling.get(m, {}).get('temperature', ''), 'options_order': ''.join({'UN': '?'}.get(v, v) for v in mapping.values()),
                'correct': ','.join(c.answer), 'index_version': sha[:12]}
         try:
-            order = PH.order_for_run(hosts.get(m) or [], r)       # this run's preferred host first, the others as fallback
+            order = provider_hosts.order_for_run(hosts.get(m) or [], r)       # this run's preferred host first, the others as fallback
             cfg_a = dict(cfg, provider_order={**(cfg.get('provider_order') or {}), m: order}) if order else cfg
             res, used, trace = modes.answer(mode, client, m, question, images, cfg_a, retriever, 'choice')
-            picked = C.parse(res['content'], mapping)
-            row.update(C.score(c, picked))
+            picked = question_files.parse(res['content'], mapping)
+            row.update(question_files.score(c, picked))
             row['answer_letters'] = ','.join(picked) if picked else ''
             row['reason'] = _reason(res['content'])
             row['credit'] = row['exact']
@@ -273,10 +273,10 @@ def main():
     if left:
         # Not a finished run: no report, which would score a partial run.
         print(f'Stopped at the {limit:g}-minute limit: {len(tasks) - left} answers done, {left} to go, {errors} errors.')
-        print(f'Resume: python3 benchmark/runner/answer_questions_for_one_model.py --resume {run_dir}')
-        sys.exit(X.STOPPED)
+        print(f'Resume: python3 benchmark/runner/answer_questions.py --resume {run_dir}')
+        sys.exit(exit_codes.STOPPED)
 
-    path = report.write(run_dir)
+    path = score_report.write(run_dir)
     print(f'Report: {path}')
     if errors:
         print(f'{errors} answers failed. Re-run with --resume {run_dir} to retry them.')
@@ -284,7 +284,7 @@ def main():
 
 def _model_params(cfg, models_, given, saved):
     """Request settings per model: --params, else the ones a resumed folder started with, else the first entry of the
-    model's list in config model_params (sample_check_before_round.py tries the entries in order and picks the first that answers cleanly)."""
+    model's list in config model_params (preflight_check.py tries the entries in order and picks the first that answers cleanly)."""
     if given:
         return json.loads(given)
     if saved.get('model_params'):

@@ -191,7 +191,7 @@ def consensus_table(fin, proj):
     k = next(iter(proj.values()))['k']
     L = ['', f'## Consensus of {k}, projected', '',
          f'What the shipped setting `consensus_samples: {k}` would give: multiple-choice letters stand only when {k} samples agree; '
-         'otherwise Unsure. Projected from the recorded runs, no new model call (`score_report_for_one_run.py`, function `consensus`). Judged answers unchanged.', '',
+         'otherwise Unsure. Projected from the recorded runs, no new model call (`score_report.py`, function `consensus`). Judged answers unchanged.', '',
          '| Model | Mode | Final | Final, consensus | Confident wrong | Confident wrong, consensus | Multiple choice: confident wrong, consensus | Multiple choice: Unsure, consensus |',
          '|---|---|---|---|---|---|---|---|']
     for key, p in sorted(proj.items()):

@@ -5,15 +5,15 @@
 25 minutes. A progress report says "running" only when this command says ALIVE and the counts moved.
 
 For each run folder of the round (.round.json, or --folders) it prints:
-  - whether a process of answer_questions_for_one_model.py works on the folder;
+  - whether a process of answer_questions.py works on the folder;
   - good answers against the total, and the time of the last written answer (minutes ago);
   - the cost so far;
   and a verdict: DONE, ALIVE, STALLED (no answer written for --stall-minutes), DEAD (not finished, no process: relaunch with --resume),
   MACHINE RESTARTED (the machine booted after the last answer was written).
 LOW BUDGET is printed when the cost of the runs reaches --warn-share of --budget (default release.max_cost_usd of config.yaml).
 
-  python3 benchmark/runner/check_round_is_alive.py
-  python3 benchmark/runner/check_round_is_alive.py --budget 100 --stall-minutes 5
+  python3 benchmark/runner/check_round_alive.py
+  python3 benchmark/runner/check_round_alive.py --budget 100 --stall-minutes 5
 
 Exit code 0: every run is DONE or ALIVE. 2: a run is STALLED, DEAD or the machine restarted, or the budget is low.
 """
@@ -30,7 +30,7 @@ import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RESULTS = os.path.join(HERE, '..', 'results')
-CHILD = 'answer_questions_for_one_model.py'
+CHILD = 'answer_questions.py'
 
 
 def folder_numbers(folder):
@@ -54,7 +54,7 @@ def folder_numbers(folder):
 
 
 def processes_for(folder_name, ps_lines):
-    """Processes of answer_questions_for_one_model.py (or run.py, its old name) that work on this folder."""
+    """Processes of answer_questions.py (or run.py, its old name) that work on this folder."""
     return [ln for ln in ps_lines if (CHILD in ln or re.search(r'(^|[/\s])run\.py\b', ln)) and folder_name in ln]
 
 

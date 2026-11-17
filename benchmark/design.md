@@ -148,7 +148,7 @@ An administrator rarely questions a counter in the abstract. The question comes 
 - First pair: [ESXi CPU Demand and Usage: vCenter vs VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-057-esxi-cpu-demand-vcenter-vs-vcf-operations.md) and [ESXi CPU Demand differs between VCF Operations and vCenter](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-120-esxi-cpu-demand-differs-between-tools.md). The practical question is Level 400: it needs arithmetic across three screenshots.
 
 ## 4. Sample size
-- The set has no target size. What its size buys is precision, and the report prints it for the set as run: the 95% margin on the final score (`score_report_for_one_run.py`, `_margin`; the summary README).
+- The set has no target size. What its size buys is precision, and the report prints it for the set as run: the 95% margin on the final score (`score_report.py`, `_margin`; the summary README).
 - Rule of thumb for a score near 85%: about ±7 points at 100 questions, ±5 at 200, ±4 at 300. The margin shrinks with the square root of the count: four times the questions for half the margin.
 - The comparison with the frontier model is paired, question by question (a one-sided exact McNemar test at α 0.05, section 8). Power to find a real 15-point win, simulated at 196 questions: about 100%, 98% and 97% when the frontier model is right and Agent E2 wrong on 5%, 8% and 10% of the questions (the reverse share).
 - Level 400 alone (about two thirds of the set) reads at about ±7 points at 80%.
@@ -194,7 +194,7 @@ The frontier model must be able to answer every question from public knowledge. 
 
 ### 6.3 Attachments
 - Every reference to an attachment in `## Prompt` is a relative link to the file: `[the attached chart export](0123/vm-cpu.csv)`. A reviewer opens it on GitHub, which renders a CSV as a table and an image as an image.
-- The runner sends only the link text, never the path (`ATTACH_LINK` in [benchmark/runner/question_files_and_answer_parsing.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/question_files_and_answer_parsing.py)), as the harness does for knowledge links: no token cost.
+- The runner sends only the link text, never the path (`ATTACH_LINK` in [benchmark/runner/question_files.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/question_files.py)), as the harness does for knowledge links: no token cost.
 - Lint: every attachment is linked in the prompt, and every link in the prompt is an attachment.
 
 ## 7. Scoring
@@ -265,7 +265,7 @@ The frontier model must be able to answer every question from public knowledge. 
   - no part credit: a partly right set of letters is a wrong answer an operator would act on.
 - Confident-wrong rate: wrong letters that are not Unsure.
 - Margin: 95% interval on the final score from the number of questions (section 4).
-- Runner: [benchmark/runner/score_report_for_one_run.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/score_report_for_one_run.py), function `final`. Report table `Final score`.
+- Runner: [benchmark/runner/score_report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/score_report.py), function `final`. Report table `Final score`.
 
 ### 7.5 Release gate
 - Read on Agent E2 as shipped: the local model running the one pipeline of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (author, 2026-11-14), with the deployment profile (section 8). The retrieval levels (section 9) are read on its reading set.
@@ -290,7 +290,7 @@ The frontier model must be able to answer every question from public knowledge. 
   - Why the 11-point limit replaces "within 5 points": on 20-30 questions the noise alone is about ±13 points, so a 5-point rule fails or passes by luck.
 - Expected frontier score: about 80%. Measured on 2026-11-13 (Claude Opus 5.5 with web search, previous state of the question set, archived): final 81%, Level 400 79%, confident-wrong 12%. It fails the gate too. The expert estimate of 2026-11-12 (about 70%) was too low: the frontier model knows each public mechanism, and loses mostly on the vantage point, the combination of readings and the Level 300 rule of thumb.
 - Target: 99%, a direction. The set cannot prove it (section 4).
-- Runner: [benchmark/runner/score_report_for_one_run.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/score_report_for_one_run.py), functions `gate` and `mcnemar`, report table `Release gate`: final score, Level 400 and confident-wrong as the gate; the gap and the paired test as outcomes. The misconception check and the held-out set are read outside the report.
+- Runner: [benchmark/runner/score_report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/score_report.py), functions `gate` and `mcnemar`, report table `Release gate`: final score, Level 400 and confident-wrong as the gate; the gap and the paired test as outcomes. The misconception check and the held-out set are read outside the report.
 
 ## 8. Comparison design
 - Agent E2 has one pipeline (author, 2026-11-14): the benchmark runs it as shipped, not modes of it. The benchmark is a proof, not a goal ([CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md), Evaluation). Why classic and agentic mode were removed: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 2.
@@ -302,7 +302,7 @@ The frontier model must be able to answer every question from public knowledge. 
 - Run matrix of a round: 3 candidates x 2 modes (Base, Agent E2) plus the frontier reference x 1 mode (`web`), every question of the run set, 5 runs. Time and cost: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md), projected by the preflight sample. Prices, rate limits and a model's thinking change both numbers: run the preflight before each round.
 
 ## 9. Retrieval check
-- The final score mixes harness and model. The retrieval check separates them: [benchmark/runner/retrieval_check_without_model.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/retrieval_check_without_model.py) checks, without a model, whether each question's `knowledge` files are found and placed in Agent E2's reading set (the code-only case). Guide: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md).
+- The final score mixes harness and model. The retrieval check separates them: [benchmark/runner/retrieval_check.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/retrieval_check.py) checks, without a model, whether each question's `knowledge` files are found and placed in Agent E2's reading set (the code-only case). Guide: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md).
 - Levels and current numbers: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md) and [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3. Re-baselined when the question set changes (Q206).
 - Blind spot: the check runs no model, so it cannot read a screenshot. A screenshot question whose stem names no counter shows as a miss even when the agent finds its files from the images in stage 1. A check of stage 1 on the screenshot questions (one model call each) covers it (to build, project/plan.md, M3).
 - Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 6.
