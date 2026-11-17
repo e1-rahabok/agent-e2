@@ -241,8 +241,42 @@ class ParallelCallsPerModelTest(unittest.TestCase):
 
     def test_other_error_in_the_window_rejects_the_step(self):
         g = self.make()
-        self.drive(g, 200, lambda c: 3.0 * c, error=lambda i: 'HTTP 502: bad gateway' if 14 <= i <= 40 else '')
-        self.assertEqual(g.limit_of('m'), 12)
+        self.drive(g, 200, lambda c: 3.0 * c, error=lambda i: 'HTTP 400: bad request' if 36 <= i <= 40 else '')
+        self.assertEqual(g.limit_of('m'), 12)                       # the window of the first probe (answers 36 to 45) has errors
+
+    def test_gateway_outage_neither_counts_nor_rejects(self):
+        g = self.make()
+        self.drive(g, 200, lambda c: 3.0 * c, error=lambda i: 'HTTP 503: unavailable' if 14 <= i <= 40 else '')
+        self.assertEqual(g.limit_of('m'), 16)                       # the burst was skipped, probing went on
+        self.assertFalse(any('errors' in s for s in self.lines))
+
+    def test_gateway_outage_does_not_end_probing(self):
+        g = self.make()
+        self.drive(g, 20, lambda c: 3.0 * c)                        # the base window is in progress
+        for _ in range(100):
+            g.record('m', 'agent-e2', 'HTTP 503: unavailable')      # an outage of any length
+        self.drive(g, 200, lambda c: 3.0 * c)
+        self.assertEqual(g.limit_of('m'), 16)
+
+    def test_errors_at_the_base_level_are_measured_again(self):
+        g = self.make()
+        self.drive(g, 30, lambda c: 3.0 * c, error=lambda i: 'HTTP 400: bad request')   # base window (after the 12 skipped) with errors
+        self.assertEqual(g.limit_of('m'), 12)                       # the floor holds
+        self.assertTrue(any('measuring 12 again' in s for s in self.lines))
+        self.drive(g, 200, lambda c: 3.0 * c)                       # clean now: probing starts and reaches the top
+        self.assertEqual(g.limit_of('m'), 16)
+
+    def test_noise_does_not_raise_a_flat_rate(self):
+        """Answer times vary by 10% (1 standard deviation) around a flat rate: no level may be kept by chance.
+        Measured 2026-11-17 with the default window of 40: 0 of 200 seeds at 10%, 5% of seeds at 20% noise."""
+        import random
+        for seed in range(50):
+            rng, t = random.Random(seed), [0.0]
+            g = G.ParallelCallsPerModel({'m': 12}, clock=lambda: t[0], log=lambda s: None)
+            for _ in range(400):
+                t[0] += 60.0 / 36.0 * max(0.05, rng.gauss(1.0, 0.10))
+                g.record('m', 'agent-e2', '')
+            self.assertEqual(g.limit_of('m'), 12, f'seed {seed}')
 
     def test_window_across_two_modes_is_measured_again(self):
         g = self.make()
