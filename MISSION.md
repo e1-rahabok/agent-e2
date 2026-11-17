@@ -67,7 +67,7 @@ Six mechanisms, in order of weight.
 - Size, speed and hardware are covered in [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section Model size and speed.
 
 ## 5. What the product must do
-These are the requirements for the shipped assistant. Findings from the author's demo app (2026-11-04) are archived in [project/archive/product-requirements.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/product-requirements.md).
+These are the requirements for the shipped assistant. Findings from the author's demo app are archived in [project/archive/product-requirements.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/product-requirements.md).
 
 ### Ways to ask
 | # | Mode | Input | What the system does | Release |
@@ -78,7 +78,7 @@ These are the requirements for the shipped assistant. Findings from the author's
 | 4 | Guided troubleshooting | A symptom ("VM is slow") | Runs the matching flow one step at a time, asks for the next value, and shows the step and the branch taken | 1.0 (today the flow is read first and the model follows its steps; taking the branch in code is still to build, Q166) |
 | 5 | Live instance | Read-only connection to VCF Operations | Reads the metrics of a named object and fills the flow steps from live values | After 1.0 |
 | 6 | URL | A link in the question: KB article, documentation page, blog, community thread | Fetches the page, keeps only the parts relevant to the question, checks them against the knowledge base, and says where the page is right and where it is wrong | 1.0 |
-| 7 | Consultation | A request to be guided ("Guide me through capacity planning for a vSphere cluster; you're my expert consultant") | Leads the conversation over several turns. It explains what matters and why, asks for the inputs each step needs (host specification, VM classes and their overcommit, reservation and expected peak, HA, what ESXi, vSAN and NSX take), offers a default for each and says it is a default, computes with the planning calculator, and explains the six numbers and which one limits the host. Release 1.0 has one consultation, capacity planning for a new cluster ([harness/capacity.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/capacity.py) is built; the conversation is still to build). 14 more follow after 1.0: [project/consultations.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/consultations.md). | 1.0: capacity planning only (decided 2026-11-14) |
+| 7 | Consultation | A request to be guided ("Guide me through capacity planning for a vSphere cluster; you're my expert consultant") | Leads the conversation over several turns. It explains what matters and why, asks for the inputs each step needs (host specification, VM classes and their overcommit, reservation and expected peak, HA, what ESXi, vSAN and NSX take), offers a default for each and says it is a default, computes with the planning calculator, and explains the six numbers and which one limits the host. Release 1.0 has one consultation, capacity planning for a new cluster ([harness/capacity.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/capacity.py) is built; the conversation is still to build). 14 more follow after 1.0: [project/consultations.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/consultations.md). | 1.0: capacity planning only |
 
 - Clarifying questions: at most one round per question, then Agent E2 answers. A consultation (Ways to ask, 7) is the exception: the user asked to be guided, so the agent asks step by step until the plan has its inputs.
   - A question that makes sense is answered without asking why.
@@ -114,7 +114,7 @@ These are the requirements for the shipped assistant. Findings from the author's
 |---|---|
 | Data stays on site | No customer data leaves the customer network, and Agent E2 answers without Internet access. A call out carries only requests for public knowledge (a URL the user gives, an update download), never customer data. Updates also arrive as an offline bundle. |
 | One tested system | The app calls `harness/` for retrieval, tools, prompt and verifier. Prompt and settings are versioned in the repository, because an edited prompt is an untested prompt. |
-| Vision | A hard requirement since 2026-11-14. Administrators upload screenshots, often several per question, and every current foundation model family reads images. Agent E2 reads the pixels of every uploaded image; there is no text-only mode and no text-only model. |
+| Vision | A hard requirement. Administrators upload screenshots, often several per question, and every current foundation model family reads images. Agent E2 reads the pixels of every uploaded image; there is no text-only mode and no text-only model. |
 | Model | Open weights with a commercial licence, vision (above), and at least 64K context. Hardware: as little as passes the release gate. One GPU is the stretch target; multiple server-class GPUs are acceptable. The benchmark chooses the model. |
 | Reproducibility | Every answer stores the question, answer, cited ids, tool trace, index version, prompt version, model and settings. |
 | Accuracy | The release gate in section 1, measured on the shipped configuration. |
@@ -129,7 +129,7 @@ These are the requirements for the shipped assistant. Findings from the author's
 
 ## 6. Design considerations
 
-### Screenshots of the product UI in the knowledge base (2026-11-06)
+### Screenshots of the product UI in the knowledge base
 - The question: would adding every screenshot of vSphere and VCF Operations, each with an explanation, improve the system's product knowledge?
 - The model is frozen, so screenshots in the knowledge base do not train it.
 - Retrieval matches text, not pixels. An image without a written explanation is never found.

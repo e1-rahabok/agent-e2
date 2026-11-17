@@ -94,14 +94,14 @@ flowchart LR
 - Agent E2 combines two bodies of knowledge in every answer, the same two the author carries as a consultant:
   - the method, the SP5 Framework: how to operate VCF, in VCF terms and examples (`sp5-framework/`);
   - the product, VCF 9.x: what each component is and does (`vsphere/`, `vcf-operations/`), and the Guest OS above the VM (`guest-os/`).
-- Sources are stated once, here (since 2026-11-14). The knowledge is written from [`project/sources/`](project/sources) and from https://isvara.io, which holds the latest copy of the author's books, spreadsheets and other material. The knowledge base is a superset of them: it adds vendor documents, mechanisms and corrections. A knowledge file therefore never names the author's material. Its `source.document` is `Knowledge base`, plus any vendor document with its version, which can go stale. `corrections` record differences from vendor documents only.
+- Sources are stated once, here. The knowledge is written from [`project/sources/`](project/sources) and from https://isvara.io, which holds the latest copy of the author's books, spreadsheets and other material. The knowledge base is a superset of them: it adds vendor documents, mechanisms and corrections. A knowledge file therefore never names the author's material. Its `source.document` is `Knowledge base`, plus any vendor document with its version, which can go stale. `corrections` record differences from vendor documents only.
 - Scope is VCF only, with nothing about competitor products. Folder rules: [`project/knowledge-rules/placement.md`](project/knowledge-rules/placement.md).
 - Agent E2 is purpose-built, so its domain knowledge is not only in what search returns. Up-front text, code and the agent's instructions carry VMware knowledge too. All of it is deployed to the site, and the author reviews all of it.
 - The home of a fact is decided by how it must reach the model, not by its subject. There are five paths, each for a failure the others cannot prevent:
 
 | Path | Holds | Home | Why this path |
 |---|---|---|---|
-| Retrieved when a question needs it | Mechanisms, metrics, misconceptions, flows | `knowledge/**/*.md` (indexed) | About 315K tokens (2026-11-13), too large to send with every question |
+| Retrieved when a question needs it | Mechanisms, metrics, misconceptions, flows | `knowledge/**/*.md` (indexed) | About 315K tokens, too large to send with every question |
 | Looked up exactly | Units, rollups, statistics levels, thresholds, user terms | `knowledge/catalog/*.yaml` (loaded into SQLite) | An exact value must not depend on ranking or on the model's memory |
 | Given up front, every question | Misconceptions with the widest reach, confusable pairs | Built by [`harness/primer.py`](harness/primer.py) from the `## Misconceptions` lines marked `up_front` in their files and from [`knowledge/glossary.md`](knowledge/glossary.md) | A confident wrong belief is never looked up, so the correction must be in place before the model reasons |
 | Executed as code | Arithmetic identities, answer checks, user-word mapping; capacity plans and flow branches (built, not yet called by the agent: [`harness/AGENT.md`](harness/AGENT.md), section 4.3) | [`harness/calc.py`](harness/calc.py), `verify.py`, `terms.py`; `capacity.py`, `flows.py` | Small models slip on arithmetic and skip steps; code does not |
@@ -109,7 +109,7 @@ flowchart LR
 
 - One home per fact. The mechanism lives in `knowledge/`; code and up-front text hold only what they need to act, and point to the file. For example, `calc.py` converts a summation counter from ms to %, but why Ready is a summation counter is explained in the Ready file. Each up-front misconception ends with `See <id>`.
 - Up-front text reaches every answer, while a retrieved file reaches only the answers that find it. A wrong up-front line or prompt rule therefore costs more than a wrong metric file, and it is reviewed first.
-- All the domain knowledge the author reviews lives in `knowledge/`, whatever its path to the model. Every knowledge file is indexed, and the up-front block is built from marked lines of those files, so no fact has a second, unindexed copy (Q211, 2026-11-14). `knowledge/` is not the same as chunked prose: the catalog is loaded, not chunked.
+- All the domain knowledge the author reviews lives in `knowledge/`, whatever its path to the model. Every knowledge file is indexed, and the up-front block is built from marked lines of those files, so no fact has a second, unindexed copy. `knowledge/` is not the same as chunked prose: the catalog is loaded, not chunked.
 - Not deployed: `project/` (lint, allowed tags, moved ids) and `benchmark/`. They check the knowledge and hold nothing the agent reads.
 
 ## 3. Knowledge forms
@@ -160,7 +160,7 @@ This is the one definition of the levels, and the benchmark uses it ([`benchmark
 
 ### One home, two paths to the model
 - Home: `## Misconceptions` in the file, in the user's own words, next to the mechanism. A question that carries the belief brings in its correction through the reading set.
-- Up front: the dozen with the widest reach are marked in their file (metadata `up_front`: the wrong belief, as quoted in the line). [`harness/primer.py`](harness/primer.py) collects the marked lines into the up-front block, so the correction is in place before the model reasons, even when the question does not name the file. There is one copy: the author edits the line in its file (Q211, 2026-11-14).
+- Up front: the dozen with the widest reach are marked in their file (metadata `up_front`: the wrong belief, as quoted in the line). [`harness/primer.py`](harness/primer.py) collects the marked lines into the up-front block, so the correction is in place before the model reasons, even when the question does not name the file. There is one copy: the author edits the line in its file.
 - Not a confusable pair: two real terms swapped (Core vs Thread Utilization) is a vocabulary error, and it is kept in the glossary. A misconception is a wrong belief about how something works.
 
 ### Misconception types
@@ -208,9 +208,9 @@ This is the one definition of the levels, and the benchmark uses it ([`benchmark
   - The file that owns the metric keeps the mechanism and a misconception line in the operator's words.
   - The term-map row ([`knowledge/catalog/user-terms.yaml`](knowledge/catalog/user-terms.yaml)) names the entry (`label:`) and holds only the match patterns, the search words and extra files. It has no note: [`harness/terms.py`](harness/terms.py) builds the note from the glossary entry at start and puts the entry's File first. Lint checks one row per label entry, a pattern that matches the term, and no note.
   - There is no generator. The match patterns are the user's words, which the term map already owns, and the note is read from the glossary at start. A generated copy and its sync check would add machinery and remove no second home.
-  - A new label row goes at the end of the term map, so it adds its note without taking the two term-map file slots from older rows. Its search words name only what the question's words lack. Retrieval check 2026-11-15, BM25, 275 questions, the change alone on one snapshot: 171 to 172 complete, main file missing 18 to 18; stem only: 126 to 126, main file missing 38 to 37.
+  - A new label row goes at the end of the term map, so it adds its note without taking the two term-map file slots from older rows. Its search words name only what the question's words lack. Retrieval check, BM25, 275 questions, the change alone on one snapshot: 171 to 172 complete, main file missing 18 to 18; stem only: 126 to 126, main file missing 38 to 37.
   - Misconception type `label-read-as-model` ([`project/tools/tags.yaml`](project/tools/tags.yaml)).
-- The first list (2026-11-15), each entry in the glossary:
+- The first list, each entry in the glossary:
 
 | Product label (entry) | Invites | Better name |
 |---|---|---|

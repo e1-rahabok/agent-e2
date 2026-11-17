@@ -19,7 +19,7 @@ When the round is complete: merge it to main, then give me the summary.
 ## Before you start (only you can do these)
 1. `AI_GATEWAY_API_KEY` is set in the environment of the session.
 2. Credits: at least US$ 100 (the projection is US$ 77 with the safety factor). The preflight reads the balance and refuses the round if the balance is below the projected cost times 1.3.
-3. Budgets: check both the key's budget and the team's budget (Vercel dashboard, AI Gateway, API Keys and Budgets & Spend). Each needs room for the projected cost times 1.3 plus margin, on top of what it has already used, and its refresh period must not reset in the middle of the round. The runner cannot read either budget. An empty one shows as HTTP 402, and the message says which one ("Team budget exceeded"). On 2026-11-13 the key had used US$ 150.43 of 150. On 2026-11-16 the round stopped on the team budget of US$ 100, with US$ 47 left on the key. Before the round, tell the human the amounts and the periods.
+3. Budgets: check both the key's budget and the team's budget (Vercel dashboard, AI Gateway, API Keys and Budgets & Spend). Each needs room for the projected cost times 1.3 plus margin, on top of what it has already used, and its refresh period must not reset in the middle of the round. The runner cannot read either budget. An empty one shows as HTTP 402, and the message says which one ("Team budget exceeded"). On the key had used US$ 150.43 of 150. On the round stopped on the team budget of US$ 100, with US$ 47 left on the key. Before the round, tell the human the amounts and the periods.
 4. Everything is committed. The index version is the commit SHA, so the questions, `knowledge/` and `harness/` must not change during the round. A resume after a change would mix two versions in one run.
 5. The session works on its own branch, started from `main`.
 6. This is a development round, not the release round. The held-out set of 30 ([benchmark/design.md](design.md), section 7.5) is drawn at release and does not exist yet, so that gate is not read. The run set is every question with status `draft` or `reviewed`. On 2026-11-16 that is 288 drafts and 3 reviewed, so the scores are read before the author has reviewed the questions (Q256).
@@ -27,9 +27,9 @@ When the round is complete: merge it to main, then give me the summary.
 
 ## Expect
 
-Each candidate runs twice, as Base (`baseline`) and as Agent E2 (`agent-e2`). The frontier reference runs in one mode, `web`: search is available and Opus decides whether to use it. Every question of the run set is asked (291 on 2026-11-16; questions with status `awaiting-input`, `retired` or `deferred` do not run), 5 runs each. There is no judge, because every question is multiple choice (Q199).
+Each candidate runs twice, as Base (`baseline`) and as Agent E2 (`agent-e2`). The frontier reference runs in one mode, `web`: search is available and Opus decides whether to use it. Every question of the run set is asked (291 ; questions with status `awaiting-input`, `retired` or `deferred` do not run), 5 runs each. There is no judge, because every question is multiple choice (Q199).
 
-The projection comes from the validity sample of 2026-11-14 (Gemma, 9 questions: US$ 0.0026 and 33 s per Agent E2 answer on the gateway, 2 model calls each) and the model prices. The Opus figures come from the round of 2026-11-13. They were scaled from the 226-question projection to 291 questions (x 1.29). Read them as plus or minus 30%; the preflight gives the real numbers before the round starts.
+The projection comes from the validity sample (Gemma, 9 questions: US$ 0.0026 and 33 s per Agent E2 answer on the gateway, 2 model calls each) and the model prices. The Opus figures come from the round. They were scaled from the 226-question projection to 291 questions (x 1.29). Read them as plus or minus 30%; the preflight gives the real numbers before the round starts.
 
 | Run folder | Modes | Answers | Request settings | Time | Cost US$ |
 |---|---|---|---|---|---|
@@ -39,9 +39,9 @@ The projection comes from the validity sample of 2026-11-14 (Gemma, 9 questions:
 | `<date>-claude-opus-5.5` | web | 1,455 | effort medium, 8,000 tokens | about 105 min | about 40 |
 | Total | | 10,185 | | about 2 hours | about 59 (77 with the safety factor) |
 
-- The larger reading set (2026-11-16) adds about 11,000 input tokens to each of the 4,365 Agent E2 answers, which costs about US$ 5 to 10 more on the three candidates. Read the total as about US$ 66 (about 85 with the safety factor). The table rows above are from before this change. The preflight prices it for real.
+- The larger reading set adds about 11,000 input tokens to each of the 4,365 Agent E2 answers, which costs about US$ 5 to 10 more on the three candidates. Read the total as about US$ 66 (about 85 with the safety factor). The table rows above are from before this change. The preflight prices it for real.
 - The four runs go in parallel, so the round lasts as long as the slowest run. That is Opus, at its starting concurrency of 3; the runner raises the concurrency while the provider allows.
-- An Agent E2 answer sends about 28,500 input tokens over its 2 model calls, against about 400 for Base. The case call takes about 1,500. The answer call takes about 27,000 with the reading set, which averaged 20,000 tokens before the related tier of 2026-11-16 and 27,000 after, against the 32,000 budget.
+- An Agent E2 answer sends about 28,500 input tokens over its 2 model calls, against about 400 for Base. The case call takes about 1,500. The answer call takes about 27,000 with the reading set, which averaged 20,000 tokens before the related tier and 27,000 after, against the 32,000 budget.
 - Add about 3 minutes for the preflight (under US$ 1) and 1 relaunch. One command lives 2 hours and the runner stops at 110 minutes.
 - The projection is checked again before anything long starts. If it is above the credits, `max_cost_usd` (150) or `max_hours` (6) in [`benchmark/runner/config.yaml`](runner/config.yaml), the round does not start.
 
@@ -56,7 +56,7 @@ The projection comes from the validity sample of 2026-11-14 (Gemma, 9 questions:
 ## Steps for the LLM
 
 1. Check `test -n "$AI_GATEWAY_API_KEY"` and that `git status` is clean. If the key is missing, stop and tell the human.
-2. Start the round in the background with one command and no wrapper shell, `nohup` or `&`: `python3 benchmark/runner/run_all_models_in_one_round.py --max-minutes 110`. Use the longest background timeout (7,200,000 ms). The system then reports when the command itself ends. A wrapped run reported the wrapper's end after seconds on 2026-11-16. The same rule applies to any run started by hand with `answer_questions_for_one_model.py --resume`.
+2. Start the round in the background with one command and no wrapper shell, `nohup` or `&`: `python3 benchmark/runner/run_all_models_in_one_round.py --max-minutes 110`. Use the longest background timeout (7,200,000 ms). The system then reports when the command itself ends. A wrapped run reported the wrapper's end after seconds. The same rule applies to any run started by hand with `answer_questions_for_one_model.py --resume`.
 3. Every 10 minutes run `python3 benchmark/runner/check_round_is_alive.py` and send the human one line: per run, the verdict (ALIVE, DONE, STALLED, DEAD, MACHINE RESTARTED), good answers against the total, time left. Say "running" only when the command says ALIVE and the good-answer count moved since the last check. After STALLED, DEAD or MACHINE RESTARTED, relaunch with `python3 benchmark/runner/run_all_models_in_one_round.py --resume --max-minutes 110` (it resumes every unfinished run, whatever stopped it) and tell the human. Schedule the next check with `send_later` or `ScheduleWakeup`, and never poll with `sleep`. The runner pushes answers and configs to the branch `snapshots/round-<date>` every 15 minutes, so do not commit run folders by hand during the round.
 4. When the command ends, read its exit code and last lines:
 
@@ -114,7 +114,7 @@ Only these stop the round.
 
 ## Why the preflight and the health check exist
 
-- The first full benchmark (2026-11-12) was accepted on "0 errors". No call had failed, but the reasoning models spent their 4,000 tokens thinking. Qwen answered 85% of its baseline questions with a cut-off text, 549 of its 1,350 multiple-choice answers had no readable letter, and the run took 512 minutes.
+- The first full benchmark was accepted on "0 errors". No call had failed, but the reasoning models spent their 4,000 tokens thinking. Qwen answered 85% of its baseline questions with a cut-off text, 549 of its 1,350 multiple-choice answers had no readable letter, and the run took 512 minutes.
 - A valid answer (one that can be scored) is not the same as a correct answer. Validity is checked on a sample before the long run and again while it goes. Correctness is the score.
 - The sample chooses every setting that decides validity (reasoning, `max_tokens`) and saves it in the run folder's `config.json`.
 
