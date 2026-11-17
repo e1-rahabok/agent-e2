@@ -1,6 +1,6 @@
 #!/bin/bash
 # SessionStart hook: resume a benchmark round that a machine restart interrupted. Does nothing when no round is in progress.
-# Logic and tests: benchmark/runner/resume_unfinished_round_if_any.py. Remote (cloud) sessions only.
+# Logic and tests: benchmark/runner/resume_round.py. Remote (cloud) sessions only.
 set -euo pipefail
 
 if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
@@ -13,4 +13,4 @@ cd "${CLAUDE_PROJECT_DIR:-.}"
 [ -f benchmark/results/.round.json ] || exit 0
 
 # The script starts the resume detached and returns at once; a failure here must not block the session.
-python3 benchmark/runner/resume_unfinished_round_if_any.py || true
+python3 benchmark/runner/resume_round.py || true

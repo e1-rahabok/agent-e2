@@ -9,10 +9,10 @@ answers. Every check here would have caught that in two minutes. For each run of
   3. checks the sample: no API error, readable letters, no answer cut off at max_tokens, completion tokens well under
      max_tokens, every mode answered;
   4. projects time and cost of the whole run from the sample (a small sample: the cost carries a safety factor).
-A run that fails is not started. The sample runs through answer_questions_for_one_model.py, the code of the real run, with the real harness settings.
+A run that fails is not started. The sample runs through answer_questions.py, the code of the real run, with the real harness settings.
 
-  python3 benchmark/runner/sample_check_before_round.py                      # the release runs of config.yaml
-  python3 benchmark/runner/sample_check_before_round.py --models alibaba/qwen3.8-27b --json out.json
+  python3 benchmark/runner/preflight_check.py                      # the release runs of config.yaml
+  python3 benchmark/runner/preflight_check.py --models alibaba/qwen3.8-27b --json out.json
 Exit code 0: every run passed. 4: at least one failed, or the credits do not cover the round. 6: the gateway refused (402, 401, 403).
 """
 import argparse
@@ -29,8 +29,8 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
-import runner_exit_codes as X  # noqa: E402
-import question_files_and_answer_parsing as C  # noqa: E402
+import exit_codes  # noqa: E402
+import question_files  # noqa: E402
 
 
 
@@ -94,9 +94,9 @@ def project(stats, n_questions, runs, concurrency):
 
 
 def run_sample(model, modes, ids, params, cfg_path, log):
-    """Answer the sample through answer_questions_for_one_model.py. Return the answers.csv rows and the folder's log tail."""
+    """Answer the sample through answer_questions.py. Return the answers.csv rows and the folder's log tail."""
     with tempfile.TemporaryDirectory(prefix='preflight-') as tmp:
-        cmd = [sys.executable, os.path.join(os.path.dirname(__file__), 'answer_questions_for_one_model.py'), '--config', cfg_path, '--models', model,
+        cmd = [sys.executable, os.path.join(os.path.dirname(__file__), 'answer_questions.py'), '--config', cfg_path, '--models', model,
                '--modes', ','.join(modes), '--runs', '1', '--questions', ','.join(ids), '--out', tmp,
                '--params', json.dumps({model: params} if params else {}), '--concurrency', '4', '--no-adaptive', '--no-health']
         p = subprocess.run(cmd, capture_output=True, text=True)
@@ -118,7 +118,7 @@ def check_model(model, modes, ladder, cfg, cfg_path, sample, meta, pf, log):
         if any('HTTP 402' in p or 'HTTP 401' in p or 'HTTP 403' in p for p in problems):
             return {'model': model, 'ok': False, 'refused': True, 'params': params, 'problems': problems, 'attempts': attempts}
         if not problems:
-            questions = [q for q in C.load() if q.scorable]
+            questions = [q for q in question_files.load() if q.scorable]
             return {'model': model, 'ok': True, 'params': params, 'stats': stats, 'attempts': attempts,
                     'n_questions': len(questions), 'max_tokens': max_tokens}
     return {'model': model, 'ok': False, 'problems': attempts[-1]['problems'], 'attempts': attempts}
@@ -129,7 +129,7 @@ def run_preflight(cfg, cfg_path, plan, client, log=print, only=None):
     pf = cfg['release']['preflight']
     rel = cfg['release']
     meta = client.models()
-    sample = pick_sample(C.load(), pf['questions'])
+    sample = pick_sample(question_files.load(), pf['questions'])
     log(f'Sample: {len(sample)} questions ({", ".join(c.id for c in sample)})')
     report = {'ok': True, 'refused': False, 'runs': {}, 'problems': []}
     try:
@@ -197,7 +197,7 @@ def main():
     show(report)
     if a.json:
         json.dump(report, open(a.json, 'w'), indent=2)
-    sys.exit(X.OK if report['ok'] else X.BUDGET if report['refused'] else X.PREFLIGHT)
+    sys.exit(exit_codes.OK if report['ok'] else exit_codes.BUDGET if report['refused'] else exit_codes.PREFLIGHT)
 
 
 if __name__ == '__main__':

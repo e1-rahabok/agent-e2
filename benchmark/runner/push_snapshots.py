@@ -11,10 +11,10 @@ built with a temporary git index, so the working branch, its index and its files
 The branch is never merged: a merge commit would keep every snapshot in main for good. The author deletes it after the round
 (a cloud session cannot delete a branch).
 
-  python3 benchmark/runner/push_snapshots_to_branch.py            # one snapshot now
-  python3 benchmark/runner/push_snapshots_to_branch.py --no-push  # commit to the local branch only
+  python3 benchmark/runner/push_snapshots.py            # one snapshot now
+  python3 benchmark/runner/push_snapshots.py --no-push  # commit to the local branch only
 
-run_all_models_in_one_round.py takes one every `snapshots.every_minutes` (config.yaml) and one at the end of the round.
+run_round.py takes one every `snapshots.every_minutes` (config.yaml) and one at the end of the round.
 """
 import argparse
 import datetime as dt

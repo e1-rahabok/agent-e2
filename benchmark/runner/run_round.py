@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """Run a whole benchmark round without anyone at the keyboard: preflight, all runs in parallel, recovery, summary.
 
-  python3 benchmark/runner/run_all_models_in_one_round.py --max-minutes 110      # start the round (stops cleanly after 110 minutes: exit 3)
-  python3 benchmark/runner/run_all_models_in_one_round.py --resume --max-minutes 110   # continue after exit 3 (or after a top-up, exit 6)
-  python3 benchmark/runner/run_all_models_in_one_round.py --dry-run               # print the plan; no API call
+  python3 benchmark/runner/run_round.py --max-minutes 110      # start the round (stops cleanly after 110 minutes: exit 3)
+  python3 benchmark/runner/run_round.py --resume --max-minutes 110   # continue after exit 3 (or after a top-up, exit 6)
+  python3 benchmark/runner/run_round.py --dry-run               # print the plan; no API call
 
 Steps (benchmark/RUN.md has the full playbook):
-  1. Preflight (sample_check_before_round.py): credits, a sample answered per model and mode, request settings chosen per model, time and cost projected.
+  1. Preflight (preflight_check.py): credits, a sample answered per model and mode, request settings chosen per model, time and cost projected.
      A run that fails the sample is not started. Nothing is spent on the long run before this passes.
-  2. One answer_questions_for_one_model.py per entry of config `release.runs`, all at once, each in its own folder `<date>-<model>`.
+  2. One answer_questions.py per entry of config `release.runs`, all at once, each in its own folder `<date>-<model>`.
   3. Recovery: a crashed run is relaunched with --resume (config `release.retries` times); answers that failed are retried the same way;
      a run stopped by the time limit is relaunched by you with --resume. A run whose answers are invalid, or a refused key, is not retried.
-  4. When every run is complete: summary_of_all_runs.py writes benchmark/results/README.md, earlier run folders move to project/archive/.
-Exit codes: runner_exit_codes.py. 0 = the round is complete; 3 = relaunch with --resume; 6 = top up credits or key budget, then --resume;
+  4. When every run is complete: summary_all_runs.py writes benchmark/results/README.md, earlier run folders move to project/archive/.
+Exit codes: exit_codes.py. 0 = the round is complete; 3 = relaunch with --resume; 6 = top up credits or key budget, then --resume;
 4, 5, 7 = a run failed: read the printed list.
 """
 import argparse
@@ -32,7 +32,7 @@ import yaml
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(HERE, '..', '..', 'harness'))
-import runner_exit_codes as X  # noqa: E402
+import exit_codes  # noqa: E402
 from run_folder_names import run_name  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
@@ -45,8 +45,8 @@ PREFLIGHT = '.preflight.json'
 # ---------- pure helpers (tested) ----------
 
 def classify(code):
-    """What the exit code of one answer_questions_for_one_model.py means for the orchestrator."""
-    return {X.OK: 'complete', X.STOPPED: 'stopped', X.UNHEALTHY: 'invalid', X.BUDGET: 'refused', X.GATEWAY_DOWN: 'outage'}.get(code, 'crashed')
+    """What the exit code of one answer_questions.py means for the orchestrator."""
+    return {exit_codes.OK: 'complete', exit_codes.STOPPED: 'stopped', exit_codes.UNHEALTHY: 'invalid', exit_codes.BUDGET: 'refused', exit_codes.GATEWAY_DOWN: 'outage'}.get(code, 'crashed')
 
 
 def unresolved(folder):
@@ -96,7 +96,7 @@ def count_valid(folder):
 
 
 def child_cmd(entry, out_dir, minutes_left, resume, extra=''):
-    cmd = [sys.executable, os.environ.get('RUN_ALL_CHILD') or os.path.join(HERE, 'answer_questions_for_one_model.py'), '--out', out_dir, '--max-minutes', f'{minutes_left:.1f}'] + extra.split()
+    cmd = [sys.executable, os.environ.get('RUN_ALL_CHILD') or os.path.join(HERE, 'answer_questions.py'), '--out', out_dir, '--max-minutes', f'{minutes_left:.1f}'] + extra.split()
     if resume:
         cmd += ['--resume', os.path.join(out_dir, entry['folder'])]
     else:
@@ -144,7 +144,7 @@ def main():
     ap.add_argument('--skip-preflight', action='store_true', help='start without the sample (not for the real round)')
     ap.add_argument('--only', help='comma-separated models: run only these entries of release.runs')
     ap.add_argument('--dry-run', action='store_true', help='print the plan and stop')
-    ap.add_argument('--child-args', default='', help='test only: extra flags for every answer_questions_for_one_model.py, e.g. "--mock --runs 1 --questions L4-0"')
+    ap.add_argument('--child-args', default='', help='test only: extra flags for every answer_questions.py, e.g. "--mock --runs 1 --questions L4-0"')
     ap.add_argument('--archive-dir', help='test only: where earlier run folders go (default project/archive/benchmark-results-before-<date>)')
     a = ap.parse_args()
     cfg = yaml.safe_load(open(a.config))
@@ -177,28 +177,28 @@ def main():
     if not state:
         state = {'started': dt.datetime.now().isoformat(timespec='seconds'), 'runs': []}
         if not a.skip_preflight:
-            import sample_check_before_round as preflight
+            import preflight_check
             from llm import GatewayClient
             print('Preflight: a sample per model and mode (about 3 minutes, under US$ 1).', flush=True)
-            rep = preflight.run_preflight(cfg, a.config, plan, GatewayClient(cfg['gateway']), log=lambda s: print(s, flush=True), only=only)
-            preflight.show(rep, log=lambda s: print(s, flush=True))
+            rep = preflight_check.run_preflight(cfg, a.config, plan, GatewayClient(cfg['gateway']), log=lambda s: print(s, flush=True), only=only)
+            preflight_check.show(rep, log=lambda s: print(s, flush=True))
             json.dump(rep, open(os.path.join(a.out, PREFLIGHT), 'w'), indent=2, default=str)
             if rep['refused']:
-                sys.exit(X.BUDGET)
+                sys.exit(exit_codes.BUDGET)
             if not rep['ok']:
                 print('Preflight failed: the round is not started and nothing more is spent. Fix the cause named above, then start again.')
-                sys.exit(X.PREFLIGHT)
+                sys.exit(exit_codes.PREFLIGHT)
             verdict = rep['runs']
         else:
             verdict = {}
         hosts = {}
         if cfg.get('spread_runs_over_providers') and not a.skip_preflight and not a.child_args:
-            import provider_hosts_per_model as PH
+            import provider_hosts
             client = GatewayClient(cfg['gateway'], retry_seconds=15)      # a host that is down must fail fast
             for p in plan:
                 ladder = (cfg.get('model_params') or {}).get(p['model']) or [{}]
                 params = verdict[p['model']]['params'] if p['model'] in verdict else ladder[0]
-                hosts[p['model']] = PH.choose_hosts(client, p['model'], params, log=lambda s: print(s, flush=True))
+                hosts[p['model']] = provider_hosts.choose_hosts(client, p['model'], params, log=lambda s: print(s, flush=True))
                 print(f'{p["model"]}: runs spread over {hosts[p["model"]] or "one host (the gateway chooses)"}', flush=True)
         for p in plan:
             ladder = (cfg.get('model_params') or {}).get(p['model']) or [{}]
@@ -207,8 +207,8 @@ def main():
                                   'rung': ladder.index(params) if params in ladder else 0, 'status': 'pending', 'note': '', 'retries': 0,
                                   'hosts': hosts.get(p['model'], [])})
         save_state(a.out, state, lock)
-    import question_files_and_answer_parsing as C
-    n_questions = len([c for c in C.load() if c.scorable])
+    import question_files
+    n_questions = len([c for c in question_files.load() if c.scorable])
 
     stop_all = threading.Event()
 
@@ -302,8 +302,8 @@ def main():
 
     def take_snapshot():
         try:
-            import push_snapshots_to_branch as snapshots
-            c = snapshots.snapshot(ROOT, a.out, snapshots.branch_name(snap.get('branch_prefix', 'snapshots/round-'), state['started'][:10]),
+            import push_snapshots
+            c = push_snapshots.snapshot(ROOT, a.out, push_snapshots.branch_name(snap.get('branch_prefix', 'snapshots/round-'), state['started'][:10]),
                                    snap.get('remote', 'origin'))
             if c:
                 print(f'[{dt.datetime.now():%H:%M}] snapshot {c[:12]} pushed', flush=True)
@@ -344,22 +344,22 @@ def main():
         ok, bad = count_valid(os.path.join(a.out, e['folder']))
         print(f'  {e["folder"]}: {e["status"]}  {ok}/{total_answers(e, cfg, n_questions)} answers, {bad} errors  {e.get("note", "")}')
     if by['refused']:
-        print('The gateway refused (HTTP 402/401/403): raise the key budget or add credits (benchmark/RUN.md, section Before you start), then run_all_models_in_one_round.py --resume.')
-        sys.exit(X.BUDGET)
+        print('The gateway refused (HTTP 402/401/403): raise the key budget or add credits (benchmark/RUN.md, section Before you start), then run_round.py --resume.')
+        sys.exit(exit_codes.BUDGET)
     if by['stopped'] or by['pending']:
-        print('Time limit reached. Relaunch: python3 benchmark/runner/run_all_models_in_one_round.py --resume --max-minutes 110')
-        sys.exit(X.STOPPED)
+        print('Time limit reached. Relaunch: python3 benchmark/runner/run_round.py --resume --max-minutes 110')
+        sys.exit(exit_codes.STOPPED)
     if by['invalid'] or by['failed']:
         print('The round is NOT complete: the runs above failed. Nothing was summarized or archived. Do not merge a partial round.')
-        sys.exit(X.PARTIAL if by['complete'] else X.UNHEALTHY)
+        sys.exit(exit_codes.PARTIAL if by['complete'] else exit_codes.UNHEALTHY)
 
     # 4. complete
-    import score_report_for_one_run as report
-    import summary_of_all_runs as summarize
+    import score_report
+    import summary_all_runs
     folders = [os.path.join(a.out, e['folder']) for e in state['runs']]
     for f in folders:
-        report.write(f)                     # a retried run needs its report again
-    open(os.path.join(a.out, 'README.md'), 'w').write(summarize.build(folders))
+        score_report.write(f)                     # a retried run needs its report again
+    open(os.path.join(a.out, 'README.md'), 'w').write(summary_all_runs.build(folders))
     day = state['started'][:10]
     arch = a.archive_dir or os.path.join(ROOT, 'project', 'archive', f'benchmark-results-before-{day}')
     moved = archive_old(a.out, {e['folder'] for e in state['runs']}, arch)
@@ -370,7 +370,7 @@ def main():
     if moved:
         print(f'Earlier run folders moved to {os.path.relpath(arch, ROOT)}/: {", ".join(moved)}')
     print('Next: lint and tests, update project/plan.md, commit, push, pull request, merge (benchmark/RUN.md, section After the round).')
-    sys.exit(X.OK)
+    sys.exit(exit_codes.OK)
 
 
 if __name__ == '__main__':

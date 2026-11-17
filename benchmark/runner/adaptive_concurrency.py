@@ -33,7 +33,7 @@ class _Probe:
         self.warned = False
 
 
-class ParallelCallsPerModel:
+class AdaptiveConcurrency:
     def __init__(self, proven, adaptive=True, step=2, max_probes=2, window=40, gain_fraction=0.5,
                  clock=time.monotonic, log=print):
         """proven: {model: proven concurrency}. gain_fraction: share of the ideal gain a step must deliver

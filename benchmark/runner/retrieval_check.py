@@ -11,8 +11,8 @@ question: no model call) on the prompt text (the same `## Prompt` the model sees
 A miss here is a harness or knowledge problem, never a model problem.
 
 Examples:
-  python3 benchmark/runner/retrieval_check_without_model.py                 # BM25 only, offline
-  AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_check_without_model.py --embeddings   # hybrid, as in runs
+  python3 benchmark/runner/retrieval_check.py                 # BM25 only, offline
+  AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_check.py --embeddings   # hybrid, as in runs
 """
 import argparse
 import os
@@ -23,7 +23,7 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
-import question_files_and_answer_parsing as C  # noqa: E402
+import question_files  # noqa: E402
 import kb  # noqa: E402
 import planner  # noqa: E402
 from retrieval import Retriever  # noqa: E402
@@ -55,7 +55,7 @@ def main():
     else:
         ret = Retriever(docs, chunks, expand=cfg.get('query_expansion', False), **rr)
     rows = []
-    for c in C.load(a.questions):
+    for c in question_files.load(a.questions):
         if not c.scorable:
             continue  # deferred, retired or awaiting input: the run does not read them
         need = list(c.knowledge)
