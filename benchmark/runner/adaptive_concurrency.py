@@ -1,7 +1,6 @@
 """Per-model concurrency for the benchmark runner.
 
-Each model starts at its proven value (`concurrency`, or its entry in `concurrency_by_model`). The
-this module probes upward in small steps (proven, proven + step, proven + 2 * step) and keeps a step only
+Each model starts at its proven value (`concurrency`, or its entry in `concurrency_by_model`). This module probes upward in small steps (proven, proven + step, proven + 2 * step) and keeps a step only
 when the answers per minute rise by about the same ratio and the window has no error. An HTTP 429 sends
 the model back to its proven value for the rest of the run. The proven value is a floor: this module
 never goes below it. A model that rate-limits at the default has its own lower proven value in the config.
@@ -12,8 +11,14 @@ take different times, so a window that spans two modes is thrown away and the ba
 
 No I/O here: the runner calls acquire and release around each answer and record after it.
 """
+import re
 import threading
 import time
+
+# A gateway outage (HTTP 500 to 599, after the client's retries) says nothing about the concurrency level:
+# the answer is neither counted nor a reason to reject a step. 2026-11-16: a 2-minute burst of HTTP 503 would have
+# ended probing for the rest of the run.
+GATEWAY_OUTAGE = re.compile(r'HTTP 5\d\d\b')
 
 
 class _Probe:
@@ -28,7 +33,7 @@ class _Probe:
         self.warned = False
 
 
-class ParallelCallsPerModel:
+class AdaptiveConcurrency:
     def __init__(self, proven, adaptive=True, step=2, max_probes=2, window=40, gain_fraction=0.5,
                  clock=time.monotonic, log=print):
         """proven: {model: proven concurrency}. gain_fraction: share of the ideal gain a step must deliver
@@ -73,6 +78,8 @@ class ParallelCallsPerModel:
             p = self._probe[model]
             if error and '429' in error:
                 self._on_429(model, p)
+                return
+            if error and GATEWAY_OUTAGE.search(error):
                 return
             if p.done:
                 return
@@ -120,6 +127,10 @@ class ParallelCallsPerModel:
         p.times, p.errors = [], 0
         acc = p.levels[p.accepted]
         if p.stage == 'base':
+            if errors:
+                # The proven level is the floor: it is kept, but its rate is not a baseline while it fails. Measure it again.
+                self._log(f'concurrency {model}: {errors} errors at {now}; measuring {now} again before any probe')
+                return
             p.base_rate, p.base_tag = rate, tag
             self._log(f'concurrency {model}: {now} gives {rate:.1f} answers/min ({tag})')
             self._next(model, p)

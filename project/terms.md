@@ -41,7 +41,7 @@ An English word has a general meaning and a VMware operations meaning. Each word
 | judge | The model that scored free-text answers 0-3; archived 2026-11-14 (Q199): every question is multiple choice | grader |
 | candidate | A model in the benchmark | model under test, AI under test |
 | test | A code test only: [`harness/test_tools.py`](../harness/test_tools.py), [`benchmark/runner/test_runner.py`](../benchmark/runner/test_runner.py) | the benchmark |
-| retrieval check | [`benchmark/runner/retrieval_check_without_model.py`](../benchmark/runner/retrieval_check_without_model.py): are the files each question needs found, without a model. Guide: [`benchmark/retrieval-check.md`](../benchmark/retrieval-check.md) | retrieval test, harness-only test |
+| retrieval check | [`benchmark/runner/retrieval_check.py`](../benchmark/runner/retrieval_check.py): are the files each question needs found, without a model. Guide: [`benchmark/retrieval-check.md`](../benchmark/retrieval-check.md) | retrieval test, harness-only test |
 | frontier reference | The frontier model scored as the bar to beat | - |
 | answer key | `## Answers` (the correct letters), `## Explanation`, metadata `misconception` | key (alone) |
 | answer type | How a question is scored: deterministic (option letters); the only type since 2026-11-14 (Q199) | kind, format, multiple choice vs conversation |

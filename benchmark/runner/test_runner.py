@@ -7,19 +7,19 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
-import question_files_and_answer_parsing as C  # noqa: E402
-import parallel_calls_per_model as G  # noqa: E402
-import score_report_for_one_run as report  # noqa: E402
-import runner_exit_codes as X  # noqa: E402
-import stop_run_on_bad_answers as H  # noqa: E402
-import run_folder_names as N  # noqa: E402
-import sample_check_before_round as P  # noqa: E402
-import run_all_models_in_one_round as RA  # noqa: E402
-import summary_of_all_runs as S  # noqa: E402
-import check_round_is_alive as CA  # noqa: E402
-import push_snapshots_to_branch as SN  # noqa: E402
-import provider_hosts_per_model as PH  # noqa: E402
-import resume_unfinished_round_if_any as RS  # noqa: E402
+import question_files  # noqa: E402
+import adaptive_concurrency  # noqa: E402
+import score_report  # noqa: E402
+import exit_codes  # noqa: E402
+import stop_on_bad_answers  # noqa: E402
+import run_folder_names  # noqa: E402
+import preflight_check  # noqa: E402
+import run_round  # noqa: E402
+import summary_all_runs  # noqa: E402
+import check_round_alive  # noqa: E402
+import push_snapshots  # noqa: E402
+import provider_hosts  # noqa: E402
+import resume_round  # noqa: E402
 from llm import MockClient, ParamClient  # noqa: E402
 
 
@@ -40,7 +40,7 @@ class AttachmentTest(unittest.TestCase):
         d = tempfile.mkdtemp()
         path = os.path.join(d, 'L2-99-t.md')
         open(path, 'w').write(body)
-        return C.Question(path)
+        return question_files.Question(path)
 
     def test_link_target_stripped(self):
         q = self._question()
@@ -65,7 +65,7 @@ class FinalScoreTest(unittest.TestCase):
                 row('c', 'judged', 'text', 400, 1, 1), row('c', 'judged', 'text', 400, 0.667, 2),
                 row('d', 'deterministic', 'table screenshot', 400, 1, 1, track='vision'),
                 row('d', 'deterministic', 'table screenshot', 400, 1, 2, track='vision')]
-        s = report.final(rows)[('m', 'agent-e2')]
+        s = score_report.final(rows)[('m', 'agent-e2')]
         self.assertAlmostEqual(s['final'], (1 + 0.5 + 0.8335 + 1) / 4, places=3)      # mean of the runs per question
         self.assertAlmostEqual(s['worst'], (1 + 0 + 0.667 + 1) / 4, places=3)        # lowest run per question: reported
         self.assertAlmostEqual(s['answer:deterministic'], 2.5 / 3, places=3)
@@ -80,7 +80,7 @@ class FinalScoreTest(unittest.TestCase):
     def test_old_text_track_ignored_when_vision_exists(self):
         rows = [row('d', 'deterministic', 'screenshot', 400, 0, 1, track='text'),
                 row('d', 'deterministic', 'screenshot', 400, 1, 1, track='vision')]
-        self.assertEqual(report.final(rows)[('m', 'agent-e2')]['final'], 1)
+        self.assertEqual(score_report.final(rows)[('m', 'agent-e2')]['final'], 1)
 
 
 class ReleaseGateTest(unittest.TestCase):
@@ -89,30 +89,30 @@ class ReleaseGateTest(unittest.TestCase):
         for i in range(10):  # the model right on all 10, the reference on 2
             q = f'q{i}'
             rows.append(dict(row(q, 'deterministic', 'text', 400, 1, 1), model='e2', mode='agent-e2'))
-            rows.append(dict(row(q, 'deterministic', 'text', 400, int(i < 2), 1), model=report.REFERENCE[0], mode=report.REFERENCE[1]))
-        fin = report.final(rows)
-        b, c, p = report.mcnemar(rows, 'e2', 'agent-e2')
+            rows.append(dict(row(q, 'deterministic', 'text', 400, int(i < 2), 1), model=score_report.REFERENCE[0], mode=score_report.REFERENCE[1]))
+        fin = score_report.final(rows)
+        b, c, p = score_report.mcnemar(rows, 'e2', 'agent-e2')
         self.assertEqual((b, c), (8, 0))
         self.assertAlmostEqual(p, 1 / 256)
-        g = {name.split(' (')[0]: ok for name, _, _, ok in report.gate(fin, rows, 'e2')}
+        g = {name.split(' (')[0]: ok for name, _, _, ok in score_report.gate(fin, rows, 'e2')}
         self.assertTrue(all(g[k] for k in ('Final score', 'Level 400', 'Confident wrong')), g)
         self.assertIsNone(g['Gap to the frontier model'])  # an outcome, not a gate
         self.assertIsNone(g['Paired test'])
 
     def test_fails_below_final_score(self):
         rows = [dict(row(f'q{i}', 'deterministic', 'text', 400, int(i < 8), 1), model='e2', mode='agent-e2') for i in range(10)]
-        g = {name: ok for name, _, _, ok in report.gate(report.final(rows), rows, 'e2')}
+        g = {name: ok for name, _, _, ok in score_report.gate(score_report.final(rows), rows, 'e2')}
         self.assertFalse(g['Final score'])
         self.assertNotIn('Gap to the frontier model', g)
 
 
 class RetrievalSummaryTest(unittest.TestCase):
     def test_main_file_misses_are_counted(self):
-        import retrieval_check_without_model as R
+        import retrieval_check
         rows = [('0001', ['a', 'b'], ['a'], ['a', 'b'], 'a'),
                 ('0002', ['c', 'd'], ['c'], ['c'], 'd'),
                 ('0003', ['e'], [], [], '')]
-        s = R.summary(rows)
+        s = retrieval_check.summary(rows)
         self.assertEqual(s['complete'], 1)
         self.assertEqual((s['main_keyed'], s['main_missed']), (2, ['0002']))
         self.assertAlmostEqual(s['context'], 3 / 5)
@@ -120,39 +120,39 @@ class RetrievalSummaryTest(unittest.TestCase):
 
 class PromptSplitTest(unittest.TestCase):
     def test_bullet_options_and_blank_lines(self):
-        stem, opts, footer = C.Question._split_prompt('- Fact one.\n- Fact two.\n\nChoose:\n\n- A. one\n- B. two\n\n- C. three\n\nHint: x')
+        stem, opts, footer = question_files.Question._split_prompt('- Fact one.\n- Fact two.\n\nChoose:\n\n- A. one\n- B. two\n\n- C. three\n\nHint: x')
         self.assertEqual([o[0] for o in opts], ['A', 'B', 'C'])
         self.assertTrue(stem.startswith('- Fact one.'))
         self.assertEqual(footer, 'Hint: x')
 
     def test_plain_options_still_parse(self):
-        stem, opts, footer = C.Question._split_prompt('Stem\n\nA. one\nB. two')
+        stem, opts, footer = question_files.Question._split_prompt('Stem\n\nA. one\nB. two')
         self.assertEqual([o[1] for o in opts], ['one', 'two'])
 
     def test_many_options_render_and_parse(self):
         # Q199 (2026-11-14): no fixed option count; 20 written options take A-T and Unsure takes U.
         import random
-        letters = C.LETTERS[:20]
-        stem, opts, footer = C.Question._split_prompt('Stem\n\n' + '\n'.join(f'- {x}. option {x}' for x in letters))
+        letters = question_files.LETTERS[:20]
+        stem, opts, footer = question_files.Question._split_prompt('Stem\n\n' + '\n'.join(f'- {x}. option {x}' for x in letters))
         self.assertEqual([o[0] for o in opts], list(letters))
-        q = C.Question.__new__(C.Question)
+        q = question_files.Question.__new__(question_files.Question)
         q.stem, q.options, q.tables, q.footer = stem, opts, '', ''
         text, mapping = q.render(random.Random(1))
         self.assertEqual(mapping['U'], 'UN')
         self.assertIn('U. Unsure', text)
         shown = next(k for k, v in mapping.items() if v == 'S')
-        self.assertEqual(C.parse(f'ANSWER: {shown}', mapping), ['S'])
-        self.assertEqual(C.parse('ANSWER: T, U', mapping), sorted([mapping['T'], 'UN']))
+        self.assertEqual(question_files.parse(f'ANSWER: {shown}', mapping), ['S'])
+        self.assertEqual(question_files.parse('ANSWER: T, U', mapping), sorted([mapping['T'], 'UN']))
 
 
 class AnswerParseTest(unittest.TestCase):
     def test_letters_not_taken_from_words_and_bold_kept(self):
         m = {c: c for c in 'ABCDEFG'}
-        self.assertEqual(C.parse('ANSWER: C and E', m), ['C', 'E'])          # was A, C, D, E: the letters of "and"
-        self.assertEqual(C.parse('ANSWER: **B**, **D**', m), ['B', 'D'])     # was B only
-        self.assertEqual(C.parse('ANSWER: B. Because A is wrong', m), ['B'])
-        self.assertEqual(C.parse('draft ANSWER: A\nANSWER: D & F', m), ['D', 'F'])   # the last ANSWER line counts
-        self.assertIsNone(C.parse('ANSWER: none', m))
+        self.assertEqual(question_files.parse('ANSWER: C and E', m), ['C', 'E'])          # was A, C, D, E: the letters of "and"
+        self.assertEqual(question_files.parse('ANSWER: **B**, **D**', m), ['B', 'D'])     # was B only
+        self.assertEqual(question_files.parse('ANSWER: B. Because A is wrong', m), ['B'])
+        self.assertEqual(question_files.parse('draft ANSWER: A\nANSWER: D & F', m), ['D', 'F'])   # the last ANSWER line counts
+        self.assertIsNone(question_files.parse('ANSWER: none', m))
 
 class OverrideTest(unittest.TestCase):
     def test_misconception_with_full_recall_counts(self):
@@ -160,15 +160,15 @@ class OverrideTest(unittest.TestCase):
                 {'mode': 'agent-e2', 'retrieval_recall': '1.0', 'misconception': '0'},
                 {'mode': 'agent-e2', 'retrieval_recall': '0.5', 'misconception': '1'},   # file missing: not an override
                 {'mode': 'baseline', 'retrieval_recall': '', 'misconception': '1'}]     # no knowledge base: not an override
-        self.assertEqual(report.override(rows), 0.5)
+        self.assertEqual(score_report.override(rows), 0.5)
 
 
 class QuestionFieldsTest(unittest.TestCase):
     def test_every_question_has_groups_and_an_answer_key(self):
-        for c in C.load():
-            self.assertIn(c.answer_type, report.ANSWER_TYPES)
-            self.assertTrue(set(c.input_types) <= set(report.INPUT_TYPES), c.id)
-            self.assertIn(str(c.level), report.LEVELS, c.id)
+        for c in question_files.load():
+            self.assertIn(c.answer_type, score_report.ANSWER_TYPES)
+            self.assertTrue(set(c.input_types) <= set(score_report.INPUT_TYPES), c.id)
+            self.assertIn(str(c.level), score_report.LEVELS, c.id)
             self.assertTrue(c.answer, c.id)
             self.assertTrue(set(c.answer) <= {o[0] for o in c.options}, c.id)
             self.assertTrue(set(c.misconception) <= {o[0] for o in c.options}, c.id)
@@ -182,12 +182,12 @@ class _Clock:
         return self.t
 
 
-class ParallelCallsPerModelTest(unittest.TestCase):
+class AdaptiveConcurrencyTest(unittest.TestCase):
     """Concurrency per model: probe above the proven value, never below it. A fake clock stands in for time."""
 
     def make(self, proven=None, **kw):
         self.clock, self.lines = _Clock(), []
-        return G.ParallelCallsPerModel(proven or {'m': 12}, window=10, clock=self.clock, log=self.lines.append, **kw)
+        return adaptive_concurrency.AdaptiveConcurrency(proven or {'m': 12}, window=10, clock=self.clock, log=self.lines.append, **kw)
 
     def drive(self, gov, n, rate_of, model='m', tag='agent-e2', error=lambda i: ''):
         """n answers finish; the time between two is 1 / rate_of(current limit) minutes."""
@@ -241,8 +241,42 @@ class ParallelCallsPerModelTest(unittest.TestCase):
 
     def test_other_error_in_the_window_rejects_the_step(self):
         g = self.make()
-        self.drive(g, 200, lambda c: 3.0 * c, error=lambda i: 'HTTP 502: bad gateway' if 14 <= i <= 40 else '')
-        self.assertEqual(g.limit_of('m'), 12)
+        self.drive(g, 200, lambda c: 3.0 * c, error=lambda i: 'HTTP 400: bad request' if 36 <= i <= 40 else '')
+        self.assertEqual(g.limit_of('m'), 12)                       # the window of the first probe (answers 36 to 45) has errors
+
+    def test_gateway_outage_neither_counts_nor_rejects(self):
+        g = self.make()
+        self.drive(g, 200, lambda c: 3.0 * c, error=lambda i: 'HTTP 503: unavailable' if 14 <= i <= 40 else '')
+        self.assertEqual(g.limit_of('m'), 16)                       # the burst was skipped, probing went on
+        self.assertFalse(any('errors' in s for s in self.lines))
+
+    def test_gateway_outage_does_not_end_probing(self):
+        g = self.make()
+        self.drive(g, 20, lambda c: 3.0 * c)                        # the base window is in progress
+        for _ in range(100):
+            g.record('m', 'agent-e2', 'HTTP 503: unavailable')      # an outage of any length
+        self.drive(g, 200, lambda c: 3.0 * c)
+        self.assertEqual(g.limit_of('m'), 16)
+
+    def test_errors_at_the_base_level_are_measured_again(self):
+        g = self.make()
+        self.drive(g, 30, lambda c: 3.0 * c, error=lambda i: 'HTTP 400: bad request')   # base window (after the 12 skipped) with errors
+        self.assertEqual(g.limit_of('m'), 12)                       # the floor holds
+        self.assertTrue(any('measuring 12 again' in s for s in self.lines))
+        self.drive(g, 200, lambda c: 3.0 * c)                       # clean now: probing starts and reaches the top
+        self.assertEqual(g.limit_of('m'), 16)
+
+    def test_noise_does_not_raise_a_flat_rate(self):
+        """Answer times vary by 10% (1 standard deviation) around a flat rate: no level may be kept by chance.
+        Measured 2026-11-17 with the default window of 40: 0 of 200 seeds at 10%, 5% of seeds at 20% noise."""
+        import random
+        for seed in range(50):
+            rng, t = random.Random(seed), [0.0]
+            g = adaptive_concurrency.AdaptiveConcurrency({'m': 12}, clock=lambda: t[0], log=lambda s: None)
+            for _ in range(400):
+                t[0] += 60.0 / 36.0 * max(0.05, rng.gauss(1.0, 0.10))
+                g.record('m', 'agent-e2', '')
+            self.assertEqual(g.limit_of('m'), 12, f'seed {seed}')
 
     def test_window_across_two_modes_is_measured_again(self):
         g = self.make()
@@ -277,7 +311,7 @@ class ParallelCallsPerModelTest(unittest.TestCase):
 class StopAndResumeTest(unittest.TestCase):
     """--max-minutes stops cleanly; --resume continues with the settings saved in the folder. Offline (--mock)."""
 
-    RUN = os.path.join(os.path.dirname(__file__), 'answer_questions_for_one_model.py')
+    RUN = os.path.join(os.path.dirname(__file__), 'answer_questions.py')
 
     def run_py(self, *args):
         import subprocess
@@ -313,19 +347,19 @@ class StopAndResumeTest(unittest.TestCase):
 
 class NamingTest(unittest.TestCase):
     def test_slug_keeps_the_model_name(self):
-        self.assertEqual(N.slug('google/gemma-4-31b-it'), 'gemma-4-31b-it')
-        self.assertEqual(N.slug('alibaba/qwen3.8-27b'), 'qwen3.8-27b')
-        self.assertEqual(N.slug('anthropic/claude-opus-5.5'), 'claude-opus-5.5')
+        self.assertEqual(run_folder_names.slug('google/gemma-4-31b-it'), 'gemma-4-31b-it')
+        self.assertEqual(run_folder_names.slug('alibaba/qwen3.8-27b'), 'qwen3.8-27b')
+        self.assertEqual(run_folder_names.slug('anthropic/claude-opus-5.5'), 'claude-opus-5.5')
 
     def test_folder_is_date_then_model_and_never_overwrites(self):
         import datetime
         import tempfile
         day = datetime.date(2026, 11, 14)
         with tempfile.TemporaryDirectory() as out:
-            self.assertEqual(N.run_name(['google/gemma-4-31b-it'], out, today=day), '20261114-gemma-4-31b-it')
+            self.assertEqual(run_folder_names.run_name(['google/gemma-4-31b-it'], out, today=day), '20261114-gemma-4-31b-it')
             os.makedirs(os.path.join(out, '20261114-gemma-4-31b-it'))
-            self.assertEqual(N.run_name(['google/gemma-4-31b-it'], out, today=day), '20261114-gemma-4-31b-it-2')
-            self.assertEqual(N.run_name(['a/x', 'b/y'], out, mock=True, today=day), '20261114-x+y-mock')
+            self.assertEqual(run_folder_names.run_name(['google/gemma-4-31b-it'], out, today=day), '20261114-gemma-4-31b-it-2')
+            self.assertEqual(run_folder_names.run_name(['a/x', 'b/y'], out, mock=True, today=day), '20261114-x+y-mock')
 
 
 class StopRunOnBadAnswersTest(unittest.TestCase):
@@ -335,66 +369,66 @@ class StopRunOnBadAnswersTest(unittest.TestCase):
         return r
 
     def test_healthy_run_never_trips(self):
-        h = H.StopRunOnBadAnswers()
+        h = stop_on_bad_answers.StopRunOnBadAnswers()
         self.assertTrue(all(h.record(self.row()) is None for _ in range(100)))
 
     def test_cut_off_answers_trip_the_check_after_enough_answers(self):
-        h = H.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
+        h = stop_on_bad_answers.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
         for _ in range(15):
             self.assertIsNone(h.record(self.row(truncated=1, parse_ok=0)))         # too few answers to judge
         reason = None
         for _ in range(10):
             reason = h.record(self.row(truncated=1, parse_ok=0))
         self.assertIn('invalid', reason)
-        self.assertEqual(h.code, X.UNHEALTHY)
+        self.assertEqual(h.code, exit_codes.UNHEALTHY)
 
     def test_a_few_wrong_or_unparsed_answers_are_not_a_problem(self):
-        h = H.StopRunOnBadAnswers()
+        h = stop_on_bad_answers.StopRunOnBadAnswers()
         for i in range(60):
             self.assertIsNone(h.record(self.row(parse_ok=0 if i % 10 == 0 else 1)))     # 10% unparsed
 
     def test_unparsable_free_text_is_not_counted_but_an_error_is(self):
-        self.assertFalse(H.StopRunOnBadAnswers.is_bad(self.row(answer_type='judged', parse_ok=0)))
-        self.assertTrue(H.StopRunOnBadAnswers.is_bad(self.row(error='HTTP 500')))
+        self.assertFalse(stop_on_bad_answers.StopRunOnBadAnswers.is_bad(self.row(answer_type='judged', parse_ok=0)))
+        self.assertTrue(stop_on_bad_answers.StopRunOnBadAnswers.is_bad(self.row(error='HTTP 500')))
 
     def test_budget_refusal_trips_at_once(self):
-        h = H.StopRunOnBadAnswers()
+        h = stop_on_bad_answers.StopRunOnBadAnswers()
         reason = h.record(self.row(error='HTTP 402: Insufficient funds'))
         self.assertIn('402', reason)
-        self.assertEqual(h.code, X.BUDGET)
+        self.assertEqual(h.code, exit_codes.BUDGET)
 
     def test_a_burst_of_gateway_errors_stops_with_the_gateway_code_not_the_settings_code(self):
         # 2026-11-16: 54 answers failed with HTTP 503 in two minutes; the check read them as invalid settings and the runner restarted two runs from zero.
-        h = H.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
+        h = stop_on_bad_answers.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
         reason = None
         for _ in range(30):
             reason = h.record(self.row(error='HTTP 503: {"error":{"message":"Service temporarily unavailable."}}'))
         self.assertIn('gateway', reason)
-        self.assertEqual(h.code, X.GATEWAY_DOWN)
-        self.assertNotEqual(h.code, X.UNHEALTHY)
+        self.assertEqual(h.code, exit_codes.GATEWAY_DOWN)
+        self.assertNotEqual(h.code, exit_codes.UNHEALTHY)
 
     def test_gateway_errors_do_not_count_against_the_settings(self):
-        h = H.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
+        h = stop_on_bad_answers.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
         for i in range(200):
             e = 'HTTP 503: unavailable' if i % 10 == 0 else ''        # 10% gateway errors: below the gateway limit
             self.assertIsNone(h.record(self.row(error=e)))
 
     def test_gateway_error_kinds(self):
         for e in ('HTTP 503: x', 'HTTP 502: x', 'HTTP 429: rate', 'HTTP 408: t', 'ReadTimeout: x', 'ConnectionError: x', 'Connection reset by peer'):
-            self.assertTrue(H.StopRunOnBadAnswers.is_gateway_error(self.row(error=e)), e)
+            self.assertTrue(stop_on_bad_answers.StopRunOnBadAnswers.is_gateway_error(self.row(error=e)), e)
         for e in ('', 'HTTP 400: bad request', 'HTTP 404: model', 'HTTP 402: budget'):
-            self.assertFalse(H.StopRunOnBadAnswers.is_gateway_error(self.row(error=e)), e)
+            self.assertFalse(stop_on_bad_answers.StopRunOnBadAnswers.is_gateway_error(self.row(error=e)), e)
 
     def test_request_errors_still_count_against_the_settings(self):
-        h = H.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
+        h = stop_on_bad_answers.StopRunOnBadAnswers(window=40, max_bad=0.25, min_answers=20)
         reason = None
         for _ in range(30):
             reason = h.record(self.row(error='HTTP 400: context too long'))
-        self.assertEqual(h.code, X.UNHEALTHY)
+        self.assertEqual(h.code, exit_codes.UNHEALTHY)
         self.assertIn('invalid', reason)
 
     def test_each_model_has_its_own_window(self):
-        h = H.StopRunOnBadAnswers(min_answers=20)
+        h = stop_on_bad_answers.StopRunOnBadAnswers(min_answers=20)
         for _ in range(30):
             h.record(self.row(model='good'))
         for _ in range(25):
@@ -448,48 +482,48 @@ class PreflightTest(unittest.TestCase):
 
     def test_sample_is_spread_and_has_each_kind(self):
         qs = [_Q(f'c{i}') for i in range(40)] + [_Q('v1', images=True), _Q('skip', scorable=False)]
-        ids = [q.id for q in P.pick_sample(qs, 7)]
+        ids = [q.id for q in preflight_check.pick_sample(qs, 7)]
         self.assertEqual(len(ids), 7)
         self.assertEqual(sum(i.startswith('c') for i in ids), 6)
         self.assertIn('v1', ids)
         self.assertNotIn('skip', ids)
-        self.assertEqual(ids, [q.id for q in P.pick_sample(qs, 7)])          # the same sample every time
+        self.assertEqual(ids, [q.id for q in preflight_check.pick_sample(qs, 7)])          # the same sample every time
 
     def test_good_sample_has_no_problem(self):
         rows = [self.srow('baseline'), self.srow('agent-e2', steps='4')]
-        problems, stats = P.evaluate(rows, 4000, ['baseline', 'agent-e2'])
+        problems, stats = preflight_check.evaluate(rows, 4000, ['baseline', 'agent-e2'])
         self.assertEqual(problems, [])
         self.assertEqual(stats['agent-e2']['steps'], 4)
 
     def test_cut_off_answers_are_a_problem(self):
         rows = [self.srow(truncated='1', completion_tokens='4000'), self.srow()]
-        problems, _ = P.evaluate(rows, 4000, ['agent-e2'])
+        problems, _ = preflight_check.evaluate(rows, 4000, ['agent-e2'])
         self.assertTrue(any('cut off' in p for p in problems))
 
     def test_unreadable_letters_and_errors_are_problems(self):
         rows = [self.srow(parse_ok='0'), self.srow(parse_ok='0'), self.srow(), self.srow(error='HTTP 400: reasoning not supported')]
-        problems = P.evaluate(rows, 4000, ['agent-e2'])[0]
+        problems = preflight_check.evaluate(rows, 4000, ['agent-e2'])[0]
         self.assertTrue(any('readable letter' in p for p in problems))
         self.assertTrue(any('HTTP 400' in p for p in problems))
 
     def test_thinking_tokens_close_to_the_cap_are_a_problem_even_when_the_answer_is_not_cut(self):
-        problems = P.evaluate([self.srow(completion_tokens='3000')], 4000, ['agent-e2'])[0]
+        problems = preflight_check.evaluate([self.srow(completion_tokens='3000')], 4000, ['agent-e2'])[0]
         self.assertTrue(any('max_tokens' in p for p in problems))
 
     def test_a_mode_without_a_valid_answer_is_a_problem(self):
-        problems = P.evaluate([self.srow('agent-e2')], 4000, ['agent-e2', 'web'])[0]
+        problems = preflight_check.evaluate([self.srow('agent-e2')], 4000, ['agent-e2', 'web'])[0]
         self.assertTrue(any('web' in p for p in problems))
 
     def test_projection_scales_with_answers_and_concurrency(self):
         stats = {'agent-e2': {'latency': 12.0, 'cost': 0.01}}
-        minutes, cost = P.project(stats, n_questions=150, runs=5, concurrency=12)
+        minutes, cost = preflight_check.project(stats, n_questions=150, runs=5, concurrency=12)
         self.assertAlmostEqual(minutes, 750 * 12 / 12 / 60, places=6)
         self.assertAlmostEqual(cost, 750 * 0.01, places=6)
 
 
 class RoundHelpersTest(unittest.TestCase):
     def test_exit_codes_map_to_actions(self):
-        self.assertEqual([RA.classify(c) for c in (0, 3, 5, 6, 1, 137)], ['complete', 'stopped', 'invalid', 'refused', 'crashed', 'crashed'])
+        self.assertEqual([run_round.classify(c) for c in (0, 3, 5, 6, 1, 137)], ['complete', 'stopped', 'invalid', 'refused', 'crashed', 'crashed'])
 
     def test_unresolved_counts_only_failures_never_answered_later(self):
         import tempfile
@@ -499,7 +533,7 @@ class RoundHelpersTest(unittest.TestCase):
                 'm,agent-e2,Q1,text,1,HTTP 500\n'
                 'm,agent-e2,Q1,text,1,\n'              # retried and answered
                 'm,agent-e2,Q2,text,1,HTTP 500\n')     # still failing
-            self.assertEqual(RA.unresolved(d), {('m', 'agent-e2', 'Q2', 'text', '1')})
+            self.assertEqual(run_round.unresolved(d), {('m', 'agent-e2', 'Q2', 'text', '1')})
 
     def test_earlier_run_folders_move_to_the_archive_and_the_round_stays(self):
         import tempfile
@@ -508,7 +542,7 @@ class RoundHelpersTest(unittest.TestCase):
                 os.makedirs(os.path.join(d, 'results', n))
                 open(os.path.join(d, 'results', n, 'config.json'), 'w').write('{}')
             open(os.path.join(d, 'results', 'README.md'), 'w').write('x')
-            moved = RA.archive_old(os.path.join(d, 'results'), {'new-a'}, os.path.join(d, 'arch'))
+            moved = run_round.archive_old(os.path.join(d, 'results'), {'new-a'}, os.path.join(d, 'arch'))
             self.assertEqual(moved, ['old-a'])
             self.assertTrue(os.path.isdir(os.path.join(d, 'arch', 'old-a')))
             self.assertTrue(os.path.isdir(os.path.join(d, 'results', 'new-a')))
@@ -516,17 +550,17 @@ class RoundHelpersTest(unittest.TestCase):
 
     def test_first_launch_names_the_folder_and_a_resume_names_only_the_folder(self):
         e = {'model': 'a/m', 'modes': ['baseline', 'web'], 'folder': '20261114-m', 'params': {'reasoning': {'effort': 'none'}}}
-        first = RA.child_cmd(e, '/out', 50, resume=False)
+        first = run_round.child_cmd(e, '/out', 50, resume=False)
         self.assertIn('--name', first)
         self.assertEqual(first[first.index('--modes') + 1], 'baseline,web')
         self.assertIn('"effort": "none"', first[first.index('--params') + 1])
-        again = RA.child_cmd(e, '/out', 50, resume=True)
+        again = run_round.child_cmd(e, '/out', 50, resume=True)
         self.assertEqual(again[again.index('--resume') + 1], os.path.join('/out', '20261114-m'))
         self.assertNotIn('--models', again)
 
 
 class RoundRecoveryTest(unittest.TestCase):
-    """run_all_models_in_one_round.py with a fake answer_questions_for_one_model.py that exits with scripted codes: recovery without any model call."""
+    """run_round.py with a fake answer_questions.py that exits with scripted codes: recovery without any model call."""
 
     FAKE = (
         "import sys, os, json\n"
@@ -554,7 +588,7 @@ class RoundRecoveryTest(unittest.TestCase):
                    FAKE_SEQ=os.path.join(d, 'seq.json'), FAKE_LOG=os.path.join(d, 'log.txt'))
         out = os.path.join(d, 'out')
         os.makedirs(out)
-        p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'run_all_models_in_one_round.py'), '--out', out, '--skip-preflight',
+        p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'run_round.py'), '--out', out, '--skip-preflight',
                             '--only', model, *extra], capture_output=True, text=True, env=env, timeout=120)
         calls = [json.loads(x) for x in open(os.path.join(d, 'log.txt')).read().splitlines()] if os.path.exists(os.path.join(d, 'log.txt')) else []
         return p, calls, out
@@ -564,48 +598,48 @@ class RoundRecoveryTest(unittest.TestCase):
         self.assertEqual(len(calls), 3)                                   # the first launch and 2 retries (release.retries)
         self.assertNotIn('--resume', calls[0])
         self.assertIn('--resume', calls[1])
-        self.assertEqual(p.returncode, X.UNHEALTHY, p.stdout + p.stderr)
+        self.assertEqual(p.returncode, exit_codes.UNHEALTHY, p.stdout + p.stderr)
         self.assertIn('NOT complete', p.stdout)
 
     def test_a_gateway_outage_waits_and_resumes_the_same_folder_without_new_settings(self):
-        p, calls, out = self.round_('alibaba/qwen3.8-27b', [X.GATEWAY_DOWN, X.GATEWAY_DOWN, X.STOPPED])
+        p, calls, out = self.round_('alibaba/qwen3.8-27b', [exit_codes.GATEWAY_DOWN, exit_codes.GATEWAY_DOWN, exit_codes.STOPPED])
         self.assertEqual(len(calls), 3, p.stdout + p.stderr)
         self.assertNotIn('--resume', calls[0])
         self.assertIn('--resume', calls[1])
         self.assertIn('--resume', calls[2])
         self.assertEqual(calls[1][calls[1].index('--resume') + 1], calls[2][calls[2].index('--resume') + 1])   # the same folder
         self.assertFalse([n for n in os.listdir(out) if 'invalid' in n])      # nothing restarted, nothing archived
-        self.assertEqual(p.returncode, X.STOPPED)
+        self.assertEqual(p.returncode, exit_codes.STOPPED)
 
     def test_an_outage_that_never_ends_fails_the_run_after_the_waits_and_keeps_the_answers(self):
-        p, calls, out = self.round_('google/gemma-4-31b-it', [X.GATEWAY_DOWN] * 30)
+        p, calls, out = self.round_('google/gemma-4-31b-it', [exit_codes.GATEWAY_DOWN] * 30)
         self.assertEqual(len(calls), 13)                                  # the first launch and release.outage_waits (12) resumes
-        self.assertEqual(p.returncode, X.UNHEALTHY)
+        self.assertEqual(p.returncode, exit_codes.UNHEALTHY)
         self.assertIn('NOT complete', p.stdout)
         self.assertFalse([n for n in os.listdir(out) if 'invalid' in n])
 
     def test_invalid_answers_restart_the_run_with_the_next_settings_and_keep_the_folder_as_evidence(self):
-        p, calls, out = self.round_('alibaba/qwen3.8-27b', [X.UNHEALTHY, X.STOPPED])
+        p, calls, out = self.round_('alibaba/qwen3.8-27b', [exit_codes.UNHEALTHY, exit_codes.STOPPED])
         self.assertEqual(len(calls), 2, p.stdout + p.stderr)
         self.assertIn('"none"', calls[0][calls[0].index('--params') + 1])
         self.assertIn('"low"', calls[1][calls[1].index('--params') + 1])
         self.assertNotIn('--resume', calls[1])                            # from the beginning: mixed settings would measure nothing
         self.assertTrue([n for n in os.listdir(out) if '-invalid-0' in n])
-        self.assertEqual(p.returncode, X.STOPPED)
+        self.assertEqual(p.returncode, exit_codes.STOPPED)
 
     def test_invalid_answers_on_the_last_settings_fail_the_run(self):
-        p, calls, _ = self.round_('google/gemma-4-31b-it', [X.UNHEALTHY])
+        p, calls, _ = self.round_('google/gemma-4-31b-it', [exit_codes.UNHEALTHY])
         self.assertEqual(len(calls), 1)                                   # gemma has one entry: nothing to try
-        self.assertEqual(p.returncode, X.UNHEALTHY)
+        self.assertEqual(p.returncode, exit_codes.UNHEALTHY)
 
     def test_a_refused_key_stops_the_round_with_the_budget_code(self):
-        p, calls, _ = self.round_('google/gemma-4-31b-it', [X.BUDGET])
-        self.assertEqual(p.returncode, X.BUDGET)
+        p, calls, _ = self.round_('google/gemma-4-31b-it', [exit_codes.BUDGET])
+        self.assertEqual(p.returncode, exit_codes.BUDGET)
         self.assertIn('raise the key budget', p.stdout)
 
     def test_a_limit_stop_asks_for_a_relaunch_and_a_second_start_needs_resume(self):
-        p, calls, out = self.round_('google/gemma-4-31b-it', [X.STOPPED])
-        self.assertEqual(p.returncode, X.STOPPED)
+        p, calls, out = self.round_('google/gemma-4-31b-it', [exit_codes.STOPPED])
+        self.assertEqual(p.returncode, exit_codes.STOPPED)
         self.assertIn('--resume', p.stdout)
         self.assertTrue(os.path.exists(os.path.join(out, '.round.json')))
 
@@ -622,7 +656,7 @@ class ResumeOnSessionStartTest(unittest.TestCase):
 
     def state(self, runs):
         import json
-        json.dump({'started': '2026-11-16T10:00:00', 'runs': runs}, open(os.path.join(self.d, RA.STATE), 'w'))
+        json.dump({'started': '2026-11-16T10:00:00', 'runs': runs}, open(os.path.join(self.d, run_round.STATE), 'w'))
 
     def folder(self, name, good):
         os.makedirs(os.path.join(self.d, name), exist_ok=True)
@@ -635,38 +669,38 @@ class ResumeOnSessionStartTest(unittest.TestCase):
         return {'model': 'm', 'modes': ['baseline'], 'folder': name, 'status': status}
 
     def test_no_round_no_action(self):
-        self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'nothing')
+        self.assertEqual(resume_round.decide(self.d, self.CFG, 4, [])[0], 'nothing')
 
     def test_an_unfinished_run_with_no_process_is_resumed(self):
         self.state([self.entry('r1')])
         self.folder('r1', 2)
-        self.assertEqual(RS.decide(self.d, self.CFG, 4, []), ('resume', ['r1']))
+        self.assertEqual(resume_round.decide(self.d, self.CFG, 4, []), ('resume', ['r1']))
 
     def test_a_run_with_a_live_process_is_left_alone(self):
         self.state([self.entry('r1')])
         self.folder('r1', 2)
-        ps = ['python3 benchmark/runner/answer_questions_for_one_model.py --resume benchmark/results/r1']
-        self.assertEqual(RS.decide(self.d, self.CFG, 4, ps)[0], 'nothing')
+        ps = ['python3 benchmark/runner/answer_questions.py --resume benchmark/results/r1']
+        self.assertEqual(resume_round.decide(self.d, self.CFG, 4, ps)[0], 'nothing')
 
     def test_a_state_file_whose_folders_are_gone_is_left_alone(self):
         self.state([self.entry('renamed-or-archived')])
-        self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'nothing')
+        self.assertEqual(resume_round.decide(self.d, self.CFG, 4, [])[0], 'nothing')
 
     def test_a_finished_round_is_left_alone(self):
         self.state([self.entry('r1', 'complete')])
         self.folder('r1', 4)
-        self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'nothing')
+        self.assertEqual(resume_round.decide(self.d, self.CFG, 4, [])[0], 'nothing')
 
     def test_a_run_that_waits_for_the_author_is_not_resumed(self):
         self.state([self.entry('r1', 'invalid')])
         self.folder('r1', 2)
-        self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'nothing')
+        self.assertEqual(resume_round.decide(self.d, self.CFG, 4, [])[0], 'nothing')
 
     def test_a_refused_or_stopped_run_is_resumed(self):
         for status in ('refused', 'stopped', 'outage', 'failed'):
             self.state([self.entry('r1', status)])
             self.folder('r1', 1)
-            self.assertEqual(RS.decide(self.d, self.CFG, 4, [])[0], 'resume', status)
+            self.assertEqual(resume_round.decide(self.d, self.CFG, 4, [])[0], 'resume', status)
 
     def test_the_hook_script_does_nothing_outside_a_remote_session_or_without_a_round(self):
         import subprocess
@@ -706,7 +740,7 @@ class SnapshotBranchTest(unittest.TestCase):
             open(os.path.join(run, n), 'w').write(t)
 
     def test_a_snapshot_holds_the_answers_configs_and_reports_but_not_the_traces(self):
-        c = SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
+        c = push_snapshots.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
         self.assertTrue(c)
         files = self.sh(self.remote, 'ls-tree', '-r', '--name-only', 'snapshots/round-x').splitlines()
         self.assertIn('benchmark/results/r1/answers.csv', files)
@@ -718,17 +752,17 @@ class SnapshotBranchTest(unittest.TestCase):
 
     def test_the_working_branch_index_and_files_are_not_touched(self):
         head = self.sh(self.repo, 'rev-parse', 'HEAD')
-        SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
+        push_snapshots.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
         self.assertEqual(self.sh(self.repo, 'rev-parse', 'HEAD'), head)
         self.assertEqual(self.sh(self.repo, 'branch', '--show-current'), 'work')
         self.assertEqual(self.sh(self.repo, 'diff', '--cached', '--name-only'), '')           # nothing staged
         self.assertTrue(os.path.exists(os.path.join(self.results, 'r1', 'traces.jsonl')))
 
     def test_no_change_gives_no_new_commit_and_a_change_chains_on_the_previous_snapshot(self):
-        c1 = SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
-        self.assertIsNone(SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin'))
+        c1 = push_snapshots.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
+        self.assertIsNone(push_snapshots.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin'))
         open(os.path.join(self.results, 'r1', 'answers.csv'), 'w').write('a,b')
-        c2 = SN.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
+        c2 = push_snapshots.snapshot(self.repo, self.results, 'snapshots/round-x', 'origin')
         self.assertNotEqual(c1, c2)
         self.assertEqual(self.sh(self.repo, 'rev-parse', f'{c2}^'), c1)
         self.assertEqual(self.sh(self.remote, 'rev-parse', 'snapshots/round-x'), c2)
@@ -739,7 +773,7 @@ class SnapshotBranchTest(unittest.TestCase):
         self.addCleanup(__import__('shutil').rmtree, other, True)
         os.makedirs(os.path.join(other, 'r'))
         open(os.path.join(other, 'r', 'config.json'), 'w').write('{}')
-        self.assertIsNone(SN.snapshot(self.repo, other, 'snapshots/round-y', 'origin'))
+        self.assertIsNone(push_snapshots.snapshot(self.repo, other, 'snapshots/round-y', 'origin'))
 
 
 class CheckRoundIsAliveTest(unittest.TestCase):
@@ -765,10 +799,10 @@ class CheckRoundIsAliveTest(unittest.TestCase):
         os.utime(os.path.join(f, 'answers.csv'), (t, t))
         return f
 
-    PS = ['python3 benchmark/runner/answer_questions_for_one_model.py --out o --resume benchmark/results/run-a']
+    PS = ['python3 benchmark/runner/answer_questions.py --out o --resume benchmark/results/run-a']
 
     def status(self, f, ps, boot=None):
-        return CA.run_status(f, self.now, ps, boot)
+        return check_round_alive.run_status(f, self.now, ps, boot)
 
     def test_a_finished_folder_is_done(self):
         self.assertEqual(self.status(self.folder('run-a', 4, 90), [])['verdict'], 'DONE')
@@ -791,7 +825,7 @@ class CheckRoundIsAliveTest(unittest.TestCase):
         self.assertEqual(self.status(self.folder('run-b', 2, 1), self.PS)['verdict'], 'DEAD')
 
     def test_the_old_script_name_counts_as_a_process(self):
-        self.assertTrue(CA.processes_for('run-a', ['python3 benchmark/runner/run.py --resume benchmark/results/run-a']))
+        self.assertTrue(check_round_alive.processes_for('run-a', ['python3 benchmark/runner/run.py --resume benchmark/results/run-a']))
 
     def test_good_answers_and_cost_are_counted(self):
         r = self.status(self.folder('run-a', 3, 1), self.PS)
@@ -821,27 +855,27 @@ class ReconcileWithFoldersTest(unittest.TestCase):
     def test_a_finished_folder_is_complete_whatever_the_state_says(self):
         self.folder('a', [('q1', ''), ('q2', '')])
         st = {'runs': [self.entry('a', 'invalid')]}
-        RA.reconcile_with_folders(st, self.d, self.cfg, 2)
+        run_round.reconcile_with_folders(st, self.d, self.cfg, 2)
         self.assertEqual(st['runs'][0]['status'], 'complete')
 
     def test_every_stop_but_a_real_settings_failure_becomes_pending(self):
         for status in ('refused', 'stopped', 'running', 'failed', 'outage', 'pending'):
             self.folder(status, [('q1', '')])
             st = {'runs': [self.entry(status, status)]}
-            RA.reconcile_with_folders(st, self.d, self.cfg, 2)
+            run_round.reconcile_with_folders(st, self.d, self.cfg, 2)
             self.assertEqual(st['runs'][0]['status'], 'pending', status)
             self.assertEqual((st['runs'][0]['retries'], st['runs'][0]['outage_waits']), (0, 0))
 
     def test_a_run_with_unresolved_failures_is_not_complete(self):
         self.folder('b', [('q1', ''), ('q2', 'HTTP 503: x')])
         st = {'runs': [self.entry('b', 'stopped')]}
-        RA.reconcile_with_folders(st, self.d, self.cfg, 2)
+        run_round.reconcile_with_folders(st, self.d, self.cfg, 2)
         self.assertEqual(st['runs'][0]['status'], 'pending')
 
     def test_a_run_marked_invalid_for_its_settings_stays_invalid(self):
         self.folder('c', [('q1', '')])
         st = {'runs': [self.entry('c', 'invalid')]}
-        RA.reconcile_with_folders(st, self.d, self.cfg, 2)
+        run_round.reconcile_with_folders(st, self.d, self.cfg, 2)
         self.assertEqual(st['runs'][0]['status'], 'invalid')
 
 
@@ -855,10 +889,10 @@ class RoundMockTest(unittest.TestCase):
             out, arch = os.path.join(d, 'out'), os.path.join(d, 'arch')
             os.makedirs(os.path.join(out, '20261101-old'))
             open(os.path.join(out, '20261101-old', 'config.json'), 'w').write('{}')
-            p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'run_all_models_in_one_round.py'), '--out', out, '--archive-dir', arch,
+            p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'run_round.py'), '--out', out, '--archive-dir', arch,
                                 '--skip-preflight', '--child-args', '--mock --runs 1 --questions L1-001,L1-002'],
                                capture_output=True, text=True, env=dict(os.environ, AI_GATEWAY_API_KEY='x'), timeout=300)
-            self.assertEqual(p.returncode, X.OK, p.stdout + p.stderr)
+            self.assertEqual(p.returncode, exit_codes.OK, p.stdout + p.stderr)
             names = sorted(n for n in os.listdir(out))
             self.assertEqual([n.split('-', 1)[1] for n in names if n != 'README.md'],
                              ['claude-opus-5.5', 'gemma-4-31b-it', 'muse-glimmer-30b', 'qwen3.8-27b'])
@@ -889,34 +923,34 @@ class ProviderHostsTest(unittest.TestCase):
             return self.reply, {}, 0.1
 
     def test_the_routing_names_the_host_and_the_others(self):
-        self.assertEqual(PH.hosts_in(PH.routing_of(self.REPLY)), ['novita', 'friendli', 'gmicloud', 'parasail'])
+        self.assertEqual(provider_hosts.hosts_in(provider_hosts.routing_of(self.REPLY)), ['novita', 'friendli', 'gmicloud', 'parasail'])
 
     def test_a_reply_without_routing_gives_no_hosts(self):
-        self.assertEqual(PH.hosts_in(PH.routing_of({'choices': [{'message': {'content': 'OK'}}]})), [])
+        self.assertEqual(provider_hosts.hosts_in(provider_hosts.routing_of({'choices': [{'message': {'content': 'OK'}}]})), [])
 
     def test_each_run_prefers_another_host_and_the_others_follow(self):
         hosts = ['a', 'b', 'c']
-        self.assertEqual([PH.order_for_run(hosts, r)[0] for r in (1, 2, 3, 4, 5)], ['a', 'b', 'c', 'a', 'b'])
-        self.assertEqual(PH.order_for_run(hosts, 2), ['b', 'a', 'c'])
-        self.assertEqual(sorted(PH.order_for_run(hosts, 3)), ['a', 'b', 'c'])      # every host stays as a fallback
+        self.assertEqual([provider_hosts.order_for_run(hosts, r)[0] for r in (1, 2, 3, 4, 5)], ['a', 'b', 'c', 'a', 'b'])
+        self.assertEqual(provider_hosts.order_for_run(hosts, 2), ['b', 'a', 'c'])
+        self.assertEqual(sorted(provider_hosts.order_for_run(hosts, 3)), ['a', 'b', 'c'])      # every host stays as a fallback
 
     def test_one_host_means_no_spreading(self):
-        self.assertEqual(PH.order_for_run(['a'], 3), [])
-        self.assertEqual(PH.order_for_run([], 1), [])
+        self.assertEqual(provider_hosts.order_for_run(['a'], 3), [])
+        self.assertEqual(provider_hosts.order_for_run([], 1), [])
 
     def test_a_host_that_fails_is_left_out_of_the_round(self):
         client, lines = self.Fake(self.REPLY, down={'gmicloud'}), []
-        good = PH.choose_hosts(client, 'google/gemma-4-31b-it', log=lines.append)
+        good = provider_hosts.choose_hosts(client, 'google/gemma-4-31b-it', log=lines.append)
         self.assertEqual(good, ['novita', 'friendli', 'parasail'])
         self.assertTrue([x for x in lines if 'gmicloud' in x])
 
     def test_fewer_than_two_working_hosts_means_the_gateway_chooses(self):
         client = self.Fake(self.REPLY, down={'friendli', 'gmicloud', 'parasail'})
-        self.assertEqual(PH.choose_hosts(client, 'm', log=lambda s: None), [])
+        self.assertEqual(provider_hosts.choose_hosts(client, 'm', log=lambda s: None), [])
 
     def test_a_model_with_one_host_is_not_spread(self):
         one = {'choices': [{'message': {'provider_metadata': {'gateway': {'routing': {'finalProvider': 'x', 'fallbacksAvailable': []}}}}}]}
-        self.assertEqual(PH.choose_hosts(self.Fake(one), 'm', log=lambda s: None), [])
+        self.assertEqual(provider_hosts.choose_hosts(self.Fake(one), 'm', log=lambda s: None), [])
 
     def test_a_run_gets_its_hosts_and_records_the_preferred_host_offline(self):
         import csv
@@ -927,7 +961,7 @@ class ProviderHostsTest(unittest.TestCase):
             out = os.path.join(d, 'out')
             os.makedirs(out)
             hosts = json.dumps({'google/gemma-4-31b-it': ['a', 'b', 'c']})
-            p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'answer_questions_for_one_model.py'), '--out', out, '--mock',
+            p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'answer_questions.py'), '--out', out, '--mock',
                                 '--models', 'google/gemma-4-31b-it', '--modes', 'baseline', '--runs', '3', '--questions', 'L1-001', '--hosts', hosts],
                                capture_output=True, text=True, env=dict(os.environ, AI_GATEWAY_API_KEY='x'), timeout=120)
             self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
@@ -942,12 +976,12 @@ class SummarizeTest(unittest.TestCase):
         import subprocess
         import tempfile
         with tempfile.TemporaryDirectory() as out:
-            run = os.path.join(os.path.dirname(__file__), 'answer_questions_for_one_model.py')
+            run = os.path.join(os.path.dirname(__file__), 'answer_questions.py')
             for m in ('x/one', 'x/two'):
                 subprocess.run([sys.executable, run, '--mock', '--models', m, '--modes', 'baseline,agent-e2', '--runs', '1',
                                 '--questions', 'L1-001,L1-002,L2-001', '--out', out], capture_output=True, text=True, timeout=300, check=True)
             folders = [os.path.join(out, n) for n in sorted(os.listdir(out))]
-            text = S.build(folders)
+            text = summary_all_runs.build(folders)
             self.assertIn('## Final score', text)
             self.assertIn('## Lift', text)
             self.assertIn('x/one', text)
@@ -968,14 +1002,14 @@ class PreflightLadderTest(unittest.TestCase):
         def fake(model, modes, ids, params, cfg_path, log):
             calls.append(params)
             return results[len(calls) - 1], ''
-        real = P.run_sample
-        P.run_sample = fake
+        real = preflight_check.run_sample
+        preflight_check.run_sample = fake
         try:
             pf = {'min_parse_rate': 0.95, 'max_token_share': 0.5}
             ladder = [{'reasoning': {'effort': 'none'}}, {'reasoning': {'effort': 'low'}}, {'reasoning': {'effort': 'low'}, 'max_tokens': 8000}]
-            v = P.check_model('x/m', ['agent-e2'], ladder, {'max_tokens': 4000}, 'cfg', [_Q('a')], {}, pf, lambda s: None)
+            v = preflight_check.check_model('x/m', ['agent-e2'], ladder, {'max_tokens': 4000}, 'cfg', [_Q('a')], {}, pf, lambda s: None)
         finally:
-            P.run_sample = real
+            preflight_check.run_sample = real
         return v, calls
 
     def test_first_clean_setting_wins(self):

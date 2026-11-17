@@ -144,8 +144,8 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 | Level | What it checks | Needs a model | Command |
 |---|---|---|---|
 | Tools | Catalog, calculator, flows, verifier give exact, expected results | No | `python3 -m unittest harness/test_tools.py` |
-| Retrieval check | For every question, are the files it needs found and put in the context? | No | `python3 benchmark/runner/retrieval_check_without_model.py` (add `--embeddings` for hybrid) |
-| Whole system | Model + harness + knowledge on the question set; recall per answer shows whether the files were found or read | Yes | `python3 benchmark/runner/answer_questions_for_one_model.py` |
+| Retrieval check | For every question, are the files it needs found and put in the context? | No | `python3 benchmark/runner/retrieval_check.py` (add `--embeddings` for hybrid) |
+| Whole system | Model + harness + knowledge on the question set; recall per answer shows whether the files were found or read | Yes | `python3 benchmark/runner/answer_questions.py` |
 
 - The current retrieval result is in [`project/plan.md`](project/plan.md), M3.
 - Reading a wrong answer: if the needed file is not in context, it is a retrieval or knowledge problem; if the file is in context but the answer is wrong, it is a model or prompt problem; if the file is missing from the knowledge base, it is a knowledge gap.

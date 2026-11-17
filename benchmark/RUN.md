@@ -47,26 +47,26 @@ The projection comes from the validity sample (Gemma, 9 questions: US$ 0.0026 an
 
 ## What happens
 
-1. Preflight (`sample_check_before_round.py`): it checks the credits, then asks a sample of 7 questions (6 multiple-choice text questions and 1 screenshot question) in every mode of every run, with the real code and settings. For each model it picks the first request setting that gives clean answers. A model with no clean setting stops the round before anything is spent.
-2. Four `answer_questions_for_one_model.py` in parallel, one folder per model: `benchmark/results/<date>-<model>/`.
+1. Preflight (`preflight_check.py`): it checks the credits, then asks a sample of 7 questions (6 multiple-choice text questions and 1 screenshot question) in every mode of every run, with the real code and settings. For each model it picks the first request setting that gives clean answers. A model with no clean setting stops the round before anything is spent.
+2. Four `answer_questions.py` in parallel, one folder per model: `benchmark/results/<date>-<model>/`.
 3. Health check inside each run: stops it when 25% of the last 40 answers are cut off, unreadable or failed.
 4. Recovery (table below).
-5. When all four runs are complete, `summary_of_all_runs.py` writes [`benchmark/results/README.md`](results/README.md), one analysis of all runs. The run folders of earlier rounds move to `project/archive/benchmark-results-before-<date>/`. The retrieval check outputs (`retrieval-<date>/`) stay.
+5. When all four runs are complete, `summary_all_runs.py` writes [`benchmark/results/README.md`](results/README.md), one analysis of all runs. The run folders of earlier rounds move to `project/archive/benchmark-results-before-<date>/`. The retrieval check outputs (`retrieval-<date>/`) stay.
 
 ## Steps for the LLM
 
 1. Check `test -n "$AI_GATEWAY_API_KEY"` and that `git status` is clean. If the key is missing, stop and tell the human.
-2. Start the round in the background with one command and no wrapper shell, `nohup` or `&`: `python3 benchmark/runner/run_all_models_in_one_round.py --max-minutes 110`. Use the longest background timeout (7,200,000 ms). The system then reports when the command itself ends. A wrapped run reported the wrapper's end after seconds. The same rule applies to any run started by hand with `answer_questions_for_one_model.py --resume`.
-3. Every 10 minutes run `python3 benchmark/runner/check_round_is_alive.py` and send the human one line: per run, the verdict (ALIVE, DONE, STALLED, DEAD, MACHINE RESTARTED), good answers against the total, time left. Say "running" only when the command says ALIVE and the good-answer count moved since the last check. After STALLED, DEAD or MACHINE RESTARTED, relaunch with `python3 benchmark/runner/run_all_models_in_one_round.py --resume --max-minutes 110` (it resumes every unfinished run, whatever stopped it) and tell the human. Schedule the next check with `send_later` or `ScheduleWakeup`, and never poll with `sleep`. The runner pushes answers and configs to the branch `snapshots/round-<date>` every 15 minutes, so do not commit run folders by hand during the round.
+2. Start the round in the background with one command and no wrapper shell, `nohup` or `&`: `python3 benchmark/runner/run_round.py --max-minutes 110`. Use the longest background timeout (7,200,000 ms). The system then reports when the command itself ends. A wrapped run reported the wrapper's end after seconds. The same rule applies to any run started by hand with `answer_questions.py --resume`.
+3. Every 10 minutes run `python3 benchmark/runner/check_round_alive.py` and send the human one line: per run, the verdict (ALIVE, DONE, STALLED, DEAD, MACHINE RESTARTED), good answers against the total, time left. Say "running" only when the command says ALIVE and the good-answer count moved since the last check. After STALLED, DEAD or MACHINE RESTARTED, relaunch with `python3 benchmark/runner/run_round.py --resume --max-minutes 110` (it resumes every unfinished run, whatever stopped it) and tell the human. Schedule the next check with `send_later` or `ScheduleWakeup`, and never poll with `sleep`. The runner pushes answers and configs to the branch `snapshots/round-<date>` every 15 minutes, so do not commit run folders by hand during the round.
 4. When the command ends, read its exit code and last lines:
 
 | Exit | Meaning | What to do |
 |---|---|---|
 | 0 | Round complete | Go to "After the round" |
-| 3 | Stopped at the time limit | Relaunch `python3 benchmark/runner/run_all_models_in_one_round.py --resume --max-minutes 110`. Repeat until 0. No other change |
+| 3 | Stopped at the time limit | Relaunch `python3 benchmark/runner/run_round.py --resume --max-minutes 110`. Repeat until 0. No other change |
 | 4 | Preflight failed or the credits do not cover the round | Read the printed reason. For a setting problem there is nothing to fix by hand, because the next settings were already tried. For credits, stop and tell the human the amount |
 | 5 | A run produced invalid answers on its last settings | Stop and report: model, the printed reason, the run folder |
-| 6 | The gateway refused (HTTP 402, 401, 403) | Stop and tell the human. The saved error shows which budget ran out (the team's or the key's). The human raises it or adds credits and says "resume"; then run `run_all_models_in_one_round.py --resume --max-minutes 110`, which resumes the refused runs too |
+| 6 | The gateway refused (HTTP 402, 401, 403) | Stop and tell the human. The saved error shows which budget ran out (the team's or the key's). The human raises it or adds credits and says "resume"; then run `run_round.py --resume --max-minutes 110`, which resumes the refused runs too |
 | 8 | The gateway or a provider kept failing | The runner waits and resumes the same folder by itself (`release.outage_waits` times). Only when it gives up, stop and report the run and the error text. Do not change settings |
 | 7 | Some runs complete, others failed | Stop and report the list printed under "Round status". Do not merge a partial round |
 | 1, other | The orchestrator itself crashed | Relaunch once with `--resume`. A second crash: stop and report the traceback |
@@ -94,7 +94,7 @@ The projection comes from the validity sample (Gemma, 9 questions: US$ 0.0026 an
 Give these before the round, so that nothing waits for a click.
 
 - Shell, run in the background for up to 2 hours each:
-  - `python3 benchmark/runner/run_all_models_in_one_round.py *`, `python3 benchmark/runner/sample_check_before_round.py *`, `python3 benchmark/runner/summary_of_all_runs.py *`;
+  - `python3 benchmark/runner/run_round.py *`, `python3 benchmark/runner/preflight_check.py *`, `python3 benchmark/runner/summary_all_runs.py *`;
   - `python3 project/tools/lint.py`, `python3 -m unittest harness/test_tools.py`, `python3 -m unittest benchmark/runner/test_runner.py`;
   - reading: `cat`, `ls`, `tail`, `head`, `test -n "$AI_GATEWAY_API_KEY"`, `git status`, `git diff`, `git log`;
   - `git add`, `git commit`, `git push -u origin <session branch>`, `git fetch`, `git merge origin/main` (only if `main` moved).
@@ -120,6 +120,6 @@ Only these stop the round.
 
 ## A smaller run
 
-- One model, one mode: `python3 benchmark/runner/answer_questions_for_one_model.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-004`.
-- `answer_questions_for_one_model.py --dry-run` prints the answers and a rough cost. It undercounts a model that thinks, so trust `sample_check_before_round.py --models <id>` instead.
-- `python3 benchmark/runner/run_all_models_in_one_round.py --dry-run` prints the plan of the round without any call.
+- One model, one mode: `python3 benchmark/runner/answer_questions.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-004`.
+- `answer_questions.py --dry-run` prints the answers and a rough cost. It undercounts a model that thinks, so trust `preflight_check.py --models <id>` instead.
+- `python3 benchmark/runner/run_round.py --dry-run` prints the plan of the round without any call.

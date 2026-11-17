@@ -17,7 +17,7 @@ import re
 import threading
 from collections import deque
 
-from runner_exit_codes import BUDGET, GATEWAY_DOWN, UNHEALTHY
+from exit_codes import BUDGET, GATEWAY_DOWN, UNHEALTHY
 
 # An answer that failed because the gateway or a provider did, not because of the model or its settings: HTTP 408, 429, 5xx
 # (after the client's retries) or a dropped connection. 2026-11-16: a 2-minute burst of HTTP 503 counted as invalid answers,
