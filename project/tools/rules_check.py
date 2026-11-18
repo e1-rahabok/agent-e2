@@ -470,7 +470,7 @@ ALERT_VALUE = re.compile(r'\d+(?:[.,]\d+)?\s?(?:%|ms|GHz|MHz|MB|GB|IOPS|minutes?
 
 
 def check_metric_names(allowed, bad):
-    """Catalog metric names carry no comma: the unit goes in brackets at the end, as VCF Operations shows it (author, 2026-11-18).
+    """Metric names a user sees carry no comma (author, 2026-11-18). The rules section, Agent E2's internal planning and sizing rules, is not checked.
     Names the author still renames at the source are listed in rules_check_values.yaml (metric_comma_pending)."""
     pending = set(allowed.get('metric_comma_pending') or [])
     found = set()
@@ -482,7 +482,7 @@ def check_metric_names(allowed, bad):
                 if m not in pending:
                     bad(path, f'metric name "{m}" has a comma: put the unit in brackets at the end')
             for k, v in node.items():
-                if k != 'meta': walk(path, v)
+                if k not in ('meta', 'rules'): walk(path, v)  # rules: Agent E2's internal planning and sizing rules, not shown in a UI
         elif isinstance(node, list):
             for v in node: walk(path, v)
     for path in sorted(glob.glob('knowledge/catalog/thresholds-*.yaml')):
