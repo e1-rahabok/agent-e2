@@ -16,7 +16,7 @@ How to help build Agent E2: knowledge, questions, reviews and code. Not indexed.
 - **Review a knowledge file.** Check every fact against its source in the metadata (`source`, `review_notes`, `corrections`). Report a wrong fact, a missing misconception or a missing link.
 - **Add a benchmark question.** Use [`benchmark/_templates/question.md`](benchmark/_templates/question.md). A realistic situation with values, 4-8 options, a misconception option, the knowledge ids that answer it, and `product` and `technology` tags. The id is the next free 4-digit number (`id: "0nnn"`; retired ids are not reused); the file name is `L<level>-<nn>-<slug>.md` (rules: [benchmark/README.md](benchmark/README.md)). Never send `## Answers` or `## Explanation` to a model.
 - **Report a wrong answer.** Give the question, the answer, and the run or trace. It is classified as a knowledge gap, a retrieval miss or a model error.
-- **Improve the harness.** Code in `harness/`, tests in [`harness/test_tools.py`](harness/test_tools.py).
+- **Improve the harness.** Code in `harness/`, tests in [`harness/test_harness.py`](harness/test_harness.py).
 
 ## Rules for knowledge files
 - Level 400: mechanism and reason, misconceptions, edge cases. No definitions a vSphere administrator already knows.
@@ -28,10 +28,10 @@ How to help build Agent E2: knowledge, questions, reviews and code. Not indexed.
 
 ## Before a pull request
 ```bash
-python3 project/tools/lint.py
+python3 project/tools/rules_check.py
 ```
 ```bash
-python3 -m unittest harness/test_tools.py
+python3 -m unittest harness/test_harness.py
 ```
 ```bash
 python3 -m unittest benchmark/runner/test_runner.py

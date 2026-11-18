@@ -5,7 +5,7 @@ Audit and improvement of the benchmark question bank against the knowledge base 
 ## 1. Result in brief
 - 275 question files at the start (228 running, 47 awaiting screenshots); 299 at the end: 296 running, 3 deferred; 4 retired to [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
 - No answer key was wrong against the current knowledge base. Every key a reviewer doubted (44 questions) was re-derived by an independent checker that had not seen the doubt: all 44 matched the file key.
-- 44 practical halves now run as exports (CSV or tool text) from a seeded generator, [project/tools/exportgen](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/exportgen/README.md); no question waits for a screenshot.
+- 44 practical halves now run as exports (CSV or tool text) from a seeded generator, [project/tools/export_generator](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/export_generator/README.md); no question waits for a screenshot.
 - 28 new questions for knowledge the bank did not test (ids 0443-0470).
 - Answer cues cut: the longest option is correct in 49.7% of questions (was 71.5%; chance 43.6%); strong length cues 16 (was 88).
 - Every changed or new question was keyed again blind by an independent agent after the edits: 296 questions, 295 agreed at once; the one that differed (0351, a time window) was fixed so its key holds, and a final blind check of the 121 questions touched after that agreed on all 121.
@@ -60,7 +60,7 @@ Audit and improvement of the benchmark question bank against the knowledge base 
 | Misconception type label-read-as-model | 0 | 5 |
 | Knowledge files cited by no running question | 81 of 288 | 58 of 288 |
 
-- `python3 project/tools/coverage.py` shows no zero except the archived `judged` answer type. M2's exception for `label-read-as-model` is no longer needed.
+- `python3 project/tools/question_coverage.py` shows no zero except the archived `judged` answer type. M2's exception for `label-read-as-model` is no longer needed.
 - Network stays the thinnest area (46 questions against 119 for CPU); 3 of the 28 new questions are network. GPU stays at one question (after 1.0).
 
 ### Knowledge files still with no question (58)
@@ -105,7 +105,7 @@ Audit and improvement of the benchmark question bank against the knowledge base 
 
 ## 6. Practical halves as exports
 - 44 converted as decided on 2026-11-15 ([project/practical-questions-as-exports-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/practical-questions-as-exports-2026-11-15.md)): prompt rewritten as the operator's situation with the export linked, `## Input to supply` removed, status draft; keys unchanged. 0389 and 0419 retired; 0435 and 0015 deferred.
-- Generator: one seeded case per question in [project/tools/exportgen/cases](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/exportgen/cases); writers for the real formats from project/sources/export-templates; `check` re-reads each file and asserts the condition behind every option it can (`python3 -m project.tools.exportgen check all`; 45 unit tests). Tool text (esxtop panels, `top`, `sar`, `mpstat`, `ip -s link`, `systeminfo`, PowerCLI output) sits in a fenced `text` block in the prompt, written by the generator.
+- Generator: one seeded case per question in [project/tools/export_generator/question_exports](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/export_generator/question_exports); writers for the real formats from project/sources/export-templates; `check` re-reads each file and asserts the condition behind every option it can (`python3 -m project.tools.export_generator check all`; 45 unit tests). Tool text (esxtop panels, `top`, `sar`, `mpstat`, `ip -s link`, `systeminfo`, PowerCLI output) sits in a fenced `text` block in the prompt, written by the generator.
 - CSV cap 24,000 characters (`question_csv_max_chars`); the largest export is about 18,500 characters.
 - vCenter exports carry no units; prompts that need them state the chart legend's units as the operator sees them.
 - Formats assumed, not captured: VCF Operations List view, `/proc/pressure/memory`, `mpstat`, the vSphere VM DRS score grid, vCenter column names beyond Usage and Readiness, the stamp position of vCenter rollups. Recorded in the generator README; worth one capture each.
@@ -667,11 +667,11 @@ Q214 (a limit balloons first, e42d026), Q201 and Q205 (deda489), Q217 (26d511c) 
 - 0394: the misconception "VCF Operations 9.1 has no VM Memory Usage (%)" is not added: the stem must say the metric is enabled to show its value.
 - 0399: the case check asserts neither rclmtgt = 0 nor PSHARE saving > 0 (both guaranteed by the generation rules); a coder may add them.
 - 0412: knowledge/vsphere/tools/esxtop/network-units-vs-vsphere-client.md line 11, misconception "esxtop shows 125 times more traffic than vCenter, so one tool is wrong" points the wrong way: the vCenter value (KBps, ~364,000) is about 125 times larger than the...
-- 0414: the generator case project/tools/exportgen/cases/q0414_command_latency_hides_slow_writes.py labels the old I condition "I" in its failure message; it is now option H (cosmetic, not my file).
+- 0414: the generator case project/tools/export_generator/question_exports/q0414_command_latency_hides_slow_writes.py labels the old I condition "I" in its failure message; it is now option H (cosmetic, not my file).
 - 0415: the review proposes 400 -> 300 (same arithmetic as 0211 at 300), which conflicts with question-pairing-2026-11-14.md C20 (400); kept at 400 pending the author.
 - 0420: the review and second reviewer judge it Level 400 on the merits (pkts rx OOB against rx_dropped, drops before delivery, a two-tool disagreement), which conflicts with question-pairing-2026-11-14.md C26 (300); not relabelled. B and J rest on the Distributed...
 - 0430: knowledge/glossary.md Usable capacity line adds hypervisor overhead, against capacity-forecast and supply (affects I).
 - 0431: the file name `L4-153-cluster-cpu-above-90-request-for-hosts.md` still states the level the title no longer gives; rename with the next renumber if wanted.
-- 0433: the generator case project/tools/exportgen/cases/q0433_drs_score_high_one_vm_low.py has comments "# B, H" and "# H" (lines 143, 152) for the rpt-batch-09 check, which is now option G (comment only; not edited here).
+- 0433: the generator case project/tools/export_generator/question_exports/q0433_drs_score_high_one_vm_low.py has comments "# B, H" and "# H" (lines 143, 152) for the rpt-batch-09 check, which is now option G (comment only; not edited here).
 - 0454: E and H lean on the kernel-reservation fact already in L4-015 C and L4-141 E (overlap noted by the reviewer, not changed).
 - 0464: with C replaced, the "DRS needs vCLS" misconception is tested only through true options A and B; misconception metadata is now F. Author may prefer a different misconception option.

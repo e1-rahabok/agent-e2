@@ -33,7 +33,7 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
 
 ## 3. Question set
 - Each question records what it covers in its metadata (`task`, `level`, `answer_type`, `input`, `technology`, `product`, `object`, `tool`, `misconception_type`, `knowledge`). The axes below describe the set; they are not quotas.
-- Counts change with every question added, rewritten or retired. They live in code, not in this file: `python3 project/tools/coverage.py` prints the count of every tag value and marks a value with no question (`<<`). The report breaks the score down by the same axes.
+- Counts change with every question added, rewritten or retired. They live in code, not in this file: `python3 project/tools/question_coverage.py` prints the count of every tag value and marks a value with no question (`<<`). The report breaks the score down by the same axes.
 - A value with no question, or a field question the set has nothing like, is a reason to write a question. A count is never a reason to keep or drop one.
 
 ### 3.1 The job
@@ -94,7 +94,7 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 - URL questions: a question that carries a link to a public page with a known Level 300 error. The key point is that the answer corrects the page with the mechanism. The page is fetched live; the key records the page's date; a changed page is re-checked before scoring. None in 1.0: the first one (0091, VM Contention dashboard) was retired after the author had the official page fixed (Q184). More pages: the author's list ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M2).
 
 ### 3.5 By area
-Each question lists every area it touches in `technology` (values from [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml)). The Guest OS layer is counted by `product` (windows, linux).
+Each question lists every area it touches in `technology` (values from [project/tools/rules_check_values.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/rules_check_values.yaml)). The Guest OS layer is counted by `product` (windows, linux).
 
 | Area | Covers |
 |---|---|
@@ -124,7 +124,7 @@ Each question lists every area it touches in `technology` (values from [project/
 | The knowledge base and the vendor document disagree, with the evidence in the question | review |
 | Long, multi-area scenarios | review |
 
-- `coverage.py` prints each count and marks a zero. The review rules are checked by the reviewer (section 11).
+- `question_coverage.py` prints each count and marks a zero. The review rules are checked by the reviewer (section 11).
 
 ### 3.8 Answer-key shape (deterministic)
 - Options: as many as the question needs, no fixed count limit or target. The reader is a model, not a person, so a long list is no burden. The runner takes up to 25 written options (letters A-Y) and appends Unsure as the next letter. No Not covered option (Q038).
@@ -175,13 +175,13 @@ The frontier model must be able to answer every question from public knowledge. 
 - F4. The rules hold for the title, the prompt, the options, `## Answers` and `## Explanation`: reviewers read the explanation as the reasons of the key.
 - F5. Evidence first. A Level 300-400 stem is an operator's situation with the data a tool shows: values, a table, a time window. Not a knowledge-file sentence turned into a question (the review found most synthetic questions tested recall of the knowledge base).
 - F6. No question is picked or dropped because the frontier model fails it. An adversarial set, if ever used, is declared and reported apart.
-- Lint checks F1, F2 and F4 against the list `question_fairness` in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml). F3, F5 and F6 are review items (section 11).
+- Lint checks F1, F2 and F4 against the list `question_fairness` in [project/tools/rules_check_values.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/rules_check_values.yaml). F3, F5 and F6 are review items (section 11).
 
 ### 6.2 Stem, options, key
 - Stem: a realistic situation with the values an operator would see (counter names, numbers, units, time window, tool). Not a definition prompt, except at Level 100-200.
 - No hints in the prompt. A prompt has no line that explains a mechanism, defines a counter, interprets a value or points to the answer ("Hint:", "Be aware of", "Do not select", "the cores run below the base clock"). A frontier model uses a hint and a local model does not, so a hint measures the model, not the knowledge base. A hint that helps a reviewer goes in `## Notes`. Case facts stay: values, settings, versions, what changed, and limits on scope ("ignore the VMX swap file").
 - The stem never tells how many options are correct (Q199): plural wording ("Which statements are correct?"), matching the runner's closing line "Choose all the correct options. There can be more than one."
-- Lint checks both against `question_prompt_hints` in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml).
+- Lint checks both against `question_prompt_hints` in [project/tools/rules_check_values.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/rules_check_values.yaml).
 - Options:
   - one fact per option;
   - similar length and style, so length gives no hint;
@@ -223,7 +223,7 @@ The frontier model must be able to answer every question from public knowledge. 
 ### 7.2 Five runs
 - One run is one draw of the answer, not the answer. Agent E2 makes two model calls (stage 1 and stage 5 of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)):
   - the case (stage 1) is asked at temperature 0, so the same question reads into the same case and gets the same reading set;
-  - the answer (stage 5) is sampled with the settings of the model's own card (temperature 1.0 for the three candidates, `sampling` in `config.yaml`), because a local server applies them by default and the operator meets that answer. Two runs of the same question can give different letters.
+  - the answer (stage 5) is sampled with the settings of the model's own card (temperature 1.0 for the three candidates, `sampling` in `runner_config.yaml`), because a local server applies them by default and the operator meets that answer. Two runs of the same question can give different letters.
 - Base and the frontier reference also sample (the card's settings; the provider's default for Opus).
 - Temperature 0 would not make one run enough either: hosted models do not answer the same way twice even at temperature 0 (batching on shared GPUs, provider routing, silent serving updates).
 - So each question runs 5 times. The 5 runs give:
@@ -284,7 +284,7 @@ The frontier model must be able to answer every question from public knowledge. 
 - Why 85%, not 90%: at about 200 questions 85 and 90 still overlap inside the margin (±5); the confident-wrong limit does more for the operator than 5 more points.
 - Reading the gap: within the margin (printed in the report) it is a tie; the paired test says whether a larger gap is more than luck.
 - Held-out set:
-  - 30 questions drawn at release in the proportions of the run set at that time (level, answer type, input; `coverage.py`). No field set of real operator questions in 1.0.
+  - 30 questions drawn at release in the proportions of the run set at that time (level, answer type, input; `question_coverage.py`). No field set of real operator questions in 1.0.
   - Written by a session that does not edit the knowledge base, reviewed by the author, never committed to the repository. Run once, on the release configuration.
   - Why drawn at release, not now: a question that exists while the knowledge base is still edited can leak into it. A fresh draw cannot.
   - Why the 11-point limit replaces "within 5 points": on 20-30 questions the noise alone is about ±13 points, so a 5-point rule fails or passes by luck.
@@ -334,11 +334,11 @@ For each question:
 8. Does a CSV hold every value the key relies on, and nothing that contradicts it?
 
 For the set:
-9. Does `coverage.py` show a tag value with no question (section 3.7)?
+9. Does `question_coverage.py` show a tag value with no question (section 3.7)?
 10. Does a field question the set has nothing like call for a new question?
 
 ## 12. Status
-- The run set is every question with status draft or reviewed. Its counts: `python3 project/tools/coverage.py`. Retired questions: [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
+- The run set is every question with status draft or reviewed. Its counts: `python3 project/tools/question_coverage.py`. Retired questions: [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
 - Every synthetic question was checked by an independent review agent, which tried to break each key against the knowledge files and the vendor documents; the defects found were fixed. Author questions from the review: all answered (Q182-Q191). Knowledge fixes found on the way: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M1.
 - Question bank audit, 2026-11-16 ([project/question-bank-audit-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-bank-audit-2026-11-15.md)): every option of every question decided again from the current knowledge base by independent reviewers, each finding challenged by a second agent, every changed key re-checked blind.
 - Status draft: each question counts after the author's review (section 6.2); the runner runs drafts too, so a score on drafts is a development score (Q256).
@@ -354,12 +354,12 @@ For the set:
 
 ### 13.1 Table questions
 - Purpose: administrators export data and ask about it: a vCenter chart export, a VCF Operations list or metric export, esxtop batch output.
-- 1.0 tables: at most 24,000 characters, about 6,000 tokens (`question_csv_max_chars` in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml), checked by lint; 2026-11-15). Each period is cut to the event; multi-day cases use a VCF Operations list view with Max, Min, First and Last, or daily rows. The runner puts the CSV after the prompt as text (`Question.tables`); the context window is 64,000 tokens.
+- 1.0 tables: at most 24,000 characters, about 6,000 tokens (`question_csv_max_chars` in [project/tools/rules_check_values.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/rules_check_values.yaml), checked by lint; 2026-11-15). Each period is cut to the event; multi-day cases use a VCF Operations list view with Max, Min, First and Last, or daily rows. The runner puts the CSV after the prompt as text (`Question.tables`); the context window is 64,000 tokens.
 - Tool text (esxtop panels, `top`, `sar`, `iostat`, `mpstat`, `ip -s link`, `systeminfo`, PowerCLI output) goes inside the prompt in a fenced `text` block, as an operator pastes it; only CSV files and images are attachments.
 - Wide exports are intended. The misleading neighbour counter sits in the same file (Readiness next to Ready, Wait next to Idle, Total next to non-Total drops), so the model has to choose the counter.
 - Larger exports (hundreds of rows) need a table tool in the harness (filter, sort, aggregate, top-N). After 1.0.
 - Column names are the product's metric names (for example `CPU|Ready (%)`, `Usage for vm-01 (Percent)`), so the reading follows the product, not the header's English.
-- Every CSV and every generated tool-text block comes from a seeded case in [project/tools/exportgen/](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/exportgen/README.md) (one module per question): the case writes the files in the real export format (templates in project/sources/export-templates/) and `check` re-reads them and asserts every condition the key rests on. `python3 -m project.tools.exportgen check all` and `python3 -m unittest project/tools/test_exportgen.py` must pass. Time stamps, object names and noise are realistic; names are invented, never a customer's or the lab's; no lab values.
+- Every CSV and every generated tool-text block comes from a seeded case in [project/tools/export_generator/](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/export_generator/README.md) (one module per question): the case writes the files in the real export format (templates in project/sources/export-templates/) and `check` re-reads them and asserts every condition the key rests on. `python3 -m project.tools.export_generator check all` and `python3 -m unittest project/tools/test_export_generator.py` must pass. Time stamps, object names and noise are realistic; names are invented, never a customer's or the lab's; no lab values.
 
 ## 14. Free-text answers
 - Not in the benchmark. The judge model that scored them 0-3 is archived with its rubric ([project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14/judge.py)); this section's earlier rules are in git history.

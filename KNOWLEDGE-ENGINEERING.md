@@ -99,10 +99,10 @@ flowchart LR
   end
   MD -->|1 retrieved: search and links| RS[Reading set]
   CAT -->|2 looked up exactly: SQLite| EX[Exact values]
-  UPL -->|3 given up front: primer.py| UP[Up-front block]
+  UPL -->|3 given up front: upfront_knowledge.py| UP[Up-front block]
   GL -->|3| UP
-  CODE["Code: calc.py, verify.py, terms.py"] -->|4 executed| EX
-  RULES["Instructions: modes.py, agent.py"] -->|5 every answer| M
+  CODE["Code: arithmetic_calculator.py, answer_check.py, user_terms.py"] -->|4 executed| EX
+  RULES["Instructions: answer_modes.py, expert_agent.py"] -->|5 every answer| M
   AG --> RS
   AG --> EX
   RS --> M[Model]
@@ -113,17 +113,17 @@ flowchart LR
 
 | Path | Holds | Home | Why this path |
 |---|---|---|---|
-| Retrieved when a question needs it | Mechanisms, metrics, misconceptions, flows | `knowledge/**/*.md` (indexed) | About 320K tokens (November 2026; [`project/tools/health.py`](project/tools/health.py) prints the current figure), too large to send with every question |
+| Retrieved when a question needs it | Mechanisms, metrics, misconceptions, flows | `knowledge/**/*.md` (indexed) | About 320K tokens (November 2026; [`project/tools/knowledge_stats.py`](project/tools/knowledge_stats.py) prints the current figure), too large to send with every question |
 | Looked up exactly | Units, rollups, statistics levels, thresholds, user terms | `knowledge/catalog/*.yaml` (loaded into SQLite) | An exact value must not depend on ranking or on the model's memory |
-| Given up front, every question | Misconceptions with the widest reach, confusable pairs | Built by [`harness/primer.py`](harness/primer.py) from the `## Misconceptions` lines marked `up_front` in their files and from [`knowledge/glossary.md`](knowledge/glossary.md) | A confident wrong belief is never looked up, so the correction must be in place before the model reasons |
-| Executed as code | Arithmetic identities, answer checks, user-word mapping; capacity plans and flow branches (code exists, not yet called by the agent: [`harness/AGENT.md`](harness/AGENT.md), section 4.3) | [`harness/calc.py`](harness/calc.py), `verify.py`, `terms.py`; `capacity.py`, `flows.py` | Small models slip on arithmetic and skip steps; code does not |
-| Agent instructions | Knowledge base first, same-name check, a file for each claim, threshold only with its source, Unsure | [`harness/modes.py`](harness/modes.py) (prompts), [`harness/agent.py`](harness/agent.py) (answer rules) | Conduct for every answer, not a fact about one metric |
+| Given up front, every question | Misconceptions with the widest reach, confusable pairs | Built by [`harness/upfront_knowledge.py`](harness/upfront_knowledge.py) from the `## Misconceptions` lines marked `up_front` in their files and from [`knowledge/glossary.md`](knowledge/glossary.md) | A confident wrong belief is never looked up, so the correction must be in place before the model reasons |
+| Executed as code | Arithmetic identities, answer checks, user-word mapping; capacity plans and flow branches (code exists, not yet called by the agent: [`harness/AGENT.md`](harness/AGENT.md), section 4.3) | [`harness/arithmetic_calculator.py`](harness/arithmetic_calculator.py), `answer_check.py`, `user_terms.py`; `capacity_calculator.py`, `flow_executor.py` | Small models slip on arithmetic and skip steps; code does not |
+| Agent instructions | Knowledge base first, same-name check, a file for each claim, threshold only with its source, Unsure | [`harness/answer_modes.py`](harness/answer_modes.py) (prompts), [`harness/expert_agent.py`](harness/expert_agent.py) (answer rules) | Conduct for every answer, not a fact about one metric |
 
-- One home per fact. The mechanism lives in `knowledge/`; code and up-front text hold only what they need to act, and point to the file. For example, `calc.py` converts a summation counter from ms to %, but why Ready is a summation counter is explained in the Ready file. Each up-front misconception ends with `See <id>`.
+- One home per fact. The mechanism lives in `knowledge/`; code and up-front text hold only what they need to act, and point to the file. For example, `arithmetic_calculator.py` converts a summation counter from ms to %, but why Ready is a summation counter is explained in the Ready file. Each up-front misconception ends with `See <id>`.
 - Up-front text reaches every answer, while a retrieved file reaches only the answers that find it. A wrong up-front line or prompt rule therefore costs more than a wrong metric file, and it is reviewed first.
 - All the domain knowledge the author reviews lives in `knowledge/`, whatever its path to the model. Every knowledge file is indexed, and the up-front block is built from marked lines of those files, so no fact has a second, unindexed copy. `knowledge/` is not the same as chunked prose: the catalog is loaded, not chunked.
 - Not deployed: `project/` (lint, allowed tags, moved ids, source notes) and `benchmark/`. They check the knowledge and hold nothing the agent reads.
-- Guard: lint rejects hidden text and instruction-like phrases in every knowledge file and benchmark prompt (`injection_patterns` in [`project/tools/tags.yaml`](project/tools/tags.yaml)). Knowledge reaches the model as trusted text, so nothing in it may read as an instruction.
+- Guard: lint rejects hidden text and instruction-like phrases in every knowledge file and benchmark prompt (`injection_patterns` in [`project/tools/rules_check_values.yaml`](project/tools/rules_check_values.yaml)). Knowledge reaches the model as trusted text, so nothing in it may read as an instruction.
 
 ### Example: VM CPU Ready on every path
 | Path | Where | What it holds |
@@ -132,7 +132,7 @@ flowchart LR
 | Looked up | `vcenter-counters.yaml`, row `cpu.ready`; `thresholds-performance.yaml`, row "Peak CPU Ready among any vCPU (%)" | Unit, rollup, statistics level and page; the 20-second colour bands, with `kb` pointing to the file that explains them |
 | Up front | The `provider-consumer` line marked `up_front` | "ESXi CPU Ready is high, so the host waits for CPU" → Ready is a consumer metric |
 | Glossary and term map | Entries Readiness and Max Limited; the term-map row for "steal time" | The user's words lead to the Ready file |
-| Code | `calc.summation_to_percent(ms, interval_seconds, vcpus)` | The ms to % conversion, done exactly |
+| Code | `arithmetic_calculator.summation_to_percent(ms, interval_seconds, vcpus)` | The ms to % conversion, done exactly |
 | Instructions | Threshold only with its source | The model quotes the catalog row, not a number from memory |
 | Proof | Question 0364 ([`L4-121`](benchmark/questions/L4-121-ready-read-against-run.md)), `knowledge_main: ready` | Option E is the misconception (type `threshold-transplanted`): the higher Readiness is not the worse VM |
 
@@ -146,11 +146,11 @@ flowchart LR
 | Folder hierarchy | The method (SP5 Framework) and the product (VCF 9.x) kept apart; inside the product, metrics by technology and KPIs by object | `knowledge/` | One tree, in the order the author reviews; links and tags give the other views |
 | Catalog | Units, rollups, statistics levels, esxtop fields, thresholds, object model | `knowledge/catalog/*.yaml` → SQLite | Exact values must not depend on retrieval luck |
 | Flows | Order of checks: health check, troubleshooting, decision tree | Files with `retriever_guide` health-check, troubleshooting or decision-tree | Small models skip steps. Today the reading plan puts the flow first and the model follows its steps; executable steps, where code takes the branch, are still to build (Q166) |
-| Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb) | [`harness/calc.py`](harness/calc.py), formulas in files | Arithmetic is where models slip |
+| Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb) | [`harness/arithmetic_calculator.py`](harness/arithmetic_calculator.py), formulas in files | Arithmetic is where models slip |
 | Images with text twins | The author's diagrams and charts | `images/` folders | Search reads words, not pixels: the text twin lets the image be found, and it costs fewer tokens than the image |
 | Terminology | Vocabulary, confusable pairs | [`knowledge/glossary.md`](knowledge/glossary.md) | Wrong words produce wrong reasoning (Usage vs Utilization, KPI vs SLA) |
 | Provenance | Source and version, what is still to check, status | metadata; evidence in the source note | Every fact can be traced and challenged |
-| Rules as code | Architecture and writing rules (project, not deployed) | [`project/tools/lint.py`](project/tools/lint.py), `tags.yaml` | A rule that a script checks cannot drift |
+| Rules as code | Architecture and writing rules (project, not deployed) | [`project/tools/rules_check.py`](project/tools/rules_check.py), `rules_check_values.yaml` | A rule that a script checks cannot drift |
 | Executable expectations | Expert answers and the misconception a non-expert holds | [`benchmark/questions/`](benchmark/questions) | Shows that the knowledge changes answers |
 
 ### What the model sees of a file
@@ -175,7 +175,7 @@ flowchart LR
   MD -.->|status, source, review_notes, corrections| RV[Review only, never embedded]
 ```
 
-- A `##` section is the unit of retrieval. A heading names its topic in words a question uses, because the title and heading go in front of every chunk ([`harness/kb.py`](harness/kb.py)).
+- A `##` section is the unit of retrieval. A heading names its topic in words a question uses, because the title and heading go in front of every chunk ([`harness/knowledge_loader.py`](harness/knowledge_loader.py)).
 - A file link `` [`id`](path.md) `` reaches the model as the id alone; the path is for reviewers on GitHub.
 - Section names come from the templates in [`project/templates/`](project/templates) (metric: Meaning, Formula, Includes / excludes, Reason), so the same question finds the same kind of section in every file.
 
@@ -210,7 +210,7 @@ This is the one definition of the levels, and the benchmark uses it ([`benchmark
 
 ### One home, two paths to the model
 - Home: `## Misconceptions` in the file, in the user's own words, next to the mechanism. A question that carries the belief brings in its correction through the reading set.
-- Up front: the dozen with the widest reach are marked in their file (metadata `up_front`: the wrong belief, as quoted in the line). [`harness/primer.py`](harness/primer.py) collects the marked lines into the up-front block, so the correction is in place before the model reasons, even when the question does not name the file. There is one copy: the author edits the line in its file.
+- Up front: the dozen with the widest reach are marked in their file (metadata `up_front`: the wrong belief, as quoted in the line). [`harness/upfront_knowledge.py`](harness/upfront_knowledge.py) collects the marked lines into the up-front block, so the correction is in place before the model reasons, even when the question does not name the file. There is one copy: the author edits the line in its file.
 - Not a confusable pair: two real terms swapped (Core vs Thread Utilization) is a vocabulary error, and it is kept in the glossary. A misconception is a wrong belief about how something works.
 
 ### Misconception types
@@ -295,13 +295,13 @@ flowchart LR
 
 1. Gather. Most of the knowledge (over 80%) comes from the author's books, spreadsheets and diagrams. The rest comes from documentation (manuals, white papers, blogs, expert answers) and from the environment (screenshots, live instances through the API or GUI, lab tests). For a vendor document, use the current version and read its revision date.
 2. Write the source note. The author and Claude write one Markdown note per topic, a few pages long, in [`project/sources/`](project/sources). It carries its release and date and an `## Evidence` section. Each claim about vendor behaviour, and each measured number, is tagged with its evidence (`[E1]`). The author's own judgment needs no tag: it is the knowledge base's own source. Format: [project/sources/README.md](project/sources/README.md).
-   - Evidence is primary: a vendor document with version, revision and page; a screenshot or API output kept in `project/sources/evidence/` with its build; a lab test with its setup. A summary written by a model is not evidence, the note included.
+   - Evidence is primary: a vendor document with version, revision and page; a screenshot or API output kept in [`project/sources/evidence/`](project/sources/evidence) with its build; a lab test with its setup. A summary written by a model is not evidence, the note included.
 3. Digest. Claude reads the note and proposes which knowledge files and folders to change. Before writing, each fact in the note gets one home file; every other file that needs it gets a link, not a copy. This is where contradictions start: the 2026-11-15 review found 27, mostly answers applied to one file and not to its neighbours ([project/review-2026-11-15.md](project/review-2026-11-15.md)).
    - Write each fact in the form that fits it (section 3), and add tags, links and misconceptions.
-   - The home file's `source.path` names the note and heading: `project/sources/<note>.md > <heading>`. Lint checks that the note and heading exist and that the note's evidence tags resolve. [`project/tools/sources.py`](project/tools/sources.py) lists which files each note feeds, from the metadata, so the trace is never kept by hand. When a note changes, those files are rechecked.
+   - The home file's `source.path` names the note and heading: `project/sources/<note>.md > <heading>`. Lint checks that the note and heading exist and that the note's evidence tags resolve. [`project/tools/source_trace.py`](project/tools/source_trace.py) lists which files each note feeds, from the metadata, so the trace is never kept by hand. When a note changes, those files are rechecked.
    - Files start as `status: draft`.
 4. Ask. Every conflict or gap becomes an author question in [`project/author-questions.md`](project/author-questions.md), with a verbatim search string. The answer is applied to the file and the review note is deleted. Extraction continues meanwhile; it does not wait for answers.
-5. Check. `python3 project/tools/lint.py` must pass before merge (folders, tags, layers, links, images, quotes, tables, phrases, source notes). Unit tests check the tools.
+5. Check. `python3 project/tools/rules_check.py` must pass before merge (folders, tags, layers, links, images, quotes, tables, phrases, source notes). Unit tests check the tools.
 6. Prove. The retrieval check confirms that the right files are found, the benchmark runs the questions against the whole system, and every wrong answer is traced to knowledge, retrieval or model.
 7. Review. The author reviews each file, answers `review_notes`, fixes errors and sets `status: reviewed`. Release content is final and curated: every file is reviewed.
 
@@ -314,11 +314,11 @@ flowchart LR
   1. Read the release notes and the new revision of each vendor document named in `source.document`.
   2. Rewrite each changed fact in its home file and update the version in `source.document`; the files that link to it follow without edits.
   3. When the vendor fixes a document, move the matching `corrections` into the text and clear them.
-  4. When a source note is about the changed behaviour, update its release line and evidence first; [`sources.py`](project/tools/sources.py) lists the files to recheck.
+  4. When a source note is about the changed behaviour, update its release line and evidence first; [`source_trace.py`](project/tools/source_trace.py) lists the files to recheck.
   5. Run the retrieval check; the benchmark questions that cite a changed file are rechecked.
 
 ### Health
-[`project/tools/health.py`](project/tools/health.py) prints the numbers; [project/plan.md](project/plan.md) records them at each review, so this file holds no figure that goes stale.
+[`project/tools/knowledge_stats.py`](project/tools/knowledge_stats.py) prints the numbers; [project/plan.md](project/plan.md) records them at each review, so this file holds no figure that goes stale.
 
 | Number | Why it matters |
 |---|---|

@@ -10,7 +10,7 @@ flowchart LR
   benchmark["benchmark/"]
   questions["questions/<br/>L&lt;level&gt;-&lt;nnn&gt;-&lt;slug&gt;.md: one question per file, one flat folder"]
   attach["questions/&lt;id&gt;/<br/>the question's attachments: screenshots, logs, diagrams (only when it has any)"]
-  runner["runner/<br/>Benchmark runner: answer_questions.py, run_round.py, preflight_check.py, stop_on_bad_answers.py, check_round_alive.py, push_snapshots.py, provider_hosts.py, resume_round.py, summary_all_runs.py, score_report.py, adaptive_concurrency.py, config.yaml"]
+  runner["runner/<br/>Benchmark runner: run_executor.py, round_executor.py, round_sample_check.py, bad_answer_guard.py, round_alive_check.py, run_folders_backup.py, inference_providers.py, round_resume.py, round_summary.py, score_report.py, adaptive_concurrency.py, runner_config.yaml"]
   models["models.md<br/>candidate models, frontier reference"]
   runmd["RUN.md<br/>how to run a benchmark round: the prompt, approvals, time, cost"]
   live["live-test.md<br/>the system on an offline model: plan and pass criteria"]
@@ -30,12 +30,12 @@ flowchart LR
 ```
 
 - One flat folder: a question often crosses products (vSphere, Windows, Linux, NSX, VCF Operations) and technologies, so folders cannot hold it. The slices are metadata (section Metadata tags):
-  - `product`: every product the question touches (values from [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml));
+  - `product`: every product the question touches (values from [project/tools/rules_check_values.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/rules_check_values.yaml));
   - `technology`: every area it touches (cpu, memory, storage, network, system): [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.5.
-- Counts of every tag over the run set: `python3 project/tools/coverage.py`. The set has no target size: it changes as questions are added, rewritten and retired ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3).
+- Counts of every tag over the run set: `python3 project/tools/question_coverage.py`. The set has no target size: it changes as questions are added, rewritten and retired ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3).
 - File name: `L<level>-<nnn>-<slug>.md`, three digits, numbered from 001 within each level, in id order. The last number of a level is its count.
 - The id is a 4-digit running number in the metadata only (`id: "0007"`). It never changes and is never reused. The runner and the results use it; people do not need it. A new question takes the next free id, counting the archived questions too.
-- A question that changes level: edit `level:`, then run `python3 project/tools/renumber_questions.py`. It renumbers the files so each level runs from 001 without gaps, and updates the question links in the documents listed in `DOCS` of [project/tools/link_refs.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/link_refs.py). The id, the results and the attachments stay.
+- A question that changes level: edit `level:`, then run `python3 project/tools/question_renumber.py`. It renumbers the files so each level runs from 001 without gaps, and updates the question links in the documents listed in `DOCS` of [project/tools/link_rewriter.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/link_rewriter.py). The id, the results and the attachments stay.
 - Attachments live in a folder named by the id: [benchmark/questions/0007](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/0007).
 - In documents, link a question by its title: `[title](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/<file>)`.
 - Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it, on vSphere 9.1 and the Guest OS layer. Cost and price questions are out of scope.
@@ -72,7 +72,7 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 | `technology` | Every technology area the question touches. A list. The per-area report counts each one | `cpu`, `memory`, `storage`, `network`, `system` (the object as a whole: KPIs, capacity, availability, DRS, provider/consumer, rollups) |
 | `task` | What the administrator is trying to do: one of the five tasks ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.1) | `read-metric`, `troubleshoot`, `decide-capacity`, `explain-mechanism`, `judge-setting` |
 | `knowledge` | The knowledge files the correct answer depends on. A list of knowledge ids. The retrieval check measures whether the harness finds them; every id must exist | Knowledge ids, e.g. [VM CPU Wait](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/wait.md) |
-| `object` | Every object type the question reads. A list. Counted by `coverage.py` ([design.md](design.md), section 3.7) | `vm`, `esxi`, `cluster`, `resource-pool`, `datastore`, `network`, `guest-os` |
+| `object` | Every object type the question reads. A list. Counted by `question_coverage.py` ([design.md](design.md), section 3.7) | `vm`, `esxi`, `cluster`, `resource-pool`, `datastore`, `network`, `guest-os` |
 | `tool` | Every tool whose output the question shows or asks about. A list | `vcenter`, `vcf-operations`, `esxtop`, `guest-os-tools` (Windows or Linux counters), `none` |
 | `pair` | Optional. The id of the question it is paired with: the same fact asked as theory (text) and as a screen to explain (screenshot or table). Both point to each other; lint checks it ([design.md](design.md), section 3.9) | `"0363"` |
 | `knowledge_main` | The one file that holds the answer or the misconception. Also listed in `knowledge` (lint checks it). Not the list order. The retrieval check reports a missing main file as a defect ([retrieval-check.md](retrieval-check.md)). Set by the author in the question review (Q130) | One knowledge id |
@@ -84,14 +84,14 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 | `level` | Expertise level ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.2) | `100`, `200`, `300`, `400` |
 | `answer_type` | How the answer is scored (section 3.3). Every question of the run set is `deterministic` since 2026-11-14 (Q199) | `deterministic` (option letters, compared by the runner), `judged` (free text, scored 0-3 by the judge) |
 | `misconception` | The letters a Level 300 reader would pick. Deterministic only. Never sent to the candidate | Letters `A`-`Y` |
-| `misconception_type` | The misconception types the question tests, from `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400. A list; may be empty at Level 100-200 | Values in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml), `misconception_type` |
+| `misconception_type` | The misconception types the question tests, from `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400. A list; may be empty at Level 100-200 | Values in [project/tools/rules_check_values.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/rules_check_values.yaml), `misconception_type` |
 
 **What the administrator gives besides the prompt**
 
 | Tag | Meaning | Values |
 |---|---|---|
 | `input` | Input types (section 3.4). A list, derived from `attachments`; lint checks they agree | `text` (no attachment), `table`, `screenshot` |
-| `attachments` | Files sent with the prompt, relative to [benchmark/questions](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions). They live in `questions/<id>/`, next to the question file. No `.md` files there: the runner and lint read every `.md` under `questions/` as a question | Paths; `.png`, `.jpg`, `.webp` are screenshots; `.csv` are tables (1.0: at most 24,000 characters, about 6,000 tokens, generated by project/tools/exportgen; [design.md](design.md), section 13.1). Tool text goes in the prompt as a fenced `text` block, not as an attachment |
+| `attachments` | Files sent with the prompt, relative to [benchmark/questions](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions). They live in `questions/<id>/`, next to the question file. No `.md` files there: the runner and lint read every `.md` under `questions/` as a question | Paths; `.png`, `.jpg`, `.webp` are screenshots; `.csv` are tables (1.0: at most 24,000 characters, about 6,000 tokens, generated by project/tools/export_generator; [design.md](design.md), section 13.1). Tool text goes in the prompt as a fenced `text` block, not as an attachment |
 
 **Where it comes from**
 

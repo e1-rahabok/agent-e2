@@ -32,7 +32,7 @@ The gaps the gateway leaves open are in [models.md](models.md), section What the
 ## 4. Code changes needed first
 | Change | Why |
 |---|---|
-| Runner `--local <url>`: point [`harness/llm.py`](../harness/llm.py) at the local server; no API key required | Today the client requires `AI_GATEWAY_API_KEY` |
+| Runner `--local <url>`: point [`harness/model_client.py`](../harness/model_client.py) at the local server; no API key required | Today the client requires `AI_GATEWAY_API_KEY` |
 | Vision and context checks from config, not from the gateway model list | The runner reads the `vision` tag and context window from the gateway; a local server has no tags |
 | Timings per model turn in `answers.csv` (time to first token, tokens per second) | Speed on the target GPU is a result of this test |
 
@@ -45,7 +45,7 @@ The gaps the gateway leaves open are in [models.md](models.md), section What the
 6. Report: the runner scores the letters on the VM and builds the report; nothing needs a connected machine.
 7. Compare: paired, question by question, with the gateway run of the same model on Agent E2 (`design.md`, section 8). Note any question that changes.
 8. Speed: median and 95th percentile time per answer and per model turn, on Agent E2; GPU memory at peak.
-9. Operator session: the author asks 20 real questions from the field, with screenshots, and judges each answer (right, partly right, wrong, unsure). The assistant runs the conversation mode (`modes.converse`): for each question, record whether it asked a clarifying question, whether asking was right (odd question, text and attachment disagree, a missing fact that changes the answer), and the answer after the reply. Every wrong answer is traced to knowledge, retrieval or model. Add at least one consultation (MISSION.md, Ways to ask, 7): "Guide me through capacity planning for a vSphere cluster; you're my expert consultant." The author judges whether the agent asked for every input the plan needs, named each default it used, got the numbers right (the planning calculator) and explained the limiting one.
+9. Operator session: the author asks 20 real questions from the field, with screenshots, and judges each answer (right, partly right, wrong, unsure). The assistant runs the conversation mode (`answer_modes.converse`): for each question, record whether it asked a clarifying question, whether asking was right (odd question, text and attachment disagree, a missing fact that changes the answer), and the answer after the reply. Every wrong answer is traced to knowledge, retrieval or model. Add at least one consultation (MISSION.md, Ways to ask, 7): "Guide me through capacity planning for a vSphere cluster; you're my expert consultant." The author judges whether the agent asked for every input the plan needs, named each default it used, got the numbers right (the planning calculator) and explained the limiting one.
 10. Update: import a newer knowledge bundle offline, rebuild the index, answer one question; the index version in the trace changes.
 
 ## 6. Pass criteria (proposal, for the author to set)

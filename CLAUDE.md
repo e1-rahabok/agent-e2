@@ -53,12 +53,13 @@ How Claude works in this repository. Read at the start of every session. The des
 
 ## Repository layout
 - Product (deployed): `knowledge/` and `harness/`. Proof: `benchmark/`. Project: `project/` and [`project/tools/`](project/tools). Map: [`REPOSITORY-MAP.md`](REPOSITORY-MAP.md); how the parts fit: [`ARCHITECTURE.md`](ARCHITECTURE.md), section Repository.
-- `harness/` depends on no folder outside the product. [`project/tools/lint.py`](project/tools/lint.py) imports the file parser from [`harness/kb.py`](harness/kb.py), never the reverse.
+- `harness/` depends on no folder outside the product. [`project/tools/rules_check.py`](project/tools/rules_check.py) imports the file parser from [`harness/knowledge_loader.py`](harness/knowledge_loader.py), never the reverse.
+- Code file names: rule in [`project/terms.md`](project/terms.md), section Code file names.
 - What is indexed and what is not: [`ARCHITECTURE.md`](ARCHITECTURE.md), section Local LLM use, Ingest.
 
 ## Validation
-- Before every commit: `python3 project/tools/lint.py` reports 0 problems, `python3 -m unittest harness/test_tools.py` and `python3 -m unittest benchmark/runner/test_runner.py` pass. Check the result itself, not only that the command ran: a pipe into `grep` or `tail` hides a failure.
-- Allowed tag values and avoided phrases live in [`project/tools/tags.yaml`](project/tools/tags.yaml). Change them there, not in the script.
+- Before every commit: `python3 project/tools/rules_check.py` reports 0 problems, `python3 -m unittest harness/test_harness.py` and `python3 -m unittest benchmark/runner/test_runner.py` pass. Check the result itself, not only that the command ran: a pipe into `grep` or `tail` hides a failure.
+- Allowed tag values and avoided phrases live in [`project/tools/rules_check_values.yaml`](project/tools/rules_check_values.yaml). Change them there, not in the script.
 - A change to structure or retrieval needs a before and after number from the retrieval check or the benchmark. The retrieval check runs on the run set as it is (reactivated by the author, 2026-11-13, Q206); re-baseline when the question bank changes.
 
 ## Git

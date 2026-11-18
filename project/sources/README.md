@@ -36,7 +36,7 @@ A source note carries its evidence, so the knowledge files that are digested fro
 - Remove customer data from screenshots and API output before they are added to `evidence/`.
 - A knowledge file digested from a note names it in `source.path`: `project/sources/<note>.md > <heading>`, several separated by `;`.
 - Lint checks every note a knowledge file cites: the note exists and is not in `future/`, the cited headings exist, the `Release:` line is there, every `[E<n>]` tag has an entry in `## Evidence`, and every `evidence/` file named there exists. A note that no knowledge file cites is not checked yet.
-- Which knowledge files each note feeds: `python3 project/tools/sources.py`. When a note changes, recheck those files.
+- Which knowledge files each note feeds: `python3 project/tools/source_trace.py`. When a note changes, recheck those files.
 
 ## future/
 Sources for future releases. Not digested: nothing in them is in `knowledge/`, and each file says so in its first line. Move a file up to `project/sources/` when a release takes it in (author, 2026-11-15, Q229).

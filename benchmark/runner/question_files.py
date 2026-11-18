@@ -15,15 +15,15 @@ import re
 
 import yaml
 
-from kb import ROOT
-from verify import answer_letters
+from knowledge_loader import ROOT
+from answer_check import answer_letters
 
 META = '\n## Metadata\n```yaml\n'
 UNSURE = 'Unsure: the information available does not settle this question.'
 TABLE_EXT = ('.csv', '.xlsx', '.xls')
 IMAGE_EXT = ('.png', '.jpg', '.jpeg', '.webp')
 # A prompt links each attachment by its path, e.g. [the attached chart](0004/chart.png), so a reviewer can open it on GitHub.
-# The model reads only the link text: the target is stripped, as kb.FILE_LINK does for knowledge links (no token cost).
+# The model reads only the link text: the target is stripped, as knowledge_loader.FILE_LINK does for knowledge links (no token cost).
 ATTACH_LINK = re.compile(r'\[([^\]\n]+)\]\((\d{4}/[^)\s]+)\)')
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'  # 25 written options at most: Unsure takes the next letter (Q199, 2026-11-14: no fixed option count)
 OPTION = re.compile(r'^(?:[-*]\s+)?([A-Y])\.\s+(.*)$')  # 'A. text' or '- A. text' (a bullet renders as a list on GitHub)

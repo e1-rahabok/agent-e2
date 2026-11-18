@@ -1,4 +1,4 @@
-"""Exit codes of answer_questions.py and run_round.py. One meaning each, so a script (or the LLM that runs a round) can decide what to do next."""
+"""Exit codes of run_executor.py and round_executor.py. One meaning each, so a script (or the LLM that runs a round) can decide what to do next."""
 OK = 0              # finished: report written
 CRASHED = 1         # unexpected error (Python raises 1): relaunch with --resume
 USAGE = 2           # bad flags (argparse)

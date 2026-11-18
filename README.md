@@ -110,7 +110,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | GPU | 0 | 1 | 0 | 0 | 1 |
 | Questions | 7 | 11 | 111 | 162 | 291 |
 
-- A question counts in every area it touches, so the area rows add up to more than 291. Current counts: `python3 project/tools/coverage.py`.
+- A question counts in every area it touches, so the area rows add up to more than 291. Current counts: `python3 project/tools/question_coverage.py`.
 - Retrieval check (2026-11-16, BM25 with options, 299 questions): needed files found for 92% (228 complete, 76%; main file missing on 4). Question text only: 77% (157 complete, 53%; main file missing on 35). Source: [question bank audit](project/question-bank-audit-2026-11-15.md), section 7. Hybrid search last measured at 80% (117 of 196) before the structure review of 2026-11-14 ([output](benchmark/results/retrieval-2026-11-14/hybrid.md)).
 - Earlier generations (classic and agentic modes) and their results are archived in [`project/archive/`](project/archive) and not compared.
 - Plan, milestones and decisions: [`project/plan.md`](project/plan.md).
@@ -118,11 +118,11 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 ## Checks
 
 ```bash
-python3 project/tools/lint.py
+python3 project/tools/rules_check.py
 ```
 
 ```bash
-python3 -m unittest harness/test_tools.py
+python3 -m unittest harness/test_harness.py
 ```
 
 ```bash
