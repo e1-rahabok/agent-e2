@@ -7,7 +7,8 @@
 ## Flow
 ```mermaid
 flowchart TD
-  S1[1. Latency high?] -->|no| E1[Stop: memory is not the cause]
+  S1[1. Latency high? On a tiered host, NVMe wait above 0?] -->|no| E1[Stop: memory is not the cause]
+  S1 -->|NVMe wait only| S5
   S1 -->|yes| S2[2. Swap-in or decompression?]
   S2 --> S3[3. Consumed flat near a limit?]
   S3 -->|yes| E3[Cause: the limit]
@@ -18,7 +19,7 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Latency (VirtualMachine) ([`vsphere/technology/memory/metrics/virtual-motherboard/latency`](metrics/virtual-motherboard/latency.md)). The only counter that shows a VM waiting for memory; it excludes balloon. Low → stop. High → step 2.
+1. Latency (VirtualMachine) ([`vsphere/technology/memory/metrics/virtual-motherboard/latency`](metrics/virtual-motherboard/latency.md)). It shows a VM waiting for reclaimed pages and excludes balloon. It is unaware of memory tiering: on a tiered host it does not count NVMe fetches. Low on a host without tiering → stop. Low on a tiered host → read the VM's NVMe read bandwidth and NVMe wait ([`vsphere/object-types/cluster/cluster-performance`](../../object-types/cluster/cluster-performance.md), section Sub-metric formulas) before stopping: NVMe wait above 0 → step 5. High → step 2.
 2. Swap-in rate and decompression rate (VirtualMachine): the source of the wait ([`vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate`](metrics/virtual-motherboard/swap-in-rate.md)). → step 3.
 3. Consumption against a limit (VirtualMachine, ResourcePool). Consumed flat near a limit on the VM or on its resource pool: the limit is the cause ([`vsphere/architecture/resource-controls`](../../architecture/resource-controls.md)). → step 4.
 4. Configuration (VirtualMachine). Shares and reservation compared with the other VMs; in a resource pool, whether the pool has enough for all its VMs. → step 5.
@@ -26,7 +27,7 @@ flowchart TD
 6. Known bug and log (VirtualMachine, HostSystem): [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), its known bug and log checks.
 
 ## Order rationale
-- Latency first: it is the only memory wait; ballooned, swapped and compressed memory are past reclamation, not a wait.
+- Latency first: it is the memory wait from reclamation; ballooned, swapped and compressed memory are past reclamation, not a wait. On a tiered host, NVMe wait is the other memory wait, and Latency does not see it.
 - The source of the wait next: swap-in and decompression say which reclamation the VM now pays for.
 - A limit before shares: a limit causes the wait on a host with free memory.
 - Host pressure after the VM settings: it explains why ESXi reclaimed from this VM.
@@ -44,6 +45,7 @@ flowchart TD
 
 ## Misconceptions
 - "Balloon is in Latency" → Latency excludes balloon.
+- "Latency is low, so memory is not the cause" → on a tiered host Latency does not count NVMe fetches; read NVMe wait first.
 - "The host has free memory, so the VM cannot wait for memory" → a limit, or pages swapped or compressed in the past, cause a wait on a host with free memory ([`vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention`](../../object-types/cluster/concepts/cluster-utilization-vs-contention.md)).
 
 ## Metadata

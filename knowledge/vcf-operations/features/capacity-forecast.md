@@ -10,6 +10,7 @@
 - Jump points: a step change (migration, scale-out, VM reconfiguration) is detected and the UI offers a Recommended Reset Date. Applying it drops the history before the step; trend and bounds then use only the data after it.
 - Upgrade to 9.1.1 writes `/storage/log/vcops/log/capacityMetricsUpgradeChanges.csv` on the VCF Operations primary node: per object, the old and new Time Remaining and rightsizing values. Read it before sharing post-upgrade forecasts; a large delta on one object usually means a jump point.
 - Usable capacity: total capacity minus what vSphere HA admission control reserves for failover, minus the policy buffer. Buffer properties: cpu|demand|bufferSetting (%), mem|demand|bufferSetting (%); default 0% ([`sp5-framework/capacity/supply`](../../sp5-framework/capacity/supply.md), section Buffer).
+- Memory tiering: VCF Operations is unaware of the NVMe memory tier. It counts NVMe as part of the host's Total Memory Capacity, so on a tiered host memory supply goes up by the NVMe tier, and Capacity Remaining and Time Remaining treat NVMe as if it were DRAM (author, 2026-11-18). Read active memory against DRAM and the NVMe tier consumption instead ([`vsphere/technology/memory/concepts/memory-tiering`](../../vsphere/technology/memory/concepts/memory-tiering.md), section Capacity management; [`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md)).
 
 ## Peaks in the 9.1.1 engine
 - A momentary peak sits above the upper quantile and barely moves the bounds.
@@ -38,6 +39,7 @@
 - The policy sets the warning threshold in days.
 
 ## Misconceptions
+- "Memory Capacity Remaining is 38% on a tiered cluster, so memory is fine" → the supply includes the NVMe tier as if it were DRAM; on a tiered host the limit is active memory against DRAM.
 - "Conservative uses the trend line" → Conservative uses the upper bound projection; Aggressive uses the mean of the upper and lower bounds.
 - "Capacity Remaining is current free capacity" → a projection over the next 3 days, set by its tightest point.
 - "Capacity Remaining is the largest gap in the next 3 days" → it is the smallest remaining capacity: usable capacity minus the highest projected point.
