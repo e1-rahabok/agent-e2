@@ -109,7 +109,7 @@ class AdaptiveConcurrency:
         elif not p.warned:
             p.warned = True
             self._log(f'concurrency {model}: HTTP 429 at the proven value {floor}. It is not proven for this model: '
-                      f'lower its entry in concurrency_by_model (config.yaml) and resume.')
+                      f'lower its entry in concurrency_by_model (runner_config.yaml) and resume.')
 
     def _next(self, model, p):
         """Move to the next level to test, or stop when the top level held."""

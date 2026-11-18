@@ -8,11 +8,11 @@ meta:
     means: Knowledge-base terms added to the search query.
     note: 'One line for the model: the misconception the user''s words carry, and what to read instead.'
     files: Knowledge files pulled into the context when the row matches, most important first.
-    label: 'Optional: the glossary term of a product label (knowledge/glossary.md, lines Product label, Invites, Better name). The row has no note: harness/terms.py builds it from that entry and puts the entry''s File first, so the correction has one home (Q208). One row per label entry; a match pattern must match the term (lint).'
-    premise: 'Optional, true when the words usually carry a wrong premise (an odd question): the note is marked so the model names the premise first (harness/clarify.py).'
+    label: 'Optional: the glossary term of a product label (knowledge/glossary.md, lines Product label, Invites, Better name). The row has no note: harness/user_terms.py builds it from that entry and puts the entry''s File first, so the correction has one home (Q208). One row per label entry; a match pattern must match the term (lint).'
+    premise: 'Optional, true when the words usually carry a wrong premise (an odd question): the note is marked so the model names the premise first (harness/user_clarification.py).'
   review_notes:
   - 'Question understanding before search. Seeded from knowledge/glossary.md (Also called, Not to confuse with), project/vocabulary.md (Words to avoid) and the Misconceptions sections. Each note restates its file; the file is the source.'
-  - 'Read by harness/terms.py. Switch: term_map in benchmark/runner/config.yaml.'
+  - 'Read by harness/user_terms.py. Switch: term_map in benchmark/runner/runner_config.yaml.'
   - 'To check: the wrong terms users write in tickets and forums, with what they mean (Q149).'
   - 'To check: each note against the file it cites.'
   status: reviewed

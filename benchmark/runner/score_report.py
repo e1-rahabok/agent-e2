@@ -96,7 +96,7 @@ def consensus(rows, k=3, modes=('agent-e2',)):
     """Per (model, mode): the scores the harness would get with consensus of k samples (cfg consensus_samples), projected
     from the recorded runs. Multiple choice: every draw of k runs out of the recorded ones; unanimous letters stand,
     anything else (disagreement, Unsure, unreadable) is Unsure: no credit, not confident wrong. Judged answers are kept
-    as recorded: consensus applies to letters only (harness/modes.py, _consensus).
+    as recorded: consensus applies to letters only (harness/answer_modes.py, _consensus).
     The projection is the exact mean over all draws of the recorded runs, so it needs no new model call. It assumes the
     samples of one question are independent, as the runs of one question are.
     Returns {(model, mode): {final, confident_wrong, choice_confident_wrong, choice_unsure, k}}; questions with fewer

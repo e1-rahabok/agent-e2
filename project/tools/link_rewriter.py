@@ -1,0 +1,127 @@
+"""Turn file references in the author-facing documents into clickable GitHub links.
+
+A backticked knowledge id (`vsphere/architecture/resource-controls`) becomes [<its # title>](URL).
+A backticked repository path that exists (`benchmark/design.md`) becomes [path](URL).
+Every other Markdown file: a backticked knowledge id becomes [`id`](relative/path.md); outside knowledge/ and the
+question files, a backticked repository path that exists (`harness/expert_agent.py`, `MISSION.md`) becomes [`path`](relative/path).
+A link costs the model nothing: knowledge files keep only `id` at ingest, and the other documents are not indexed.
+    python3 project/tools/link_rewriter.py          # rewrite DOCS
+    python3 project/tools/link_rewriter.py --check  # list unlinked references; exit 1 if any (used by lint)
+"""
+import glob
+import os
+import re
+import subprocess
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
+from rules_check import MOVED  # noqa: E402
+
+BASE = 'https://github.com/e1-rahabok/agent-e2/blob/main/'
+DOCS = ['project/author-questions.md', 'project/plan.md', 'MISSION.md', 'benchmark/design.md', 'benchmark/README.md',
+        'benchmark/runner/README.md', 'benchmark/models.md', 'benchmark/retrieval-check.md']
+TICK = re.compile(r'`([\w./-]+)`')
+_TRACKED = None
+
+
+def tracked(path):
+    """True when git tracks the file, or a file under the folder: local caches and untracked files are not linked."""
+    global _TRACKED
+    if _TRACKED is None:
+        out = subprocess.run(['git', 'ls-files'], capture_output=True, text=True).stdout.split('\n')
+        _TRACKED = set(out)
+        for f in out:
+            d = os.path.dirname(f)
+            while d:
+                _TRACKED.add(d)
+                d = os.path.dirname(d)
+    return path.rstrip('/') in _TRACKED
+
+
+def target(ref):
+    ref = ref.rstrip('/')
+    ref = MOVED.get(ref, ref)
+    k = f'knowledge/{ref}.md'
+    if '/' in ref and os.path.isfile(k):
+        m = re.search(r'^# (.+)$', open(k).read(), re.M)
+        return (m.group(1).strip() if m else ref), BASE + k
+    if '/' in ref and tracked(ref):
+        return ref, BASE + ref
+    if '/' not in ref and '-' in ref:  # short knowledge name, e.g. `cluster-risk`, when unique
+        hits = [h for h in glob.glob(f'knowledge/**/{ref}.md', recursive=True)]
+        if len(hits) == 1:
+            return target(hits[0][len('knowledge/'):-3])
+    return None
+
+
+FENCE = re.compile(r'(^```.*?^```)', re.M | re.S)  # code blocks are left as they are
+
+
+def _prose(text, fn):
+    parts = FENCE.split(text)
+    return ''.join(p if i % 2 else fn(p) for i, p in enumerate(parts))
+
+
+MOVED_URL = re.compile(r'blob/main/knowledge/([\w./-]+)\.md')
+
+
+def rewrite(text):
+    text = MOVED_URL.sub(lambda m: f'blob/main/knowledge/{MOVED.get(m.group(1), m.group(1))}.md', text)
+    return _prose(text, lambda t: TICK.sub(lambda m: (lambda x: f'[{x[0]}]({x[1]})' if x else m.group(0))(target(m.group(1))), t))
+
+
+# Every other Markdown file: a backticked knowledge id becomes [`id`](relative/path.md), the form knowledge files use
+# (project/knowledge-rules/writing.md). The harness keeps only `id` (kb.FILE_LINK), so the model reads no path.
+SKIP = ('project/sources/', 'project/archive/')
+BARE_ID = re.compile(r'(?<!\[)`([\w./-]+)`(?!\]\()')
+
+
+def others():
+    return [f for f in sorted(glob.glob('**/*.md', recursive=True)) if f not in DOCS and not f.startswith(SKIP) and tracked(f)]
+
+
+NO_PATH_LINKS = ('knowledge/', 'benchmark/questions/', 'benchmark/results/')  # indexed text, text sent to a candidate, generated reports: knowledge ids only
+
+
+def _rel(path, ref):
+    ref = MOVED.get(ref.rstrip('/'), ref.rstrip('/'))
+    k = f'knowledge/{ref}.md'
+    if '/' in ref and os.path.isfile(k):
+        return os.path.relpath(k, os.path.dirname(path) or '.')
+    if not path.startswith(NO_PATH_LINKS) and ('/' in ref or '.' in ref) and not ref.startswith(('.', '/')) and tracked(ref) and ref != path:
+        return os.path.relpath(ref, os.path.dirname(path) or '.')
+    return None
+
+
+def rewrite_relative(path, text):
+    return _prose(text, lambda t: BARE_ID.sub(lambda m: (lambda r: f'[`{m.group(1)}`]({r})' if r else m.group(0))(_rel(path, m.group(1))), t))
+
+
+def bare_ids(path):
+    found = []
+    _prose(open(path, encoding='utf-8').read(), lambda t: found.extend(m.group(1) for m in BARE_ID.finditer(t) if _rel(path, m.group(1))) or t)
+    return found
+
+
+def unlinked(path):
+    found = []
+    _prose(open(path, encoding='utf-8').read(), lambda t: found.extend(m.group(1) for m in TICK.finditer(t) if target(m.group(1))) or t)
+    return found
+
+
+if __name__ == '__main__':
+    if '--check' in sys.argv:
+        bad = {d: unlinked(d) for d in DOCS}
+        for d, refs in bad.items():
+            for r in refs: print(f'{d}: `{r}` should be a link (run project/tools/link_rewriter.py)')
+        bad.update({f: bare_ids(f) for f in others()})
+        for d, refs in bad.items():
+            if d not in DOCS:
+                for r in refs: print(f'{d}: `{r}` should be a link (run project/tools/link_rewriter.py)')
+        sys.exit(1 if any(bad.values()) else 0)
+    for d in DOCS:
+        t = open(d).read(); u = rewrite(t)
+        if u != t: open(d, 'w').write(u); print('updated', d)
+    for f in others():
+        t = open(f).read(); u = rewrite_relative(f, t)
+        if u != t: open(f, 'w').write(u); print('updated', f)

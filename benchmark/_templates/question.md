@@ -42,7 +42,7 @@ attachments: []                   # paths relative to benchmark/questions/, e.g.
 origin: book                      # book | quiz | real-ticket | synthetic
 source_path: "<heading path in the source document>"
 misconception: [A]                # deterministic only
-misconception_type: [layer-confusion]   # project/tools/tags.yaml, misconception_type
+misconception_type: [layer-confusion]   # project/tools/rules_check_values.yaml, misconception_type
 pair: "<nnnn>"                    # optional: the paired question (benchmark/design.md, section 3.9); delete if none
 status: draft                     # draft | awaiting-input | reviewed | deferred | retired
 ```

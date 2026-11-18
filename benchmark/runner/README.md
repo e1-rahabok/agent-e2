@@ -7,38 +7,38 @@ Design: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/b
 ## Setup
 - Python 3.10+ with `pyyaml` and `requests`.
 - Environment variable `AI_GATEWAY_API_KEY` (Vercel AI Gateway API key). Never commit it.
-- Settings: `config.yaml` (models, modes, runs, temperature, budgets, provider pinning).
+- Settings: `runner_config.yaml` (models, modes, runs, temperature, budgets, provider pinning).
 
 ## Commands
 ```bash
-python3 benchmark/runner/answer_questions.py --dry-run
+python3 benchmark/runner/run_executor.py --dry-run
 ```
 - Shows the matrix, the number of answers and a cost estimate. No API calls.
 
 ```bash
-python3 benchmark/runner/answer_questions.py --mock --runs 2
+python3 benchmark/runner/run_executor.py --mock --runs 2
 ```
 - Offline pipeline check: random answers, real retrieval, no API calls.
 
 ```bash
-python3 benchmark/runner/answer_questions.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-004
+python3 benchmark/runner/run_executor.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-004
 ```
 - Smallest real benchmark: one model, one mode, one question.
 
 ```bash
-python3 benchmark/runner/answer_questions.py
+python3 benchmark/runner/run_executor.py
 ```
-- Full matrix from `config.yaml`.
+- Full matrix from `runner_config.yaml`.
 
 ```bash
-python3 benchmark/runner/answer_questions.py --resume benchmark/results/<run-folder>
+python3 benchmark/runner/run_executor.py --resume benchmark/results/<run-folder>
 ```
 - Continue a benchmark; failed answers are retried.
 
 ```bash
-python3 benchmark/runner/preflight_check.py
-python3 benchmark/runner/run_round.py --max-minutes 110
-python3 benchmark/runner/run_round.py --resume --max-minutes 110
+python3 benchmark/runner/round_sample_check.py
+python3 benchmark/runner/round_executor.py --max-minutes 110
+python3 benchmark/runner/round_executor.py --resume --max-minutes 110
 ```
 - The final round: a sample first, then all runs in parallel, then the summary. See "A whole round" below and [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
 
@@ -62,7 +62,7 @@ python3 benchmark/runner/retrieval_check.py
 - Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.4. Report table `Final score`; code `score_report.py`, function `final`.
 
 ### Free text
-- Not in the benchmark: every question is multiple choice, and `answer_questions.py` refuses a question without options. The judge is archived in [project/archive/legacy/judge-2026-11-14](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14).
+- Not in the benchmark: every question is multiple choice, and `run_executor.py` refuses a question without options. The judge is archived in [project/archive/legacy/judge-2026-11-14](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14).
 
 ### Screenshots
 - Questions with image attachments are sent with all their images (track `vision`). There is no text-only track.
@@ -96,9 +96,9 @@ python3 benchmark/runner/retrieval_check.py
 | Runs on | Every candidate | Every candidate | The frontier reference only |
 
 - Two runs per candidate: Base and Agent E2. Agent E2 is the shipped system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)); Base is the same model alone. The frontier reference runs one mode, `web`: search is available and Opus decides whether to use it, as in a chat product. There is no run with search removed: a user cannot switch it off, so that run measures nothing a user meets.
-- Agent E2 answers pass the answer verifier ([harness/verify.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/verify.py)): a missing ANSWER line, a letter that is not an option, or Unsure mixed with other letters gets one repair turn. Baseline and web are not verified.
+- Agent E2 answers pass the answer verifier ([harness/answer_check.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/answer_check.py)): a missing ANSWER line, a letter that is not an option, or Unsure mixed with other letters gets one repair turn. Baseline and web are not verified.
 - Recall column: the needed files whose text reached the model (the reading set and any gap follow-up). Agent E2 only: Base and web read no knowledge base.
-- Classic and agentic modes were removed ; `answer_questions.py` refuses them.
+- Classic and agentic modes were removed ; `run_executor.py` refuses them.
 
 ### Index version
 - The knowledge base changes with every commit. A score is only meaningful next to the knowledge that produced it.
@@ -114,9 +114,9 @@ python3 benchmark/runner/retrieval_check.py
 - The knowledge files are cut into chunks, one per `##` heading.
 - Two searches run on the same prompt:
   - Keyword search (BM25): scores chunks that share the prompt's words. Strong on exact terms: metric names, counter names such as %LAT_M.
-  - Vector search (embeddings): an embedding model (`embedding_model` in `config.yaml`) turns each chunk and the prompt into vectors; nearest vectors score highest. Strong on meaning when the words differ, e.g. "VM waits for memory" vs "page-fault latency".
+  - Vector search (embeddings): an embedding model (`embedding_model` in `runner_config.yaml`) turns each chunk and the prompt into vectors; nearest vectors score highest. Strong on meaning when the words differ, e.g. "VM waits for memory" vs "page-fault latency".
 - Fusion: reciprocal rank fusion. Each chunk gets 1 / (60 + rank) from each list; the sums decide the order. A chunk ranked well by both searches comes first.
-- Best chunk per file; the reading plan takes the top `search_k` (6) files, then adds linked files and one search per claim ([harness/planner.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/planner.py)).
+- Best chunk per file; the reading plan takes the top `search_k` (6) files, then adds linked files and one search per claim ([harness/reading_plan.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/reading_plan.py)).
 - Hybrid = both searches fused. `bm25` in a report = embeddings were off or unavailable; keyword search only.
 - Why hybrid: keyword search misses paraphrases; vector search misses rare exact terms. Fusing both is the common practice for technical text.
 
@@ -125,7 +125,7 @@ python3 benchmark/runner/retrieval_check.py
 - Ceiling: set by the model providers' rate limits behind the gateway, not by the runner. Not documented per model; found by trial. Above it, providers return HTTP 429. The client retries 429, 408 and 5xx; an answer that still fails is listed, and `--resume` retries it.
 - Limit: a Claude Code cloud background command stops after 2 hours (see Long runs below).
 
-**Adaptive concurrency** ([adaptive_concurrency.py](adaptive_concurrency.py), `adaptive_concurrency` in `config.yaml`; `--no-adaptive` turns it off):
+**Adaptive concurrency** ([adaptive_concurrency.py](adaptive_concurrency.py), `adaptive_concurrency` in `runner_config.yaml`; `--no-adaptive` turns it off):
 - Each model starts at its proven value: `concurrency` (12), or its entry in `concurrency_by_model` (anthropic/claude-opus-5.5: 3; the provider rate-limits above that in a short trial; `adaptive_concurrency.py` kept 5 in the baseline run and 7 in the web run of 2026-11-13). The proven value is the floor: the runner never goes below it. `--concurrency N` sets one proven value for every model.
 - It then probes upward in steps of 2, up to 2 steps (12, 14, 16). Each level is measured over a window of 40 answers (the first answers after a change are dropped).
 - A step is kept only if the window has no error and the answers per minute rise by at least half of the ideal gain (12 to 14: at least +8.3% of the ideal +16.7%; 14 to 16: at least +7.1%). A step that fails returns to the last level that held, and probing stops.
@@ -136,45 +136,45 @@ python3 benchmark/runner/retrieval_check.py
 - Tested offline (a fake clock, [test_runner.py](test_runner.py), class AdaptiveConcurrencyTest). The first live run is the real test: watch the decision lines.
 
 ### Long runs: stop and resume
-- `--max-minutes N` (or `max_minutes` in `config.yaml`): after N minutes the runner starts no new answer, lets the running ones finish, prints `Resume: python3 benchmark/runner/answer_questions.py --resume <folder>` and exits with code 3. It writes no `report.md`: a stopped run is not a result. Exit code 0 = finished, 3 = stopped at the limit.
+- `--max-minutes N` (or `max_minutes` in `runner_config.yaml`): after N minutes the runner starts no new answer, lets the running ones finish, prints `Resume: python3 benchmark/runner/run_executor.py --resume <folder>` and exits with code 3. It writes no `report.md`: a stopped run is not a result. Exit code 0 = finished, 3 = stopped at the limit.
 - In a Claude Code cloud session start every long run with `--max-minutes 110`: the 2-hour limit kills a command in the middle of an answer; this stops it clean, a few minutes earlier.
-- `--resume <folder>` needs no other flag: models, modes, runs, temperature, questions and primer are read from the folder's `config.json`, so a resume cannot change what the run measures (a resume without `--models` once ran every model of `config.yaml` into the folder). A flag you pass still overrides. Saved answers are kept; answers that failed are retried. `config.json` keeps the original `started` time and lists each resume in `resumed`.
-- Cannot be done inside the process: a command cannot extend the 2-hour limit of the session that started it. The relaunch is a new command: when a run exits with code 3 (or its process is gone and the folder has fewer answers than the matrix), start `python3 benchmark/runner/answer_questions.py --resume <folder> --max-minutes 110` again. The 15-minute progress check does this on its own: it counts the rows of `answers.csv` by `model` and relaunches a dead run.
+- `--resume <folder>` needs no other flag: models, modes, runs, temperature, questions and primer are read from the folder's `config.json`, so a resume cannot change what the run measures (a resume without `--models` once ran every model of `runner_config.yaml` into the folder). A flag you pass still overrides. Saved answers are kept; answers that failed are retried. `config.json` keeps the original `started` time and lists each resume in `resumed`.
+- Cannot be done inside the process: a command cannot extend the 2-hour limit of the session that started it. The relaunch is a new command: when a run exits with code 3 (or its process is gone and the folder has fewer answers than the matrix), start `python3 benchmark/runner/run_executor.py --resume <folder> --max-minutes 110` again. The 15-minute progress check does this on its own: it counts the rows of `answers.csv` by `model` and relaunches a dead run.
 - `index_version` in `config.json` is the commit at the last resume; each row of `answers.csv` keeps the commit of its own answer. A resume after a change to the knowledge base mixes two versions in one run: stop edits to `knowledge/` during a run.
 
 ### Request settings per model (reasoning)
 - A reasoning model spends tokens thinking before it writes the `ANSWER:` line. `max_tokens` counts the thinking. When the thinking uses all of it, the answer is cut off, no letter is found and the answer scores as wrong: the run measures the cap, not the model.
 - Measured with the default settings: alibaba/qwen3.8-27b used 3,700-4,300 tokens per answer in every mode (85% of its baseline answers hit the 4,000 cap, 549 of its 1,350 multiple-choice answers had no readable letter) and took 25-38 s per answer; google/gemma-4-31b-it used 160-380 tokens and 9-20 s.
-- `model_params` in `config.yaml` lists, per model, the request settings in order of preference. Fields: `reasoning` (sent to the gateway as is: `{effort: none}`, `{enabled: false}`; the model's `reasoning_options` in the gateway `/v1/models` list what it accepts) and `max_tokens`. `answer_questions.py` without `--params` uses the first entry; `preflight_check.py` picks the first entry that answers cleanly. The choice is saved in the run folder's `config.json` under `model_params`, and a resume keeps it.
+- `model_params` in `runner_config.yaml` lists, per model, the request settings in order of preference. Fields: `reasoning` (sent to the gateway as is: `{effort: none}`, `{enabled: false}`; the model's `reasoning_options` in the gateway `/v1/models` list what it accepts) and `max_tokens`. `run_executor.py` without `--params` uses the first entry; `round_sample_check.py` picks the first entry that answers cleanly. The choice is saved in the run folder's `config.json` under `model_params`, and a resume keeps it.
 - Measured live : `{effort: none}` cut a Qwen answer from 303 to 41 tokens; `{enabled: false}` removed Muse's thinking; Opus accepts `{effort: medium}`.
 - The setting is part of the measurement: a model with reasoning off may score differently from the same model with it on. The summary README lists the settings of every run.
 
 ### Health check (during a run)
-- [stop_on_bad_answers.py](stop_on_bad_answers.py) watches the last 40 answers of each model. A bad answer is an API error, a multiple-choice answer with no readable letter, or an answer cut off at `max_tokens` (the gateway's `finish_reason` is `length`; column `truncated`). When 25% of them are bad (after 20 answers) the run stops starting new answers, writes no report and exits with code 5. The answers stay in the folder.
-- A failure of the gateway or of a provider (HTTP 408, 429, 5xx after the retries, a dropped connection) is not a bad answer. It has its own window (the same 40 and 25%) and stops the run with code 8, `GATEWAY_DOWN`: not a setting problem, so nothing restarts with other settings. `run_round.py` waits `release.outage_wait_seconds` and resumes the same folder, up to `release.outage_waits` times. The client keeps retrying a failing call for `gateway_retry_minutes` (5) first. Why: a 2-minute burst of HTTP 503 counted as invalid answers, stopped two runs and restarted both from zero.
+- [bad_answer_guard.py](bad_answer_guard.py) watches the last 40 answers of each model. A bad answer is an API error, a multiple-choice answer with no readable letter, or an answer cut off at `max_tokens` (the gateway's `finish_reason` is `length`; column `truncated`). When 25% of them are bad (after 20 answers) the run stops starting new answers, writes no report and exits with code 5. The answers stay in the folder.
+- A failure of the gateway or of a provider (HTTP 408, 429, 5xx after the retries, a dropped connection) is not a bad answer. It has its own window (the same 40 and 25%) and stops the run with code 8, `GATEWAY_DOWN`: not a setting problem, so nothing restarts with other settings. `round_executor.py` waits `release.outage_wait_seconds` and resumes the same folder, up to `release.outage_waits` times. The client keeps retrying a failing call for `gateway_retry_minutes` (5) first. Why: a 2-minute burst of HTTP 503 counted as invalid answers, stopped two runs and restarted both from zero.
 - An HTTP 402 (credits or key budget) or 401 or 403 (key) stops the run at once with code 6: every further answer would fail the same way. The 402 text names the budget that ran out: the key's or the team's.
 - `--no-health` turns it off (the preflight uses that: it judges the sample itself). Tested in `test_runner.py`, class StopRunOnBadAnswersTest.
 
 ### Preflight (before a round)
-- [preflight_check.py](preflight_check.py) answers a sample (6 multiple-choice text questions and 1 screenshot question) in every mode of every run of the round, through `answer_questions.py`: the code and the settings of the real run. It tries a model's `model_params` entries in order until one passes: no API error, 95% of letters readable, no answer cut off, mean completion tokens under half of `max_tokens`, every mode answered.
+- [round_sample_check.py](round_sample_check.py) answers a sample (6 multiple-choice text questions and 1 screenshot question) in every mode of every run of the round, through `run_executor.py`: the code and the settings of the real run. It tries a model's `model_params` entries in order until one passes: no API error, 95% of letters readable, no answer cut off, mean completion tokens under half of `max_tokens`, every mode answered.
 - It reads the credits (`/v1/credits`), projects time and cost of the whole round from the sample, and refuses the round when the projected cost times `release.cost_safety` is above the credits or `release.max_cost_usd`, or the time is above `release.max_hours`. The key's own budget cannot be read; it shows only as an HTTP 402.
 - The projection is rough: seven questions per mode. Live : 1.5 to 2.5 minutes of wall time for two models at once, about US$ 0.55 for all four.
 
-### A whole round: run_round.py
-- [run_round.py](run_round.py) runs `release.runs` of `config.yaml` (one answer_questions.py per model, all at once, each in `benchmark/results/<date>-<model>/`): preflight, runs, recovery, summary. Playbook, approvals and expectations: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
+### A whole round: round_executor.py
+- [round_executor.py](round_executor.py) runs `release.runs` of `runner_config.yaml` (one run_executor.py per model, all at once, each in `benchmark/results/<date>-<model>/`): preflight, runs, recovery, summary. Playbook, approvals and expectations: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
 - Recovery: a run that crashed (exit 1 and others) is relaunched with `--resume`, up to `release.retries` times; answers that failed are retried the same way. A gateway outage (exit 8) waits and resumes the same folder. A run whose answers are invalid (exit 5: cut off, unreadable, a bad request) restarts from the beginning with the next entry of the model's `model_params`; the invalid folder is kept as evidence and moves to the archive at the end. A refused key (exit 6) stops the round.
 - State is in `benchmark/results/.round.json` (not in git). `--resume` resumes every unfinished run, whatever stopped it: it starts from the folders, not from the state file (`reconcile_with_folders`). A folder with every answer is complete; a run stopped by the time limit, a refused key, an outage or a crash is pending again; only a run marked invalid for its settings waits. Without `--resume` a second start is refused while a round is in progress; `--new` discards the state.
-- Snapshots: every `snapshots.every_minutes` (15) and at the end, [push_snapshots.py](push_snapshots.py) pushes the `answers.csv`, `config.json` and `report.md` of every run folder to the branch `snapshots/round-<date>`, built with a temporary git index, so the working branch is not touched. The branch is never merged; the author deletes it after the round.
-- Hosts: with `spread_runs_over_providers`, [provider_hosts.py](provider_hosts.py) reads a model's provider hosts from the gateway's own reply (`message.provider_metadata.gateway.routing`), drops a host that fails a tiny call pinned to it, and gives run r the preferred host r mod n, the others as fallback. The host of every answer is in the column `provider`; scores are pooled over the hosts. `concurrency_per_provider` (off) would count the proven concurrency per host.
+- Snapshots: every `snapshots.every_minutes` (15) and at the end, [run_folders_backup.py](run_folders_backup.py) pushes the `answers.csv`, `config.json` and `report.md` of every run folder to the branch `snapshots/round-<date>`, built with a temporary git index, so the working branch is not touched. The branch is never merged; the author deletes it after the round.
+- Hosts: with `spread_runs_over_providers`, [inference_providers.py](inference_providers.py) reads a model's provider hosts from the gateway's own reply (`message.provider_metadata.gateway.routing`), drops a host that fails a tiny call pinned to it, and gives run r the preferred host r mod n, the others as fallback. The host of every answer is in the column `provider`; scores are pooled over the hosts. `concurrency_per_provider` (off) would count the proven concurrency per host.
 - Starting runs: start each run with one background command, with no wrapper shell, `nohup` or `&`: the system then reports the run's own end (a wrapper reports its own end after seconds).
-- [check_round_alive.py](check_round_alive.py): per run, whether a process works on the folder, good answers against the total, the time of the last written answer and the cost. Verdicts: DONE, ALIVE, STALLED (no answer for `--stall-minutes`), DEAD, MACHINE RESTARTED; LOW BUDGET at 80% of `--budget`. A progress report says "running" only when it says ALIVE and the counts moved. Exit 0 when every run is DONE or ALIVE, 2 otherwise.
-- [resume_round.py](resume_round.py), called by the SessionStart hook [.claude/hooks/resume_unfinished_benchmark_round.sh](https://github.com/e1-rahabok/agent-e2/blob/main/.claude/hooks/resume_unfinished_benchmark_round.sh): when a round is in progress, a run is unfinished and no process works on it, it starts `run_round.py --resume` detached. It does nothing otherwise. Not tested live: whether a machine restart starts a session (and so the hook) without a message is not known.
-- When every run is complete it writes [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md) with [summary_all_runs.py](summary_all_runs.py) (one analysis of all runs, every number from the run folders) and moves earlier run folders to `project/archive/benchmark-results-before-<date>/`. It does not commit or merge.
+- [round_alive_check.py](round_alive_check.py): per run, whether a process works on the folder, good answers against the total, the time of the last written answer and the cost. Verdicts: DONE, ALIVE, STALLED (no answer for `--stall-minutes`), DEAD, MACHINE RESTARTED; LOW BUDGET at 80% of `--budget`. A progress report says "running" only when it says ALIVE and the counts moved. Exit 0 when every run is DONE or ALIVE, 2 otherwise.
+- [round_resume.py](round_resume.py), called by the SessionStart hook [.claude/hooks/resume_unfinished_benchmark_round.sh](https://github.com/e1-rahabok/agent-e2/blob/main/.claude/hooks/resume_unfinished_benchmark_round.sh): when a round is in progress, a run is unfinished and no process works on it, it starts `round_executor.py --resume` detached. It does nothing otherwise. Not tested live: whether a machine restart starts a session (and so the hook) without a message is not known.
+- When every run is complete it writes [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md) with [round_summary.py](round_summary.py) (one analysis of all runs, every number from the run folders) and moves earlier run folders to `project/archive/benchmark-results-before-<date>/`. It does not commit or merge.
 - Exit codes ([exit_codes.py](exit_codes.py)): 0 done; 1 crashed; 3 stopped at `--max-minutes`, relaunch with `--resume`; 4 preflight failed; 5 invalid answers; 6 credits, key or team budget refused; 7 some runs done, others failed; 8 the gateway or a provider kept failing (wait, then resume the same folder).
 
 ### Temperature
 - Temperature controls randomness in the model's word choice. 0 = always the most likely word. Higher = more varied.
-- Each model runs with the sampling settings of its own card (`generation_config.json` on Hugging Face): `config.yaml`, key `sampling`.
+- Each model runs with the sampling settings of its own card (`generation_config.json` on Hugging Face): `runner_config.yaml`, key `sampling`.
   - Gemma 4 31B and Muse Glimmer 30B: temperature 1.0, top_p 0.95, top_k 64. Qwen 3.8 27B: temperature 1.0, top_p 0.95, top_k 20.
   - Reason: a local server (vLLM, and others that read the card) applies these by default, so the benchmark sees what a user sees. Until every model ran at 0.2.
   - The frontier reference sends none: the provider's default, as a chat user meets it.
@@ -204,7 +204,7 @@ python3 benchmark/runner/retrieval_check.py
 | `answers.csv` | One row per answer: model, provider, mode, track, question, answer type, input, level, run, option order, letters, scores (exact, partial, misconception, unsure, credit, confident wrong), retrieval recall (Agent E2), model calls (`steps`), stages that acted (`tools_used`: compute, gap, repair, consensus) or the web reference's tools, verifier flags, repaired, tokens, latency, cost | Yes |
 | `report.md` | Final score and sub-scores; release gate and consensus projection; multiple-choice matrix (exact, partial, majority, margin, consistency, misconception, parse failures, recall, model calls, cost), by area and task; hardest questions | Yes |
 | `traces.jsonl` | Full prompt and retrieval trace per answer | No (large); keep locally |
-| `run.log` | Console output of the run, written by `run_round.py` | No |
+| `run.log` | Console output of the run, written by `round_executor.py` | No |
 
 ## Question fields used
 | Field | Meaning |
@@ -218,7 +218,7 @@ python3 benchmark/runner/retrieval_check.py
 - Options in `## Prompt` are lines starting with `A. ` to `H. `. Text after the options (for example `Hint:`) is kept below them.
 - The prompt states the problem in words; the images supply the values.
 - `## Answers` (the correct letters) and `## Explanation` are the key; never sent to a candidate. The runner reads only `## Answers`.
-- [project/tools/lint.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/lint.py) checks these fields.
+- [project/tools/rules_check.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/rules_check.py) checks these fields.
 
 ## Limits
 - Provider name is recorded when the gateway returns it; the field is not documented as stable.

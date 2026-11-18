@@ -14,10 +14,10 @@ Script: [benchmark/runner/retrieval_check.py](https://github.com/e1-rahabok/agen
 
 ## What it does
 - Input: every benchmark question that lists `knowledge` ids, the files a correct answer depends on ([benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md)).
-- For each question it builds Agent E2's reading set ([harness/planner.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/planner.py)) from the code-only reading of the question (no model call), on the same `## Prompt` text the model sees, options included:
+- For each question it builds Agent E2's reading set ([harness/reading_plan.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/reading_plan.py)) from the code-only reading of the question (no model call), on the same `## Prompt` text the model sees, options included:
   1. Search: the top 6 files (`--k`, default 6; the reading plan itself searches `search_k`, 10 on 2026-11-16).
-  2. Reading set: the tiers of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.2 (flow, named files, search, mechanism links, one search per claim, the rest), cut to the context budget (`context_tokens: 32000`). Settings: [benchmark/runner/config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/config.yaml).
-- It never drops an unknown id: a needed file that no longer exists (moved, renamed) stops the check, because dropping it would raise recall falsely. Moved files go in [project/tools/moved.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/moved.yaml).
+  2. Reading set: the tiers of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.2 (flow, named files, search, mechanism links, one search per claim, the rest), cut to the context budget (`context_tokens: 32000`). Settings: [benchmark/runner/runner_config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/runner_config.yaml).
+- It never drops an unknown id: a needed file that no longer exists (moved, renamed) stops the check, because dropping it would raise recall falsely. Moved files go in [project/tools/moved_ids.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/moved_ids.yaml).
 
 ```bash
 python3 benchmark/runner/retrieval_check.py                       # keyword (BM25), offline

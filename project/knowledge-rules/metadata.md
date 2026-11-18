@@ -20,7 +20,7 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 
 | Field | Meaning |
 |---|---|
-| `id` | Path without `knowledge/` and `.md`. A file that moves gets a line in [`project/tools/moved.yaml`](../tools/moved.yaml) (old id → new id): lint names the current id when an old one is still used, and `link_refs.py` rewrites links in the author documents. Not deployed: the harness reads only current ids. |
+| `id` | Path without `knowledge/` and `.md`. A file that moves gets a line in [`project/tools/moved_ids.yaml`](../tools/moved_ids.yaml) (old id → new id): lint names the current id when an old one is still used, and `link_rewriter.py` rewrites links in the author documents. Not deployed: the harness reads only current ids. |
 | `retriever_guide` | See retriever_guide above. |
 | `scope` | sp5-framework, vsphere, vcf-operations or guest-os; matches the top folder. Root file (glossary): sp5-framework. |
 | `technology` | cpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. |
@@ -38,13 +38,13 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 | `source.document` / `source.path` | `source.document`: `Knowledge base` for knowledge written from the author's material (stated once, in KNOWLEDGE-ENGINEERING.md section 2, never per file); a vendor document with version and revision; or both, separated by `;`. Lint rejects the author's book or spreadsheet names here. `source.path`: heading path or pages; for a file digested from a source note, `project/sources/<note>.md > <heading>` (lint checks that the note and heading exist and that the note carries its evidence; [project/sources/README.md](../sources/README.md)). |
 | `corrections` | Facts that differ from a vendor document named in `source.document`, kept until that document is fixed. Each entry names the section it affects. Not for the author's material: the knowledge base supersedes it. |
 | `review_notes` | Only what is still to check: section, what, and the URL or document to check against. No who-said-it tags. A settled item is deleted. |
-| `up_front` | Optional. The wrong belief of one `## Misconceptions` line of this file, as quoted in that line: the line goes to the model with every question (up-front block `rules`, [`harness/primer.py`](../../harness/primer.py)). Lint checks it matches exactly one line. |
+| `up_front` | Optional. The wrong belief of one `## Misconceptions` line of this file, as quoted in that line: the line goes to the model with every question (up-front block `rules`, [`harness/upfront_knowledge.py`](../../harness/upfront_knowledge.py)). Lint checks it matches exactly one line. |
 | `status` | draft (not reviewed) or reviewed. Agent E2 says so when an answer depends on a draft file. |
 
 - Audit information (corrections, what is still to check, review state) lives only in the metadata block. Body text and headings carry no audit markers and no who-said-it tags: no "", no "the author states".
 
 ## Dimensions not to mix
-The concepts behind the tags; the allowed values are in [`project/tools/tags.yaml`](../tools/tags.yaml).
+The concepts behind the tags; the allowed values are in [`project/tools/rules_check_values.yaml`](../tools/rules_check_values.yaml).
 - Object type: a kind of managed object (VirtualMachine, HostSystem). Not a component inside an object (vCPU, vmnic).
 - Object: one named instance of an object type ("db01"). Not a metric or a layer.
 - Instance (metric): a sub-component a metric is reported for (vCPU 0, vmnic1, vmhba0). Tag `instance`. Not an object type.

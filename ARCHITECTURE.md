@@ -32,7 +32,7 @@ flowchart LR
   end
   subgraph Project["Project: not deployed"]
     P["project/<br/>plan, decisions,<br/>author questions, reviews"]
-    T["project/tools/<br/>lint.py, tags.yaml"]
+    T["project/tools/<br/>rules_check.py, rules_check_values.yaml"]
   end
   B -->|runs questions through| H
   T -->|checks| K
@@ -42,32 +42,32 @@ flowchart LR
 - Product: what runs at the customer site.
   - `knowledge/`: Level 400 mechanisms, metrics, misconceptions and flows (health checks, troubleshooting, decision trees), plus exact data in [`knowledge/catalog/`](knowledge/catalog). Up-front text and domain code in `harness/` act on it ([`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), section 2). Version 1.0 covers vSphere 9.1 metrics, the VCF Operations metrics and models computed on vSphere objects, and the Guest OS layer, for performance and capacity. The end scope is the private cloud stack (vSAN, NSX, Kubernetes, and VCF Operations beyond its vSphere metrics).
   - `harness/`: the software around the model. It holds hybrid retrieval, link expansion, the exact tools (catalog lookup and calculator; the planning calculator and the flow executor are built but not yet called by the agent), the answer verifier, web fetch and search, and the agent itself. It reads `knowledge/` and depends on no other folder.
-  - Agent: the expert's procedure as code, a neuro-symbolic expert system ([`harness/AGENT.md`](harness/AGENT.md)). It reads the question into a case, plans the reading set from the knowledge base's map ([`harness/planner.py`](harness/planner.py)), runs the exact tools, decides whether to ask, calls the model to read and write, and checks the answer.
+  - Agent: the expert's procedure as code, a neuro-symbolic expert system ([`harness/AGENT.md`](harness/AGENT.md)). It reads the question into a case, plans the reading set from the knowledge base's map ([`harness/reading_plan.py`](harness/reading_plan.py)), runs the exact tools, decides whether to ask, calls the model to read and write, and checks the answer.
   - Model: an open-weight vision model on local GPUs, chosen by the benchmark ([`benchmark/models.md`](benchmark/models.md)). It is not stored here.
 - Proof: shows that the product works by passing the benchmark. A higher score than a frontier model is an outcome, not a goal.
   - `benchmark/`: questions with answer keys and their attachments, the candidate models ([`benchmark/models.md`](benchmark/models.md)), the runner, and the results. It produces one final score, 0-100%, with sub-scores by answer type (deterministic, judged), input type (text, table, screenshot) and level (100-400). Luck is taken out with an Unsure option, the confident-wrong rate, each question scored on the mean of 5 runs, and the worst run reported as consistency. It is never indexed, because it holds the answer keys.
 - Project: how this repository is built and kept correct.
   - `project/`: the plan (milestones, decisions, open work), author questions, reviews, and the archive.
-  - [`project/tools/`](project/tools): `lint.py` (file, tag and folder checks, run before every merge) and `tags.yaml` (allowed tag values, avoided phrases).
+  - [`project/tools/`](project/tools): `rules_check.py` (file, tag and folder checks, run before every merge) and `rules_check_values.yaml` (allowed tag values, avoided phrases).
 
-- It is one repository, not two, because the benchmark runs the harness and the knowledge base at the same commit; a score therefore always belongs to one exact version of the product. `lint.py` imports the parser from [`harness/kb.py`](harness/kb.py), so the dependency points only from project to product.
+- It is one repository, not two, because the benchmark runs the harness and the knowledge base at the same commit; a score therefore always belongs to one exact version of the product. `rules_check.py` imports the parser from [`harness/knowledge_loader.py`](harness/knowledge_loader.py), so the dependency points only from project to product.
 
 ## Product
-This is one level down from the Product group: how the agent and the harness drive the model and use the knowledge, module by module, for one question. There are four layers: `knowledge/` (what is read), the `harness/` tools (built at start-up and called only by agent code), the agent's six stages (where the decisions are made, in code), and the model endpoint (`llm.py`).
+This is one level down from the Product group: how the agent and the harness drive the model and use the knowledge, module by module, for one question. There are four layers: `knowledge/` (what is read), the `harness/` tools (built at start-up and called only by agent code), the agent's six stages (where the decisions are made, in code), and the model endpoint (`model_client.py`).
 
 ![Agent E2 Product: knowledge, harness tools, the six agent stages and the model endpoint, with the four model calls numbered](images/product-architecture.svg)
 
 - Read it left to right through the agent band: 1 Understand, 2 Plan, 3 Compute, 4 Ask, Prompt, 5 Answer, 6 Check, Consensus. The stage view, with its evidence, is in [`harness/AGENT.md`](harness/AGENT.md), section 3.
 - Orange lines are the model calls: 1 is the case (temperature 0) and 2 the draft. Calls 3 (the gap follow-up) and 4 (the repair) fire only when the agent finds a gap or a hard verifier issue. Consensus repeats 5 and 6 on the same reading set.
 - Purple dashed lines show agent code calling a tool. The model calls no tool and never chooses a file.
-- Grey dashed lines are built but not yet called: the `flows.py` executable steps (Q166) and the `capacity.py` planning calculator.
-- Source: [`project/tools/draw_product_diagram.py`](project/tools/draw_product_diagram.py) draws the SVG. Change it along with any change to `harness/` that the diagram shows, and run it from the repository root. The diagram is laid out by hand, not with Mermaid, because Mermaid's automatic layout pulled the stages out of order at this size.
+- Grey dashed lines are built but not yet called: the `flow_executor.py` executable steps (Q166) and the `capacity_calculator.py` planning calculator.
+- Source: [`project/tools/product_diagram.py`](project/tools/product_diagram.py) draws the SVG. Change it along with any change to `harness/` that the diagram shows, and run it from the repository root. The diagram is laid out by hand, not with Mermaid, because Mermaid's automatic layout pulled the stages out of order at this size.
 
 ## 1. Parts
 | Part | What it is | Where | What it decides |
 |---|---|---|---|
 | Knowledge | Level 400 facts, mechanisms, misconceptions, flows (markdown) and exact data (YAML catalog); up-front misconceptions | `knowledge/` | Nothing. It is the first source, and where it speaks, it wins. |
-| Agent | The expert's procedure as code: six stages from question to checked answer ([`harness/AGENT.md`](harness/AGENT.md)) | [`harness/agent.py`](harness/agent.py), [`harness/planner.py`](harness/planner.py) | The case, the reading set, which exact tools run on which values, whether to ask, and when the answer is accepted. |
+| Agent | The expert's procedure as code: six stages from question to checked answer ([`harness/AGENT.md`](harness/AGENT.md)) | [`harness/expert_agent.py`](harness/expert_agent.py), [`harness/reading_plan.py`](harness/reading_plan.py) | The case, the reading set, which exact tools run on which values, whether to ask, and when the answer is accepted. |
 | Harness | The execution environment and the guardrails: hybrid search engine (BM25 + vectors), SQLite catalog, calculator, planning calculator and flow executor (not yet called), web fetch and search, budgets, and the answer verifier | `harness/` | Nothing on its own. It runs what the agent asks for and enforces the limits. |
 | Model | An open-weight vision LLM on local GPUs ([`benchmark/models.md`](benchmark/models.md)). Vision is a hard requirement: the model reads the pixels of every uploaded screenshot ([MISSION.md](MISSION.md), Non-functional) | served by vLLM, llama.cpp or Ollama | How to read the question and the images into the case, and how to turn the reading set into an answer: which options are right, which mechanism applies. It does not choose what to read. |
 
@@ -102,7 +102,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 | Mixes the VM and ESXi meanings of one label | One object per metric file; `same_name` links; a reminder before answering | Knowledge + harness |
 | Calls a Guest OS metric a VM metric | A separate `guest-os/` layer; the `layer` tag; a lint rule | Knowledge |
 | Gets a unit, rollup, statistics level or arithmetic wrong | Catalog lookup and calculator | Harness |
-| Loses track in a multi-step capacity plan (six numbers, three classes, HA) | Planning calculator (`capacity.py`): the agent computes from the case's inputs and the model explains. Built; still to wire into stage 3 | Harness |
+| Loses track in a multi-step capacity plan (six numbers, three classes, HA) | Planning calculator (`capacity_calculator.py`): the agent computes from the case's inputs and the model explains. Built; still to wire into stage 3 | Harness |
 | Skips steps or jumps to a conclusion | The flow comes first in the reading set (tier 1) and the model follows its numbered steps. Still to build: the flow executor, where the agent compares the case's values with each step's test and takes the branch (Q166) | Knowledge + agent |
 | Does not know which file it needs | Reading plan: named files, their mechanism links, one search per claim | Knowledge + agent |
 | Invents a threshold | Rule: quote a threshold only with its source; the thresholds catalog; the verifier flags numbers not in the text | Knowledge + harness |
@@ -119,8 +119,8 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 | Index | Disk | Chunks and vectors built from `knowledge/`, tied to one git commit (the index version) |
 
 - Updates arrive as a bundle (knowledge, catalog, index, and optionally new weights), either downloaded or imported offline. No customer data is sent out. Lab exception (author, 2026-11-17): the author's lab VCF may send its live data to the gateway model; customer sites keep this rule and the local model.
-- Internet access comes through two harness tools: `fetch_url` for a link in the question, and `web_search` only for current facts (bugs, builds, maximums, renamed features). Both go through the customer's proxy and send only public requests, never customer data. Fetched text is untrusted: it is trimmed to the relevant parts, placed after the knowledge-base files, and checked against them. The rules are in [`MISSION.md`](MISSION.md), section 5 (Ways to ask, Answer). Built in [`harness/web.py`](harness/web.py):
-  - Every URL in the question (up to 3) is read before the model starts (`web.gather`, stage 5 of the agent). The model calls no tool; only the benchmark's frontier reference (mode `web`) gets `web_search` and `fetch_url` as tools.
+- Internet access comes through two harness tools: `fetch_url` for a link in the question, and `web_search` only for current facts (bugs, builds, maximums, renamed features). Both go through the customer's proxy and send only public requests, never customer data. Fetched text is untrusted: it is trimmed to the relevant parts, placed after the knowledge-base files, and checked against them. The rules are in [`MISSION.md`](MISSION.md), section 5 (Ways to ask, Answer). Built in [`harness/public_web_lookup.py`](harness/public_web_lookup.py):
+  - Every URL in the question (up to 3) is read before the model starts (`public_web_lookup.gather`, stage 5 of the agent). The model calls no tool; only the benchmark's frontier reference (mode `web`) gets `web_search` and `fetch_url` as tools.
   - Search runs only when the question asks for current facts, matched against a pattern list: known bugs, builds, patches, release notes, maximums, defaults, renamed, end of support. The agent decides by that rule, not the model.
   - The search query keeps product words, versions and KB numbers, and drops tokens that look like the customer's system names (letters mixed with digits, dots or underscores), so the names of VMs, hosts and datastores do not leave the site.
   - Private, loopback and link-local addresses are refused, and an optional allow list restricts hosts.
@@ -133,7 +133,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
     2. SearXNG on site, vendor sites only. SearXNG queries public search engines from the server. Some security teams reject it because it scrapes those engines, and server-side outbound access is usually stricter than users' browsing. The query scrubbing and the vendor-only filter are the controls to show them.
     3. No outbound access from the Agent E2 VM. Agent E2 says it cannot read the page and asks the user to paste the relevant text; answers come from the knowledge base.
   - Every option keeps the rule that no customer data leaves the site.
-- The benchmark reaches the same open-weight models through the Vercel AI Gateway; at a customer site, [`harness/llm.py`](harness/llm.py) points at the local server instead. The harness code is the same.
+- The benchmark reaches the same open-weight models through the Vercel AI Gateway; at a customer site, [`harness/model_client.py`](harness/model_client.py) points at the local server instead. The harness code is the same.
 - The deployment is one VM with a GPU (passthrough or vGPU) on the customer's own VCF. VMware Private AI Foundation with NVIDIA is the natural platform (to verify against current product documentation).
 - The assistant's own GPU VM is monitored by the same rules: [`knowledge/vsphere/technology/gpu/gpu-monitoring.md`](knowledge/vsphere/technology/gpu/gpu-monitoring.md).
 
@@ -143,9 +143,9 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 
 | Level | What it checks | Needs a model | Command |
 |---|---|---|---|
-| Tools | Catalog, calculator, flows, verifier give exact, expected results | No | `python3 -m unittest harness/test_tools.py` |
+| Tools | Catalog, calculator, flows, verifier give exact, expected results | No | `python3 -m unittest harness/test_harness.py` |
 | Retrieval check | For every question, are the files it needs found and put in the context? | No | `python3 benchmark/runner/retrieval_check.py` (add `--embeddings` for hybrid) |
-| Whole system | Model + harness + knowledge on the question set; recall per answer shows whether the files were found or read | Yes | `python3 benchmark/runner/answer_questions.py` |
+| Whole system | Model + harness + knowledge on the question set; recall per answer shows whether the files were found or read | Yes | `python3 benchmark/runner/run_executor.py` |
 
 - The current retrieval result is in [`project/plan.md`](project/plan.md), M3.
 - Reading a wrong answer: if the needed file is not in context, it is a retrieval or knowledge problem; if the file is in context but the answer is wrong, it is a model or prompt problem; if the file is missing from the knowledge base, it is a knowledge gap.
@@ -155,7 +155,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 
 ## 8. Local LLM use
 - The design target is a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.
-- `harness/` implements the steps below ([`harness/kb.py`](harness/kb.py), [`harness/retrieval.py`](harness/retrieval.py), [`harness/modes.py`](harness/modes.py), [`harness/agent.py`](harness/agent.py)). They are also the contract for any other RAG stack.
+- `harness/` implements the steps below ([`harness/knowledge_loader.py`](harness/knowledge_loader.py), [`harness/knowledge_search.py`](harness/knowledge_search.py), [`harness/answer_modes.py`](harness/answer_modes.py), [`harness/expert_agent.py`](harness/expert_agent.py)). They are also the contract for any other RAG stack.
 
 ### Retrieval approach
 - Retrieval, not fine-tuning, supplies the facts, for four reasons: the knowledge is not on the Internet, it changes often, answers must cite files, and small models memorise facts poorly.
@@ -175,11 +175,11 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 5. Keep image links in the chunk. The text next to each image states the same facts, so Agent E2 can understand it.
 6. Index each `images` entry as its own record (path, alt text, tags), so an image can be retrieved by product, object, metric or type, and returned with what it shows.
 7. Load `knowledge/catalog/*.yaml` into a database for exact lookups (unit, rollup, statistics level, thresholds, object relations). Do not chunk it as prose.
-8. Up front as well as indexed: the misconception lines marked `up_front` in their files and the confusable pairs of [`knowledge/glossary.md`](knowledge/glossary.md) reach the model with every question as up-front blocks ([`harness/primer.py`](harness/primer.py)). All five paths by which knowledge reaches the model are in [`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), section 2.
+8. Up front as well as indexed: the misconception lines marked `up_front` in their files and the confusable pairs of [`knowledge/glossary.md`](knowledge/glossary.md) reach the model with every question as up-front blocks ([`harness/upfront_knowledge.py`](harness/upfront_knowledge.py)). All five paths by which knowledge reaches the model are in [`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), section 2.
 
 ### Query
-0. Map the user's words ([`harness/terms.py`](harness/terms.py), [`knowledge/catalog/user-terms.yaml`](knowledge/catalog/user-terms.yaml)). Users write Level 300 terms ("CPU usage is high", "steal time", "the real-time chart"). Each matched row adds knowledge-base terms to the search query, pulls its files into the context, and adds one note on the misconception the words carry. This is deterministic code with no model; it is part of the case (stage 1) and tier 2 of the reading plan.
-1. Read the question into the case (stage 1 of [`harness/AGENT.md`](harness/AGENT.md)): its `retriever_guide` kind (how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting, decision-tree), objects, layer, metrics with values, claims, missing facts, and what each image shows. The agent also reads the question on its own: object words, metric titles and counter keys, values in ms, options and their parts ([`harness/planner.py`](harness/planner.py), [`harness/agent.py`](harness/agent.py)).
+0. Map the user's words ([`harness/user_terms.py`](harness/user_terms.py), [`knowledge/catalog/user-terms.yaml`](knowledge/catalog/user-terms.yaml)). Users write Level 300 terms ("CPU usage is high", "steal time", "the real-time chart"). Each matched row adds knowledge-base terms to the search query, pulls its files into the context, and adds one note on the misconception the words carry. This is deterministic code with no model; it is part of the case (stage 1) and tier 2 of the reading plan.
+1. Read the question into the case (stage 1 of [`harness/AGENT.md`](harness/AGENT.md)): its `retriever_guide` kind (how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting, decision-tree), objects, layer, metrics with values, claims, missing facts, and what each image shows. The agent also reads the question on its own: object words, metric titles and counter keys, values in ms, options and their parts ([`harness/reading_plan.py`](harness/reading_plan.py), [`harness/expert_agent.py`](harness/expert_agent.py)).
 2. Filters: the objects the question names filter the metric files it names (tier 2), and the case's kind picks the flow (tier 1). `product`, `technology` and `pillar` are not used as search filters.
 3. Retrieve by similarity: hybrid search on the question, and one search per claim.
 4. Expand: add the files named in `same_name`, `internal_derive` and `related` (the reading plan does not follow `same_meaning`).
@@ -195,7 +195,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 - Each file in the reading set shows its `status`. The answer prompt has no draft rule, and answers never mention review status (MISSION.md, D1). Release content is reviewed (284 of 285 knowledge files are draft ; project/plan.md, M6).
 - Use the terms of [`knowledge/glossary.md`](knowledge/glossary.md): preferred names, other names, confusable terms.
 - Quote a threshold only when a file states it with its source.
-- One clarifying round ([`harness/clarify.py`](harness/clarify.py), `modes.converse`; rules in MISSION.md, section 5). The agent decides whether the round is offered (stage 4): it is offered when the case lists a missing fact or reads a premise, or when a term-map row marked `premise` matches; otherwise the prompt has no clarifying rule. When the round is offered, the conversation kind `chat` lets the model reply `CLARIFY:` with at most 3 questions, each with its reason, when the question is odd or illogical, the text and an attachment disagree, or one missing fact changes the answer. The second turn runs `chat_final`: the original question, the questions asked and the user's reply, with the rule to answer now; a second request to clarify gets one repair turn. Term-map rows marked `premise` flag their note as a possible wrong premise. The benchmark kinds (`choice`, `open`) never offer the round.
+- One clarifying round ([`harness/user_clarification.py`](harness/user_clarification.py), `answer_modes.converse`; rules in MISSION.md, section 5). The agent decides whether the round is offered (stage 4): it is offered when the case lists a missing fact or reads a premise, or when a term-map row marked `premise` matches; otherwise the prompt has no clarifying rule. When the round is offered, the conversation kind `chat` lets the model reply `CLARIFY:` with at most 3 questions, each with its reason, when the question is odd or illogical, the text and an attachment disagree, or one missing fact changes the answer. The second turn runs `chat_final`: the original question, the questions asked and the user's reply, with the rule to answer now; a second request to clarify gets one repair turn. Term-map rows marked `premise` flag their note as a possible wrong premise. The benchmark kinds (`choice`, `open`) never offer the round.
 
 ### Flow questions (`health-check`, `troubleshooting`, `decision-tree`)
 - Retrieve the matching flow file first: the object's health check, the troubleshooting flow for the symptom, or the decision tree for the question. Retrieve its `internal_derive` metric files with it.

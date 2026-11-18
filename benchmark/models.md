@@ -1,7 +1,7 @@
 # Models
 
 Candidate models and the frontier reference for the benchmark. Not indexed.
-Settings: [benchmark/runner/config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/config.yaml). Why a small local model can win: [MISSION.md](../MISSION.md), section 3. Model size: section Model size and speed below.
+Settings: [benchmark/runner/runner_config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/runner_config.yaml). Why a small local model can win: [MISSION.md](../MISSION.md), section 3. Model size: section Model size and speed below.
 
 ## 1. What model the goal needs
 The goal is Level 400 on a narrow domain, for VMware administrators. That sets what the model must do, and what it must not do.
@@ -75,7 +75,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 ### Two ways to reach a model
 | | Benchmark | Customer site |
 |---|---|---|
-| Where the model runs | A hosting provider's GPUs, reached through Vercel AI Gateway (`https://ai-gateway.vercel.sh/v1`, `gateway` in `config.yaml`) | The customer's own GPU VM, on its own VCF |
+| Where the model runs | A hosting provider's GPUs, reached through Vercel AI Gateway (`https://ai-gateway.vercel.sh/v1`, `gateway` in `runner_config.yaml`) | The customer's own GPU VM, on its own VCF |
 | Who serves it | The provider the gateway routes to (for example Baseten, Fireworks, Groq); the runner records it per answer when the gateway returns it | vLLM, llama.cpp or Ollama, installed by the VMware administrator at initial setup |
 | Weights | The provider's copy and precision | Downloaded from Hugging Face, at the precision the GPU allows |
 | Internet | Yes | Not required; customer data stays on site |
@@ -83,7 +83,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 
 - One gateway: Vercel AI Gateway. It is an OpenAI-compatible front door to many providers and many models, so the runner tests 3 or 10 models with one API key and one code path. It is a test convenience only.
 - Hugging Face is not a gateway here. It is where the open weights are published; this file uses it to check size, licence and release date, and the site downloads the weights from it.
-- Both speak the same OpenAI-compatible API. The harness changes one setting ([harness/llm.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/llm.py): base URL and key); the retrieval, tools, prompts and verifier are the same code (`ARCHITECTURE.md`, section 5).
+- Both speak the same OpenAI-compatible API. The harness changes one setting ([harness/model_client.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/model_client.py): base URL and key); the retrieval, tools, prompts and verifier are the same code (`ARCHITECTURE.md`, section 5).
 - So the gateway is not part of the product and is not relevant at the customer site. It is the reason for criterion 6: a model that is not on the gateway cannot be benchmarked cheaply, and a model without downloadable weights cannot be deployed.
 
 ### What the gateway does not prove
@@ -134,7 +134,7 @@ Preferred, not required:
 - Muse-Glimmer-30B: the gateway does not tag it `open-weights`; the weights and the Apache 2.0 licence are on Hugging Face (`meta-models/Muse-Glimmer-30B`, 29.8B parameters, checked 2026-11-05).
 - mistral-small (removed, section 7): the gateway description says the id serves Mistral Small 4 (2026-03, `mistralai/Mistral-Small-4-119B-2603`), the latest Mistral Small in the Mistral model list (https://docs.mistral.ai/models, checked 2026-11-05). The gateway's 2024-09 release date is older than the model the id now serves; the description is the authority. It is 119B MoE, not 24B dense as this file said before.
 - Licences checked on Hugging Face. The Gemma licence allows commercial use; read it before deployment.
-- Request settings (`model_params` in `config.yaml`; [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md), section Request settings per model): qwen3.8-27b and muse-glimmer-30b are reasoning models. With the default settings they spend 2,000-4,300 tokens per answer thinking, are cut off at the 4,000-token cap, and take 3-8 times longer than gemma-4-31b-it. The final round sends reasoning off (`effort: none` for Qwen, `enabled: false` for Muse). That is a choice: it measures the model without thinking, and a deployment with thinking on needs its own run. The next entries of each list (effort low, with room for 8,000 tokens) are the fallback when the preflight or the health check finds cut-off answers.
+- Request settings (`model_params` in `runner_config.yaml`; [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md), section Request settings per model): qwen3.8-27b and muse-glimmer-30b are reasoning models. With the default settings they spend 2,000-4,300 tokens per answer thinking, are cut off at the 4,000-token cap, and take 3-8 times longer than gemma-4-31b-it. The final round sends reasoning off (`effort: none` for Qwen, `enabled: false` for Muse). That is a choice: it measures the model without thinking, and a deployment with thinking on needs its own run. The next entries of each list (effort low, with room for 8,000 tokens) are the fallback when the preflight or the health check finds cut-off answers.
 
 ### Measured impact of the reasoning setting (Qwen3.8-27B, round, partial runs)
 - Read as a rough comparison, not a controlled test: each attempt is a different, unfinished slice of the run (the first two were stopped by the health check after a gateway 503 burst), and gateway load differed. Reasoning off is the first attempt (2,179 of 2,910 answers, mostly baseline then part of Agent E2); effort low is the later attempts. Answer sets differ, so compare the shape, not the second decimal.
@@ -165,9 +165,9 @@ Preferred, not required:
 
 ## 5. Frontier reference
 - One frontier model, without the knowledge base: anthropic/claude-opus-5.5 only, because Agent E2 is built with Claude (Q164). Effort capped at medium, for cost.
-- Run it with `--models anthropic/claude-opus-5.5`: its proven concurrency is 3 in `concurrency_by_model` (`config.yaml`); the provider rate-limits above that in a short trial, and `adaptive_concurrency.py` probes upward from 3.
-- Effort: `model_params` in `config.yaml` sends `reasoning: {effort: medium}` and `max_tokens: 8000` (room for the thinking). The gateway accepts it (tested live 2026-11-13).
-- Mode `web`: search available, Opus decides. The baseline prompt plus two tools, web search and page fetch, offered with `tool_choice: auto` and no instruction to search; at most 5 tool calls ([harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py), `web_search_on`). Opus may answer from its own knowledge without a search, as in a chat product with search on. `tools_used` in `answers.csv` records each search and fetch it chose.
+- Run it with `--models anthropic/claude-opus-5.5`: its proven concurrency is 3 in `concurrency_by_model` (`runner_config.yaml`); the provider rate-limits above that in a short trial, and `adaptive_concurrency.py` probes upward from 3.
+- Effort: `model_params` in `runner_config.yaml` sends `reasoning: {effort: medium}` and `max_tokens: 8000` (room for the thinking). The gateway accepts it (tested live 2026-11-13).
+- Mode `web`: search available, Opus decides. The baseline prompt plus two tools, web search and page fetch, offered with `tool_choice: auto` and no instruction to search; at most 5 tool calls ([harness/answer_modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/answer_modes.py), `web_search_on`). Opus may answer from its own knowledge without a search, as in a chat product with search on. `tools_used` in `answers.csv` records each search and fetch it chose.
 - No run with the tools removed: a user cannot switch search off in a chat product by typing a prompt, so that run measures nothing a user meets. The result without tools (67%) stays in the archive as history.
 
 ## 6. Judge (archived)

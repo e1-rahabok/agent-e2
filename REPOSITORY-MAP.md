@@ -8,7 +8,7 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | [README.md](README.md) | What Agent E2 is, in one page |
 | [MISSION.md](MISSION.md) | Why a small local model can win; requirements; risks |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | The whole system: repository, parts, modes, query flow |
-| [`images/`](images) | Diagrams of the root documents: `product-architecture.svg` (ARCHITECTURE.md, section Product), drawn by [`project/tools/draw_product_diagram.py`](project/tools/draw_product_diagram.py). Not indexed |
+| [`images/`](images) | Diagrams of the root documents: `product-architecture.svg` (ARCHITECTURE.md, section Product), drawn by [`project/tools/product_diagram.py`](project/tools/product_diagram.py). Not indexed |
 | [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | The knowledge design: where knowledge lives, forms, Level 400 and misconceptions. Rules: [`project/knowledge-rules/`](project/knowledge-rules) |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to add or change a file |
 | [CLAUDE.md](CLAUDE.md) | How Claude works in this repository |
@@ -73,7 +73,7 @@ Started by one operational question; ends in a choice to act, with its reason. N
 | Folder | Holds |
 |---|---|
 | [`benchmark/questions/`](benchmark/questions) | Questions with answer keys. Never indexed. Template: [`benchmark/_templates/question.md`](benchmark/_templates/question.md) |
-| [`benchmark/runner/`](benchmark/runner) | Runner (one file per job, named by it: `answer_questions.py`, `run_round.py`, `check_round_alive.py`), retrieval check (`retrieval_check.py`), config |
+| [`benchmark/runner/`](benchmark/runner) | Runner (one file per job, named by it: `run_executor.py`, `round_executor.py`, `round_alive_check.py`), retrieval check (`retrieval_check.py`), config |
 | [`benchmark/results/`](benchmark/results) | One folder per run (`<date>-<model>`), [`README.md`](benchmark/results/README.md) (the analysis of all runs) and the retrieval check outputs (`retrieval-<date>/`) |
 | [`benchmark/RUN.md`](benchmark/RUN.md) | How to run a benchmark round: prompt, approvals, time, cost |
 | `benchmark/*.md` | [design](benchmark/design.md), [models](benchmark/models.md), [live test](benchmark/live-test.md), [retrieval check](benchmark/retrieval-check.md) |
@@ -91,4 +91,4 @@ Started by one operational question; ends in a choice to act, with its reason. N
 | [`project/sources/`](project/sources) | Source documents: book chapters, vendor PDFs, technical notes. The author adds them; Claude may edit them |
 | [`project/knowledge-rules/`](project/knowledge-rules) | Rules for knowledge files, one module each: placement, flows, metadata, thresholds, writing, terminology, vocabulary (words to avoid) |
 | [`project/templates/`](project/templates) | Templates for knowledge files: concept, metric, configuration, alerts (one object type), screen, and the three flow kinds (health check, troubleshooting, decision tree) |
-| [`project/tools/`](project/tools) | `lint.py` and `tags.yaml` (checks and allowed values), `link_refs.py` and `moved.yaml` (old file ids → current ids), `tidy.py`, `kpi_csv.py`, `answered.py`, `renumber_questions.py`, `coverage.py` (what the question set covers: counts per tag value), `draw_product_diagram.py` (the Product diagram of ARCHITECTURE.md) |
+| [`project/tools/`](project/tools) | `rules_check.py` and `rules_check_values.yaml` (checks and allowed values), `link_rewriter.py` and `moved_ids.yaml` (old file ids → current ids), `markdown_tidy.py`, `kpi_csv_sync.py`, `author_replies.py`, `question_renumber.py`, `question_coverage.py` (what the question set covers: counts per tag value), `product_diagram.py` (the Product diagram of ARCHITECTURE.md) |

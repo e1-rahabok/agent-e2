@@ -36,15 +36,15 @@ Not indexed.
 - Rows are joined by the metric's English name; no key.
 
 ### 3.2 How Agent E2 uses them
-1. Start-up: [`harness/catalog.py`](../harness/catalog.py) loads the three files into an in-memory SQLite catalog: tables `thresholds` (one-value tests with `use`: alert, decision, rule, flow; plus `criticality`, `class`, `pillar`, `interval`, `instance`), `kpi`, and `bands` (capacity model rows).
-2. Term map ([`harness/terms.py`](../harness/terms.py), [`knowledge/catalog/user-terms.yaml`](../knowledge/catalog/user-terms.yaml)): the user's words pull the metric's knowledge files into the context. No threshold is fetched here.
+1. Start-up: [`harness/catalog_database.py`](../harness/catalog_database.py) loads the three files into an in-memory SQLite catalog: tables `thresholds` (one-value tests with `use`: alert, decision, rule, flow; plus `criticality`, `class`, `pillar`, `interval`, `instance`), `kpi`, and `bands` (capacity model rows).
+2. Term map ([`harness/user_terms.py`](../harness/user_terms.py), [`knowledge/catalog/user-terms.yaml`](../knowledge/catalog/user-terms.yaml)): the user's words pull the metric's knowledge files into the context. No threshold is fetched here.
 3. Agent E2's reading set: `Catalog.facts_for(ids)` adds up to 20 "Catalog facts (exact)" lines for the files in the reading set: counters, rule rows, and the KPI levels of a KPI file (all three intervals, "no value" where empty).
 4. The agent's code calls `Catalog.lookup` with each metric name of the case (harness/AGENT.md, stage 1; the model calls no tool since 2026-11-14). It scores every counter, esxtop field, metric file and threshold row against the name (word overlap, `_score`) and returns the 8 best of each, with the KPI levels of each matched band.
 5. The LLM reads the rows, picks one, compares the value itself and writes the answer.
-6. Prompt rules ([`harness/modes.py`](../harness/modes.py), [`harness/primer.py`](../harness/primer.py)): "Quote a threshold only when the knowledge base states it"; "For a threshold, call catalog. Its values are exact."
-7. Verifier ([`harness/verify.py`](../harness/verify.py)): a number with a unit in the reason line that is not in the question or the context is recorded as "ungrounded" in the trace. Soft: it does not trigger a repair.
-8. Clarifying ([`harness/clarify.py`](../harness/clarify.py), shipped conversation only): one round of up to 3 questions when the question is odd, the text and an attachment disagree, or one missing fact (object, layer, interval, version) changes the answer.
-9. Quality checks: lint checks every catalog row (parses, fields, allowed values), a `quote` where one remains, and that no knowledge file carries a colour-band table. [`harness/test_tools.py`](../harness/test_tools.py) checks that lookups and the reading set show the catalog values.
+6. Prompt rules ([`harness/answer_modes.py`](../harness/answer_modes.py), [`harness/upfront_knowledge.py`](../harness/upfront_knowledge.py)): "Quote a threshold only when the knowledge base states it"; "For a threshold, call catalog. Its values are exact."
+7. Verifier ([`harness/answer_check.py`](../harness/answer_check.py)): a number with a unit in the reason line that is not in the question or the context is recorded as "ungrounded" in the trace. Soft: it does not trigger a repair.
+8. Clarifying ([`harness/user_clarification.py`](../harness/user_clarification.py), shipped conversation only): one round of up to 3 questions when the question is odd, the text and an attachment disagree, or one missing fact (object, layer, interval, version) changes the answer.
+9. Quality checks: lint checks every catalog row (parses, fields, allowed values), a `quote` where one remains, and that no knowledge file carries a colour-band table. [`harness/test_harness.py`](../harness/test_harness.py) checks that lookups and the reading set show the catalog values.
 
 ### 3.3 Gaps in what is built
 | # | Gap | Effect on an answer |
@@ -419,7 +419,7 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 
 ## 12. What Agent E2 always knows
 
-- An up-front prompt block, about 200 tokens, generated from the `uses` sentences of the files (as [`harness/primer.py`](../harness/primer.py) generates its blocks), states the frame before any lookup:
+- An up-front prompt block, about 200 tokens, generated from the `uses` sentences of the files (as [`harness/upfront_knowledge.py`](../harness/upfront_knowledge.py) generates its blocks), states the frame before any lookup:
   - the uses and their question, time span, spike filter, deadline;
   - a threshold applies to one reading: object, metric, instance, interval;
   - KPI colour means how bad; alert colour means by when; yellow is never an alert;
@@ -433,19 +433,19 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 | Part | Today | Target |
 |---|---|---|
 | [`knowledge/catalog/`](../knowledge/catalog) | 2 threshold files, joined by name | 6 files (section 8), joined by reading key |
-| Catalog load ([`harness/catalog.py`](../harness/catalog.py)) | Tables `thresholds` (with `use`), `kpi`, `bands` (capacity model rows) | Tables `readings`, `reading_names`, `kpi`, `tests` (sli, rule, symptom), `targets` (sla, kai, ksi), `models`, `model_inputs`, `decisions`, `alerts`, `alert_symptoms` |
+| Catalog load ([`harness/catalog_database.py`](../harness/catalog_database.py)) | Tables `thresholds` (with `use`), `kpi`, `bands` (capacity model rows) | Tables `readings`, `reading_names`, `kpi`, `tests` (sli, rule, symptom), `targets` (sla, kai, ksi), `models`, `model_inputs`, `decisions`, `alerts`, `alert_symptoms` |
 | Name to reading | Fuzzy score on English names | Exact match on `names` and external keys first; fuzzy only as fallback, marked as a guess |
 | Lookup | Returns rows | Extends the existing `catalog` tool with `value`, `use`, `class`: returns the verdict per use, `why`, "not comparable" for other readings, "depends on" for missing parts. One tool, not a new one: each tool costs prompt tokens and choice errors for a 32B LLM |
 | Comparison | By the LLM | In the catalog: levels and bands, direction, the boundary rule |
 | Alert timing | Free text | Computed: time to fire and to clear from wait and cancel cycles |
 | Reading set (`Catalog.facts_for`) | Counters and rules of the files in the reading set | Results of section 10 for every reading of the files in context, bands included |
 | Term map (`user-terms.yaml`) | Files | Files and reading keys, so the lookup starts before the LLM asks |
-| Up-front block ([`harness/primer.py`](../harness/primer.py)) | Tool advice | The threshold frame of section 12 |
-| Clarifying rule ([`harness/clarify.py`](../harness/clarify.py)) | Object, layer, interval, version | Adds instance, use, class, the customer's own setting; reads "depends on" |
-| Verifier ([`harness/verify.py`](../harness/verify.py)) | Soft check on numbers in the reason line | Every number with a unit in the whole answer checked against the returned rows; a threshold not returned triggers the repair turn after the benchmark shows it helps |
-| Lint ([`project/tools/lint.py`](tools/lint.py)) | Sections by use, no other section; `class` on SLA rows; `criticality` red or orange on alert rows; fields, quotes; `kpi` one copy, values worsen yellow to red, each line matched to its Markdown band table by metric name, both ways; capacity band rows vs Markdown | Plus: `use` and `reading` on every row; reading exists; ids unique; no yellow alert; cancel cycles within R1-R6 (section 9) |
-| Tools | `kpi_csv.py` | `kpi_csv.py` on the new files; a migration script to the 6 files |
-| Tests ([`harness/test_tools.py`](../harness/test_tools.py)) | Lookups return sourced rows | Verdicts per use, not-comparable cases, depends-on cases, alert timing, dominance |
+| Up-front block ([`harness/upfront_knowledge.py`](../harness/upfront_knowledge.py)) | Tool advice | The threshold frame of section 12 |
+| Clarifying rule ([`harness/user_clarification.py`](../harness/user_clarification.py)) | Object, layer, interval, version | Adds instance, use, class, the customer's own setting; reads "depends on" |
+| Verifier ([`harness/answer_check.py`](../harness/answer_check.py)) | Soft check on numbers in the reason line | Every number with a unit in the whole answer checked against the returned rows; a threshold not returned triggers the repair turn after the benchmark shows it helps |
+| Lint ([`project/tools/rules_check.py`](tools/rules_check.py)) | Sections by use, no other section; `class` on SLA rows; `criticality` red or orange on alert rows; fields, quotes; `kpi` one copy, values worsen yellow to red, each line matched to its Markdown band table by metric name, both ways; capacity band rows vs Markdown | Plus: `use` and `reading` on every row; reading exists; ids unique; no yellow alert; cancel cycles within R1-R6 (section 9) |
+| Tools | `kpi_csv_sync.py` | `kpi_csv_sync.py` on the new files; a migration script to the 6 files |
+| Tests ([`harness/test_harness.py`](../harness/test_harness.py)) | Lookups return sourced rows | Verdicts per use, not-comparable cases, depends-on cases, alert timing, dominance |
 
 ## 14. Alternatives considered
 
@@ -494,4 +494,4 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 - Broadcom TechDocs, VCF 9.0: [Alert Definition Best Practices](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/infrastructure-operations/configuring-alerts-and-actions/defining-alerts-best-practices.html).
 - Broadcom TechDocs, VCF 9.1: [Add a Virtual Machine CPU Usage Symptom to the Alert Definition](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/configuring-alerts-and-actions/create-a-problem-alert-definition/add-a-virtual-machine-cpu-usage-symptom-to-the-alert-definition.html).
 - Knowledge base: [`sp5-framework/performance/kpi-vs-sla`](../knowledge/sp5-framework/performance/kpi-vs-sla.md), [`sp5-framework/outputs/alert-design`](../knowledge/sp5-framework/outputs/alert-design.md), [`sp5-framework/outputs/alerts-and-insights`](../knowledge/sp5-framework/outputs/alerts-and-insights.md), [`vcf-operations/alert-definitions`](../knowledge/vcf-operations/alert-definitions.md), the cluster models, `close-for-business`, [`sp5-framework/observability/thresholds`](../knowledge/sp5-framework/observability/thresholds.md).
-- Harness: [`harness/catalog.py`](../harness/catalog.py), [`harness/agent.py`](../harness/agent.py), [`harness/modes.py`](../harness/modes.py), [`harness/primer.py`](../harness/primer.py), [`harness/clarify.py`](../harness/clarify.py), [`harness/verify.py`](../harness/verify.py), [`project/tools/lint.py`](tools/lint.py).
+- Harness: [`harness/catalog_database.py`](../harness/catalog_database.py), [`harness/expert_agent.py`](../harness/expert_agent.py), [`harness/answer_modes.py`](../harness/answer_modes.py), [`harness/upfront_knowledge.py`](../harness/upfront_knowledge.py), [`harness/user_clarification.py`](../harness/user_clarification.py), [`harness/answer_check.py`](../harness/answer_check.py), [`project/tools/rules_check.py`](tools/rules_check.py).

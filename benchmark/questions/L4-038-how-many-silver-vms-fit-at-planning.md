@@ -37,7 +37,7 @@ B
 4. Name the binding resource and model: memory utilization.
 
 ## Notes
-- Synthetic, 2026-11-11, from Capacity Planning Stage.xlsx (sheet Read Me, the 6-number example); checked with harness/capacity.py (`vms_per_host`). Counts only after the author's approval.
+- Synthetic, 2026-11-11, from Capacity Planning Stage.xlsx (sheet Read Me, the 6-number example); checked with harness/capacity_calculator.py (`vms_per_host`). Counts only after the author's approval.
 - The six-number policy is stated in the prompt (a team policy, design.md section 6.1 F3). The key is per host in whole VMs.
 - Changed in the 2026-11-15 audit: host and cluster numbers differ from the knowledge-base example (F5), and the stem no longer explains what one busy vCPU fills.
 
