@@ -129,6 +129,19 @@ class CatalogTest(unittest.TestCase):
         r = CAT.thresholds(name='ESXi Disk Kernel Latency (KAVG)')['thresholds'][0]
         self.assertEqual((r['use'], r['step'], r['source']), ('flow', 1, 'knowledge-base'))
 
+    def test_two_reading_flow_test(self):
+        # The warm-up or sustained test of is-memory-tiering-slowing-host step 3, applied by code from its flow row.
+        q = 'esxi-pay-05, Tuesday 09:10 and 10:15: NVMe read bandwidth 380 MBps and 360 MBps; latency 290 µs and 280 µs.'
+        out = expert_agent.two_reading_tests(q)
+        self.assertEqual(len(out), 1)
+        self.assertIn('380 MBps at 09:10 and 360 MBps at 10:15, 65 minutes apart: above 200 MBps at the second reading: sustained', out[0])
+        self.assertIn('flow row flow-esxi-nvme-read-sustained', out[0])
+        warm = expert_agent.two_reading_tests('After the August weekend, 09:10 and 10:15: NVMe read bandwidth 70 MBps and 8 MBps.')
+        self.assertIn('at or below 200 MBps at the second reading: a warm-up after an idle period', warm[0])
+        close = expert_agent.two_reading_tests('09:10 and 09:30: NVMe read bandwidth 380 MBps and 360 MBps.')
+        self.assertIn('too close to tell', close[0])
+        self.assertEqual(expert_agent.two_reading_tests('NVMe read bandwidth 380 MBps.'), [])
+
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
         self.assertEqual(uses, {'decision', 'rule', 'flow'})
