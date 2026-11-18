@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VCF Operations — vSphere Specialist Workspace</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            vcf: {
+              bg: '#0f172a',
+              card: '#1e293b',
+              cardHover: '#263349',
+              border: '#334155',
+              sky: '#38bdf8',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              red: '#ef4444',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* Custom dark enterprise scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="bg-[#0f172a] text-slate-100 font-sans antialiased selection:bg-sky-500/30 selection:text-sky-200 min-h-screen flex flex-col">
+
+  <!-- ===================================================================== -->
+  <!-- TOP NAVIGATION BAR (STRICT L2 SPECIALIST WORKSPACE)                   -->
+  <!-- ===================================================================== -->
+  <header class="bg-[#0f172a]/95 backdrop-blur border-b border-[#334155] sticky top-0 z-30">
+    <div class="max-w-[1760px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+      
+      <!-- Left: Brand + 3 Primary Top-Level Tabs -->
+      <div class="flex items-center gap-6">
+        <!-- Brand Identity -->
+        <div class="flex items-center gap-2.5 shrink-0">
+          <div class="w-7 h-7 rounded bg-sky-500/15 border border-sky-400/40 flex items-center justify-center">
+            <svg class="w-4 h-4 text-[#38bdf8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 9h6v6H9z" />
+            </svg>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold tracking-tight text-[15px] text-white">VCF Operations</span>
+            <span class="hidden sm:inline-block text-[11px] font-mono font-medium px-2 py-0.5 rounded bg-[#1e293b] text-[#38bdf8] border border-[#334155]">
+              vSphere Specialist Workspace
+            </span>
+          </div>
+        </div>
+
+        <!-- Desktop 3-Tab Switcher -->
+        <nav class="hidden lg:flex items-center gap-1 bg-[#1e293b] p-1 rounded-lg border border-[#334155]" aria-label="Workspace Views">
+          <button id="nav-tab-reactive" onclick="switchTopTab('reactive')"
+            class="px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all bg-[#38bdf8] text-slate-950 shadow-sm flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-red-600"></span>
+            <span>Reactive: Escalations &amp; Alerts (Fix)</span>
+          </button>
+          <button id="nav-tab-proactive" onclick="switchTopTab('proactive')"
+            class="px-3.5 py-1.5 rounded-md text-xs font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#10b981]"></span>
+            <span>Proactive: Health &amp; Capacity (Improve)</span>
+          </button>
+          <button id="nav-tab-policies" onclick="switchTopTab('policies')"
+            class="px-3.5 py-1.5 rounded-md text-xs font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800 flex items-center gap-1.5">
+            <span>Automation Policies</span>
+            <span id="audit-badge-count" class="px-1.5 py-0.2 bg-slate-900 text-slate-300 border border-[#334155] rounded text-[10px] font-mono">4</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Right: User Profile & Scope Indicator -->
+      <div class="flex items-center gap-3 text-xs">
+        <div class="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#1e293b] border border-[#334155] font-mono text-[11px] text-slate-300">
+          <svg class="w-3.5 h-3.5 text-[#38bdf8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2" />
+          </svg>
+          <span>14 vCenters &middot; 182 Clusters</span>
+        </div>
+
+        <div class="flex items-center gap-2.5 bg-[#1e293b] border border-[#334155] px-3 py-1.5 rounded-md">
+          <div class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-400/40 text-[#38bdf8] font-mono font-bold text-[11px] flex items-center justify-center">
+            IR
+          </div>
+          <div class="leading-tight">
+            <div class="font-semibold text-white text-xs">Iwan Rahabok</div>
+            <div class="text-[10px] text-slate-400 hidden sm:block">Principal vSphere Specialist</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile / Tablet Responsive Navigation Bar -->
+    <div class="flex lg:hidden border-t border-[#334155] bg-[#1e293b] px-4 py-1.5 gap-2 overflow-x-auto">
+      <button id="mob-tab-reactive" onclick="switchTopTab('reactive')"
+        class="px-3 py-1.5 rounded text-xs font-semibold bg-[#38bdf8] text-slate-950 whitespace-nowrap">
+        Reactive: Escalations &amp; Alerts (Fix)
+      </button>
+      <button id="mob-tab-proactive" onclick="switchTopTab('proactive')"
+        class="px-3 py-1.5 rounded text-xs font-medium text-slate-300 bg-slate-900 whitespace-nowrap">
+        Proactive: Health &amp; Capacity (Improve)
+      </button>
+      <button id="mob-tab-policies" onclick="switchTopTab('policies')"
+        class="px-3 py-1.5 rounded text-xs font-medium text-slate-300 bg-slate-900 whitespace-nowrap">
+        Automation Policies
+      </button>
+    </div>
+  </header>
+
+  <!-- Non-Intrusive Toast Notification -->
+  <div id="toast-notification" class="hidden fixed bottom-5 left-5 z-50 max-w-lg bg-[#1e293b] text-slate-100 px-4 py-3 rounded-lg shadow-2xl border border-sky-500/50 flex items-center gap-3 text-xs">
+    <span class="w-2.5 h-2.5 rounded-full bg-[#10b981] shrink-0"></span>
+    <span id="toast-text" class="leading-relaxed font-medium">Action completed.</span>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MAIN WORKSPACE CONTAINER (LEFT/CENTER CANVAS + RIGHT ASSISTANT DOCK)  -->
+  <!-- ===================================================================== -->
+  <div class="flex-1 max-w-[1760px] w-full mx-auto px-4 sm:px-6 py-5">
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
+
+      <!-- ================================================================= -->
+      <!-- LEFT / CENTER PRIMARY CANVAS (8 of 12 Columns)                    -->
+      <!-- ================================================================= -->
+      <div class="xl:col-span-8 space-y-5">
+
+        <!-- =============================================================== -->
+        <!-- TAB 1: REACTIVE: ESCALATIONS & ALERTS (FIX) — BOTTOM-UP         -->
+        <!-- =============================================================== -->
+        <div id="view-reactive" class="space-y-5">
+
+          <!-- Bottom-Up Workflow Direction Header + Case Selector Strip -->
+          <section class="space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 bg-[#1e293b]/70 border border-[#334155] rounded-lg px-4 py-2.5">
+              <div class="flex items-center gap-2.5">
+                <span class="px-2 py-0.5 rounded bg-sky-500/15 border border-sky-400/40 text-[#38bdf8] font-mono text-[11px] font-semibold">
+                  BOTTOM-UP WORKFLOW
+                </span>
+                <span class="text-xs text-slate-300">
+                  Trace from symptomatic <strong class="text-white">VM / ESXi Host</strong> &rarr; <strong class="text-white">Cluster / vCenter</strong> root cause
+                </span>
+              </div>
+              <span class="text-[11px] font-mono text-slate-400">2 Active Items Requiring L2 Fix</span>
+            </div>
+
+            <!-- Two Reactive Case Selector Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              
+              <!-- Case #402 Card -->
+              <button id="reactive-card-402" onclick="selectReactiveCase('402')"
+                class="text-left bg-[#1e293b] rounded-lg p-4 border-2 border-[#38bdf8] shadow-md transition-all hover:bg-[#263349]">
+                <div class="flex items-center justify-between gap-2 mb-1.5">
+                  <span class="px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-red-500/15 text-[#ef4444] border border-red-500/30">
+                    CASE #402 &middot; ESCALATED FROM L1
+                  </span>
+                  <span class="text-[11px] font-mono text-sky-300">5 Artifacts Pinned</span>
+                </div>
+                <div class="font-mono text-xs text-amber-400 mb-1">
+                  SQL-DB-01 &rarr; esxi-07.sg.local &rarr; Cluster-SG-Prod-04
+                </div>
+                <p class="text-sm font-semibold text-white leading-snug">
+                  Severe CPU Ready (%RDY 14.8%) &amp; Co-Stop (%CSTP 9.2%)
+                </p>
+              </button>
+
+              <!-- Case #409 Card -->
+              <button id="reactive-card-409" onclick="selectReactiveCase('409')"
+                class="text-left bg-[#1e293b] rounded-lg p-4 border border-[#334155] transition-all hover:bg-[#263349]">
+                <div class="flex items-center justify-between gap-2 mb-1.5">
+                  <span class="px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-amber-500/15 text-[#f59e0b] border border-amber-500/30">
+                    CASE #409 &middot; URGENT ALERT
+                  </span>
+                  <span class="text-[11px] font-mono text-emerald-400">0 Charts Needed</span>
+                </div>
+                <div class="font-mono text-xs text-slate-400 mb-1">
+                  SAP-HANA-02 &rarr; Cluster-SG-Prod-02
+                </div>
+                <p class="text-sm font-semibold text-white leading-snug">
+                  vSphere HA Failover Capacity Violated (0 Charts Needed)
+                </p>
+              </button>
+
+            </div>
+          </section>
+
+          <!-- Simulation Active Banner (Shown when Simulate Impact is toggled ON in Case #402) -->
+          <div id="reactive-sim-banner" class="hidden bg-emerald-950/80 border border-[#10b981] rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <span class="px-2 py-0.5 rounded bg-[#10b981] text-slate-950 font-mono text-[11px] font-bold">
+                POST-REMEDIATION SIMULATION
+              </span>
+              <span id="reactive-sim-text" class="text-xs text-emerald-100 font-medium">
+                Overlaying projected telemetry after live vMotion of SQL-DB-01 to esxi-09.sg.local...
+              </span>
+            </div>
+            <button onclick="toggleSimulation()" class="text-xs font-semibold text-[#10b981] hover:underline">
+              Reset Overlay
+            </button>
+          </div>
+
+          <!-- Dynamic Reactive Investigation Container (Populated by JS) -->
+          <div id="reactive-detail-container" class="space-y-5"></div>
+
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- TAB 2: PROACTIVE: HEALTH & CAPACITY (IMPROVE) — TOP-DOWN        -->
+        <!-- =============================================================== -->
+        <div id="view-proactive" class="hidden space-y-5">
+
+          <!-- Top-Down Workflow Direction Header -->
+          <div class="flex flex-wrap items-center justify-between gap-2 bg-[#1e293b]/70 border border-[#334155] rounded-lg px-4 py-2.5">
+            <div class="flex items-center gap-2.5">
+              <span class="px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/40 text-[#10b981] font-mono text-[11px] font-semibold">
+                TOP-DOWN WORKFLOW
+              </span>
+              <span class="text-xs text-slate-300">
+                Drill down from <strong class="text-white">14 vCenters Estate Health</strong> &rarr; <strong class="text-white">Cluster Headroom</strong> &rarr; <strong class="text-white">VM &amp; Host Optimization</strong>
+              </span>
+            </div>
+            <span class="text-[11px] font-mono text-slate-400">Daily Proactive Engineering Review</span>
+          </div>
+
+          <!-- Top-Down Estate Summary Bar (4 KPI Cards) -->
+          <section aria-label="Estate Health Summary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+            
+            <!-- KPI 1 -->
+            <div class="bg-[#1e293b] border border-[#334155] rounded-lg p-3.5">
+              <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                Overall vSphere Health Score
+              </div>
+              <div class="mt-1.5 flex items-baseline gap-2">
+                <span class="text-2xl font-mono font-bold text-[#10b981]">94 / 100</span>
+              </div>
+              <div class="mt-1 text-[11px] text-slate-400">
+                4 clusters flagged for tuning
+              </div>
+            </div>
+
+            <!-- KPI 2 -->
+            <div class="bg-[#1e293b] border border-[#334155] rounded-lg p-3.5">
+              <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                Tightest Cluster Time Remaining
+              </div>
+              <div class="mt-1.5 flex items-baseline gap-2">
+                <span id="kpi-time-remaining" class="text-2xl font-mono font-bold text-[#f59e0b]">18 Days</span>
+              </div>
+              <div class="mt-1 text-[11px] font-mono text-slate-400">
+                Cluster-SG-Prod-01 Memory
+              </div>
+            </div>
+
+            <!-- KPI 3 -->
+            <div class="bg-[#1e293b] border border-[#334155] rounded-lg p-3.5">
+              <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                Reclaimable Waste
+              </div>
+              <div class="mt-1.5 flex items-baseline gap-2">
+                <span class="text-xl font-mono font-bold text-[#38bdf8]">1.42 TB RAM &middot; 310 vCPUs</span>
+              </div>
+              <div class="mt-1 text-[11px] text-slate-400">
+                48 oversized/powered-off VMs
+              </div>
+            </div>
+
+            <!-- KPI 4 -->
+            <div class="bg-[#1e293b] border border-[#334155] rounded-lg p-3.5">
+              <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                Configuration Hygiene
+              </div>
+              <div class="mt-1.5 flex items-baseline gap-2">
+                <span class="text-2xl font-mono font-bold text-white">7 Findings</span>
+              </div>
+              <div class="mt-1 text-[11px] text-slate-400">
+                Host power policies &amp; DRS balance
+              </div>
+            </div>
+
+          </section>
+
+          <!-- Two Selectable Top-Down Improvement Items -->
+          <section class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            
+            <!-- Improvement #118 -->
+            <button id="proactive-card-118" onclick="selectProactiveItem('118')"
+              class="text-left bg-[#1e293b] rounded-lg p-4 border-2 border-[#38bdf8] shadow-md transition-all hover:bg-[#263349]">
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-amber-500/15 text-[#f59e0b] border border-amber-500/30">
+                  IMPROVEMENT #118 &middot; CAPACITY &amp; HEADROOM
+                </span>
+                <span class="text-[11px] font-mono text-sky-300">What-If Modeler</span>
+              </div>
+              <p class="text-sm font-semibold text-white leading-snug">
+                Cluster-SG-Prod-01 | Memory Headroom Exhaustion in 18 Days
+              </p>
+              <div class="mt-1.5 text-[11px] font-mono text-slate-400">
+                6.0 TB Total &rarr; 1.0 TB HA Reserve &rarr; 512 GB Reclaimable Candidates
+              </div>
+            </button>
+
+            <!-- Improvement #124 -->
+            <button id="proactive-card-124" onclick="selectProactiveItem('124')"
+              class="text-left bg-[#1e293b] rounded-lg p-4 border border-[#334155] transition-all hover:bg-[#263349]">
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-sky-500/15 text-[#38bdf8] border border-sky-500/30">
+                  IMPROVEMENT #124 &middot; CONFIGURATION HYGIENE
+                </span>
+                <span class="text-[11px] font-mono text-slate-400">Host Profile Drift</span>
+              </div>
+              <p class="text-sm font-semibold text-white leading-snug">
+                Cluster-SG-Prod-03 | Suboptimal ESXi Host Power Management Policy
+              </p>
+              <div class="mt-1.5 text-[11px] font-mono text-slate-400">
+                6 of 8 ESXi hosts running "Balanced" instead of "High Performance"
+              </div>
+            </button>
+
+          </section>
+
+          <!-- Dynamic Proactive Drill-Down Container (Populated by JS) -->
+          <div id="proactive-detail-container" class="space-y-5"></div>
+
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- TAB 3: AUTOMATION POLICIES (GUARDRAILS & AUDIT LOG)             -->
+        <!-- =============================================================== -->
+        <div id="view-policies" class="hidden space-y-5">
+
+          <!-- Header Banner -->
+          <div class="bg-[#1e293b] border border-[#334155] rounded-lg p-4 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 class="text-base font-bold text-white">Automation Policies &amp; Blast-Radius Guardrails</h1>
+              <p class="text-xs text-slate-400 mt-0.5">
+                Hard operational boundaries enforced before any automated vCenter API execution across 14 vCenters.
+              </p>
+            </div>
+            <div class="flex items-center gap-3 text-xs font-mono">
+              <span class="px-3 py-1.5 rounded bg-emerald-500/10 text-[#10b981] border border-emerald-500/30">
+                Guardrails Active: 4 / 4
+              </span>
+            </div>
+          </div>
+
+          <!-- Blast-Radius Guardrails Grid -->
+          <section class="bg-[#1e293b] border border-[#334155] rounded-lg overflow-hidden">
+            <div class="px-4 py-3 bg-slate-900/60 border-b border-[#334155] flex items-center justify-between">
+              <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200">
+                Blast-Radius Guardrails (Pre-Execution Safety Checks)
+              </h2>
+              <span class="text-[11px] font-mono text-slate-400">Scope: Global vSphere Clusters</span>
+            </div>
+
+            <div class="divide-y divide-[#334155]">
+              
+              <!-- Guardrail 1 -->
+              <div class="p-4 flex items-center justify-between gap-4">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold text-white">Exclude VMs Tagged <code class="font-mono text-[#38bdf8] bg-slate-900 px-1.5 py-0.5 rounded">Tier-0-DB</code></span>
+                    <span class="px-2 py-0.5 rounded font-mono text-[10px] bg-red-500/15 text-[#ef4444] border border-red-500/30">HARD LOCK</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">
+                    Never allow unattended vMotion, vCPU/vMEM rightsizing, or snapshot consolidation on Tier-0 database workloads without explicit L2 Specialist approval.
+                  </p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                  <input type="checkbox" checked onchange="showToast('Updated Guardrail: Exclude Tier-0-DB VMs')" class="sr-only peer" />
+                  <div class="w-9 h-5 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#38bdf8]"></div>
+                </label>
+              </div>
+
+              <!-- Guardrail 2 -->
+              <div class="p-4 flex items-center justify-between gap-4">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold text-white">Rate Limit: Max 1 Host Action per Cluster / Hour</span>
+                    <span class="px-2 py-0.5 rounded font-mono text-[10px] bg-amber-500/15 text-[#f59e0b] border border-amber-500/30">RATE LIMIT</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">
+                    Prevents cascading cluster disruptions by serializing host power policy updates, maintenance mode transitions, and DRS rule updates.
+                  </p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                  <input type="checkbox" checked onchange="showToast('Updated Guardrail: Max 1 Host Action per Cluster / Hour')" class="sr-only peer" />
+                  <div class="w-9 h-5 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#38bdf8]"></div>
+                </label>
+              </div>
+
+              <!-- Guardrail 3 -->
+              <div class="p-4 flex items-center justify-between gap-4">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold text-white">Target ESXi Host Memory Utilization Ceiling (&le; 80%)</span>
+                    <span class="px-2 py-0.5 rounded font-mono text-[10px] bg-sky-500/15 text-[#38bdf8] border border-sky-500/30">CAPACITY GATE</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">
+                    Abort automated DRS evacuation or proactive balance migrations if destination ESXi host consumed memory exceeds <code class="font-mono text-slate-200">80.0%</code>.
+                  </p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                  <input type="checkbox" checked onchange="showToast('Updated Guardrail: Target Host Memory Ceiling (80%)')" class="sr-only peer" />
+                  <div class="w-9 h-5 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#38bdf8]"></div>
+                </label>
+              </div>
+
+              <!-- Guardrail 4 -->
+              <div class="p-4 flex items-center justify-between gap-4">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold text-white">Require Maintenance Window for Cold VM Rightsizing</span>
+                    <span class="px-2 py-0.5 rounded font-mono text-[10px] bg-emerald-500/15 text-[#10b981] border border-emerald-500/30">WINDOW LOCK</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">
+                    Any vCPU or vMEM reduction requiring guest OS reboot is automatically queued for the VM's assigned CMDB maintenance window.
+                  </p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                  <input type="checkbox" checked onchange="showToast('Updated Guardrail: Require Maintenance Window for Cold Rightsizing')" class="sr-only peer" />
+                  <div class="w-9 h-5 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#38bdf8]"></div>
+                </label>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Executed Actions Audit Log Table with Working Rollback -->
+          <section class="bg-[#1e293b] border border-[#334155] rounded-lg overflow-hidden">
+            <div class="px-4 py-3 bg-slate-900/60 border-b border-[#334155] flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200">
+                  Executed Actions Audit Log
+                </h2>
+                <p class="text-[11px] text-slate-400 mt-0.5">vCenter task audit trail with immediate state rollback</p>
+              </div>
+              <span class="text-[11px] font-mono text-slate-400">Retention: 90 Days</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-[#334155] bg-slate-900/40 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                    <th class="py-2.5 px-4">Timestamp</th>
+                    <th class="py-2.5 px-4">Task / Rule ID</th>
+                    <th class="py-2.5 px-4">Target Object</th>
+                    <th class="py-2.5 px-4">Action Executed</th>
+                    <th class="py-2.5 px-4">Status</th>
+                    <th class="py-2.5 px-4 text-right">Control</th>
+                  </tr>
+                </thead>
+                <tbody id="audit-log-tbody" class="divide-y divide-[#334155] text-xs">
+                  <!-- Populated dynamically by JS -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+      <!-- ================================================================= -->
+      <!-- RIGHT DOCK: vSPHERE SPECIALIST ASSISTANT (4 of 12 Columns)        -->
+      <!-- ================================================================= -->
+      <aside class="xl:col-span-4 bg-[#1e293b] rounded-lg border border-[#334155] shadow-lg flex flex-col h-[780px] sticky top-20">
+        
+        <!-- Assistant Header -->
+        <div class="px-4 py-3 bg-slate-900/90 border-b border-[#334155] rounded-t-lg flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-md bg-sky-500/15 border border-sky-400/40 flex items-center justify-center">
+              <svg class="w-4 h-4 text-[#38bdf8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-xs font-bold text-white tracking-wide">vSphere Specialist Assistant</h2>
+              <p id="assistant-context-subtitle" class="text-[11px] font-mono text-[#38bdf8]">
+                Context: Case #402 (SQL-DB-01 / esxi-07)
+              </p>
+            </div>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-[#334155]">
+            vCenter API
+          </span>
+        </div>
+
+        <!-- Chat Message Stream -->
+        <div id="assistant-messages" class="flex-1 overflow-y-auto p-4 space-y-3.5 bg-[#0f172a]/60">
+          <!-- Populated dynamically by JS -->
+        </div>
+
+        <!-- Quick-Action Prompt Chips -->
+        <div class="px-3.5 py-2.5 bg-[#1e293b] border-t border-[#334155] space-y-2">
+          <div class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+            Quick Investigation Prompts
+          </div>
+          <div id="assistant-chips" class="flex flex-wrap gap-1.5">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </div>
+
+        <!-- Chat Input Box -->
+        <form onsubmit="handleAssistantSubmit(event)" class="p-3 bg-slate-900/70 border-t border-[#334155] rounded-b-lg">
+          <div class="flex items-center gap-2">
+            <input id="assistant-input" type="text"
+              placeholder="Query vCenter metrics, esxtop, or target hosts..."
+              class="flex-1 text-xs bg-[#0f172a] border border-[#334155] rounded-md px-3 py-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#38bdf8] transition-colors" />
+            <button type="submit"
+              class="px-3.5 py-2 rounded-md bg-[#38bdf8] hover:bg-sky-300 text-slate-950 text-xs font-semibold transition-colors shrink-0">
+              Ask
+            </button>
+          </div>
+        </form>
+
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- APPLICATION STATE & INTERACTIVE LOGIC                                 -->
+  <!-- ===================================================================== -->
+  <script>
+    // -----------------------------------------------------------------------
+    // 1. CENTRAL APPLICATION STATE
+    // -----------------------------------------------------------------------
+    const appState = {
+      activeTab: 'reactive',        // 'reactive' | 'proactive' | 'policies'
+      activeReactiveCase: '402',    // '402' | '409'
+      activeProactiveItem: '118',   // '118' | '124'
+      simulationActive: false,
+      targetHost402: 'esxi-09.sg.local', // Can be changed via Assistant chat (e.g. esxi-08.sg.local)
+      remediationStatus: {
+        '402': 'pending',
+        '409': 'pending',
+        '118': 'pending',
+        '124': 'pending'
+      },
+      // Interactive What-If VM Reclamation selection for Improvement #118 (Total = 512 GB)
+      reclaimVMs: {
+        'app-worker-01..08': { selected: true, gb: 256, label: 'app-worker-01..08 (8 VMs)', current: '64 GB ea (512 GB)', target: '32 GB ea (256 GB)', type: 'Rightsize vMEM' },
+        'legacy-stage-02':   { selected: true, gb: 128, label: 'legacy-stage-02',           current: '128 GB (Powered Off)', target: 'Delete VM',       type: 'Decommission' },
+        'analytics-node-04': { selected: true, gb: 64,  label: 'analytics-node-04',         current: '128 GB (21% Active)',  target: '64 GB',           type: 'Rightsize vMEM' },
+        'dev-cache-01..04':  { selected: true, gb: 64,  label: 'dev-cache-01..04 (4 VMs)',  current: '32 GB ea (128 GB)',  target: '16 GB ea (64 GB)',  type: 'Rightsize vMEM' }
+      },
+      // Audit Log Entries
+      auditLog: [
+        {
+          id: 'TSK-8841',
+          time: '09:42:15 SGT',
+          ruleId: 'DRS-AFFINITY-04',
+          target: 'Cluster-SG-Prod-05 / vm-web-12',
+          action: 'Migrated vm-web-12 to esxi-14.sg.local to relieve datastore queue depth',
+          status: 'Executed'
+        },
+        {
+          id: 'TSK-8837',
+          time: '08:15:04 SGT',
+          ruleId: 'SNAP-CLEANUP-02',
+          target: 'Cluster-SG-Prod-03 / rpt-etl-09',
+          action: 'Consolidated 3 stale backup snapshots older than 72h (64 GB freed)',
+          status: 'Executed'
+        },
+        {
+          id: 'TSK-8829',
+          time: '06:30:00 SGT',
+          ruleId: 'HA-POLICY-SYNC',
+          target: 'Cluster-SG-Prod-06',
+          action: 'Enabled Proactive HA datastore PDL/APD automated quarantine',
+          status: 'Executed'
+        },
+        {
+          id: 'TSK-8814',
+          time: '02:05:19 SGT',
+          ruleId: 'MEM-RIGHTSIZE-11',
+          target: 'Cluster-SG-Dev-01 / build-agent-07',
+          action: 'Reduced allocated vMEM from 64 GB to 32 GB during maintenance window',
+          status: 'Executed'
+        }
+      ],
+      // Contextual Chat History keyed by context ID
+      chatHistory: {
+        '402': [
+          {
+            role: 'assistant',
+            text: 'Case #402 loaded. Bottom-up trace confirms <strong>SQL-DB-01 (32 vCPU, 384 GB)</strong> is spanning across two 16-core NUMA sockets on <strong>esxi-07.sg.local</strong>.'
+          },
+          {
+            role: 'assistant',
+            text: 'In addition, advanced parameter <code>numa.nodeAffinity=0</code> is pinning initial memory allocation to Node 0, forcing 49% remote UPI memory reads and driving <strong>%RDY to 14.8%</strong> and <strong>%CSTP to 9.2%</strong>. Recommended fix: DRS Must-Run Rule + live vMotion to <strong>esxi-09.sg.local</strong> (2x24c NUMA).'
+          }
+        ],
+        '409': [
+          {
+            role: 'assistant',
+            text: 'Case #409 loaded. <strong>0 telemetry charts required</strong> — this is a pure vSphere HA Admission Control configuration issue.'
+          },
+          {
+            role: 'assistant',
+            text: 'Powering on <strong>SAP-HANA-02</strong> with a <code>512 GB</code> memory reservation inflated the cluster-wide HA slot size to 512 GB across all 12 hosts in <strong>Cluster-SG-Prod-02</strong>, reducing available failover slots below N+1 requirements.'
+          }
+        ],
+        '118': [
+          {
+            role: 'assistant',
+            text: 'Top-down capacity review for <strong>Cluster-SG-Prod-01</strong>: Total physical RAM is <strong>6.0 TB</strong> with <strong>1.0 TB</strong> reserved for N+1 HA failover.'
+          },
+          {
+            role: 'assistant',
+            text: 'At current allocation velocity, memory headroom exhausts in <strong>18 Days</strong>. Selecting all 4 reclamation candidates frees <strong>512 GB RAM</strong> and extends runway to <strong>76 Days</strong> without purchasing new ESXi hosts.'
+          }
+        ],
+        '124': [
+          {
+            role: 'assistant',
+            text: 'Top-down configuration hygiene check on <strong>Cluster-SG-Prod-03</strong>: 6 of 8 ESXi hosts are configured with BIOS/ESXi Power Management Policy set to <code>Balanced</code> instead of <code>High Performance</code>.'
+          },
+          {
+            role: 'assistant',
+            text: 'Under burst transactional CPU demand, C1E/P-state frequency ramp-up introduces ~180&micro;s scheduling latency. Applying the Host Profile remediation aligns all 8 hosts non-disruptively.'
+          }
+        ],
+        'policies': [
+          {
+            role: 'assistant',
+            text: 'Automation Policies active across <strong>14 vCenters · 182 Clusters</strong>. All <code>Tier-0-DB</code> workloads are hard-locked against unattended changes.'
+          }
+        ]
+      }
+    };
+
+    const quickChipsByContext = {
+      '402': [
+        'Compare esxi-08 vs esxi-09 NUMA headroom',
+        'Switch target host to esxi-08.sg.local',
+        'Check datastore latency on Cluster-04'
+      ],
+      '409': [
+        'Verify SAP-HANA-02 reservation necessity',
+        'Check vCenter HA slot calculation details'
+      ],
+      '118': [
+        'Model +15% quarterly VM growth',
+        'Verify CMDB maintenance windows for selected VMs'
+      ],
+      '124': [
+        'Check P-state residency across Cluster-SG-Prod-03',
+        'Verify zero reboot requirement for Power Policy change'
+      ],
+      'policies': [
+        'Show blocked actions in last 24 hours',
+        'Check Tier-0-DB tag coverage across 14 vCenters'
+      ]
+    };
+
+    // -----------------------------------------------------------------------
+    // 2. NAVIGATION & SELECTION HANDLERS
+    // -----------------------------------------------------------------------
+    function switchTopTab(tab) {
+      appState.activeTab = tab;
+      appState.simulationActive = false;
+
+      const views = ['reactive', 'proactive', 'policies'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        const navBtn = document.getElementById(`nav-tab-${v}`);
+        const mobBtn = document.getElementById(`mob-tab-${v}`);
+
+        if (v === tab) {
+          el.classList.remove('hidden');
+          navBtn.className = 'px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all bg-[#38bdf8] text-slate-950 shadow-sm flex items-center gap-1.5';
+          mobBtn.className = 'px-3 py-1.5 rounded text-xs font-semibold bg-[#38bdf8] text-slate-950 whitespace-nowrap';
+        } else {
+          el.classList.add('hidden');
+          navBtn.className = 'px-3.5 py-1.5 rounded-md text-xs font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800 flex items-center gap-1.5';
+          mobBtn.className = 'px-3 py-1.5 rounded text-xs font-medium text-slate-300 bg-slate-900 whitespace-nowrap';
+        }
+      });
+
+      if (tab === 'reactive') renderReactiveWorkspace();
+      if (tab === 'proactive') renderProactiveWorkspace();
+      if (tab === 'policies') renderAuditLog();
+
+      renderAssistant();
+    }
+
+    function selectReactiveCase(caseId) {
+      appState.activeReactiveCase = caseId;
+      appState.simulationActive = false;
+
+      ['402', '409'].forEach(id => {
+        const card = document.getElementById(`reactive-card-${id}`);
+        if (id === caseId) {
+          card.classList.remove('border', 'border-[#334155]');
+          card.classList.add('border-2', 'border-[#38bdf8]', 'shadow-md');
+        } else {
+          card.classList.remove('border-2', 'border-[#38bdf8]', 'shadow-md');
+          card.classList.add('border', 'border-[#334155]');
+        }
+      });
+
+      renderReactiveWorkspace();
+      renderAssistant();
+    }
+
+    function selectProactiveItem(itemId) {
+      appState.activeProactiveItem = itemId;
+
+      ['118', '124'].forEach(id => {
+        const card = document.getElementById(`proactive-card-${id}`);
+        if (id === itemId) {
+          card.classList.remove('border', 'border-[#334155]');
+          card.classList.add('border-2', 'border-[#38bdf8]', 'shadow-md');
+        } else {
+          card.classList.remove('border-2', 'border-[#38bdf8]', 'shadow-md');
+          card.classList.add('border', 'border-[#334155]');
+        }
+      });
+
+      renderProactiveWorkspace();
+      renderAssistant();
+    }
+
+    function toggleSimulation() {
+      appState.simulationActive = !appState.simulationActive;
+      renderReactiveWorkspace();
+    }
+
+    // -----------------------------------------------------------------------
+    // 3. TAB 1 RENDERER: REACTIVE (BOTTOM-UP)
+    // -----------------------------------------------------------------------
+    function renderReactiveWorkspace() {
+      const caseId = appState.activeReactiveCase;
+      const sim = appState.simulationActive;
+      const container = document.getElementById('reactive-detail-container');
+      const simBanner = document.getElementById('reactive-sim-banner');
+      const simText = document.getElementById('reactive-sim-text');
+
+      if (sim && caseId === '402') {
+        simBanner.classList.remove('hidden');
+        simText.textContent = `Simulated Post-Remediation Overlay: SQL-DB-01 migrated to ${appState.targetHost402} — %RDY drops 14.8% → 1.3%, %CSTP drops 9.2% → 0.4%, %NLM restores 51% → 99.1%.`;
+      } else {
+        simBanner.classList.add('hidden');
+      }
+
+      // ---------------------------------------------------------------------
+      // CASE #402: BOTTOM-UP CPU READY & NUMA CONTENTION (5 ARTIFACTS)
+      // ---------------------------------------------------------------------
+      if (caseId === '402') {
+        const status = appState.remediationStatus['402'];
+        const rdyVal = sim ? '1.3%' : '14.8%';
+        const cstpVal = sim ? '0.4%' : '9.2%';
+        const nlmVal = sim ? '99.1%' : '51.0%';
+        const targetHostShort = appState.targetHost402.split('.')[0];
+
+        container.innerHTML = `
+          <!-- SECTION 1: ROOT CAUSE & CONFIGURATION CHECK (BOTTOM-UP) -->
+          <section class="bg-[#1e293b] border border-[#334155] rounded-lg overflow-hidden">
+            <div class="px-4 py-3 bg-slate-900/60 border-b border-[#334155] flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded bg-[#38bdf8] text-slate-950 font-mono text-xs font-bold flex items-center justify-center">1</span>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-white">
+                  Root Cause &amp; Configuration Check
+                </h2>
+              </div>
+              <span class="text-[11px] font-mono text-[#38bdf8]">Bottom-Up Dependency Trace</span>
+            </div>
+
+            <div class="p-4 space-y-4">
+              <!-- Bottom-Up Dependency Path -->
+              <div class="flex flex-wrap items-center gap-2 bg-[#0f172a] border border-[#334155] rounded-lg px-3.5 py-2.5 font-mono text-xs">
+                <span class="px-2.5 py-1 rounded bg-red-500/15 text-[#ef4444] border border-red-500/30 font-semibold">
+                  [VM: SQL-DB-01 (32 vCPU, 384 GB)]
+                </span>
+                <span class="text-slate-400 font-bold">&rarr;</span>
+                <span class="px-2.5 py-1 rounded bg-amber-500/15 text-[#f59e0b] border border-amber-500/30 font-semibold">
+                  [Host: esxi-07.sg.local (2x16c NUMA)]
+                </span>
+                <span class="text-slate-400 font-bold">&rarr;</span>
+                <span class="px-2.5 py-1 rounded bg-sky-500/15 text-[#38bdf8] border border-sky-500/30 font-semibold">
+                  [Cluster: Cluster-SG-Prod-04]
+                </span>
+              </div>
+
+              <!-- Engineering Findings Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+                <div class="p-3.5 rounded-lg bg-[#0f172a] border border-[#334155]">
+                  <div class="text-[10px] font-mono font-bold uppercase tracking-wider text-[#ef4444] mb-1">
+                    1. vNUMA Socket Boundary Exceeded
+                  </div>
+                  <div class="text-xs font-semibold text-white">32 vCPU &gt; 16 pCPU per Socket</div>
+                  <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                    <code class="font-mono text-slate-200">SQL-DB-01</code> requires 32 vCPUs, exceeding the 16 physical cores per NUMA node on <code class="font-mono text-slate-200">esxi-07.sg.local</code> and forcing cross-socket vCPU gang scheduling.
+                  </p>
+                </div>
+
+                <div class="p-3.5 rounded-lg bg-[#0f172a] border border-[#334155]">
+                  <div class="text-[10px] font-mono font-bold uppercase tracking-wider text-[#f59e0b] mb-1">
+                    2. Advanced VMX Parameter Conflict
+                  </div>
+                  <div class="text-xs font-semibold text-white">numa.nodeAffinity = 0</div>
+                  <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                    Explicit <code class="font-mono text-amber-300">numa.nodeAffinity=0</code> pins initial memory allocation to Socket 0 (256 GB local), forcing the remaining 128 GB and Socket 1 vCPUs across UPI interconnect links.
+                  </p>
+                </div>
+
+                <div class="p-3.5 rounded-lg bg-[#0f172a] border border-[#334155]">
+                  <div class="text-[10px] font-mono font-bold uppercase tracking-wider text-[#38bdf8] mb-1">
+                    3. Cluster Placement Root Cause
+                  </div>
+                  <div class="text-xs font-semibold text-white">Mixed Host Socket Widths in Cluster-04</div>
+                  <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                    DRS placed <code class="font-mono text-slate-200">SQL-DB-01</code> onto 16-core <code class="font-mono text-slate-200">esxi-07</code> during maintenance instead of 24-core hosts (<code class="font-mono text-emerald-400">${targetHostShort}</code>).
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION 2: SUPPORTING TELEMETRY & LOGS (5 ARTIFACTS PINNED) -->
+          <section class="bg-[#1e293b] border border-[#334155] rounded-lg overflow-hidden">
+            <div class="px-4 py-3 bg-slate-900/60 border-b border-[#334155] flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded bg-[#38bdf8] text-slate-950 font-mono text-xs font-bold flex items-center justify-center">2</span>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-white">
+                  Supporting Telemetry &amp; Logs (5 Artifacts Pinned)
+                </h2>
+              </div>
+              <span class="text-[11px] font-mono text-slate-400">
+                ${sim ? 'Showing Simulated Post-Remediation Overlay' : 'Live vCenter & esxtop Telemetry'}
+              </span>
+            </div>
+
+            <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              
+              <!-- ARTIFACT 1: SVG Time-Series Chart: esxi-07 CPU %RDY vs %RUN -->
+              <div class="bg-[#0f172a] border border-[#334155] rounded-lg p-3.5">
+                <div class="flex items-center justify-between mb-2">
+                  <div>
+                    <div class="text-[10px] font-mono text-slate-400">ARTIFACT 1/5 &middot; HOST SCHEDULER</div>
+                    <h3 class="text-xs font-bold text-white">esxi-07 CPU %RDY vs %RUN</h3>
+                  </div>
+                  <span class="px-2 py-0.5 rounded font-mono text-xs font-bold ${sim ? 'bg-emerald-500/15 text-[#10b981] border border-emerald-500/30' : 'bg-red-500/15 text-[#ef4444] border border-red-500/30'}">
+                    %RDY: ${rdyVal}
+                  </span>
+                </div>
+                <svg viewBox="0 0 360 125" class="w-full h-32 overflow-visible">
+                  <line x1="32" y1="20" x2="350" y2="20" stroke="#1e293b" />
+                  <line x1="32" y1="55" x2="350" y2="55" stroke="#1e293b" />
+                  <line x1="32" y1="90" x2="350" y2="90" stroke="#334155" />
+                  <!-- 5% Threshold -->
+                  <line x1="32" y1="67" x2="350" y2="67" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3" />
+                  <text x="348" y="63" text-anchor="end" class="text-[8px] font-mono fill-amber-400">5.0% Ready Threshold</text>
+                  <!-- Y Axis -->
+                  <text x="26" y="23" text-anchor="end" class="text-[9px] font-mono fill-slate-400">15%</text>
+                  <text x="26" y="58" text-anchor="end" class="text-[9px] font-mono fill-slate-400">7.5%</text>
+                  <text x="26" y="93" text-anchor="end" class="text-[9px] font-mono fill-slate-400">0%</text>
+                  <!-- %RUN Line -->
+                  <polyline fill="none" stroke="#64748b" stroke-width="1.5"
+                    points="32,44 85,42 140,45 195,41 250,43 305,40 350,42" />
+                  <!-- Current %RDY Spike -->
+                  <polyline fill="none" stroke="#ef4444" stroke-width="2.2" stroke-opacity="${sim ? '0.35' : '1'}"
+                    points="32,83 85,80 140,76 195,34 250,24 305,22 350,21" />
+                  ${sim ? `
+                    <!-- Simulated Post-Remediation Curve -->
+                    <polyline fill="none" stroke="#10b981" stroke-width="2.5"
+                      points="32,83 85,80 140,76 195,82 250,84 305,84 350,84" />
+                    <circle cx="350" cy="84" r="3.5" fill="#10b981" />
+                  ` : `
+                    <circle cx="350" cy="21" r="3.5" fill="#ef4444" />
+                  `}
+                  <text x="32" y="106" class="text-[9px] font-mono fill-slate-400">-30m</text>
+                  <text x="195" y="106" text-anchor="middle" class="text-[9px] font-mono fill-slate-400">-15m</text>
+                  <text x="350" y="106" text-anchor="end" class="text-[9px] font-mono fill-slate-400">Now</text>
+                </svg>
+                <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-1.5 border-t border-[#1e293b]">
+                  <span>--- %RUN (64.2%)</span>
+                  <span class="${sim ? 'text-[#10b981]' : 'text-[#ef4444]'}">${sim ? 'Simulated %RDY: 1.3%' : 'Current %RDY: 14.8%'}</span>
+                </div>
+              </div>
+
+              <!-- ARTIFACT 2: SVG Time-Series Chart: SQL-DB-01 %CSTP vs vCPU Entitlement -->
+              <div class="bg-[#0f172a] border border-[#334155] rounded-lg p-3.5">
+                <div class="flex items-center justify-between mb-2">
+                  <div>
+                    <div class="text-[10px] font-mono text-slate-400">ARTIFACT 2/5 &middot; VM SMP SCHEDULING</div>
+                    <h3 class="text-xs font-bold text-white">SQL-DB-01 %CSTP vs vCPU Entitlement</h3>
+                  </div>
+                  <span class="px-2 py-0.5 rounded font-mono text-xs font-bold ${sim ? 'bg-emerald-500/15 text-[#10b981] border border-emerald-500/30' : 'bg-amber-500/15 text-[#f59e0b] border border-amber-500/30'}">
+                    %CSTP: ${cstpVal}
+                  </span>
+                </div>
+                <svg viewBox="0 0 360 125" class="w-full h-32 overflow-visible">
+                  <line x1="32" y1="20" x2="350" y2="20" stroke="#1e293b" />
+                  <line x1="32" y1="55" x2="350" y2="55" stroke="#1e293b" />
+                  <line x1="32" y1="90" x2="350" y2="90" stroke="#334155" />
+                  <!-- 3% Co-Stop Threshold -->
+                  <line x1="32" y1="63" x2="350" y2="63" stroke="#ef4444" stroke-width="1" stroke-dasharray="4,3" />
+                  <text x="348" y="59" text-anchor="end" class="text-[8px] font-mono fill-red-400">3.0% Co-Stop Limit</text>
+                  <text x="26" y="23" text-anchor="end" class="text-[9px] font-mono fill-slate-400">10%</text>
+                  <text x="26" y="58" text-anchor="end" class="text-[9px] font-mono fill-slate-400">5%</text>
+                  <text x="26" y="93" text-anchor="end" class="text-[9px] font-mono fill-slate-400">0%</text>
+                  <!-- vCPU Entitlement line -->
+                  <polyline fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="2,2"
+                    points="32,32 95,31 160,33 225,30 290,32 350,31" />
+                  <!-- %CSTP Curve -->
+                  <polyline fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-opacity="${sim ? '0.35' : '1'}"
+                    points="32,86 95,84 160,76 225,36 290,28 350,26" />
+                  ${sim ? `
+                    <polyline fill="none" stroke="#10b981" stroke-width="2.5"
+                      points="32,86 95,84 160,76 225,86 290,87 350,87" />
+                    <circle cx="350" cy="87" r="3.5" fill="#10b981" />
+                  ` : `
+                    <circle cx="350" cy="26" r="3.5" fill="#f59e0b" />
+                  `}
+                  <text x="32" y="106" class="text-[9px] font-mono fill-slate-400">-30m</text>
+                  <text x="350" y="106" text-anchor="end" class="text-[9px] font-mono fill-slate-400">Now</text>
+                </svg>
+                <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-1.5 border-t border-[#1e293b]">
+                  <span class="text-[#38bdf8]">--- Entitlement (88.4%)</span>
+                  <span class="${sim ? 'text-[#10b981]' : 'text-[#f59e0b]'}">${sim ? 'Simulated %CSTP: 0.4%' : 'Current %CSTP: 9.2%'}</span>
+                </div>
+              </div>
+
+              <!-- ARTIFACT 3: SVG Time-Series Chart: NUMA Local Memory (%NLM) -->
+              <div class="bg-[#0f172a] border border-[#334155] rounded-lg p-3.5">
+                <div class="flex items-center justify-between mb-2">
+                  <div>
+                    <div class="text-[10px] font-mono text-slate-400">ARTIFACT 3/5 &middot; NUMA MEMORY LOCALITY</div>
+                    <h3 class="text-xs font-bold text-white">NUMA Local Memory (%NLM)</h3>
+                  </div>
+                  <span class="px-2 py-0.5 rounded font-mono text-xs font-bold ${sim ? 'bg-emerald-500/15 text-[#10b981] border border-emerald-500/30' : 'bg-red-500/15 text-[#ef4444] border border-red-500/30'}">
+                    %NLM: ${nlmVal}
+                  </span>
+                </div>
+                <svg viewBox="0 0 360 125" class="w-full h-32 overflow-visible">
+                  <line x1="32" y1="20" x2="350" y2="20" stroke="#1e293b" />
+                  <line x1="32" y1="55" x2="350" y2="55" stroke="#1e293b" />
+                  <line x1="32" y1="90" x2="350" y2="90" stroke="#334155" />
+                  <text x="26" y="23" text-anchor="end" class="text-[9px] font-mono fill-slate-400">100%</text>
+                  <text x="26" y="58" text-anchor="end" class="text-[9px] font-mono fill-slate-400">75%</text>
+                  <text x="26" y="93" text-anchor="end" class="text-[9px] font-mono fill-slate-400">50%</text>
+                  <!-- Drop from 98% to 51% -->
+                  <polyline fill="none" stroke="#ef4444" stroke-width="2.2" stroke-opacity="${sim ? '0.35' : '1'}"
+                    points="32,22 95,23 160,24 210,84 280,88 350,88" />
+                  ${sim ? `
+                    <polyline fill="none" stroke="#10b981" stroke-width="2.5"
+                      points="32,22 95,23 160,24 210,22 280,21 350,21" />
+                    <circle cx="350" cy="21" r="3.5" fill="#10b981" />
+                  ` : `
+                    <circle cx="350" cy="88" r="3.5" fill="#ef4444" />
+                  `}
+                  <text x="32" y="106" class="text-[9px] font-mono fill-slate-400">-30m (98%)</text>
+                  <text x="350" y="106" text-anchor="end" class="text-[9px] font-mono fill-slate-400">Now (${nlmVal})</text>
+                </svg>
+                <div class="text-[10px] font-mono text-slate-400 pt-1.5 border-t border-[#1e293b]">
+                  ${sim ? '99.1% local DDR5 access after vMotion to 24-core NUMA host.' : '49.0% remote cross-UPI memory access penalty on esxi-07.'}
+                </div>
+              </div>
+
+              <!-- ARTIFACT 4: SVG Topology Comparison Diagram -->
+              <div class="bg-[#0f172a] border border-[#334155] rounded-lg p-3.5">
+                <div class="flex items-center justify-between mb-2">
+                  <div>
+                    <div class="text-[10px] font-mono text-slate-400">ARTIFACT 4/5 &middot; SOCKET TOPOLOGY DIFF</div>
+                    <h3 class="text-xs font-bold text-white">esxi-07 (2x16c) vs ${targetHostShort} (2x24c)</h3>
+                  </div>
+                  <span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold ${sim ? 'bg-emerald-500/15 text-[#10b981]' : 'bg-sky-500/15 text-[#38bdf8]'}">
+                    ${sim ? 'Target Active' : 'Side-by-Side'}
+                  </span>
+                </div>
+                <svg viewBox="0 0 360 125" class="w-full h-32">
+                  <!-- Left Box: esxi-07 (Spanned) -->
+                  <rect x="6" y="8" width="162" height="108" rx="6" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" />
+                  <text x="87" y="24" text-anchor="middle" class="text-[9px] font-mono font-bold fill-red-400">esxi-07 (2x16c Spanned)</text>
+                  <rect x="16" y="34" width="66" height="44" rx="4" fill="#0f172a" stroke="#475569" />
+                  <text x="49" y="50" text-anchor="middle" class="text-[8px] font-mono fill-slate-300">Socket 0: 16c</text>
+                  <text x="49" y="65" text-anchor="middle" class="text-[8px] font-mono font-bold fill-red-400">16 vCPU (100%)</text>
+                  <rect x="92" y="34" width="66" height="44" rx="4" fill="#0f172a" stroke="#475569" />
+                  <text x="125" y="50" text-anchor="middle" class="text-[8px] font-mono fill-slate-300">Socket 1: 16c</text>
+                  <text x="125" y="65" text-anchor="middle" class="text-[8px] font-mono font-bold fill-red-400">16 vCPU (100%)</text>
+                  <line x1="82" y1="56" x2="92" y2="56" stroke="#ef4444" stroke-width="2" />
+                  <text x="87" y="98" text-anchor="middle" class="text-[8px] font-mono fill-slate-400">UPI Bus Saturated (49% Remote)</text>
+
+                  <!-- Right Box: Target esxi-09 (Aligned) -->
+                  <rect x="192" y="8" width="162" height="108" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="1.5" />
+                  <text x="273" y="24" text-anchor="middle" class="text-[9px] font-mono font-bold fill-emerald-400">${targetHostShort} (2x24c Aligned)</text>
+                  <rect x="202" y="34" width="66" height="44" rx="4" fill="#0f172a" stroke="#10b981" stroke-opacity="0.5" />
+                  <text x="235" y="50" text-anchor="middle" class="text-[8px] font-mono fill-slate-300">Socket 0: 24c</text>
+                  <text x="235" y="65" text-anchor="middle" class="text-[8px] font-mono font-bold fill-emerald-400">16 vCPU (8c free)</text>
+                  <rect x="278" y="34" width="66" height="44" rx="4" fill="#0f172a" stroke="#10b981" stroke-opacity="0.5" />
+                  <text x="311" y="50" text-anchor="middle" class="text-[8px] font-mono fill-slate-300">Socket 1: 24c</text>
+                  <text x="311" y="65" text-anchor="middle" class="text-[8px] font-mono font-bold fill-emerald-400">16 vCPU (8c free)</text>
+                  <text x="273" y="98" text-anchor="middle" class="text-[8px] font-mono fill-emerald-300">Balanced 2x16 vNUMA (99.1% Local)</text>
+                </svg>
+                <div class="text-[10px] font-mono text-slate-400 pt-1.5 border-t border-[#1e293b]">
+                  24 pCPUs/socket absorbs 32 vCPUs with 33% core headroom per NUMA domain.
+                </div>
+              </div>
+
+              <!-- ARTIFACT 5: Terminal / Log Extract: esxtop & vmkernel.log -->
+              <div class="md:col-span-2 bg-[#090d16] border border-[#334155] rounded-lg p-3.5">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-[10px] font-mono font-bold text-[#38bdf8]">
+                    ARTIFACT 5/5 &middot; esxtop &amp; vmkernel.log NUMA REMOTE ALLOCATION SNIPPET
+                  </span>
+                  <span class="text-[10px] font-mono text-slate-400">esxi-07.sg.local</span>
+                </div>
+                <pre class="font-mono text-[11px] leading-relaxed overflow-x-auto text-slate-300"><span class="text-slate-500">2026-11-18T09:48:11.204Z cpu08:2097812)</span> <span class="text-amber-400">WARNING: NUMA: 1842:</span> World 2104891 (SQL-DB-01.vmx) numa.nodeAffinity=0 spans nodes 0,1 (local=51.0%, remote=49.0%)
+<span class="text-slate-500">2026-11-18T09:49:03.819Z cpu14:2097158)</span> <span class="text-red-400">CpuSched: 4912:</span> Wide-VM group 2104890 (32 vCPUs) %CSTP=9.21% %RDY=14.84% (cross-socket gang stall)
+<span class="text-sky-400">esxtop -b -n 1 | grep SQL-DB-01</span> &rarr; GID:2104890 NWLD:32 %USED:1810.4 %RUN:1895.0 %WAIT:840.2 <span class="text-red-400 font-bold">%RDY:14.84 %CSTP:9.21</span> %NLM:51.00</pre>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SECTION 3: RECOMMENDED REMEDIATION -->
+          <section class="bg-[#1e293b] border border-[#334155] rounded-lg overflow-hidden">
+            <div class="px-4 py-3 bg-slate-900/60 border-b border-[#334155] flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded bg-[#10b981] text-slate-950 font-mono text-xs font-bold flex items-center justify-center">3</span>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-white">
+                  Recommended Remediation
+                </h2>
+              </div>
+              <span class="px-2 py-0.5 rounded font-mono text-[11px] ${status === 'approved' ? 'bg-emerald-500/15 text-[#10b981] border border-emerald-500/30' : 'bg-amber-500/15 text-[#f59e0b] border border-amber-500/30'}">
+                ${status === 'approved' ? 'Executed via vCenter API' : 'Pending L2 Approval'}
+              </span>
+            </div>
+
+            <div class="p-4 space-y-4">
+              <div class="flex flex-wrap items-start justify-between gap-4">
+                <div class="space-y-1.5">
+                  <h3 class="text-sm font-bold text-white">
+                    Create DRS VM-Host Must-Run Rule &amp; live vMotion SQL-DB-01 to ${appState.targetHost402} (24 pCPUs/socket)
+                  </h3>
+                  <ul class="space-y-1 text-xs text-slate-300">
+                    <li class="flex items-center gap-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-[#38bdf8]"></span>
+                      <span>Create DRS VM-Host Affinity Rule binding <code class="font-mono text-sky-300">SQL-DB-01</code> to 24-core host group (<code class="font-mono text-emerald-400">${appState.targetHost402}</code>)</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-[#38bdf8]"></span>
+                      <span>Clear conflicting <code class="font-mono text-amber-300">numa.nodeAffinity=0</code> override and execute live vMotion over 25GbE vmk2</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="flex flex-col gap-1.5 font-mono text-[11px] text-right shrink-0">
+                  <span class="px-2.5 py-1 rounded bg-[#0f172a] border border-[#334155] text-slate-300">
+                    Blast Radius: <strong class="text-white">1 VM (384 GB RAM)</strong>
+                  </span>
+                  <span class="px-2.5 py-1 rounded bg-[#0f172a] border border-[#334155] text-slate-400">
+                    Est. vMotion Stun: <strong class="text-[#10b981]">&lt; 90 ms</strong>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Footer Action Controls -->
+              <div class="pt-3 border-t border-[#334155] flex flex-wrap items-center justify-between gap-3">
+                <button onclick="toggleSimulation()"
+                  class="inline-flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-semibold border transition-all ${
+                    sim
+                      ? 'bg-[#10b981] text-slate-950 border-[#10b981]'
+                      : 'bg-[#0f172a] text-slate-200 border-[#334155] hover:border-[#38bdf8]'
+                  }">
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                  </svg>
+                  <span>${sim ? 'Simulate Impact: ON' : 'Simulate Impact'}</span>
+                </button>
+
+                <button onclick="executeRemediation('402', 'DRS Must-Run Rule + Live vMotion SQL-DB-01 to ${appState.targetHost402}', 'Cluster-SG-Prod-04 / SQL-DB-01', 'DRS-NUMA-402')"
+                  ${status === 'approved' ? 'disabled' : ''}
+                  class="px-4 py-2 rounded-md text-xs font-semibold bg-[#38bdf8] hover:bg-sky-300 text-slate-950 shadow-sm disabled:opacity-50 disabled:pointer-events-none transition-colors">
+                  ${status === 'approved' ? 'Approved & Executed ✓' : 'Approve & Execute'}
+                </button>
+              </div>
+            </div>
+          </section>
+        `;
+      }
+
+      // ---------------------------------------------------------------------
+      // CASE #409: URGENT ALERT — HA FAILOVER CAPACITY VIOLATED (0 CHARTS)
+      // ---------------------------------------------------------------------
+      else if (caseId === '409') {
+        const status = appState.remediationStatus['409'];
+
+        container.innerHTML = `
+          <!-- SECTION 1: ROOT CAUSE & CONFIGURATION CHECK -->
+          <section class="bg-[#1e293b] border border-[#334155] rounded-lg overflow-hidden">
+            <div class="px-4 py-3 bg-slate-900/60 border-b border-[#334155] flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded bg-[#38bdf8] text-slate-950 font-mono text-xs font-bold flex items-center justify-center">1</span>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-white">
+                  Root Cause &amp; Configuration Check
+                </h2>
+              </div>
+              <span class="text-[11px] font-mono text-[#38bdf8]">Bottom-Up Configuration Trace</span>
+            </div>
+
+            <div class="p-4 space-y-4">
+              <!-- Bottom-Up Trace -->
+              <div class="flex flex-wrap items-center gap-2 bg-[#0f172a] border border-[#334155] rounded-lg px-3.5 py-2.5 font-mono text-xs">
+                <span class="px-2.5 py-1 rounded bg-amber-500/15 text-[#f59e0b] border border-amber-500/30 font-semibold">
+                  [VM: SAP-HANA-02 (512 GB Reservation)]
+                </span>
+                <span class="text-slate-400 font-bold">&rarr;</span>
+                <span class="px-2.5 py-1 rounded bg-red-500/15 text-[#ef4444] border border-red-500/30 font-semibold">
+                  [Cluster: Cluster-SG-Prod-02 HA Admission Control]
+                </span>
+              </div>
+
+              <div class="p-3.5 rounded-lg bg-[#0f172a] border border-[#334155] text-xs text-slate-300 leading-relaxed">
+                <strong class="text-white">Engineering Finding:</strong> Powering on <code class="font-mono text-amber-300">SAP-HANA-02</code> with an explicit <code class="font-mono text-amber-300">512 GB</code> memory reservation skewed the vSphere HA cluster-wide memory slot size to <code class="font-mono text-red-400">512 GB</code> across all 12 ESXi hosts in <code class="font-mono text-sky-300">Cluster-SG-Prod-02</code>. Because every host only has 512 GB physical RAM, available failover slots dropped from 48 to 0, violating N+1 HA admission control and blocking new VM power-on operations.
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION 2: 0 TELEMETRY CHARTS REQUIRED — PURE CONFIGURATION ISSUE -->
+          <section class="bg-[#1e293b] border border-[#334155] rounded-lg overflow-hidden">
+            <div class="px-4 py-3 bg-slate-900/60 border-b border-[#334155] flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded bg-[#38bdf8] text-slate-950 font-mono text-xs font-bold flex items-center justify-center">2</span>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-white">
+                  Supporting Telemetry &amp; Logs (0 Telemetry Charts Required &mdash; Pure Configuration Issue)
+                </h2>
+              </div>
+              <span class="px-2 py-0.5 rounded font-mono text-[11px] bg-emerald-500/15 text-[#10b981] border border-emerald-500/30">
+                Configuration Diff Only
+              </span>
+            </div>
+
+            <div class="p-4 space-y-3">
+              <div class="overflow-x-auto border border-[#334155] rounded-lg">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr class="bg-[#0f172a] border-b border-[#334155] text-[11px] font-mono uppercase text-slate-400">
+                      <th class="py-2.5 px-4">vSphere HA Parameter</th>
+                      <th class="py-2.5 px-4 text-[#ef4444]">Current Configuration (Violated)</th>
+                      <th class="py-2.5 px-4 text-[#10b981]">Recommended Configuration</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-[#334155] font-mono">
+                    <tr class="bg-[#0f172a]/50">
+                      <td class="py-2.5 px-4 font-sans font-semibold text-white">Admission Control Policy</td>
+                      <td class="py-2.5 px-4 text-[#ef4444]">Slot Policy (Cover all powered-on VMs)</td>
+                      <td class="py-2.5 px-4 text-[#10b981]">Cluster Resource Percentage (25% CPU / 25% Memory)</td>
+                    </tr>
+                    <tr class="bg-[#0f172a]/50">
+                      <td class="py-2.5 px-4 font-sans font-semibold text-white">Memory Slot / Reserve Calculation</td>
+                      <td class="py-2.5 px-4 text-[#ef4444]">512 GB per slot (skewed by SAP-HANA-02)</td>
+                      <td class="py-2.5 px-4 text-[#10b981]">Aggregate 25% Cluster Reserve (1.50 TB)</td>
+                    </tr>
+                    <tr class="bg-[#0f172a]/50">
+                      <td class="py-2.5 px-4 font-sans font-semibold text-white">N+1 Failover Compliance</td>
+                      <td class="py-2.5 px-4 text-[#ef4444]">VIOLATED (0 available failover slots)</td>
+                      <td class="py-2.5 px-4 text-[#10b981]">COMPLIANT (34.2% unreserved headroom)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION 3: RECOMMENDED REMEDIATION -->
+          <section class="bg-[#1e293b] border border-[#334155] rounded-lg overflow-hidden">
+            <div class="px-4 py-3 bg-slate-900/60 border-b border-[#334155] flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded bg-[#10b981] text-slate-950 font-mono text-xs font-bold flex items-center justify-center">3</span>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-white">
+                  Recommended Remediation
+                </h2>
+              </div>
+              <span class="px-2 py-0.5 rounded font-mono text-[11px] ${status === 'approved' ? 'bg-emerald-500/15 text-[#10b981] border border-emerald-500/30' : 'bg-amber-500/15 text-[#f59e0b] border border-amber-500/30'}">
+                ${status === 'approved' ? 'Executed via vCenter API' : 'Pending L2 Approval'}
+              </span>
+            </div>
+
+            <div class="p-4 flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h3 class="text-sm font-bold text-white">
+                  Switch Cluster-SG-Prod-02 HA Admission Control to Cluster Resource Percentage (25% CPU / 25% Memory)
+                </h3>
+                <p class="text-xs text-slate-400 mt-1">
+                  Zero VM downtime or vMotion required. Eliminates single-VM reservation slot skew immediately.
+                </p>
+              </div>
+              <button onclick="executeRemediation('409', 'Set HA Admission Control to Cluster Resource Percentage (25% CPU / 25% Mem)', 'Cluster-SG-Prod-02', 'HA-ADM-409')"
+                ${status === 'approved' ? 'disabled' : ''}
+                class="px-4 py-2 rounded-md text-xs font-semibold bg-[#38bdf8] hover:bg-sky-300 text-slate-950 shadow-sm disabled:opacity-50 disabled:pointer-events-none transition-colors shrink-0">
+                ${status === 'approved' ? 'Approved & Executed ✓' : 'Approve & Execute'}
+              </button>
+            </div>
+          </section>
+        `;
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // 4. TAB 2 RENDERER: PROACTIVE: HEALTH & CAPACITY (TOP-DOWN)
+    // -----------------------------------------------------------------------
+    function getSelectedReclaimGB() {
+      return Object.values(appState.reclaimVMs).reduce((sum, vm) => sum + (vm.selected ? vm.gb : 0), 0);
+    }
+
+    function calculateProjectedDays(reclaimedGB) {
+      // Scales smoothly from 18 Days (0 GB reclaimed) up to 76 Days (512 GB reclaimed)
+      return 18 + Math.round((reclaimedGB / 512) * 58);
+    }
+
+    function toggleReclaimRow(key) {
+      appState.reclaimVMs[key].selected = !appState.reclaimVMs[key].selected;
+      const days = calculateProjectedDays(getSelectedReclaimGB());
+      const kpiEl = document.getElementById('kpi-time-remaining');
+      if (kpiEl) {
+        kpiEl.textContent = `${days} Days`;
+        kpiEl.className = days >= 45
+          ? 'text-2xl font-mono font-bold text-[#10b981]'
+          : 'text-2xl font-mono font-bold text-[#f59e0b]';
+      }
+      renderProactiveWorkspace();
+    }
+
+    function renderProactiveWorkspace() {
+      const itemId = appState.activeProactiveItem;
+      const container = document.getElementById('proactive-detail-container');
+
+      // ---------------------------------------------------------------------
+      // IMPROVEMENT #118: CAPACITY & HEADROOM WHAT-IF MODELER
+      // ---------------------------------------------------------------------
+      if (itemId === '118') {
+        const status = appState.remediationStatus['118'];
+        const reclaimedGB = getSelectedReclaimGB();
+        const projectedDays = calculateProjectedDays(reclaimedGB);
+        // Calculate SVG endpoint Y for projected burn-down line (lower Y = higher on chart = more memory used)
+        // Baseline line goes from y=54 (Today) to y=20 (+60d), crossing red 5.0TB HA limit (y=38) at Day 18 (x=145)
+        const postStartY = 54 + Math.round((reclaimedGB / 512) * 26); // drops down to y=80 when 512GB freed
+        const postEndY = postStartY - 26; // reaches y=54 at +60d (well below y=38 HA threshold!)
+
+        const rowsHTML = Object.entries(appState.reclaimVMs).map(([key, vm]) => `
+          <tr class="hover:bg-slate-800/60 transition-colors">
+            <td class="py-2.5 px-3.5">
+              <input type="checkbox" ${vm.selected ? 'checked' : ''} onchange="toggleReclaimRow('${key}')"
+                class="w-4 h-4 rounded border-slate-600 bg-slate-900 text-[#38bdf8] focus:ring-0 cursor-pointer" />
+            </td>
+            <td class="py-2.5 px-3.5 font-mono font-semibold text-white">${vm.label}</td>
+            <td class="py-2.5 px-3.5 text-slate-300">${vm.type}</td>
+            <td class="py-2.5 px-3.5 font-mono text-slate-400">${vm.current}</td>
+            <td class="py-2.5 px-3.5 font-mono text-sky-300">${vm.target}</td>
+            <td class="py-2.5 px-3.5 font-mono font-bold text-right ${vm.selected ? 'text-[#10b981]' : 'text-slate-500'}">
+              +${vm.gb} GB
+            </td>
+          </tr>
+        `).join('');
+
+        container.innerHTML = `
+          <!-- Top-Down Drill-Down Hierarchy Strip -->
+          <section class="bg-[#1e293b] border border-[#334155] rounded-lg p-4 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h2 class="text-xs font-bold uppercase tracking-wider text-white">
+                Top-Down Capacity &amp; Headroom Breakdown &mdash; Cluster-SG-Prod-01
+              </h2>
+              <span class="font-mono text-xs text-[#38bdf8]">12 ESXi Hosts &middot; 6.0 TB Physical RAM</span>
+            </div>
+
+            <!-- 4-Step Top-Down Capacity Waterfall -->
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 font-mono text-xs">
+              <div class="p-3 rounded-lg bg-[#0f172a] border border-[#334155]">
+                <div class="text-[10px] text-slate-400">1. CLUSTER TOTAL CAPACITY</div>
+                <div class="text-base font-bold text-white mt-0.5">6.00 TB</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">12 x 512 GB ESXi Hosts</div>
+              </div>
+              <div class="p-3 rounded-lg bg-[#0f172a] border border-[#334155]">
+                <div class="text-[10px] text-slate-400">2. N+1 HA FAILOVER RESERVE</div>
+                <div class="text-base font-bold text-[#f59e0b] mt-0.5">-1.00 TB</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">5.00 TB Usable Admission Cap</div>
+              </div>
+              <div class="p-3 rounded-lg bg-[#0f172a] border border-[#334155]">
+                <div class="text-[10px] text-slate-400">3. ACTIVE vs CONSUMED</div>
+                <div class="text-base font-bold text-sky-400 mt-0.5">2.1 TB / 4.78 TB</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">2.68 TB Idle Allocated RAM</div>
+              </div>
+              <div class="p-3 rounded-lg bg-[#0f172a] border border-emerald-500/40">
+                <div class="text-[10px] text-emerald-400">4. WHAT-IF TIME REMAINING</div>
+                <div class="text-base font-bold text-[#10b981] mt-0.5">${projectedDays} Days</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Baseline: 18 Days (+${projectedDays - 18}d gain)</div>
+              </div>
+            </div>
+
+            <!-- SVG Capacity Burn-Down Chart + Interactive What-If Table -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 pt-1">
+              
+              <!-- Left 5 Cols: SVG Burn-Down Chart -->
+              <div class="lg:col-span-5 bg-[#0f172a] border border-[#334155] rounded-lg p-3.5 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-[10px] font-mono text-slate-400">CAPACITY BURN-DOWN FORECAST</span>
+                    <span class="px-2 py-0.5 rounded font-mono text-xs font-bold ${projectedDays >= 45 ? 'bg-emerald-500/15 text-[#10b981]' : 'bg-amber-500/15 text-[#f59e0b]'}">
+                      ${projectedDays} Days
+                    </span>
+                  </div>
+                  <h3 class="text-xs font-bold text-white mb-2">Cluster-SG-Prod-01 Memory Runway</h3>
+                </div>
+
+                <svg viewBox="0 0 340 145" class="w-full h-40 overflow-visible">
+                  <!-- HA Reserve Red Zone -->
+                  <rect x="34" y="12" width="296" height="26" fill="#ef4444" fill-opacity="0.12" />
+                  <line x1="34" y1="38" x2="330" y2="38" stroke="#ef4444" stroke-width="1.3" stroke-dasharray="4,3" />
+                  <text x="326" y="28" text-anchor="end" class="text-[8px] font-mono font-semibold fill-red-400">
+                    Usable HA Limit (5.00 TB)
+                  </text>
+
+                  <!-- Grid & Y-Axis -->
+                  <line x1="34" y1="72" x2="330" y2="72" stroke="#1e293b" />
+                  <line x1="34" y1="108" x2="330" y2="108" stroke="#334155" />
+                  <text x="28" y="41" text-anchor="end" class="text-[8px] font-mono fill-slate-400">5.0T</text>
+                  <text x="28" y="75" text-anchor="end" class="text-[8px] font-mono fill-slate-400">4.4T</text>
+                  <text x="28" y="111" text-anchor="end" class="text-[8px] font-mono fill-slate-400">3.8T</text>
+
+                  <!-- Unoptimized Trajectory (Breaches at Day 18) -->
+                  <line x1="34" y1="54" x2="330" y2="16" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="3,3" />
+                  <circle cx="158" cy="38" r="3.5" fill="#ef4444" />
+                  <text x="158" y="50" text-anchor="middle" class="text-[8px] font-mono fill-amber-400">Unoptimized: 18d</text>
+
+                  <!-- Dynamic Post-Reclamation Trajectory -->
+                  ${reclaimedGB > 0 ? `
+                    <line x1="34" y1="${postStartY}" x2="330" y2="${postEndY}" stroke="#10b981" stroke-width="2.5" />
+                    <circle cx="34" cy="${postStartY}" r="3.5" fill="#10b981" />
+                    <circle cx="330" cy="${postEndY}" r="3.5" fill="#10b981" />
+                  ` : ''}
+
+                  <!-- X-Axis -->
+                  <text x="34" y="124" class="text-[8px] font-mono fill-slate-400">Today</text>
+                  <text x="182" y="124" text-anchor="middle" class="text-[8px] font-mono fill-slate-400">+30 Days</text>
+                  <text x="330" y="124" text-anchor="end" class="text-[8px] font-mono fill-slate-400">+60 Days</text>
+                </svg>
+
+                <div class="text-[10px] font-mono text-slate-400 pt-2 border-t border-[#1e293b] flex justify-between">
+                  <span>Selected Savings: <strong class="text-[#10b981]">${reclaimedGB} GB RAM</strong></span>
+                  <span>CapEx Deferred: <strong class="text-white">2 Hosts</strong></span>
+                </div>
+              </div>
+
+              <!-- Right 7 Cols: Interactive What-If VM Reclamation Table -->
+              <div class="lg:col-span-7 bg-[#0f172a] border border-[#334155] rounded-lg overflow-hidden flex flex-col">
+                <div class="px-3.5 py-2.5 bg-slate-900 border-b border-[#334155] flex items-center justify-between">
+                  <span class="text-xs font-bold text-white">Interactive VM Waste Reclamation What-If</span>
+                  <span class="font-mono text-xs font-semibold text-[#10b981]">+${reclaimedGB} GB Selected</span>
+                </div>
+                <div class="overflow-x-auto flex-1">
+                  <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr class="border-b border-[#334155] text-[10px] font-mono uppercase text-slate-400 bg-slate-900/50">
+                        <th class="py-2 px-3.5 w-8">Use</th>
+                        <th class="py-2 px-3.5">VM Scope</th>
+                        <th class="py-2 px-3.5">Action</th>
+                        <th class="py-2 px-3.5">Current</th>
+                        <th class="py-2 px-3.5">Target</th>
+                        <th class="py-2 px-3.5 text-right">Reclaim</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#334155]">
+                      ${rowsHTML}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Optimization Plan Footer -->
+          <section class="bg-[#1e293b] border border-[#334155] rounded-lg overflow-hidden">
+            <div class="px-4 py-3 bg-slate-900/60 border-b border-[#334155] flex flex-wrap items-center justify-between gap-2">
+              <h2 class="text-xs font-bold uppercase tracking-wider text-white">
+                Optimization Plan
+              </h2>
+              <span class="font-mono text-[11px] text-slate-400">CMDB Maintenance Window: Saturday 02:00 SGT</span>
+            </div>
+            <div class="p-4 flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h3 class="text-sm font-bold text-white">
+                  Reclaim ${reclaimedGB} GB Memory Across Selected Non-Production VMs (Extends Runway to ${projectedDays} Days)
+                </h3>
+                <p class="text-xs text-slate-400 mt-1">
+                  Queues cold vMEM rightsizing and powered-off VM cleanup inside the approved Saturday 02:00 SGT maintenance window. Zero Tier-0 workloads affected.
+                </p>
+              </div>
+              <button onclick="executeRemediation('118', 'Scheduled Memory Rightsizing (${reclaimedGB} GB reclaimed across Cluster-SG-Prod-01)', 'Cluster-SG-Prod-01', 'CAP-OPT-118')"
+                ${status === 'approved' || reclaimedGB === 0 ? 'disabled' : ''}
+                class="px-4 py-2 rounded-md text-xs font-semibold bg-[#10b981] hover:bg-emerald-400 text-slate-950 shadow-sm disabled:opacity-50 disabled:pointer-events-none transition-colors shrink-0">
+                ${status === 'approved' ? 'Scheduled in Window ✓' : 'Schedule in Maintenance Window'}
+              </button>
+            </div>
+          </section>
+        `;
+      }
+
+      // ---------------------------------------------------------------------
+      // IMPROVEMENT #124: CONFIGURATION HYGIENE (HOST POWER MANAGEMENT)
+      // ---------------------------------------------------------------------
+      else if (itemId === '124') {
+        const status = appState.remediationStatus['124'];
+
+        container.innerHTML = `
+          <section class="bg-[#1e293b] border border-[#334155] rounded-lg overflow-hidden">
+            <div class="px-4 py-3 bg-slate-900/60 border-b border-[#334155] flex flex-wrap items-center justify-between gap-2">
+              <h2 class="text-xs font-bold uppercase tracking-wider text-white">
+                Top-Down Configuration Hygiene Drill-Down &mdash; Cluster-SG-Prod-03
+              </h2>
+              <span class="font-mono text-xs text-[#f59e0b]">6 of 8 ESXi Hosts Non-Compliant</span>
+            </div>
+
+            <div class="p-4 space-y-4">
+              <p class="text-xs text-slate-300 leading-relaxed">
+                <strong class="text-white">Top-Down Finding:</strong> Cluster-SG-Prod-03 hosts latency-sensitive payment microservices. Six ESXi hosts added during last month's hardware expansion retained the default <code class="font-mono text-amber-300">Balanced</code> CPU Power Management policy instead of the cluster baseline <code class="font-mono text-emerald-400">High Performance</code> profile, causing P-state frequency transition spikes under burst load.
+              </p>
+
+              <div class="overflow-x-auto border border-[#334155] rounded-lg">
+                <table class="w-full text-left border-collapse text-xs font-mono">
+                  <thead>
+                    <tr class="bg-[#0f172a] border-b border-[#334155] text-[10px] uppercase text-slate-400">
+                      <th class="py-2 px-4">ESXi Host</th>
+                      <th class="py-2 px-4">CPU Model</th>
+                      <th class="py-2 px-4">Current Power Policy</th>
+                      <th class="py-2 px-4">Target Baseline</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-[#334155]">
+                    <tr class="bg-[#0f172a]/50">
+                      <td class="py-2 px-4 text-white">esxi-301.sg.local .. esxi-302.sg.local</td>
+                      <td class="py-2 px-4 text-slate-400">Intel Xeon Gold 6448Y</td>
+                      <td class="py-2 px-4 text-[#10b981]">High Performance</td>
+                      <td class="py-2 px-4 text-slate-400">Compliant</td>
+                    </tr>
+                    <tr class="bg-[#0f172a]/50">
+                      <td class="py-2 px-4 text-white">esxi-303.sg.local .. esxi-308.sg.local (6 hosts)</td>
+                      <td class="py-2 px-4 text-slate-400">Intel Xeon Gold 6448Y</td>
+                      <td class="py-2 px-4 text-[#f59e0b]">Balanced (P-State Throttling)</td>
+                      <td class="py-2 px-4 text-[#38bdf8]">High Performance</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Optimization Plan Footer -->
+          <section class="bg-[#1e293b] border border-[#334155] rounded-lg overflow-hidden">
+            <div class="px-4 py-3 bg-slate-900/60 border-b border-[#334155] flex flex-wrap items-center justify-between gap-2">
+              <h2 class="text-xs font-bold uppercase tracking-wider text-white">
+                Optimization Plan
+              </h2>
+              <span class="font-mono text-[11px] text-emerald-400">Online Change (No Maintenance Mode Required)</span>
+            </div>
+            <div class="p-4 flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h3 class="text-sm font-bold text-white">
+                  Apply Host Profile Remediation: Set Power Management to High Performance on 6 Hosts
+                </h3>
+                <p class="text-xs text-slate-400 mt-1">
+                  Updates ESXi host power policy via vCenter Host Profile API sequentially (1 host at a time per Guardrail policy).
+                </p>
+              </div>
+              <button onclick="executeRemediation('124', 'Applied Host Profile Power Policy (High Performance) on 6 hosts in Cluster-SG-Prod-03', 'Cluster-SG-Prod-03', 'PROF-PWR-124')"
+                ${status === 'approved' ? 'disabled' : ''}
+                class="px-4 py-2 rounded-md text-xs font-semibold bg-[#10b981] hover:bg-emerald-400 text-slate-950 shadow-sm disabled:opacity-50 disabled:pointer-events-none transition-colors shrink-0">
+                ${status === 'approved' ? 'Applied ✓' : 'Apply Host Profile Remediation'}
+              </button>
+            </div>
+          </section>
+        `;
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // 5. EXECUTION & AUDIT LOG HANDLERS
+    // -----------------------------------------------------------------------
+    function executeRemediation(id, actionDesc, targetObj, ruleId) {
+      appState.remediationStatus[id] = 'approved';
+
+      const now = new Date();
+      const timestamp = now.toTimeString().split(' ')[0] + ' SGT';
+
+      appState.auditLog.unshift({
+        id: `TSK-${Math.floor(8850 + Math.random() * 140)}`,
+        time: timestamp,
+        ruleId: ruleId,
+        target: targetObj,
+        action: actionDesc,
+        status: 'Executed'
+      });
+
+      document.getElementById('audit-badge-count').textContent = appState.auditLog.length;
+
+      if (appState.activeTab === 'reactive') renderReactiveWorkspace();
+      if (appState.activeTab === 'proactive') renderProactiveWorkspace();
+
+      showToast(`Executed & recorded in Automation Policies Audit Log: ${actionDesc}`);
+    }
+
+    function renderAuditLog() {
+      const tbody = document.getElementById('audit-log-tbody');
+      tbody.innerHTML = appState.auditLog.map(row => {
+        const isRolledBack = row.status === 'Rolled Back';
+        return `
+          <tr class="hover:bg-slate-800/60 transition-colors">
+            <td class="py-3 px-4 font-mono text-slate-400 whitespace-nowrap">${row.time}</td>
+            <td class="py-3 px-4 font-mono font-semibold text-[#38bdf8] whitespace-nowrap">${row.ruleId}</td>
+            <td class="py-3 px-4 font-mono text-slate-200 whitespace-nowrap">${row.target}</td>
+            <td class="py-3 px-4 text-slate-200">${row.action}</td>
+            <td class="py-3 px-4 whitespace-nowrap">
+              <span class="px-2 py-0.5 rounded font-mono text-[11px] font-semibold ${
+                isRolledBack
+                  ? 'bg-amber-500/15 text-[#f59e0b] border border-amber-500/30'
+                  : 'bg-emerald-500/15 text-[#10b981] border border-emerald-500/30'
+              }">
+                ${row.status}
+              </span>
+            </td>
+            <td class="py-3 px-4 text-right whitespace-nowrap">
+              <button onclick="rollbackAuditTask('${row.id}')"
+                ${isRolledBack ? 'disabled' : ''}
+                class="px-2.5 py-1 rounded border border-[#334155] bg-[#0f172a] hover:border-red-500/50 hover:text-[#ef4444] text-xs font-medium text-slate-300 disabled:opacity-40 disabled:pointer-events-none transition-colors">
+                ${isRolledBack ? 'Rolled Back' : 'Rollback'}
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function rollbackAuditTask(taskId) {
+      const item = appState.auditLog.find(r => r.id === taskId);
+      if (!item || item.status === 'Rolled Back') return;
+      item.status = 'Rolled Back';
+      renderAuditLog();
+      showToast(`Rollback completed for ${item.id} (${item.target})`);
+    }
+
+    // -----------------------------------------------------------------------
+    // 6. RIGHT DOCK: vSPHERE SPECIALIST ASSISTANT
+    // -----------------------------------------------------------------------
+    function getActiveContextKey() {
+      if (appState.activeTab === 'reactive') return appState.activeReactiveCase;
+      if (appState.activeTab === 'proactive') return appState.activeProactiveItem;
+      return 'policies';
+    }
+
+    function renderAssistant() {
+      const key = getActiveContextKey();
+      const subtitleEl = document.getElementById('assistant-context-subtitle');
+      const messagesEl = document.getElementById('assistant-messages');
+      const chipsEl = document.getElementById('assistant-chips');
+
+      const subtitleMap = {
+        '402': `Context: Case #402 (SQL-DB-01 / esxi-07)`,
+        '409': `Context: Case #409 (Cluster-SG-Prod-02 HA)`,
+        '118': `Context: Improvement #118 (Cluster-SG-Prod-01)`,
+        '124': `Context: Improvement #124 (Cluster-SG-Prod-03)`,
+        'policies': `Context: Automation Policies & Guardrails`
+      };
+      subtitleEl.textContent = subtitleMap[key];
+
+      const msgs = appState.chatHistory[key] || [];
+      messagesEl.innerHTML = msgs.map(m => {
+        if (m.role === 'assistant') {
+          return `
+            <div class="flex items-start gap-2.5">
+              <div class="w-6 h-6 rounded bg-sky-500/20 border border-sky-400/40 text-[#38bdf8] font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                VCF
+              </div>
+              <div class="bg-[#1e293b] border border-[#334155] rounded-lg rounded-tl-none px-3 py-2.5 text-xs text-slate-200 leading-relaxed">
+                ${m.text}
+              </div>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="flex items-start justify-end">
+              <div class="bg-[#38bdf8] text-slate-950 font-medium rounded-lg rounded-tr-none px-3 py-2 text-xs leading-relaxed max-w-[85%]">
+                ${m.text}
+              </div>
+            </div>
+          `;
+        }
+      }).join('');
+
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+
+      const chips = quickChipsByContext[key] || [];
+      chipsEl.innerHTML = chips.map(chip => `
+        <button type="button" onclick="sendQuickPrompt('${chip.replace(/'/g, "\\'")}')"
+          class="text-left text-[11px] px-2.5 py-1 rounded-md bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-[#38bdf8] border border-[#334155] hover:border-sky-500/40 transition-colors">
+          ${chip}
+        </button>
+      `).join('');
+    }
+
+    function sendQuickPrompt(text) {
+      processAssistantQuery(text);
+    }
+
+    function handleAssistantSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('assistant-input');
+      const query = input.value.trim();
+      if (!query) return;
+      input.value = '';
+      processAssistantQuery(query);
+    }
+
+    function processAssistantQuery(query) {
+      const key = getActiveContextKey();
+      appState.chatHistory[key].push({ role: 'user', text: query });
+
+      const q = query.toLowerCase();
+      let response = '';
+
+      if (q.includes('compare esxi-08 vs esxi-09')) {
+        response = `<strong>NUMA Headroom Comparison (Cluster-SG-Prod-04):</strong><br/>
+        &bull; <code class="font-mono text-sky-300">esxi-09.sg.local</code>: Dual 24c sockets, 31% CPU util, <strong>680 GB free local DDR5</strong> (Best fit: 0% remote memory).<br/>
+        &bull; <code class="font-mono text-sky-300">esxi-08.sg.local</code>: Dual 24c sockets, 48% CPU util, <strong>540 GB free local DDR5</strong> (Viable secondary target).`;
+      } else if (q.includes('esxi-08')) {
+        appState.targetHost402 = 'esxi-08.sg.local';
+        response = `Updated active remediation target to <strong>esxi-08.sg.local</strong> (2x24c NUMA, 540 GB free RAM). Topology diff diagram and Recommended Remediation panel have been updated.`;
+        if (appState.activeTab === 'reactive') renderReactiveWorkspace();
+      } else if (q.includes('esxi-09')) {
+        appState.targetHost402 = 'esxi-09.sg.local';
+        response = `Updated active remediation target to <strong>esxi-09.sg.local</strong> (2x24c NUMA, 680 GB free RAM). Topology diff diagram and Recommended Remediation panel have been updated.`;
+        if (appState.activeTab === 'reactive') renderReactiveWorkspace();
+      } else if (q.includes('datastore') || q.includes('latency')) {
+        response = `<strong>Cluster-SG-Prod-04 Storage Check:</strong> All 4 NVMe-oF datastores (<code class="font-mono text-slate-200">DS-NVME-PROD-01..04</code>) show <strong>0.4 ms</strong> average device latency and 0 queued commands. Storage is not contributing to SQL-DB-01 stalls.`;
+      } else if (q.includes('15%') || q.includes('growth')) {
+        const currentDays = calculateProjectedDays(getSelectedReclaimGB());
+        const stressedDays = Math.max(14, Math.round(currentDays * 0.78));
+        response = `<strong>+15% Quarterly VM Growth Model (Cluster-SG-Prod-01):</strong><br/>
+        With your current reclamation selection (<strong>${getSelectedReclaimGB()} GB</strong>), factoring in +15% quarterly demand growth yields <strong>${stressedDays} Days</strong> of usable N+1 HA headroom (vs 14 days unoptimized).`;
+      } else if (q.includes('reservation') || q.includes('sap')) {
+        response = `Verified <code class="font-mono text-amber-300">SAP-HANA-02.vmx</code>: <code class="font-mono text-slate-200">sched.mem.min = "524288"</code> (512 GB) is required by SAP HANA TDI certification. Switching Cluster-SG-Prod-02 HA Admission Control to <strong>Cluster Resource Percentage (25%)</strong> preserves the VM reservation while eliminating cluster-wide slot skew.`;
+      } else {
+        response = `Verified via vCenter API for <strong>${key.toUpperCase()}</strong>: No conflicting DRS affinity rules or datastore bottlenecks detected. Ready to stage or execute your selected action.`;
+      }
+
+      appState.chatHistory[key].push({ role: 'assistant', text: response });
+      renderAssistant();
+    }
+
+    // -----------------------------------------------------------------------
+    // 7. TOAST UTILITY & INITIALIZATION
+    // -----------------------------------------------------------------------
+    let toastTimer = null;
+    function showToast(msg) {
+      const box = document.getElementById('toast-notification');
+      const txt = document.getElementById('toast-text');
+      txt.textContent = msg;
+      box.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => box.classList.add('hidden'), 4200);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderReactiveWorkspace();
+      renderProactiveWorkspace();
+      renderAuditLog();
+      renderAssistant();
+    });
+  </script>
+</body>
+</html>
