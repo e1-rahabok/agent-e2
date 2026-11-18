@@ -15,7 +15,8 @@
 ## Mechanism
 - The name is VM Memory Latency; users also say page-fault latency. esxtop: %LAT_M.
 - Time a vCPU waits for a page fault to complete. Mostly swap wait, plus some decompression and copy-on-write break.
-- The only memory performance counter. Other memory metrics measure space held, which is capacity, not speed.
+- The memory performance counter for reclaimed pages. Other memory metrics measure space held, which is capacity, not speed.
+- Unaware of memory tiering: it does not count waits for pages fetched from NVMe; read NVMe wait ([`vsphere/object-types/cluster/cluster-performance`](../../../../object-types/cluster/cluster-performance.md)).
 - Highly correlated with swap-in rate.
 - Superset of CPU Swap Wait: CPU Swap Wait covers swap-in only; Latency also covers decompression.
 - VCF Operations VM Memory Contention maps to this counter.

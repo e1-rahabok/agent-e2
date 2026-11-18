@@ -29,7 +29,7 @@ meta:
   review_notes:
   - 'To check: kpi cells still null: green, yellow, orange, red, zero to enter by hand for each of 5m, 20s and 2s (Q152).'
   - 'To check: flow rows flow-esxi-disk-kernel-latency and flow-esxi-disk-device-latency: the knowledge base gives no sample interval (esxtop or the vCenter 20-second real-time chart); interval stays empty until a source states it.'
-  - 'To check: cluster memory wait rows: green and zero limits set from memory latency only (zero 8 and 4), before NVMe wait is scored.'
+  - 'To check: the memory wait rows (VM Performance, Cluster Performance) score memory contention plus NVMe wait with limits set from memory contention only (cluster zero 8 and 4; VM zero 4); check them against NVMe wait on a tiered host.'
   status: reviewed
 kpi:
 - {object: Guest OS, metric: "Peak vCPU run queue length (count)", group: "Guest OS contention", direction: above, 5m: null, 20s: [0, 2, 4, 8, 16], 2s: null, kb: guest-os/system/guest-os-performance}
@@ -57,7 +57,7 @@ kpi:
 - {object: VirtualMachine, metric: "Peak CPU Co-stop among any vCPU (%)", group: "VM contention", direction: above, 5m: null, 20s: [0, 1, 2, 4, 8], 2s: null, kb: vsphere/object-types/vm/vm-performance}
 - {object: VirtualMachine, metric: "Peak CPU Ready among any vCPU (%)", group: "VM contention", direction: above, 5m: null, 20s: [0, 2, 4, 8, 16], 2s: null, kb: vsphere/object-types/vm/vm-performance}
 - {object: VirtualMachine, metric: "Peak CPU Overlap (%)", group: "VM contention", direction: above, 5m: null, 20s: [0, 0.5, 1, 2, 4], 2s: null, excluded_when_green: true, kb: vsphere/object-types/vm/vm-performance}
-- {object: VirtualMachine, metric: "Peak RAM Contention (%)", group: "VM contention", direction: above, 5m: null, 20s: [0, 0.5, 1, 2, 4], 2s: null, kb: vsphere/object-types/vm/vm-performance}
+- {object: VirtualMachine, metric: "Peak memory wait (%)", group: "VM contention", direction: above, 5m: null, 20s: [0, 0.5, 1, 2, 4], 2s: null, kb: vsphere/object-types/vm/vm-performance}
 - {object: VirtualMachine, metric: "Peak read/write latency among vDisks (ms)", group: "VM contention", direction: above, 5m: null, 20s: [0, 10, 20, 40, 80], 2s: null, kb: vsphere/object-types/vm/vm-performance}
 - {object: VirtualMachine, metric: "Peak network TX dropped packets (%)", group: "VM contention", direction: above, 5m: null, 20s: [0, 0, 0.5, 1, 2], 2s: null, excluded_when_green: true, kb: vsphere/object-types/vm/vm-performance}
 - {object: VirtualMachine, metric: "CPU Net Run (%)", group: "VM utilization", direction: above, 5m: [0, 95, 97, 99, 100], 20s: null, 2s: null, excluded_when_green: true, kb: vsphere/object-types/vm/vm-performance}
