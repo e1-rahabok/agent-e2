@@ -4,15 +4,16 @@ I am the L2 vSphere specialist on call. I was not part of any change last week a
 [Capacity] Memory Capacity Remaining was 38% last Wednesday, Time Remaining over 200 days. This is not capacity.
 [DBA] The payments databases, sql-pay-01 to sql-pay-06, show no wait.
 Cluster CL-SG-PRD-PAY: 8 identical hosts, 2 x 32 cores, 1,024 GB DRAM plus a 1,024 GB NVMe memory tier (1:1), memory tiering configured since June, VCF 9.1.1, DRS fully automated.
-VCF Operations, worst host, business hours, last Monday, Wednesday, Friday and today:
+VCF Operations, worst host, business hours, last Monday, Wednesday, Friday and today; symptoms with their start time:
 - Cluster Risk (%): 22.5, 25.5, 31.1, 66.0.
-- Highest ESXi Memory Reservation (%): 0, 26 (since Tue 23:25), 26, 26.
-- Highest ESXi DRAM Memory Consumed (%): 68, 74, 87 (above 80 since Fri 08:40), 108.
-- Highest ESXi Memory Overcommit Ratio: 1.07, 1.07, 1.23 (since Thu 23:35), 1.23.
-- Highest ESXi CPU Overcommit Ratio: 1.10, 1.10, 1.41 (since Thu 23:35), 1.41.
+- Highest ESXi Memory Reservation (%): 0, 26 (yellow symptom started Tue 23:25), 26, 26.
+- Highest ESXi DRAM Memory Consumed (%): 68, 74, 87 (yellow symptom started Fri 08:40), 108.
+- Highest ESXi Memory Overcommit Ratio: 1.07, 1.07, 1.23 (symptom started Thu 23:35), 1.23.
+- Highest ESXi CPU Overcommit Ratio: 1.10, 1.10, 1.41 (symptom started Thu 23:35), 1.41.
 - Worst ESXi Active Memory, tiered hosts (% of DRAM): 34, 35, 46, 77.
 - Worst ESXi NVMe Read Latency (µs): no reads, no reads, 120, 290.
 - Cluster Performance (%): 99, 99, 98, 48.
+- Open alerts: Cluster Risk orange, started Tuesday 09:20. No alert before Tuesday; the earlier yellow symptoms were insights for the daily health check.
 esxi-pay-05, the worst host:
 - NVMe consumed: 0 GB until Friday morning, 50 GB on Friday at 18:00, 280 GB on Tuesday at 08:00.
 - From Friday 18:00 to Tuesday 08:30: NVMe write bandwidth up, NVMe read bandwidth near 0.

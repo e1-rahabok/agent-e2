@@ -52,9 +52,8 @@ tables:
   - ['pay-api-07 VM Performance', '%', {v: 99, band: green}, {v: '', band: grey}, {v: 17, band: red}, {v: '', band: grey}]
   note: 'The host holds sql-pay-03 (tiering off, 256 GB reserved, 110 GB active) and 34 tiered VMs, among them 5 of the 40 application VMs. pay-api-07 reads 6 MBps from NVMe: NVMe wait about 5.6% of its vCPU time, while its Memory Contention reads 0.2%. esxi-pay-07 and esxi-pay-08 hold no SQL VM: active memory 44% and 41% of DRAM.'
 models:
-- {id: anthropic/claude-opus-5.5, label: 'Frontier reference', role: 'frontier model, same Agent E2 pipeline'}
-- {id: alibaba/qwen3.8-27b, label: 'Candidate: Qwen 27B', role: 'local candidate'}
-- {id: google/gemma-4-31b-it, label: 'Candidate: Gemma 31B', role: 'local candidate'}
+- {id: meta/muse-glimmer-30b, label: 'Muse Glimmer 30B', role: 'best local model of the round of 2026-11-16 (84% with Agent E2); reasoning effort low'}
+- {id: google/gemma-4-31b-it, label: 'Gemma 31B', role: 'second-best local model of the round (79% with Agent E2)'}
 checks:
 - {id: t1-nvme-wait, turn: 1, text: 'Explains VM Performance 17 with Memory Contention at 0.2%: Memory Contention does not count NVMe fetches; NVMe wait of pay-api-07 is about 5.6% of its vCPU time.', kb: [vsphere/object-types/vm/vm-performance, vsphere/object-types/cluster/cluster-performance]}
 - {id: t1-why-now, turn: 1, text: 'Explains why now: DRAM consumed passed 80% on Friday, so tiering started for the first time; over the weekend idle pages moved to NVMe; on Tuesday they come back.', kb: [vsphere/technology/memory/concepts/memory-tiering, vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host]}
@@ -65,18 +64,17 @@ checks:
 - {id: t1-room, turn: 1, text: 'Finds where the DRAM pressure is and where there is room: esxi-pay-05 holds a SQL VM with tiering off; esxi-pay-07 and esxi-pay-08 hold none, at 44% and 41% active. The fix itself is the L2 specialist''s.', kb: [vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host]}
 - {id: t1-ask, turn: 1, text: 'If it asks back (allowed: it should not jump), it asks for the fact that changes the answer: what was changed at Tue 23:25 and Thu 23:35. Not applicable when it answers.', kb: [vsphere/object-types/cluster/models/cluster-risk]}
 scores:
-  anthropic/claude-opus-5.5: {t1-nvme-wait: pass, t1-why-now: partial, t1-active: pass, t1-sustained: pass, t1-capacity: partial, t1-risk: pass, t1-room: pass, t1-ask: na}
-  alibaba/qwen3.8-27b: {t1-nvme-wait: pass, t1-why-now: fail, t1-active: pass, t1-sustained: partial, t1-capacity: fail, t1-risk: fail, t1-room: pass, t1-ask: na}
-  google/gemma-4-31b-it: {t1-nvme-wait: pass, t1-why-now: pass, t1-active: pass, t1-sustained: fail, t1-capacity: fail, t1-risk: fail, t1-room: fail, t1-ask: na}
+  meta/muse-glimmer-30b: {t1-nvme-wait: partial, t1-why-now: partial, t1-active: pass, t1-sustained: pass, t1-capacity: partial, t1-risk: fail, t1-room: pass, t1-ask: na}
+  google/gemma-4-31b-it: {t1-nvme-wait: pass, t1-why-now: partial, t1-active: pass, t1-sustained: pass, t1-capacity: fail, t1-risk: fail, t1-room: pass, t1-ask: na}
 scoring_note: 'Scored by reading each answer against the check: the scores are judgment, the answers are verbatim. Agent E2 finds facts and analyses them; the fix is the L2 specialist''s, so no check asks for a remedy. Asking back is allowed (Agent E2 should not jump): its questions are scored. One run per model, so the numbers move between runs.'
 lessons: |
-    - **The knowledge base and the harness carry the scenario.** The frontier model, run through the same Agent E2 pipeline and the same knowledge base, passes 6 of 7 checks and cites a file for each claim.
-    - **Every model explains the red VM Performance.** With NVMe wait scored in the knowledge base, all three trace the 17 to an NVMe wait of about 5.6% that Memory Contention does not count.
-    - **The local candidates miss the same things.** Qwen 27B passes 3.5 of 7 and Gemma 31B 3 of 7. Neither reads the Cluster Risk rise as two dated changes, and neither rejects Capacity Remaining as proof. Gemma calls the sustained reads a warm-up although it has both readings and does not say where there is room; Qwen does not explain why the problem started now.
-    - **A harness quirk:** Qwen's answer opens with "The provided ESXi Memory Latency text does not change the diagnosis". That is the gap follow-up (a second pass with an added file) showing through; the follow-up prompt should keep the model from talking about it.
-    - **Stage 1 held** on this input for every model (1,500 to 5,200 tokens; the cap for the local models is 2,400).
-    - **Next, in the harness (stage 3, exact tools):** compute what the local models miss, before the model reads: the two NVMe readings an hour apart against the flow row of step 3 (sustained or warm-up) and active memory against the DRAM left for tiered VMs. The start times of the Cluster Risk symptoms come from VCF Operations, once the vCommunity pack defines them. Then rerun five times per model.
-    - **Not settled by the knowledge base** (named by the frontier run): whether an NVMe wait of about 5.6% alone explains a p99 of 1.4 s (Guest OS and application counters), and why DRS did not rebalance.
+    - **Run once per model, best first** (the round of 2026-11-16): Muse Glimmer 30B, then Gemma 31B. Neither passes: both score 4.5 of 7, so the run stopped there. No frontier model: it is not what ships.
+    - **What the new code fixed:** both answers now call the reads sustained, from the computed fact Agent E2 gives them (`flow-esxi-nvme-read-sustained`, step 3). Before it, Gemma called the same reads a warm-up.
+    - **What both get right:** active memory at 77% of DRAM, the SQL VM with tiering off taking DRAM from the tiered VMs, and the room on esxi-pay-07 and esxi-pay-08. Gemma computes the NVMe wait (5.57%) behind the VM Performance of 17.
+    - **What both miss:** the symptom start times (Tue 23:25, Thu 23:35, Fri 08:40) as dated changes, the clue the scenario is built on, and the flaw in Capacity Remaining on a tiered cluster, although its note reaches them through the term map. Neither explains that tiering started only on Friday, when DRAM consumed passed 80%.
+    - **Muse lost its case:** its first step (reading the question) was cut at 2,400 tokens because its reasoning tokens count toward the limit (plan, M3a).
+    - **Muse proposes remedies** (move sql-pay-03, move the hottest VMs): Agent E2 should stop at facts and analysis. The answer prompt does not say so yet.
+    - **Not settled by the knowledge base:** whether an NVMe wait of about 5.6% alone explains a p99 of 1.4 s (Guest OS and application counters), and why DRS did not rebalance.
 rerun: |
     1. `python3 project/tools/demo_scenario_executor.py project/demo-site/scenario-1-memory-tiering <model>` (needs AI_GATEWAY_API_KEY): writes `results/<model>.json`.
     2. Read the answers and set `scores` in `scenario.yaml`.
