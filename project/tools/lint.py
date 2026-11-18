@@ -714,12 +714,17 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
             bad(f'knowledge/{lv["kb"]}.md', f'KPI table: no cell names the catalog kpi line "{lv.get("metric")}" (column Catalog row (KPI))')
 
 def check_source_document(docs, bad):
-    """source.document names no author material (book, spreadsheet): sources are stated once (KNOWLEDGE-ENGINEERING.md, section 2)."""
+    """source.document names no author material (book, spreadsheet): sources are stated once (KNOWLEDGE-ENGINEERING.md, section 2).
+    A source note cited in source.path must exist, hold the cited headings and carry its evidence (project/tools/sources.py)."""
+    import sources
     pat = re.compile(r'Private Cloud Management|Capacity Planning Stage|\bbook\b|isvara', re.I)
     for i, (fm, _) in docs.items():
         doc = str(((fm or {}).get('source') or {}).get('document', ''))
         if pat.search(doc):
             bad(f'knowledge/{i}.md', f'source.document names the author\'s material ("{pat.search(doc).group(0)}"): write Knowledge base (KNOWLEDGE-ENGINEERING.md, section 2)')
+        for note, heads in sources.refs(((fm or {}).get('source') or {}).get('path')):
+            for msg in sources.check(note, heads):
+                bad(f'knowledge/{i}.md', f'source.path {msg} (project/sources/README.md)')
         for k in ('corrections', 'review_notes'):
             for n in (fm or {}).get(k) or []:
                 if isinstance(n, str) and re.search(r'(?i)the source document|\bthe book\b', n):

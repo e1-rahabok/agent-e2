@@ -23,7 +23,18 @@ Product label entry (design: [KNOWLEDGE-ENGINEERING.md](../../KNOWLEDGE-ENGINEER
 - Named by the label as a question names it, with its object: ESXi CPU Usage (%), not Usage (%).
 - The meaning line says what the product computes. Then `  - Product label: the label verbatim (where it shows)`, `  - Invites: the decision the label invites`, `  - Better name: Name: the better model`, and a `File:` line for the file that owns the metric. Lint requires all four.
 - Short: the term map sends meaning, Invites and Better name to the model as one note, inside the reading set, so every word costs a file section at the budget's edge.
-- One term-map row names the entry (`label:`) and carries the match patterns; it has no note. A pattern must match the entry term. A new row goes at the end of the term map. The mechanism and the misconception line stay in the File.
+- One term-map row names the entry (`label:`) and carries the match patterns; it has no note. A pattern must match the entry term. A new row goes at the end of the term map, so it adds its note without taking the two term-map file slots from older rows; its search words name only what the question's words lack. The mechanism and the misconception line stay in the File.
+- No generator: the match patterns are the user's words, which the term map already owns, and [`harness/terms.py`](../../harness/terms.py) reads the note from the glossary entry at start and puts the entry's File first. A generated copy and its sync check would add machinery and remove no second home.
+- Better name:
+  - Never reword the label itself. Quote it as the product shows it, then correct the model behind it. Wrong: "vSphere's GHz total". Right: "Total Capacity (GHz) is the capacity at base clock; space for vCPUs is threads" ([vocabulary.md](vocabulary.md), Words to avoid).
+  - Reuse Agent E2's existing words where one fits (CPU Throughput, Active, Guest OS Needed Memory), so the names form one family: Usage (MHz) is CPU Throughput, and Total Capacity (GHz) is Total Base Capacity (GHz).
+  - A label that already names its model well stays as the better name (Q236): VM CPU Latency, ESXi Memory Usage (%), VM Memory Consumed.
+  - Throughput is activity, not capability, so no capacity figure is named a throughput.
+  - The better name belongs to Agent E2's vocabulary. A benchmark prompt uses only the label (fairness F1). A key point grades the model, never the better name, which a frontier model cannot know.
+- Teaching order, the order the author uses in consulting: (1) name the label as the operator sees it; (2) say what it computes; (3) name the decision it invites and why that decision fails; (4) give the better model and its name; (5) say what to read instead.
+  - Applied only when the question or the case names a listed label (a term-map row with `label` matches), and inside the answer's length and shape, never on top of them: 250 words with the conclusion first leave no room for five extra steps.
+  - The conclusion carries steps 1, 3 and 4; the mechanism carries step 2; what to check next carries step 5. The text is `LABEL_ORDER` in [`harness/terms.py`](../../harness/terms.py), added to the rules of an open answer ([`harness/AGENT.md`](../../harness/AGENT.md), section 4.5). A multiple-choice answer gets the note, not the order.
+- Not a label entry: Contention (VCF Operations). It is Overlap + Co-stop + Ready + Other Wait (below 1%), time the vCPU did not get, which is what the label says ([`contention`](../../knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/contention.md)). Its wrong reading, that the cluster is overloaded when a limit causes it, is about cause, so it stays a misconception of its file.
 
 A confusable pair passes all four tests:
 1. Two (or three) terms of the same kind, each a real term: two metrics, two processes, two scores. "Reservation vs usage" is a rule, not a pair.
