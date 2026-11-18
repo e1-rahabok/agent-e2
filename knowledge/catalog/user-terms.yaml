@@ -271,6 +271,12 @@ rows:
   match: ['(vm|virtual machine)s?\b[^.?\n]{0,25}\b(memory|ram)\b[^.?\n]{0,15}\bconsumed', '\bconsumed (memory|ram)\b[^.?\n]{0,25}\b(vm|virtual machine)']
   means: Guest OS In Use Guest OS sizing
   files: [vsphere/technology/memory/concepts/guest-os-vs-vm-memory]
+- id: capacity-remaining-tiered
+  premise: true
+  match: ['capacity remaining[\s\S]*(?:nvme|memory tier)', '(?:nvme|memory tier)[\s\S]*capacity remaining']
+  means: Capacity Remaining memory tiering NVMe Total Memory Capacity active memory DRAM
+  note: 'On a cluster with memory tiering, VCF Operations counts the NVMe tier in Total Memory Capacity, so Capacity Remaining treats NVMe as DRAM and overstates memory supply. Read active memory against DRAM.'
+  files: [vcf-operations/features/capacity-forecast, vsphere/technology/memory/concepts/memory-tiering]
 - id: capacity-remaining
   label: Capacity Remaining (%)
   match: ['capacity remaining']
