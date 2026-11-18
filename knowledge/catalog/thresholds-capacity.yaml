@@ -5,11 +5,13 @@ meta:
     models: Capacity and risk model inputs with colour bands (grey for wastage, green, yellow, orange, red).
     decisions: 'Close for business: when a cluster takes no more VMs. Reads model and KPI scores over 24 hours.'
     rules: 'Planning and sizing rules: one value, above X means Y.'
+    planning: 'Agent E2 planning parameters, per class of service and per host: inputs to the capacity plan. Not metrics: no VCF Operations or vCenter metric has these names, none has a key, none is collected. Their name is in the field parameter, never metric.'
   fields:
     id: Stable key.
     group: 'Where the metric belongs (the group column of the source table, for example Utilization, Depth).'
     metric: 'The metric name as the knowledge file names it: the text a user reads. No comma, and no unit or description inside it.'
     key: 'Optional: the metric key the VCF Operations API uses, English only.'
+    parameter: 'Planning section only, instead of metric: the name of an Agent E2 planning parameter. Not a metric name.'
     description: 'One line saying what the metric measures; for a ratio, what is divided by what.'
     object: Managed object type.
     layer: Layer that produces the metric.
@@ -439,8 +441,9 @@ rules:
   source: knowledge-base
   kb: vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
   quote: Keep it around 80%-90% per host
+planning:
 - id: planning-gold-cpu-overcommit
-  metric: CPU overcommit ratio
+  parameter: CPU overcommit ratio
   object: VirtualMachine
   operator: '='
   value: 1
@@ -451,7 +454,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-gold-memory-overcommit
-  metric: Memory overcommit ratio
+  parameter: Memory overcommit ratio
   object: VirtualMachine
   operator: '='
   value: 1
@@ -462,7 +465,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-gold-cpu-reservation
-  metric: CPU reservation ratio
+  parameter: CPU reservation ratio
   object: VirtualMachine
   operator: '='
   value: 0.5
@@ -473,7 +476,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-gold-memory-reservation
-  metric: Memory reservation ratio
+  parameter: Memory reservation ratio
   object: VirtualMachine
   operator: '='
   value: 1.0
@@ -484,7 +487,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-gold-cpu-concurrent-peak
-  metric: Expected concurrent peak CPU utilization of a VM
+  parameter: Expected concurrent peak CPU utilization of a VM
   object: VirtualMachine
   operator: '='
   value: 0.35
@@ -495,7 +498,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-gold-memory-concurrent-peak
-  metric: Expected concurrent peak memory utilization of a VM
+  parameter: Expected concurrent peak memory utilization of a VM
   object: VirtualMachine
   operator: '='
   value: 0.85
@@ -506,7 +509,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-gold-vcpu
-  metric: Typical VM size
+  parameter: Typical VM size
   object: VirtualMachine
   operator: '='
   value: 16
@@ -517,7 +520,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-cpu-overcommit
-  metric: CPU overcommit ratio
+  parameter: CPU overcommit ratio
   object: VirtualMachine
   operator: '='
   value: 2
@@ -528,7 +531,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-memory-overcommit
-  metric: Memory overcommit ratio
+  parameter: Memory overcommit ratio
   object: VirtualMachine
   operator: '='
   value: 1.2
@@ -539,7 +542,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-cpu-reservation
-  metric: CPU reservation ratio
+  parameter: CPU reservation ratio
   object: VirtualMachine
   operator: '='
   value: 0.25
@@ -550,7 +553,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-memory-reservation
-  metric: Memory reservation ratio
+  parameter: Memory reservation ratio
   object: VirtualMachine
   operator: '='
   value: 0.5
@@ -561,7 +564,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-cpu-concurrent-peak
-  metric: Expected concurrent peak CPU utilization of a VM
+  parameter: Expected concurrent peak CPU utilization of a VM
   object: VirtualMachine
   operator: '='
   value: 0.5
@@ -572,7 +575,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-memory-concurrent-peak
-  metric: Expected concurrent peak memory utilization of a VM
+  parameter: Expected concurrent peak memory utilization of a VM
   object: VirtualMachine
   operator: '='
   value: 0.85
@@ -583,7 +586,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-vcpu
-  metric: Typical VM size
+  parameter: Typical VM size
   object: VirtualMachine
   operator: '='
   value: 8
@@ -594,7 +597,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-cpu-overcommit
-  metric: CPU overcommit ratio
+  parameter: CPU overcommit ratio
   object: VirtualMachine
   operator: '='
   value: 3
@@ -605,7 +608,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-memory-overcommit
-  metric: Memory overcommit ratio
+  parameter: Memory overcommit ratio
   object: VirtualMachine
   operator: '='
   value: 1.4
@@ -616,7 +619,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-cpu-reservation
-  metric: CPU reservation ratio
+  parameter: CPU reservation ratio
   object: VirtualMachine
   operator: '='
   value: 0.125
@@ -627,7 +630,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-memory-reservation
-  metric: Memory reservation ratio
+  parameter: Memory reservation ratio
   object: VirtualMachine
   operator: '='
   value: 0.25
@@ -638,7 +641,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-cpu-concurrent-peak
-  metric: Expected concurrent peak CPU utilization of a VM
+  parameter: Expected concurrent peak CPU utilization of a VM
   object: VirtualMachine
   operator: '='
   value: 0.65
@@ -649,7 +652,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-memory-concurrent-peak
-  metric: Expected concurrent peak memory utilization of a VM
+  parameter: Expected concurrent peak memory utilization of a VM
   object: VirtualMachine
   operator: '='
   value: 0.85
@@ -660,7 +663,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-vcpu
-  metric: Typical VM size
+  parameter: Typical VM size
   object: VirtualMachine
   operator: '='
   value: 4
@@ -671,7 +674,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-gb-per-vcpu
-  metric: VM memory per vCPU
+  parameter: VM memory per vCPU
   object: VirtualMachine
   operator: '='
   value: 4
@@ -682,7 +685,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-hypervisor-threads
-  metric: Hypervisor CPU overhead
+  parameter: Hypervisor CPU overhead
   object: HostSystem
   operator: '='
   value: 14
@@ -693,7 +696,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-hypervisor-memory-gb
-  metric: Hypervisor memory overhead
+  parameter: Hypervisor memory overhead
   object: HostSystem
   operator: '='
   value: 64
@@ -704,7 +707,7 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-system-reservation-ghz
-  metric: CPU kept by the system
+  parameter: CPU kept by the system
   object: HostSystem
   operator: '='
   value: 10

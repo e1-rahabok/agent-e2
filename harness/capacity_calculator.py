@@ -12,7 +12,7 @@ Host specification: with no RAM given, the CPU side decides how many VMs of one 
 matches them is returned (knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md).
 
 Class defaults (overcommit, reservation, expected concurrent peak, typical VM size) are rows of
-knowledge/catalog/thresholds-capacity.yaml, section rules, ids starting with "planning-". One place per number.
+knowledge/catalog/thresholds-capacity.yaml, section planning: Agent E2 parameters, not metrics. One place per number.
 """
 import os
 
@@ -28,7 +28,7 @@ MODELS = ('allocation', 'reservation', 'utilization')
 
 def defaults(root=ROOT):
     """Planning defaults from the threshold catalog: {'gold': {...}, 'silver': {...}, 'bronze': {...}, 'host': {...}}."""
-    rows = yaml.safe_load(open(os.path.join(root, 'knowledge', 'catalog', 'thresholds-capacity.yaml')))['rules']
+    rows = yaml.safe_load(open(os.path.join(root, 'knowledge', 'catalog', 'thresholds-capacity.yaml')))['planning']
     vals = {r['id'][len('planning-'):]: r['value'] for r in rows if r['id'].startswith('planning-')}
     out = {c: {p: vals[f'{c}-{p}'] for p in CLASS_PARAMS} for c in CLASSES}
     out['host'] = {p: vals[p] for p in HOST_PARAMS}

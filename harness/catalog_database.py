@@ -123,12 +123,12 @@ class Catalog:
         # Threshold files are split by use: the section name is the use (one place; no use field on the rows).
         perf, cap, al = (load_yaml(f'thresholds-{n}.yaml') for n in ('performance', 'capacity', 'alerts'))
         # A flow test is the number one step of a flow file compares with; kb is the flow file, step its numbered step.
-        tests = [(cap, 'decisions', 'capacity'), (cap, 'rules', 'capacity'), (perf, 'flow', 'performance')]
+        tests = [(cap, 'decisions', 'capacity'), (cap, 'rules', 'capacity'), (cap, 'planning', 'capacity'), (perf, 'flow', 'performance')]
         for data, section, pillar in tests:
             use = {'decisions': 'decision', 'rules': 'rule'}.get(section, section)
             for r in data.get(section) or []:
                 c.execute('INSERT INTO thresholds VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-                          (r['id'], use, r.get('criticality'), r.get('class'), r.get('pillar') or pillar, r['metric'], r.get('object'),
+                          (r['id'], use, r.get('criticality'), r.get('class'), r.get('pillar') or pillar, r.get('metric') or r['parameter'], r.get('object'),
                            r.get('layer'), r.get('instance'), r.get('interval'), r['operator'], r['value'], r.get('value_high'),
                            r.get('unit'), r.get('condition'), r.get('meaning'), r['source'], r['kb'], r.get('step')))
         for r in cap.get('models') or []:
@@ -325,7 +325,8 @@ class Catalog:
             hi = f"-{r['value_high']:g}" if r['value_high'] is not None else ''
             cond = f" with {r['condition']}" if r['condition'] else ''
             iv = f" ({r['interval']})" if r['interval'] else ''
-            lines.append(f"- {_use_label(r)}: {r['metric']}{iv} {r['operator']} {r['value']:g}{hi} {r['unit'] or ''}{cond}: {r['meaning']} "
+            unit = '' if r['unit'] in (None, 'number') else r['unit']  # number is a ratio or a count: the value says it
+            lines.append(f"- {_use_label(r)}: {r['metric']}{iv} {r['operator']} {r['value']:g}{hi} {unit}{cond}: {r['meaning']} "
                          f"(source: {r['source']}) [{r['kb']}]")
         # An alert comes with its object type's alert file only. A symptom's kb is the metric file: reading a metric
         # does not pull every alert that tests it (the catalog lookup finds those by metric name).
@@ -379,7 +380,8 @@ def _best(scored, limit, keep=0.6):
     return [r for s, r in scored if s >= top * keep][:limit]
 
 
-USE_LABELS = {'decision': 'Capacity decision', 'rule': 'Capacity rule', 'flow': 'Flow test'}
+USE_LABELS = {'decision': 'Capacity decision', 'rule': 'Capacity rule', 'flow': 'Flow test',
+              'planning': 'Planning parameter (an Agent E2 input, not a VCF Operations metric)'}
 
 
 def _use_label(r):
