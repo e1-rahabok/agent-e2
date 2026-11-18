@@ -455,7 +455,7 @@ THRESHOLD_SOURCES = ['knowledge-base', 'vsphere-9.1-docs', 'performance-best-pra
 # Threshold files and their sections, named by use. A section name is the use the Harness shows with each value.
 THRESHOLD_SECTIONS = {
     'thresholds-performance.yaml': ('kpi', 'flow'),
-    'thresholds-capacity.yaml': ('models', 'decisions', 'rules', 'planning'),
+    'thresholds-capacity.yaml': ('models', 'decisions', 'rules'),
     'thresholds-alerts.yaml': ('symptoms', 'alerts'),
 }
 CLASSES = ('gold', 'silver', 'bronze')  # class of service
@@ -470,7 +470,7 @@ ALERT_VALUE = re.compile(r'\d+(?:[.,]\d+)?\s?(?:%|ms|GHz|MHz|MB|GB|IOPS|minutes?
 
 
 def check_metric_names(allowed, bad):
-    """Metric names a user sees carry no comma (author, 2026-11-18). The rules and planning sections, internal to Agent E2, are not checked.
+    """Metric names a user sees carry no comma (author, 2026-11-18). The rules section, Agent E2's internal planning and sizing rules, is not checked.
     Names the author still renames at the source are listed in rules_check_values.yaml (metric_comma_pending)."""
     pending = set(allowed.get('metric_comma_pending') or [])
     found = set()
@@ -482,7 +482,7 @@ def check_metric_names(allowed, bad):
                 if m not in pending:
                     bad(path, f'metric name "{m}" has a comma: put the unit in brackets at the end')
             for k, v in node.items():
-                if k not in ('meta', 'rules', 'planning'): walk(path, v)  # Agent E2's internal rules and planning parameters, not shown in a UI
+                if k not in ('meta', 'rules'): walk(path, v)  # rules: Agent E2's internal planning and sizing rules, not shown in a UI
         elif isinstance(node, list):
             for v in node: walk(path, v)
     for path in sorted(glob.glob('knowledge/catalog/thresholds-*.yaml')):
@@ -661,12 +661,6 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                     if r.get('interval') and r['interval'] not in ('2s', '20s', '5m', '1d'): bad(path, f'{w}: interval must be 2s, 20s, 5m or 1d')
                     if r.get('source') not in THRESHOLD_SOURCES: bad(path, f'{w}: source "{r.get("source")}" not allowed')
                     kb_ok(path, w, r.get('kb'))
-                    if section == 'planning':
-                        # Agent E2 planning parameters: named in parameter, never metric, so no one reads them as a VCF Operations metric.
-                        if 'metric' in r: bad(path, f'{w}: a planning parameter has no metric field: name it in parameter')
-                        for k in ('id', 'parameter', 'operator', 'value', 'unit', 'description', 'source'):
-                            if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
-                        continue
                     if section == 'models':
                         for k in ('id', 'metric', 'bands', 'source', 'kb'):
                             if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
