@@ -12,7 +12,7 @@ meta:
     interval: 20s (20-second peak), 5m (5-minute average), 2s (esxtop), 1d; empty until a source states it.
     operator: '>, >=, <, <=, =.'
     value: The number compared against.
-    unit: 'Unit of value. count for a number of things (threads, I/Os, packets, VMs, vCPU): the VCF Operations unit. Blank for a ratio or fraction: what it is a ratio of is in the metric name.'
+    unit: 'Unit of value, kept in its own field as VCF Operations keeps it, and shown in brackets at the end of the metric name. count for a number of things (threads, I/Os, packets, VMs, vCPU): the VCF Operations unit. For a ratio or fraction, the unit names what it is a ratio of (vCPU per physical thread).'
     role: 'issue (default): the problem itself. gate: not a problem; keeps the alert off idle objects (CPU Usage above 1 GHz, IOPS above 100).'
     source: 'knowledge-base, or a vendor document with its version: vsphere-9.1-docs, performance-best-practices-9.1, microsoft. Vendor values can go stale; the newer official document wins.'
     kb: 'Alert: the alert file of its object type (<object>/<object>-alerts): why each symptom is in the alert, who receives it, which flow to open. Symptom: the file of the metric it tests. No quote: the files hold no alert values.'

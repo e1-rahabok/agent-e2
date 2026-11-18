@@ -298,6 +298,7 @@ def main():
     check_file_types(bad)
     check_terminology(pdocs, bad)
     check_catalog(allowed, ids, {fm.get('id'): FILE_LINK.sub(r'\1', body) for fm, body in docs.values()}, bad)
+    check_metric_names(allowed, bad)
     check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
     check_source_document({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
     check_titles(bad)  # titles and headings are machine input: harness/knowledge_loader.py puts both in front of every chunk (Q181)
@@ -467,6 +468,27 @@ FLOW_CHECKS = re.compile(r'^## Checks, in order\s*$', re.M)
 FLOW_STEP = re.compile(r'^(\d+)\.\s', re.M)
 ALERT_VALUE = re.compile(r'\d+(?:[.,]\d+)?\s?(?:%|ms|GHz|MHz|MB|GB|IOPS|minutes?|cycles?)(?![a-z])')
 
+
+def check_metric_names(allowed, bad):
+    """Catalog metric names carry no comma: the unit goes in brackets at the end, as VCF Operations shows it (author, 2026-11-18).
+    Names the author still renames at the source are listed in rules_check_values.yaml (metric_comma_pending)."""
+    pending = set(allowed.get('metric_comma_pending') or [])
+    found = set()
+    def walk(path, node):
+        if isinstance(node, dict):
+            m = node.get('metric')
+            if isinstance(m, str) and ',' in m:
+                found.add(m)
+                if m not in pending:
+                    bad(path, f'metric name "{m}" has a comma: put the unit in brackets at the end')
+            for k, v in node.items():
+                if k != 'meta': walk(path, v)
+        elif isinstance(node, list):
+            for v in node: walk(path, v)
+    for path in sorted(glob.glob('knowledge/catalog/thresholds-*.yaml')):
+        walk(path, yaml.safe_load(open(path, encoding='utf-8')))
+    for m in sorted(pending - found):
+        bad('project/tools/rules_check_values.yaml', f'metric_comma_pending lists "{m}", which no longer has a comma: remove it')
 
 def check_catalog(allowed, ids, bodies, bad, docs=None):
     """knowledge/catalog/*.yaml: parses, required fields, valid tags, existing knowledge ids; a quote, where a row still has one, is still in its file."""

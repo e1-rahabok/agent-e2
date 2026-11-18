@@ -36,7 +36,7 @@
 - An NVMe device used for tiering is not available to vSAN. Count the lost vSAN capacity when sizing the cluster.
 - Overcommit is counted against DRAM only; tiering is what makes a memory overcommit ratio above 1:1 workable. At the default 1:1 tier ratio, a host can carry up to 2x its DRAM in VM memory. Broadcom's warning not to overcommit on top of tiering is against allocation beyond DRAM + NVMe, where ballooning and swapping run on top of NVMe pages.
 - Consumed covers both tiers; once cold pages move to NVMe, consumed can exceed DRAM.
-- VM memory contention (esxtop %LAT_M; VCF Operations Memory Contention) does not count time spent on pages in the NVMe tier: the memory latency counter is unaware of memory tiering (author, 2026-11-18). A VM can wait on NVMe while its memory contention reads near 0. Read the NVMe tier counters (read bandwidth and latency) directly, or NVMe wait ([`vsphere/object-types/cluster/cluster-performance`](../../../object-types/cluster/cluster-performance.md), section Sub-metric formulas).
+- VM memory contention (esxtop %LAT_M; VCF Operations Memory Contention) does not count time spent on pages in the NVMe tier: the memory latency counter is unaware of memory tiering. A VM can wait on NVMe while its memory contention reads near 0. Read the NVMe tier counters (read bandwidth and latency) directly, or NVMe wait ([`vsphere/object-types/cluster/cluster-performance`](../../../object-types/cluster/cluster-performance.md), section Sub-metric formulas).
 - The capacity plan sizes DRAM; tiering is not part of the overcommit ratio ([`sp5-framework/capacity/overcommit`](../../../../sp5-framework/capacity/overcommit.md)). In the running stage, consumed memory above DRAM is expected on a tiered host.
 
 ## Sizing (documentation)

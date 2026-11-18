@@ -1,7 +1,8 @@
 # Resource pool design
 
 ## Pool use cases
-- Use resource pools sparingly. A pool divides resources; it is not a folder for VMs. It is not a namespace and unrelated to Kubernetes.
+- Use resource pools sparingly. A pool divides resources; it is not a folder for VMs.
+- A Supervisor creates one resource pool per vSphere Namespace (VCF 9.1 documentation, What is a vSphere Namespace?). The namespace sets the resource boundary of its vSphere Pods, VMs and VKS clusters. A VKS environment therefore adds many sibling and child pools: the tree gets hard to operate, and a mistake is easy to make in a large cluster. A vSphere Namespace is not a Kubernetes namespace; Kubernetes itself is a later release.
 - Delegated resource management: a pool sold as a service, where the tenant's contract sets the pool's reservation and limit. A tenant that bought 1 TB of RAM with no burst gets a 1 TB limit.
 - A multi-tier service: group its VMs in one pool, so resources go to the service as a whole.
 - One pool alone makes no operational sense. Create at least two, or none.
@@ -9,11 +10,11 @@
 - Read pool and VM shares and reservations together; with Scalable Shares, more so.
 
 ## Cluster-wide pool settings
-- A pool's reservation, limit and shares apply across the cluster, while each of its VMs runs on one host. In a large cluster, the pool limit or share setting can hurt its VMs in ways that is hard to see from one host.
+- A pool's reservation, limit and shares apply across the cluster, while each of its VMs runs on one host. In a large cluster, the pool limit or share setting can hurt its VMs in ways that are hard to see from one host.
 - Fixed vs expandable reservation is a design choice: Fixed isolates the pool (only its own reservation is admitted); expandable is flexible, but one child pool can take all of the parent's spare reservation. To isolate a pool fully, set it to Fixed with a reservation and a limit. How the admission check walks the tree: [`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../cluster/concepts/admission-control-and-cluster-state.md).
 
 ## Reading a pool with limit set
-- A pool at its CPU limit will show the pool total CPU Usage flat over time, near a round number, despite the associated ESXi hosts have spare CPU. A pool that is not capped varies with its load.
+- A pool at its CPU limit will show the pool total CPU Usage flat over time, near a round number, while its ESXi hosts have spare CPU. A pool that is not capped varies with its load.
 - Its VMs show Ready on every host they run on, while VMs of other pools on the same hosts show little or none: the wait follows the pool, not the host. Ready includes time held back by a limit; vCenter shows it as Max Limited; esxtop counts %MLMTD inside %RDY.
 - A limit on one pool caps only that pool and its descendants. It cannot cause contention in a sibling pool. In fact, it frees ESXi resource for the siblings. 
 
@@ -60,7 +61,7 @@ related:
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 - vsphere/object-types/cluster/concepts/drs-overview
 source:
-  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); VCF 9.1 vSphere Supervisor Installation and Configuration, What is a vSphere Namespace? (TechDocs, updated 2026-11-16)
   path: 'VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 77); DRS Cluster Sizing and Resource Settings (p. 78); Configuration Management > Review List > Resource Pool; vSphere 9.1 Create a Resource Pool, scalable shares (pp. 1889-1890); Edit Cluster Settings, Scalable Shares (p. 1900); esxtop CPU panel, %MLMTD included in %RDY (p. 2154)'
 corrections: []
 review_notes:
