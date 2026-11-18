@@ -1,7 +1,7 @@
 # Resource pool design
 
 ## Pool use cases
-- Use resource pools sparingly. A pool divides resources; it is not a folder for VMs.
+- Use resource pools sparingly. A pool divides resources; it is not a folder for VMs. It is not a namespace and unrelated to Kubernetes.
 - Delegated resource management: a pool sold as a service, where the tenant's contract sets the pool's reservation and limit. A tenant that bought 1 TB of RAM with no burst gets a 1 TB limit.
 - A multi-tier service: group its VMs in one pool, so resources go to the service as a whole.
 - One pool alone makes no operational sense. Create at least two, or none.
@@ -9,14 +9,13 @@
 - Read pool and VM shares and reservations together; with Scalable Shares, more so.
 
 ## Cluster-wide pool settings
-- A pool's reservation, limit and shares apply across the cluster, while each of its VMs runs on one host. In a large cluster a pool limit or share setting can hurt its VMs in ways hard to see from one host.
+- A pool's reservation, limit and shares apply across the cluster, while each of its VMs runs on one host. In a large cluster, the pool limit or share setting can hurt its VMs in ways that is hard to see from one host.
 - Fixed vs expandable reservation is a design choice: Fixed isolates the pool (only its own reservation is admitted); expandable is flexible, but one child pool can take all of the parent's spare reservation. To isolate a pool fully, set it to Fixed with a reservation and a limit. How the admission check walks the tree: [`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../cluster/concepts/admission-control-and-cluster-state.md).
 
-## Reading a pool limit in the data
-- A pool at its CPU limit shows pool CPU usage flat at one value sample after sample, near a round number, while its hosts have spare CPU. A pool that is not capped varies with its load.
+## Reading a pool with limit set
+- A pool at its CPU limit will show the pool total CPU Usage flat over time, near a round number, despite the associated ESXi hosts have spare CPU. A pool that is not capped varies with its load.
 - Its VMs show Ready on every host they run on, while VMs of other pools on the same hosts show little or none: the wait follows the pool, not the host. Ready includes time held back by a limit; vCenter shows it as Max Limited; esxtop counts %MLMTD inside %RDY.
-- A limit on one pool caps only that pool and its descendants. It cannot raise Ready in a sibling pool: it frees CPU for the siblings. When the pool that a change was meant for runs below the limit and another pool sits flat at it, check which pool holds the limit: the change may have hit the wrong pool.
-- More hosts or more vCPUs do not help a pool at its limit: the VMs share the same cap.
+- A limit on one pool caps only that pool and its descendants. It cannot cause contention in a sibling pool. In fact, it frees ESXi resource for the siblings. 
 
 ## Siblings and Scalable Shares
 - Rule: pools and VMs are not siblings. Each level of the tree holds only pools or only VMs. The rule holds with Scalable Shares off or on; only the reason changes.
