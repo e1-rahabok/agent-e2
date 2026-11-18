@@ -34,7 +34,7 @@
 <text x="764" y="128" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">vcenter-counters, vcenter-api-counters</text>
 <text x="764" y="143" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">esxtop-fields, objects</text>
 <text x="764" y="158" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">thresholds-performance,</text>
-<text x="764" y="173" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">thresholds-capacity (planning),</text>
+<text x="764" y="173" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">thresholds-capacity (planning-*),</text>
 <text x="764" y="188" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">thresholds-alerts</text>
 <rect x="995" y="92" width="205" height="94" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
 <text x="1004" y="110" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start">catalog/user-terms.yaml</text>

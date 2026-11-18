@@ -20,7 +20,7 @@
 - CPU per physical thread: Gold 1:1, Silver 2:1, Bronze 3:1. Per core with Hyper-Threading: 2:1, 4:1, 6:1.
 - Memory: Gold 1:1, Silver 1.2:1, Bronze 1.4:1.
 - 3:1 per thread is the highest CPU ratio of any class. 4:1 per thread is 8:1 per core.
-- Values and the other planning settings per class: [`sp5-framework/capacity/class-of-service-planning`](class-of-service-planning.md); the planning parameters in `catalog/thresholds-capacity`, section planning: Agent E2 inputs, not VCF Operations metrics.
+- Values and the other planning settings per class: [`sp5-framework/capacity/class-of-service-planning`](class-of-service-planning.md); catalog rows `planning-*` in `catalog/thresholds-capacity`.
 - The class also sets the maximum VM size, which follows from the ratio ([`sp5-framework/capacity/vm-size`](vm-size.md)).
 
 ## Ratio and price
