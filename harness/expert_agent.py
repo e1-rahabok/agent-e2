@@ -152,10 +152,42 @@ def compute(case, question, retriever, used):
             line += f"; {per.get('result'):g}% per vCPU of {case['vcpus']:g} vCPUs (the counter sums every vCPU)"
         lines.append(line + '. [arithmetic_calculator.py: ' + '; '.join(one.get('notes') or []) + ']')
     lines += two_reading_tests(question)
+    lines += nvme_wait(case, question)
     return ('Computed (exact):\n' + '\n'.join(dict.fromkeys(lines))) if lines else ''
 
 
 TIME = re.compile(r'\b([01]?\d|2[0-3]):([0-5]\d)\b')
+HOST_OBJECT = re.compile(r'esxi|host', re.I)
+
+
+def _nvme_read(m, word):
+    n = str(m.get('name') or '').lower()
+    return 'nvme' in n and 'read' in n and word in n and isinstance(m.get('value'), (int, float))
+
+
+def nvme_wait(case, question):
+    """NVMe wait of a VM on a tiered host (cluster-performance, section Sub-metric formulas), from the case: the VM's NVMe
+    read bandwidth (a reading whose object is not a host), the host's NVMe read latency and the VM's vCPU count. Nothing
+    when one is missing or the case is unreadable: the model then reads the formula from the knowledge base."""
+    ms = case.get('metrics') or []
+    bw = [m for m in ms if _nvme_read(m, 'bandwidth') and m.get('object') and not HOST_OBJECT.search(str(m['object']))]
+    lat = [m for m in ms if _nvme_read(m, 'latency') and not (m.get('object') and not HOST_OBJECT.search(str(m['object'])))]
+    v = VCPUS.search(question)
+    vcpus = case.get('vcpus') or (int(v.group(1)) if v else None)
+    if not (bw and lat and vcpus):
+        return []
+    out = []
+    for b in bw[:2]:
+        for l in list({m['value']: m for m in lat}.values())[:2]:
+            unit = str(l.get('unit') or 'us').strip().lower().replace('microseconds', 'us').replace('milliseconds', 'ms')
+            sec = arithmetic_calculator.evaluate(f'convert({l["value"]}, "{unit}", "s")')
+            if 'result' not in sec:
+                continue
+            r = arithmetic_calculator.evaluate(f"nvme_wait_pct({b['value']}, {sec['result']}, {vcpus})")
+            if 'result' in r:
+                out.append(f"- NVMe wait of {b['object']} = {b['value']:g} MBps x 256 pages per MB x {l['value']:g} {l.get('unit') or 'µs'} "
+                           f"/ {vcpus:g} vCPUs = {r['result']:.1f}% of its vCPU time. [arithmetic_calculator.py: {' '.join(r['notes'])}]")
+    return out
 
 
 def two_reading_tests(question):

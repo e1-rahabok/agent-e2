@@ -1,16 +1,19 @@
-"""Run one demo scenario through Agent E2, as the shipped assistant answers it (answer_modes.converse, chat mode).
+"""Run the steps of one demo scenario through Agent E2, as the shipped assistant answers them (answer_modes.converse, chat mode).
 
-A scenario folder in project/demo-site/ holds turn-1.txt (what the user writes first) and, optionally, turn-2.txt
-(what the user writes next). Turn 1 runs as is. If Agent E2 asks back (one clarifying round), turn 2 is the user's
-reply; otherwise turn 2 is a follow-up that carries the first question and answer. The result, with the files read,
-the trace and the knowledge base commit, goes to <folder>/results/<model>.json.
+A scenario folder in project/demo-site/ holds steps/step-1.txt, step-2.txt, ...: what the L2 specialist sends at each step,
+the typed question first, then the readings the screen attaches. Each step is a question of its own: Agent E2 does not
+carry an earlier answer into the next one. The answers, with the exact facts computed by code (stage 3), the files read,
+the trace and the knowledge base commit, go to <folder>/results/<model>.json; a rerun of some steps keeps the others.
 
-Usage: python3 project/tools/demo_scenario_executor.py project/demo-site/scenario-1-memory-tiering google/gemma-4-31b-it ['{"reasoning": {"effort": "low"}}']
-The optional third argument replaces the model's request settings (runner_config model_params), as a benchmark run passes --params.
-Needs AI_GATEWAY_API_KEY (the benchmark gateway). Not a benchmark run: demos are not scored into the release.
+Usage: python3 project/tools/demo_scenario_executor.py <folder> <model> [--params '{"reasoning": {"effort": "low"}}'] [--steps 1,3]
+--params replaces the model's request settings (runner_config model_params), as a benchmark run passes --params.
+Needs AI_GATEWAY_API_KEY (the benchmark gateway). Not a benchmark run: a demo is not scored.
 """
+import argparse
+import glob
 import json
 import os
+import re
 import sys
 
 import yaml
@@ -29,7 +32,12 @@ def _trace(steps):
     return [{k: s.get(k) for k in TRACE_KEYS} for s in steps]
 
 
-def main(folder, model, params_json=None):
+def step_files(folder):
+    files = glob.glob(os.path.join(folder, 'steps', 'step-*.txt'))
+    return sorted(files, key=lambda p: int(re.search(r'step-(\d+)\.txt$', p).group(1)))
+
+
+def main(folder, model, params_json=None, only=None):
     cfg = yaml.safe_load(open(os.path.join(ROOT, 'benchmark', 'runner', 'runner_config.yaml')))
     params = {model: json.loads(params_json) if params_json else (((cfg.get('model_params') or {}).get(model) or [{}])[0] or {})}
     sampling = {model: (cfg.get('sampling') or {}).get(model, {'temperature': cfg.get('temperature')})}
@@ -40,28 +48,31 @@ def main(folder, model, params_json=None):
     except LLMError as e:
         print(f'Embeddings unavailable ({e}); BM25 only.')
         retriever = Retriever(docs, chunks, expand=cfg.get('query_expansion', False))
-    turn1 = open(os.path.join(folder, 'turn-1.txt')).read()
-    out1 = answer_modes.converse('agent-e2', client, model, [turn1], [], cfg, retriever)
-    rec = {'model': model, 'model_params': params[model], 'knowledge_commit': knowledge_loader.git_sha(),
-           'turn_1': {'type': out1['type'], 'content': out1['result'].get('content'), 'files_read': out1['used'],
-                      'trace': _trace(out1['trace'])}}
-    path2 = os.path.join(folder, 'turn-2.txt')
-    if os.path.exists(path2):
-        turn2 = open(path2).read()
-        if out1['type'] == 'clarify':
-            out2 = answer_modes.converse('agent-e2', client, model, [turn1, out1['result'].get('content'), turn2], [], cfg, retriever)
-        else:
-            follow = f'{turn1}\n\nAgent E2 answered:\n{out1["result"].get("content") or ""}\n\nThe user now writes:\n{turn2}'
-            out2 = answer_modes.converse('agent-e2', client, model, [follow], [], cfg, retriever)
-        rec['turn_2'] = {'type': out2['type'], 'content': out2['result'].get('content'), 'files_read': out2['used'],
-                         'trace': _trace(out2['trace'])}
-    os.makedirs(os.path.join(folder, 'results'), exist_ok=True)
     out_path = os.path.join(folder, 'results', model.replace('/', '_') + '.json')
+    rec = json.load(open(out_path)) if os.path.exists(out_path) else {}
+    rec.update({'model': model, 'model_params': params[model], 'knowledge_commit': knowledge_loader.git_sha()})
+    rec.setdefault('steps', {})
+    for path in step_files(folder):
+        n = re.search(r'step-(\d+)\.txt$', path).group(1)
+        if only and n not in only:
+            continue
+        text = open(path).read()
+        out = answer_modes.converse('agent-e2', client, model, [text], [], cfg, retriever)
+        trace = _trace(out['trace'])
+        computed = [line for s in trace if s['action'] == 'compute' for line in (s.get('output') or [])]
+        rec['steps'][n] = {'type': out['type'], 'content': out['result'].get('content'), 'computed': computed,
+                           'files_read': out['used'], 'trace': trace}
+        print(f'step {n}: {out["type"]}, {len(out["result"].get("content") or "")} characters, computed {len(computed)}')
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
     json.dump(rec, open(out_path, 'w'), indent=1, ensure_ascii=False, default=str)
     print(out_path)
 
 
 if __name__ == '__main__':
-    if len(sys.argv) not in (3, 4):
-        sys.exit(__doc__)
-    main(*sys.argv[1:])
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('folder')
+    ap.add_argument('model')
+    ap.add_argument('--params')
+    ap.add_argument('--steps', help='comma-separated step numbers; default every step')
+    a = ap.parse_args()
+    main(a.folder, a.model, a.params, a.steps.split(',') if a.steps else None)

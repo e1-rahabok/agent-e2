@@ -142,6 +142,18 @@ class CatalogTest(unittest.TestCase):
         self.assertIn('too close to tell', close[0])
         self.assertEqual(expert_agent.two_reading_tests('NVMe read bandwidth 380 MBps.'), [])
 
+    def test_nvme_wait_from_case(self):
+        # NVMe wait by Little's law (cluster-performance, Sub-metric formulas): 6 MBps x 256 x 290 µs / 8 vCPUs = 5.6%.
+        case = {'vcpus': 8, 'metrics': [
+            {'name': 'NVMe read bandwidth', 'object': 'pay-api-07', 'value': 6, 'unit': 'MBps'},
+            {'name': 'NVMe read latency', 'object': 'esxi-pay-05', 'value': 290, 'unit': 'µs'},
+            {'name': 'NVMe read bandwidth', 'object': 'esxi-pay-05', 'value': 380, 'unit': 'MBps'}]}
+        out = expert_agent.nvme_wait(case, 'pay-api-07, 8 vCPU')
+        self.assertEqual(len(out), 1)
+        self.assertIn('NVMe wait of pay-api-07 = 6 MBps x 256 pages per MB x 290 µs / 8 vCPUs = 5.6% of its vCPU time', out[0])
+        self.assertIn('cluster-performance', out[0])
+        self.assertEqual(expert_agent.nvme_wait({'metrics': case['metrics'][1:]}, 'esxi-pay-05'), [])  # host bandwidth only
+
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
         self.assertEqual(uses, {'decision', 'rule', 'flow'})
@@ -182,6 +194,8 @@ class CalcTest(unittest.TestCase):
         self.assertIn('error', arithmetic_calculator.evaluate('2 ** 1000'))
         self.assertIn('thousands', arithmetic_calculator.evaluate('13,856 * 300')['error'])
         self.assertIn('error', arithmetic_calculator.evaluate('convert(1, "GB", "ms")'))
+        self.assertAlmostEqual(self.r('convert(290, "µs", "s")'), 0.00029)
+        self.assertAlmostEqual(self.r('nvme_wait_pct(6, 0.00029, 8)'), 5.568)
 
 
 class CapacityPlanTest(unittest.TestCase):
