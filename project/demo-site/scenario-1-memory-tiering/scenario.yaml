@@ -1,0 +1,85 @@
+title: 'Nobody did anything wrong'
+short_title: Memory Tiering Demo
+subtitle: 'Scenario 1. A bank payments cluster on VCF 9.1.1 with memory tiering. Two correct changes by two teams, then a long weekend. Risk (potential) warned on Wednesday and Friday; contention (actual) hit on Tuesday. The L2 specialist on call knows neither change. Agent E2 answers from its knowledge base only; every answer below is unedited output of the Agent E2 pipeline.'
+summary:
+- title: The trap
+  text: |
+    - L1: "1.6 TB consumed on 1 TB hosts, we are swapping."
+    - Capacity: "Memory Capacity Remaining was 38%."
+    - DBA: "Our SQL VMs show no wait."
+    - VM Performance (%) 99 and Cluster Performance (%) 96: green.
+    Every one of them is right about its own number, and every one points away from the cause.
+- title: The cause
+  text: |
+    - CHG-1 turned memory tiering off on 6 SQL VMs and reserved all their memory: each takes 256 GB of DRAM away from the tiered VMs on its host.
+    - CHG-2 added 40 VMs, approved on a capacity number that counts NVMe as DRAM.
+    - The long weekend let idle pages go cold. On Tuesday the working set no longer fits the DRAM left: the VMs wait on NVMe.
+- title: What Agent E2 must show
+  text: |
+    - Contention against consumption against context, read together (Triple See).
+    - The NVMe wait that memory contention does not count.
+    - A sustained read, not a warm-up, against the August baseline.
+    - The Cluster Risk rows that stepped up on Tuesday night and Thursday night: the clue to two changes the specialist never saw.
+week:
+- {when: 'Mon', what: 'Normal. Memory tiering on since June; active memory 45% of DRAM.', seen: ''}
+- {when: 'Tue 22:00-23:30', what: '**CHG-1**, DBA team, blueprint SQL Gold v3: sql-pay-01 to 06 (16 vCPU, 256 GB) powered off, `sched.mem.enableTiering = FALSE`, all memory reserved, powered on. Broadcom guidance for SQL.', seen: 'Seen by the DBA team only.'}
+- {when: 'Wed', what: 'Fine for users. Cluster Risk: memory reservation steps from 0 to 26%.', seen: 'Nobody looks.'}
+- {when: 'Thu 21:00-23:40', what: '**CHG-2**, application team: 40 VMs (8 vCPU, 32 GB) moved in, approved on Memory Capacity Remaining 38%.', seen: 'Seen by the application and capacity teams.'}
+- {when: 'Fri', what: 'Fine for users. Cluster Risk: active memory leaves green (52.7%), NVMe latency turns yellow. Cluster Performance 98.', seen: 'Nobody looks.'}
+- {when: 'Sat-Mon', what: 'National Day long weekend. Idle pages go cold and move to NVMe.', seen: ''}
+- {when: 'Tue 09:05', what: 'Payments API p99 latency from 180 ms to 1.4 s.', seen: 'Service desk.'}
+- {when: 'Tue 10:20', what: 'The L2 vSphere specialist is called. Not part of either change; the change calendar is not open to them yet.', seen: ''}
+tables:
+- title: 'Cluster Risk sub-metrics, worst host, business hours (vCommunity metrics)'
+  head: [Metric, Unit, Mon, Wed, Fri, Tue]
+  rows:
+  - ['Highest ESXi Memory Reservation', '%', {v: 0, band: grey}, {v: 26, band: yellow}, {v: 26, band: yellow}, {v: 26, band: yellow}]
+  - ['Highest ESXi Memory Overcommit Ratio', number, {v: 1.50, band: orange}, {v: 1.50, band: orange}, {v: 1.66, band: orange}, {v: 1.66, band: orange}]
+  - ['Highest ESXi CPU Overcommit Ratio', number, {v: 1.25, band: yellow}, {v: 1.25, band: yellow}, {v: 1.56, band: yellow}, {v: 1.56, band: yellow}]
+  - ['Highest ESXi DRAM Memory Consumed', '%', {v: 121, band: red}, {v: 121, band: red}, {v: 146, band: red}, {v: 157, band: red}]
+  - ['Worst ESXi Active Memory, tiered hosts', '% of DRAM', {v: 45, band: green}, {v: 46, band: green}, {v: 52.7, band: yellow}, {v: 63.5, band: orange}]
+  - ['Worst ESXi NVMe Read Latency', 'µs', {v: 90, band: green}, {v: 95, band: green}, {v: 120, band: yellow}, {v: 290, band: orange}]
+  - ['Cluster Risk', '%', {v: 64.8, band: orange}, {v: 62.7, band: orange}, {v: 62.3, band: orange}, {v: 64.5, band: orange}]
+  - ['Cluster Performance', '%', {v: 99, band: green}, {v: 99, band: green}, {v: 98, band: green}, {v: 96, band: green}]
+  note: 'Bands from `catalog/thresholds-capacity` and `catalog/thresholds-performance`; the Cluster Risk score uses the scoring of `sp5-framework/performance/performance-kpi-design`. The reservation row stepped up at Tue 23:25 and the overcommit rows at Thu 23:35. The score stays flat and even falls: the DRAM Memory Consumed row already scores 0 at the heaviest weight (`vsphere/object-types/cluster/models/cluster-risk`, section Sub-metric weight).'
+- title: 'esxi-pay-05, the worst host'
+  head: [Reading, Unit, 'Tue 09:10', 'Tue 10:15', 'August long weekend, 09:10', 'August, 10:15']
+  rows:
+  - ['NVMe read bandwidth', MBps, {v: 380, band: orange}, {v: 360, band: orange}, {v: 70, band: green}, {v: 8, band: green}]
+  - ['NVMe read latency', 'µs', {v: 290, band: orange}, {v: 280, band: orange}, {v: 110, band: yellow}, {v: '', band: grey}]
+  - ['Active memory', GB, {v: 650, band: orange}, {v: 640, band: orange}, {v: 560, band: yellow}, {v: '', band: grey}]
+  - ['DRAM consumed / NVMe consumed', GB, {v: '930 / 680', band: grey}, {v: '', band: grey}, {v: '', band: grey}, {v: '', band: grey}]
+  - ['Ballooned, compressed, swapped', GB, {v: 0, band: green}, {v: 0, band: green}, {v: 0, band: green}, {v: 0, band: green}]
+  note: 'The host holds sql-pay-03 (tiering off, 256 GB reserved, 110 GB active) and 34 tiered VMs: 1,024 − 256 = 768 GB of DRAM is left for them (0.75:1 against 1 TB of NVMe). esxi-pay-07 and esxi-pay-08 hold no SQL VM: active memory 44% and 41% of DRAM.'
+models:
+- {id: anthropic/claude-opus-5.5, label: 'Frontier reference', role: 'frontier model, same Agent E2 pipeline'}
+- {id: alibaba/qwen3.8-27b, label: 'Candidate: Qwen 27B', role: 'local candidate'}
+- {id: google/gemma-4-31b-it, label: 'Candidate: Gemma 31B', role: 'local candidate'}
+checks:
+- {id: t1-swap, turn: 1, text: 'Rejects "we are swapping": consumed passes DRAM by design on a tiered host; ballooned, compressed and swapped are 0.', kb: [vsphere/technology/memory/concepts/memory-tiering, vsphere/object-types/cluster/models/cluster-risk]}
+- {id: t1-capacity, turn: 1, text: 'Rejects Capacity Remaining as proof: it counts NVMe as DRAM; active memory against DRAM is the limit.', kb: [vcf-operations/features/capacity-forecast]}
+- {id: t1-nvme-wait, turn: 1, text: 'Memory contention does not count NVMe fetches; NVMe wait of pay-api-07 is about 5.6% of its vCPU time.', kb: [vsphere/object-types/cluster/cluster-performance, vsphere/technology/memory/concepts/memory-tiering]}
+- {id: t1-active, turn: 1, text: 'Active memory 63.5% of DRAM: at risk (50-75%).', kb: [vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host]}
+- {id: t1-sustained, turn: 1, text: 'Sustained, not a warm-up: 380 then 360 MBps an hour apart, where August fell from 70 to 8.', kb: [vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host]}
+- {id: t1-risk, turn: 1, text: 'Reads the Cluster Risk steps (Tue 23:25 reservation, Thu 23:35 overcommit) as two changes and asks what was changed then.', kb: [vsphere/object-types/cluster/models/cluster-risk]}
+- {id: t1-action, turn: 1, text: 'Acts now: moves the heaviest NVMe readers to esxi-pay-07 or esxi-pay-08.', kb: [vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host]}
+- {id: t2-cause, turn: 2, text: 'Cause: CHG-1 and CHG-2 together, exposed by the long weekend; neither alone.', kb: [vsphere/technology/memory/concepts/memory-tiering, vsphere/object-types/cluster/models/cluster-risk]}
+- {id: t2-rollback, turn: 2, text: 'Rolling back CHG-2 is not the first fix: a lever, not the cause.', kb: [vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host]}
+- {id: t2-reservation, turn: 2, text: 'Does not lower the reservation of a VM with tiering off; gives DRAM back by turning tiering on for a SQL VM that is not latency-sensitive (a power cycle).', kb: [vsphere/technology/memory/concepts/memory-tiering]}
+- {id: t2-process, turn: 2, text: 'Process: approve capacity on active memory against DRAM, not on Capacity Remaining.', kb: [vsphere/technology/memory/concepts/memory-tiering, vcf-operations/features/capacity-forecast]}
+scores:
+  anthropic/claude-opus-5.5: {t1-swap: pass, t1-capacity: partial, t1-nvme-wait: pass, t1-active: pass, t1-sustained: pass, t1-risk: pass, t1-action: pass, t2-cause: pass, t2-rollback: pass, t2-reservation: partial, t2-process: partial}
+  alibaba/qwen3.8-27b: {t1-swap: fail, t1-capacity: fail, t1-nvme-wait: fail, t1-active: fail, t1-sustained: fail, t1-risk: fail, t1-action: fail, t2-cause: fail, t2-rollback: pass, t2-reservation: partial, t2-process: fail}
+  google/gemma-4-31b-it: {t1-swap: pass, t1-capacity: fail, t1-nvme-wait: partial, t1-active: fail, t1-sustained: fail, t1-risk: fail, t1-action: fail, t2-cause: partial, t2-rollback: pass, t2-reservation: partial, t2-process: partial}
+scoring_note: 'Scored by reading each answer against the check: the scores are judgment, the answers are verbatim. Qwen asked two questions back in turn 1 instead of answering, so its turn 1 checks fail. One run per model, so the numbers move between runs.'
+lessons: |
+    - **The knowledge base and the harness carry the scenario.** The frontier model, run through the same Agent E2 pipeline and the same knowledge base, passes 9.5 of 11 checks and cites a file for each claim. Every fact it needs is in the knowledge base.
+    - **The local candidates do not, yet.** Gemma 31B passes 4 of 11 and Qwen 27B 1.5 of 11. Where they fail is the same: comparing two readings in time (sustained against warm-up), reading the risk history to date the changes, and acting (moving the heaviest NVMe readers). Qwen also asked back instead of answering, on a P1.
+    - **Fixed while building this demo** (knowledge commit 734ed63): stage 1 failed on this long input, because the case was cut at 1,200 tokens (now 2,400); the misconception "lower the reservation of a VM with tiering off" now reaches the model up front, and both local models stopped advising it; Cluster Risk has a section on its use in troubleshooting; the decision tree tells a warm-up from a sustained read; turning tiering off per VM needs a power cycle (Broadcom KB 426485, 448305).
+    - **Tried and not kept:** reading a decision tree whole when the chosen flow links to it. The retrieval check dropped from 254 to 252 complete questions, so the change was removed.
+    - **Next, in the harness (stage 3, exact tools):** compute what the local models miss, before the model reads: the two readings against the past baseline (sustained or warm-up), the step changes in the Cluster Risk rows with their times, NVMe wait per VM, and active memory against the DRAM left for tiered VMs. The model then explains numbers it no longer has to derive.
+    - **Not settled by the knowledge base** (named by the frontier run): whether an NVMe wait of about 5.6% alone explains a p99 of 1.4 s (Guest OS and application counters), and why DRS did not rebalance.
+rerun: |
+    1. `python3 project/tools/demo_scenario_executor.py project/demo-site/scenario-1-memory-tiering <model>` (needs AI_GATEWAY_API_KEY): writes `results/<model>.json`.
+    2. Read the answers and set `scores` in `scenario.yaml`.
+    3. `python3 project/tools/demo_page_builder.py project/demo-site/scenario-1-memory-tiering`: writes `index.html`.

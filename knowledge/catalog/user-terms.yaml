@@ -73,8 +73,8 @@ rows:
 - id: active-memory
   match: ['active memory', 'memory active']
   means: VM Memory Active Consumed
-  note: 'Active is an estimate of pages touched recently, with no operational use for sizing.'
-  files: [vsphere/technology/memory/metrics/virtual-motherboard/active]
+  note: 'Active is an estimate of pages touched recently, with no operational use for sizing a VM. On a host with memory tiering it is the capacity limit: host active memory against DRAM decides whether tiering slows the VMs.'
+  files: [vsphere/technology/memory/metrics/virtual-motherboard/active, vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host]
 - id: balloon
   match: ['balloon']
   means: VM Memory Ballooned Swapped

@@ -78,7 +78,13 @@ Per host, then the worst host is kept.
 - Inter-host imbalance: partly covered by highest host utilization; complex; field validation that it changes remediation is pending.
 - vMotion: involves the network across top-of-rack switches. Track the maximum vMotion stun time across the environment separately, as basic health ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md), section vMotion Count).
 
+## Use in troubleshooting
+- Cluster Risk is potential contention; Cluster Performance is actual contention. Risk can rise for days while performance stays green, until a trigger (a busy morning, a host failure, a maintenance window) turns it into contention.
+- When VMs are slow, read the sub-metrics over the days before the complaint, not only today. A step in a reservation, overcommit, monster VM or DRAM memory consumed row is a configuration or placement change: reservations set, VMs added or resized. The time of the step dates the change, so ask what was changed then. The specialist on call often was not part of the change.
+- Read the rows, not the score: a worse sub-metric can leave the score flat or lower it (section Sub-metric weight in Cluster Risk).
+
 ## Misconceptions
+- "Cluster Performance was green all week, so nothing was building up" → Cluster Risk reads potential contention; its sub-metrics can step up days before the VMs wait.
 - "The CPU overcommit row reads 3, so the Bronze 3:1 plan is met" → the row is per thread, as the class plans are: Bronze 3:1 reads 3; on Hyper-Threading hosts that is 6 vCPUs per core.
 - "Cluster average utilization shows risk" → use the worst host.
 - "Cluster Risk fell, so the cluster is safer" → a worse sub-metric can lower it when the score is already high; read the sub-metrics.

@@ -22,7 +22,7 @@ flowchart TD
 ## Checks, in order
 1. NVMe consumed (HostSystem): `tier.consumed` per tier, or `memstats -r vmtier-stats` per VM. 0 → no: tiering starts only when DRAM consumption passes about 80%, or the VMs are excluded from tiering. Above 0 → step 2.
 2. Active memory as % of host DRAM (HostSystem): vCenter Active, or esxtop TCHD summed over the VMs. 50% or lower: green. 50-75%: at risk; test the workloads. Above 75%: significant loss expected. → step 3.
-3. NVMe read bandwidth (HostSystem): tier in rate, pages fetched back from NVMe. Near 0 → no: the pages on NVMe stay cold. Above 200 MB/s → watch the latency. → step 4.
+3. NVMe read bandwidth (HostSystem): tier in rate, pages fetched back from NVMe. Near 0 → no: the pages on NVMe stay cold. Above 200 MB/s → watch the latency. After an idle period, such as a long weekend, pages that were not touched have gone cold and moved to NVMe, so the first busy hour fetches them back: a warm-up. Tell a warm-up from a working set that no longer fits DRAM: compare with the same event before (the last long weekend) and read the reads again an hour later. Reads that fall back are a warm-up; reads that stay high are sustained. → step 4.
 4. NVMe read latency (HostSystem): `latency.read` of the NVMe tier, in ns, statistics level 3. Below 200 µs: good. 200-400 µs: potential issues. Above 400 µs: impact expected. High latency at almost no reads is a device waking from a power-saving state: the cause, not a reason to discard it. The VMs that read then waited. → step 5.
 5. Per-VM NVMe read bandwidth (VirtualMachine): which VMs fetch from NVMe. A VM with high read bandwidth waits on NVMe whatever the host average says. → step 6.
 6. Reclamation (HostSystem, VirtualMachine): ballooned, compressed, swapped. On a tiered host, reclamation means one of: a VM excluded from tiering without a full memory reservation, a memory limit, or demand beyond DRAM + NVMe. Allocation must stay within DRAM + NVMe; an overcommit ratio above 1:1 against DRAM is what tiering is for. → step 7.
@@ -43,11 +43,13 @@ flowchart TD
 ## Interpretation
 - No at step 1 or 3: tiering is not slowing the host.
 - Active memory above 50% with rising NVMe reads: at risk now; move VMs to hosts with more DRAM, or lower the DRAM:NVMe ratio.
+- NVMe reads that stay high an hour into the first busy morning after an idle period, where the same morning before fell back within the hour: not a warm-up; the working set of the tiered VMs no longer fits the DRAM left to them.
 - NVMe reads with latency above 400 µs: yes; check the device class, wear and write load (garbage collection).
 - One VM with high NVMe reads: yes for that VM; disable tiering for it with a full reservation, or give it a host with spare DRAM.
 - Balloon, compression or swap on a tiered host: a configuration problem first (non-tiered VM without reservation, limit, allocation beyond DRAM + NVMe).
 
 ## Misconceptions
+- "High NVMe reads on the morning after a long weekend are only a warm-up" → a warm-up falls back within the hour; reads that stay high mean the working set no longer fits DRAM.
 - "NVMe consumed is high, so the VMs are slow" → NVMe holds cold pages: saturation, not contention. Read active memory and NVMe reads.
 - "NVMe latency is 900 µs on an idle device, so ignore it" → the VMs that read then waited 900 µs each. Measure the total (reads × latency); the wake-up explains it, it does not erase it.
 - "Latency is below 200 µs, so tiering costs nothing" → each fetch still costs about 1,000x a DRAM access; many fetches slow the VM.

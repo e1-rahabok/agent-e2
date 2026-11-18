@@ -51,6 +51,7 @@
 - Excluded from tiering automatically: 1 GB page VMs, confidential VMs, Fault Tolerance VMs, large VMs, low latency VMs, nested virtualization VMs (VBS can opt in), PCI passthrough VMs (including vGPU), preallocated VMs, vQAT VMs.
 - VMs with more than 512 GB of memory and 64 vCPUs can degrade on a tiered host (documentation). The VCF 9.0 performance study sets the line lower: no VMs larger than 32 vCPUs and 512 GB with tiering. The documentation advises disabling tiering for them, with a full memory reservation.
 - A VM with tiering disabled needs a full memory reservation. Without it, it competes for DRAM with tiered VMs and its pages go to the host swap file, slower than NVMe.
+- To turn tiering off for one VM, set the advanced parameter `sched.mem.enableTiering = "FALSE"` with the VM powered off, then power it on (Broadcom KB 426485, KB 448305). The change needs a power cycle, so it waits for a maintenance window; turning tiering back on needs one too.
 - Each DRAM-only reservation shrinks the DRAM left for tiered VMs. Example: 1 TB DRAM, 1 TB NVMe; two 200 GB VMs fully reserved and excluded → the remaining VMs run at about 0.6:1 (600 GB DRAM : 1 TB NVMe).
 
 ## Interactions
@@ -148,6 +149,7 @@ memstats -r vmtier-stats -u mb -s name:memSize:active:tier1Target:tier1Consumed
 - "Active memory at 75% of DRAM is the limit" → 75% is the point where some workloads begin to suffer. The ideal is 50%.
 - "High consumed memory on a tiered host is a problem" → consumed may exceed DRAM by design; active memory against DRAM decides performance.
 - "A memory reservation keeps a tiered VM in DRAM" → it keeps the VM from being ballooned or swapped; its cold pages still go to NVMe, also when the reservations fit in DRAM. Turn tiering off for the VM and reserve all its memory.
+- "Lower the reservation of a VM with tiering off to free DRAM for the other VMs" → a VM with tiering off and no full reservation competes for DRAM and its pages go to the host swap file. To give DRAM back, turn tiering back on for that VM (a power cycle) and keep its reservation.
 - "Disable tiering for a VM and it gets DRAM" → only with a full memory reservation; otherwise it can be swapped.
 - "NVMe shows 0 consumed, so tiering is broken" → by design below about 80% DRAM consumption; also 0 for Fault Tolerance and PCI passthrough VMs, which stay in DRAM.
 - "Tiering doubles memory, so the host is still at 1:1" → the overcommit ratio is against DRAM: a 1 TB DRAM host carrying 1.66 TB of VM memory runs at 1.66:1. Tiering makes that ratio workable; it does not reset it.
@@ -164,6 +166,7 @@ memstats -r vmtier-stats -u mb -s name:memSize:active:tier1Target:tier1Consumed
 ## Metadata
 ```yaml
 id: vsphere/technology/memory/concepts/memory-tiering
+up_front: 'Lower the reservation of a VM with tiering off to free DRAM for the other VMs'
 retriever_guide: how-it-works
 scope: vsphere
 technology:
@@ -186,7 +189,7 @@ related:
 - vsphere/technology/memory/configuration/host-level-swapping
 - vsphere/technology/storage/metrics/host/disk
 source:
-  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 documentation (PDF built 2026-11-02); Memory Tiering Performance, VMware Cloud Foundation 9.0 (performance study, July 2025)
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 documentation (PDF built 2026-11-02); Memory Tiering Performance, VMware Cloud Foundation 9.0 (performance study, July 2025); Broadcom KB 426485 and KB 448305 (per-VM memory tiering setting)
   path: 'Memory Hardware Considerations > Memory Tiering Hardware (p. 14); ESX Memory Considerations > Memory Tiering (p. 38); vSphere Resource Management > Memory Tiering over NVMe: Capacity Planning Considerations, Virtual Machine Profiles, Configuration Parameters, Assessing Customer Workloads, Considerations and Best Practices, NVMe Failure Scenarios, Troubleshooting, NVMe Device Health Monitoring (pp. 1844-1849, 1868-1873, 1957-1959); vSphere Availability > Memory Tiering and HA Admission Control (pp. 1969-1971); Monitoring and Performance > Hosts > Memory (MB), Memory Rate, Memory Bandwidth, Memory Latency; View Memory Tiering Device Information (pp. 2038, 2070, 2074-2076, 2145); performance study > Using and monitoring Memory Tiering (pp. 34-39, https://www.vmware.com/docs/memtier-vcf9-perf); Storage > ESXi > Disk or Device > Memory Tiering'
 corrections: []
 review_notes:
