@@ -12,51 +12,74 @@ The author's books describe metrics from three perspectives: technology, object,
 
 ## The knowledge base folder
 
-```text
-knowledge/                           # the domain knowledge Agent E2 uses (see KNOWLEDGE-ENGINEERING.md, section 2)
-├── catalog/                         # structured data read by harness tools, not chunked as prose:
-│                                    # vCenter counters, esxtop fields, thresholds, object model, user terms (YAML)
-├── glossary.md                      # the agent's vocabulary: one entry per term, other names, confusable term (all products)
-├── sp5-framework/                   # the method: how to operate VCF (the SP5 Framework), with VCF terms and examples
-│   ├── concepts/                    # the framework across pillars: overview, why not ITIL, health check, SLAs,
-│   │                                # class of service, modelling, monitoring vs troubleshooting
-│   ├── observability/               # how to read telemetry: input types, interval, aggregation, units, naming,
-│   │                                # accounting, thresholds, Triple See Method
-│   ├── outputs/                     # how insight reaches people: alerts, dashboards, reports, NOC live screen
-│   ├── performance/                 # performance-management (main file: boundary, processes, KPI map, question map),
-│   │                                # KPI design, KPI vs SLA, noisy neighbour, vm-slow (the flow across technologies)
-│   └── capacity/                    # capacity-management (main file: boundary, stages, question map), supply, demand,
-│                                    # overcommit, forecasting, planning, sizing, reclamation; decision-tree/ across technologies
-├── vsphere/
-│   ├── architecture/                # vSphere-wide design that every metric depends on: provider/consumer,
-│   │                                # VM vs Guest OS, kernel worlds, overhead, resource controls, metric sources
-│   ├── technology/                  # raw metrics, by technology (book route: contention first, then consumption)
-│   │   └── cpu/ gpu/ memory/ storage/ network/   # the kind folders below exist from 2 files; one file sits here
-│   │       ├── concepts/            # how it works
-│   │       ├── metrics/<object>/    # one metric, one object type per file: virtual-motherboard/, host/,
-│   │       │                        # cluster/, datastore/; comparisons/ for side-by-side groups
-│   │       ├── configuration/       # what to set
-│   │       ├── decision-tree/       # operational questions within this technology (headroom, downsizing)
-│   │       ├── troubleshooting/     # why flows within this technology
-│   │       └── images/
-│   ├── object-types/                # multi-technology content, by object (book route); one folder per object type
-│   │   └── vm/ esxi/ cluster/ ...   # <object>-alerts, <object>-health-check, <object>-performance (KPI) directly in
-│   │                                # the object folder; concepts/, metrics/, configuration/, models/, troubleshooting/,
-│   │                                # decision-tree/ once they hold 2 or more files; images/
-│   └── tools/                       # how each tool shows the counters
-│       ├── esxtop/                  # panels, fields, units vs the vSphere Client
-│       └── vsphere-client/          # vCenter statistics (levels, rollups, intervals), documentation guidance;
-│                                    # screens/ for the screen library (release 1.1)
-├── vcf-operations/                  # the product VCF Operations: what it is, ships and does
-│   ├── vcf-operations-role          # what the product is for
-│   ├── alert-definitions            # how VCF Operations builds an alert definition: symptoms, conditions, cycles
-│   ├── report-suite                 # the report suite as built in the product
-│   ├── features/                    # features as implemented (real-time metrics, 20-second peaks)
-│   └── dashboards/                  # dashboards as shipped or as built in the product (VM Performance, business applications)
-└── guest-os/                        # Windows, Linux: a separate layer, not Broadcom products, not part of the VM
-    ├── guest-os-alerts              # the Guest OS alert set: the Guest OS is the object
-    └── <technology>/                # cpu/ memory/ storage/ system/ (scope: guest-os, layer: guest-os); kind folders
-                                     # from 2 files, images/
+```mermaid
+flowchart LR
+  knowledge["knowledge/<br/>the domain knowledge Agent E2 uses (see KNOWLEDGE-ENGINEERING.md, section 2)"]
+  catalog["catalog/<br/>structured data read by harness tools, not chunked as prose: vCenter counters, esxtop fields, thresholds, object model, user terms (YAML)"]
+  glossary["glossary.md<br/>the agent's vocabulary: one entry per term, other names, confusable term (all products)"]
+  sp5["sp5-framework/<br/>the method: how to operate VCF (the SP5 Framework), with VCF terms and examples"]
+  sp5concepts["concepts/<br/>the framework across pillars: overview, why not ITIL, health check, SLAs, class of service, modelling, monitoring vs troubleshooting"]
+  sp5obs["observability/<br/>how to read telemetry: input types, interval, aggregation, units, naming, accounting, thresholds, Triple See Method"]
+  sp5out["outputs/<br/>how insight reaches people: alerts, dashboards, reports, NOC live screen"]
+  sp5perf["performance/<br/>performance-management (main file: boundary, processes, KPI map, question map), KPI design, KPI vs SLA, noisy neighbour, vm-slow (the flow across technologies)"]
+  sp5cap["capacity/<br/>capacity-management (main file: boundary, stages, question map), supply, demand, overcommit, forecasting, planning, sizing, reclamation; decision-tree/ across technologies"]
+  vsphere["vsphere/"]
+  arch["architecture/<br/>vSphere-wide design that every metric depends on: provider/consumer, VM vs Guest OS, kernel worlds, overhead, resource controls, metric sources"]
+  tech["technology/<br/>raw metrics, by technology (book route: contention first, then consumption)"]
+  techkinds["cpu/ gpu/ memory/ storage/ network/<br/>kind folders below exist from 2 files; one file sits here"]
+  tconcepts["concepts/<br/>how it works"]
+  tmetrics["metrics/&lt;object&gt;/<br/>one metric, one object type per file: virtual-motherboard/, host/, cluster/, datastore/; comparisons/ for side-by-side groups"]
+  tconf["configuration/<br/>what to set"]
+  tdt["decision-tree/<br/>operational questions within this technology (headroom, downsizing)"]
+  tts["troubleshooting/<br/>why flows within this technology"]
+  timg["images/"]
+  objtypes["object-types/<br/>multi-technology content, by object (book route); one folder per object type"]
+  objs["vm/ esxi/ cluster/ ...<br/>&lt;object&gt;-alerts, &lt;object&gt;-health-check, &lt;object&gt;-performance (KPI) directly in the object folder; concepts/, metrics/, configuration/, models/, troubleshooting/, decision-tree/ once they hold 2 or more files; images/"]
+  tools["tools/<br/>how each tool shows the counters"]
+  esxtop["esxtop/<br/>panels, fields, units vs the vSphere Client"]
+  vcl["vsphere-client/<br/>vCenter statistics (levels, rollups, intervals), documentation guidance; screens/ for the screen library (release 1.1)"]
+  vcfops["vcf-operations/<br/>the product VCF Operations: what it is, ships and does"]
+  vcfrole["vcf-operations-role<br/>what the product is for"]
+  alertdef["alert-definitions<br/>how VCF Operations builds an alert definition: symptoms, conditions, cycles"]
+  report["report-suite<br/>the report suite as built in the product"]
+  features["features/<br/>features as implemented (real-time metrics, 20-second peaks)"]
+  dashboards["dashboards/<br/>dashboards as shipped or as built in the product (VM Performance, business applications)"]
+  guest["guest-os/<br/>Windows, Linux: a separate layer, not Broadcom products, not part of the VM"]
+  gosalerts["guest-os-alerts<br/>the Guest OS alert set: the Guest OS is the object"]
+  gtech["&lt;technology&gt;/<br/>cpu/ memory/ storage/ system/ (scope: guest-os, layer: guest-os); kind folders from 2 files, images/"]
+
+  knowledge --> catalog
+  knowledge --> glossary
+  knowledge --> sp5
+  knowledge --> vsphere
+  knowledge --> vcfops
+  knowledge --> guest
+  sp5 --> sp5concepts
+  sp5 --> sp5obs
+  sp5 --> sp5out
+  sp5 --> sp5perf
+  sp5 --> sp5cap
+  vsphere --> arch
+  vsphere --> tech
+  vsphere --> objtypes
+  vsphere --> tools
+  tech --> techkinds
+  techkinds --> tconcepts
+  techkinds --> tmetrics
+  techkinds --> tconf
+  techkinds --> tdt
+  techkinds --> tts
+  techkinds --> timg
+  objtypes --> objs
+  tools --> esxtop
+  tools --> vcl
+  vcfops --> vcfrole
+  vcfops --> alertdef
+  vcfops --> report
+  vcfops --> features
+  vcfops --> dashboards
+  guest --> gosalerts
+  guest --> gtech
 ```
 
 - The author's book sees metrics from 3 perspectives: technology, pillar of operations, product. A folder tree holds one hierarchy; tags (`technology`, `pillar`, `product`, `object`) hold the others, and retrieval and the website browse by any of them.
