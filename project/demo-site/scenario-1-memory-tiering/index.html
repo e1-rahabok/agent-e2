@@ -18,217 +18,229 @@ border-radius:999px;padding:6px 12px;cursor:pointer;font:inherit;font-size:14px}
 .answer p{margin:6px 0}.answer ul,.answer ol{margin:6px 0 6px 20px;padding:0}.tag{display:inline-block;font-size:12px;border:1px solid var(--line);
 border-radius:999px;padding:1px 8px;color:var(--muted);margin-right:6px}.note{color:var(--muted);font-size:13px}
 .timeline li{margin:4px 0}details summary{cursor:pointer;color:var(--accent)}
-</style></head><body><main><h1>Nobody did anything wrong</h1><p class="sub">Scenario 1. A bank payments cluster on VCF 9.1.1 with memory tiering. Two correct changes by two teams, then a long weekend. Risk (potential) warned on Wednesday and Friday; contention (actual) hit on Tuesday. The L2 specialist on call knows neither change. Agent E2 answers from its knowledge base only; every answer below is unedited output of the Agent E2 pipeline.</p><div class="grid"><div class="panel"><h3>The trap</h3><ul>
-<li>L1: &quot;1.6 TB consumed on 1 TB hosts, we are swapping.&quot;</li>
-<li>Capacity: &quot;Memory Capacity Remaining was 38%.&quot;</li>
-<li>DBA: &quot;Our SQL VMs show no wait.&quot;</li>
-<li>VM Performance (%) 99 and Cluster Performance (%) 96: green.</li>
-</ul>
-<p>Every one of them is right about its own number, and every one points away from the cause.</p></div><div class="panel"><h3>The cause</h3><ul>
-<li>CHG-1 turned memory tiering off on 6 SQL VMs and reserved all their memory: each takes 256 GB of DRAM away from the tiered VMs on its host.</li>
-<li>CHG-2 added 40 VMs, approved on a capacity number that counts NVMe as DRAM.</li>
-<li>The long weekend let idle pages go cold. On Tuesday the working set no longer fits the DRAM left: the VMs wait on NVMe.</li>
+</style></head><body><main><h1>Nobody did anything wrong</h1><p class="sub">Scenario 1. The payments application servers wait for memory pages stored on NVMe, because the hosts that also run a SQL VM no longer have enough DRAM for the application&#x27;s working set. Two changes on the same payments service, by two teams, made that happen, and a long weekend exposed it. The L2 specialist on call knows neither change. Every answer below is unedited output of the Agent E2 pipeline, answering from its knowledge base.</p><div class="grid"><div class="panel"><h3>The service</h3><ul>
+<li>The payments service has a database tier, sql-pay-01 to 06, already in cluster CL-SG-PRD-PAY.</li>
+<li>Its application tier, 40 VMs (pay-api and pay-web), ran on an old cluster until this week.</li>
+<li>The cluster has 8 identical hosts, each with 1 TB of DRAM and a 1 TB NVMe memory tier. Memory tiering has been configured since June, but DRAM consumed never passed 80%, so no page had ever moved to NVMe.</li>
+</ul></div><div class="panel"><h3>The cause</h3><ul>
+<li>CHG-1 (DBA team) turned memory tiering off on the 6 SQL VMs and reserved all their memory: 256 GB of each host&#x27;s DRAM now belongs to one SQL VM.</li>
+<li>CHG-2 (application team) moved the 40 application VMs in, approved on a capacity number that counts NVMe as DRAM. On Friday DRAM consumed passed 80%, and tiering started for the first time.</li>
+<li>Over the long weekend idle application pages moved to NVMe. On Tuesday the application needs them back, and its working set no longer fits the DRAM left.</li>
 </ul></div><div class="panel"><h3>What Agent E2 must show</h3><ul>
-<li>Contention against consumption against context, read together (Triple See).</li>
-<li>The NVMe wait that memory contention does not count.</li>
-<li>A sustained read, not a warm-up, against the August baseline.</li>
-<li>The Cluster Risk rows that stepped up on Tuesday night and Thursday night: the clue to two changes the specialist never saw.</li>
-</ul></div></div><h2>The week</h2><div class="panel"><ol class="timeline"><li><strong>Mon</strong>: Normal. Memory tiering on since June; active memory 45% of DRAM. <span class="note"></span></li><li><strong>Tue 22:00-23:30</strong>: <strong>CHG-1</strong>, DBA team, blueprint SQL Gold v3: sql-pay-01 to 06 (16 vCPU, 256 GB) powered off, <code>sched.mem.enableTiering = FALSE</code>, all memory reserved, powered on. Broadcom guidance for SQL. <span class="note">Seen by the DBA team only.</span></li><li><strong>Wed</strong>: Fine for users. Cluster Risk: memory reservation steps from 0 to 26%. <span class="note">Nobody looks.</span></li><li><strong>Thu 21:00-23:40</strong>: <strong>CHG-2</strong>, application team: 40 VMs (8 vCPU, 32 GB) moved in, approved on Memory Capacity Remaining 38%. <span class="note">Seen by the application and capacity teams.</span></li><li><strong>Fri</strong>: Fine for users. Cluster Risk: active memory leaves green (52.7%), NVMe latency turns yellow. Cluster Performance 98. <span class="note">Nobody looks.</span></li><li><strong>Sat-Mon</strong>: National Day long weekend. Idle pages go cold and move to NVMe. <span class="note"></span></li><li><strong>Tue 09:05</strong>: Payments API p99 latency from 180 ms to 1.4 s. <span class="note">Service desk.</span></li><li><strong>Tue 10:20</strong>: The L2 vSphere specialist is called. Not part of either change; the change calendar is not open to them yet. <span class="note"></span></li></ol></div><h2>What the L2 specialist sees on Tuesday</h2><div class="panel"><h3>Cluster Risk sub-metrics, worst host, business hours (vCommunity metrics)</h3><div class="scroll"><table><thead><tr><th>Metric</th><th>Unit</th><th>Mon</th><th>Wed</th><th>Fri</th><th>Tue</th></tr></thead><tbody><tr><td>Highest ESXi Memory Reservation</td><td class=num>%</td><td class="num c-grey">0</td><td class="num c-yellow">26</td><td class="num c-yellow">26</td><td class="num c-yellow">26</td></tr><tr><td>Highest ESXi Memory Overcommit Ratio</td><td class=num>number</td><td class="num c-orange">1.5</td><td class="num c-orange">1.5</td><td class="num c-orange">1.66</td><td class="num c-orange">1.66</td></tr><tr><td>Highest ESXi CPU Overcommit Ratio</td><td class=num>number</td><td class="num c-yellow">1.25</td><td class="num c-yellow">1.25</td><td class="num c-yellow">1.56</td><td class="num c-yellow">1.56</td></tr><tr><td>Highest ESXi DRAM Memory Consumed</td><td class=num>%</td><td class="num c-red">121</td><td class="num c-red">121</td><td class="num c-red">146</td><td class="num c-red">157</td></tr><tr><td>Worst ESXi Active Memory, tiered hosts</td><td class=num>% of DRAM</td><td class="num c-green">45</td><td class="num c-green">46</td><td class="num c-yellow">52.7</td><td class="num c-orange">63.5</td></tr><tr><td>Worst ESXi NVMe Read Latency</td><td class=num>µs</td><td class="num c-green">90</td><td class="num c-green">95</td><td class="num c-yellow">120</td><td class="num c-orange">290</td></tr><tr><td>Cluster Risk</td><td class=num>%</td><td class="num c-orange">64.8</td><td class="num c-orange">62.7</td><td class="num c-orange">62.3</td><td class="num c-orange">64.5</td></tr><tr><td>Cluster Performance</td><td class=num>%</td><td class="num c-green">99</td><td class="num c-green">99</td><td class="num c-green">98</td><td class="num c-green">96</td></tr></tbody></table></div><p class="note">Bands from <code>catalog/thresholds-capacity</code> and <code>catalog/thresholds-performance</code>; the Cluster Risk score uses the scoring of <code>sp5-framework/performance/performance-kpi-design</code>. The reservation row stepped up at Tue 23:25 and the overcommit rows at Thu 23:35. The score stays flat and even falls: the DRAM Memory Consumed row already scores 0 at the heaviest weight (<code>vsphere/object-types/cluster/models/cluster-risk</code>, section Sub-metric weight).</p></div><div class="panel"><h3>esxi-pay-05, the worst host</h3><div class="scroll"><table><thead><tr><th>Reading</th><th>Unit</th><th>Tue 09:10</th><th>Tue 10:15</th><th>August long weekend, 09:10</th><th>August, 10:15</th></tr></thead><tbody><tr><td>NVMe read bandwidth</td><td class=num>MBps</td><td class="num c-orange">380</td><td class="num c-orange">360</td><td class="num c-green">70</td><td class="num c-green">8</td></tr><tr><td>NVMe read latency</td><td class=num>µs</td><td class="num c-orange">290</td><td class="num c-orange">280</td><td class="num c-yellow">110</td><td class="num c-grey"></td></tr><tr><td>Active memory</td><td class=num>GB</td><td class="num c-orange">650</td><td class="num c-orange">640</td><td class="num c-yellow">560</td><td class="num c-grey"></td></tr><tr><td>DRAM consumed / NVMe consumed</td><td class=num>GB</td><td class="num c-grey">930 / 680</td><td class="num c-grey"></td><td class="num c-grey"></td><td class="num c-grey"></td></tr><tr><td>Ballooned, compressed, swapped</td><td class=num>GB</td><td class="num c-green">0</td><td class="num c-green">0</td><td class="num c-green">0</td><td class="num c-green">0</td></tr></tbody></table></div><p class="note">The host holds sql-pay-03 (tiering off, 256 GB reserved, 110 GB active) and 34 tiered VMs: 1,024 − 256 = 768 GB of DRAM is left for them (0.75:1 against 1 TB of NVMe). esxi-pay-07 and esxi-pay-08 hold no SQL VM: active memory 44% and 41% of DRAM.</p></div><h2>Turn 1: the specialist writes</h2><div class="panel"><pre>P1 bridge, Payments latency. Tuesday 10:20, first business day after the 3-day National Day weekend (Saturday to Monday).
+<li>Contention, consumption and context, read together (Triple See).</li>
+<li>The NVMe wait that Memory Contention does not count, behind a VM Performance of 17.</li>
+<li>Why now: tiering started on Friday, and the weekend moved the pages.</li>
+<li>The Cluster Risk rise on Wednesday and Friday: the clue to two changes the specialist never saw.</li>
+</ul></div></div><h2>The week</h2><div class="panel"><ol class="timeline"><li><strong>Mon</strong>: Normal. DRAM consumed 68% on the worst host. NVMe consumed 0. Cluster Risk 22.5 (green). <span class="note"></span></li><li><strong>Tue 22:00-23:30</strong>: <strong>CHG-1</strong>, DBA team, blueprint SQL Gold v3: sql-pay-01 to 06 (16 vCPU, 256 GB) powered off, <code>sched.mem.enableTiering = FALSE</code>, all memory reserved, powered on. <span class="note">Seen by the DBA team only.</span></li><li><strong>Wed</strong>: Fine for users. The memory reservation sub-metric of Cluster Risk goes from 0 to 26%; Cluster Risk 25.5 (yellow). <span class="note">Level 1 does not act on yellow.</span></li><li><strong>Thu 21:00-23:40</strong>: <strong>CHG-2</strong>, application team: the 40 payments application VMs (8 vCPU, 32 GB) move in to sit next to their databases, approved on Memory Capacity Remaining 38%. Five land on esxi-pay-05, next to sql-pay-03. <span class="note">Seen by the application and capacity teams.</span></li><li><strong>Fri</strong>: The application goes live and consumes memory. On esxi-pay-05, DRAM consumed passes 80% at 08:40, so tiering starts for the first time: new pages go to NVMe. Cluster Risk 31.1 (yellow). Cluster Performance 98; users fine. <span class="note">Level 1 does not act on yellow.</span></li><li><strong>Fri 18:00 to Mon</strong>: National Day long weekend; load near zero. DRAM is above 80%, so idle pages move to NVMe: NVMe writes up, NVMe consumed 50 → 280 GB. NVMe reads stay near 0, because nobody touches those pages. <span class="note"></span></li><li><strong>Tue 09:05</strong>: Business resumes. The application touches its pages and they come back from NVMe. Payments API p99 latency from 180 ms to 1.4 s. <span class="note">Service desk.</span></li><li><strong>Tue 10:20</strong>: The L2 vSphere specialist is called: not part of either change, and the change calendar is not open to them yet. <span class="note"></span></li></ol></div><h2>What the L2 specialist sees on Tuesday</h2><div class="panel"><h3>VCF Operations, worst host, business hours (vCommunity metrics)</h3><div class="scroll"><table><thead><tr><th>Metric</th><th>Unit</th><th>Mon</th><th>Wed</th><th>Fri</th><th>Tue</th></tr></thead><tbody><tr><td>Cluster Risk</td><td class=num>%</td><td class="num c-green">22.5</td><td class="num c-yellow">25.5</td><td class="num c-yellow">31.1</td><td class="num c-orange">66.0</td></tr><tr><td>Highest ESXi Memory Reservation</td><td class=num>%</td><td class="num c-grey">0</td><td class="num c-yellow">26</td><td class="num c-yellow">26</td><td class="num c-yellow">26</td></tr><tr><td>Highest ESXi DRAM Memory Consumed</td><td class=num>%</td><td class="num c-grey">68</td><td class="num c-grey">74</td><td class="num c-yellow">87</td><td class="num c-red">108</td></tr><tr><td>Highest ESXi Memory Overcommit Ratio</td><td class=num>number</td><td class="num c-yellow">1.07</td><td class="num c-yellow">1.07</td><td class="num c-yellow">1.23</td><td class="num c-yellow">1.23</td></tr><tr><td>Highest ESXi CPU Overcommit Ratio</td><td class=num>number</td><td class="num c-yellow">1.1</td><td class="num c-yellow">1.1</td><td class="num c-yellow">1.41</td><td class="num c-yellow">1.41</td></tr><tr><td>Worst ESXi Active Memory, tiered hosts</td><td class=num>% of DRAM</td><td class="num c-green">34</td><td class="num c-green">35</td><td class="num c-green">46</td><td class="num c-red">77</td></tr><tr><td>Worst ESXi NVMe Read Latency</td><td class=num>µs</td><td class="num c-grey">no reads</td><td class="num c-grey">no reads</td><td class="num c-yellow">120</td><td class="num c-orange">290</td></tr><tr><td>Cluster Performance</td><td class=num>%</td><td class="num c-green">99</td><td class="num c-green">99</td><td class="num c-green">98</td><td class="num c-orange">48</td></tr></tbody></table></div><p class="note">Grey: a sub-metric left out of the score while green (Cluster Risk excludes a host that is not busy). Bands from <code>catalog/thresholds-capacity</code> and <code>catalog/thresholds-performance</code>; scores by <code>sp5-framework/performance/performance-kpi-design</code>. Risk rose on Wednesday and Friday while Performance stayed green; contention arrived on Tuesday.</p></div><div class="panel"><h3>esxi-pay-05, the worst host</h3><div class="scroll"><table><thead><tr><th>Reading</th><th>Unit</th><th>Fri 18:00</th><th>Sat to Mon</th><th>Tue 09:10</th><th>Tue 10:15</th></tr></thead><tbody><tr><td>NVMe consumed</td><td class=num>GB</td><td class="num c-grey">50</td><td class="num c-grey">50 → 280</td><td class="num c-grey">280</td><td class="num c-grey">285</td></tr><tr><td>NVMe write bandwidth</td><td class=num></td><td class="num c-grey">low</td><td class="num c-grey">up: pages moving down</td><td class="num c-grey">low</td><td class="num c-grey">low</td></tr><tr><td>NVMe read bandwidth</td><td class=num>MBps</td><td class="num c-green">near 0</td><td class="num c-green">near 0</td><td class="num c-orange">380</td><td class="num c-orange">360</td></tr><tr><td>NVMe read latency</td><td class=num>µs</td><td class="num c-grey"></td><td class="num c-grey"></td><td class="num c-orange">290</td><td class="num c-orange">280</td></tr><tr><td>Active memory</td><td class=num>% of DRAM</td><td class="num c-grey"></td><td class="num c-grey"></td><td class="num c-red">77</td><td class="num c-red">77</td></tr><tr><td>pay-api-07 VM Performance</td><td class=num>%</td><td class="num c-green">99</td><td class="num c-grey"></td><td class="num c-red">17</td><td class="num c-grey"></td></tr></tbody></table></div><p class="note">The host holds sql-pay-03 (tiering off, 256 GB reserved, 110 GB active) and 34 tiered VMs, among them 5 of the 40 application VMs. pay-api-07 reads 6 MBps from NVMe: NVMe wait about 5.6% of its vCPU time, while its Memory Contention reads 0.2%. esxi-pay-07 and esxi-pay-08 hold no SQL VM: active memory 44% and 41% of DRAM.</p></div><h2>The specialist's first message</h2><div class="panel"><pre>Priority 1 incident bridge, payments latency. Tuesday 10:20, first business day after the 3-day National Day weekend (Saturday to Monday).
 I am the L2 vSphere specialist on call. I was not part of any change last week and I cannot see the change calendar yet.
-[Service desk] Payments API p99 went from 180 ms to 1.4 s at 09:05. Branch teller app slow too. Core SQL looks fine.
-[L1 compute] VCF Operations shows memory consumed 1.6 TB on hosts that only have 1 TB in CL-SG-PRD-PAY. We are swapping.
+[Service desk] Payments API p99 latency went from 180 ms to 1.4 s at 09:05. Branch teller app slow too.
 [Capacity] Memory Capacity Remaining was 38% last Wednesday, Time Remaining over 200 days. This is not capacity.
-[DBA] Our SQL VMs show no wait.
-Cluster CL-SG-PRD-PAY: 8 identical hosts, 2 x 32 cores, 1,024 GB DRAM plus a 1,024 GB NVMe memory tier (1:1), memory tiering on since June, VCF 9.1.1, DRS fully automated.
-VCF Operations, Cluster Risk sub-metrics, worst host, business hours, last 7 days:
-- Highest ESXi Memory Reservation (%): Mon 0, Wed 26 (since Tue 23:25), Fri 26, Tue 26.
-- Highest ESXi Memory Overcommit Ratio: Mon 1.50, Wed 1.50, Fri 1.66 (since Thu 23:35), Tue 1.66.
-- Highest ESXi CPU Overcommit Ratio: Mon 1.25, Wed 1.25, Fri 1.56 (since Thu 23:35), Tue 1.56.
-- Highest ESXi DRAM Memory Consumed (%): Mon 121, Wed 121, Fri 146, Tue 157.
-- Worst ESXi Active Memory, tiered hosts (% of DRAM): Mon 45, Wed 46, Fri 52.7, Tue 63.5.
-- Worst ESXi NVMe Read Latency (µs): Mon 90, Wed 95, Fri 120, Tue 290.
-- Cluster Risk (%): Mon 64.8, Wed 62.7, Fri 62.3, Tue 64.5.
-Cluster Performance (%): Mon 99, Wed 99, Fri 98, Tue 96. Its sub-metric Worst memory wait among all VMs (%), memory latency plus NVMe wait: 5.8 today, shown, not scored.
-Cluster Consumption: ESXi Memory Consumed in DRAM 87%. Memory Tiering Consumption 44% (Thursday 21%). Ballooned 0. Zip Swap 0.
-esxi-pay-05, vSphere Client memory charts, 09:10 and 10:15: DRAM consumed 930 GB; NVMe consumed 680 GB; active memory 650 GB and 640 GB; NVMe read bandwidth 380 MBps and 360 MBps; NVMe read latency 290 µs and 280 µs; ballooned, compressed and swapped 0. It runs sql-pay-03 (16 vCPU, 256 GB, memory tiering off, 256 GB reserved, consumed 256 GB, active 110 GB) and 34 tiered VMs.
-Same host, first business day after the August long weekend: active memory 560 GB; NVMe read bandwidth 70 MBps at 09:10 and 8 MBps at 10:15; NVMe read latency 110 µs.
+[DBA] The payments databases, sql-pay-01 to sql-pay-06, show no wait.
+Cluster CL-SG-PRD-PAY: 8 identical hosts, 2 x 32 cores, 1,024 GB DRAM plus a 1,024 GB NVMe memory tier (1:1), memory tiering configured since June, VCF 9.1.1, DRS fully automated.
+VCF Operations, worst host, business hours, last Monday, Wednesday, Friday and today:
+- Cluster Risk (%): 22.5, 25.5, 31.1, 66.0.
+- Highest ESXi Memory Reservation (%): 0, 26 (since Tue 23:25), 26, 26.
+- Highest ESXi DRAM Memory Consumed (%): 68, 74, 87 (above 80 since Fri 08:40), 108.
+- Highest ESXi Memory Overcommit Ratio: 1.07, 1.07, 1.23 (since Thu 23:35), 1.23.
+- Highest ESXi CPU Overcommit Ratio: 1.10, 1.10, 1.41 (since Thu 23:35), 1.41.
+- Worst ESXi Active Memory, tiered hosts (% of DRAM): 34, 35, 46, 77.
+- Worst ESXi NVMe Read Latency (µs): no reads, no reads, 120, 290.
+- Cluster Performance (%): 99, 99, 98, 48.
+esxi-pay-05, the worst host:
+- NVMe consumed: 0 GB until Friday morning, 50 GB on Friday at 18:00, 280 GB on Tuesday at 08:00.
+- From Friday 18:00 to Tuesday 08:30: NVMe write bandwidth up, NVMe read bandwidth near 0.
+- Tuesday 09:10 and 10:15: NVMe read bandwidth 380 MBps and 360 MBps; NVMe read latency 290 µs and 280 µs; active memory 790 GB and 785 GB; ballooned, compressed and swapped 0.
+- It runs sql-pay-03 (16 vCPU, 256 GB, memory tiering off, 256 GB reserved, active 110 GB) and 34 tiered VMs.
 esxi-pay-07 and esxi-pay-08 hold no SQL VM: active memory 44% and 41% of DRAM, NVMe read bandwidth 30 MBps.
-pay-api-07 (8 vCPU, 32 GB, tiered, on esxi-pay-05): NVMe read bandwidth 6 MBps, VM memory contention peak 0.2%, VM Performance (%) 99, CPU Ready peak 0.8%.
+pay-api-07 (8 vCPU, 32 GB, tiered, on esxi-pay-05): VM Performance (%) 17 today, 99 last week; NVMe read bandwidth 6 MBps; Memory Contention peak 0.2%; CPU Ready peak 0.8%.
 What is wrong, and what do I do now?
-</pre></div><h3>Agent E2 answers (turn 1)</h3><div class="tabs" data-tabs><button data-for="t1m0" aria-selected="true">Frontier reference</button><button data-for="t1m1" aria-selected="false">Candidate: Qwen 27B</button><button data-for="t1m2" aria-selected="false">Candidate: Gemma 31B</button></div><div id="t1m0" class="panel answer"><p><span class="tag">anthropic/claude-opus-5.5</span><span class="tag">frontier model, same Agent E2 pipeline</span><span class="tag">2 model calls, 67,894 tokens, 53 s</span><span class="tag">knowledge e295b47</span></p><p>Assuming the Payments VMs sit on esxi-pay-05: the hosts are not swapping. The likely problem is memory tiering on esxi-pay-05, whose active working set no longer fits in DRAM.</p>
-<p><strong>Why it is not swapping</strong></p>
-<ul>
-<li>1.6 TB consumed is 930 GB in DRAM plus 680 GB in the NVMe tier.</li>
-<li>Highest ESXi DRAM Memory Consumed passes 100% by design on a tiered host (cluster-risk). 157% means 1.57 times DRAM is held, the rest in NVMe.</li>
-<li>Ballooned, compressed and swapped are all 0 (cluster-consumption).</li>
-</ul>
-<p><strong>What is wrong on esxi-pay-05</strong></p>
-<ul>
-<li>Active memory is 650 of 1,024 GB, 63.5% of DRAM. That is in the at-risk band of 50-75% (is-memory-tiering-slowing-host, step 2).</li>
-<li>NVMe reads stayed at 380 then 360 MBps an hour later, at 290/280 µs, in the potential-issues band of 200-400 µs. After the August weekend they fell from 70 to 8 MBps at 110 µs. Reads that stay high are a sustained working set, not a warm-up (step 3).</li>
-<li>sql-pay-03 has 256 GB reserved with tiering off, which shrinks the DRAM left for the 34 tiered VMs (step 7). Its 256 GB matches the 26% reservation that appeared Tue 23:25; that link is likely but unconfirmed.</li>
-<li>Overcommit rose on Thu 23:35, so more VMs were added.</li>
-</ul>
-<p><strong>Why the VM metrics look fine</strong></p>
-<ul>
-<li>pay-api-07&#x27;s 0.2% memory contention and VM Performance 99 do not count NVMe fetches; memory latency is unaware of tiering (vm-memory-latency-high).</li>
-<li>Its NVMe wait is 6 MBps × 256 × 0.00029 s ÷ 8 vCPU = 5.57% (cluster-performance). This is unverified (one page per fetch, one frozen vCPU), so it is shown, not scored.</li>
-</ul>
-<p><strong>Not a capacity problem</strong></p>
-<ul>
-<li>Capacity Remaining is a 3-day forecast, read last Wednesday; Time Remaining is the long-term runway (capacity-forecast). Neither reads active memory against DRAM.</li>
-</ul>
-<p><strong>Do now</strong></p>
-<ol>
-<li>Read per-VM NVMe reads with <code>memstats -r vmtier-stats</code> on esxi-pay-05.</li>
-<li>vMotion the heaviest tiered readers to esxi-pay-07 or esxi-pay-08 (41-44% active).</li>
-<li>Re-read host NVMe reads and the Payments p99 an hour later.</li>
-<li>Get the Tue and Thu change records.</li>
-</ol>
-<p>Not settled by the knowledge base: whether a 5.6% NVMe wait alone explains 180 ms → 1.4 s. Check the application tier, the network and Guest OS counters too.</p><details><summary>Files read (71), first 15</summary><pre>vsphere/technology/memory/vm-memory-latency-high
-vsphere/technology/memory/metrics/virtual-motherboard/active
-vsphere/technology/memory/metrics/virtual-motherboard/swapped
-vsphere/technology/cpu/metrics/virtual-motherboard/ready
-vsphere/technology/memory/metrics/cluster/consumed
-vsphere/technology/memory/metrics/host/consumed
-vsphere/technology/memory/metrics/host/latency
-vsphere/technology/memory/metrics/virtual-motherboard/consumed
-vsphere/technology/memory/metrics/virtual-motherboard/latency
-vsphere/object-types/cluster/models/cluster-risk
-vsphere/object-types/cluster/cluster-performance
-vsphere/technology/memory/concepts/memory-tiering
-vsphere/object-types/vm/vm-performance
-guest-os/system/guest-os-performance
-vsphere/object-types/cluster/models/cluster-consumption</pre></details></div><div id="t1m1" class="panel answer" hidden><p><span class="tag">alibaba/qwen3.8-27b</span><span class="tag">local candidate</span><span class="tag">2 model calls, 41,355 tokens, 11 s</span><span class="tag">knowledge e295b47</span></p><p>CLARIFY:</p>
-<ol>
-<li>Are the VMs running on esxi-pay-05 identical in configuration and application tier to those running on esxi-pay-07 and esxi-pay-08? because if esxi-pay-05 carries a different mix of workloads (e.g., more batch or cache-heavy apps), the high NVMe read bandwidth and active memory are expected for its specific role and not a cluster-wide anomaly.</li>
-<li>Was sql-pay-03 on esxi-pay-05 before the weekend, or was it migrated or powered on after Tuesday 09:00? because if it arrived via DRS after the weekend, its 256 GB of non-tiered memory instantly reduced the DRAM available for tiered VMs, forcing them to NVMe and explaining the spike in reads and latency.</li>
-</ol><details><summary>Files read (60), first 15</summary><pre>vsphere/technology/memory/vm-memory-latency-high
-vsphere/technology/memory/metrics/virtual-motherboard/active
-vsphere/technology/memory/metrics/virtual-motherboard/swapped
-vsphere/technology/cpu/metrics/virtual-motherboard/ready
-vsphere/technology/memory/metrics/cluster/consumed
-vsphere/technology/memory/metrics/host/consumed
-vsphere/technology/memory/metrics/host/latency
-vsphere/technology/memory/metrics/virtual-motherboard/consumed
-vsphere/technology/memory/metrics/virtual-motherboard/latency
-vsphere/object-types/cluster/cluster-performance
-vsphere/object-types/cluster/models/cluster-consumption
-vsphere/object-types/cluster/models/cluster-risk
-vsphere/object-types/esxi/esxi-performance
-vsphere/object-types/vm/vm-performance
-vsphere/technology/cpu/metrics/host/wait</pre></details></div><div id="t1m2" class="panel answer" hidden><p><span class="tag">google/gemma-4-31b-it</span><span class="tag">local candidate</span><span class="tag">2 model calls, 42,512 tokens, 105 s</span><span class="tag">knowledge e295b47</span></p><p>The root cause of the latency is <strong>memory tiering contention</strong> (NVMe wait) on the hosts of CL-SG-PRD-PAY, specifically triggered by a &quot;warm-up&quot; period following the National Day long weekend.</p>
-<p><strong>Mechanism and Reason</strong></p>
-<p>The L1 compute&#x27;s premise that the system is swapping is wrong. &quot;Highest ESXi DRAM Memory Consumed&quot; of 157% is a design feature of memory tiering, where pages exceed DRAM and reside in NVMe [<code>vsphere/object-types/cluster/models/cluster-risk</code>]. The metrics prove there is no swapping or ballooning (both 0), so there is no &quot;swap-in&quot; contention [<code>vsphere/technology/memory/metrics/virtual-motherboard/swapped</code>].</p>
-<p>The latency is caused by <strong>NVMe wait</strong>. On <code>esxi-pay-05</code>, the NVMe read bandwidth is high (380 MBps) and NVMe read latency has spiked to 290 µs. This is a classic &quot;warm-up&quot; scenario: after the long weekend, pages that went cold and moved to NVMe are being fetched back into DRAM [<code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code>]. The &quot;Worst memory wait&quot; of 5.8% confirms this is the primary performance hit, as it sums memory latency and NVMe wait [<code>vsphere/object-types/cluster/cluster-performance</code>].</p>
-<p><strong>What to check next</strong></p>
-<ol>
-<li><strong>Wait for warm-up</strong>: Compare current NVMe read bandwidth against values from the previous business day to see if it is falling.</li>
-<li><strong>Check NVMe device health</strong>: Run <code>esxcli nvme device log smart get</code> to ensure the latency is not due to hardware wear [<code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code>].</li>
-<li><strong>Verify Tiering exclusion</strong>: Confirm if any high-priority VMs should have tiering disabled via full memory reservations [<code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code>].</li>
-</ol><details><summary>Files read (72), first 15</summary><pre>vsphere/technology/memory/vm-memory-latency-high
-vsphere/technology/memory/metrics/virtual-motherboard/active
-vsphere/technology/memory/metrics/virtual-motherboard/swapped
-vsphere/technology/cpu/metrics/virtual-motherboard/ready
-vsphere/technology/memory/metrics/cluster/consumed
-vsphere/technology/memory/metrics/host/consumed
-vsphere/technology/memory/metrics/host/latency
-vsphere/technology/memory/metrics/virtual-motherboard/consumed
-vsphere/technology/memory/metrics/virtual-motherboard/latency
-vsphere/technology/memory/metrics/host/reservation
-vsphere/object-types/cluster/models/cluster-risk
-vsphere/object-types/cluster/cluster-performance
-vsphere/technology/memory/concepts/memory-tiering
-vsphere/object-types/vm/vm-performance
-vsphere/object-types/cluster/models/cluster-consumption</pre></details></div><h2>Turn 2: the specialist writes</h2><div class="panel"><pre>The change calendar is open now. Last week, in this cluster:
-- CHG-1, Tuesday 22:00-23:30, DBA team, blueprint &quot;SQL Gold v3&quot;: sql-pay-01 to sql-pay-06 (16 vCPU, 256 GB each): power off, sched.mem.enableTiering = FALSE, Reserve all guest memory, power on. Status: successful.
-- CHG-2, Thursday 21:00-23:40, application team, migration wave 3: 40 VMs (8 vCPU, 32 GB each) moved in by cross-vCenter vMotion. Approved on Memory Capacity Remaining 38%. Status: successful.
-No other change. Which change caused it? Should we roll back CHG-2?
-</pre></div><h3>Agent E2 answers (turn 2)</h3><div class="tabs" data-tabs><button data-for="t2m0" aria-selected="true">Frontier reference</button><button data-for="t2m1" aria-selected="false">Candidate: Qwen 27B</button><button data-for="t2m2" aria-selected="false">Candidate: Gemma 31B</button></div><div id="t2m0" class="panel answer"><p><span class="tag">anthropic/claude-opus-5.5</span><span class="tag">frontier model, same Agent E2 pipeline</span><span class="tag">2 model calls, 67,072 tokens, 41 s</span><span class="tag">knowledge e295b47</span></p><p><strong>Most likely both changes together, made visible by the long weekend. Do not roll back CHG-2 now; relieve the six hosts that hold a SQL VM instead.</strong> Placement of the 40 VMs is unknown, so this is not proven.</p>
-<p><strong>Timeline</strong></p>
-<ul>
-<li><strong>After CHG-1 alone (Wednesday):</strong> reservation rose to 26%, about one 256 GB SQL VM plus overhead. Active memory stayed at 46% and NVMe latency at 95 µs.</li>
-<li><strong>After CHG-2 (Friday):</strong> 40 × 32 GB matches the memory overcommit step from 1.50 to 1.66. Active rose to 52.7% and NVMe latency to 120 µs, a mild change.</li>
-<li><strong>Today:</strong> active is 63.5%, NVMe reads hold at 380 then 360 MBps, and latency is 290 µs. After the August weekend the same host fell to 8 MBps within an hour. Reads that stay high mean the working set no longer fits DRAM (is-memory-tiering-slowing-host, step 3).</li>
-</ul>
+</pre></div><h3>Agent E2 answers</h3><div class="tabs" data-tabs><button data-for="t1m0" aria-selected="true">Frontier reference</button><button data-for="t1m1" aria-selected="false">Candidate: Qwen 27B</button><button data-for="t1m2" aria-selected="false">Candidate: Gemma 31B</button></div><div id="t1m0" class="panel answer"><p><span class="tag">anthropic/claude-opus-5.5</span><span class="tag">frontier model, same Agent E2 pipeline</span><span class="tag">2 model calls, 69,320 tokens, 58 s</span><span class="tag">knowledge 87c5d4a</span></p><p>Assumption: &quot;slow&quot; means the tiered VMs on esxi-pay-05, and the same pattern on other hosts is unverified. The cause is a working set that no longer fits DRAM on esxi-pay-05, so tiered VMs wait on NVMe fetches. Act now by moving load off that host.</p>
 <p><strong>Mechanism</strong></p>
 <ul>
-<li><strong>CHG-1:</strong> each full reservation with tiering off shrinks the DRAM left for tiered VMs (step 7).</li>
-<li><strong>CHG-2:</strong> it added working set on top.</li>
-<li><strong>esxi-pay-05 (my arithmetic):</strong> about 540 GB of tiered active memory against about 768 GB of DRAM left.</li>
-<li><strong>Hosts without SQL:</strong> esxi-pay-07 and esxi-pay-08 stay at 41-44% active.</li>
+<li>Active memory is 790 GB, 77% of DRAM. Above 75% means significant loss is expected (is-memory-tiering-slowing-host, step 2).</li>
+<li>NVMe reads stayed high an hour apart (380 then 360 MBps). That is a sustained working set beyond DRAM, not a weekend warm-up (step 3).</li>
+<li>NVMe read latency of 290 µs is in the &quot;potential issues&quot; band (step 4).</li>
+<li>sql-pay-03&#x27;s full 256 GB reservation shrinks the DRAM left for the 34 tiered VMs (step 7). That explains why pay-05 is worse than pay-07 and pay-08, which hold no SQL VM.</li>
 </ul>
-<p><strong>Why CHG-2 looked safe:</strong> &quot;Capacity Remaining (%)&quot; invites &quot;memory free now&quot;. It is the 3-Day Forecast Capacity Remaining (%), the tightest point of a 3-day projection (capacity-forecast). It never reads active memory against DRAM, the running-stage signal for tiering (overcommit). Cluster Risk&#x27;s active-memory row had already passed 50% on Friday.</p>
+<p><strong>Premises that fail</strong></p>
+<ul>
+<li>pay-api-07&#x27;s 0.2% Memory Contention does not rule out tiering. That counter is unaware of NVMe fetches. Its NVMe wait is 6 × 256 × 0.00029 ÷ 8 = 5.57% (cluster-performance), which matches VM Performance at 17%.</li>
+<li>&quot;Capacity Remaining (%)&quot; invites reading it as capacity free now. It is really a 3-Day Forecast Capacity Remaining (%) from last Wednesday, taken before the Thursday change. The KB does not say whether it reads active memory against DRAM. Cluster Risk at 66% is the current reading (cluster-risk).</li>
+<li>The DBA&#x27;s &quot;no wait&quot; fits a VM with a full reservation. It does not clear sql-pay-03&#x27;s effect on its neighbours.</li>
+</ul>
 <p><strong>Do now</strong></p>
 <ol>
-<li>Read active memory against DRAM and NVMe reads on the other five SQL hosts.</li>
-<li>Run <code>memstats -r vmtier-stats</code> on esxi-pay-05, then vMotion its heaviest NVMe readers to esxi-pay-07 and esxi-pay-08.</li>
-<li>Keep CHG-1. A full reservation with tiering off is the documented setting for latency-sensitive VMs.</li>
+<li>Rank the VMs on esxi-pay-05 by NVMe read bandwidth (step 5).</li>
+<li>vMotion the heaviest readers to esxi-pay-07 and esxi-pay-08, after confirming their DRAM headroom.</li>
+<li>Check the active memory of hosts 01–04 and 06 before using them.</li>
 </ol>
-<p>Not settled by the knowledge base: whether a 40-VM reverse cross-vCenter vMotion is safe mid-incident, and whether NVMe waits alone explain the jump in p99.</p><details><summary>Files read (70), first 15</summary><pre>vsphere/technology/memory/vm-memory-latency-high
+<p><strong>Check next</strong></p>
+<ul>
+<li>The change calendar for Tue 23:25 and Thu 23:35.</li>
+<li>Migration history.</li>
+<li>The teller app VMs&#x27; hosts.</li>
+</ul>
+<p>Not settled by the knowledge base: whether the Tuesday and Thursday changes caused this, and why DRS did not rebalance.</p><details><summary>Files read (63), first 15</summary><pre>vsphere/technology/memory/vm-memory-latency-high
 vsphere/technology/memory/metrics/virtual-motherboard/active
-vsphere/technology/memory/metrics/virtual-motherboard/swapped
+sp5-framework/capacity/overcommit
 vsphere/technology/cpu/metrics/virtual-motherboard/ready
 vsphere/technology/memory/metrics/cluster/consumed
 vsphere/technology/memory/metrics/host/consumed
-vsphere/technology/memory/metrics/host/latency
 vsphere/technology/memory/metrics/virtual-motherboard/consumed
-vsphere/technology/memory/metrics/virtual-motherboard/latency
-vsphere/technology/memory/concepts/memory-tiering
-vsphere/object-types/cluster/models/cluster-consumption
-guest-os/system/guest-os-performance
-vsphere/object-types/cluster/cluster-performance
-vsphere/object-types/cluster/models/cluster-risk
-vsphere/object-types/esxi/esxi-performance</pre></details></div><div id="t2m1" class="panel answer" hidden><p><span class="tag">alibaba/qwen3.8-27b</span><span class="tag">local candidate</span><span class="tag">2 model calls, 42,319 tokens, 19 s</span><span class="tag">knowledge e295b47</span></p><p>Assuming the changes occurred as logged, CHG-2 caused the incident. Do not roll back CHG-2.</p>
-<p>CHG-2 moved 40 VMs (1.28 TB RAM) into a cluster where DRAM was already 121% consumed. This pushed DRAM usage to 157% and NVMe usage to 44%. More critically, it raised the <strong>Worst ESXi Active Memory</strong> to 63.5% of DRAM and <strong>NVMe Read Latency</strong> to 290 µs. On tiered hosts, <strong>Active memory</strong> against DRAM is the capacity constraint for performance, not Consumed. While Active memory drives reclamation to NVMe, it is the actual reads from the NVMe tier that cause the 1.4s latency. The 63.5% Active memory combined with 290 µs latency (above the 200 µs &quot;potential for issues&quot; threshold) means the VMs are waiting for pages fetched from NVMe.</p>
-<p>CHG-1 (sql-pay-03) is a red herring for cluster-wide latency. While it reduced DRAM available for tiered VMs, it is fully reserved and its low Active memory (110 GB of 256 GB) means it does not drive the host&#x27;s Active memory high. The &quot;swapping&quot; L1 sees is likely misread NVMe tiering; actual swap, balloon, and compress are 0.</p>
-<p>Next steps:</p>
-<ol>
-<li>Confirm NVMe Read Bandwidth on esxi-pay-05 (~380 MB/s) is high.</li>
-<li>Since Capacity Remaining is still 38%, the issue is performance (NVMe wait), not capacity exhaustion.</li>
-<li>Investigate if the 40 moved VMs are batch-heavy, driving Active memory.</li>
-<li>Monitor NVMe latency; if it stays &gt;400 µs, consider migrating some VMs off or addressing the underlying workload.</li>
-</ol>
-<p>Not settled by the knowledge base: The specific root cause of the 40 VMs&#x27; high Active memory (batch vs. cache) requires application-level analysis.</p><details><summary>Files read (58), first 15</summary><pre>vsphere/technology/memory/vm-memory-latency-high
-vsphere/technology/memory/metrics/virtual-motherboard/active
-vsphere/technology/memory/metrics/virtual-motherboard/swapped
-vsphere/technology/cpu/metrics/virtual-motherboard/ready
-vsphere/technology/memory/metrics/cluster/consumed
-vsphere/technology/memory/metrics/host/consumed
-vsphere/technology/memory/metrics/host/latency
-vsphere/technology/memory/metrics/virtual-motherboard/consumed
-vsphere/technology/memory/metrics/virtual-motherboard/latency
-guest-os/system/guest-os-performance
-vsphere/object-types/cluster/cluster-performance
-vsphere/object-types/cluster/models/cluster-consumption
-vsphere/object-types/cluster/models/cluster-risk
-vsphere/object-types/esxi/esxi-performance
-vsphere/object-types/vm/vm-performance</pre></details></div><div id="t2m2" class="panel answer" hidden><p><span class="tag">google/gemma-4-31b-it</span><span class="tag">local candidate</span><span class="tag">2 model calls, 44,141 tokens, 44 s</span><span class="tag">knowledge e295b47</span></p><p>CHG-2 caused the latency. No, do not roll back CHG-2.</p>
-<p><strong>Mechanism and Reason</strong></p>
-<p>CHG-1 disabled tiering and added full reservations for six SQL VMs (6 x 256 GB = 1.536 TB). Because full reservations for non-tiered VMs shrink the DRAM available for other VMs (<code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code>), the effective DRAM:NVMe ratio for the rest of the cluster fell significantly.</p>
-<p>CHG-2 then added 40 VMs (40 x 32 GB = 1.28 TB). While the cluster had &quot;Capacity Remaining&quot; (which counts total usable capacity, including the NVMe tier), it did not have enough DRAM. This forced more pages of the tiered VMs into the NVMe tier, as seen in the &quot;Highest ESXi DRAM Memory Consumed&quot; rising from 121% to 157% and &quot;Memory Tiering Consumption&quot; increasing from 21% to 44% [<code>vsphere/object-types/cluster/models/cluster-risk</code>, <code>vsphere/object-types/cluster/models/cluster-consumption</code>].</p>
-<p>The latency occurred on Tuesday because the working set of these VMs now exceeds the reduced DRAM. Following the long weekend, a &quot;warm-up&quot; happened: pages that moved to NVMe were fetched back, causing high NVMe read bandwidth (380 MBps) and NVMe wait (Worst memory wait 5.8%) [<code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code>, <code>vsphere/object-types/cluster/cluster-performance</code>].</p>
-<p><strong>What to check next</strong></p>
-<p>Check if the &quot;Worst ESXi Active Memory&quot; (63.5%) stays above 50% as the morning progresses; if it does not fall, the working set no longer fits in DRAM, and you must move some VMs to other clusters [<code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code>].</p><details><summary>Files read (66), first 15</summary><pre>vsphere/technology/memory/vm-memory-latency-high
-vsphere/technology/memory/metrics/virtual-motherboard/swapped
-vsphere/technology/memory/metrics/virtual-motherboard/active
-vsphere/technology/cpu/metrics/virtual-motherboard/ready
-vsphere/technology/memory/metrics/cluster/consumed
-vsphere/technology/memory/metrics/host/consumed
-vsphere/technology/memory/metrics/host/latency
-vsphere/technology/memory/metrics/virtual-motherboard/consumed
-vsphere/technology/memory/metrics/virtual-motherboard/latency
-vsphere/technology/memory/metrics/host/reservation
 vsphere/object-types/cluster/models/cluster-risk
 vsphere/object-types/cluster/cluster-performance
 vsphere/technology/memory/concepts/memory-tiering
 vsphere/technology/memory/metrics/host/ballooned
-vsphere/technology/memory/metrics/host/compressed</pre></details></div><h2>Checks an expert answer must pass</h2><div class="panel"><div class="scroll"><table><thead><tr><th>Turn</th><th>Check</th><th>Knowledge</th><th>Frontier reference</th><th>Candidate: Qwen 27B</th><th>Candidate: Gemma 31B</th></tr></thead><tbody><tr><td>1</td><td>Rejects &quot;we are swapping&quot;: consumed passes DRAM by design on a tiered host; ballooned, compressed and swapped are 0.</td><td><code>vsphere/technology/memory/concepts/memory-tiering</code> <code>vsphere/object-types/cluster/models/cluster-risk</code></td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td></tr><tr><td>1</td><td>Rejects Capacity Remaining as proof: it counts NVMe as DRAM; active memory against DRAM is the limit.</td><td><code>vcf-operations/features/capacity-forecast</code></td><td class="partial">◐</td><td class="fail">✗</td><td class="fail">✗</td></tr><tr><td>1</td><td>Memory contention does not count NVMe fetches; NVMe wait of pay-api-07 is about 5.6% of its vCPU time.</td><td><code>vsphere/object-types/cluster/cluster-performance</code> <code>vsphere/technology/memory/concepts/memory-tiering</code></td><td class="pass">✓</td><td class="partial">◐</td><td class="partial">◐</td></tr><tr><td>1</td><td>Active memory 63.5% of DRAM: at risk (50-75%).</td><td><code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code></td><td class="pass">✓</td><td class="pass">✓</td><td class="fail">✗</td></tr><tr><td>1</td><td>Sustained, not a warm-up: 380 then 360 MBps an hour apart, where August fell from 70 to 8.</td><td><code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code></td><td class="pass">✓</td><td class="fail">✗</td><td class="fail">✗</td></tr><tr><td>1</td><td>Reads the Cluster Risk steps (Tue 23:25 reservation, Thu 23:35 overcommit) as two changes and asks what was changed then.</td><td><code>vsphere/object-types/cluster/models/cluster-risk</code></td><td class="pass">✓</td><td class="fail">✗</td><td class="fail">✗</td></tr><tr><td>1</td><td>Acts now: moves the heaviest NVMe readers to esxi-pay-07 or esxi-pay-08.</td><td><code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code></td><td class="pass">✓</td><td class="partial">◐</td><td class="fail">✗</td></tr><tr><td>1</td><td>If it asks back (allowed: it should not jump), it asks for the fact that changes the answer: what was changed at Tue 23:25 and Thu 23:35. Not applicable when it answers.</td><td><code>vsphere/object-types/cluster/models/cluster-risk</code></td><td class="na">–</td><td class="partial">◐</td><td class="na">–</td></tr><tr><td>2</td><td>Cause: CHG-1 and CHG-2 together, exposed by the long weekend; neither alone.</td><td><code>vsphere/technology/memory/concepts/memory-tiering</code> <code>vsphere/object-types/cluster/models/cluster-risk</code></td><td class="pass">✓</td><td class="fail">✗</td><td class="partial">◐</td></tr><tr><td>2</td><td>Rolling back CHG-2 is not the first fix: a lever, not the cause.</td><td><code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code></td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td></tr><tr><td>2</td><td>Does not lower the reservation of a VM with tiering off; gives DRAM back by turning tiering on for a SQL VM that is not latency-sensitive (a power cycle).</td><td><code>vsphere/technology/memory/concepts/memory-tiering</code></td><td class="partial">◐</td><td class="partial">◐</td><td class="partial">◐</td></tr><tr><td>2</td><td>Process: approve capacity on active memory against DRAM, not on Capacity Remaining.</td><td><code>vsphere/technology/memory/concepts/memory-tiering</code> <code>vcf-operations/features/capacity-forecast</code></td><td class="partial">◐</td><td class="fail">✗</td><td class="partial">◐</td></tr></tbody></table></div><p class="note">✓ pass, ◐ partial, ✗ fail, – not applicable. Frontier reference: 9.5 of 11; Candidate: Qwen 27B: 5 of 12; Candidate: Gemma 31B: 4 of 11. Scored by reading each answer against the check: the scores are judgment, the answers are verbatim. Asking back is allowed (Agent E2 should not jump): Qwen asked two questions in turn 1, so its turn 1 checks are read on the answer it gave after the specialist replied. One run per model, so the numbers move between runs.</p></div><h2>What the run taught us</h2><div class="panel"><ul>
-<li><strong>The knowledge base and the harness carry the scenario.</strong> The frontier model, run through the same Agent E2 pipeline and the same knowledge base, passes 9.5 of 11 checks and cites a file for each claim. Every fact it needs is in the knowledge base.</li>
-<li><strong>The local candidates do not, yet.</strong> Gemma 31B passes 4 of 11 and Qwen 27B 5 of 12. Where they fail is the same: comparing two readings in time (sustained against warm-up), reading the risk history to date the changes, and acting (moving the heaviest NVMe readers). Qwen asked back first, which is allowed, but asked about the placement of sql-pay-03 rather than what was changed in the two windows the risk rows point to; its stage 1 was also cut at 2,400 tokens in both turns, so it answered without its case.</li>
-<li><strong>Fixed while building this demo</strong> (knowledge commit 734ed63): stage 1 failed on this long input, because the case was cut at 1,200 tokens (now 2,400); the misconception &quot;lower the reservation of a VM with tiering off&quot; now reaches the model up front, and both local models stopped advising it; Cluster Risk has a section on its use in troubleshooting; the decision tree tells a warm-up from a sustained read; turning tiering off per VM needs a power cycle (Broadcom KB 426485, 448305).</li>
-<li><strong>Tried and not kept:</strong> reading a decision tree whole when the chosen flow links to it. The retrieval check dropped from 254 to 252 complete questions, so the change was removed.</li>
-<li><strong>Next, in the harness (stage 3, exact tools):</strong> compute what the local models miss, before the model reads: the two readings against the past baseline (sustained or warm-up), the step changes in the Cluster Risk rows with their times, NVMe wait per VM, and active memory against the DRAM left for tiered VMs. The model then explains numbers it no longer has to derive.</li>
+vsphere/technology/memory/metrics/host/compressed
+vsphere/technology/memory/metrics/virtual-motherboard/swapped
+vsphere/object-types/vm/vm-performance
+guest-os/system/guest-os-performance</pre></details></div><div id="t1m1" class="panel answer" hidden><p><span class="tag">alibaba/qwen3.8-27b</span><span class="tag">local candidate</span><span class="tag">3 model calls, 80,719 tokens, 15 s</span><span class="tag">knowledge 87c5d4a</span></p><p>The provided ESXi Memory Latency text does not change the diagnosis; it reinforces reading the worst VM rather than host averages. The root cause remains memory-tiering pressure on esxi-pay-05.</p>
+<p><strong>Conclusion</strong></p>
+<p>esxi-pay-05 is throttling pay-api-07 because its working set (77% Active) exceeds DRAM, forcing sustained NVMe fetches. The 5.57% NVMe wait (calculated from 6 MB/s and 290 µs latency) drives the VM Performance drop to 17%.</p>
+<p><strong>Mechanism</strong></p>
+<p>The new file confirms that ESXi Memory Latency is a normalized average that hides the specific VM suffering. Therefore, the low host-level signal is irrelevant; the metric to trust is the worst VM&#x27;s contention. Here, the &quot;wait&quot; is not traditional page-fault latency (which is unaware of tiering) but the NVMe wait component added to the KPI. The 380 MB/s read rate is not a transient warm-up because Active Memory remains high at 77%, indicating the working set genuinely does not fit in DRAM.</p>
+<p><strong>What to check next</strong></p>
+<ol>
+<li><strong>Immediate mitigation:</strong> Migrate pay-api-07 off esxi-pay-05 to a host with lower Active Memory (e.g., esxi-pay-07 at 44%) to escape the NVMe latency penalty.</li>
+<li><strong>Verify DRS:</strong> Check why DRS did not move the VM earlier. If DRS is blocked by affinity rules or data locality, migrate manually.</li>
+<li><strong>Long-term fix:</strong> Since the working set exceeds DRAM on this host, either add DRAM to esxi-pay-05 or permanently move the heavy SQL VMs (which have tiering off) to hosts with sufficient headroom to keep tiered VMs&#x27; Active Memory below 75% of DRAM.</li>
+</ol>
+<p>Not settled by the knowledge base: Why DRS failed to proactively rebalance the host before the spike occurred.</p><details><summary>Files read (63), first 15</summary><pre>vsphere/technology/memory/vm-memory-latency-high
+vsphere/technology/memory/metrics/virtual-motherboard/active
+sp5-framework/capacity/overcommit
+vsphere/technology/cpu/metrics/virtual-motherboard/ready
+vsphere/technology/memory/metrics/cluster/consumed
+vsphere/technology/memory/metrics/host/consumed
+vsphere/technology/memory/metrics/virtual-motherboard/consumed
+vsphere/object-types/cluster/models/cluster-risk
+vsphere/technology/memory/metrics/host/reservation
+vsphere/object-types/cluster/cluster-performance
+vsphere/technology/memory/concepts/memory-tiering
+vsphere/object-types/vm/vm-performance
+vsphere/object-types/esxi/esxi-performance
+vsphere/technology/cpu/metrics/virtual-motherboard/contention
+vsphere/technology/memory/metrics/host/ballooned</pre></details></div><div id="t1m2" class="panel answer" hidden><p><span class="tag">google/gemma-4-31b-it</span><span class="tag">local candidate</span><span class="tag">2 model calls, 41,823 tokens, 121 s</span><span class="tag">knowledge 87c5d4a</span></p><p>The root cause is memory tiering slowing the VM <code>pay-api-07</code>. The VM is experiencing a &quot;warm-up&quot; period after the long weekend, where cold pages moved to the NVMe tier are being fetched back into DRAM, causing vCPU freezes.</p>
+<p><strong>Mechanism and Reason:</strong></p>
+<ol>
+<li><strong>Host Saturation:</strong> <code>esxi-pay-05</code> is under memory pressure. DRAM consumption passed 80% on Friday (<code>vsphere/object-types/cluster/models/cluster-consumption</code>), triggering memory tiering. By Tuesday, DRAM Consumed reached 108% and Active Memory rose to 77% of DRAM, which is the signal for significant performance loss on tiered hosts (<code>vsphere/technology/memory/concepts/memory-tiering</code>).</li>
+<li><strong>NVMe Fetch Wait:</strong> The VM <code>pay-api-07</code> has a Memory Contention (Latency) of 0.2%, which is low because that counter is unaware of memory tiering (<code>vsphere/technology/memory/metrics/virtual-motherboard/latency</code>). However, it is reading from NVMe at 6 MB/s.</li>
+<li><strong>Calculation:</strong> Using the NVMe wait formula (<code>vsphere/object-types/cluster/cluster-performance</code>):</li>
+</ol>
+<p>   6 MB/s × 256 pages/MB × 0.00029 s (latency) ÷ 8 vCPUs × 100 = 5.58\%.</p>
+<p>   This 5.58% vCPU wait is the primary driver of the VM Performance score (17%) and the application latency.</p>
+<ol>
+<li><strong>Context:</strong> The pattern of near-zero reads until Tuesday morning, followed by a spike, is a classic &quot;warm-up&quot; after an idle period (National Day weekend) (<code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code>).</li>
+</ol>
+<p><strong>What to check next:</strong></p>
+<p>Monitor the NVMe read bandwidth for <code>pay-api-07</code> over the next hour. If it falls, it was a warm-up; if it stays high, the working set no longer fits in DRAM (<code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code>).</p><details><summary>Files read (59), first 15</summary><pre>vsphere/technology/memory/vm-memory-latency-high
+vsphere/technology/memory/metrics/virtual-motherboard/active
+sp5-framework/capacity/overcommit
+vsphere/technology/cpu/metrics/virtual-motherboard/ready
+vsphere/technology/memory/metrics/cluster/consumed
+vsphere/technology/memory/metrics/host/consumed
+vsphere/technology/memory/metrics/virtual-motherboard/consumed
+vsphere/object-types/cluster/models/cluster-risk
+vsphere/technology/memory/metrics/host/reservation
+vsphere/object-types/cluster/cluster-performance
+vsphere/technology/memory/concepts/memory-tiering
+vsphere/technology/memory/metrics/host/ballooned
+vsphere/technology/memory/metrics/host/compressed
+vsphere/technology/memory/metrics/virtual-motherboard/swapped
+vsphere/object-types/vm/vm-performance</pre></details></div><h2>The follow-up, once the change calendar is open</h2><div class="panel"><pre>The change calendar is open now. Last week, in this cluster:
+- CHG-1, Tuesday 22:00-23:30, DBA team, blueprint &quot;SQL Gold v3&quot;: the payments databases sql-pay-01 to sql-pay-06 (16 vCPU, 256 GB each): power off, sched.mem.enableTiering = FALSE, Reserve all guest memory, power on. Status: successful.
+- CHG-2, Thursday 21:00-23:40, application team, payments migration wave 3: the payments application tier, 40 VMs (8 vCPU, 32 GB each, pay-api and pay-web), moved in from the old cluster by cross-vCenter vMotion, to sit next to its databases. Approved on Memory Capacity Remaining 38%. Status: successful.
+No other change. Which change caused it? Should we roll back CHG-2?
+</pre></div><h3>Agent E2 answers</h3><div class="tabs" data-tabs><button data-for="t2m0" aria-selected="true">Frontier reference</button><button data-for="t2m1" aria-selected="false">Candidate: Qwen 27B</button><button data-for="t2m2" aria-selected="false">Candidate: Gemma 31B</button></div><div id="t2m0" class="panel answer"><p><span class="tag">anthropic/claude-opus-5.5</span><span class="tag">frontier model, same Agent E2 pipeline</span><span class="tag">2 model calls, 68,158 tokens, 49 s</span><span class="tag">knowledge 87c5d4a</span></p><p>Neither change alone caused it; the two together did. Do not roll back CHG-2 as the first remedy. Rebalance DRAM inside the cluster now.</p>
+<p>Mechanism</p>
+<ul>
+<li><strong>CHG-1 (Tue 23:25):</strong> each SQL VM now holds 256 GB of DRAM, fully reserved and not tiered. Each full reservation shrinks the DRAM left for the tiered VMs (is-memory-tiering-slowing-host, step 7). On esxi-pay-05, sql-pay-03 leaves at most 768 GB of DRAM for 34 tiered VMs, before hypervisor overhead.</li>
+<li><strong>CHG-2 (Thu 23:35):</strong> 40 tiered VMs arrived. On the worst host, the overcommit ratio rose from 1.07 to 1.23 and DRAM Consumed passed 80%, so tiering started.</li>
+<li><strong>The weekend:</strong> cold pages moved to NVMe (writes up, reads near 0).</li>
+<li><strong>Tuesday morning:</strong> active memory is 790 GB, 77% of DRAM, above the 75% point where significant loss is expected. NVMe reads stayed high an hour apart, so this is a sustained working set, not a warm-up (step 3).</li>
+</ul>
+<p>The two changes split DRAM between reserved SQL and tiered VMs. Neither alone shows this.</p>
+<p><strong>The approval check:</strong> &quot;Capacity Remaining (%)&quot; invites reading it as room free now. It fails twice:</p>
+<ul>
+<li>It is a 3-day projection of utilization.</li>
+<li>VCF Operations counts the NVMe tier as DRAM, so supply looked doubled (capacity-forecast).</li>
+</ul>
+<p>The better model is 3-Day Forecast Capacity Remaining (%). On a tiered cluster, also read active memory against DRAM and Cluster Risk.</p>
+<p>Do now</p>
+<ol>
+<li>vMotion the heaviest NVMe readers off esxi-pay-05 (and any host with a SQL VM) to esxi-pay-07 and esxi-pay-08 (44% and 41% active).</li>
+<li>Check where the six SQL VMs sit. Keep at most one per host (6 SQL VMs, 8 hosts).</li>
+<li>Recheck active memory and NVMe reads after each move.</li>
+</ol>
+<p>Not settled by the knowledge base: whether the old cluster can take the 40 VMs back, why DRS did not rebalance, and where the teller VMs run.</p><details><summary>Files read (61), first 15</summary><pre>vsphere/technology/memory/vm-memory-latency-high
+vsphere/technology/memory/metrics/virtual-motherboard/active
+vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
+vsphere/technology/cpu/metrics/virtual-motherboard/ready
+vsphere/technology/memory/metrics/cluster/consumed
+vsphere/technology/memory/metrics/host/consumed
+vsphere/technology/memory/metrics/virtual-motherboard/consumed
+vsphere/object-types/cluster/models/cluster-risk
+vsphere/technology/memory/metrics/host/reservation
+vsphere/object-types/cluster/cluster-performance
+vsphere/technology/memory/concepts/memory-tiering
+vsphere/object-types/vm/vm-performance
+vsphere/object-types/esxi/esxi-performance
+vsphere/technology/cpu/metrics/virtual-motherboard/contention
+vsphere/technology/memory/metrics/host/ballooned</pre></details></div><div id="t2m1" class="panel answer" hidden><p><span class="tag">alibaba/qwen3.8-27b</span><span class="tag">local candidate</span><span class="tag">2 model calls, 43,195 tokens, 9 s</span><span class="tag">knowledge 87c5d4a</span></p><p><strong>Conclusion</strong></p>
+<p>CHG-1 caused the incident. Do not roll back CHG-2.</p>
+<p><strong>Mechanism</strong></p>
+<p>CHG-1 (Tuesday) disabled memory tiering for the six SQL VMs and reserved their full 256 GB memory each. On esxi-pay-05, this consumed 256 GB of DRAM that was previously available for tiered VMs. Consequently, the &quot;DRAM left for tiered VMs&quot; shrank. The working set of the remaining 34 tiered VMs did not change, so their Active Memory as a percentage of the *remaining* DRAM jumped from ~35% to 77% (above the 75% threshold for significant loss). This forced sustained NVMe fetches (380 MB/s at 290 µs) starting Friday, not Tuesday, because the weekend peak load pushed the working set over the edge.</p>
+<p>CHG-2 (Thursday) added 40 small VMs (32 GB each). These VMs are tiered and fit within the NVMe tier. They did not consume the full DRAM reservations that CHG-1 did. Their contribution to Active Memory is minor compared to the SQL VMs&#x27; 256 GB full reservation.</p>
+<p><strong>What to check next</strong></p>
+<ol>
+<li><strong>Confirm CHG-1 impact:</strong> Verify that esxi-pay-05’s DRAM capacity for tiered VMs dropped by exactly the sum of the SQL VM reservations on that host.</li>
+<li><strong>Immediate mitigation:</strong> Migrate pay-api-07 (and other affected tiered VMs) to hosts with lower Active Memory % (e.g., esxi-pay-07 at 44%) to escape the NVMe latency penalty.</li>
+<li><strong>Long-term fix:</strong> Re-enable memory tiering for the SQL VMs on esxi-pay-05, or migrate them to hosts with more DRAM, or add DRAM. Keeping them with tiering off and full reservation on a tiered host is the configuration error.</li>
+</ol>
+<p>Not settled by the knowledge base: Why DRS did not proactively rebalance the VMs off esxi-pay-05 before the Friday spike.</p><details><summary>Files read (69), first 15</summary><pre>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host
+vsphere/technology/memory/metrics/virtual-motherboard/active
+vsphere/technology/cpu/metrics/virtual-motherboard/ready
+vsphere/technology/memory/metrics/cluster/consumed
+vsphere/technology/memory/metrics/host/consumed
+vsphere/technology/memory/metrics/host/latency
+vsphere/technology/memory/metrics/virtual-motherboard/consumed
+vsphere/technology/memory/metrics/virtual-motherboard/latency
+vsphere/object-types/cluster/models/cluster-risk
+vsphere/technology/memory/metrics/host/reservation
+vsphere/object-types/cluster/cluster-performance
+vsphere/technology/memory/concepts/memory-tiering
+vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
+vsphere/technology/memory/metrics/virtual-motherboard/usage
+vsphere/object-types/vm/vm-performance</pre></details></div><div id="t2m2" class="panel answer" hidden><p><span class="tag">google/gemma-4-31b-it</span><span class="tag">local candidate</span><span class="tag">2 model calls, 42,910 tokens, 114 s</span><span class="tag">knowledge 87c5d4a</span></p><p>CHG-1 caused the issue. Do not roll back CHG-2.</p>
+<p><strong>Mechanism and Reason:</strong></p>
+<p>The issue is memory contention caused by the reduced DRAM available for tiered VMs, not the addition of new VMs alone.</p>
+<ol>
+<li><strong>The Trigger (CHG-1):</strong> On Tuesday, CHG-1 disabled memory tiering and added full memory reservations for six SQL VMs (256 GB each). According to <code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code>, each full reservation shrinks the DRAM left for tiered VMs. This reduced the effective DRAM:NVMe ratio for the remaining tiered VMs.</li>
+<li><strong>The Saturation (CHG-2):</strong> CHG-2 added 40 VMs. While this increased demand, the critical signal is that DRAM consumption passed the 80% threshold on Friday (<code>vsphere/technology/memory/concepts/memory-tiering</code>), which is when tiering actually starts moving pages to NVMe.</li>
+<li><strong>The Contention:</strong> By Tuesday, the worst host&#x27;s Active Memory reached 77% of DRAM. Per <code>vsphere/technology/memory/concepts/memory-tiering</code>, values above 75% result in significant performance loss. The &quot;warm-up&quot; reads (380 MB/s host total, 6 MB/s for <code>pay-api-07</code>) are fetching pages from NVMe because the working set no longer fits in the remaining DRAM.</li>
+<li><strong>The Overcommit:</strong> The Highest ESXi Memory Overcommit Ratio rose to 1.23 on Thursday, shortly after CHG-2, but the performance drop only occurred when the Active working set exceeded the remaining DRAM on Tuesday morning.</li>
+</ol>
+<p><strong>What to check next:</strong></p>
+<p>Compare the current NVMe read bandwidth against the same time window from the previous long weekend to confirm if the working set now permanently exceeds the reduced DRAM capacity (<code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code>).</p><details><summary>Files read (65), first 15</summary><pre>vsphere/technology/memory/vm-memory-latency-high
+vsphere/technology/memory/metrics/virtual-motherboard/active
+vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host
+vsphere/technology/cpu/metrics/virtual-motherboard/ready
+vsphere/technology/memory/metrics/cluster/consumed
+vsphere/technology/memory/metrics/host/consumed
+vsphere/technology/memory/metrics/virtual-motherboard/consumed
+vsphere/object-types/cluster/models/cluster-risk
+vsphere/technology/memory/metrics/host/reservation
+vsphere/object-types/cluster/cluster-performance
+vsphere/technology/memory/concepts/memory-tiering
+vsphere/object-types/vm/vm-performance
+vsphere/object-types/esxi/esxi-performance
+vsphere/technology/cpu/metrics/virtual-motherboard/contention
+guest-os/system/guest-os-performance</pre></details></div><h2>Checks an expert answer must pass</h2><div class="panel"><div class="scroll"><table><thead><tr><th>Message</th><th>Check</th><th>Knowledge</th><th>Frontier reference</th><th>Candidate: Qwen 27B</th><th>Candidate: Gemma 31B</th></tr></thead><tbody><tr><td>first</td><td>Explains VM Performance 17 with Memory Contention at 0.2%: Memory Contention does not count NVMe fetches; NVMe wait of pay-api-07 is about 5.6% of its vCPU time.</td><td><code>vsphere/object-types/vm/vm-performance</code> <code>vsphere/object-types/cluster/cluster-performance</code></td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td></tr><tr><td>first</td><td>Explains why now: DRAM consumed passed 80% on Friday, so tiering started for the first time; over the weekend idle pages moved to NVMe; on Tuesday they come back.</td><td><code>vsphere/technology/memory/concepts/memory-tiering</code> <code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code></td><td class="partial">◐</td><td class="fail">✗</td><td class="pass">✓</td></tr><tr><td>first</td><td>Active memory 77% of DRAM: above 75%, significant loss expected.</td><td><code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code></td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td></tr><tr><td>first</td><td>Sustained, not a warm-up: 380 then 360 MBps an hour apart.</td><td><code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code></td><td class="pass">✓</td><td class="partial">◐</td><td class="fail">✗</td></tr><tr><td>first</td><td>Rejects Capacity Remaining as proof: it counts NVMe as DRAM; active memory against DRAM is the limit.</td><td><code>vcf-operations/features/capacity-forecast</code></td><td class="partial">◐</td><td class="fail">✗</td><td class="fail">✗</td></tr><tr><td>first</td><td>Reads the Cluster Risk rise as two changes (memory reservation at Tue 23:25; overcommit at Thu 23:35) and asks what was changed then.</td><td><code>vsphere/object-types/cluster/models/cluster-risk</code></td><td class="pass">✓</td><td class="fail">✗</td><td class="fail">✗</td></tr><tr><td>first</td><td>Acts now: moves the heaviest NVMe readers to esxi-pay-07 or esxi-pay-08.</td><td><code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code></td><td class="pass">✓</td><td class="partial">◐</td><td class="fail">✗</td></tr><tr><td>first</td><td>If it asks back (allowed: it should not jump), it asks for the fact that changes the answer: what was changed at Tue 23:25 and Thu 23:35. Not applicable when it answers.</td><td><code>vsphere/object-types/cluster/models/cluster-risk</code></td><td class="na">–</td><td class="na">–</td><td class="na">–</td></tr><tr><td>follow-up</td><td>Cause: CHG-1 and CHG-2 together, exposed by the long weekend; neither alone.</td><td><code>vsphere/technology/memory/concepts/memory-tiering</code> <code>vsphere/object-types/cluster/models/cluster-risk</code></td><td class="pass">✓</td><td class="fail">✗</td><td class="partial">◐</td></tr><tr><td>follow-up</td><td>Rolling back CHG-2 is not the first fix: a lever, not the cause.</td><td><code>vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host</code></td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td></tr><tr><td>follow-up</td><td>Does not lower the reservation of a VM with tiering off; gives DRAM back by turning tiering on for a SQL VM that is not latency-sensitive (a power cycle).</td><td><code>vsphere/technology/memory/concepts/memory-tiering</code></td><td class="partial">◐</td><td class="pass">✓</td><td class="partial">◐</td></tr><tr><td>follow-up</td><td>Process: approve capacity on active memory against DRAM, not on Capacity Remaining.</td><td><code>vsphere/technology/memory/concepts/memory-tiering</code> <code>vcf-operations/features/capacity-forecast</code></td><td class="pass">✓</td><td class="fail">✗</td><td class="fail">✗</td></tr></tbody></table></div><p class="note">✓ pass, ◐ partial, ✗ fail, – not applicable. Frontier reference: 9.5 of 11; Candidate: Qwen 27B: 5 of 11; Candidate: Gemma 31B: 5 of 11. Scored by reading each answer against the check: the scores are judgment, the answers are verbatim. Asking back is allowed (Agent E2 should not jump); when a model asks first, its turn 1 checks are read on the answer it gives after the specialist replies. One run per model, so the numbers move between runs.</p></div><h2>What the run taught us</h2><div class="panel"><ul>
+<li><strong>The knowledge base and the harness carry the scenario.</strong> The frontier model, run through the same Agent E2 pipeline and the same knowledge base, passes 9.5 of 11 checks and cites a file for each claim.</li>
+<li><strong>Every model explains the red VM Performance.</strong> With NVMe wait scored in the knowledge base (VM Performance and Cluster Performance), all three trace the 17 to an NVMe wait of about 5.6% that Memory Contention does not count.</li>
+<li><strong>The local candidates miss the same things.</strong> Gemma 31B and Qwen 27B pass 5 of 11 each. Neither reads the Cluster Risk rise as two dated changes, neither rejects Capacity Remaining as proof, and both blame CHG-1 alone. Gemma calls the sustained reads a warm-up although it has both readings; Qwen does not explain why the problem started now.</li>
+<li><strong>A harness quirk:</strong> Qwen&#x27;s first answer opens with &quot;The provided ESXi Memory Latency text does not change the diagnosis&quot;. That is the gap follow-up (a second pass with an added file) showing through; the follow-up prompt should keep the model from talking about it.</li>
+<li><strong>Stage 1 held</strong> on this input for every model (1,300 to 5,200 tokens at the 2,400 cap for the local models).</li>
+<li><strong>Next, in the harness (stage 3, exact tools):</strong> compute what the local models miss, before the model reads: the step changes in the Cluster Risk rows with their times, the two NVMe readings an hour apart (sustained or warm-up), and active memory against the DRAM left for tiered VMs. Then rerun five times per model.</li>
 <li><strong>Not settled by the knowledge base</strong> (named by the frontier run): whether an NVMe wait of about 5.6% alone explains a p99 of 1.4 s (Guest OS and application counters), and why DRS did not rebalance.</li>
 </ul></div><h2>How to run it again</h2><div class="panel"><ol>
 <li><code>python3 project/tools/demo_scenario_executor.py project/demo-site/scenario-1-memory-tiering &lt;model&gt;</code> (needs AI_GATEWAY_API_KEY): writes <code>results/&lt;model&gt;.json</code>.</li>
