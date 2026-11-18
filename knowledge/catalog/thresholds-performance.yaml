@@ -6,14 +6,15 @@ meta:
     flow: 'Flow tests: a number that one step of a troubleshooting flow, health check or decision tree compares a reading with to pick the next step. Not a KPI level and not an alert. kb is the flow file, step its numbered step.'
   fields:
     id: Stable key, unique across the threshold files.
-    metric: Metric as the knowledge file names it.
+    metric: 'The metric name as the knowledge file names it: the text a user reads. No comma, and no unit or description inside it.'
+    description: 'Optional: one line saying what the metric measures; for a ratio, what is divided by what.'
     object: Managed object type.
     layer: Layer that produces the metric.
     instance: 'Which reading: object aggregate, worst instance, percentile. Empty until a source states it.'
     interval: '20s: a VCF Operations peak, the highest of the 15 20-second averages in the 5-minute cycle; 5m: 5-minute average; 2s: esxtop. Every KPI is reported every 5 minutes.'
     operator: '>, >=, <, <=, =, range.'
     value: 'The number compared against; range: low end, value_high the high end.'
-    unit: 'Unit of value, kept in its own field as VCF Operations keeps it, and shown in brackets at the end of the metric name. count for a number of things (threads, I/Os, packets, VMs, vCPU): the VCF Operations unit. For a ratio or fraction, the unit names what it is a ratio of (vCPU per physical thread).'
+    unit: 'Unit of value: one of the finite set of units VCF Operations defines, never a new one. Its own part of the metric, apart from the name; the UI shows it in brackets after the name. A ratio or fraction has the unit number; what it divides by goes in description.'
     condition: Another condition that must hold at the same time.
     meaning: What the knowledge file says the value means.
     source: 'knowledge-base, or a vendor document with its version: vsphere-9.1-docs, performance-best-practices-9.1, microsoft. Vendor values can go stale; the newer official document wins.'

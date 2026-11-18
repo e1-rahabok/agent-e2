@@ -8,11 +8,12 @@ meta:
     id: Stable key, unique across the threshold files. Symptoms start with sym-, alerts with alert-.
     object: 'Managed object type. An alert has one: an alert fires on one object type. A symptom with a list is one definition per type in VCF Operations.'
     layer: Layer that produces the metric.
-    metric: Metric as the knowledge file names it.
+    metric: 'The metric name as the knowledge file names it: the text a user reads. No comma, and no unit or description inside it.'
+    description: 'Optional: one line saying what the metric measures; for a ratio, what is divided by what.'
     interval: 20s (20-second peak), 5m (5-minute average), 2s (esxtop), 1d; empty until a source states it.
     operator: '>, >=, <, <=, =.'
     value: The number compared against.
-    unit: 'Unit of value, kept in its own field as VCF Operations keeps it, and shown in brackets at the end of the metric name. count for a number of things (threads, I/Os, packets, VMs, vCPU): the VCF Operations unit. For a ratio or fraction, the unit names what it is a ratio of (vCPU per physical thread).'
+    unit: 'Unit of value: one of the finite set of units VCF Operations defines, never a new one. Its own part of the metric, apart from the name; the UI shows it in brackets after the name. A ratio or fraction has the unit number; what it divides by goes in description.'
     role: 'issue (default): the problem itself. gate: not a problem; keeps the alert off idle objects (CPU Usage above 1 GHz, IOPS above 100).'
     source: 'knowledge-base, or a vendor document with its version: vsphere-9.1-docs, performance-best-practices-9.1, microsoft. Vendor values can go stale; the newer official document wins.'
     kb: 'Alert: the alert file of its object type (<object>/<object>-alerts): why each symptom is in the alert, who receives it, which flow to open. Symptom: the file of the metric it tests. No quote: the files hold no alert values.'
@@ -36,7 +37,8 @@ symptoms:
   interval: 20s
   operator: '>'
   value: 20
-  unit: count per vCPU
+  unit: number
+  description: 'Read per vCPU: the queue divided by the vCPU count.'
   source: knowledge-base
   kb: guest-os/cpu/metrics/run-queue
 - id: sym-vm-cpu-net-run-above-75
@@ -169,7 +171,8 @@ symptoms:
   metric: Guest OS CPU Queue
   operator: '>'
   value: 4
-  unit: count per vCPU
+  unit: number
+  description: 'Read per vCPU: the queue divided by the vCPU count.'
   source: knowledge-base
   kb: guest-os/cpu/metrics/run-queue
 - id: sym-esxi-cpu-thread-utilization-above-40
