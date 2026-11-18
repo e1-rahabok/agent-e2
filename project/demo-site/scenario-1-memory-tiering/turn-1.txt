@@ -1,0 +1,22 @@
+P1 bridge, Payments latency. Tuesday 10:20, first business day after the 3-day National Day weekend (Saturday to Monday).
+I am the L2 vSphere specialist on call. I was not part of any change last week and I cannot see the change calendar yet.
+[Service desk] Payments API p99 went from 180 ms to 1.4 s at 09:05. Branch teller app slow too. Core SQL looks fine.
+[L1 compute] VCF Operations shows memory consumed 1.6 TB on hosts that only have 1 TB in CL-SG-PRD-PAY. We are swapping.
+[Capacity] Memory Capacity Remaining was 38% last Wednesday, Time Remaining over 200 days. This is not capacity.
+[DBA] Our SQL VMs show no wait.
+Cluster CL-SG-PRD-PAY: 8 identical hosts, 2 x 32 cores, 1,024 GB DRAM plus a 1,024 GB NVMe memory tier (1:1), memory tiering on since June, VCF 9.1.1, DRS fully automated.
+VCF Operations, Cluster Risk sub-metrics, worst host, business hours, last 7 days:
+- Highest ESXi Memory Reservation (%): Mon 0, Wed 26 (since Tue 23:25), Fri 26, Tue 26.
+- Highest ESXi Memory Overcommit Ratio: Mon 1.50, Wed 1.50, Fri 1.66 (since Thu 23:35), Tue 1.66.
+- Highest ESXi CPU Overcommit Ratio: Mon 1.25, Wed 1.25, Fri 1.56 (since Thu 23:35), Tue 1.56.
+- Highest ESXi DRAM Memory Consumed (%): Mon 121, Wed 121, Fri 146, Tue 157.
+- Worst ESXi Active Memory, tiered hosts (% of DRAM): Mon 45, Wed 46, Fri 52.7, Tue 63.5.
+- Worst ESXi NVMe Read Latency (µs): Mon 90, Wed 95, Fri 120, Tue 290.
+- Cluster Risk (%): Mon 64.8, Wed 62.7, Fri 62.3, Tue 64.5.
+Cluster Performance (%): Mon 99, Wed 99, Fri 98, Tue 96. Its sub-metric Worst memory wait among all VMs (%), memory latency plus NVMe wait: 5.8 today, shown, not scored.
+Cluster Consumption: ESXi Memory Consumed in DRAM 87%. Memory Tiering Consumption 44% (Thursday 21%). Ballooned 0. Zip Swap 0.
+esxi-pay-05, vSphere Client memory charts, 09:10 and 10:15: DRAM consumed 930 GB; NVMe consumed 680 GB; active memory 650 GB and 640 GB; NVMe read bandwidth 380 MBps and 360 MBps; NVMe read latency 290 µs and 280 µs; ballooned, compressed and swapped 0. It runs sql-pay-03 (16 vCPU, 256 GB, memory tiering off, 256 GB reserved, consumed 256 GB, active 110 GB) and 34 tiered VMs.
+Same host, first business day after the August long weekend: active memory 560 GB; NVMe read bandwidth 70 MBps at 09:10 and 8 MBps at 10:15; NVMe read latency 110 µs.
+esxi-pay-07 and esxi-pay-08 hold no SQL VM: active memory 44% and 41% of DRAM, NVMe read bandwidth 30 MBps.
+pay-api-07 (8 vCPU, 32 GB, tiered, on esxi-pay-05): NVMe read bandwidth 6 MBps, VM memory contention peak 0.2%, VM Performance (%) 99, CPU Ready peak 0.8%.
+What is wrong, and what do I do now?
