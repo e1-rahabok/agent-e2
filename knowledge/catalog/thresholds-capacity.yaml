@@ -66,7 +66,7 @@ models:
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-consumption
 - id: cluster-consumption-cluster-wide-esxi-dram-consumed-tiered
-  metric: Cluster-wide ESXi DRAM consumed, tiered hosts (tier 0, %)
+  metric: Cluster-wide ESXi Memory Consumed in DRAM (%)
   group: Utilization
   object: ClusterComputeResource
   interval: 5m
@@ -144,7 +144,7 @@ models:
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
 - id: cluster-risk-highest-esxi-memory-consumed
-  metric: Highest ESXi memory consumed (%)
+  metric: Highest ESXi DRAM Memory Consumed (%)
   group: Utilization
   object: ClusterComputeResource
   interval: 5m

@@ -33,7 +33,7 @@
 - Bad packets are never averaged or summed over a longer time: that hides a spike. Packets Received and Transmitted totals are deactivated by default in VCF Operations; activate them in the policy first.
 - One VM with 200 ms disk latency and the others at 0: the worst-VM row is red, a quarter into the band; the 90th percentile stays 0. One VM is not a broad problem.
 
-- NVMe wait: the share of vCPU time a VM waits for pages fetched from the NVMe tier, by Little's law. NVMe wait (%) = VM tier-1 read bandwidth (MB/s) × 256 pages per MB × host NVMe read latency (s) ÷ VM vCPUs × 100. The VM does not care where it waits for memory, so the bands stay those of memory latency. On a host without tiering, NVMe wait is 0.
+- NVMe wait: the share of vCPU time a VM waits for pages fetched from the NVMe tier, by Little's law. NVMe wait (%) = VM NVMe read bandwidth (MB/s) × 256 pages per MB × host NVMe read latency (s) ÷ VM vCPUs × 100. The VM does not care where it waits for memory, so the bands stay those of memory latency. On a host without tiering, NVMe wait is 0.
 - Before NVMe wait is scored, validate on a tiered host: one 4 KB page per fetch blocking one vCPU, no prefetch, and memory latency not already counting the fetches. Until then it is shown and left out of the score.
 
 ## Scoring

@@ -8,7 +8,7 @@
 ## Flow
 ```mermaid
 flowchart TD
-  S1[1. Tiering active: tier 1 consumed above 0?] -->|no| E1[No: all pages in DRAM]
+  S1[1. Tiering active: NVMe consumed above 0?] -->|no| E1[No: all pages in DRAM]
   S1 -->|yes| S2[2. Active memory vs DRAM]
   S2 --> S3[3. NVMe read bandwidth]
   S3 -->|near 0| E3[No: cold pages stay cold]
@@ -20,7 +20,7 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Tier 1 consumed (HostSystem): `tier.consumed` per tier, or `memstats -r vmtier-stats` per VM. 0 → no: tiering starts only when DRAM consumption passes about 80%, or the VMs are excluded from tiering. Above 0 → step 2.
+1. NVMe consumed (HostSystem): `tier.consumed` per tier, or `memstats -r vmtier-stats` per VM. 0 → no: tiering starts only when DRAM consumption passes about 80%, or the VMs are excluded from tiering. Above 0 → step 2.
 2. Active memory as % of host DRAM (HostSystem): vCenter Active, or esxtop TCHD summed over the VMs. 50% or lower: green. 50-75%: at risk; test the workloads. Above 75%: significant loss expected. → step 3.
 3. NVMe read bandwidth (HostSystem): tier in rate, pages fetched back from NVMe. Near 0 → no: the pages on NVMe stay cold. Above 200 MB/s → watch the latency. → step 4.
 4. NVMe read latency (HostSystem): `latency.read` of the NVMe tier, in ns, statistics level 3. Below 200 µs: good. 200-400 µs: potential issues. Above 400 µs: impact expected. High latency at almost no reads is a device waking from a power-saving state: the cause, not a reason to discard it. The VMs that read then waited. → step 5.
@@ -34,7 +34,7 @@ flowchart TD
    - HA: before vSphere 9.1.1, admission control does not reserve DRAM separately; restarts need DRAM ([`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../../../object-types/cluster/concepts/admission-control-and-cluster-state.md)).
 
 ## Order rationale
-- Tiering active first: with nothing on tier 1, nothing can wait on NVMe.
+- Tiering active first: with nothing on NVMe, nothing can wait on NVMe.
 - Active memory before the device: it is the leading signal. When the working set outgrows DRAM, NVMe reads rise.
 - Reads before latency: what the VMs lose is reads × latency. Few reads at a high latency, or many reads at a good latency, both cost wait time.
 - Host before VM: the host signals say whether to look; the per-VM reads say who pays.
@@ -48,7 +48,7 @@ flowchart TD
 - Balloon, compression or swap on a tiered host: a configuration problem first (non-tiered VM without reservation, limit, allocation beyond DRAM + NVMe).
 
 ## Misconceptions
-- "Tier 1 consumed is high, so the VMs are slow" → tier 1 holds cold pages: saturation, not contention. Read active memory and NVMe reads.
+- "NVMe consumed is high, so the VMs are slow" → NVMe holds cold pages: saturation, not contention. Read active memory and NVMe reads.
 - "NVMe latency is 900 µs on an idle device, so ignore it" → the VMs that read then waited 900 µs each. Measure the total (reads × latency); the wake-up explains it, it does not erase it.
 - "Latency is below 200 µs, so tiering costs nothing" → each fetch still costs about 1,000x a DRAM access; many fetches slow the VM.
 - "Only reads come from NVMe, so write-heavy VMs are safe" → a write to a cold page waits for the page to come back first.
