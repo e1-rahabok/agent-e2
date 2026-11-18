@@ -16,7 +16,7 @@ import sys
 
 import yaml
 
-MARK = {'pass': ('✓', 'pass'), 'partial': ('◐', 'partial'), 'fail': ('✗', 'fail')}
+MARK = {'pass': ('✓', 'pass'), 'partial': ('◐', 'partial'), 'fail': ('✗', 'fail'), 'na': ('–', 'na')}
 CSS = """
 :root{--bg:#f6f7f9;--panel:#fff;--ink:#16202c;--muted:#5b6776;--line:#d9dee5;--accent:#0b6bcb;--code:#eef1f5;
 --g:#d7f0dd;--y:#fbf0c4;--o:#fbd9b5;--r:#f6c6c6;--gi:#1d6b33;--yi:#7a5d00;--oi:#8a4300;--ri:#8f1f1f}
@@ -31,7 +31,7 @@ th{color:var(--muted);font-weight:600}.scroll{overflow-x:auto}code{background:va
 pre{background:var(--code);padding:12px;border-radius:8px;white-space:pre-wrap;font-size:13px;margin:0}
 .c-green{background:var(--g);color:var(--gi)}.c-yellow{background:var(--y);color:var(--yi)}.c-orange{background:var(--o);color:var(--oi)}
 .c-red{background:var(--r);color:var(--ri)}.c-grey{color:var(--muted)}td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
-.pass{color:var(--gi);font-weight:700}.partial{color:var(--yi);font-weight:700}.fail{color:var(--ri);font-weight:700}
+.pass{color:var(--gi);font-weight:700}.na{color:var(--muted)}.partial{color:var(--yi);font-weight:700}.fail{color:var(--ri);font-weight:700}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.tabs button{border:1px solid var(--line);background:var(--panel);color:var(--ink);
 border-radius:999px;padding:6px 12px;cursor:pointer;font:inherit;font-size:14px}.tabs button[aria-selected="true"]{border-color:var(--accent);color:var(--accent);font-weight:600}
 .answer p{margin:6px 0}.answer ul,.answer ol{margin:6px 0 6px 20px;padding:0}.tag{display:inline-block;font-size:12px;border:1px solid var(--line);
@@ -143,13 +143,14 @@ def build(folder):
             row.append(f'§{cls}§{sym}')
         rows.append(row)
     t = table(head, rows)
-    t = re.sub(r'<td>§(pass|partial|fail)§(.)</td>', r'<td class="\1">\2</td>', t)
+    t = re.sub(r'<td>§(pass|partial|fail|na)§(.)</td>', r'<td class="\1">\2</td>', t)
     totals = []
     for m, _ in runs:
         s = sc.get('scores', {}).get(m['id'], {}) or {}
-        n = sum(1.0 if s.get(c['id']) == 'pass' else 0.5 if s.get(c['id']) == 'partial' else 0 for c in sc['checks'])
-        totals.append(f'{esc(m["label"])}: {n:g} of {len(sc["checks"])}')
-    parts.append(t + f'<p class="note">✓ pass, ◐ partial, ✗ fail. {"; ".join(totals)}. {inline(sc.get("scoring_note", ""))}</p></div>')
+        apply = [c for c in sc['checks'] if s.get(c['id']) != 'na']
+        n = sum(1.0 if s.get(c['id']) == 'pass' else 0.5 if s.get(c['id']) == 'partial' else 0 for c in apply)
+        totals.append(f'{esc(m["label"])}: {n:g} of {len(apply)}')
+    parts.append(t + f'<p class="note">✓ pass, ◐ partial, ✗ fail, – not applicable. {"; ".join(totals)}. {inline(sc.get("scoring_note", ""))}</p></div>')
     parts.append('<h2>What the run taught us</h2><div class="panel">' + markdown(sc['lessons']) + '</div>')
     parts.append('<h2>How to run it again</h2><div class="panel">' + markdown(sc['rerun']) + '</div>')
     page = (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
