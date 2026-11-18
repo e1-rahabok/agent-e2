@@ -114,9 +114,10 @@ def build(folder):
     for tb in sc['tables']:
         parts.append(f'<div class="panel"><h3>{esc(tb["title"])}</h3>{table(tb["head"], tb["rows"], "num")}'
                      f'<p class="note">{inline(tb.get("note", ""))}</p></div>')
+    names = ["The specialist's first message", 'The follow-up, once the change calendar is open']
     for i, t in enumerate(turns, 1):
-        parts.append(f'<h2>Turn {i}: the specialist writes</h2><div class="panel"><pre>{esc(t)}</pre></div>')
-        parts.append(f'<h3>Agent E2 answers (turn {i})</h3><div class="tabs" data-tabs>')
+        parts.append(f'<h2>{names[i - 1] if i <= len(names) else f"Message {i}"}</h2><div class="panel"><pre>{esc(t)}</pre></div>')
+        parts.append('<h3>Agent E2 answers</h3><div class="tabs" data-tabs>')
         for j, (m, r) in enumerate(runs):
             parts.append(f'<button data-for="t{i}m{j}" aria-selected="{str(j == 0).lower()}">{esc(m["label"])}</button>')
         parts.append('</div>')
@@ -133,10 +134,10 @@ def build(folder):
                          f'<details><summary>Files read ({len(tr.get("files_read", []))}), first 15</summary><pre>'
                          f'{esc(chr(10).join(tr.get("files_read", [])[:15]))}</pre></details></div>')
     parts.append('<h2>Checks an expert answer must pass</h2><div class="panel">')
-    head = ['Turn', 'Check', 'Knowledge'] + [m['label'] for m, _ in runs]
+    head = ['Message', 'Check', 'Knowledge'] + [m['label'] for m, _ in runs]
     rows = []
     for c in sc['checks']:
-        row = [str(c['turn']), c['text'], ' '.join(f'`{k}`' for k in c['kb'])]
+        row = ['first' if c['turn'] == 1 else 'follow-up', c['text'], ' '.join(f'`{k}`' for k in c['kb'])]
         for m, _ in runs:
             v = (sc.get('scores', {}).get(m['id'], {}) or {}).get(c['id'], 'fail')
             sym, cls = MARK[v]
