@@ -59,7 +59,7 @@ def main(folder, model, params_json=None, only=None):
         text = open(path).read()
         out = answer_modes.converse('agent-e2', client, model, [text], [], cfg, retriever)
         trace = _trace(out['trace'])
-        computed = [line for s in trace if s['step'] == 'compute' for line in (s.get('output') or [])]
+        computed = [line for s in trace if s['action'] == 'compute' for line in (s.get('output') or [])]
         rec['steps'][n] = {'type': out['type'], 'content': out['result'].get('content'), 'computed': computed,
                            'files_read': out['used'], 'trace': trace}
         print(f'step {n}: {out["type"]}, {len(out["result"].get("content") or "")} characters, computed {len(computed)}')
