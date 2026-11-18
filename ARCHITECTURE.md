@@ -118,7 +118,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 | Harness | CPU | Python: the agent, retrieval, catalog (SQLite in memory), calculator, verifier |
 | Index | Disk | Chunks and vectors built from `knowledge/`, tied to one git commit (the index version) |
 
-- Updates arrive as a bundle (knowledge, catalog, index, and optionally new weights), either downloaded or imported offline. No customer data is sent out.
+- Updates arrive as a bundle (knowledge, catalog, index, and optionally new weights), either downloaded or imported offline. No customer data is sent out. Lab exception (author, 2026-11-17): the author's lab VCF may send its live data to the gateway model; customer sites keep this rule and the local model.
 - Internet access comes through two harness tools: `fetch_url` for a link in the question, and `web_search` only for current facts (bugs, builds, maximums, renamed features). Both go through the customer's proxy and send only public requests, never customer data. Fetched text is untrusted: it is trimmed to the relevant parts, placed after the knowledge-base files, and checked against them. The rules are in [`MISSION.md`](MISSION.md), section 5 (Ways to ask, Answer). Built in [`harness/web.py`](harness/web.py):
   - Every URL in the question (up to 3) is read before the model starts (`web.gather`, stage 5 of the agent). The model calls no tool; only the benchmark's frontier reference (mode `web`) gets `web_search` and `fetch_url` as tools.
   - Search runs only when the question asks for current facts, matched against a pattern list: known bugs, builds, patches, release notes, maximums, defaults, renamed, end of support. The agent decides by that rule, not the model.
