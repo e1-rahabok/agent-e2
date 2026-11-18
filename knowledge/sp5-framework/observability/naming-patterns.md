@@ -4,6 +4,21 @@ A metric name does not reliably tell what the metric measures.
 Two metrics can share a name and differ. Two names can mean the same thing.
 The patterns below classify the ways names mislead.
 
+## Six parts of a metric
+A metric in VCF Operations has six parts. Keep them apart: the patterns below come from reading one part as another.
+
+| Part | What it is | Example (Cluster CPU Overcommit Ratio) |
+|---|---|---|
+| Group | Where the metric belongs | Cluster Risk, Allocation |
+| Name | The text shown to the user. It is translated (internationalization), so the same metric reads differently per language | CPU Overcommit Ratio |
+| Key | What the API uses. Typically English only, and the same in every language | the key in the pack's adapter; a native example: `cpu\|usage_average` (VM CPU Usage) |
+| Unit | One of the finite set of units VCF Operations defines. Use only those; never make one up. The UI shows it in brackets after the name and can convert it on the fly (KB to GB) | number |
+| Value | The number | 1.66 |
+| Description | One line saying what the metric measures | The sum of the vCPUs of all running VMs divided by the usable physical threads of the cluster |
+
+- What a ratio divides by belongs in the description, not in the unit or the name. A ratio's unit is number.
+- Match a metric on its key, not its name: the name changes with the language and between releases.
+
 ## Pattern catalogue
 
 | Pattern | Meaning |
@@ -52,6 +67,8 @@ The patterns below classify the ways names mislead.
 - What runs on top of the kernel are processes. "Process Manager" would match the concept.
 
 ## Misconceptions
+- "The unit of an overcommit ratio is vCPU per physical thread" → the unit is number; what is divided by what is the description.
+- "A metric is identified by its name" → by its key; the name is translated and can change.
 - "Processor Queue Length and Current Disk Queue Length count the same thing: work waiting" → Processor Queue Length counts only threads waiting, not the running ones; Current Disk Queue Length also counts IOs being processed. A disk queue above 0 can be IOs in service, not waiting.
 - "Two tools show the same metric name, so the values match" → a name does not fix the formula: the same name can differ by object, by level inside the object, and by capping. Check which naming pattern applies (section Pattern catalogue) and read the file of each metric.
 
