@@ -18,7 +18,9 @@ An English word has a general meaning and a VMware operations meaning. Each word
 ## Terms
 | Use | Means | Do not use for it |
 |---|---|---|
-| sources | Source documents the knowledge is written from ([`project/sources/`](sources)): book chapters, vendor PDFs, technical notes. The author adds them; Claude may edit them | raw input |
+| sources | Source documents the knowledge is written from ([`project/sources/`](sources)): book chapters, vendor PDFs, source notes. The author adds them; Claude may edit them | raw input |
+| source note | One Markdown file in [`project/sources/`](sources) per topic, a few pages, written with Claude from the author's material, documentation and the environment; its claims cite its evidence. A proposal, for the author to confirm | digest, technical note, staging file |
+| evidence | Primary proof a source note cites: a vendor document with version and page, a screenshot, API output, a lab result (`project/sources/evidence/`). A summary written by a model is not evidence. A proposal, for the author to confirm | proof, reference |
 | benchmark | The proof of the product: question set, runner, results (`benchmark/`). Also one execution of it: every candidate, every mode, 5 runs; one folder per model, `benchmark/results/<date>-<model>/` (benchmark/runner/run_folder_names.py) | Auto Test, test, evaluation, benchmark run |
 | run | One pass through all the questions, by one model in one mode (`baseline` or `agent-e2` for a candidate, `web` for the frontier reference). A benchmark has 5 runs (`runs: 5`, column `run`). Each run is a repeat of the same questions; the answers differ | repeat, iteration |
 | question | One benchmark item: one file in [`benchmark/questions/`](../benchmark/questions) with prompt, answer key and metadata. A benchmark question plays a question a VMware administrator asks the product | case, test case, golden case, exam question |
