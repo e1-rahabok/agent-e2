@@ -14,7 +14,7 @@
 |---|---|---|
 | Utilization | ESXi CPU Thread Utilization | Threads in use on all hosts ÷ CPU usable capacity in threads |
 | Utilization | ESXi Memory Consumed, hosts without tiering | Consumed memory of all hosts ÷ usable DRAM |
-| Utilization | ESXi DRAM Consumed, tiered hosts | Tier 0 consumed of all tiered hosts ÷ their usable DRAM. Memory Consumed covers both tiers and passes 100% of DRAM by design; tiering starts at 80% of DRAM, so green runs to 80 |
+| Utilization | ESXi Memory Consumed in DRAM (tiered hosts) | Memory consumed in DRAM on all tiered hosts ÷ their usable DRAM. Never above 100%; not the Cluster Risk row Highest ESXi DRAM Memory Consumed, which divides memory consumed in DRAM and NVMe by DRAM. Memory Consumed covers both tiers and passes 100% of DRAM by design; tiering starts at 80% of DRAM, so green runs to 80 |
 | Saturation | Memory Tiering Consumption | NVMe tier in use on all hosts ÷ usable NVMe tier |
 | Saturation | ESXi Memory Ballooned | Ballooned memory of all hosts ÷ usable DRAM |
 | Saturation | ESXi Memory Zip Swap | Compressed plus swapped memory of all hosts ÷ usable DRAM |
