@@ -5,17 +5,28 @@ Never index this folder: it contains answer keys.
 
 ## Layout
 
-```text
-benchmark/
-├── questions/L<level>-<nnn>-<slug>.md                # one question per file, one flat folder
-├── questions/<id>/                                   # the question's attachments: screenshots, logs, diagrams (only when it has any)
-├── runner/                                       # Benchmark runner: answer_questions.py, run_round.py, preflight_check.py, stop_on_bad_answers.py, check_round_alive.py, push_snapshots.py, provider_hosts.py, resume_round.py, summary_all_runs.py, score_report.py, adaptive_concurrency.py, config.yaml
-├── models.md                                     # candidate models, frontier reference
-├── RUN.md                                        # how to run a benchmark round: the prompt, approvals, time, cost
-├── live-test.md                                  # the system on an offline model: plan and pass criteria
-├── results/README.md                             # one analysis of all runs of a round (written when the last run finishes)
-├── results/<date>-<model>/                       # per run: answers.csv, report.md, config.json (traces.jsonl not in git)
-└── _templates/question.md
+```mermaid
+flowchart LR
+  benchmark["benchmark/"]
+  questions["questions/<br/>L&lt;level&gt;-&lt;nnn&gt;-&lt;slug&gt;.md: one question per file, one flat folder"]
+  attach["questions/&lt;id&gt;/<br/>the question's attachments: screenshots, logs, diagrams (only when it has any)"]
+  runner["runner/<br/>Benchmark runner: answer_questions.py, run_round.py, preflight_check.py, stop_on_bad_answers.py, check_round_alive.py, push_snapshots.py, provider_hosts.py, resume_round.py, summary_all_runs.py, score_report.py, adaptive_concurrency.py, config.yaml"]
+  models["models.md<br/>candidate models, frontier reference"]
+  runmd["RUN.md<br/>how to run a benchmark round: the prompt, approvals, time, cost"]
+  live["live-test.md<br/>the system on an offline model: plan and pass criteria"]
+  results["results/README.md<br/>one analysis of all runs of a round (written when the last run finishes)"]
+  resultdirs["results/&lt;date&gt;-&lt;model&gt;/<br/>per run: answers.csv, report.md, config.json (traces.jsonl not in git)"]
+  tmpl["_templates/question.md"]
+
+  benchmark --> questions
+  benchmark --> attach
+  benchmark --> runner
+  benchmark --> models
+  benchmark --> runmd
+  benchmark --> live
+  benchmark --> results
+  results --> resultdirs
+  benchmark --> tmpl
 ```
 
 - One flat folder: a question often crosses products (vSphere, Windows, Linux, NSX, VCF Operations) and technologies, so folders cannot hold it. The slices are metadata (section Metadata tags):

@@ -18,42 +18,35 @@ Consider a simple hypervisor host with **16 physical cores (pCores) per NUMA bou
 
 ### Architectural Topology Comparison
 
-```text
-====================================================================================
- OPTION A: 20 vCPU VM (Spans 2 pNUMA Nodes -> Continuous Inter-Socket Tax)
-====================================================================================
-  [ Guest OS: 20 vCPUs (Windows / Linux) ]
-     |-- Soft-Affinity spreads threads across vCPU 0..19
-     |-- Burst Concurrency: Drains up to 20 threads/quantum (Low Run Queue)
-     v
-  +-----------------------------------+       +-----------------------------------+
-  |  pNUMA Node 0 (Socket 0: 16 pCore)|       |  pNUMA Node 1 (Socket 1: 16 pCore)|
-  |  [ 10 vCPUs Scheduled ]           |       |  [ 10 vCPUs Scheduled ]           |
-  |  [ Shared L3 Cache (32 MB) ]      |       |  [ Shared L3 Cache (32 MB) ]      |
-  |  [ Local DRAM: ~80 ns ]           |       |  [ Local DRAM: ~80 ns ]           |
-  +-----------------------------------+       +-----------------------------------+
-                    ^                                           ^
-                    |======= Intel UPI / AMD Infinity Fabric ===|
-                             * Remote DRAM Stall: 150-300+ ns
-                             * Cross-Socket MESI Lock Bouncing
-                             * Split L3 Cache Footprint
+#### Option A: 20 vCPU VM (spans 2 pNUMA nodes, continuous inter-socket tax)
 
-====================================================================================
- OPTION B: 10 vCPU VM (Fits 1 pNUMA Node -> Zero Inter-Socket Tax)
-====================================================================================
-  [ Guest OS: 10 vCPUs (Windows / Linux) ]
-     |-- Soft-Affinity keeps threads inside vCPU 0..9
-     |-- Burst Concurrency: Drains 10 threads/quantum (Threads 11+ Queue Briefly)
-     v
-  +-----------------------------------+       +-----------------------------------+
-  |  pNUMA Node 0 (Socket 0: 16 pCore)|       |  pNUMA Node 1 (Socket 1: 16 pCore)|
-  |  [ All 10 vCPUs Scheduled ]       |       |  [ Idle / Other VMs ]             |
-  |  [ Unified L3 Cache (32 MB) ]     |       |                                   |
-  |  [ 100% Local DRAM: ~80 ns ]      |       |                                   |
-  +-----------------------------------+       +-----------------------------------+
-                    ^
-                    +-- Zero UPI / Infinity Fabric Traffic
-                    +-- Maximum Native Instructions Per Cycle (IPC)
+```mermaid
+flowchart TB
+  guestA["Guest OS: 20 vCPUs (Windows / Linux)<br/>Soft-Affinity spreads threads across vCPU 0..19<br/>Burst concurrency: drains up to 20 threads per quantum (low run queue)"]
+  subgraph socketA0["pNUMA Node 0 (Socket 0: 16 pCore)"]
+    a0["10 vCPUs scheduled<br/>Shared L3 cache (32 MB)<br/>Local DRAM: ~80 ns"]
+  end
+  subgraph socketA1["pNUMA Node 1 (Socket 1: 16 pCore)"]
+    a1["10 vCPUs scheduled<br/>Shared L3 cache (32 MB)<br/>Local DRAM: ~80 ns"]
+  end
+  guestA --> a0
+  guestA --> a1
+  a0 <-->|"Intel UPI / AMD Infinity Fabric<br/>Remote DRAM stall: 150-300+ ns<br/>Cross-socket MESI lock bouncing<br/>Split L3 cache footprint"| a1
+```
+
+#### Option B: 10 vCPU VM (fits 1 pNUMA node, zero inter-socket tax)
+
+```mermaid
+flowchart TB
+  guestB["Guest OS: 10 vCPUs (Windows / Linux)<br/>Soft-Affinity keeps threads inside vCPU 0..9<br/>Burst concurrency: drains 10 threads per quantum (threads 11+ queue briefly)"]
+  subgraph socketB0["pNUMA Node 0 (Socket 0: 16 pCore)"]
+    b0["All 10 vCPUs scheduled<br/>Unified L3 cache (32 MB)<br/>100% local DRAM: ~80 ns"]
+  end
+  subgraph socketB1["pNUMA Node 1 (Socket 1: 16 pCore)"]
+    b1["Idle / other VMs"]
+  end
+  guestB --> b0
+  b0 --- noteB["Zero UPI / Infinity Fabric traffic<br/>Maximum native instructions per cycle (IPC)"]
 ```
 
 ---

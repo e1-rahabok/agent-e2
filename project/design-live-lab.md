@@ -61,7 +61,7 @@ Same as section 5, with the VM health-check flow and the VM as the object. The V
 
 ## 8. Build dependencies (honest status)
 - The flow executor (take the branch in code, Q166) is not built. It is needed by both checks. It is the first dependency.
-- Threshold verdicts in stage 3 are not built (`project/plan.md`, M3a).
+- Threshold verdicts in stage 3 are not built ([`project/plan.md`](plan.md), M3a).
 - Object lists and metric fetch need the connector (new).
 - Check two flows in the knowledge base exist (cluster and VM health check). The cluster flow has to be checked against its steps before the executor uses it.
 
