@@ -11,6 +11,7 @@ One entry point, evaluate(expression). Numbers without thousands separators. The
   pct(part, whole)                                          part as % of whole
   cpu_states(run, ready, costop, wait, vcpus=1)             esxtop state sum; 100% per vCPU
   used_pct(run, system, overlap)                            esxtop %USED = %RUN + %SYS - %OVRLP
+  nvme_wait_pct(read_mbps, latency_s, vcpus=1)              share of vCPU time a VM waits for NVMe tier pages (Little's law)
   min max abs round sum avg
 
 Every function adds a note naming the knowledge file or source that defines the rule.
@@ -23,7 +24,7 @@ BYTE = {'B': 1, 'KB': 1024, 'MB': 1024 ** 2, 'GB': 1024 ** 3, 'TB': 1024 ** 4,
         'KIB': 1024, 'MIB': 1024 ** 2, 'GIB': 1024 ** 3, 'TIB': 1024 ** 4,
         'KBD': 1e3, 'MBD': 1e6, 'GBD': 1e9, 'TBD': 1e12}
 BIT = {'b': 1 / 8, 'bit': 1 / 8, 'kb': 1e3 / 8, 'Kb': 1e3 / 8, 'Mb': 1e6 / 8, 'Gb': 1e9 / 8, 'Tb': 1e12 / 8}
-TIME = {'NS': 1e-9, 'US': 1e-6, 'µS': 1e-6, 'MS': 1e-3, 'S': 1, 'SEC': 1, 'SECONDS': 1, 'MIN': 60, 'MINUTES': 60, 'H': 3600, 'HOURS': 3600}
+TIME = {'NS': 1e-9, 'US': 1e-6, 'MS': 1e-3, 'S': 1, 'SEC': 1, 'SECONDS': 1, 'MIN': 60, 'MINUTES': 60, 'H': 3600, 'HOURS': 3600}
 FREQ = {'HZ': 1, 'KHZ': 1e3, 'MHZ': 1e6, 'GHZ': 1e9}
 SRC_STATS = 'vsphere/tools/vsphere-client/vcenter-statistics'
 
@@ -34,7 +35,7 @@ class CalcError(ValueError):
 
 def _unit(u):
     """Return (kind, factor to base, is_rate, warning). Bits vs bytes is decided by letter case: b = bit, B = byte."""
-    raw = u.strip()
+    raw = u.strip().replace('\u00b5', 'u').replace('\u03bc', 'u')  # micro sign and Greek mu: µs = us
     warn = None
     rate = False
     for suf in ('/s', '/sec', 'ps'):
@@ -64,7 +65,7 @@ class Evaluator:
         self.funcs = {
             'summation_to_percent': self.summation_to_percent, 'percent_to_summation': self.percent_to_summation,
             'convert': self.convert, 'capacity_ghz': self.capacity_ghz, 'pct': self.pct, 'cpu_states': self.cpu_states,
-            'used_pct': self.used_pct, 'min': min, 'max': max, 'abs': abs, 'round': round, 'sum': sum,
+            'used_pct': self.used_pct, 'nvme_wait_pct': self.nvme_wait_pct, 'min': min, 'max': max, 'abs': abs, 'round': round, 'sum': sum,
             'avg': lambda xs: sum(xs) / len(xs), 'sqrt': math.sqrt}
 
     def note(self, text):
@@ -115,6 +116,15 @@ class Evaluator:
     def used_pct(self, run, system, overlap):
         self.note('esxtop: %USED = %RUN + %SYS - %OVRLP. %USED also moves with CPU frequency. Source: catalog/esxtop-fields formulas.')
         return run + system - overlap
+
+    def nvme_wait_pct(self, read_mbps, latency_s, vcpus=1):
+        self.note("NVMe wait (%) = VM NVMe read bandwidth (MB/s) x 256 pages per MB x host NVMe read latency (s) / VM vCPUs x 100 "
+                  "(Little's law). It assumes one 4 KB page per fetch and that the fetch stalls the vCPU; if either fails, it "
+                  'overstates the wait. Memory Contention does not count this wait. See vsphere/object-types/cluster/cluster-performance, '
+                  'section Sub-metric formulas.')
+        if vcpus <= 0:
+            raise CalcError('nvme_wait_pct: vcpus must be above 0')
+        return read_mbps * 256 * latency_s / vcpus * 100
 
     # ---------- safe evaluation ----------
     def eval(self, node):
