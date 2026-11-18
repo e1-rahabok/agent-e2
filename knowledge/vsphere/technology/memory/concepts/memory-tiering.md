@@ -34,7 +34,7 @@
 - Effective host memory = DRAM (tier 0) + NVMe (tier 1). At the default 1:1 ratio, capacity doubles; at most 4 TB of NVMe per host.
 - The capacity constraint moves from Consumed to Active memory. Consumed can exceed DRAM by design; Active must stay within DRAM, ideally below 50% of it.
 - An NVMe device used for tiering is not available to vSAN. Count the lost vSAN capacity when sizing the cluster.
-- Do not overcommit memory on top of tiering (Broadcom). The overcommit ratio counts DRAM only.
+- Overcommit is counted against DRAM only; tiering is what makes a memory overcommit ratio above 1:1 workable. At the default 1:1 tier ratio, a host can carry up to 2x its DRAM in VM memory. Broadcom's warning not to overcommit on top of tiering is against allocation beyond DRAM + NVMe, where ballooning and swapping run on top of NVMe pages.
 - Consumed covers both tiers; once cold pages move to tier 1, consumed can exceed DRAM.
 - Unknown: whether VM memory contention (esxtop %LAT_M) counts time spent on pages in the NVMe tier. Read the NVMe tier counters (read bandwidth and latency) directly.
 - The capacity plan sizes DRAM; tiering is not part of the overcommit ratio ([`sp5-framework/capacity/overcommit`](../../../../sp5-framework/capacity/overcommit.md)). In the running stage, consumed memory above DRAM is expected on a tiered host.
@@ -59,7 +59,7 @@
   - a memory limit on a VM or resource pool reclaims whatever the host has free;
   - demand beyond DRAM + NVMe: swap stays as the last resort, for correctness, for example during evacuations at 3x-4x overcommit.
 - Broadcom does not state that compression and swap now wait until tier 1 is full. The host's total memory is tier 0 + tier 1, and new pages are allocated from tier 1 once DRAM passes 80%, so host-wide reclamation is expected only when both tiers are nearly full.
-- Do not combine memory overcommit with memory tiering: ballooning and swapping on top of NVMe pages degrade performance.
+- Do not allocate beyond DRAM + NVMe: ballooning and swapping on top of NVMe pages degrade performance. An overcommit ratio above 1:1 against DRAM, within DRAM + NVMe, is the purpose of tiering.
 - Memory reservations (not pinned memory) are served from both tiers. The vendor example, reserved VMs that together exceed DRAM, shows the split; it is not a condition for it.
 - A memory reservation is a floor against reclamation (balloon, compression, swap), not a DRAM placement lock. Once DRAM consumption passes about 80%, cold pages of a reserved tiered VM go to NVMe, whatever the total of the reservations. Only its overhead memory always sits in DRAM. To keep a VM in DRAM, turn tiering off for it and reserve all its memory (vSphere 9.1 documentation, pp. 1871, 1873, 1969).
 - vMotion of a tiered VM takes 1.5x to 2x longer: pages are fetched from NVMe first. The running VM is barely affected.
@@ -150,6 +150,7 @@ memstats -r vmtier-stats -u mb -s name:memSize:active:tier1Target:tier1Consumed
 - "A memory reservation keeps a tiered VM in DRAM" → it keeps the VM from being ballooned or swapped; its cold pages still go to NVMe, also when the reservations fit in DRAM. Turn tiering off for the VM and reserve all its memory.
 - "Disable tiering for a VM and it gets DRAM" → only with a full memory reservation; otherwise it can be swapped.
 - "Tier 1 shows 0 consumed, so tiering is broken" → by design below about 80% DRAM consumption; also 0 for Fault Tolerance and PCI passthrough VMs, which stay in DRAM.
+- "Tiering doubles memory, so the host is still at 1:1" → the overcommit ratio is against DRAM: a 1 TB DRAM host carrying 1.66 TB of VM memory runs at 1.66:1. Tiering makes that ratio workable; it does not reset it.
 - "Tiering doubles memory, so plan capacity on Consumed" → plan on Active against DRAM; Consumed may exceed DRAM.
 - "The NVMe device can also serve vSAN" → a tiering device is taken out of vSAN capacity.
 - "NVMe tiering behaves like swap" → tiering selects cold pages by age on a dedicated device; swap picks random pages.

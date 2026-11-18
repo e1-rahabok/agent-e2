@@ -25,7 +25,7 @@ flowchart TD
 3. NVMe read bandwidth (HostSystem): tier in rate, pages fetched back from NVMe. Near 0 → no: the pages on NVMe stay cold. Above 200 MB/s → watch the latency. → step 4.
 4. NVMe read latency (HostSystem): `latency.read` of the NVMe tier, in ns, statistics level 3. Below 200 µs: good. 200-400 µs: potential issues. Above 400 µs: impact expected. High latency at almost no reads is a device waking from a power-saving state: the cause, not a reason to discard it. The VMs that read then waited. → step 5.
 5. Per-VM NVMe read bandwidth (VirtualMachine): which VMs fetch from NVMe. A VM with high read bandwidth waits on NVMe whatever the host average says. → step 6.
-6. Reclamation (HostSystem, VirtualMachine): ballooned, compressed, swapped. On a tiered host, reclamation means one of: a VM excluded from tiering without a full memory reservation, a memory limit, or demand beyond DRAM + NVMe. Memory overcommit must not be combined with tiering. → step 7.
+6. Reclamation (HostSystem, VirtualMachine): ballooned, compressed, swapped. On a tiered host, reclamation means one of: a VM excluded from tiering without a full memory reservation, a memory limit, or demand beyond DRAM + NVMe. Allocation must stay within DRAM + NVMe; an overcommit ratio above 1:1 against DRAM is what tiering is for. → step 7.
 7. Configuration (VirtualMachine, HostSystem, ClusterComputeResource):
    - VMs that should not be tiered: above 32 vCPUs and 512 GB (performance study), above 64 vCPUs and 512 GB (documentation); latency-sensitive VMs. Disable tiering for them with a full memory reservation.
    - Each full reservation shrinks the DRAM left for tiered VMs: the effective DRAM:NVMe ratio falls below 1:1.
@@ -45,7 +45,7 @@ flowchart TD
 - Active memory above 50% with rising NVMe reads: at risk now; move VMs to hosts with more DRAM, or lower the DRAM:NVMe ratio.
 - NVMe reads with latency above 400 µs: yes; check the device class, wear and write load (garbage collection).
 - One VM with high NVMe reads: yes for that VM; disable tiering for it with a full reservation, or give it a host with spare DRAM.
-- Balloon, compression or swap on a tiered host: a configuration problem first (non-tiered VM without reservation, limit, overcommit).
+- Balloon, compression or swap on a tiered host: a configuration problem first (non-tiered VM without reservation, limit, allocation beyond DRAM + NVMe).
 
 ## Misconceptions
 - "Tier 1 consumed is high, so the VMs are slow" → tier 1 holds cold pages: saturation, not contention. Read active memory and NVMe reads.
