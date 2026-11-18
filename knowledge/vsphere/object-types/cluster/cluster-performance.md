@@ -36,7 +36,7 @@
 - NVMe wait: the share of vCPU time a VM waits for pages fetched from the NVMe tier, by Little's law. NVMe wait (%) = VM NVMe read bandwidth (MB/s) × 256 pages per MB × host NVMe read latency (s) ÷ VM vCPUs × 100. The VM does not care where it waits for memory, so the bands stay those of memory latency. On a host without tiering, NVMe wait is 0.
 - How the formula works (Little's law: items in flight = arrival rate × time each takes): MB/s × 256 is the fetches per second, since 1 MB holds 256 pages of 4 KB; × the read latency is the vCPUs frozen at any moment; ÷ the vCPUs is the share of the VM's vCPU time spent waiting, read like CPU Ready.
 - Example: a VM of 8 vCPUs reads 6 MB/s from NVMe at 290 µs. 6 × 256 = 1,536 fetches per second; × 0.00029 s = 0.445 vCPU frozen on average; ÷ 8 = 5.57% of its vCPU time.
-- Memory latency does not count the NVMe fetches: the memory latency counter is unaware of memory tiering (author, 2026-11-18). Adding the two counts no wait twice.
+- Memory latency does not count the NVMe fetches: the memory latency counter is unaware of memory tiering. Adding the two counts no wait twice.
 - Two assumptions remain. Until both are checked on a tiered host, NVMe wait is shown and left out of the score:
   - One 4 KB page per fetch. If ESXi brings back more than one page per fault (prefetch, or a large page), there are fewer fetches than MB/s × 256 and the formula overstates the wait.
   - Each fetch freezes one vCPU, the one that touched the page, for the whole read latency ([`vsphere/technology/memory/concepts/memory-tiering`](../../technology/memory/concepts/memory-tiering.md), section Touching a page on NVMe). If part of a fetch overlapped running time, the formula overstates the wait.

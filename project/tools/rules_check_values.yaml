@@ -98,3 +98,14 @@ avoid_repo_terms:
   '(?i)\b(model|AI) under test\b': 'candidate'
   '\bTest design\b': 'Benchmark design'
   'test-design\.md': 'benchmark/design.md'
+# Catalog metric names with a comma that the author renames at the source (author, 2026-11-18). A metric name carries no comma;
+# the unit goes in brackets at the end. Remove a name here once it is renamed; rules_check flags a stale entry.
+metric_comma_pending:
+- 'ESXi Network Transmitted Packets Dropped, virtual network'
+- 'ESXi Network Transmitted Packets Dropped, physical network'
+- 'Worst ESXi active memory, tiered hosts (% of DRAM)'
+- 'Cluster Consumption (%), 95th percentile of the last 24 hours'
+- 'Cluster Performance (%), 5th percentile of the last 24 hours (higher is better)'
+- 'Cluster Risk (%), 95th percentile of the last 24 hours'
+- 'Worst peak read/write disk latency, all VM vDisks (ms)'
+- 'Worst peak read/write disk latency, all vDisks of VMs on the host (ms)'
