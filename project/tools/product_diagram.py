@@ -95,7 +95,7 @@ box(X1, yk, W1, 'Knowledge files *.md', ['metric, concept, mechanism, flow', 'bo
 box(X2, yk, W2, '## Metadata (yaml): the map', ['same_name, internal_derive, related', 'retriever_guide: health-check,',
                                                  'troubleshooting, decision-tree', 'flows: ## Checks, in order', 'object, status, images'], 'know')
 box(X3, yk, W3 + 30, 'catalog/*.yaml', ['vcenter-counters, vcenter-api-counters', 'esxtop-fields, objects',
-                                       'thresholds-performance,', 'thresholds-capacity (planning-*),', 'thresholds-alerts'], 'know')
+                                       'thresholds-performance,', 'thresholds-capacity (planning),', 'thresholds-alerts'], 'know')
 box(X4 + 15, yk, W4 + 25, 'catalog/user-terms.yaml', ['user words to KB terms', 'and files', 'misconception note',
                                                       'premise flag, product label'], 'know')
 box(X5 + 40, yk, W5 - 10, 'glossary.md', ['preferred word per concept', 'Also called, Not to confuse with',

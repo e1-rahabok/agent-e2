@@ -18,6 +18,7 @@ A metric in VCF Operations has six parts. Keep them apart: the patterns below co
 
 - What a ratio divides by belongs in the description, not in the unit or the name. A ratio's unit is number.
 - Match a metric on its key, not its name: the name changes with the language and between releases.
+- Agent E2's own planning parameters (overcommit ratio per class, typical VM size, hypervisor overhead) are not metrics. They have no key, are never collected and never appear in VCF Operations; a parameter that shares words with a metric (CPU overcommit ratio) is still not that metric. The catalog keeps them in their own section, named parameter, never metric.
 
 ## Pattern catalogue
 
@@ -69,6 +70,7 @@ A metric in VCF Operations has six parts. Keep them apart: the patterns below co
 ## Misconceptions
 - "The unit of an overcommit ratio is vCPU per physical thread" → the unit is number; what is divided by what is the description.
 - "A metric is identified by its name" → by its key; the name is translated and can change.
+- "An Agent E2 planning parameter is a VCF Operations metric" → it is an input to the plan: no key, never collected, never shown in VCF Operations.
 - "Processor Queue Length and Current Disk Queue Length count the same thing: work waiting" → Processor Queue Length counts only threads waiting, not the running ones; Current Disk Queue Length also counts IOs being processed. A disk queue above 0 can be IOs in service, not waiting.
 - "Two tools show the same metric name, so the values match" → a name does not fix the formula: the same name can differ by object, by level inside the object, and by capping. Check which naming pattern applies (section Pattern catalogue) and read the file of each metric.
 

@@ -131,7 +131,12 @@ class CatalogTest(unittest.TestCase):
 
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
-        self.assertEqual(uses, {'decision', 'rule', 'flow'})
+        self.assertEqual(uses, {'decision', 'rule', 'flow', 'planning'})
+
+    def test_planning_parameter_is_labelled_not_a_metric(self):
+        # Agent E2 planning parameters must never read as VCF Operations metrics (author, 2026-11-18).
+        f = CAT.facts_for(['sp5-framework/capacity/class-of-service-planning'], max_rows=60)
+        self.assertIn('Planning parameter (an Agent E2 input, not a VCF Operations metric): CPU overcommit ratio', f)
         self.assertEqual(CAT.stats()['thresholds'], 40)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q162); 2 flow tests (Q195)
         self.assertEqual(CAT.stats()['symptoms'], 40)
         self.assertEqual(CAT.stats()['alerts'], 33)  # one alert per object type: ESXi, resource pool, cluster contention split; ESXi drops virtual and physical (2026-11-12)
