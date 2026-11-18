@@ -36,7 +36,7 @@
 - An NVMe device used for tiering is not available to vSAN. Count the lost vSAN capacity when sizing the cluster.
 - Overcommit is counted against DRAM only; tiering is what makes a memory overcommit ratio above 1:1 workable. At the default 1:1 tier ratio, a host can carry up to 2x its DRAM in VM memory. Broadcom's warning not to overcommit on top of tiering is against allocation beyond DRAM + NVMe, where ballooning and swapping run on top of NVMe pages.
 - Consumed covers both tiers; once cold pages move to NVMe, consumed can exceed DRAM.
-- Unknown: whether VM memory contention (esxtop %LAT_M) counts time spent on pages in the NVMe tier. Read the NVMe tier counters (read bandwidth and latency) directly.
+- VM memory contention (esxtop %LAT_M; VCF Operations Memory Contention) does not count time spent on pages in the NVMe tier: the memory latency counter is unaware of memory tiering (author, 2026-11-18). A VM can wait on NVMe while its memory contention reads near 0. Read the NVMe tier counters (read bandwidth and latency) directly, or NVMe wait ([`vsphere/object-types/cluster/cluster-performance`](../../../object-types/cluster/cluster-performance.md), section Sub-metric formulas).
 - The capacity plan sizes DRAM; tiering is not part of the overcommit ratio ([`sp5-framework/capacity/overcommit`](../../../../sp5-framework/capacity/overcommit.md)). In the running stage, consumed memory above DRAM is expected on a tiered host.
 
 ## Sizing (documentation)
@@ -156,6 +156,7 @@ memstats -r vmtier-stats -u mb -s name:memSize:active:tier1Target:tier1Consumed
 - "NVMe tiering behaves like swap" → tiering selects cold pages by age on a dedicated device; swap picks random pages.
 - "Writes do not hurt: only reads come from NVMe" → a guest write to a cold page waits for the page to come back from NVMe; only demotion writes are off the vCPU's path.
 - "Swap and compression wait until the NVMe tier is full" → not stated by Broadcom; non-tiered VMs without a full reservation and memory limits are reclaimed while tier 1 has room.
+- "VM memory contention is near 0, so the VM does not wait for memory" → on a tiered host it does not count NVMe fetches; read the VM's NVMe read bandwidth or NVMe wait.
 - "NVMe consumed means the VMs are slow" → it holds cold pages: it is saturation, memory spilled beyond DRAM, not contention. On a tiered host it replaces compression and swap as the saturation signal; the performance signals are active memory against DRAM and NVMe reads.
 - "HA admission control is green, so the VMs will restart" → before 9.1.1 it counted NVMe as if it were DRAM; restarts need DRAM.
 - "NVMe read latency of 900 µs on an idle device can be ignored: it is only a wake-up" → the VM that touched the page waited 900 µs. The wake-up is the why. What the VMs lost is reads × latency: few reads, little total wait, but never zero.
@@ -191,7 +192,6 @@ corrections: []
 review_notes:
 - 'To check: Section ''Mechanism'': that the 80% tiering point is fixed and not a setting; vSphere 9.1 documentation (p. 1869) gives around 80% and names no setting; the fixed value comes from a blog (yellow-bricks.com, Memory Tiering Considerations and frequently asked questions, 2026-07-16).'
 - 'To check: Section ''Interactions'': whether the host memory states and host-wide reclamation count NVMe as free memory; vSphere 9.1 documentation, Resource Management > Memory Reclamation (p. 1839), does not say.'
-- 'To check: Section ''Capacity management'': whether VM memory contention (%LAT_M) counts time waiting for NVMe fetches; neither the vSphere 9.1 documentation nor Performance Best Practices for vSphere 9.1 says.'
 - 'To check: Section ''Monitoring counters'': that Tier in rate (p. 2071) and NVMe read bandwidth (p. 1848) count the same fetches; compare both on a tiered 9.1 host.'
 status: draft
 ```
