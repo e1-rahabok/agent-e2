@@ -3,15 +3,13 @@
 ## Definition
 - Hyper-Threading (also called simultaneous multithreading, SMT) lets one physical core behave like two logical processors.
 - The two logical processors run threads at the same time.
-- Gain: a slight to significant increase in system performance, by keeping the processor pipeline busy.
-- Hyper-Threading does not double performance. Twice as many physical cores can roughly double performance. Hyper-Threading can provide anywhere from a slight to a significant increase.
+- Gain: a slight to significant increase in system throughput, by keeping the processor pipeline busy.
+- Hyper-Threading increase capacity (quantity) as the expense of performance (quality). 
 
 ## Enablement
 - ESX uses Hyper-Threading automatically when the hardware and BIOS support it.
-- The BIOS must support it. Check the system documentation.
-- Enable it in the system BIOS.
+- The BIOS must support it. 
 - BIOS labels vary: "Logical Processor" or "Enable Hyper-Threading".
-- Performance Best Practices for vSphere 9.1 recommends activating it for best performance.
 
 ## Logical processor numbering
 - ESX assigns adjacent CPU numbers to the logical processors of one core.
@@ -189,6 +187,7 @@ Core Utilization (ESXi)   = (75% + 100%) / 2          = 87.5%
 ![Time taken vs distance travelled for VM and ESXi CPU metrics](../images/cpu-metrics-time-taken-vs-work-done-vm-and-esxi.png)
 
 ## Misconceptions
+- "Performance Best Practices for vSphere 9.1 recommends activating it for best performance." → Read it as "for more capacity at reduced performance".
 - "Hyper-Threading doubles CPU capacity" → Hyper-Threading gives a slight to significant gain, not a doubling (Performance Best Practices for vSphere 9.1).
 - "Pin each vCPU to a logical processor for isolation" → pinning both threads of one core can cause poor performance.
 - "Run 50% means the VM got 50% of a core" → Run ignores the shared core. Used shows 40.625%.
