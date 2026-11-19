@@ -12,12 +12,12 @@ A metric in VCF Operations has six parts. Keep them apart: the patterns below co
 | Group | Where the metric belongs | Cluster Risk, Allocation |
 | Name | The text shown to the user. It is translated (internationalization), so the same metric reads differently per language | CPU Overcommit Ratio |
 | Key | What the API uses. Typically English only, and the same in every language | the key in the pack's adapter; a native example: `cpu\|usage_average` (VM CPU Usage) |
-| Unit | One of the finite set of units VCF Operations defines. Use only those; never make one up. The UI shows it in brackets after the name and can convert it on the fly (KB to GB) | number |
+| Unit | One of the finite set of units VCF Operations defines. Use only those; never make one up. The UI shows it in brackets after the name | number |
 | Value | The number | 1.66 |
 | Description | One line saying what the metric measures | The sum of the vCPUs of all running VMs divided by the usable physical threads of the cluster |
 
 - What a ratio divides by belongs in the description, not in the unit or the name. A ratio's unit is number.
-- Match a metric on its key, not its name: the name changes with the language and between releases.
+- Match a metric on its key, not its name: the name changes with the language.
 
 ## Pattern catalogue
 

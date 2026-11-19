@@ -24,6 +24,19 @@ No open question blocks release 1.0.
 
 ## Future release
 
+### Q257 · Memory tiering · NVMe consumed as saturation, and the signal that replaces compression and swap
+
+- Files: [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md), section Misconceptions; [Is memory tiering slowing the host?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host.md), section Misconceptions.
+- Search strings: "it replaces compression and swap as the saturation signal"; "NVMe holds cold pages: saturation, not contention".
+- Now: memory-tiering says NVMe consumed "holds cold pages: it is saturation, memory spilled beyond DRAM, not contention. On a tiered host it replaces compression and swap as the saturation signal; the performance signals are active memory against DRAM and NVMe reads." The decision tree says the same in one line.
+- Source: none. Found in the audit of 2026-11-19 as an inference. vSphere 9.1 documentation (p. 1847): NVMe write is cold pages moved into the NVMe tier; NVMe read is pages fetched back when they become active. No vendor text calls NVMe consumed saturation or a replacement for compression and swap.
+- Question: keep the SP5 reading?
+  - A. Keep both lines.
+  - B. Keep "NVMe consumed is saturation, not contention"; drop "it replaces compression and swap as the saturation signal".
+  - C. Remove both.
+- Recommended: B. The first half follows from the vendor text (pages on NVMe are cold until fetched, so holding them costs no wait) and from the SP5 split of contention and consumption. The second half overreaches: compression and swap still run on a tiered host (memory-tiering, section Interactions).
+- Answer:
+
 ### Q246 · Storage > Adapter Highest latency · Plain or command-weighted mean of read and write
 
 - Moved to Future release by the author, 2026-11-16. Impact: 0072 is deferred (status `deferred`), key unchanged; its theory half 0406 keeps running (A does not depend on the weighting). The three files keep their lines until this is answered.

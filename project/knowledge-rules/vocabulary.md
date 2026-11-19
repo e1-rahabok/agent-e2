@@ -7,6 +7,7 @@ When the author corrects a wording mistake, add it here. A word users also say g
 
 | Avoid | Use instead | Why |
 |---|---|---|
+| Warm-up (for NVMe reads on a tiered host) | Pages fetched back from NVMe when they become active | Warm-up means an application filling its cache on purpose. NVMe reads are ESXi fetching back pages the guest touches; neither the guest nor the application knows. Cold pages move to NVMe once DRAM consumed reaches about 80%, not because a quiet period passes. |
 | Tier 0, Tier 1 (for the memory tiers) | DRAM, NVMe | Tier-0 and Tier-1 also name NSX gateways. Keep the tier number only inside a counter or `memstats` field name (author, 2026-11-18). |
 | Highest ESXi memory consumed (the Cluster Risk row) | Highest ESXi DRAM Memory Consumed | The row divides memory consumed in DRAM and NVMe by DRAM; "memory consumed" alone hid that the base is DRAM. Metric names carry no comma; "consumed" is the key word (author, 2026-11-18). |
 | ESXi DRAM Consumed, tiered hosts (the Cluster Consumption row) | ESXi Memory Consumed in DRAM | Kept apart from the Cluster Risk row Highest ESXi DRAM Memory Consumed; no comma in a metric name (author, 2026-11-18). |

@@ -129,19 +129,6 @@ class CatalogTest(unittest.TestCase):
         r = CAT.thresholds(name='ESXi Disk Kernel Latency (KAVG)')['thresholds'][0]
         self.assertEqual((r['use'], r['step'], r['source']), ('flow', 1, 'knowledge-base'))
 
-    def test_two_reading_flow_test(self):
-        # The warm-up or sustained test of is-memory-tiering-slowing-host step 3, applied by code from its flow row.
-        q = 'esxi-pay-05, Tuesday 09:10 and 10:15: NVMe read bandwidth 380 MBps and 360 MBps; latency 290 µs and 280 µs.'
-        out = expert_agent.two_reading_tests(q)
-        self.assertEqual(len(out), 1)
-        self.assertIn('380 MBps at 09:10 and 360 MBps at 10:15, 65 minutes apart: above 200 MBps at the second reading: sustained', out[0])
-        self.assertIn('flow row flow-esxi-nvme-read-sustained', out[0])
-        warm = expert_agent.two_reading_tests('After the August weekend, 09:10 and 10:15: NVMe read bandwidth 70 MBps and 8 MBps.')
-        self.assertIn('at or below 200 MBps at the second reading: a warm-up after an idle period', warm[0])
-        close = expert_agent.two_reading_tests('09:10 and 09:30: NVMe read bandwidth 380 MBps and 360 MBps.')
-        self.assertIn('too close to tell', close[0])
-        self.assertEqual(expert_agent.two_reading_tests('NVMe read bandwidth 380 MBps.'), [])
-
     def test_nvme_wait_from_case(self):
         # NVMe wait by Little's law (cluster-performance, Sub-metric formulas): 6 MBps x 256 x 290 µs / 8 vCPUs = 5.6%.
         case = {'vcpus': 8, 'metrics': [
@@ -157,9 +144,7 @@ class CatalogTest(unittest.TestCase):
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
         self.assertEqual(uses, {'decision', 'rule', 'flow'})
-        self.assertEqual(CAT.stats()['thresholds'], 41)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q162); 3 flow tests (Q195; NVMe warm-up or sustained, 2026-11-18)
-        f = CAT.facts_for(['vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host'])
-        self.assertIn('Flow test, step 3: ESXi NVMe read bandwidth > 200 MBps with second reading, at least one hour after the first', f)
+        self.assertEqual(CAT.stats()['thresholds'], 40)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q162); 2 flow tests (Q195)
         self.assertEqual(CAT.stats()['symptoms'], 40)
         self.assertEqual(CAT.stats()['alerts'], 33)  # one alert per object type: ESXi, resource pool, cluster contention split; ESXi drops virtual and physical (2026-11-12)
         self.assertEqual(CAT.stats()['bands'], 20)  # + tiered DRAM consumed, active memory (Q179, 2026-11-12)

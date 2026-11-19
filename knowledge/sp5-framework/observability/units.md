@@ -2,7 +2,7 @@
 
 ## Units in VCF Operations
 - A metric's unit is one of the finite set VCF Operations defines; use only those, never a new one. The unit is its own part of the metric, separate from the name and the description ([`sp5-framework/observability/naming-patterns`](naming-patterns.md), section Six parts of a metric).
-- The UI shows the unit in brackets after the name and can convert it on the fly, for example KB to GB.
+- The UI shows the unit in brackets after the name.
 - A ratio or a fraction has the unit number. What it divides by goes in the description.
 
 ## CPU frequency
