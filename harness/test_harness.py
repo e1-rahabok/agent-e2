@@ -67,6 +67,28 @@ class CatalogTest(unittest.TestCase):
         self.assertIn('statistics level 1', f)
         self.assertIn('Bands:', CAT.facts_for(['vsphere/object-types/cluster/models/cluster-risk']))
 
+    def test_facts_for_named_metric_first(self):
+        # H1: the cap of 20 rows dropped the bands of the file the question was about. A row whose metric the
+        # question names comes first, whatever its kind or file.
+        ids = ['vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms', 'vsphere/object-types/vm/vm-performance',
+               'vsphere/object-types/cluster/models/cluster-risk']
+        q = 'Highest ESXi memory reservation (%): 0, 25, 25. Worst ESXi NVMe read latency (µs): 70, 230. What do the rows tell me?'
+        lines = CAT.facts_for(ids, question=q).splitlines()[1:]
+        first = ' '.join(lines[:2])
+        self.assertTrue(all(x.startswith('- Bands:') for x in lines[:2]))
+        self.assertIn('Highest ESXi memory reservation (%)', first)
+        self.assertIn('Worst ESXi NVMe read latency (µs)', first)
+        self.assertLessEqual(len(lines), 20)
+
+    def test_facts_for_file_order_without_a_named_metric(self):
+        # No metric named: rows follow the reading-set order of the files, bands and KPI levels first within a file.
+        risk, vmp = 'vsphere/object-types/cluster/models/cluster-risk', 'vsphere/object-types/vm/vm-performance'
+        lines = CAT.facts_for([risk, vmp], max_rows=1000).splitlines()[1:]
+        last_risk = max(n for n, x in enumerate(lines) if x.endswith(f'[{risk}]'))
+        first_vmp = min(n for n, x in enumerate(lines) if x.endswith(f'[{vmp}]'))
+        self.assertLess(last_risk, first_vmp)
+        self.assertTrue(lines[0].startswith('- Bands:'))
+
     def test_facts_for_kpi_levels(self):
         f = CAT.facts_for(['vsphere/object-types/vm/vm-performance'])
         self.assertIn('KPI levels', f)

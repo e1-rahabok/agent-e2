@@ -62,7 +62,7 @@ def main(folder, model, params_json=None, only=None):
         trace = _trace(out['trace'])
         computed = [line for s in trace if s['action'] == 'compute' for line in (s.get('output') or [])]
         rec['steps'][n] = {'type': out['type'], 'content': out['result'].get('content'), 'computed': computed,
-                           'files_read': out['used'], 'trace': trace}
+                           'files_read': out['used'], 'knowledge_commit': rec['knowledge_commit'], 'trace': trace}
         print(f'step {n}: {out["type"]}, {len(out["result"].get("content") or "")} characters, computed {len(computed)}')
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     json.dump(rec, open(out_path, 'w'), indent=1, ensure_ascii=False, default=str)

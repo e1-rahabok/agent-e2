@@ -306,47 +306,68 @@ class Catalog:
     def formulas(self):
         return self._q('SELECT * FROM formulas')
 
-    def facts_for(self, ids, max_rows=20):
-        """Compact catalog facts for knowledge files in Agent E2's reading set (harness/reading_plan.py)."""
+    def facts_for(self, ids, max_rows=20, question=None):
+        """Compact catalog facts for knowledge files in Agent E2's reading set (harness/reading_plan.py).
+
+        Order, before the max_rows cap (H1, project/plan.md): first the rows whose metric the question names; then by
+        file, in reading-set order (ids come in tier order, so the main files lead); within a file, bands and KPI levels
+        before thresholds, counters and alerts. Before 2026-11-19 the rows went by kind (counters first), so on a long
+        reading set the cap dropped the bands of the file the question was about."""
         if not ids:
             return ''
         marks = ','.join('?' * len(ids))
-        rows = self._q(f'SELECT * FROM counters WHERE kb IN ({marks})', tuple(ids))
-        seen, lines = set(), []
-        for r in rows:
+        rank = {i: n for n, i in enumerate(ids)}
+        q = _norm_name(question or '')
+        rows = []   # (named, file rank, kind, line)
+
+        def add(kind, kb, names, line):
+            named = bool(q) and any(len(n.split()) >= 2 and n in q for n in map(_norm_name, names) if n)
+            rows.append((0 if named else 1, rank.get(kb, len(ids)), kind, line))
+
+        for r in self._q(f'SELECT * FROM bands WHERE kb IN ({marks})', tuple(ids)):
+            grey = f"grey {r['grey']}, " if r['grey'] else ''
+            add(0, r['kb'], (r['metric'],),
+                f"- Bands: {r['metric']} ({r['grp']}): {grey}green {r['green']}, yellow {r['yellow']}, orange {r['orange']}, red {r['red']}. [{r['kb']}]")
+        for r in self._q(f'SELECT * FROM kpi WHERE src IN ({marks})', tuple(ids)):
+            worse = 'higher is worse' if r['direction'] == 'above' else 'lower is worse'
+            vals = '; '.join(f"{iv} {_ranges(r[col])}" for iv, col in (('20s', 's20'), ('5m', 'm5'), ('2s', 's2')))
+            ex = '; left out of the score while green' if r['excluded'] else ''
+            add(1, r['src'], (r['metric'],), f"- KPI levels: {r['object']} {r['metric']} ({r['grp']}), {worse}: {vals}{ex}. [{r['src']}]")
+        for r in self._q(f'SELECT * FROM thresholds WHERE kb IN ({marks})', tuple(ids)):
+            hi = f"-{r['value_high']:g}" if r['value_high'] is not None else ''
+            cond = f" with {r['condition']}" if r['condition'] else ''
+            iv = f" ({r['interval']})" if r['interval'] else ''
+            add(2, r['kb'], (r['metric'],),
+                f"- {_use_label(r)}: {r['metric']}{iv} {r['operator']} {r['value']:g}{hi} {r['unit'] or ''}{cond}: {r['meaning']} "
+                f"(source: {r['source']}) [{r['kb']}]")
+        seen = set()
+        for r in self._q(f'SELECT * FROM counters WHERE kb IN ({marks})', tuple(ids)):
             k = (r['counter'], r['object'], r['unit'], r['rollup'], r['level'])
             if k in seen:
                 continue
             seen.add(k)
             mm = f", min/max at level {r['minmax_level']}" if r['minmax_level'] else ''
-            lines.append(f"- {r['object']} {r['counter']} ({r['label']}): {r['unit']}, {r['stat_type']}, {r['rollup']}, "
-                         f"statistics level {r['level']}{mm}. [{r['kb']}]")
-        for r in self._q(f'SELECT * FROM thresholds WHERE kb IN ({marks})', tuple(ids)):
-            hi = f"-{r['value_high']:g}" if r['value_high'] is not None else ''
-            cond = f" with {r['condition']}" if r['condition'] else ''
-            iv = f" ({r['interval']})" if r['interval'] else ''
-            lines.append(f"- {_use_label(r)}: {r['metric']}{iv} {r['operator']} {r['value']:g}{hi} {r['unit'] or ''}{cond}: {r['meaning']} "
-                         f"(source: {r['source']}) [{r['kb']}]")
+            add(3, r['kb'], (r['label'], r['counter']), f"- {r['object']} {r['counter']} ({r['label']}): {r['unit']}, {r['stat_type']}, {r['rollup']}, "
+                f"statistics level {r['level']}{mm}. [{r['kb']}]")
         # An alert comes with its object type's alert file only. A symptom's kb is the metric file: reading a metric
         # does not pull every alert that tests it (the catalog lookup finds those by metric name).
         for r in self._q(f'SELECT * FROM alerts WHERE kb IN ({marks})', tuple(ids)):
             a = _alert(r)
-            lines.append(f"- Alert, {a['criticality']}: {a['name']} ({a['object']}), {a['rule']}; {a['wait']}. [{a['kb']}]")
-        for r in self._q(f'SELECT * FROM kpi WHERE src IN ({marks})', tuple(ids)):
-            worse = 'higher is worse' if r['direction'] == 'above' else 'lower is worse'
-            vals = '; '.join(f"{iv} {_ranges(r[col])}" for iv, col in (('20s', 's20'), ('5m', 'm5'), ('2s', 's2')))
-            ex = '; left out of the score while green' if r['excluded'] else ''
-            lines.append(f"- KPI levels: {r['object']} {r['metric']} ({r['grp']}), {worse}: {vals}{ex}. [{r['src']}]")
-        for r in self._q(f'SELECT * FROM bands WHERE kb IN ({marks})', tuple(ids)):
-            grey = f"grey {r['grey']}, " if r['grey'] else ''
-            lines.append(f"- Bands: {r['metric']} ({r['grp']}): {grey}green {r['green']}, yellow {r['yellow']}, orange {r['orange']}, red {r['red']}. [{r['kb']}]")
-        if not lines:
+            add(4, a['kb'], (a['name'],), f"- Alert, {a['criticality']}: {a['name']} ({a['object']}), {a['rule']}; {a['wait']}. [{a['kb']}]")
+        if not rows:
             return ''
-        return 'Catalog facts (exact):\n' + '\n'.join(lines[:max_rows])
+        rows.sort(key=lambda x: x[:3])   # stable: the database order holds within a kind
+        return 'Catalog facts (exact):\n' + '\n'.join(r[3] for r in rows[:max_rows])
 
     def stats(self):
         return {t: self._q(f'SELECT COUNT(*) AS n FROM {t}')[0]['n']
                 for t in ('counters', 'api_counters', 'esxtop', 'thresholds', 'symptoms', 'alerts', 'bands', 'kpi', 'metrics', 'objects', 'relations')}
+
+
+def _norm_name(s):
+    """Lower case, a trailing unit in brackets dropped, spaces collapsed: a metric name as a question writes it."""
+    s = re.sub(r'\s*\([^()]*\)\s*$', '', str(s or '').strip())
+    return re.sub(r'\s+', ' ', s).lower()
 
 
 def _esx_key(s):

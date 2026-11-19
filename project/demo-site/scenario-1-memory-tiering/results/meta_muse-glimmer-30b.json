@@ -330,7 +330,8 @@
      "latency": 5.62,
      "provider": "togetherai"
     }
-   ]
+   ],
+   "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d"
   },
   "2": {
    "type": "answer",
@@ -653,7 +654,8 @@
      "latency": 14.78,
      "provider": "togetherai"
     }
-   ]
+   ],
+   "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d"
   },
   "3": {
    "type": "answer",
@@ -999,7 +1001,8 @@
      "latency": 8.93,
      "provider": "togetherai"
     }
-   ]
+   ],
+   "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d"
   },
   "4": {
    "type": "answer",
@@ -1240,7 +1243,8 @@
      "latency": 11.43,
      "provider": "togetherai"
     }
-   ]
+   ],
+   "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d"
   },
   "5": {
    "type": "answer",
@@ -1460,7 +1464,8 @@
      "latency": 11.34,
      "provider": "togetherai"
     }
-   ]
+   ],
+   "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d"
   }
  }
 }
