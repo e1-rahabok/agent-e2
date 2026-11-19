@@ -292,7 +292,7 @@ def build(folder):
     asks, left, chat, finds = {}, [], [], []
 
     inc = sc['incident']
-    left.append(f'<section data-view="0" data-at="-1"><div class="panel l1"><div class="h">Ticket worklog · L1 escalation note</div>'
+    left.append(f'<section data-view="0" data-at="-1"><div class="panel l1"><div class="h">Ticket worklog · L1 note</div>'
                 f'{markdown(sc["l1_note"])}</div><div class="panel"><p class="note">Cluster {esc(sc["cluster"])}: {esc(sc["cluster_meta"])}</p>'
                 f'<p>{esc(sc["start"])}</p></div></section>')
     chat.append(f'<div class="sys" data-upto="0">{esc(sc["incident"]["id"])} loaded. Ask Agent E2: it reads VCF Operations and vCenter for you.</div>')
@@ -357,7 +357,7 @@ def build(folder):
 <div class="tabs" role="tablist"><button aria-selected="true" data-for="reactive">Reactive: incidents</button><button aria-selected="false" data-for="proactive">Proactive: health</button></div>
 <span class="who">{esc(sc['incident']['user'])}</span></header>
 <div class="inc"><span class="id">{esc(sc['incident']['id'])} · {esc(sc['incident']['priority'])}</span><b>{esc(sc['incident']['title'])}</b>
-<span>{esc(sc['incident']['summary'])}</span><span class="m">{esc(sc['incident']['escalated'])} · now {esc(sc['incident']['now'])}</span></div>
+<span>{esc(sc['incident']['summary'])}</span><span class="m">{esc(sc['incident']['escalated'])} · {esc(sc['incident']['now'])}</span></div>
 {about}
 <div class="wrap"><main><div id="reactive">{''.join(left)}<div class="panel find"><div class="h">Findings pinned by the specialist</div><ol style="list-style:none;margin:0;padding:0">{''.join(finds)}</ol></div></div>
 <div id="proactive" hidden>{proactive}</div></main>
