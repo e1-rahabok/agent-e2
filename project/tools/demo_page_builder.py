@@ -1,10 +1,10 @@
 """Build the page of one demo scenario: project/demo-site/<scenario>/index.html, one self-contained file.
 
 The page looks like the L2 specialist's workspace: the incident on top, the evidence of the current object on the left,
-Agent E2 on the right, a stepper at the bottom. Each step replays one narrow question and Agent E2's recorded answer.
+Agent E2 on the right, a stepper at the bottom. Each step replays one narrow question, the readings Agent E2 fetched, and its recorded answer.
 Reads from the scenario folder:
   scenario.yaml          the incident, the evidence shown at each step, the specialist's pinned findings, the end screen;
-  steps/step-N.txt       what the specialist sends: the typed question, a blank line, the readings the screen attaches;
+  steps/step-N.txt       the specialist's question, a blank line, the readings Agent E2 reads from VCF Operations;
   results/<model>.json   Agent E2's answers, written by project/tools/demo_scenario_executor.py.
 The answers and the computed facts are shown as recorded; nothing in them is edited.
 
@@ -61,7 +61,7 @@ border:1px solid var(--line);border-radius:10px}
 .chat{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:12px}
 .msg{border-radius:10px;padding:10px 12px;font-size:13px}.you{background:#0c2a3d;border:1px solid #155e75;align-self:flex-end;max-width:92%}
 .e2{background:var(--panel2);border:1px solid var(--line)}.e2 .who2{font:600 11px var(--mono);color:var(--accent);margin-bottom:4px}
-.e2 p{margin:5px 0}.l1 p{margin:6px 0}.l1 ul{margin:4px 0 8px 18px;padding:0}.l1 h4{margin:12px 0 4px;font-size:13px;color:#cbd5e1}.e2 ul,.e2 ol{margin:5px 0 5px 18px;padding:0}.e2 h4{margin:10px 0 4px;font-size:13px;color:#cbd5e1}
+.e2 p{margin:5px 0}.l1 p{margin:6px 0}.rc{border-color:#0e7490}.rc p{margin:6px 0}.rc ul{margin:4px 0 8px 18px;padding:0}.rc h4{margin:10px 0 4px;font-size:13px;color:#cbd5e1}.l1 ul{margin:4px 0 8px 18px;padding:0}.l1 h4{margin:12px 0 4px;font-size:13px;color:#cbd5e1}.e2 ul,.e2 ol{margin:5px 0 5px 18px;padding:0}.e2 h4{margin:10px 0 4px;font-size:13px;color:#cbd5e1}
 .att summary{cursor:pointer;color:#7dd3fc;font-size:12px;margin-top:6px}.att pre{white-space:pre-wrap;font:11px var(--mono);color:var(--muted);margin:6px 0 0}
 .calc{border:1px solid #0e7490;background:#071d2a;border-radius:8px;padding:8px 10px;margin:6px 0 8px}.calc .t{font:600 11px var(--mono);color:#67e8f9}
 .calc .x{font:12px var(--mono);color:#e0f2fe;margin-top:3px}.calc .w{font-size:11px;color:var(--muted);margin-top:3px}
@@ -90,7 +90,7 @@ document.getElementById('prev').disabled=cur===0;document.getElementById('next')
 var a=asks[cur]||'';document.getElementById('in').textContent=a||'Replay ended';document.getElementById('send').disabled=!a;
 var c=document.getElementById('chat');c.scrollTop=c.scrollHeight;
 var m=document.querySelectorAll('.chat [data-upto="'+cur+'"]');if(m.length&&window.innerWidth>900){c.scrollTop=m[0].offsetTop-c.offsetTop-8;}
-document.getElementById('send').textContent=(cur===last-1)?'Open':'Ask about selection';}
+document.getElementById('send').textContent=(cur===last-1)?'Open':'Ask';}
 document.getElementById('prev').onclick=function(){show(cur-1);};document.getElementById('next').onclick=function(){show(cur+1);};
 document.getElementById('send').onclick=function(){show(cur+1);};
 document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')show(cur+1);if(e.key==='ArrowLeft')show(cur-1);});
@@ -295,7 +295,7 @@ def build(folder):
     left.append(f'<section data-view="0" data-at="-1"><div class="panel l1"><div class="h">Ticket worklog · L1 escalation note</div>'
                 f'{markdown(sc["l1_note"])}</div><div class="panel"><p class="note">Cluster {esc(sc["cluster"])}: {esc(sc["cluster_meta"])}</p>'
                 f'<p>{esc(sc["start"])}</p></div></section>')
-    chat.append(f'<div class="sys" data-upto="0">{esc(sc["incident"]["id"])} loaded. Ask about any selection.</div>')
+    chat.append(f'<div class="sys" data-upto="0">{esc(sc["incident"]["id"])} loaded. Ask Agent E2: it reads VCF Operations and vCenter for you.</div>')
     for s in steps:
         n = s['n']
         text = open(os.path.join(folder, 'steps', f'step-{n}.txt')).read().strip()
@@ -317,7 +317,7 @@ def build(folder):
         left.append(f'<section data-view="{n}" data-at="{crumbs.index(o["name"])}">{panel}</section>')
         r = (rec.get('steps') or {}).get(str(n))
         nread = sum(1 for x in attached.splitlines()[1:] if x.strip())
-        chat.append(f'<div class="msg you" data-upto="{n}">{esc(ask)}<details class="att"><summary>📎 Readings attached ({nread} lines)</summary>'
+        chat.append(f'<div class="msg you" data-upto="{n}">{esc(ask)}<details class="att"><summary>⇣ Agent E2 read {nread} lines from VCF Operations</summary>'
                     f'<pre>{esc(attached)}</pre></details></div>')
         if r:
             calls = [t for t in r.get('trace', []) if t.get('prompt_tokens')]
@@ -342,7 +342,9 @@ def build(folder):
     e = sc['end']
     left.append(f'<section data-view="{last}" data-at="2"><div class="panel"><div class="h">{esc(e["title"])}</div>'
                 + table(['Change', 'When', 'Team', 'What', 'Matches'], [[c['id'], c['when'], c['team'], c['what'], c['match']] for c in e['rows']])
-                + f'<p>{esc(e["note"])}</p><p><b>{esc(e["next"])}</b></p></div></section>')
+                + f'<p>{esc(e["note"])}</p></div>'
+                + f'<div class="panel rc"><div class="h">Root cause, written by the specialist</div>{markdown(e["root_cause"])}'
+                + f'<p><b>{esc(e["next"])}</b></p></div></section>')
     chat.append(f'<div class="sys" data-upto="{last}">Change calendar: CHG-1 and CHG-2 fall at the times Agent E2 flagged.</div>')
     pro = sc['proactive']
     proactive = (f'<div class="panel"><div class="h">Daily health check · {esc(sc["cluster"])}</div><p class="note">{esc(pro["intro"])}</p>'
@@ -361,7 +363,7 @@ def build(folder):
 <div id="proactive" hidden>{proactive}</div></main>
 <aside><div class="ah"><b>Agent E2</b> <span class="pill">knowledge base · local model</span><div class="m">Context: {esc(sc['incident']['id'])} · {esc(sc['cluster'])}</div></div>
 <div class="chat" id="chat">{''.join(chat)}</div>
-<div class="ask"><div class="in" id="in"></div><button id="send">Ask about selection</button></div></aside></div>
+<div class="ask"><div class="in" id="in"></div><button id="send">Ask</button></div></aside></div>
 <div class="step"><button id="prev">◀</button><span class="lab" id="lab"></span><button id="next">▶</button><span class="note">← → keys</span><span class="rec">{rec_line}</span></div>
 <script>{JS.replace('%LAST%', str(last)).replace('%ASKS%', json.dumps(asks))}</script></body></html>"""
     out = os.path.join(folder, 'index.html')

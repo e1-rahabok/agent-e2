@@ -1,6 +1,6 @@
 Cluster Risk went orange at 09:20 today, and some of its rows turned yellow earlier. What does each row tell me? I was not part of any change last week.
 
-Attached from VCF Operations (selected by the user):
+Agent E2 read from VCF Operations:
 Cluster CL-SG-PRD-PAY, Cluster Risk and its rows (vCommunity management pack), worst host, business hours, on Monday, Wednesday and Friday last week and today (Tuesday):
 - Cluster Risk (%): 22.5, 25.5, 31.1, 66.0. Alert: orange, started today at 09:20; no alert before today.
 - Highest ESXi Memory Reservation (%): 0, 26, 26, 26. Yellow symptom started last Tuesday at 23:25.
