@@ -5,7 +5,7 @@ about: |
   - Agent E2 runs on site, connected to VCF Operations and vCenter. The L2 specialist asks one narrow question per step; Agent E2 reads the data it needs, finds the facts and explains them. The specialist connects the steps, writes the root cause and proposes the fix.
   - The VCF Operations connector is not built yet: in this recording the readings stand for what it would fetch, and the pipeline gets them as text. The vCommunity management pack is the enhanced one: VM Performance and Cluster Performance score NVMe wait.
   - A boxed number comes from Agent E2's code (stage 3), not from the model.
-  - One run per question, recorded on 2026-11-19, kept as it came, flaws included.
+  - One run per question, recorded on 2026-11-19, kept as it came, flaws included. Step 5 was run a second time, once, after a harness fix that brings the Cluster Risk bands to the model; the first answer had stated wrong bands.
 incident: {id: PRB-20931, priority: RCA, title: 'Payments API slow on Tuesday morning (INC-48213, resolved)', summary: 'The problem has disappeared. Business asks why it happened and how to avoid it.', escalated: 'assigned to L2 vSphere for RCA', now: 'L1 does not perform RCA', user: 'L2 vSphere specialist'}
 l1_note: |
   INC-48213 opened at 09:12 by the service desk; escalated to L2 vSphere at 10:05. The problem has disappeared. L1 does not perform RCA, so this problem record goes to L2 vSphere.
@@ -94,7 +94,7 @@ steps:
     - ['Memory Capacity Remaining (%)', [41, green], [38, green], [36, green], [36, green], [36, green], 'green throughout']
     note: 'Grey: a row left out of the score while green. Memory Capacity Remaining is a VCF Operations capacity metric, not a Cluster Risk row.'
   finding: 'Cluster Risk rows went yellow 9 days ago and moved again on Saturday; Capacity Remaining stayed green because it counts NVMe as DRAM.'
-  follow: {quote: 'workload change during the 3-day public holiday', note: 'the specialist asks the teams what ran at those times.'}
+  follow: {note: 'the specialist asks the teams what ran at those times.'}
 end:
   title: 'Timeline, last 11 days, assembled by the specialist'
   ask: 'Ask the teams what ran at those times'

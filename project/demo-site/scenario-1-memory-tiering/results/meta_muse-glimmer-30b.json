@@ -5,7 +5,7 @@
    "effort": "low"
   }
  },
- "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d",
+ "knowledge_commit": "84e5531a6999ff42a5e199881a6477812d5afaf8",
  "steps": {
   "1": {
    "type": "answer",
@@ -330,7 +330,8 @@
      "latency": 5.62,
      "provider": "togetherai"
     }
-   ]
+   ],
+   "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d"
   },
   "2": {
    "type": "answer",
@@ -653,7 +654,8 @@
      "latency": 14.78,
      "provider": "togetherai"
     }
-   ]
+   ],
+   "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d"
   },
   "3": {
    "type": "answer",
@@ -999,7 +1001,8 @@
      "latency": 8.93,
      "provider": "togetherai"
     }
-   ]
+   ],
+   "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d"
   },
   "4": {
    "type": "answer",
@@ -1240,11 +1243,12 @@
      "latency": 11.43,
      "provider": "togetherai"
     }
-   ]
+   ],
+   "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d"
   },
   "5": {
    "type": "answer",
-   "content": "Conclusion: the Cluster Risk memory rows show rising DRAM pressure and tiering stress over the 11 days, while Memory Capacity Remaining stayed green because VCF Operations counts the NVMe tier as supply.\n\nMechanism and reason\n* Highest ESXi memory reservation 0→25 % yellow from 9 days ago: the worst host now has ~25 % of DRAM reserved. Admission control counts reservations, not usage, and Cluster Risk scores reservation against DRAM.\n* Highest ESXi DRAM Memory Consumed 76→84→95→102→101 %: Cluster Risk DRAM Memory Consumed is memory consumed in DRAM+NVMe as % of host DRAM. It is allowed to pass 100 % by design on tiered hosts. Yellow >80 %, orange >100 %, red >100 %. The row went orange Saturday 12:05 and red Saturday 17:40 and stays red. Consumed is a capacity/saturation signal, not performance.\n* Worst ESXi active memory, tiered hosts 31→33→53→51→44 % of DRAM: active memory is the capacity limit on a tiered host. Green ≤50 %, yellow 50-75 %. It entered yellow Saturday 11:20- Sunday 07:30, peak 53 %. Active >50 % means pages are being forced out of DRAM to NVMe; >75 % predicts significant loss.\n* Worst ESXi NVMe read latency µs: no reads →70→60→80→230. Cluster Risk thresholds are 100/200/400/800 µs. 230 µs is in the 200-400 µs potential-issues band. A fetch costs ~100-200 µs per page; latency spikes on an idle device can be wake-up, but the VM that touched the page still waited.\n* Memory Capacity Remaining 41→38→36 % green throughout is misleading. On a memory-tiered host VCF Operations includes the NVMe tier in Total Memory Capacity, so Capacity Remaining treats NVMe as DRAM and overstates supply. The correct capacity signal is active memory against DRAM.\n\nWhat to check next\nPer-VM memory reservation and ballooning, host-level active vs consumed breakdown over time, NVMe tier hit rate and write latency, VCF Operations Cluster Risk threshold definitions for yellow/orange/red, and workload change during the 3-day public holiday.\n\nNot settled by the knowledge base: exact per-VM ballooning/compression data and the holiday workload delta for this cluster.",
+   "content": "Cluster Risk is rising for memory, not a capacity shortage yet. Memory Capacity Remaining is green because VCF Operations counts the NVMe tier in Total Memory Capacity, so on a 1:1 tiered host supply is overstated. Capacity Remaining is a 3-day projection against usable capacity, not a risk indicator.\n\n* Highest ESXi memory reservation %: 0 → 25. Yellow 10-40. Reservation became non-zero 9 days ago, so a host now has ≥10% of DRAM reserved.\n* Highest ESXi DRAM Memory Consumed %: 76 → 84 → 95 → 102 → 101. Utilization bands: yellow 80-90, orange 90-95, red 95-100. Consumed is memory consumed in DRAM+NVMe as % of DRAM; >100% is by design on tiered hosts. Red from Sat 17:40 means the worst host is carrying >1.0× DRAM in VMs.\n* Worst ESXi active memory, tiered hosts % of DRAM: 31 → 33 → 53 → 51 → 44. Saturation bands: green 0-50, yellow 50-62.5. Yellow Sat 11:20 to Sun 07:30. Active is the capacity limit on a tiered host; 53% is the warning zone, >75% is expected loss.\n* Worst ESXi NVMe read latency µs: no reads → 70 → 60 → 80 → 230. Saturation bands: green 0-100, yellow 100-200, orange 200-400. Today 230 µs is yellow; fetches are now waiting on NVMe.\n\nTogether: tiering started, DRAM consumed passed ~80% and pages spilled to NVMe, active memory rose into yellow during the holiday load and NVMe latency is now degrading. Performance can still be green because Cluster Risk measures potential, and VM memory contention does not count NVMe waits.\n\nCheck next: per-VM NVMe read bandwidth, Active memory per host vs DRAM, and NVMe read latency trend; do not rely on Memory Capacity Remaining on tiered clusters.",
    "computed": [],
    "files_read": [
     "vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms",
@@ -1291,9 +1295,9 @@
     "sp5-framework/concepts/health-check",
     "sp5-framework/capacity/capacity-management",
     "vsphere/technology/cpu/metrics/host/imbalance",
-    "vsphere/object-types/cluster/concepts/cluster-operations",
-    "vsphere/technology/cpu/concepts/cpu-measurement-levels"
+    "vsphere/object-types/cluster/concepts/cluster-operations"
    ],
+   "knowledge_commit": "84e5531a6999ff42a5e199881a6477812d5afaf8",
    "trace": [
     {
      "step": 1,
@@ -1309,60 +1313,60 @@
        {
         "name": "Highest ESXi memory reservation",
         "object": "ESXi host",
-        "value": 25,
+        "value": null,
         "unit": "%",
-        "interval": "past 11 days",
+        "interval": "5 times over last 11 days",
         "tool": "VCF Operations"
        },
        {
         "name": "Highest ESXi DRAM Memory Consumed",
         "object": "ESXi host",
-        "value": 101,
+        "value": null,
         "unit": "%",
-        "interval": "past 11 days",
+        "interval": "5 times over last 11 days",
         "tool": "VCF Operations"
        },
        {
         "name": "Worst ESXi active memory, tiered hosts",
         "object": "ESXi host",
-        "value": 44,
+        "value": null,
         "unit": "% of DRAM",
-        "interval": "past 11 days",
+        "interval": "5 times over last 11 days",
         "tool": "VCF Operations"
        },
        {
         "name": "Worst ESXi NVMe read latency",
         "object": "ESXi host",
-        "value": 230,
+        "value": null,
         "unit": "µs",
-        "interval": "past 11 days",
+        "interval": "5 times over last 11 days",
         "tool": "VCF Operations"
        },
        {
         "name": "Memory Capacity Remaining",
         "object": "cluster",
-        "value": 36,
+        "value": null,
         "unit": "%",
-        "interval": "past 11 days",
+        "interval": "5 times over last 11 days",
         "tool": "VCF Operations"
        }
       ],
       "symptom": "team saw no performance problem and Memory Capacity Remaining stayed green, so nobody acted",
-      "premise": "Memory Capacity Remaining staying green means no memory problem requiring action",
+      "premise": "Memory Capacity Remaining staying green means no memory risk/action needed",
       "claims": [
-       "What do the Cluster Risk rows tell about memory pressure and tiering over the last 11 days"
+       "What the Cluster Risk rows indicate about memory pressure and tiering behavior over the 11 days",
+       "Why Memory Capacity Remaining can stay green while other risk rows degrade"
       ],
       "missing": [
-       "per-VM memory reservation and ballooning data",
-       "host-level active memory vs consumed breakdown over time",
-       "NVMe tier hit rate and write latency",
-       "VCF Operations Cluster Risk threshold definitions for yellow/orange/red",
-       "workload change during 3-day public holiday"
+       "object",
+       "interval",
+       "vCPU count",
+       "version"
       ]
      },
      "prompt_tokens": 680,
-     "completion_tokens": 885,
-     "latency": 9.6,
+     "completion_tokens": 788,
+     "latency": 9.31,
      "provider": "togetherai"
     },
     {
@@ -1424,8 +1428,7 @@
        "sp5-framework/concepts/health-check",
        "sp5-framework/capacity/capacity-management",
        "vsphere/technology/cpu/metrics/host/imbalance",
-       "vsphere/object-types/cluster/concepts/cluster-operations",
-       "vsphere/technology/cpu/concepts/cpu-measurement-levels"
+       "vsphere/object-types/cluster/concepts/cluster-operations"
       ]
      },
      "prompt_tokens": null,
@@ -1454,10 +1457,10 @@
     {
      "step": 5,
      "action": "answer",
-     "output": "Conclusion: the Cluster Risk memory rows show rising DRAM pressure and tiering stress over the 11 days, while Memory Capacity Remaining stayed green because VCF Operations counts the NVMe tier as supply.\n\nMechanism and reason\n* Highest ESXi memory reservation 0→25 % yellow from 9 days ago: the worst host now has ~25 % of DRAM reserved. Admission control counts reservations, not usage, and Cluster ",
-     "prompt_tokens": 34126,
-     "completion_tokens": 925,
-     "latency": 11.34,
+     "output": "Cluster Risk is rising for memory, not a capacity shortage yet. Memory Capacity Remaining is green because VCF Operations counts the NVMe tier in Total Memory Capacity, so on a 1:1 tiered host supply is overstated. Capacity Remaining is a 3-day projection against usable capacity, not a risk indicator.\n\n* Highest ESXi memory reservation %: 0 → 25. Yellow 10-40. Reservation became non-zero 9 days ag",
+     "prompt_tokens": 34036,
+     "completion_tokens": 985,
+     "latency": 13.29,
      "provider": "togetherai"
     }
    ]

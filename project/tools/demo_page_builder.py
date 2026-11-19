@@ -351,7 +351,8 @@ def build(folder):
     proactive = (f'<div class="panel"><div class="h">Daily health check · {esc(sc["cluster"])}</div><p class="note">{esc(pro["intro"])}</p>'
                  + table(['Object', 'Symptom', 'Started', 'Status'], [[x['object'], x['symptom'], x['started'], x['status']] for x in pro['rows']]) + '</div>')
     about = '<details class="about"><summary>About this demo</summary>' + markdown(sc['about']) + '</details>'
-    rec_line = (f'Recorded run · {esc(run["label"])} ({esc(run["params"])}) · knowledge {esc((rec.get("knowledge_commit") or "")[:7])}')
+    shas = list(dict.fromkeys((st.get('knowledge_commit') or rec.get('knowledge_commit') or '')[:7] for st in (rec.get('steps') or {}).values()))
+    rec_line = (f'Recorded run · {esc(run["label"])} ({esc(run["params"])}) · knowledge {esc(", ".join(shas) or (rec.get("knowledge_commit") or "")[:7])}')
     page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(sc['short_title'])}</title><style>{CSS}</style></head><body>
 <header><span class="brand">VCF Operations</span><span class="pill">vSphere specialist workspace</span>

@@ -252,7 +252,7 @@ def reading_set(retriever, question, cfg, budget=None, case=None):
     if notes:
         parts.append(notes)
         budget -= _tok(notes)
-    facts = catalog_database.get(retriever.docs).facts_for(ids) if cfg.get('catalog_facts', True) else ''
+    facts = catalog_database.get(retriever.docs).facts_for(ids, question=question) if cfg.get('catalog_facts', True) else ''
     if facts:
         parts.append(facts)
         budget -= _tok(facts)
