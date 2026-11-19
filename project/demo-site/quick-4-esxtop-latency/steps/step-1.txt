@@ -1,0 +1,1 @@
+esxtop disk device panel on host esx-04, one LUN: GAVG/cmd 5.4 ms, KAVG/cmd 4.6 ms, QAVG/cmd 4.5 ms, DAVG/cmd 0.8 ms. The storage team says the array is fine. One colleague adds KAVG and QAVG and says the host adds 9 ms. Another says every value is below 10 ms, so storage is healthy. Where does the time go, and is the array the problem?

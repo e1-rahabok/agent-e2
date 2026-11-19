@@ -6,7 +6,8 @@ not built yet: the readings stand for what it would fetch, and the pipeline gets
 carry an earlier answer into the next one. The answers, with the exact facts computed by code (stage 3), the files read,
 the trace and the knowledge base commit, go to <folder>/results/<model>.json; a rerun of some steps keeps the others.
 
-Usage: python3 project/tools/demo_scenario_executor.py <folder> <model> [--params '{"reasoning": {"effort": "low"}}'] [--steps 1,3]
+Usage: python3 project/tools/demo_scenario_executor.py <folder> <model> [--params '{"reasoning": {"effort": "low"}}'] [--steps 1,3] [--label run2]
+--label writes results/<model>__<label>.json instead, so the gate runs of a quick-answer demo do not overwrite each other.
 --params replaces the model's request settings (runner_config model_params), as a benchmark run passes --params.
 Needs AI_GATEWAY_API_KEY (the benchmark gateway). Not a benchmark run: a demo is not scored.
 """
@@ -38,7 +39,7 @@ def step_files(folder):
     return sorted(files, key=lambda p: int(re.search(r'step-(\d+)\.txt$', p).group(1)))
 
 
-def main(folder, model, params_json=None, only=None):
+def main(folder, model, params_json=None, only=None, label=None):
     cfg = yaml.safe_load(open(os.path.join(ROOT, 'benchmark', 'runner', 'runner_config.yaml')))
     params = {model: json.loads(params_json) if params_json else (((cfg.get('model_params') or {}).get(model) or [{}])[0] or {})}
     sampling = {model: (cfg.get('sampling') or {}).get(model, {'temperature': cfg.get('temperature')})}
@@ -49,7 +50,7 @@ def main(folder, model, params_json=None, only=None):
     except LLMError as e:
         print(f'Embeddings unavailable ({e}); BM25 only.')
         retriever = Retriever(docs, chunks, expand=cfg.get('query_expansion', False))
-    out_path = os.path.join(folder, 'results', model.replace('/', '_') + '.json')
+    out_path = os.path.join(folder, 'results', model.replace('/', '_') + (f'__{label}' if label else '') + '.json')
     rec = json.load(open(out_path)) if os.path.exists(out_path) else {}
     rec.update({'model': model, 'model_params': params[model], 'knowledge_commit': knowledge_loader.git_sha()})
     rec.setdefault('steps', {})
@@ -75,5 +76,6 @@ if __name__ == '__main__':
     ap.add_argument('model')
     ap.add_argument('--params')
     ap.add_argument('--steps', help='comma-separated step numbers; default every step')
+    ap.add_argument('--label', help='a run label: results/<model>__<label>.json')
     a = ap.parse_args()
-    main(a.folder, a.model, a.params, a.steps.split(',') if a.steps else None)
+    main(a.folder, a.model, a.params, a.steps.split(',') if a.steps else None, a.label)

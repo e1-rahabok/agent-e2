@@ -1,0 +1,36 @@
+title: 'Balloon is 0, yet memory is swapped and compressed. Is a counter wrong?'
+short_title: Balloon and Swap Demo
+user: L2 vSphere specialist
+context: 'Quick answer · host esx-21'
+about: |
+  - One question an L2 specialist asks, and the recorded answer of the Agent E2 pipeline (a local model reading the knowledge base), unedited. The host and its readings are a scenario.
+  - The specialist types the readings into the question; no connector is needed.
+  - Gate before this page was built: the same question was run 3 times; every run had to carry the answer points written before the run and none of the claims the question carries. All 3 runs passed; run 1 is shown, flaws included.
+object: {kind: ESXi host, name: esx-21, meta: '768 GB · no memory tiering · vCenter, past day'}
+tiles:
+- {label: 'Memory State', value: High, band: green, note: 'every sample'}
+- {label: 'Balloon', unit: GB, value: 0, band: green, note: 'every sample'}
+- {label: 'Swap consumed', unit: GB, value: 3.1, band: grey, note: 'flat'}
+- {label: 'Compressed', unit: GB, value: 1.2, band: grey, note: 'flat'}
+- {label: 'Swap in, swap out rates', unit: KBps, value: 0, band: green, note: 'every sample'}
+- {label: 'Compression, decompression rates', unit: KBps, value: 0, band: green, note: 'every sample'}
+claims:
+- 'Ballooning comes before swapping, so a counter must be wrong.'
+- 'The host needs VMs moved off it.'
+knowledge:
+- {id: vsphere/technology/memory/concepts/ballooning, what: 'Balloon can be 0 while Compressed or Swapped are above 0.'}
+- {id: vsphere/technology/memory/concepts/swap-and-compression, what: 'Compressed and swapped data stays out until the guest asks for it.'}
+- {id: vsphere/technology/memory/concepts/host-memory-states, what: 'Ballooning starts at the Soft state; High means no reclamation.'}
+twin: {title: 'Balloon 0 while Swapped and Compressed are not 0', url: 'https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-010-balloon-0-while-swapped-and-compressed-are-not-0.md', models: [Muse Glimmer 30B, Gemma 31B, Qwen 27B], e2: [5, 5, 5], alone: [2, 0, 1]}
+key:
+  must_say:
+  - 'No counter is wrong.'
+  - 'Swap consumed and Compressed are amounts held now, left from reclamation in the past; they stay until the guest touches the pages, while the balloon deflates when its target falls.'
+  - 'All four rates at 0: no new reclamation and no page came back, so no VM waited on these pages today.'
+  - 'State High: no memory pressure now, so ESXi has no reason to inflate a balloon.'
+  - 'No VMs need to move for this; a swapped or compressed page still costs a wait if a VM touches it later.'
+  must_not:
+  - 'A counter error.'
+  - 'Old swapped pages cost nothing.'
+  - 'VMs must move off the host.'
+run: {model: meta/muse-glimmer-30b, label: 'Muse Glimmer 30B', params: 'reasoning effort low', shown: run1}

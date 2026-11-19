@@ -1,0 +1,28 @@
+title: 'Cluster DRS Score is 92%, yet one VM is slow. Is the cluster fine?'
+short_title: DRS Score Demo
+user: L2 vSphere specialist
+context: 'Quick answer · cluster prod-cl02'
+about: |
+  - One question an L2 specialist asks, and the recorded answer of the Agent E2 pipeline (a local model reading the knowledge base), unedited. The cluster and its readings are a scenario.
+  - The specialist types the readings into the question; no connector is needed.
+  - Gate before this page was built: the same question was run 3 times; every run had to carry the answer points written before the run and none of the claims the question carries. All 3 runs passed; run 1 is shown, flaws included.
+object: {kind: Cluster, name: prod-cl02, meta: '10 hosts · 420 powered-on VMs · DRS fully automated, default migration threshold'}
+tiles:
+- {label: 'Cluster DRS Score', unit: '%', value: 92, band: green, note: 'steady all morning'}
+- {label: 'pay-db-01', value: slow, band: red, note: 'slow queries since 09:00'}
+claims:
+- 'Team lead: the DRS score is high, so the cluster is fine and the problem must be inside the database.'
+knowledge:
+- {id: vsphere/object-types/cluster/configuration/drs-migration-levels, what: 'Cluster DRS Score is a weighted average of the VM DRS Scores; VM DRS Score is execution efficiency.'}
+- {id: vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention, what: 'A cluster value hides the VM that waits.'}
+twin: {title: 'A high Cluster DRS Score and one slow VM', url: 'https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-045-cluster-drs-score-high-one-vm-slow.md', models: [Muse Glimmer 30B, Gemma 31B, Qwen 27B], e2: [5, 5, 4], alone: [0, 0, 0]}
+key:
+  must_say:
+  - 'Not a valid conclusion.'
+  - 'The Cluster DRS Score is a weighted average of the VM DRS Scores; one VM among 420 barely moves it.'
+  - 'Read the VM DRS Score of pay-db-01 itself (Monitor > vSphere DRS, VM list).'
+  - 'The VM DRS Score is execution efficiency, not contention: read the contention counters of pay-db-01 (Ready, Co-stop, memory contention, disk latency) to tell whether it waits.'
+  must_not:
+  - 'A high cluster score means every VM is fine.'
+  - 'The cluster score means nothing.'
+run: {model: meta/muse-glimmer-30b, label: 'Muse Glimmer 30B', params: 'reasoning effort low', shown: run1}

@@ -1,0 +1,1 @@
+Cluster prod-cl02: 10 hosts, 420 powered-on VMs, DRS fully automated, default migration threshold. The Cluster DRS Score is 92%, steady all morning. Since 09:00 the owners of the VM pay-db-01 report slow queries. My team lead says the DRS score is high, so the cluster is fine and the problem must be inside the database. Is that a valid conclusion?
