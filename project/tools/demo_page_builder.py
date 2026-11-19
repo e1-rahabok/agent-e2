@@ -61,7 +61,7 @@ border:1px solid var(--line);border-radius:10px}
 .chat{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:12px}
 .msg{border-radius:10px;padding:10px 12px;font-size:13px}.you{background:#0c2a3d;border:1px solid #155e75;align-self:flex-end;max-width:92%}
 .e2{background:var(--panel2);border:1px solid var(--line)}.e2 .who2{font:600 11px var(--mono);color:var(--accent);margin-bottom:4px}
-.e2 p{margin:5px 0}.e2 ul,.e2 ol{margin:5px 0 5px 18px;padding:0}.e2 h4{margin:10px 0 4px;font-size:13px;color:#cbd5e1}
+.e2 p{margin:5px 0}.l1 p{margin:6px 0}.l1 ul{margin:4px 0 8px 18px;padding:0}.l1 h4{margin:12px 0 4px;font-size:13px;color:#cbd5e1}.e2 ul,.e2 ol{margin:5px 0 5px 18px;padding:0}.e2 h4{margin:10px 0 4px;font-size:13px;color:#cbd5e1}
 .att summary{cursor:pointer;color:#7dd3fc;font-size:12px;margin-top:6px}.att pre{white-space:pre-wrap;font:11px var(--mono);color:var(--muted);margin:6px 0 0}
 .calc{border:1px solid #0e7490;background:#071d2a;border-radius:8px;padding:8px 10px;margin:6px 0 8px}.calc .t{font:600 11px var(--mono);color:#67e8f9}
 .calc .x{font:12px var(--mono);color:#e0f2fe;margin-top:3px}.calc .w{font-size:11px;color:var(--muted);margin-top:3px}
@@ -291,9 +291,10 @@ def build(folder):
     crumbs = list(dict.fromkeys(path))
     asks, left, chat, finds = {}, [], [], []
 
-    left.append(f'<section data-view="0" data-at="-1"><div class="panel"><div class="h">{esc(sc["start"]["title"])}</div>'
-                f'<p>{esc(sc["incident"]["detail"])}. {esc(sc["incident"]["alert"])}.</p><p class="note">{esc(sc["incident"]["note"])}</p>'
-                f'<p>{esc(sc["start"]["text"])}</p><p class="note">Cluster {esc(sc["cluster"])}: {esc(sc["cluster_meta"])}</p></div></section>')
+    inc = sc['incident']
+    left.append(f'<section data-view="0" data-at="-1"><div class="panel l1"><div class="h">Ticket worklog · L1 escalation note</div>'
+                f'{markdown(sc["l1_note"])}</div><div class="panel"><p class="note">Cluster {esc(sc["cluster"])}: {esc(sc["cluster_meta"])}</p>'
+                f'<p>{esc(sc["start"])}</p></div></section>')
     chat.append(f'<div class="sys" data-upto="0">{esc(sc["incident"]["id"])} loaded. Ask about any selection.</div>')
     for s in steps:
         n = s['n']
@@ -354,7 +355,7 @@ def build(folder):
 <div class="tabs" role="tablist"><button aria-selected="true" data-for="reactive">Reactive: incidents</button><button aria-selected="false" data-for="proactive">Proactive: health</button></div>
 <span class="who">{esc(sc['incident']['user'])}</span></header>
 <div class="inc"><span class="id">{esc(sc['incident']['id'])} · {esc(sc['incident']['priority'])}</span><b>{esc(sc['incident']['title'])}</b>
-<span>{esc(sc['incident']['detail'])}</span><span class="m">{esc(sc['incident']['alert'])} · {esc(sc['incident']['now'])}</span></div>
+<span>{esc(sc['incident']['summary'])}</span><span class="m">{esc(sc['incident']['escalated'])} · now {esc(sc['incident']['now'])}</span></div>
 {about}
 <div class="wrap"><main><div id="reactive">{''.join(left)}<div class="panel find"><div class="h">Findings pinned by the specialist</div><ol style="list-style:none;margin:0;padding:0">{''.join(finds)}</ol></div></div>
 <div id="proactive" hidden>{proactive}</div></main>
