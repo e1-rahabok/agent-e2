@@ -1,8 +1,11 @@
 # Cluster Risk (%)
 
 ## Purpose
-- A leading indicator: it warns before the VMs feel contention or consumption can suddenly rise. It covers capacity and performance.
-- Cluster Performance shows actual contention happening now ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md)). Cluster Risk shows potential contention.
+- A leading indicator.
+- The name is not Capacity Risk or Performance Risk as it covers both.
+- It quantifies the risk factor of VMs feel contention or ESXi consumption rise.
+- Risk measures potential. It complements actual. 
+- Cluster Performance shows actual contention ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md)). Cluster Risk shows potential contention.
 - Higher is worse: 0 is no risk, 100 is maximum risk. Cluster Consumption reads the same way; Cluster Performance is higher-is-better.
 - Every sub-metric takes the worst ESXi host. One full host hurts its VMs while the cluster average looks fine. Many clusters have 8 hosts or fewer, so the worst warns early. Different sub-metrics can come from different hosts: fine for monitoring, not for troubleshooting.
 - A risk model, not a KPI: a KPI scores performance only. Users also call it the Cluster Risk KPI.
@@ -79,9 +82,7 @@ Per host, then the worst host is kept.
 - vMotion: involves the network across top-of-rack switches. Track the maximum vMotion stun time across the environment separately, as basic health ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md), section vMotion Count).
 
 ## Use in troubleshooting
-- Cluster Risk is potential contention; Cluster Performance is actual contention. Risk can rise for days while performance stays green, until a trigger (a busy morning, a host failure, a maintenance window) turns it into contention.
-- A sub-metric that enters yellow is a symptom read as an insight in the daily health check, not an alert; orange or red is an alert ([`sp5-framework/outputs/alerts-and-insights`](../../../../sp5-framework/outputs/alerts-and-insights.md)).
-- When VMs are slow, read the Cluster Risk symptoms and alerts that started in the days before the complaint. Each start time dates a change (reservations set, VMs added or resized): ask what was changed then. The specialist on call often was not part of the change.
+- Risk can rise for days while performance stays green, until a trigger (a busy morning, a host failure, a maintenance window) turns it into contention.
 - Read the rows, not the score: a worse sub-metric can leave the score flat or lower it (section Sub-metric weight in Cluster Risk).
 
 ## Misconceptions
