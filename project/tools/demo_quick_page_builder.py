@@ -11,22 +11,31 @@ The answer is shown as recorded; nothing in it is edited.
 
 Usage: python3 project/tools/demo_quick_page_builder.py project/demo-site/quick-2-esxi-cpu-demand
 """
+import base64
 import json
+import mimetypes
 import os
 import sys
 
 import yaml
 
-from demo_page_builder import CSS, NAV_CSS, REPO, nav, computed_box, esc, inline, knowledge_ids, markdown, sources, tile
+from demo_page_builder import CSS, NAV_CSS, REPO, line_chart, nav, table, computed_box, esc, inline, knowledge_ids, markdown, sources, tile
 
 QUICK_CSS = """
 .inc.q{border-color:#155e75;background:#0c2a3d}.inc.q .id{color:#7dd3fc;border-color:#155e75}
 .claims{margin:0;padding:0 0 0 18px}.claims li{margin:4px 0}
 .kb{display:flex;flex-direction:column;gap:6px}.kb a{font:12px var(--mono);text-decoration:none;color:#93c5fd}.kb span{color:var(--muted);font-size:12px}
 .twin td.n{font:600 14px var(--mono)}.twin td.n.g{color:#86efac}
+.panel2c{margin-top:14px}.shot{margin:12px 0 0}.shot img{display:block;width:100%;border-radius:6px;background:#fff}.shot figcaption{font-size:12px;color:var(--muted);margin-top:4px}
 .foot{margin:0 16px 16px;font:11px var(--mono);color:var(--muted);text-align:right}
 .wrap{padding-bottom:16px}aside{height:calc(100vh - 150px)}
 """
+
+
+def img(folder, name):
+    """A screenshot of the step, embedded as a data URI so the page stays one file."""
+    p = os.path.join(folder, 'steps', name)
+    return f"data:{mimetypes.guess_type(p)[0] or 'image/png'};base64,{base64.b64encode(open(p, 'rb').read()).decode()}"
 
 
 def build(folder):
@@ -38,7 +47,13 @@ def build(folder):
     ask = open(os.path.join(folder, 'steps', 'step-1.txt')).read().strip()
     o = sc['object']
     see = (f'<div class="panel"><div class="h">What the specialist sees</div><p class="obj">{esc(o["kind"])} · {esc(o["name"])}</p>'
-           f'<p class="objm">{esc(o["meta"])}</p><div class="tiles">' + ''.join(tile(t, False) for t in sc['tiles']) + '</div></div>')
+           f'<p class="objm">{esc(o["meta"])}</p>'
+           + (f'<div class="tiles">' + ''.join(tile(t, False) for t in sc['tiles']) + '</div>' if sc.get('tiles') else '')
+           + ''.join(f'<figure class="shot"><img src="{img(folder, x["file"])}" alt="{esc(x["caption"])}"><figcaption>{esc(x["caption"])}</figcaption></figure>'
+                     for x in sc.get('screens') or [])
+           + ''.join(f'<div class="panel2c">{line_chart(c)}</div>' for c in sc.get('charts') or [])
+           + ''.join(f'<div class="panel2c"><div class="h">{esc(x["title"])}</div>{table(x["head"], x["rows"])}'
+                     + (f'<p class="note">{esc(x["note"])}</p>' if x.get('note') else '') + '</div>' for x in sc.get('tables') or []) + '</div>')
     claims = ('<div class="panel"><div class="h">The claims on the table</div><ul class="claims">'
               + ''.join(f'<li>{inline(c)}</li>' for c in sc['claims']) + '</ul></div>')
     kb = ('<div class="panel"><div class="h">Where the answer comes from</div><div class="kb">'
@@ -52,7 +67,8 @@ def build(folder):
             + ''.join(f'<tr><td>{esc(m)}</td><td class="n g">{a} of 5</td><td class="n">{b} of 5</td></tr>'
                       for m, a, b in zip(tw['models'], tw['e2'], tw['alone']))
             + '</tbody></table></div></div>')
-    chat = f'<div class="msg you">{esc(ask)}</div>'
+    shots = sc.get('screens') or []
+    chat = f'<div class="msg you">{esc(ask)}' + (f'<div class="note">📎 {len(shots)} screenshots attached</div>' if shots else '') + '</div>'
     if r:
         calls = [t for t in r.get('trace', []) if t.get('prompt_tokens')]
         sec = sum(t.get('latency') or 0 for t in calls)

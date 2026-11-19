@@ -1,6 +1,7 @@
 """Run the steps of one demo scenario through Agent E2, as the shipped assistant answers them (answer_modes.converse, chat mode).
 
-A scenario folder in project/demo-site/ holds steps/step-1.txt, step-2.txt, ...: at each step the L2 specialist's
+A scenario folder in project/demo-site/ holds steps/step-1.txt, step-2.txt, ... (and any screenshots step-N-<name>.png
+attached to a step): at each step the L2 specialist's
 question, a blank line, then the readings Agent E2 reads from VCF Operations and vCenter. The VCF Operations connector is
 not built yet: the readings stand for what it would fetch, and the pipeline gets them as text. Each step is a question of its own: Agent E2 does not
 carry an earlier answer into the next one. The answers, with the exact facts computed by code (stage 3), the files read,
@@ -12,8 +13,10 @@ Usage: python3 project/tools/demo_scenario_executor.py <folder> <model> [--param
 Needs AI_GATEWAY_API_KEY (the benchmark gateway). Not a benchmark run: a demo is not scored.
 """
 import argparse
+import base64
 import glob
 import json
+import mimetypes
 import os
 import re
 import sys
@@ -39,6 +42,18 @@ def step_files(folder):
     return sorted(files, key=lambda p: int(re.search(r'step-(\d+)\.txt$', p).group(1)))
 
 
+def step_images(path):
+    """Screenshots the specialist attaches to a step: steps/step-N-<name>.png, .webp or .jpg, in name order, sent as
+    images with the question (the same parts a benchmark question sends)."""
+    base = path[:-4]
+    out = []
+    for f in sorted(glob.glob(base + '-*')):
+        if f.lower().endswith(('.png', '.webp', '.jpg', '.jpeg')):
+            mime = mimetypes.guess_type(f)[0] or 'image/png'
+            out.append({'type': 'image_url', 'image_url': {'url': f'data:{mime};base64,{base64.b64encode(open(f, "rb").read()).decode()}'}})
+    return out
+
+
 def main(folder, model, params_json=None, only=None, label=None):
     cfg = yaml.safe_load(open(os.path.join(ROOT, 'benchmark', 'runner', 'runner_config.yaml')))
     params = {model: json.loads(params_json) if params_json else (((cfg.get('model_params') or {}).get(model) or [{}])[0] or {})}
@@ -59,7 +74,7 @@ def main(folder, model, params_json=None, only=None, label=None):
         if only and n not in only:
             continue
         text = open(path).read()
-        out = answer_modes.converse('agent-e2', client, model, [text], [], cfg, retriever)
+        out = answer_modes.converse('agent-e2', client, model, [text], step_images(path), cfg, retriever)
         trace = _trace(out['trace'])
         computed = [line for s in trace if s['action'] == 'compute' for line in (s.get('output') or [])]
         rec['steps'][n] = {'type': out['type'], 'content': out['result'].get('content'), 'computed': computed,
