@@ -28,7 +28,7 @@
 - CPU uses 4 metrics (Co-stop, Ready, Overlap, Net Run). They do not peak in the same 20-second period, so they cannot be combined. Known limitation: CPU weight is larger.
 - Ready, Co-stop and Overlap have different thresholds: different sensitivity. Ready tends to be 2x Co-stop.
 - High CPU utilization threshold: high utilization means work is done; only above 95% does the VM's own size limit it.
-- Memory wait = Memory Contention + NVMe wait; Memory Contention does not count NVMe fetches. Same bands; NVMe wait reads Latest values. VM and Guest OS can have memory problems independently.
+- Memory wait = Memory Contention + NVMe wait; Memory Contention does not count NVMe fetches. Same bands; NVMe wait reads Latest values. Limits of NVMe wait (vMotion precopy, time base, release, collection): [`vsphere/object-types/cluster/cluster-performance`](../cluster/cluster-performance.md), section Limitations. VM and Guest OS can have memory problems independently.
 - Ballooned and Zip Swap are leading indicators, not real performance problems.
 - Compressed and Swapped are combined: both result from the same action (reclaiming a page), so together they tell the complete picture.
 - Zip Swap has a tighter band than Memory Contention (green 0-0.25% vs 0-0.5%) although it is less serious: it is measured on 5-minute samples, Memory Contention on 20-second peaks. A 5-minute average reads lower than a 20-second peak, so its band must be lower too.
