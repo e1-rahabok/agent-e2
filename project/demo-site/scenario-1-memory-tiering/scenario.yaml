@@ -5,7 +5,27 @@ about: |
   - The L2 specialist asks one narrow question per step and attaches the readings selected on screen. Agent E2 finds the facts and explains them; the specialist connects the steps and decides the fix.
   - A boxed number comes from Agent E2's code (stage 3), not from the model.
   - One run per question, recorded on 2026-11-18, kept as it came. Known flaws, not edited out: a stray "2025-..." in the answer to step 5; the answers to steps 2 and 4 end with a remedy, which Agent E2 should leave to the specialist (the answer prompt does not say so yet).
-incident: {id: INC-48213, priority: P1, title: 'Payments API slow', detail: 'p99 latency 180 ms → 1.4 s since 09:05; branch teller app slow', alert: 'Cluster Risk orange since 09:20', now: 'Tuesday 10:20, first business day after a 3-day weekend', user: 'L2 vSphere specialist, on call', note: 'Not part of any change last week; the change calendar is not open to the specialist yet.'}
+incident: {id: INC-48213, priority: P1, title: 'Payments API slow', summary: 'p99 latency 180 ms → 1.4 s since 09:05; teller app slow at all branches', escalated: 'escalated from L1 at 10:05', now: 'Tuesday 10:20', user: 'L2 vSphere specialist, on call'}
+l1_note: |
+  Opened 09:12 by the service desk. Escalated to L2 vSphere at 10:05.
+  ## Impact
+  - Payments API p99 latency 180 ms → 1.4 s since 09:05. No errors: transactions complete, slowly.
+  - Teller app slow at all branches.
+  - First business day after the 3-day National Day weekend (Saturday to Monday). Tuesday-morning volume as usual.
+  ## Scope (service map)
+  - Payments service: pay-api-01 to 20, pay-web-01 to 20, sql-pay-01 to 06, all on CL-SG-PRD-PAY.
+  - VCF Operations: VM Performance alert, red, on 28 of the 40 application VMs, started 09:05 to 09:15. Worst: pay-api-07 at 17. No alert on the sql-pay VMs.
+  ## Checked (L1 runbook): all normal
+  - Hosts: all 8 connected; no HA event; no host alert.
+  - VMs: CPU Ready and Memory Contention near 0; no ballooning, compression or swapping. Guest OS CPU 30-40%.
+  - Datastore latency normal. Network: no drops.
+  - DBA: the databases show no wait.
+  - Changes in the last 24 hours: none.
+  ## Done
+  - 09:40: the app team restarted the pay-api service on pay-api-07. No change.
+  - Nothing changed in vSphere: no vMotion, no VM restart. P1 production, so L2 decides.
+  ## Why L2
+  - VM Performance is red while every counter in the runbook is green. Outside the L1 runbook.
 cluster: CL-SG-PRD-PAY
 cluster_meta: '8 identical hosts · 2 x 32 cores · 1,024 GB DRAM + 1,024 GB NVMe memory tier · VCF 9.1.1 · vCommunity management pack'
 run: {model: meta/muse-glimmer-30b, label: 'Muse Glimmer 30B', params: 'reasoning effort low', why: 'best local model of the round of 2026-11-16'}
@@ -15,9 +35,7 @@ proactive:
   - {object: esxi-pay-05, symptom: 'Highest ESXi Memory Reservation (%) 26, yellow', started: 'last Tue 23:25', status: 'not reviewed'}
   - {object: esxi-pay-05, symptom: 'Highest ESXi DRAM Memory Consumed (%) 87, yellow', started: 'last Fri 08:40', status: 'not reviewed'}
   - {object: CL-SG-PRD-PAY, symptom: 'Cluster Risk (%) 66, orange: alert', started: 'today 09:20', status: 'open alert'}
-start:
-  title: 'Incident opened'
-  text: 'The specialist starts bottom-up, at the slowest payments VM.'
+start: 'The specialist starts where L1 stopped: pay-api-07, the worst VM, red on VM Performance with Memory Contention near 0.'
 steps:
 - n: 1
   at: 0
@@ -84,9 +102,9 @@ steps:
   finding: 'Memory reservation yellow from last Tue 23:25; overcommit stepped up last Thu 23:35: two changes. Ask what changed then.'
   follow: {quote: 'Ask what changed at those timestamps', note: 'the specialist opens the change calendar.'}
 end:
-  title: 'Change calendar, opened 11:05'
+  title: 'Change calendar, last 7 days, opened 11:05'
   rows:
   - {id: CHG-1, when: 'last Tue 22:00-23:30', team: DBA, what: 'Blueprint SQL Gold v3 on sql-pay-01 to 06: powered off, memory tiering off, all memory reserved, powered on.', match: 'Highest ESXi Memory Reservation, yellow at 23:25'}
   - {id: CHG-2, when: 'last Thu 21:00-23:40', team: Application, what: '40 payments application VMs moved in, next to their databases. Approved on Memory Capacity Remaining 38%.', match: 'Memory and CPU overcommit stepped up at 23:35'}
-  note: 'Both changes went as approved. Neither team saw the other change.'
+  note: 'L1 searched the last 24 hours: Monday was a holiday, so both changes fell outside the window. Both went as approved; neither team saw the other change.'
   next: 'Specialist: call the DBA and application teams to the bridge with the findings; decide the fix together.'
