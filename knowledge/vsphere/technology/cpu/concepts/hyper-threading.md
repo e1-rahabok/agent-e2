@@ -161,7 +161,7 @@ Core Utilization (ESXi)   = (75% + 100%) / 2          = 87.5%
 | 5 | 20000, 0, 0, 0 | 20000, 0, 0, 0 |
 | 6 | 0, 0, 0, 0 | 0, 0, 0, 0 |
 
-## Used and Usage vs Utilization
+## Used & Usage versus Utilization
 - Used is calculated from a hardware counter: Non-Halted Core Cycles (NHCC). Higher clock speed completes more cycles, so Used rises with Turbo.
 - Used and Usage add 2 factors that Utilization ignores:
   - efficiency: a thread executes less efficiently when its sibling runs.
