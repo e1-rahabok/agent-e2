@@ -25,7 +25,7 @@ Per host, then the worst host is kept.
 |---|---|---|
 | CPU thread utilization | % of the host's threads in use, Hyper-Threading aware | `cpu\|utilization_average` |
 | CPU imbalance | Running threads / running cores. Running threads = utilization % × threads; running cores = core utilization % × cores | `cpu\|utilization_average`, `cpu\|coreUtilization_average`, `hardware\|cpuInfo\|numCpuCores` |
-| DRAM Memory Consumed | Memory consumed in DRAM and NVMe, as % of host DRAM. On a tiered host it passes 100% by design: 157% means the host carries 1.57 times its DRAM, the rest in NVMe. A leading indicator of risk, not contention | `mem\|consumed_average` |
+| DRAM Memory Consumed | Memory consumed in DRAM and NVMe, as % of host DRAM. On a tiered host it passes 100% by design: 157% means the host carries 1.57 times its DRAM, the rest in NVMe. | `mem\|consumed_average` |
 | Memory ballooned | Ballooned, as % of host DRAM | `mem\|vmmemctl_average` |
 | Swapped + zipped | (Compressed + swapped), as % of host DRAM | `mem\|compressed_average`, `mem\|swapout_average` |
 | Active memory, tiered hosts | Active memory as % of host DRAM. Excluded while green (below 50%). Left out on hosts without memory tiering | vCenter `mem.active`; DRAM `mem:DRAM\|memory_tier_total_capacity` |
