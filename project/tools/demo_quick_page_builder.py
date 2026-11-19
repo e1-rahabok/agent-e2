@@ -84,8 +84,8 @@ def build(folder):
                 f'knowledge {esc((rec.get("knowledge_commit") or "")[:7])}')
     page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(sc['short_title'])}</title><style>{CSS}{QUICK_CSS}{NAV_CSS}</style></head><body>
-<header><span class="brand">VCF Operations</span>{nav(sc['page'])}
-<span class="pill" style="margin-left:auto">Ask Agent E2</span><span class="who">{esc(sc['user'])}</span></header>
+<header><span class="brand">Agent E2</span>{nav(sc['page'])}
+<span class="who" style="margin-left:auto">{esc(sc['user'])}</span></header>
 <div class="inc q"><span class="id">Question</span><b>{esc(sc['title'])}</b><span class="m">one question · one recorded answer</span></div>
 {about}
 <div class="wrap"><main>{see}{claims}{kb}{twin}</main>

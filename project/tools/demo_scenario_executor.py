@@ -2,7 +2,7 @@
 
 A scenario folder in project/demo-site/ holds steps/step-1.txt, step-2.txt, ... (and any screenshots step-N-<name>.png
 attached to a step): at each step the L2 specialist's
-question, a blank line, then the readings Agent E2 reads from VCF Operations and vCenter. The VCF Operations connector is
+question, a blank line, then the readings the specialist attaches from VCF Operations and vCenter. The VCF Operations connector is
 not built yet: the readings stand for what it would fetch, and the pipeline gets them as text. Each step is a question of its own: Agent E2 does not
 carry an earlier answer into the next one. The answers, with the exact facts computed by code (stage 3), the files read,
 the trace and the knowledge base commit, go to <folder>/results/<model>.json; a rerun of some steps keeps the others.

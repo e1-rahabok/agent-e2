@@ -1,6 +1,6 @@
 Why were pay-api-01's pages on NVMe on Tuesday morning, and why did the wait stop by 09:55?
 
-Agent E2 read from VCF Operations:
+Attached by the specialist, from VCF Operations:
 VM pay-api-01: 8 vCPU, 32 GB, memory tiering on, on host esx-sg01-14 (1,024 GB DRAM plus a 1,024 GB NVMe memory tier, 1:1). VCF 9.1.1. Saturday to Monday was a 3-day public holiday; Tuesday is the first business day.
 - Host DRAM consumption: above 80% of DRAM since Sunday 9 days ago.
 - VM active memory: Friday 15:00 11 GB; Saturday, Sunday and Monday 0.3 GB; Tuesday 08:55 0.4 GB; Tuesday 09:15 12 GB; Tuesday 09:55 11 GB.

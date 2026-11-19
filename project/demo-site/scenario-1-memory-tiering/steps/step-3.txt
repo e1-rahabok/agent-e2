@@ -1,6 +1,6 @@
 Over the long weekend the payments VMs on esx-sg01-14 were idle, yet their pages moved to NVMe. What moved them there?
 
-Agent E2 read from VCF Operations:
+Attached by the specialist, from VCF Operations:
 Host esx-sg01-14: 1,024 GB DRAM plus a 1,024 GB NVMe memory tier (1:1), memory tiering configured, VCF 9.1.1. 42 VMs: 1 database VM with memory tiering off, 3 payments VMs (8 vCPU, 32 GB each), 6 load-test VMs of another application, 32 other VMs. Saturday to Monday was a 3-day public holiday.
 - Host DRAM consumption: above 80% of DRAM since Sunday 9 days ago.
 - Saturday 10:00-18:00: load test on the 6 load-test VMs; their active memory 4 GB before, 150 GB during.

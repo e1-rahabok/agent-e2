@@ -1,0 +1,1469 @@
+{
+ "model": "meta/muse-glimmer-30b",
+ "model_params": {
+  "reasoning": {
+   "effort": "low"
+  }
+ },
+ "knowledge_commit": "84e5531a6999ff42a5e199881a6477812d5afaf8",
+ "steps": {
+  "1": {
+   "type": "answer",
+   "content": "The VM waited on NVMe tier fetches, not on CPU Ready or reclaimed-page memory contention, and disk latency is not indicated by the data provided.\n\nVM Performance % in VCF Operations is a KPI from contention sub-metrics: Peak CPU Ready, Peak CPU Co-stop, Memory wait – which on tiered hosts is VM `mem|20_sec_peak_host_contentionPct` plus NVMe wait – Peak disk latency and Peak network TX drops. The peak is 20-second, not 5-minute.\n\nFor pay-api-01 at 09:15:\n* Peak CPU Ready 0.9% and peak Memory Contention 0.2% are near zero; Ballooned, Compressed and Swapped are 0. VM Memory Latency is the reclamation wait, swap-in and decompression, and it excludes balloon. It is unaware of memory tiering.\n* NVMe read bandwidth is 12 MBps at 09:15 vs 0 before 09:05. Host esx-sg01-14 NVMe read latency is 210 µs at 09:15.\n\nOn a tiered host Memory Latency does not count NVMe fetches. NVMe wait is computed from the VM’s NVMe read bandwidth and host NVMe read latency. With 8 vCPUs:\nNVMe wait ≈ 12 MBps × 256 pages/MB × 210 µs / 8 ≈ 8.1% of vCPU time.\n\nThat wait feeds the Memory wait component of VM Performance and explains the drop from 99% to 17% at 09:15 while CPU Ready and Memory Contention stayed near zero. ESXi Memory Latency is a normalized average of VM Memory Latency and hides the victim; it is not used for alerting or troubleshooting.\n\nVM Disk Latency is a primary performance counter for VM Performance, but no disk latency value is provided and NVMe read bandwidth is a memory-tier signal, not a virtual-disk signal.\n\nCheck next: per-VM NVMe read bandwidth 09:05-09:55, host tier in rate and tier consumed, and the 20-second peak disk latency per vDisk for pay-api-01 to rule out storage.",
+   "computed": [
+    "- NVMe wait of VM pay-api-01 = 12 MBps x 256 pages per MB x 210 µs / 8 vCPUs = 8.1% of its vCPU time. [arithmetic_calculator.py: NVMe wait (%) = VM NVMe read bandwidth (MB/s) x 256 pages per MB x host NVMe read latency (s) / VM vCPUs x 100 (Little's law). It assumes one 4 KB page per fetch and that the fetch stalls the vCPU; if either fails, it overstates the wait; during a vMotion, precopy reads may count too. Memory Contention does not count this wait. See vsphere/object-types/cluster/cluster-performance, sections NVMe wait formula and Limitations.]",
+    "- NVMe wait of VM pay-api-01 = 0 MBps x 256 pages per MB x 210 µs / 8 vCPUs = 0.0% of its vCPU time. [arithmetic_calculator.py: NVMe wait (%) = VM NVMe read bandwidth (MB/s) x 256 pages per MB x host NVMe read latency (s) / VM vCPUs x 100 (Little's law). It assumes one 4 KB page per fetch and that the fetch stalls the vCPU; if either fails, it overstates the wait; during a vMotion, precopy reads may count too. Memory Contention does not count this wait. See vsphere/object-types/cluster/cluster-performance, sections NVMe wait formula and Limitations.]"
+   ],
+   "files_read": [
+    "vsphere/technology/memory/vm-memory-latency-high",
+    "vsphere/technology/memory/metrics/virtual-motherboard/ballooned",
+    "vsphere/technology/memory/metrics/virtual-motherboard/swapped",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/ready",
+    "vsphere/object-types/vm/vm-performance",
+    "vsphere/technology/memory/metrics/host/ballooned",
+    "vsphere/technology/memory/metrics/host/compressed",
+    "vsphere/technology/memory/concepts/memory-tiering",
+    "vsphere/object-types/esxi/esxi-performance",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/contention",
+    "vsphere/technology/memory/metrics/virtual-motherboard/compressed",
+    "vsphere/technology/cpu/metrics/host/wait",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/wait",
+    "vsphere/tools/vsphere-client/performance-guidance",
+    "vsphere/technology/memory/concepts/host-memory-states",
+    "vsphere/architecture/provider-consumer",
+    "vsphere/architecture/resource-controls",
+    "vsphere/technology/cpu/concepts/vcpu-states",
+    "sp5-framework/performance/performance-kpi-design",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/other-wait",
+    "vsphere/technology/memory/concepts/ballooning",
+    "vsphere/technology/memory/concepts/swap-and-compression",
+    "vsphere/object-types/cluster/cluster-performance",
+    "vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host",
+    "vsphere/technology/memory/metrics/virtual-motherboard/latency",
+    "vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate",
+    "sp5-framework/performance/vm-slow",
+    "vsphere/object-types/vm/vm-health-check",
+    "vcf-operations/dashboards/vm-performance-dashboard",
+    "vsphere/technology/memory/metrics/comparisons/vm-memory-metrics",
+    "vsphere/object-types/cluster/models/cluster-risk",
+    "guest-os/system/guest-os-performance",
+    "vcf-operations/features/peak-20-second-metrics",
+    "sp5-framework/performance/performance-management",
+    "sp5-framework/capacity/class-of-service-planning",
+    "sp5-framework/concepts/modelling",
+    "sp5-framework/outputs/performance-dashboards",
+    "vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm",
+    "vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster",
+    "vsphere/object-types/esxi/esxi-alerts",
+    "vsphere/object-types/resource-pool/resource-pool-alerts",
+    "vsphere/object-types/vm/vm-alerts",
+    "vsphere/technology/memory/concepts/memory-layers",
+    "vsphere/technology/memory/concepts/memory-limit",
+    "vsphere/technology/cpu/metrics/comparisons/host-contention-metrics",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/latency",
+    "vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/run",
+    "sp5-framework/observability/aggregation",
+    "sp5-framework/performance/noisy-neighbour",
+    "vsphere/technology/memory/metrics/comparisons/host-memory-metrics",
+    "vsphere/technology/memory/metrics/host/consumed",
+    "vsphere/technology/memory/metrics/host/state",
+    "vsphere/technology/memory/metrics/host/swap-used",
+    "vsphere/object-types/cluster/concepts/admission-control-and-cluster-state",
+    "vsphere/tools/vsphere-client/vcenter-statistics",
+    "sp5-framework/capacity/demand",
+    "sp5-framework/capacity/overcommit",
+    "vsphere/technology/gpu/gpu-monitoring",
+    "vsphere/technology/memory/concepts/memory-as-storage",
+    "vsphere/object-types/esxi/esxi-health-check",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/overlap",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/co-stop",
+    "vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/demand",
+    "vsphere/technology/memory/metrics/host/latency",
+    "vsphere/technology/storage/metrics/virtual-motherboard/disk-latency"
+   ],
+   "trace": [
+    {
+     "step": 1,
+     "action": "understand",
+     "output": {
+      "kind": "troubleshooting",
+      "objects": [
+       "VM",
+       "ESXi host"
+      ],
+      "metrics": [
+       {
+        "name": "VM Performance",
+        "object": "VM pay-api-01",
+        "value": 17,
+        "unit": "%",
+        "interval": "09:15",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "VM Performance",
+        "object": "VM pay-api-01",
+        "value": 99,
+        "unit": "%",
+        "interval": "before 09:05",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "VM Performance",
+        "object": "VM pay-api-01",
+        "value": 99,
+        "unit": "%",
+        "interval": "from 09:55",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "Memory Contention",
+        "object": "VM pay-api-01",
+        "value": 0.2,
+        "unit": "%",
+        "interval": "peak",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "CPU Ready",
+        "object": "VM pay-api-01",
+        "value": 0.9,
+        "unit": "%",
+        "interval": "peak",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "Balloon memory",
+        "object": "VM pay-api-01",
+        "value": 0,
+        "unit": null,
+        "interval": null,
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "Compressed memory",
+        "object": "VM pay-api-01",
+        "value": 0,
+        "unit": null,
+        "interval": null,
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "Swapped memory",
+        "object": "VM pay-api-01",
+        "value": 0,
+        "unit": null,
+        "interval": null,
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe read bandwidth",
+        "object": "VM pay-api-01",
+        "value": 12,
+        "unit": "MBps",
+        "interval": "09:15",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe read bandwidth",
+        "object": "VM pay-api-01",
+        "value": 0,
+        "unit": "MBps",
+        "interval": "before 09:05",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe read latency",
+        "object": "Host esx-sg01-14",
+        "value": 210,
+        "unit": "µs",
+        "interval": "09:15",
+        "tool": "VCF Operations"
+       }
+      ],
+      "vcpus": 8,
+      "symptom": "VM Performance on pay-api-01 dropped to 17 this morning while Memory Contention and CPU Ready stayed near zero",
+      "premise": "Performance drop is due to memory contention or CPU Ready",
+      "claims": [
+       "What did the VM wait on when VM Performance dropped to 17"
+      ]
+     },
+     "prompt_tokens": 542,
+     "completion_tokens": 895,
+     "latency": 9.97,
+     "provider": "togetherai"
+    },
+    {
+     "step": 2,
+     "action": "plan",
+     "output": {
+      "flow": [
+       "vsphere/technology/memory/vm-memory-latency-high"
+      ],
+      "named": [
+       "vsphere/technology/memory/metrics/virtual-motherboard/ballooned",
+       "vsphere/technology/memory/metrics/virtual-motherboard/swapped",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/ready",
+       "vsphere/object-types/vm/vm-performance",
+       "vsphere/technology/memory/metrics/host/ballooned",
+       "vsphere/technology/memory/metrics/host/compressed",
+       "vsphere/technology/memory/concepts/memory-tiering",
+       "vsphere/object-types/esxi/esxi-performance",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/contention",
+       "vsphere/technology/memory/metrics/virtual-motherboard/compressed",
+       "vsphere/technology/cpu/metrics/host/wait",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/wait"
+      ],
+      "search": [
+       "vsphere/tools/vsphere-client/performance-guidance"
+      ],
+      "mechanism": [
+       "vsphere/technology/memory/concepts/host-memory-states",
+       "vsphere/architecture/provider-consumer",
+       "vsphere/architecture/resource-controls",
+       "vsphere/technology/cpu/concepts/vcpu-states",
+       "sp5-framework/performance/performance-kpi-design",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/other-wait",
+       "vsphere/technology/memory/concepts/ballooning",
+       "vsphere/technology/memory/concepts/swap-and-compression",
+       "vsphere/object-types/cluster/cluster-performance",
+       "vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host",
+       "vsphere/technology/memory/metrics/virtual-motherboard/latency",
+       "vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate",
+       "sp5-framework/performance/vm-slow"
+      ],
+      "search_rest": [
+       "vsphere/object-types/vm/vm-health-check",
+       "vcf-operations/dashboards/vm-performance-dashboard",
+       "vsphere/technology/memory/metrics/comparisons/vm-memory-metrics",
+       "vsphere/object-types/cluster/models/cluster-risk"
+      ],
+      "more": [
+       "guest-os/system/guest-os-performance",
+       "vcf-operations/features/peak-20-second-metrics",
+       "sp5-framework/performance/performance-management",
+       "sp5-framework/capacity/class-of-service-planning",
+       "sp5-framework/concepts/modelling",
+       "sp5-framework/outputs/performance-dashboards",
+       "vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm",
+       "vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster",
+       "vsphere/object-types/esxi/esxi-alerts",
+       "vsphere/object-types/resource-pool/resource-pool-alerts",
+       "vsphere/object-types/vm/vm-alerts",
+       "vsphere/technology/memory/concepts/memory-layers",
+       "vsphere/technology/memory/concepts/memory-limit",
+       "vsphere/technology/cpu/metrics/comparisons/host-contention-metrics",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/latency",
+       "vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/run",
+       "sp5-framework/observability/aggregation",
+       "sp5-framework/performance/noisy-neighbour",
+       "vsphere/technology/memory/metrics/comparisons/host-memory-metrics",
+       "vsphere/technology/memory/metrics/host/consumed",
+       "vsphere/technology/memory/metrics/host/state",
+       "vsphere/technology/memory/metrics/host/swap-used",
+       "vsphere/object-types/cluster/concepts/admission-control-and-cluster-state",
+       "vsphere/tools/vsphere-client/vcenter-statistics",
+       "sp5-framework/capacity/demand",
+       "sp5-framework/capacity/overcommit",
+       "vsphere/technology/gpu/gpu-monitoring",
+       "vsphere/technology/memory/concepts/memory-as-storage",
+       "vsphere/object-types/esxi/esxi-health-check",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/overlap",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/co-stop",
+       "vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/demand"
+      ]
+     },
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 3,
+     "action": "compute",
+     "output": [
+      "- NVMe wait of VM pay-api-01 = 12 MBps x 256 pages per MB x 210 µs / 8 vCPUs = 8.1% of its vCPU time. [arithmetic_calculator.py: NVMe wait (%) = VM NVMe read bandwidth (MB/s) x 256 pages per MB x host NVMe read latency (s) / VM vCPUs x 100 (Little's law). It assumes one 4 KB page per fetch and that the fetch stalls the vCPU; if either fails, it overstates the wait; during a vMotion, precopy reads may count too. Memory Contention does not count this wait. See vsphere/object-types/cluster/cluster-performance, sections NVMe wait formula and Limitations.]",
+      "- NVMe wait of VM pay-api-01 = 0 MBps x 256 pages per MB x 210 µs / 8 vCPUs = 0.0% of its vCPU time. [arithmetic_calculator.py: NVMe wait (%) = VM NVMe read bandwidth (MB/s) x 256 pages per MB x host NVMe read latency (s) / VM vCPUs x 100 (Little's law). It assumes one 4 KB page per fetch and that the fetch stalls the vCPU; if either fails, it overstates the wait; during a vMotion, precopy reads may count too. Memory Contention does not count this wait. See vsphere/object-types/cluster/cluster-performance, sections NVMe wait formula and Limitations.]"
+     ],
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 4,
+     "action": "coverage",
+     "output": "named",
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 5,
+     "action": "ask",
+     "output": "allowed: premise",
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 6,
+     "action": "answer",
+     "output": "VM Performance dropped because of NVMe memory-tier wait, not CPU Ready or memory reclamation contention.\n\nVM Performance (%) in VCF Operations is a KPI built from contention sub-metrics: Peak CPU Ready, Peak CPU Co-stop, Peak memory wait – which on tiered hosts is VM `mem|20_sec_peak_host_contentionPct` plus NVMe wait – Peak disk latency and Peak network TX drops. The 20-second peaks are used, not",
+     "prompt_tokens": 34602,
+     "completion_tokens": 714,
+     "latency": 9.43,
+     "provider": "togetherai"
+    },
+    {
+     "step": 7,
+     "action": "gap",
+     "output": "The VM waited on NVMe tier fetches, not on CPU Ready or reclaimed-page memory contention, and disk latency is not indicated by the data provided.\n\nVM Performance % in VCF Operations is a KPI from contention sub-metrics: Peak CPU Ready, Peak CPU Co-stop, Memory wait – which on tiered hosts is VM `mem|20_sec_peak_host_contentionPct` plus NVMe wait – Peak disk latency and Peak network TX drops. The p",
+     "prompt_tokens": 35845,
+     "completion_tokens": 457,
+     "latency": 5.62,
+     "provider": "togetherai"
+    }
+   ],
+   "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d"
+  },
+  "2": {
+   "type": "answer",
+   "content": "Conclusion: the VM’s pages were cold and demoted to NVMe over the 3-day public holiday while the host stayed above the ~80 % DRAM start point for tiering, and the wait stopped on Tuesday morning once the workload restarted, the working set became hot again and the pages were fetched back from NVMe to DRAM.\n\nMechanism and reason\n* Memory tiering is active on the host. Tiering starts when host DRAM consumption reaches about 80 %: from then new memory is allocated from NVMe. `vsphere/technology/memory/concepts/memory-tiering` \n* With tiering, frequently accessed data stays on DRAM, infrequently accessed data is placed on the NVMe tier. Pages are classified by recency and frequency; hot pages are those accessed most often in about the past minute; the rest are cold. `vsphere/technology/memory/concepts/memory-tiering`\n* A page on NVMe is fetched back to DRAM when it becomes active; the vCPU that touched it waits for the fetch. The fetch shows as NVMe read bandwidth, which counts pages fetched from NVMe when they become active; NVMe write bandwidth counts cold pages moved down. `vsphere/technology/memory/concepts/memory-tiering`\n* Active is an estimate of pages touched recently. On a host with memory tiering it is the capacity limit: host active memory against DRAM decides whether tiering slows the VMs. `vsphere/technology/memory/metrics/virtual-motherboard/active`\nActive is a rate reported as space, rises fast and falls slowly, ESXi estimates the working set by statistical sampling over a period of 60 s by default, smoothed over several periods. `vsphere/technology/memory/metrics/virtual-motherboard/active`\n\nWhy pages were on NVMe Tuesday morning\nHost esx-sg01-14 DRAM consumption has been above 80 % since Sunday 9 days ago, so tiering is on and new allocations go to NVMe. \nDuring the holiday the VM was idle: active memory fell to ~0.3 GB Saturday-Sunday-Monday, Tuesday 08:55 0.4 GB. The VM’s working set was cold, so the tiering classification moved its pages down. NVMe consumed grew from 0.4 GB Friday 15:00 → 10 GB Saturday 18:00 → 19 GB Sunday 08:00 → 20 GB Tuesday 08:55 while NVMe read bandwidth was 0 Friday to Tuesday 09:05. Cold pages were demoted in the background, no fetches were needed.\n\nWhy the wait appeared at 09:15 and stopped by 09:55\nTuesday is the first business day. At 09:15 the VM active memory jumps from 0.4 GB at 08:55 to 12 GB, then 11 GB at 09:55. The working set became hot again, so pages that were on NVMe had to be brought back. \nNVMe read bandwidth is 12 MBps at 09:15 and drops to 0.3 MBps at 09:55, matching the NVMe consumed drop 20 GB → 13 GB → 3 GB. The reads are the fetches back to DRAM; the vCPU waits for each fetch. Once the hot set is resident in DRAM, fetches cease and the wait stops.\n\nDecision-tree signal: NVMe consumed >0 confirms tiering is active; active memory as % of host DRAM is the leading signal, and NVMe read bandwidth >0 with per-VM reads identifies the VMs that wait on NVMe. `vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host`\n\nWhat to check next\n* Confirm the exact workload restart time Tuesday morning and correlate with the active memory rise and NVMe read burst.\n* Per-VM NVMe read bandwidth and host NVMe read latency to quantify NVMe wait = VM NVMe read bandwidth ×256 pages/MB × host NVMe read latency ÷ vCPUs ×100. `vsphere/object-types/cluster/cluster-performance`\n* Host active memory vs DRAM to ensure active stays below the recommended ≤50 % of DRAM; at 50-75 % tiering is at risk. `vsphere/technology/memory/concepts/memory-tiering`\n* Ensure the VM is not excluded from tiering with a missing full reservation, and check reclamation metrics ballooned/compressed/swapped for configuration issues on a tiered host. `vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host`\n\nNot settled by the knowledge base:\nExact time of VM workload restart on Tuesday, Guest OS memory pressure details, VM swap usage, and host memory tiering policy thresholds and eviction behavior specific to this VCF 9.1.1 build.",
+   "computed": [],
+   "files_read": [
+    "vsphere/technology/memory/vm-memory-latency-high",
+    "vsphere/technology/memory/metrics/virtual-motherboard/active",
+    "vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host",
+    "vsphere/technology/memory/concepts/memory-tiering",
+    "vsphere/technology/cpu/metrics/host/wait",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/wait",
+    "vsphere/object-types/cluster/cluster-performance",
+    "vsphere/technology/memory/concepts/guest-os-vs-vm-memory",
+    "vsphere/object-types/cluster/concepts/admission-control-and-cluster-state",
+    "vsphere/technology/cpu/concepts/vcpu-states",
+    "vsphere/architecture/provider-consumer",
+    "vsphere/technology/memory/metrics/virtual-motherboard/latency",
+    "vsphere/technology/memory/concepts/swap-and-compression",
+    "vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate",
+    "vsphere/architecture/resource-controls",
+    "sp5-framework/performance/vm-slow",
+    "vsphere/technology/memory/metrics/virtual-motherboard/zero-pages",
+    "vsphere/object-types/cluster/models/cluster-risk",
+    "vsphere/object-types/cluster/models/cluster-consumption",
+    "vsphere/technology/memory/metrics/virtual-motherboard/utilization",
+    "vsphere/technology/memory/metrics/host/consumed",
+    "vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm",
+    "vsphere/technology/memory/concepts/host-memory-states",
+    "vsphere/tools/vsphere-client/vcenter-statistics",
+    "sp5-framework/capacity/demand",
+    "sp5-framework/capacity/overcommit",
+    "vsphere/technology/gpu/gpu-monitoring",
+    "vsphere/technology/memory/concepts/memory-as-storage",
+    "vsphere/technology/memory/metrics/comparisons/vm-memory-metrics",
+    "vsphere/technology/memory/metrics/virtual-motherboard/consumed",
+    "vsphere/technology/memory/metrics/virtual-motherboard/usage",
+    "guest-os/memory/sql-server-memory",
+    "vcf-operations/dashboards/vm-performance-dashboard",
+    "vsphere/technology/cpu/metrics/host/idle",
+    "vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu",
+    "vsphere/technology/cpu/concepts/idle-and-unused-vcpus",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/idle",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/swap-wait",
+    "vsphere/object-types/cluster/cluster-health-check",
+    "sp5-framework/performance/performance-management",
+    "vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention",
+    "vsphere/object-types/vm/vm-performance",
+    "sp5-framework/concepts/performance-vs-capacity",
+    "sp5-framework/observability/aggregation",
+    "sp5-framework/performance/kpi-vs-sla",
+    "sp5-framework/performance/performance-kpi-design",
+    "vsphere/technology/memory/metrics/virtual-motherboard/shared",
+    "vsphere/technology/memory/metrics/virtual-motherboard/granted"
+   ],
+   "trace": [
+    {
+     "step": 1,
+     "action": "understand",
+     "output": {
+      "kind": "troubleshooting",
+      "objects": [
+       "VM",
+       "ESXi host"
+      ],
+      "metrics": [
+       {
+        "name": "DRAM consumption",
+        "object": "ESXi host esx-sg01-14",
+        "value": null,
+        "unit": "%",
+        "interval": "since Sunday 9 days ago",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "active memory",
+        "object": "VM pay-api-01",
+        "value": null,
+        "unit": "GB",
+        "interval": "Friday 15:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "active memory",
+        "object": "VM pay-api-01",
+        "value": null,
+        "unit": "GB",
+        "interval": "Saturday",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "active memory",
+        "object": "VM pay-api-01",
+        "value": null,
+        "unit": "GB",
+        "interval": "Sunday",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "active memory",
+        "object": "VM pay-api-01",
+        "value": null,
+        "unit": "GB",
+        "interval": "Monday",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "active memory",
+        "object": "VM pay-api-01",
+        "value": 0.4,
+        "unit": "GB",
+        "interval": "Tuesday 08:55",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "active memory",
+        "object": "VM pay-api-01",
+        "value": 12,
+        "unit": "GB",
+        "interval": "Tuesday 09:15",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "active memory",
+        "object": "VM pay-api-01",
+        "value": 11,
+        "unit": "GB",
+        "interval": "Tuesday 09:55",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "VM pay-api-01",
+        "value": 0.4,
+        "unit": "GB",
+        "interval": "Friday 15:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "VM pay-api-01",
+        "value": 10,
+        "unit": "GB",
+        "interval": "Saturday 18:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "VM pay-api-01",
+        "value": 19,
+        "unit": "GB",
+        "interval": "Sunday 08:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "VM pay-api-01",
+        "value": 20,
+        "unit": "GB",
+        "interval": "Tuesday 08:55",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "VM pay-api-01",
+        "value": 13,
+        "unit": "GB",
+        "interval": "Tuesday 09:15",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "VM pay-api-01",
+        "value": 3,
+        "unit": "GB",
+        "interval": "Tuesday 09:55",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe read bandwidth",
+        "object": "VM pay-api-01",
+        "value": 0,
+        "unit": "MBps",
+        "interval": "Friday to Tuesday 09:05",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe read bandwidth",
+        "object": "VM pay-api-01",
+        "value": 12,
+        "unit": "MBps",
+        "interval": "Tuesday 09:15",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe read bandwidth",
+        "object": "VM pay-api-01",
+        "value": 0.3,
+        "unit": "MBps",
+        "interval": "Tuesday 09:55",
+        "tool": "VCF Operations"
+       }
+      ],
+      "vcpus": 8,
+      "symptom": "VM pay-api-01 pages on NVMe on Tuesday morning with NVMe read bandwidth 12 MBps at 09:15, dropping to 0.3 MBps at 09:55",
+      "premise": "memory tiering is on and host DRAM consumption has been above 80% since Sunday 9 days ago",
+      "claims": [
+       "Why were pay-api-01's pages on NVMe on Tuesday morning",
+       "Why did the wait stop by 09:55"
+      ],
+      "missing": [
+       "Guest OS memory pressure details",
+       "VM swap usage",
+       "Host memory tiering policy thresholds and eviction behavior",
+       "Exact time of VM workload restart on Tuesday",
+       "VCF version specific memory tiering warm-up behavior"
+      ]
+     },
+     "prompt_tokens": 619,
+     "completion_tokens": 1539,
+     "latency": 16.79,
+     "provider": "togetherai"
+    },
+    {
+     "step": 2,
+     "action": "plan",
+     "output": {
+      "flow": [
+       "vsphere/technology/memory/vm-memory-latency-high"
+      ],
+      "named": [
+       "vsphere/technology/memory/metrics/virtual-motherboard/active",
+       "vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host",
+       "vsphere/technology/memory/concepts/memory-tiering",
+       "vsphere/technology/cpu/metrics/host/wait",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/wait"
+      ],
+      "search": [
+       "vsphere/object-types/cluster/cluster-performance"
+      ],
+      "mechanism": [
+       "vsphere/technology/memory/concepts/guest-os-vs-vm-memory",
+       "vsphere/object-types/cluster/concepts/admission-control-and-cluster-state",
+       "vsphere/technology/cpu/concepts/vcpu-states",
+       "vsphere/architecture/provider-consumer",
+       "vsphere/technology/memory/metrics/virtual-motherboard/latency",
+       "vsphere/technology/memory/concepts/swap-and-compression",
+       "vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate",
+       "vsphere/architecture/resource-controls",
+       "sp5-framework/performance/vm-slow"
+      ],
+      "claims": [
+       "vsphere/technology/memory/metrics/virtual-motherboard/zero-pages"
+      ],
+      "search_rest": [
+       "vsphere/object-types/cluster/models/cluster-risk",
+       "vsphere/object-types/cluster/models/cluster-consumption",
+       "vsphere/technology/memory/metrics/virtual-motherboard/utilization",
+       "vsphere/technology/memory/metrics/host/consumed"
+      ],
+      "more": [
+       "vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm",
+       "vsphere/technology/memory/concepts/host-memory-states",
+       "vsphere/tools/vsphere-client/vcenter-statistics",
+       "sp5-framework/capacity/demand",
+       "sp5-framework/capacity/overcommit",
+       "vsphere/technology/gpu/gpu-monitoring",
+       "vsphere/technology/memory/concepts/memory-as-storage",
+       "vsphere/technology/memory/metrics/comparisons/vm-memory-metrics",
+       "vsphere/technology/memory/metrics/virtual-motherboard/consumed",
+       "vsphere/technology/memory/metrics/virtual-motherboard/usage",
+       "guest-os/memory/sql-server-memory",
+       "vcf-operations/dashboards/vm-performance-dashboard",
+       "vsphere/technology/cpu/metrics/host/idle",
+       "vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu",
+       "vsphere/technology/cpu/concepts/idle-and-unused-vcpus",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/idle",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/swap-wait",
+       "vsphere/object-types/cluster/cluster-health-check",
+       "sp5-framework/performance/performance-management",
+       "vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention",
+       "vsphere/object-types/vm/vm-performance",
+       "sp5-framework/concepts/performance-vs-capacity",
+       "sp5-framework/observability/aggregation",
+       "sp5-framework/performance/kpi-vs-sla",
+       "sp5-framework/performance/performance-kpi-design",
+       "vsphere/technology/memory/metrics/virtual-motherboard/shared",
+       "vsphere/technology/memory/metrics/virtual-motherboard/granted"
+      ]
+     },
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 3,
+     "action": "coverage",
+     "output": "named",
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 4,
+     "action": "ask",
+     "output": "allowed: missing fact, premise",
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 5,
+     "action": "answer",
+     "output": "Conclusion: the VM’s pages were cold and demoted to NVMe over the 3-day public holiday while the host stayed above the ~80 % DRAM start point for tiering, and the wait stopped on Tuesday morning once the workload restarted, the working set became hot again and the pages were fetched back from NVMe to DRAM.\n\nMechanism and reason\n* Memory tiering is active on the host. Tiering starts when host DRAM ",
+     "prompt_tokens": 31219,
+     "completion_tokens": 1230,
+     "latency": 14.78,
+     "provider": "togetherai"
+    }
+   ],
+   "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d"
+  },
+  "3": {
+   "type": "answer",
+   "content": "Conclusion: the payments VMs’ pages were demoted to NVMe by host memory tiering because host DRAM consumption was already >80 % and the host’s active working set grew with the load test and security scan, not because the payments VMs were writing to NVMe.\n\nMechanism and reason\n* esx-sg01-14 is 1,024 GB DRAM + 1,024 GB NVMe 1:1 with tiering configured. Tiering starts once host DRAM consumption passes ~80 % and then continuously ages pages by recency/frequency; cold pages are moved to the NVMe tier, hot pages stay in DRAM. `vsphere/technology/memory/concepts/memory-tiering`\n* DRAM consumption has been >80 % since Sunday 9 days ago, so tiering is active. On a tiered host the capacity constraint is active memory against DRAM, not Consumed. `vsphere/technology/memory/metrics/virtual-motherboard/active`\n* Active memory rose on other workloads: 6 load-test VMs 4 GB →150 GB active Sat 10:00-18:00; 32 other VMs 120 GB →260 GB active Sun 01:00-07:00. Payments VMs stayed idle at 0.3 GB each Sat-Mon.\n* Host NVMe write bandwidth is tier out/demotion: <5 MBps Fri, 140 MBps Sat 10:00-18:00, 160 MBps Sun 01:00-07:00. NVMe write bandwidth counts cold pages moved down in background, off the vCPU path. `vsphere/technology/memory/concepts/memory-tiering`\n* Host NVMe read bandwidth was <5 MBps Sat-Mon, so no fetches back. Host NVMe consumed 35 GB →120 GB →190 GB and payments VMs NVMe consumed 1 GB →30 GB →58 GB →60 GB track the demotion bursts. The idle payments VMs were cold and were aged out as the active working set of the other VMs grew.\n\nWhat to check next\nVerify per-VM NVMe read bandwidth for the three payments VMs is near zero in the window, and confirm tier1Target/tier1Consumed via memstats. Confirm the VMs are not excluded from tiering and do not have a full memory reservation that would keep them in DRAM.",
+   "computed": [],
+   "files_read": [
+    "vsphere/technology/memory/vm-memory-latency-high",
+    "vsphere/technology/memory/metrics/virtual-motherboard/active",
+    "vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host",
+    "vsphere/technology/memory/concepts/memory-tiering",
+    "vsphere/technology/cpu/metrics/host/idle",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/idle",
+    "vsphere/technology/memory/concepts/guest-os-vs-vm-memory",
+    "vsphere/object-types/cluster/concepts/admission-control-and-cluster-state",
+    "vsphere/technology/cpu/concepts/hyper-threading",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/wait",
+    "vsphere/technology/memory/metrics/virtual-motherboard/latency",
+    "vsphere/technology/memory/concepts/swap-and-compression",
+    "vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate",
+    "vsphere/architecture/resource-controls",
+    "sp5-framework/performance/vm-slow",
+    "vsphere/object-types/cluster/configuration/drs-migration-levels",
+    "vsphere/object-types/cluster/cluster-performance",
+    "vsphere/technology/memory/metrics/host/consumed",
+    "vsphere/object-types/cluster/models/cluster-consumption",
+    "vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention",
+    "vsphere/object-types/cluster/models/cluster-risk",
+    "vsphere/technology/memory/concepts/large-memory-pages",
+    "vsphere/technology/memory/metrics/comparisons/host-memory-metrics",
+    "sp5-framework/outputs/it-leaders-dashboards",
+    "vsphere/technology/memory/metrics/virtual-motherboard/zero-pages",
+    "vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm",
+    "vsphere/technology/memory/concepts/host-memory-states",
+    "vsphere/tools/vsphere-client/vcenter-statistics",
+    "sp5-framework/capacity/demand",
+    "sp5-framework/capacity/overcommit",
+    "vsphere/technology/gpu/gpu-monitoring",
+    "vsphere/technology/memory/concepts/memory-as-storage",
+    "vsphere/technology/memory/metrics/comparisons/vm-memory-metrics",
+    "vsphere/technology/memory/metrics/virtual-motherboard/consumed",
+    "vsphere/technology/memory/metrics/virtual-motherboard/usage",
+    "guest-os/memory/sql-server-memory",
+    "vcf-operations/dashboards/vm-performance-dashboard",
+    "vsphere/technology/cpu/metrics/host/wait",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/other-wait",
+    "vsphere/technology/cpu/concepts/idle-and-unused-vcpus",
+    "vsphere/object-types/cluster/concepts/drs-overview",
+    "vsphere/object-types/resource-pool/resource-pool-design",
+    "vsphere/object-types/cluster/concepts/dpm",
+    "vsphere/object-types/cluster/configuration/cluster-configuration-review",
+    "vsphere/object-types/vm/vm-performance",
+    "vsphere/object-types/cluster/cluster-health-check",
+    "sp5-framework/performance/performance-management",
+    "sp5-framework/concepts/performance-vs-capacity",
+    "sp5-framework/observability/aggregation",
+    "sp5-framework/performance/kpi-vs-sla",
+    "sp5-framework/performance/performance-kpi-design",
+    "vsphere/technology/memory/metrics/host/latency"
+   ],
+   "trace": [
+    {
+     "step": 1,
+     "action": "understand",
+     "output": {
+      "kind": "troubleshooting",
+      "objects": [
+       "VM",
+       "ESXi host",
+       "memory tier"
+      ],
+      "metrics": [
+       {
+        "name": "DRAM consumption",
+        "object": "Host esx-sg01-14",
+        "value": null,
+        "unit": "% of DRAM",
+        "interval": "since Sunday 9 days ago",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "active memory",
+        "object": "6 load-test VMs",
+        "value": 4,
+        "unit": "GB",
+        "interval": "before Saturday 10:00-18:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "active memory",
+        "object": "6 load-test VMs",
+        "value": 150,
+        "unit": "GB",
+        "interval": "Saturday 10:00-18:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "active memory",
+        "object": "32 other VMs",
+        "value": 120,
+        "unit": "GB",
+        "interval": "before Sunday 01:00-07:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "active memory",
+        "object": "32 other VMs",
+        "value": 260,
+        "unit": "GB",
+        "interval": "Sunday 01:00-07:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "active memory",
+        "object": "payments VMs",
+        "value": 0.3,
+        "unit": "GB each",
+        "interval": "Saturday to Monday",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe write bandwidth",
+        "object": "Host esx-sg01-14",
+        "value": 5,
+        "unit": "MBps",
+        "interval": "Friday",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe write bandwidth",
+        "object": "Host esx-sg01-14",
+        "value": 140,
+        "unit": "MBps",
+        "interval": "Saturday 10:00-18:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe write bandwidth",
+        "object": "Host esx-sg01-14",
+        "value": 160,
+        "unit": "MBps",
+        "interval": "Sunday 01:00-07:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe read bandwidth",
+        "object": "Host esx-sg01-14",
+        "value": 5,
+        "unit": "MBps",
+        "interval": "Saturday to Monday",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "payments VMs (3 together)",
+        "value": 1,
+        "unit": "GB",
+        "interval": "Friday",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "payments VMs (3 together)",
+        "value": 30,
+        "unit": "GB",
+        "interval": "Saturday 18:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "payments VMs (3 together)",
+        "value": 58,
+        "unit": "GB",
+        "interval": "Sunday 08:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "payments VMs (3 together)",
+        "value": 60,
+        "unit": "GB",
+        "interval": "Tuesday 08:55",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "Host esx-sg01-14",
+        "value": 35,
+        "unit": "GB",
+        "interval": "Friday",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "Host esx-sg01-14",
+        "value": 120,
+        "unit": "GB",
+        "interval": "Saturday 18:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "Host esx-sg01-14",
+        "value": 190,
+        "unit": "GB",
+        "interval": "Sunday 08:00",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "Host esx-sg01-14",
+        "value": 190,
+        "unit": "GB",
+        "interval": "Tuesday 08:55",
+        "tool": "VCF Operations"
+       }
+      ],
+      "vcpus": 8,
+      "symptom": "payments VMs were idle over long weekend yet their pages moved to NVMe memory tier",
+      "premise": "idle VMs should not have pages tiered to NVMe",
+      "claims": [
+       "Memory tiering moved idle pages to NVMe due to host DRAM pressure",
+       "Load test and security scan caused eviction of cold pages from payments VMs to NVMe",
+       "Payments VMs were actively writing to NVMe"
+      ],
+      "missing": [
+       "memory tiering policy thresholds and eviction aggressiveness",
+       "whether payments VMs have memory tiering enabled per-VM",
+       "host DRAM free/overcommit numbers and balloon/swap activity",
+       "esxtop memory tiering counters for the interval"
+      ]
+     },
+     "prompt_tokens": 727,
+     "completion_tokens": 1370,
+     "latency": 14.97,
+     "provider": "togetherai"
+    },
+    {
+     "step": 2,
+     "action": "plan",
+     "output": {
+      "flow": [
+       "vsphere/technology/memory/vm-memory-latency-high"
+      ],
+      "named": [
+       "vsphere/technology/memory/metrics/virtual-motherboard/active",
+       "vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host",
+       "vsphere/technology/memory/concepts/memory-tiering",
+       "vsphere/technology/cpu/metrics/host/idle",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/idle"
+      ],
+      "mechanism": [
+       "vsphere/technology/memory/concepts/guest-os-vs-vm-memory",
+       "vsphere/object-types/cluster/concepts/admission-control-and-cluster-state",
+       "vsphere/technology/cpu/concepts/hyper-threading",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/wait",
+       "vsphere/technology/memory/metrics/virtual-motherboard/latency",
+       "vsphere/technology/memory/concepts/swap-and-compression",
+       "vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate",
+       "vsphere/architecture/resource-controls",
+       "sp5-framework/performance/vm-slow"
+      ],
+      "claims": [
+       "vsphere/object-types/cluster/configuration/drs-migration-levels",
+       "vsphere/object-types/cluster/cluster-performance"
+      ],
+      "search_rest": [
+       "vsphere/technology/memory/metrics/host/consumed",
+       "vsphere/object-types/cluster/models/cluster-consumption",
+       "vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention",
+       "vsphere/object-types/cluster/models/cluster-risk",
+       "vsphere/technology/memory/concepts/large-memory-pages",
+       "vsphere/technology/memory/metrics/comparisons/host-memory-metrics"
+      ],
+      "more": [
+       "sp5-framework/outputs/it-leaders-dashboards",
+       "vsphere/technology/memory/metrics/virtual-motherboard/zero-pages",
+       "vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm",
+       "vsphere/technology/memory/concepts/host-memory-states",
+       "vsphere/tools/vsphere-client/vcenter-statistics",
+       "sp5-framework/capacity/demand",
+       "sp5-framework/capacity/overcommit",
+       "vsphere/technology/gpu/gpu-monitoring",
+       "vsphere/technology/memory/concepts/memory-as-storage",
+       "vsphere/technology/memory/metrics/comparisons/vm-memory-metrics",
+       "vsphere/technology/memory/metrics/virtual-motherboard/consumed",
+       "vsphere/technology/memory/metrics/virtual-motherboard/usage",
+       "guest-os/memory/sql-server-memory",
+       "vcf-operations/dashboards/vm-performance-dashboard",
+       "vsphere/technology/cpu/metrics/host/wait",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/other-wait",
+       "vsphere/technology/cpu/concepts/idle-and-unused-vcpus",
+       "vsphere/object-types/cluster/concepts/drs-overview",
+       "vsphere/object-types/resource-pool/resource-pool-design",
+       "vsphere/object-types/cluster/concepts/dpm",
+       "vsphere/object-types/cluster/configuration/cluster-configuration-review",
+       "vsphere/object-types/vm/vm-performance",
+       "vsphere/object-types/cluster/cluster-health-check",
+       "sp5-framework/performance/performance-management",
+       "sp5-framework/concepts/performance-vs-capacity",
+       "sp5-framework/observability/aggregation",
+       "sp5-framework/performance/kpi-vs-sla",
+       "sp5-framework/performance/performance-kpi-design"
+      ]
+     },
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 3,
+     "action": "coverage",
+     "output": "named",
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 4,
+     "action": "ask",
+     "output": "allowed: missing fact, premise",
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 5,
+     "action": "answer",
+     "output": "Conclusion: the payments VMs’ pages were demoted to NVMe by host memory tiering because the host’s active working set grew and DRAM consumption was already >80 %, not because the payments VMs were writing to NVMe.\n\nMechanism and reason\n* Host esx-sg01-14 is tiered 1:1, 1,024 GB DRAM + 1,024 GB NVMe, tiering configured. Tiering starts once host DRAM consumption passes ~80 % and then continuously cl",
+     "prompt_tokens": 30128,
+     "completion_tokens": 895,
+     "latency": 11.1,
+     "provider": "togetherai"
+    },
+    {
+     "step": 6,
+     "action": "gap",
+     "output": "Conclusion: the payments VMs’ pages were demoted to NVMe by host memory tiering because host DRAM consumption was already >80 % and the host’s active working set grew with the load test and security scan, not because the payments VMs were writing to NVMe.\n\nMechanism and reason\n* esx-sg01-14 is 1,024 GB DRAM + 1,024 GB NVMe 1:1 with tiering configured. Tiering starts once host DRAM consumption pass",
+     "prompt_tokens": 31270,
+     "completion_tokens": 677,
+     "latency": 8.93,
+     "provider": "togetherai"
+    }
+   ],
+   "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d"
+  },
+  "4": {
+   "type": "answer",
+   "content": "Conclusion: crm-db-03 is DRAM-pinned and the host’s reservable DRAM for tiered VMs is reduced; active memory is still safe, so no tiering wait yet, but capacity headroom and the effective DRAM:NVMe ratio are worse.\n\nMechanism and reason\n* With `sched.mem.enableTiering = \"FALSE\"` the VM is excluded from memory tiering. An excluded VM needs a full memory reservation, otherwise it competes for DRAM and its pages can go to host swap. `vsphere/technology/memory/concepts/memory-tiering`\n* The 256 GB reservation is sticky and counts for admission control as set, not as touched. Host memory reservation went 0% → 25% of DRAM since Sunday 9 days ago 02:10, matching the VM’s 256 GB reservation. Reservation consumed is the sum of running VMs’ reservations as set. `vsphere/technology/memory/metrics/host/reservation`\n* A memory reservation is a guarantee, not use. Pages are held only after they are touched and then stay with the VM. The VM’s active memory is 110 GB, so ~110 GB of the 256 GB is already touched and pinned in DRAM. `vsphere/architecture/resource-controls`\n* DRAM consumption rose from ~74% the week before to 81-84% on weekdays since, and NVMe consumed moved from 0 GB to 20-35 GB. Host active memory is 26-33% of DRAM. Active <50% of DRAM is the green capacity limit for a tiered host; tiering starts ~80% DRAM consumption. `vsphere/technology/memory/concepts/memory-tiering`\n* Each DRAM-only reservation shrinks the DRAM left for tiered VMs. With 1 TB DRAM + 1 TB NVMe, a 256 GB pinned reservation lowers the effective DRAM:NVMe ratio for the remaining 41 VMs and raises Cluster Risk via Memory reservation % and DRAM Memory Consumed. `vsphere/object-types/cluster/models/cluster-risk`\n\nWhat to check next\nPer-VM tiering eligibility and active memory for the other 41 VMs, host `mem.missrate`, NVMe read bandwidth/latency and per-VM NVMe read bandwidth to confirm no fetches, and Cluster Risk sub-metrics for Memory reservation and Active memory on esx-sg01-14.",
+   "computed": [],
+   "files_read": [
+    "vsphere/technology/memory/metrics/virtual-motherboard/active",
+    "vsphere/architecture/resource-controls",
+    "vsphere/technology/memory/metrics/host/reservation",
+    "vsphere/technology/memory/concepts/memory-tiering",
+    "vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host",
+    "vsphere/object-types/cluster/models/cluster-risk",
+    "vsphere/technology/memory/concepts/guest-os-vs-vm-memory",
+    "vsphere/object-types/cluster/concepts/admission-control-and-cluster-state",
+    "vsphere/technology/memory/concepts/memory-overhead",
+    "vsphere/object-types/cluster/models/cluster-consumption",
+    "vsphere/architecture/overhead",
+    "vsphere/technology/memory/metrics/host/consumed",
+    "vsphere/technology/memory/concepts/large-memory-pages",
+    "vsphere/technology/memory/concepts/host-memory-states",
+    "vsphere/tools/vsphere-client/vcenter-statistics",
+    "sp5-framework/capacity/demand",
+    "sp5-framework/capacity/overcommit",
+    "vsphere/technology/gpu/gpu-monitoring",
+    "vsphere/technology/memory/concepts/memory-as-storage",
+    "vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm",
+    "vsphere/technology/memory/vm-memory-latency-high",
+    "vsphere/technology/memory/metrics/comparisons/vm-memory-metrics",
+    "vsphere/technology/memory/metrics/virtual-motherboard/consumed",
+    "vsphere/technology/memory/metrics/virtual-motherboard/usage",
+    "guest-os/memory/sql-server-memory",
+    "vcf-operations/dashboards/vm-performance-dashboard",
+    "vsphere/technology/cpu/metrics/host/demand",
+    "glossary",
+    "vsphere/technology/cpu/metrics/comparisons/consumption-metrics",
+    "sp5-framework/capacity/unused-vm",
+    "sp5-framework/concepts/class-of-service",
+    "sp5-framework/concepts/overview",
+    "vsphere/technology/memory/metrics/comparisons/host-memory-metrics",
+    "vsphere/technology/cpu/metrics/host/reserved-capacity"
+   ],
+   "trace": [
+    {
+     "step": 1,
+     "action": "understand",
+     "output": {
+      "kind": "how-it-works",
+      "objects": [
+       "VM",
+       "ESXi host"
+      ],
+      "metrics": [
+       {
+        "name": "memory reservation",
+        "object": "Host esx-sg01-14",
+        "value": null,
+        "unit": "% of DRAM",
+        "interval": null,
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "memory reservation",
+        "object": "Host esx-sg01-14",
+        "value": 0,
+        "unit": "% of DRAM",
+        "interval": "before Sunday 9 days ago",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "memory reservation",
+        "object": "Host esx-sg01-14",
+        "value": 25,
+        "unit": "% of DRAM",
+        "interval": "since Sunday 9 days ago 02:10",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "DRAM consumption",
+        "object": "Host esx-sg01-14",
+        "value": 74,
+        "unit": "% of DRAM",
+        "interval": "the week before",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "DRAM consumption",
+        "object": "Host esx-sg01-14",
+        "value": null,
+        "unit": "% of DRAM",
+        "interval": "81 to 84 on weekdays since Sunday 9 days ago",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "Host esx-sg01-14",
+        "value": 0,
+        "unit": "GB",
+        "interval": "until Sunday 9 days ago",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "NVMe consumed",
+        "object": "Host esx-sg01-14",
+        "value": null,
+        "unit": "GB",
+        "interval": "20 to 35 GB on weekdays since Sunday 9 days ago",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "active memory",
+        "object": "Host esx-sg01-14",
+        "value": null,
+        "unit": "% of DRAM",
+        "interval": "26% to 33% of DRAM on weekdays",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "sched.mem.enableTiering",
+        "object": "VM crm-db-03",
+        "value": null,
+        "unit": null,
+        "interval": "since Sunday 9 days ago 02:10",
+        "tool": "vCenter"
+       },
+       {
+        "name": "memory reservation",
+        "object": "VM crm-db-03",
+        "value": 256,
+        "unit": "GB",
+        "interval": "since Sunday 9 days ago 02:10",
+        "tool": "vCenter"
+       },
+       {
+        "name": "active memory",
+        "object": "VM crm-db-03",
+        "value": 110,
+        "unit": "GB",
+        "interval": null,
+        "tool": "vCenter"
+       }
+      ],
+      "vcpus": 16,
+      "symptom": "crm-db-03 on esx-sg01-14 has had memory tiering off and all 256 GB reserved since Sunday 9 days ago",
+      "premise": "memory tiering off with full reservation pins the VM's memory to DRAM and changes host reservation and tier usage",
+      "claims": [
+       "What effect does crm-db-03 having memory tiering off with a full 256 GB reservation have on the tiered VMs on esx-sg01-14"
+      ],
+      "missing": [
+       "tiering policy for the other 41 VMs",
+       "per-VM tiering eligibility and active memory",
+       "host memory pressure and ballooning/swapping details",
+       "VCF Operations / vCenter version specifics beyond VCF 9.1.1"
+      ]
+     },
+     "prompt_tokens": 596,
+     "completion_tokens": 1295,
+     "latency": 14.18,
+     "provider": "togetherai"
+    },
+    {
+     "step": 2,
+     "action": "plan",
+     "output": {
+      "named": [
+       "vsphere/technology/memory/metrics/virtual-motherboard/active",
+       "vsphere/architecture/resource-controls",
+       "vsphere/technology/memory/metrics/host/reservation"
+      ],
+      "search": [
+       "vsphere/technology/memory/concepts/memory-tiering",
+       "vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host",
+       "vsphere/object-types/cluster/models/cluster-risk"
+      ],
+      "mechanism": [
+       "vsphere/technology/memory/concepts/guest-os-vs-vm-memory",
+       "vsphere/object-types/cluster/concepts/admission-control-and-cluster-state"
+      ],
+      "search_rest": [
+       "vsphere/technology/memory/concepts/memory-overhead",
+       "vsphere/object-types/cluster/models/cluster-consumption",
+       "vsphere/architecture/overhead",
+       "vsphere/technology/memory/metrics/host/consumed",
+       "vsphere/technology/memory/concepts/large-memory-pages"
+      ],
+      "more": [
+       "vsphere/technology/memory/concepts/host-memory-states",
+       "vsphere/tools/vsphere-client/vcenter-statistics",
+       "sp5-framework/capacity/demand",
+       "sp5-framework/capacity/overcommit",
+       "vsphere/technology/gpu/gpu-monitoring",
+       "vsphere/technology/memory/concepts/memory-as-storage",
+       "vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm",
+       "vsphere/technology/memory/vm-memory-latency-high",
+       "vsphere/technology/memory/metrics/comparisons/vm-memory-metrics",
+       "vsphere/technology/memory/metrics/virtual-motherboard/consumed",
+       "vsphere/technology/memory/metrics/virtual-motherboard/usage",
+       "guest-os/memory/sql-server-memory",
+       "vcf-operations/dashboards/vm-performance-dashboard",
+       "vsphere/technology/cpu/metrics/host/demand",
+       "glossary",
+       "vsphere/technology/cpu/metrics/comparisons/consumption-metrics",
+       "sp5-framework/capacity/unused-vm",
+       "sp5-framework/concepts/class-of-service",
+       "sp5-framework/concepts/overview",
+       "vsphere/technology/memory/metrics/comparisons/host-memory-metrics",
+       "vsphere/technology/cpu/metrics/host/reserved-capacity"
+      ]
+     },
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 3,
+     "action": "coverage",
+     "output": "named",
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 4,
+     "action": "ask",
+     "output": "allowed: missing fact, premise",
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 5,
+     "action": "answer",
+     "output": "Conclusion: crm-db-03 is DRAM-pinned and the host’s reservable DRAM for tiered VMs is reduced; active memory is still safe, so no tiering wait yet, but capacity headroom and the effective DRAM:NVMe ratio are worse.\n\nMechanism and reason\n* With `sched.mem.enableTiering = \"FALSE\"` the VM is excluded from memory tiering. An excluded VM needs a full memory reservation, otherwise it competes for DRAM a",
+     "prompt_tokens": 33165,
+     "completion_tokens": 926,
+     "latency": 11.43,
+     "provider": "togetherai"
+    }
+   ],
+   "knowledge_commit": "f811cacfcc9be2d3aed0cb990622f51e96ba638d"
+  },
+  "5": {
+   "type": "answer",
+   "content": "Cluster Risk is rising for memory, not a capacity shortage yet. Memory Capacity Remaining is green because VCF Operations counts the NVMe tier in Total Memory Capacity, so on a 1:1 tiered host supply is overstated. Capacity Remaining is a 3-day projection against usable capacity, not a risk indicator.\n\n* Highest ESXi memory reservation %: 0 → 25. Yellow 10-40. Reservation became non-zero 9 days ago, so a host now has ≥10% of DRAM reserved.\n* Highest ESXi DRAM Memory Consumed %: 76 → 84 → 95 → 102 → 101. Utilization bands: yellow 80-90, orange 90-95, red 95-100. Consumed is memory consumed in DRAM+NVMe as % of DRAM; >100% is by design on tiered hosts. Red from Sat 17:40 means the worst host is carrying >1.0× DRAM in VMs.\n* Worst ESXi active memory, tiered hosts % of DRAM: 31 → 33 → 53 → 51 → 44. Saturation bands: green 0-50, yellow 50-62.5. Yellow Sat 11:20 to Sun 07:30. Active is the capacity limit on a tiered host; 53% is the warning zone, >75% is expected loss.\n* Worst ESXi NVMe read latency µs: no reads → 70 → 60 → 80 → 230. Saturation bands: green 0-100, yellow 100-200, orange 200-400. Today 230 µs is yellow; fetches are now waiting on NVMe.\n\nTogether: tiering started, DRAM consumed passed ~80% and pages spilled to NVMe, active memory rose into yellow during the holiday load and NVMe latency is now degrading. Performance can still be green because Cluster Risk measures potential, and VM memory contention does not count NVMe waits.\n\nCheck next: per-VM NVMe read bandwidth, Active memory per host vs DRAM, and NVMe read latency trend; do not rely on Memory Capacity Remaining on tiered clusters.",
+   "computed": [],
+   "files_read": [
+    "vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms",
+    "vsphere/object-types/cluster/models/cluster-risk",
+    "vsphere/technology/memory/metrics/cluster/consumed",
+    "vsphere/technology/memory/metrics/host/consumed",
+    "vsphere/technology/memory/metrics/virtual-motherboard/consumed",
+    "vsphere/technology/memory/metrics/host/reservation",
+    "vsphere/technology/memory/metrics/virtual-motherboard/active",
+    "vsphere/object-types/cluster/cluster-performance",
+    "vsphere/object-types/esxi/esxi-performance",
+    "vsphere/object-types/vm/vm-performance",
+    "vsphere/object-types/cluster/models/cluster-consumption",
+    "vsphere/technology/memory/concepts/memory-tiering",
+    "vsphere/object-types/cluster/models/close-for-business",
+    "vsphere/object-types/cluster/concepts/admission-control-and-cluster-state",
+    "sp5-framework/capacity/demand",
+    "sp5-framework/capacity/supply",
+    "sp5-framework/capacity/forecasting",
+    "vcf-operations/features/capacity-forecast",
+    "sp5-framework/concepts/modelling",
+    "sp5-framework/capacity/class-of-service-planning",
+    "sp5-framework/performance/performance-kpi-design",
+    "sp5-framework/capacity/overcommit",
+    "vsphere/technology/cpu/metrics/cluster/inter-host-imbalance",
+    "vsphere/architecture/resource-controls",
+    "vsphere/architecture/provider-consumer",
+    "vsphere/architecture/overhead",
+    "vsphere/technology/memory/concepts/guest-os-vs-vm-memory",
+    "vsphere/object-types/vm/vmotion",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/other-wait",
+    "sp5-framework/outputs/dashboard-design",
+    "vsphere/technology/memory/metrics/host/utilization",
+    "vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host",
+    "vsphere/technology/memory/metrics/comparisons/host-memory-metrics",
+    "sp5-framework/concepts/performance-vs-capacity",
+    "sp5-framework/outputs/system-engagement",
+    "vsphere/technology/memory/concepts/host-memory-states",
+    "vsphere/tools/vsphere-client/vcenter-statistics",
+    "vsphere/technology/gpu/gpu-monitoring",
+    "vsphere/technology/memory/concepts/memory-as-storage",
+    "vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out",
+    "vsphere/object-types/cluster/cluster-health-check",
+    "sp5-framework/concepts/health-check",
+    "sp5-framework/capacity/capacity-management",
+    "vsphere/technology/cpu/metrics/host/imbalance",
+    "vsphere/object-types/cluster/concepts/cluster-operations"
+   ],
+   "knowledge_commit": "84e5531a6999ff42a5e199881a6477812d5afaf8",
+   "trace": [
+    {
+     "step": 1,
+     "action": "understand",
+     "output": {
+      "kind": "metric-meaning",
+      "objects": [
+       "cluster",
+       "ESXi host",
+       "VM"
+      ],
+      "metrics": [
+       {
+        "name": "Highest ESXi memory reservation",
+        "object": "ESXi host",
+        "value": null,
+        "unit": "%",
+        "interval": "5 times over last 11 days",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "Highest ESXi DRAM Memory Consumed",
+        "object": "ESXi host",
+        "value": null,
+        "unit": "%",
+        "interval": "5 times over last 11 days",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "Worst ESXi active memory, tiered hosts",
+        "object": "ESXi host",
+        "value": null,
+        "unit": "% of DRAM",
+        "interval": "5 times over last 11 days",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "Worst ESXi NVMe read latency",
+        "object": "ESXi host",
+        "value": null,
+        "unit": "µs",
+        "interval": "5 times over last 11 days",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "Memory Capacity Remaining",
+        "object": "cluster",
+        "value": null,
+        "unit": "%",
+        "interval": "5 times over last 11 days",
+        "tool": "VCF Operations"
+       }
+      ],
+      "symptom": "team saw no performance problem and Memory Capacity Remaining stayed green, so nobody acted",
+      "premise": "Memory Capacity Remaining staying green means no memory risk/action needed",
+      "claims": [
+       "What the Cluster Risk rows indicate about memory pressure and tiering behavior over the 11 days",
+       "Why Memory Capacity Remaining can stay green while other risk rows degrade"
+      ],
+      "missing": [
+       "object",
+       "interval",
+       "vCPU count",
+       "version"
+      ]
+     },
+     "prompt_tokens": 680,
+     "completion_tokens": 788,
+     "latency": 9.31,
+     "provider": "togetherai"
+    },
+    {
+     "step": 2,
+     "action": "plan",
+     "output": {
+      "named": [
+       "vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms",
+       "vsphere/object-types/cluster/models/cluster-risk",
+       "vsphere/technology/memory/metrics/cluster/consumed",
+       "vsphere/technology/memory/metrics/host/consumed",
+       "vsphere/technology/memory/metrics/virtual-motherboard/consumed",
+       "vsphere/technology/memory/metrics/host/reservation",
+       "vsphere/technology/memory/metrics/virtual-motherboard/active",
+       "vsphere/object-types/cluster/cluster-performance",
+       "vsphere/object-types/esxi/esxi-performance",
+       "vsphere/object-types/vm/vm-performance"
+      ],
+      "search": [
+       "vsphere/object-types/cluster/models/cluster-consumption",
+       "vsphere/technology/memory/concepts/memory-tiering"
+      ],
+      "mechanism": [
+       "vsphere/object-types/cluster/models/close-for-business",
+       "vsphere/object-types/cluster/concepts/admission-control-and-cluster-state",
+       "sp5-framework/capacity/demand",
+       "sp5-framework/capacity/supply",
+       "sp5-framework/capacity/forecasting",
+       "vcf-operations/features/capacity-forecast",
+       "sp5-framework/concepts/modelling",
+       "sp5-framework/capacity/class-of-service-planning",
+       "sp5-framework/performance/performance-kpi-design",
+       "sp5-framework/capacity/overcommit",
+       "vsphere/technology/cpu/metrics/cluster/inter-host-imbalance",
+       "vsphere/architecture/resource-controls",
+       "vsphere/architecture/provider-consumer",
+       "vsphere/architecture/overhead",
+       "vsphere/technology/memory/concepts/guest-os-vs-vm-memory",
+       "vsphere/object-types/vm/vmotion",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/other-wait"
+      ],
+      "claims": [
+       "sp5-framework/outputs/dashboard-design"
+      ],
+      "search_rest": [
+       "vsphere/technology/memory/metrics/host/utilization",
+       "vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host",
+       "vsphere/technology/memory/metrics/comparisons/host-memory-metrics",
+       "sp5-framework/concepts/performance-vs-capacity"
+      ],
+      "more": [
+       "sp5-framework/outputs/system-engagement",
+       "vsphere/technology/memory/concepts/host-memory-states",
+       "vsphere/tools/vsphere-client/vcenter-statistics",
+       "vsphere/technology/gpu/gpu-monitoring",
+       "vsphere/technology/memory/concepts/memory-as-storage",
+       "vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out",
+       "vsphere/object-types/cluster/cluster-health-check",
+       "sp5-framework/concepts/health-check",
+       "sp5-framework/capacity/capacity-management",
+       "vsphere/technology/cpu/metrics/host/imbalance",
+       "vsphere/object-types/cluster/concepts/cluster-operations"
+      ]
+     },
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 3,
+     "action": "coverage",
+     "output": "named",
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 4,
+     "action": "ask",
+     "output": "allowed: missing fact, premise, premise term",
+     "prompt_tokens": null,
+     "completion_tokens": null,
+     "latency": null,
+     "provider": null
+    },
+    {
+     "step": 5,
+     "action": "answer",
+     "output": "Cluster Risk is rising for memory, not a capacity shortage yet. Memory Capacity Remaining is green because VCF Operations counts the NVMe tier in Total Memory Capacity, so on a 1:1 tiered host supply is overstated. Capacity Remaining is a 3-day projection against usable capacity, not a risk indicator.\n\n* Highest ESXi memory reservation %: 0 → 25. Yellow 10-40. Reservation became non-zero 9 days ag",
+     "prompt_tokens": 34036,
+     "completion_tokens": 985,
+     "latency": 13.29,
+     "provider": "togetherai"
+    }
+   ]
+  }
+ }
+}
