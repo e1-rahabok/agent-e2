@@ -1,0 +1,10 @@
+Cluster Risk went orange at 09:20 today, and some of its rows turned yellow earlier. What does each row tell me? I was not part of any change last week.
+
+Agent E2 read from VCF Operations:
+Cluster CL-SG-PRD-PAY, Cluster Risk and its rows (vCommunity management pack), worst host, business hours, on Monday, Wednesday and Friday last week and today (Tuesday):
+- Cluster Risk (%): 22.5, 25.5, 31.1, 66.0. Alert: orange, started today at 09:20; no alert before today.
+- Highest ESXi Memory Reservation (%): 0, 26, 26, 26. Yellow symptom started last Tuesday at 23:25.
+- Highest ESXi DRAM Memory Consumed (%): 68, 74, 87, 108. Yellow symptom started last Friday at 08:40; red today.
+- Highest ESXi Memory Overcommit Ratio: 1.07, 1.07, 1.23, 1.23. Stepped up last Thursday at 23:35.
+- Highest ESXi CPU Overcommit Ratio: 1.10, 1.10, 1.41, 1.41. Stepped up last Thursday at 23:35.
+- Cluster Performance (%): 99, 99, 98, 48.

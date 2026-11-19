@@ -1,0 +1,8 @@
+Capacity says the cluster has 30% memory left, but Highest ESXi DRAM Memory Consumed reads 108%. Which one is right?
+
+Agent E2 read from VCF Operations:
+Cluster CL-SG-PRD-PAY: 8 identical hosts, each 1,024 GB DRAM plus a 1,024 GB NVMe memory tier (1:1); memory tiering configured since June; VCF 9.1.1 with the vCommunity management pack.
+- Memory Capacity Remaining (%): 38 last Wednesday, 30 today. Time Remaining: over 200 days.
+- Highest ESXi DRAM Memory Consumed (%): Monday 68, Wednesday 74, Friday 87, Tuesday (today) 108.
+- Worst ESXi Active Memory, tiered hosts (% of DRAM): Monday 34, Wednesday 35, Friday 46, Tuesday 77.
+- Worst ESXi NVMe Read Latency (µs): no reads on Monday and Wednesday, 120 on Friday, 290 today.

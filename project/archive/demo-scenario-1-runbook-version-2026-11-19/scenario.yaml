@@ -1,0 +1,112 @@
+title: 'Approved by the runbook'
+short_title: Memory Tiering Demo
+about: |
+  - A replay of one P1 incident, step by step. The cluster, its readings and the incident are a scenario; every Agent E2 answer is the recorded output of the Agent E2 pipeline (a local model reading the knowledge base), unedited.
+  - Agent E2 runs on site, connected to VCF Operations and vCenter. The L2 specialist asks one narrow question per step; Agent E2 reads the data it needs, finds the facts and explains them. The specialist connects the steps, writes the root cause and decides the fix.
+  - The VCF Operations connector is not built yet: in this recording the readings stand for what it would fetch, and the pipeline gets them as text. The vCommunity management pack is the enhanced one: VM Performance and Cluster Performance score NVMe wait.
+  - A boxed number comes from Agent E2's code (stage 3), not from the model.
+  - One run per question, recorded on 2026-11-19, kept as it came, flaws included.
+incident: {id: PRB-20931, priority: RCA, title: 'Payments API slow (INC-48213, resolved)', summary: 'The problem has disappeared. Business asks why it happened and how to avoid it.', escalated: 'assigned to L2 vSphere for RCA', now: 'L1 does not perform RCA', user: 'L2 vSphere specialist'}
+l1_note: |
+  INC-48213 opened by the service desk: Payments API slow. Closed by L1: the problem has disappeared, with no action taken. Business wants to know why it happened and how to avoid it in future. L1 does not perform RCA, so this problem record goes to L2 vSphere.
+  ## Impact
+  - Payments API p99 latency 180 ms → 1.4 s from 09:05, then back to normal.
+  ## Scope (app team)
+  - The payments application runs in 2 physical data centers, 72 VMs in each. In each DC its 72 VMs sit in a single cluster.
+  - In DC-01 that cluster is CL-SG-DC-PRD-01: 24 hosts, 1,006 VMs.
+  - DC-02 plays the passive standby this week.
+  ## Checked (L1 SOP)
+  - VCF Operations: VM Performance (%) dropped on the payments VMs. The NVMe metric caused the drop.
+  - Worst hit: pay-api-01, on CL-SG-DC-PRD-01.
+  - Nothing else seems wrong, by the SOP that L1 follows.
+  ## Handed to L2
+  - Why did the payments VMs wait on NVMe, why did it go away, and how is it avoided next time.
+cluster: CL-SG-PRD-PAY
+cluster_meta: '8 identical hosts · 2 x 32 cores · 1,024 GB DRAM + 1,024 GB NVMe memory tier · VCF 9.1.1 · vCommunity management pack'
+run: {model: meta/muse-glimmer-30b, label: 'Muse Glimmer 30B', params: 'reasoning effort low', why: 'best local model of the round of 2026-11-16'}
+proactive:
+  intro: 'Daily health check. Insights are yellow symptoms: they raise no alert. Orange or red is an alert.'
+  rows:
+  - {object: esxi-pay-05, symptom: 'Highest ESXi Memory Reservation (%) 26, yellow', started: 'last Tue 23:25', status: 'not reviewed'}
+  - {object: esxi-pay-05, symptom: 'Highest ESXi DRAM Memory Consumed (%) 87, yellow', started: 'last Fri 08:40', status: 'not reviewed'}
+  - {object: CL-SG-PRD-PAY, symptom: 'Cluster Risk (%) 66, orange: alert', started: 'today 09:20', status: 'open alert'}
+start: 'The specialist starts where L1 stopped: pay-api-01, the worst VM, its VM Performance drop caused by the NVMe metric.'
+steps:
+- n: 1
+  at: 0
+  object: {kind: VM, name: pay-api-07, meta: '8 vCPU · 32 GB · memory tiering on · on esxi-pay-05'}
+  tiles:
+  - {label: 'VM Performance', unit: '%', value: 17, band: red, note: '99 every day last week'}
+  - {label: 'Memory Contention', unit: '%', value: 0.2, band: green, note: 'peak'}
+  - {label: 'CPU Ready', unit: '%', value: 0.8, band: green, note: 'peak'}
+  - {label: 'NVMe read bandwidth', unit: MBps, value: 6, band: grey, note: 'this VM'}
+  - {label: 'Balloon, compressed, swapped', unit: GB, value: 0, band: green, note: ''}
+  - {label: 'NVMe read latency', unit: 'µs', value: 290, band: orange, note: 'host esxi-pay-05'}
+  chart: {type: line, title: 'VM Performance (%), pay-api-07, daily', x: [Mon, Tue, Wed, Thu, Fri, Sat, Sun, Mon, Today], series: [{name: 'VM Performance', values: [99, 99, 99, 99, 99, 99, 99, 99, 17]}], ymax: 100, ring: [8]}
+  finding: 'pay-api-07 waits on NVMe: 5.6% of its vCPU time. Memory Contention does not count it.'
+  follow: {quote: 'active memory vs DRAM and tier in rate to confirm a working-set miss or warm-up', note: 'the specialist opens host esxi-pay-05.'}
+- n: 2
+  at: 1
+  object: {kind: ESXi host, name: esxi-pay-05, meta: '2 x 32 cores · 1,024 GB DRAM + 1,024 GB NVMe tier (1:1) · memory tiering configured'}
+  tiles:
+  - {label: 'NVMe read bandwidth', unit: MBps, value: '380 → 360', band: orange, note: '09:10 → 10:15'}
+  - {label: 'NVMe read latency', unit: 'µs', value: '290 → 280', band: orange, note: '09:10 → 10:15'}
+  - {label: 'Active memory', unit: GB, value: '790 → 785', band: red, note: '77% of DRAM'}
+  - {label: 'NVMe consumed', unit: GB, value: '0 → 50 → 280', band: grey, note: 'Fri morning → Fri 18:00 → Tue 08:00'}
+  chart: {type: line, title: 'NVMe read bandwidth (MBps), esxi-pay-05', x: ['Fri 08:00', 'Fri 18:00', Sat, Sun, Mon, 'Tue 08:30', 'Tue 09:10', 'Tue 10:15'], series: [{name: 'NVMe read bandwidth', values: [0, 1, 0, 0, 0, 2, 380, 360]}], ymax: 400, threshold: {value: 200, label: '200 MBps'}, ring: [6, 7], note: 'Fri 18:00 to Tue 08:30: NVMe writes up (cold pages moving down, 50 → 280 GB), reads near 0.'}
+  finding: 'esxi-pay-05: NVMe reads are sustained (380 then 360 MBps, an hour apart), not a warm-up. Active memory 77% of DRAM: the working set no longer fits the DRAM left.'
+  follow: {quote: 'review VMs that should not be tiered with a full reservation', note: 'the specialist opens the VMs on esxi-pay-05.'}
+- n: 3
+  at: 1
+  object: {kind: ESXi host, name: esxi-pay-05, meta: 'VMs on this host · Tuesday 10:15'}
+  table:
+    head: [VM, vCPU, Memory, Memory tiering, Reservation, Active]
+    rows:
+    - ['**sql-pay-03**', 16, '256 GB', '**off** (`sched.mem.enableTiering = "FALSE"`)', '256 GB (all)', '110 GB']
+    - ['pay-api-07', 8, '32 GB', 'on', '0', '']
+    - ['pay-api-03, pay-web-02, pay-web-05, pay-api-11', 8, '32 GB each', 'on', '0', '']
+    - ['29 other tiered VMs', '', '', 'on', '', '']
+  chart: {type: bars, title: 'DRAM, 1,024 GB per host', bars: [{name: esxi-pay-05, segments: [{label: 'sql-pay-03, tiering off, reserved', value: 256, band: orange}, {label: 'left for 34 tiered VMs', value: 768, band: grey}], marker: {value: 785, label: 'host active memory 785 GB'}}, {name: esxi-pay-07, segments: [{label: 'no SQL VM', value: 1024, band: grey}], marker: {value: 451, label: 'active 44%'}}, {name: esxi-pay-08, segments: [{label: 'no SQL VM', value: 1024, band: grey}], marker: {value: 420, label: 'active 41%'}}], max: 1024}
+  finding: 'sql-pay-03 (tiering off, 256 GB reserved) keeps its memory in DRAM; the 34 tiered VMs share the DRAM left. esxi-pay-07 and esxi-pay-08 hold no SQL VM: 44% and 41% active.'
+  follow: {note: 'Capacity team on the bridge: "Memory Capacity Remaining is 30%. This is not capacity." The specialist opens the cluster.'}
+- n: 4
+  at: 2
+  object: {kind: Cluster, name: CL-SG-PRD-PAY, meta: '8 hosts · 8 TB DRAM + 8 TB NVMe tier · capacity and Cluster Risk'}
+  tiles:
+  - {label: 'Memory Capacity Remaining', unit: '%', value: 30, band: green, note: '38 last Wednesday'}
+  - {label: 'Time Remaining', unit: days, value: '> 200', band: green, note: ''}
+  - {label: 'Highest ESXi DRAM Memory Consumed', unit: '%', value: 108, band: red, note: 'Cluster Risk row'}
+  - {label: 'Worst ESXi Active Memory, tiered hosts', unit: '% of DRAM', value: 77, band: red, note: '34 last Monday'}
+  - {label: 'Worst ESXi NVMe Read Latency', unit: 'µs', value: 290, band: orange, note: 'no reads until Friday'}
+  chart: {type: line, title: 'Highest ESXi DRAM Memory Consumed (%)', x: [Mon, Wed, Fri, Today], series: [{name: 'DRAM consumed', values: [68, 74, 87, 108]}], ymax: 120, threshold: {value: 80, label: '80%'}, ring: [2]}
+  finding: 'Capacity Remaining counts NVMe as DRAM, so it overstates the room. DRAM consumed passed 80% on Friday (87%), and NVMe consumed was 0 until Friday (step 2): tiering started on Friday.'
+  follow: {note: 'The Cluster Risk alert is open since 09:20. The specialist opens its rows.'}
+- n: 5
+  at: 2
+  object: {kind: Cluster, name: CL-SG-PRD-PAY, meta: 'Cluster Risk and its rows · worst host · business hours'}
+  risk:
+    head: [Row, Mon, Wed, Fri, Today, Change seen]
+    rows:
+    - ['Cluster Risk (%)', [22.5, green], [25.5, yellow], [31.1, yellow], ['66.0', orange], 'alert orange, today 09:20']
+    - ['Highest ESXi Memory Reservation (%)', [0, grey], [26, yellow], [26, yellow], [26, yellow], 'yellow symptom, last Tue 23:25']
+    - ['Highest ESXi DRAM Memory Consumed (%)', [68, grey], [74, grey], [87, yellow], [108, red], 'yellow symptom, last Fri 08:40']
+    - ['Highest ESXi Memory Overcommit Ratio', ['1.07', yellow], ['1.07', yellow], ['1.23', yellow], ['1.23', yellow], 'stepped up, last Thu 23:35']
+    - ['Highest ESXi CPU Overcommit Ratio', ['1.10', yellow], ['1.10', yellow], ['1.41', yellow], ['1.41', yellow], 'stepped up, last Thu 23:35']
+    - ['Cluster Performance (%)', [99, green], [99, green], [98, green], [48, orange], '']
+    note: 'Grey: a row left out of the score while green.'
+  finding: 'Memory reservation yellow from last Tue 23:25; overcommit stepped up last Thu 23:35: two changes. Ask what changed then.'
+  follow: {quote: 'Ask what changed at those timestamps', note: 'the specialist opens the change calendar.'}
+end:
+  title: 'Change calendar, last 7 days, opened 11:05'
+  rows:
+  - {id: CHG-1, when: 'last Tue 22:00-23:30', team: DBA, what: 'Blueprint SQL Gold v3 on sql-pay-01 to 06: powered off, memory tiering off, all memory reserved, powered on. No capacity review: no VM added.', match: 'Highest ESXi Memory Reservation, yellow at 23:25'}
+  - {id: CHG-2, when: 'last Thu 21:00-23:40', team: Application, what: '40 payments application VMs moved in, next to their databases. Capacity check passed: Memory Capacity Remaining 38%.', match: 'Memory and CPU overcommit stepped up at 23:35'}
+  note: 'L1 searched the last 24 hours: Monday was a holiday, so both changes fell outside the window. Both changes followed the runbook.'
+  root_cause: |
+    **Human: runbook incomplete.** Memory tiering was turned on for CL-SG-PRD-PAY in June; the capacity runbook was not updated for it.
+    - It approves added VMs on Memory Capacity Remaining, which counts NVMe as DRAM.
+    - It does not subtract the DRAM held by VMs with tiering off and fully reserved.
+    - It has no check of active memory against the DRAM left for the tiered VMs.
+    **Triggers:** CHG-1 took 256 GB of DRAM per host away from the tiered VMs, with no capacity review. CHG-2 added 40 VMs on a check that could not see it.
+    **Not the cause:** memory tiering worked as designed; DRAM consumed above 80% is where tiering starts. Capacity Remaining counting NVMe is documented behaviour, not a bug. No hardware fault.
+  next: 'Next: the DBA, application and capacity teams on the bridge with the findings; the fix and the runbook update are theirs to decide.'

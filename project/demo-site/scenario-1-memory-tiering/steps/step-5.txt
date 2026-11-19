@@ -1,10 +1,9 @@
-Cluster Risk went orange at 09:20 today, and some of its rows turned yellow earlier. What does each row tell me? I was not part of any change last week.
+These Cluster Risk rows changed over the last 11 days. The team saw no performance problem and Memory Capacity Remaining stayed green, so nobody acted. What do the rows tell me?
 
 Agent E2 read from VCF Operations:
-Cluster CL-SG-PRD-PAY, Cluster Risk and its rows (vCommunity management pack), worst host, business hours, on Monday, Wednesday and Friday last week and today (Tuesday):
-- Cluster Risk (%): 22.5, 25.5, 31.1, 66.0. Alert: orange, started today at 09:20; no alert before today.
-- Highest ESXi Memory Reservation (%): 0, 26, 26, 26. Yellow symptom started last Tuesday at 23:25.
-- Highest ESXi DRAM Memory Consumed (%): 68, 74, 87, 108. Yellow symptom started last Friday at 08:40; red today.
-- Highest ESXi Memory Overcommit Ratio: 1.07, 1.07, 1.23, 1.23. Stepped up last Thursday at 23:35.
-- Highest ESXi CPU Overcommit Ratio: 1.10, 1.10, 1.41, 1.41. Stepped up last Thursday at 23:35.
-- Cluster Performance (%): 99, 99, 98, 48.
+Cluster CL-SG-DC-PRD-01: 24 identical hosts, each 1,024 GB DRAM plus a 1,024 GB NVMe memory tier (1:1); memory tiering configured since June; 1,006 VMs; VCF 9.1.1 with the vCommunity management pack. Cluster Risk rows, worst host for each row, at 5 times: Friday 11 days ago, Wednesday last week, Saturday 18:00, Sunday 08:00, today (Tuesday) 09:15. Saturday to Monday was a 3-day public holiday.
+- Highest ESXi memory reservation (%): 0, 25, 25, 25, 25. Yellow since Sunday 9 days ago 02:15.
+- Highest ESXi DRAM Memory Consumed (%): 76, 84, 95, 102, 101. Yellow since Sunday 9 days ago 02:20; orange from Saturday 12:05; red from Saturday 17:40.
+- Worst ESXi active memory, tiered hosts (% of DRAM): 31, 33, 53, 51, 44. Yellow from Saturday 11:20 to Sunday 07:30.
+- Worst ESXi NVMe read latency (µs): no reads, 70, 60, 80, 230.
+- Memory Capacity Remaining (%): 41, 38, 36, 36, 36. Green throughout.

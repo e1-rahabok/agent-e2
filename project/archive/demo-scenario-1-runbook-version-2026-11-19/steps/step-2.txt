@@ -1,0 +1,9 @@
+Is this NVMe read a warm-up after the long weekend, or is it sustained?
+
+Agent E2 read from VCF Operations:
+Host esxi-pay-05: 2 x 32 cores, 1,024 GB DRAM plus a 1,024 GB NVMe memory tier (1:1), VCF 9.1.1. Today is Tuesday, the first business day after a 3-day weekend (Saturday to Monday).
+- NVMe consumed: 0 GB until Friday morning; 50 GB on Friday at 18:00; 280 GB on Tuesday at 08:00.
+- Friday 18:00 to Tuesday 08:30: NVMe write bandwidth up, NVMe read bandwidth near 0.
+- Tuesday 09:10 and 10:15: NVMe read bandwidth 380 MBps and 360 MBps.
+- Tuesday 09:10 and 10:15: NVMe read latency 290 µs and 280 µs.
+- Tuesday 09:10 and 10:15: active memory 790 GB and 785 GB.
