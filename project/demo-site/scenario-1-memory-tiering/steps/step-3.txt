@@ -1,6 +1,6 @@
 sql-pay-03 has memory tiering turned off and all its memory reserved. What does it do to the tiered VMs on the same host?
 
-Attached from VCF Operations and vCenter (selected by the user):
+Agent E2 read from VCF Operations and vCenter:
 Host esxi-pay-05: 1,024 GB DRAM plus a 1,024 GB NVMe memory tier (1:1), memory tiering configured, VCF 9.1.1. Tuesday 10:15.
 - Active memory: 785 GB (77% of DRAM).
 - NVMe read bandwidth 360 MBps; NVMe read latency 280 µs.

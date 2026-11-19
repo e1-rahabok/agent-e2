@@ -151,12 +151,10 @@ def compute(case, question, retriever, used):
             per = arithmetic_calculator.evaluate(f"summation_to_percent({value}, {sec}, {case['vcpus']})")
             line += f"; {per.get('result'):g}% per vCPU of {case['vcpus']:g} vCPUs (the counter sums every vCPU)"
         lines.append(line + '. [arithmetic_calculator.py: ' + '; '.join(one.get('notes') or []) + ']')
-    lines += two_reading_tests(question)
     lines += nvme_wait(case, question)
     return ('Computed (exact):\n' + '\n'.join(dict.fromkeys(lines))) if lines else ''
 
 
-TIME = re.compile(r'\b([01]?\d|2[0-3]):([0-5]\d)\b')
 HOST_OBJECT = re.compile(r'esxi|host', re.I)
 
 
@@ -190,37 +188,6 @@ def nvme_wait(case, question):
     return out
 
 
-def two_reading_tests(question):
-    """Flow rows that compare a second reading (catalog thresholds-performance, section flow, rows with gap_minutes):
-    where one line of the question gives the metric twice with two times ('09:10 and 10:15: NVMe read bandwidth 380 MBps
-    and 360 MBps'), the second reading is compared with the row's value, if it came at least gap_minutes after the first.
-    The number, the unit and the gap come from the row, so the knowledge base, not this code, holds the test."""
-    out = []
-    for r in catalog_database.load_yaml('thresholds-performance.yaml').get('flow') or []:
-        if not r.get('gap_minutes'):
-            continue
-        name = re.sub(r'^(ESXi|VM|Cluster)\s+', '', r['metric'])
-        unit = re.escape(str(r['unit'])).replace('MBps', r'MB(?:ps|/s)')
-        pair = re.compile(re.escape(name) + r'\s+([\d.]+)\s*' + unit + r'\s+and\s+([\d.]+)\s*' + unit, re.I)
-        for line in question.split('\n'):
-            m, times = pair.search(line), TIME.findall(line)
-            if not m or len(times) < 2:
-                continue
-            (h1, m1), (h2, m2) = times[:2]
-            gap = (int(h2) * 60 + int(m2)) - (int(h1) * 60 + int(m1))
-            v1, v2 = float(m.group(1)), float(m.group(2))
-            head = (f"- {name} {v1:g} {r['unit']} at {h1}:{m1} and {v2:g} {r['unit']} at {h2}:{m2}, {gap} minutes apart: ")
-            if gap < r['gap_minutes']:
-                verdict = f"too close to tell: step {r['step']} needs a second reading at least {r['gap_minutes']} minutes after the first"
-            elif v2 > r['value']:
-                verdict = f"above {r['value']:g} {r['unit']} at the second reading: {r['meaning'].split(';')[0]}"
-            else:
-                verdict = f"at or below {r['value']:g} {r['unit']} at the second reading: {r['meaning'].split(';')[-1].strip().removeprefix('at or below it, ')}"
-            out.append(head + verdict + f". [flow row {r['id']}: {r['kb']}, step {r['step']}]")
-    return out
-
-
-# ---------- stage 6: check ----------
 def gaps(docs, case, draft, used, limit=2):
     """Metric files the draft names that are not in the reading set, for the objects of the case."""
     objs = reading_plan.objects_in(' '.join(map(str, case.get('objects') or [])) + ' ' + ' '.join(case.get('code_objects') or []))

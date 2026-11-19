@@ -1,6 +1,6 @@
 Why is VM Performance low on pay-api-07 when its Memory Contention and CPU Ready are near zero?
 
-Attached from VCF Operations (selected by the user):
+Agent E2 read from VCF Operations:
 VM pay-api-07: 8 vCPU, 32 GB, memory tiering on, on host esxi-pay-05. VCF 9.1.1. Tuesday 09:10.
 - VM Performance (%): 17 today; 99 every day last week.
 - Memory Contention (%): peak 0.2.
