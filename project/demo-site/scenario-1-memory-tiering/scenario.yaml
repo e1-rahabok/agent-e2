@@ -6,26 +6,21 @@ about: |
   - The VCF Operations connector is not built yet: in this recording the readings stand for what it would fetch, and the pipeline gets them as text. The vCommunity management pack is the enhanced one: VM Performance and Cluster Performance score NVMe wait.
   - A boxed number comes from Agent E2's code (stage 3), not from the model.
   - One run per question, recorded on 2026-11-19, kept as it came, flaws included.
-incident: {id: INC-48213, priority: P1, title: 'Payments API slow', summary: 'p99 latency 180 ms → 1.4 s since 09:05; teller app slow at all branches', escalated: 'escalated from L1 at 10:05', now: 'Tuesday 10:20', user: 'L2 vSphere specialist, on call'}
+incident: {id: PRB-20931, priority: RCA, title: 'Payments API slow (INC-48213, resolved)', summary: 'The problem has disappeared. Business asks why it happened and how to avoid it.', escalated: 'assigned to L2 vSphere for RCA', now: 'L1 does not perform RCA', user: 'L2 vSphere specialist'}
 l1_note: |
-  Opened 09:12 by the service desk. Escalated to L2 vSphere at 10:05.
+  INC-48213 opened by the service desk: Payments API slow. Closed by L1: the problem has disappeared, with no action taken. Business wants to know why it happened and how to avoid it in future. L1 does not perform RCA, so this problem record goes to L2 vSphere.
   ## Impact
-  - Payments API p99 latency 180 ms → 1.4 s since 09:05. No errors: transactions complete, slowly.
-  - Teller app slow at all branches.
-  - First business day after the 3-day National Day weekend (Saturday to Monday). Tuesday-morning volume as usual.
-  ## Scope (service map)
-  - Payments service runs on 46 VMs: pay-api-01 to 20, pay-web-01 to 20, sql-pay-01 to 06, all on VMware cluster CL-SG-PRD-PAY.
-  ## Checked, 09:15 to 09:50
-  - VCF Operations: VM Performance alert, red, on 28 of the 40 application VMs, started 09:05 to 09:15. Worst: pay-api-07 at 17. The memory wait row is red. No alert on the sql-pay VMs.
-  - Same VMs: Memory Contention and CPU Ready near 0; no ballooning, compression or swapping. Guest OS CPU 30-40%.
-  - Hosts: all 8 connected; no HA event; no host alert. Datastore latency normal. Network: no drops.
-  - DBA: the databases show no wait.
-  - Changes in the last 24 hours: none.
-  ## Done
-  - 09:40: the app team restarted the pay-api service on pay-api-07. No change.
-  - Nothing changed in vSphere: no vMotion, no VM restart. P1 production, so L2 decides.
-  ## Why L2
-  - Memory wait is red on 28 VMs, but Memory Contention, ballooning and swapping are near 0. L1 cannot tell what the VMs wait for.
+  - Payments API p99 latency 180 ms → 1.4 s from 09:05, then back to normal.
+  ## Scope (app team)
+  - The payments application runs in 2 physical data centers, 72 VMs in each. In each DC its 72 VMs sit in a single cluster.
+  - In DC-01 that cluster is CL-SG-DC-PRD-01: 24 hosts, 1,006 VMs.
+  - DC-02 plays the passive standby this week.
+  ## Checked (L1 SOP)
+  - VCF Operations: VM Performance (%) dropped on the payments VMs. The NVMe metric caused the drop.
+  - Worst hit: pay-api-01, on CL-SG-DC-PRD-01.
+  - Nothing else seems wrong, by the SOP that L1 follows.
+  ## Handed to L2
+  - Why did the payments VMs wait on NVMe, why did it go away, and how is it avoided next time.
 cluster: CL-SG-PRD-PAY
 cluster_meta: '8 identical hosts · 2 x 32 cores · 1,024 GB DRAM + 1,024 GB NVMe memory tier · VCF 9.1.1 · vCommunity management pack'
 run: {model: meta/muse-glimmer-30b, label: 'Muse Glimmer 30B', params: 'reasoning effort low', why: 'best local model of the round of 2026-11-16'}
@@ -35,7 +30,7 @@ proactive:
   - {object: esxi-pay-05, symptom: 'Highest ESXi Memory Reservation (%) 26, yellow', started: 'last Tue 23:25', status: 'not reviewed'}
   - {object: esxi-pay-05, symptom: 'Highest ESXi DRAM Memory Consumed (%) 87, yellow', started: 'last Fri 08:40', status: 'not reviewed'}
   - {object: CL-SG-PRD-PAY, symptom: 'Cluster Risk (%) 66, orange: alert', started: 'today 09:20', status: 'open alert'}
-start: 'The specialist starts where L1 stopped: pay-api-07, the worst VM, memory wait red with Memory Contention near 0.'
+start: 'The specialist starts where L1 stopped: pay-api-01, the worst VM, its VM Performance drop caused by the NVMe metric.'
 steps:
 - n: 1
   at: 0
