@@ -1,6 +1,6 @@
 VM Performance on pay-api-01 dropped to 17 this morning, while its Memory Contention and CPU Ready stayed near zero. What did the VM wait on?
 
-Agent E2 read from VCF Operations:
+Attached by the specialist, from VCF Operations:
 VM pay-api-01: 8 vCPU, 32 GB, memory tiering on, on host esx-sg01-14. VCF 9.1.1. Tuesday 09:15.
 - VM Performance (%): 17 at 09:15; 99 before 09:05 and again from 09:55; 99 every day last week.
 - Memory Contention (%): peak 0.2.

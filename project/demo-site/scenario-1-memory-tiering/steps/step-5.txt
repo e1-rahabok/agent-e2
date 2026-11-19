@@ -1,6 +1,6 @@
 These Cluster Risk rows changed over the last 11 days. The team saw no performance problem and Memory Capacity Remaining stayed green, so nobody acted. What do the rows tell me?
 
-Agent E2 read from VCF Operations:
+Attached by the specialist, from VCF Operations:
 Cluster CL-SG-DC-PRD-01: 24 identical hosts, each 1,024 GB DRAM plus a 1,024 GB NVMe memory tier (1:1); memory tiering configured since June; 1,006 VMs; VCF 9.1.1 with the vCommunity management pack. Cluster Risk rows, worst host for each row, at 5 times: Friday 11 days ago, Wednesday last week, Saturday 18:00, Sunday 08:00, today (Tuesday) 09:15. Saturday to Monday was a 3-day public holiday.
 - Highest ESXi memory reservation (%): 0, 25, 25, 25, 25. Yellow since Sunday 9 days ago 02:15.
 - Highest ESXi DRAM Memory Consumed (%): 76, 84, 95, 102, 101. Yellow since Sunday 9 days ago 02:20; orange from Saturday 12:05; red from Saturday 17:40.

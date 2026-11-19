@@ -4,7 +4,7 @@ The page looks like the L2 specialist's workspace: the incident on top, the evid
 Agent E2 on the right, a stepper at the bottom. Each step replays one narrow question, the readings Agent E2 fetched, and its recorded answer.
 Reads from the scenario folder:
   scenario.yaml          the incident, the evidence shown at each step, the specialist's pinned findings, the end screen;
-  steps/step-N.txt       the specialist's question, a blank line, the readings Agent E2 reads from VCF Operations;
+  steps/step-N.txt       the specialist's question, a blank line, the readings the specialist attaches;
   results/<model>.json   Agent E2's answers, written by project/tools/demo_scenario_executor.py.
 The answers and the computed facts are shown as recorded; nothing in them is edited.
 
@@ -315,7 +315,7 @@ def build(folder):
     left.append(f'<section data-view="0" data-at="-1"><div class="panel l1"><div class="h">Ticket worklog · L1 note</div>'
                 f'{markdown(sc["l1_note"])}</div><div class="panel"><p class="note">Cluster {esc(sc["cluster"])}: {esc(sc["cluster_meta"])}</p>'
                 f'<p>{esc(sc["start"])}</p></div></section>')
-    chat.append(f'<div class="sys" data-upto="0">{esc(sc["incident"]["id"])} loaded. Ask Agent E2: it reads VCF Operations and vCenter for you.</div>')
+    chat.append(f'<div class="sys" data-upto="0">{esc(sc["incident"]["id"])} loaded. Attach readings from VCF Operations or vCenter and ask Agent E2.</div>')
     for s in steps:
         n = s['n']
         text = open(os.path.join(folder, 'steps', f'step-{n}.txt')).read().strip()
@@ -337,7 +337,7 @@ def build(folder):
         left.append(f'<section data-view="{n}" data-at="{crumbs.index(o["name"])}">{panel}</section>')
         r = (rec.get('steps') or {}).get(str(n))
         nread = sum(1 for x in attached.splitlines()[1:] if x.strip())
-        chat.append(f'<div class="msg you" data-upto="{n}">{esc(ask)}<details class="att"><summary>⇣ Agent E2 read {nread} lines from VCF Operations</summary>'
+        chat.append(f'<div class="msg you" data-upto="{n}">{esc(ask)}<details class="att"><summary>📎 Readings attached by the specialist ({nread} lines)</summary>'
                     f'<pre>{esc(attached)}</pre></details></div>')
         if r:
             calls = [t for t in r.get('trace', []) if t.get('prompt_tokens')]
@@ -375,7 +375,7 @@ def build(folder):
     rec_line = (f'Recorded run · {esc(run["label"])} ({esc(run["params"])}) · knowledge {esc(", ".join(shas) or (rec.get("knowledge_commit") or "")[:7])}')
     page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(sc['short_title'])}</title><style>{CSS}{NAV_CSS}</style></head><body>
-<header><span class="brand">VCF Operations</span>{nav(sc.get('page', 'index.html'))}
+<header><span class="brand">Agent E2</span>{nav(sc.get('page', 'index.html'))}
 <div class="tabs" role="tablist"><button aria-selected="true" data-for="reactive">Reactive: incidents</button><button aria-selected="false" data-for="proactive">Proactive: health</button></div>
 <span class="who">{esc(sc['incident']['user'])}</span></header>
 <div class="inc"><span class="id">{esc(sc['incident']['id'])} · {esc(sc['incident']['priority'])}</span><b>{esc(sc['incident']['title'])}</b>

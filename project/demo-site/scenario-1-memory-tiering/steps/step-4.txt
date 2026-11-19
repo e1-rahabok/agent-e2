@@ -1,6 +1,6 @@
 crm-db-03 on esx-sg01-14 has had memory tiering off and all 256 GB reserved since Sunday 9 days ago. What does that do to the tiered VMs on this host?
 
-Agent E2 read from VCF Operations and vCenter:
+Attached by the specialist, from VCF Operations and vCenter:
 Host esx-sg01-14: 1,024 GB DRAM plus a 1,024 GB NVMe memory tier (1:1), memory tiering configured, VCF 9.1.1. 42 VMs; crm-db-03 is the only one with memory tiering off.
 VM crm-db-03: 16 vCPU, 256 GB, sched.mem.enableTiering = "FALSE" since Sunday 9 days ago 02:10, memory reservation 256 GB (all of it), active memory 110 GB.
 - Host memory reservation (% of DRAM): 0 before; 25 since Sunday 9 days ago 02:10.
