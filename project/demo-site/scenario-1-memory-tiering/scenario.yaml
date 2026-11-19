@@ -48,6 +48,7 @@ steps:
   - {label: 'NVMe read latency', unit: 'µs', value: 210, band: orange, note: 'host esx-sg01-14'}
   chart: {type: line, title: 'VM Performance (%), pay-api-01, Tuesday', x: ['08:45', '09:00', '09:05', '09:15', '09:30', '09:45', '09:55', '10:15'], series: [{name: 'VM Performance', values: [99, 99, 62, 17, 38, 81, 99, 99]}], ymax: 100, ring: [3]}
   finding: 'pay-api-01 waited on pages fetched from NVMe, not counted in Memory Contention.'
+  follow: {quote: 'per-VM NVMe read bandwidth 09:05-09:55, host tier in rate and tier consumed', note: 'the specialist asks why its pages were on NVMe at all.'}
 - n: 2
   object: {kind: VM, name: pay-api-01, meta: 'active memory and NVMe consumed · Friday to Tuesday'}
   tiles:
@@ -57,6 +58,7 @@ steps:
   - {label: 'Host DRAM consumption', unit: '%', value: '> 80', band: yellow, note: 'since Sun 9 days ago'}
   chart: {type: line, title: 'pay-api-01 memory (GB): active and on NVMe', x: ['Fri 15:00', 'Sat 18:00', 'Sun 08:00', 'Mon 15:00', 'Tue 08:55', 'Tue 09:15', 'Tue 09:55'], series: [{name: 'NVMe consumed', values: [0.4, 10, 19, 20, 20, 13, 3]}, {name: 'Active', values: [11, 0.3, 0.3, 0.3, 0.4, 12, 11]}], ymax: 32, ring: [4, 5]}
   finding: 'Idle over the 3-day weekend, so its pages went to NVMe; fetched back when touched on Tuesday, so the wait stopped by 09:55.'
+  follow: {note: 'the specialist opens host esx-sg01-14 over the weekend.'}
 - n: 3
   object: {kind: ESXi host, name: esx-sg01-14, meta: '1,024 GB DRAM + 1,024 GB NVMe tier (1:1) · 42 VMs · the 3-day weekend'}
   table:
@@ -69,6 +71,7 @@ steps:
     - ['Host', 42, '', '', '35 → 190 GB']
   chart: {type: line, title: 'NVMe write bandwidth (MBps), esx-sg01-14', x: [Fri, 'Sat 10:00', 'Sat 14:00', 'Sat 18:00', 'Sun 01:00', 'Sun 04:00', 'Sun 07:00', Mon, 'Tue 08:55'], series: [{name: 'NVMe write bandwidth', values: [4, 120, 140, 30, 150, 160, 40, 2, 1]}], ymax: 200, ring: [1, 2, 4, 5], note: 'NVMe reads stayed under 5 MBps from Saturday to Monday.'}
   finding: 'Saturday load test and Sunday scan made other VMs hot; the idle payments VMs, not scanned, had their pages moved to NVMe (1 → 60 GB).'
+  follow: {note: 'the specialist opens crm-db-03, the one VM on the host with memory tiering off.'}
 - n: 4
   object: {kind: ESXi host, name: esx-sg01-14, meta: 'crm-db-03 · memory tiering off · all 256 GB reserved'}
   tiles:
@@ -78,6 +81,7 @@ steps:
   - {label: 'Active memory', unit: '% of DRAM', value: '26-33', band: green, note: 'weekdays'}
   chart: {type: bars, title: 'DRAM of esx-sg01-14, 1,024 GB', bars: [{name: 'Week before', segments: [{label: 'all 42 VMs tiered', value: 1024, band: grey}], marker: {value: 758, label: 'DRAM consumption 74%'}}, {name: 'Since Sun 9 days ago', segments: [{label: 'crm-db-03: tiering off, all reserved', value: 256, band: orange}, {label: 'left for 41 tiered VMs', value: 768, band: grey}], marker: {value: 860, label: 'DRAM consumption 84%'}}], max: 1024}
   finding: 'crm-db-03 keeps 256 GB of DRAM out of the tiering pool; the 41 tiered VMs share the rest. DRAM consumption passed 80%: tiering ran from then.'
+  follow: {quote: 'Cluster Risk sub-metrics for Memory reservation and Active memory', note: 'the specialist opens the Cluster Risk rows of the cluster.'}
 - n: 5
   object: {kind: Cluster, name: CL-SG-DC-PRD-01, meta: 'Cluster Risk rows · worst host for each row · last 11 days'}
   risk:
@@ -90,6 +94,7 @@ steps:
     - ['Memory Capacity Remaining (%)', [41, green], [38, green], [36, green], [36, green], [36, green], 'green throughout']
     note: 'Grey: a row left out of the score while green. Memory Capacity Remaining is a VCF Operations capacity metric, not a Cluster Risk row.'
   finding: 'Cluster Risk rows went yellow 9 days ago and moved again on Saturday; Capacity Remaining stayed green because it counts NVMe as DRAM.'
+  follow: {quote: 'workload change during the 3-day public holiday', note: 'the specialist asks the teams what ran at those times.'}
 end:
   title: 'Timeline, last 11 days, assembled by the specialist'
   ask: 'Ask the teams what ran at those times'
