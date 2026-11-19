@@ -17,7 +17,7 @@ import sys
 
 import yaml
 
-from demo_page_builder import CSS, REPO, computed_box, esc, inline, knowledge_ids, markdown, sources, tile
+from demo_page_builder import CSS, NAV_CSS, REPO, nav, computed_box, esc, inline, knowledge_ids, markdown, sources, tile
 
 QUICK_CSS = """
 .inc.q{border-color:#155e75;background:#0c2a3d}.inc.q .id{color:#7dd3fc;border-color:#155e75}
@@ -67,8 +67,8 @@ def build(folder):
     rec_line = (f'Recorded run · {esc(run["label"])} ({esc(run["params"])}) · {esc(run["shown"])} of the gate · '
                 f'knowledge {esc((rec.get("knowledge_commit") or "")[:7])}')
     page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(sc['short_title'])}</title><style>{CSS}{QUICK_CSS}</style></head><body>
-<header><span class="brand">VCF Operations</span><span class="pill">vSphere specialist workspace</span>
+<title>{esc(sc['short_title'])}</title><style>{CSS}{QUICK_CSS}{NAV_CSS}</style></head><body>
+<header><span class="brand">VCF Operations</span>{nav(sc['page'])}
 <span class="pill" style="margin-left:auto">Ask Agent E2</span><span class="who">{esc(sc['user'])}</span></header>
 <div class="inc q"><span class="id">Question</span><b>{esc(sc['title'])}</b><span class="m">one question · one recorded answer</span></div>
 {about}

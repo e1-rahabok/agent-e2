@@ -100,6 +100,21 @@ show(0);
 """
 
 
+# The demo pages published together in one artifact (published path, label). Each page shows this bar in its own
+# header, so a viewer can move between the demos inside the page.
+DEMOS = [('index.html', 'Memory Tiering'), ('cpu-demand.html', 'CPU Demand'), ('balloon-swap.html', 'Balloon and Swap'),
+         ('storage-latency.html', 'Storage Latency'), ('drs-score.html', 'DRS Score')]
+NAV_CSS = """.demos{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:3px}
+.demos a{padding:4px 10px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:13px}
+.demos a:hover,.demos a:focus-visible{color:var(--ink);outline:1px solid var(--accent)}.demos a[aria-current=page]{background:var(--accent);color:#06263a;font-weight:600}
+"""
+
+
+def nav(current):
+    return ('<nav class="demos" aria-label="Demos">' + ''.join(
+        f'<a href="{p}"{" aria-current=" + chr(34) + "page" + chr(34) if p == current else ""}>{esc(t)}</a>' for p, t in DEMOS) + '</nav>')
+
+
 def esc(s):
     return html.escape(str(s))
 
@@ -354,8 +369,8 @@ def build(folder):
     shas = list(dict.fromkeys((st.get('knowledge_commit') or rec.get('knowledge_commit') or '')[:7] for st in (rec.get('steps') or {}).values()))
     rec_line = (f'Recorded run · {esc(run["label"])} ({esc(run["params"])}) · knowledge {esc(", ".join(shas) or (rec.get("knowledge_commit") or "")[:7])}')
     page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(sc['short_title'])}</title><style>{CSS}</style></head><body>
-<header><span class="brand">VCF Operations</span><span class="pill">vSphere specialist workspace</span>
+<title>{esc(sc['short_title'])}</title><style>{CSS}{NAV_CSS}</style></head><body>
+<header><span class="brand">VCF Operations</span>{nav(sc.get('page', 'index.html'))}
 <div class="tabs" role="tablist"><button aria-selected="true" data-for="reactive">Reactive: incidents</button><button aria-selected="false" data-for="proactive">Proactive: health</button></div>
 <span class="who">{esc(sc['incident']['user'])}</span></header>
 <div class="inc"><span class="id">{esc(sc['incident']['id'])} · {esc(sc['incident']['priority'])}</span><b>{esc(sc['incident']['title'])}</b>
