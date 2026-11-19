@@ -1,10 +1,11 @@
-title: 'Nobody did anything wrong'
+title: 'Approved by the runbook'
 short_title: Memory Tiering Demo
 about: |
-  - A replay of one incident, step by step. The cluster, its readings and the incident are a scenario; every Agent E2 answer is the recorded output of the Agent E2 pipeline (a local model reading the knowledge base), unedited.
-  - The L2 specialist asks one narrow question per step and attaches the readings selected on screen. Agent E2 finds the facts and explains them; the specialist connects the steps and decides the fix.
+  - A replay of one P1 incident, step by step. The cluster, its readings and the incident are a scenario; every Agent E2 answer is the recorded output of the Agent E2 pipeline (a local model reading the knowledge base), unedited.
+  - Agent E2 runs on site, connected to VCF Operations and vCenter. The L2 specialist asks one narrow question per step; Agent E2 reads the data it needs, finds the facts and explains them. The specialist connects the steps, writes the root cause and decides the fix.
+  - The VCF Operations connector is not built yet: in this recording the readings stand for what it would fetch, and the pipeline gets them as text. The vCommunity management pack is the enhanced one: VM Performance and Cluster Performance score NVMe wait.
   - A boxed number comes from Agent E2's code (stage 3), not from the model.
-  - One run per question, recorded on 2026-11-18, kept as it came. Known flaws, not edited out: a stray "2025-..." in the answer to step 5; the answers to steps 2 and 4 end with a remedy, which Agent E2 should leave to the specialist (the answer prompt does not say so yet).
+  - One run per question, recorded on 2026-11-19, kept as it came, flaws included.
 incident: {id: INC-48213, priority: P1, title: 'Payments API slow', summary: 'p99 latency 180 ms → 1.4 s since 09:05; teller app slow at all branches', escalated: 'escalated from L1 at 10:05', now: 'Tuesday 10:20', user: 'L2 vSphere specialist, on call'}
 l1_note: |
   Opened 09:12 by the service desk. Escalated to L2 vSphere at 10:05.
@@ -13,19 +14,18 @@ l1_note: |
   - Teller app slow at all branches.
   - First business day after the 3-day National Day weekend (Saturday to Monday). Tuesday-morning volume as usual.
   ## Scope (service map)
-  - Payments service: pay-api-01 to 20, pay-web-01 to 20, sql-pay-01 to 06, all on CL-SG-PRD-PAY.
-  - VCF Operations: VM Performance alert, red, on 28 of the 40 application VMs, started 09:05 to 09:15. Worst: pay-api-07 at 17. No alert on the sql-pay VMs.
-  ## Checked (L1 runbook): all normal
-  - Hosts: all 8 connected; no HA event; no host alert.
-  - VMs: CPU Ready and Memory Contention near 0; no ballooning, compression or swapping. Guest OS CPU 30-40%.
-  - Datastore latency normal. Network: no drops.
+  - Payments service runs on 46 VMs: pay-api-01 to 20, pay-web-01 to 20, sql-pay-01 to 06, all on VMware cluster CL-SG-PRD-PAY.
+  ## Checked, 09:15 to 09:50
+  - VCF Operations: VM Performance alert, red, on 28 of the 40 application VMs, started 09:05 to 09:15. Worst: pay-api-07 at 17. The memory wait row is red. No alert on the sql-pay VMs.
+  - Same VMs: Memory Contention and CPU Ready near 0; no ballooning, compression or swapping. Guest OS CPU 30-40%.
+  - Hosts: all 8 connected; no HA event; no host alert. Datastore latency normal. Network: no drops.
   - DBA: the databases show no wait.
   - Changes in the last 24 hours: none.
   ## Done
   - 09:40: the app team restarted the pay-api service on pay-api-07. No change.
   - Nothing changed in vSphere: no vMotion, no VM restart. P1 production, so L2 decides.
   ## Why L2
-  - VM Performance is red while every counter in the runbook is green. Outside the L1 runbook.
+  - Memory wait is red on 28 VMs, but Memory Contention, ballooning and swapping are near 0. L1 cannot tell what the VMs wait for.
 cluster: CL-SG-PRD-PAY
 cluster_meta: '8 identical hosts · 2 x 32 cores · 1,024 GB DRAM + 1,024 GB NVMe memory tier · VCF 9.1.1 · vCommunity management pack'
 run: {model: meta/muse-glimmer-30b, label: 'Muse Glimmer 30B', params: 'reasoning effort low', why: 'best local model of the round of 2026-11-16'}
@@ -35,7 +35,7 @@ proactive:
   - {object: esxi-pay-05, symptom: 'Highest ESXi Memory Reservation (%) 26, yellow', started: 'last Tue 23:25', status: 'not reviewed'}
   - {object: esxi-pay-05, symptom: 'Highest ESXi DRAM Memory Consumed (%) 87, yellow', started: 'last Fri 08:40', status: 'not reviewed'}
   - {object: CL-SG-PRD-PAY, symptom: 'Cluster Risk (%) 66, orange: alert', started: 'today 09:20', status: 'open alert'}
-start: 'The specialist starts where L1 stopped: pay-api-07, the worst VM, red on VM Performance with Memory Contention near 0.'
+start: 'The specialist starts where L1 stopped: pay-api-07, the worst VM, memory wait red with Memory Contention near 0.'
 steps:
 - n: 1
   at: 0
@@ -104,7 +104,14 @@ steps:
 end:
   title: 'Change calendar, last 7 days, opened 11:05'
   rows:
-  - {id: CHG-1, when: 'last Tue 22:00-23:30', team: DBA, what: 'Blueprint SQL Gold v3 on sql-pay-01 to 06: powered off, memory tiering off, all memory reserved, powered on.', match: 'Highest ESXi Memory Reservation, yellow at 23:25'}
-  - {id: CHG-2, when: 'last Thu 21:00-23:40', team: Application, what: '40 payments application VMs moved in, next to their databases. Approved on Memory Capacity Remaining 38%.', match: 'Memory and CPU overcommit stepped up at 23:35'}
-  note: 'L1 searched the last 24 hours: Monday was a holiday, so both changes fell outside the window. Both went as approved; neither team saw the other change.'
-  next: 'Specialist: call the DBA and application teams to the bridge with the findings; decide the fix together.'
+  - {id: CHG-1, when: 'last Tue 22:00-23:30', team: DBA, what: 'Blueprint SQL Gold v3 on sql-pay-01 to 06: powered off, memory tiering off, all memory reserved, powered on. No capacity review: no VM added.', match: 'Highest ESXi Memory Reservation, yellow at 23:25'}
+  - {id: CHG-2, when: 'last Thu 21:00-23:40', team: Application, what: '40 payments application VMs moved in, next to their databases. Capacity check passed: Memory Capacity Remaining 38%.', match: 'Memory and CPU overcommit stepped up at 23:35'}
+  note: 'L1 searched the last 24 hours: Monday was a holiday, so both changes fell outside the window. Both changes followed the runbook.'
+  root_cause: |
+    **Human: runbook incomplete.** Memory tiering was turned on for CL-SG-PRD-PAY in June; the capacity runbook was not updated for it.
+    - It approves added VMs on Memory Capacity Remaining, which counts NVMe as DRAM.
+    - It does not subtract the DRAM held by VMs with tiering off and fully reserved.
+    - It has no check of active memory against the DRAM left for the tiered VMs.
+    **Triggers:** CHG-1 took 256 GB of DRAM per host away from the tiered VMs, with no capacity review. CHG-2 added 40 VMs on a check that could not see it.
+    **Not the cause:** memory tiering worked as designed; DRAM consumed above 80% is where tiering starts. Capacity Remaining counting NVMe is documented behaviour, not a bug. No hardware fault.
+  next: 'Next: the DBA, application and capacity teams on the bridge with the findings; the fix and the runbook update are theirs to decide.'
