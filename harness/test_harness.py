@@ -130,7 +130,7 @@ class CatalogTest(unittest.TestCase):
         self.assertEqual((r['use'], r['step'], r['source']), ('flow', 1, 'knowledge-base'))
 
     def test_nvme_wait_from_case(self):
-        # NVMe wait by Little's law (cluster-performance, Sub-metric formulas): 6 MBps x 256 x 290 µs / 8 vCPUs = 5.6%.
+        # NVMe wait by Little's law (cluster-performance, NVMe wait formula): 6 MBps x 256 x 290 µs / 8 vCPUs = 5.6%.
         case = {'vcpus': 8, 'metrics': [
             {'name': 'NVMe read bandwidth', 'object': 'pay-api-07', 'value': 6, 'unit': 'MBps'},
             {'name': 'NVMe read latency', 'object': 'esxi-pay-05', 'value': 290, 'unit': 'µs'},

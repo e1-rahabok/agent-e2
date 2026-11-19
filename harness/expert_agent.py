@@ -164,7 +164,7 @@ def _nvme_read(m, word):
 
 
 def nvme_wait(case, question):
-    """NVMe wait of a VM on a tiered host (cluster-performance, section Sub-metric formulas), from the case: the VM's NVMe
+    """NVMe wait of a VM on a tiered host (cluster-performance, section NVMe wait formula), from the case: the VM's NVMe
     read bandwidth (a reading whose object is not a host), the host's NVMe read latency and the VM's vCPU count. Nothing
     when one is missing or the case is unreadable: the model then reads the formula from the knowledge base."""
     ms = case.get('metrics') or []

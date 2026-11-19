@@ -120,8 +120,8 @@ class Evaluator:
     def nvme_wait_pct(self, read_mbps, latency_s, vcpus=1):
         self.note("NVMe wait (%) = VM NVMe read bandwidth (MB/s) x 256 pages per MB x host NVMe read latency (s) / VM vCPUs x 100 "
                   "(Little's law). It assumes one 4 KB page per fetch and that the fetch stalls the vCPU; if either fails, it "
-                  'overstates the wait. Memory Contention does not count this wait. See vsphere/object-types/cluster/cluster-performance, '
-                  'section Sub-metric formulas.')
+                  'overstates the wait; during a vMotion, precopy reads may count too. Memory Contention does not count this wait. '
+                  'See vsphere/object-types/cluster/cluster-performance, sections NVMe wait formula and Limitations.')
         if vcpus <= 0:
             raise CalcError('nvme_wait_pct: vcpus must be above 0')
         return read_mbps * 256 * latency_s / vcpus * 100
