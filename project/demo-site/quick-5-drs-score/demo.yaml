@@ -1,5 +1,6 @@
 title: 'Cluster DRS Score is 92%, yet one VM is slow. Is the cluster fine?'
 short_title: DRS Score Demo
+page: drs-score.html
 user: L2 vSphere specialist
 context: 'Quick answer · cluster prod-cl02'
 about: |

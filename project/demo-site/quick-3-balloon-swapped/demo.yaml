@@ -1,5 +1,6 @@
 title: 'Balloon is 0, yet memory is swapped and compressed. Is a counter wrong?'
 short_title: Balloon and Swap Demo
+page: balloon-swap.html
 user: L2 vSphere specialist
 context: 'Quick answer · host esx-21'
 about: |

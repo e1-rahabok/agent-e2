@@ -1,5 +1,6 @@
 title: 'VCF Operations shows CPU Demand far above Usage. Do we need another host?'
 short_title: CPU Demand Demo
+page: cpu-demand.html
 user: L2 vSphere specialist
 context: 'Quick answer · host esx-07'
 about: |

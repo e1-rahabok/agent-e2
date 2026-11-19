@@ -1,5 +1,6 @@
 title: 'KAVG 4.6 ms, DAVG 0.8 ms. Where does the time go?'
 short_title: Storage Latency Demo
+page: storage-latency.html
 user: L2 vSphere specialist
 context: 'Quick answer · host esx-04 · esxtop'
 about: |

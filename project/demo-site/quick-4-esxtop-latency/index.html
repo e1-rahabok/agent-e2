@@ -58,8 +58,11 @@ details.about{margin:10px 16px 0;color:var(--muted);font-size:13px}details.about
 .twin td.n{font:600 14px var(--mono)}.twin td.n.g{color:#86efac}
 .foot{margin:0 16px 16px;font:11px var(--mono);color:var(--muted);text-align:right}
 .wrap{padding-bottom:16px}aside{height:calc(100vh - 150px)}
+.demos{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:3px}
+.demos a{padding:4px 10px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:13px}
+.demos a:hover,.demos a:focus-visible{color:var(--ink);outline:1px solid var(--accent)}.demos a[aria-current=page]{background:var(--accent);color:#06263a;font-weight:600}
 </style></head><body>
-<header><span class="brand">VCF Operations</span><span class="pill">vSphere specialist workspace</span>
+<header><span class="brand">VCF Operations</span><nav class="demos" aria-label="Demos"><a href="index.html">Memory Tiering</a><a href="cpu-demand.html">CPU Demand</a><a href="balloon-swap.html">Balloon and Swap</a><a href="storage-latency.html" aria-current="page">Storage Latency</a><a href="drs-score.html">DRS Score</a></nav>
 <span class="pill" style="margin-left:auto">Ask Agent E2</span><span class="who">L2 vSphere specialist</span></header>
 <div class="inc q"><span class="id">Question</span><b>KAVG 4.6 ms, DAVG 0.8 ms. Where does the time go?</b><span class="m">one question · one recorded answer</span></div>
 <details class="about"><summary>About this demo</summary><ul>
