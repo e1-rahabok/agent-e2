@@ -1,0 +1,78 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DRS Score Demo</title><style>
+:root{--bg:#0b1220;--panel:#111a2e;--panel2:#16213a;--ink:#e2e8f0;--muted:#94a3b8;--line:#26324a;--accent:#38bdf8;
+--g:#22c55e;--y:#eab308;--o:#f97316;--r:#ef4444;--grey:#64748b;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--accent)}button{font:inherit;color:inherit}
+header{position:sticky;top:0;z-index:5;background:rgba(11,18,32,.96);border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center;
+padding:10px 16px;flex-wrap:wrap}.brand{font-weight:700;font-size:16px}.pill{font:12px var(--mono);color:var(--accent);border:1px solid var(--line);
+border-radius:6px;padding:2px 8px}.tabs{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:3px;margin-left:auto}
+.tabs button{border:0;background:none;padding:5px 12px;border-radius:6px;cursor:pointer;color:var(--muted)}.tabs button[aria-selected=true]{background:var(--accent);color:#06263a;font-weight:600}
+.who{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:4px 10px}
+.inc{margin:14px 16px 0;padding:10px 14px;border:1px solid #7f1d1d;background:#1d0f14;border-radius:10px;display:flex;gap:10px 16px;flex-wrap:wrap;align-items:baseline}
+.inc .id{font:12px var(--mono);color:#fca5a5;border:1px solid #7f1d1d;border-radius:6px;padding:1px 8px}.inc b{font-size:15px}.inc .m{color:var(--muted);font-size:13px}
+.wrap{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:14px;padding:14px 16px 90px;max-width:1500px;margin:0 auto}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:14px}
+.h{font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.crumb{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font:12px var(--mono);margin-bottom:12px}.crumb span{border:1px solid var(--line);border-radius:6px;padding:3px 8px;color:var(--muted)}
+.crumb span.on{border-color:var(--accent);color:var(--accent)}.crumb i{color:var(--muted);font-style:normal}
+.obj{font-size:18px;font-weight:700;margin:0}.objm{color:var(--muted);font-size:13px;margin:2px 0 12px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.tile{background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--grey);border-radius:8px;padding:9px 11px;position:relative}
+.tile.sel{outline:2px solid var(--accent);outline-offset:1px}.tile.sel:after{content:'✓';position:absolute;top:6px;right:9px;color:var(--accent);font-weight:700}
+.tile .l{font-size:12px;color:var(--muted);padding-right:14px}.tile .v{font:600 20px var(--mono);margin-top:2px}.tile .u{font-size:12px;color:var(--muted);margin-left:4px}
+.tile .n{font-size:11px;color:var(--muted)}
+.b-green{border-left-color:var(--g)}.b-yellow{border-left-color:var(--y)}.b-orange{border-left-color:var(--o)}.b-red{border-left-color:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:13px}th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}.scroll{overflow-x:auto}td.c{font-family:var(--mono);text-align:center;font-weight:600}
+td.c-green{background:rgba(34,197,94,.16);color:#86efac}td.c-yellow{background:rgba(234,179,8,.16);color:#fde047}td.c-orange{background:rgba(249,115,22,.18);color:#fdba74}
+td.c-red{background:rgba(239,68,68,.2);color:#fca5a5}td.c-grey{color:var(--muted)}
+code{font:12px var(--mono);background:#0b1426;border:1px solid var(--line);border-radius:4px;padding:0 4px}
+svg text{fill:var(--muted);font:12px var(--mono)}.chart{overflow-x:auto}.chart svg{min-width:560px;display:block}.note{color:var(--muted);font-size:12px}
+.find li{margin:6px 0}.find li b{color:var(--accent);font-family:var(--mono);margin-right:6px}
+aside{position:sticky;top:64px;align-self:start;height:calc(100vh - 160px);min-height:520px;display:flex;flex-direction:column;background:var(--panel);
+border:1px solid var(--line);border-radius:10px}
+.ah{padding:12px 14px;border-bottom:1px solid var(--line)}.ah b{font-size:15px}.ah .m{font:11px var(--mono);color:var(--accent)}
+.chat{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:12px}
+.msg{border-radius:10px;padding:10px 12px;font-size:13px}.you{background:#0c2a3d;border:1px solid #155e75;align-self:flex-end;max-width:92%}
+.e2{background:var(--panel2);border:1px solid var(--line)}.e2 .who2{font:600 11px var(--mono);color:var(--accent);margin-bottom:4px}
+.e2 p{margin:5px 0}.l1 p{margin:6px 0}.rc{border-color:#0e7490}.rc p{margin:6px 0}.rc ul{margin:4px 0 8px 18px;padding:0}.rc h4{margin:10px 0 4px;font-size:13px;color:#cbd5e1}.l1 ul{margin:4px 0 8px 18px;padding:0}.l1 h4{margin:12px 0 4px;font-size:13px;color:#cbd5e1}.e2 ul,.e2 ol{margin:5px 0 5px 18px;padding:0}.e2 h4{margin:10px 0 4px;font-size:13px;color:#cbd5e1}
+.att summary{cursor:pointer;color:#7dd3fc;font-size:12px;margin-top:6px}.att pre{white-space:pre-wrap;font:11px var(--mono);color:var(--muted);margin:6px 0 0}
+.calc{border:1px solid #0e7490;background:#071d2a;border-radius:8px;padding:8px 10px;margin:6px 0 8px}.calc .t{font:600 11px var(--mono);color:#67e8f9}
+.calc .x{font:12px var(--mono);color:#e0f2fe;margin-top:3px}.calc .w{font-size:11px;color:var(--muted);margin-top:3px}
+.src{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.src a{font:11px var(--mono);border:1px solid var(--line);border-radius:999px;padding:1px 8px;text-decoration:none;color:#93c5fd}
+.meta{font:11px var(--mono);color:var(--muted);margin-top:6px}.sys{font-size:12px;color:var(--muted);text-align:center}
+.ask{border-top:1px solid var(--line);padding:10px;display:flex;gap:8px}.ask .in{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:8px;
+padding:8px 10px;color:var(--muted);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ask button{background:var(--accent);color:#06263a;border:0;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.ask button:disabled{opacity:.4;cursor:default}
+.step{position:fixed;left:0;right:0;bottom:0;z-index:6;background:rgba(11,18,32,.97);border-top:1px solid var(--line);display:flex;gap:10px;align-items:center;
+padding:8px 16px;flex-wrap:wrap}.step button{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:5px 12px;cursor:pointer}
+.step .lab{font:600 12px var(--mono)}.step .rec{margin-left:auto;font:11px var(--mono);color:var(--muted)}
+details.about{margin:10px 16px 0;color:var(--muted);font-size:13px}details.about summary{cursor:pointer;color:var(--accent)}details.about ul{margin:6px 0 0 18px;padding:0}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr)}aside{position:static;height:auto;min-height:0}.chat{max-height:none}.tabs{margin-left:0}}
+
+.inc.q{border-color:#155e75;background:#0c2a3d}.inc.q .id{color:#7dd3fc;border-color:#155e75}
+.claims{margin:0;padding:0 0 0 18px}.claims li{margin:4px 0}
+.kb{display:flex;flex-direction:column;gap:6px}.kb a{font:12px var(--mono);text-decoration:none;color:#93c5fd}.kb span{color:var(--muted);font-size:12px}
+.twin td.n{font:600 14px var(--mono)}.twin td.n.g{color:#86efac}
+.foot{margin:0 16px 16px;font:11px var(--mono);color:var(--muted);text-align:right}
+.wrap{padding-bottom:16px}aside{height:calc(100vh - 150px)}
+</style></head><body>
+<header><span class="brand">VCF Operations</span><span class="pill">vSphere specialist workspace</span>
+<span class="pill" style="margin-left:auto">Ask Agent E2</span><span class="who">L2 vSphere specialist</span></header>
+<div class="inc q"><span class="id">Question</span><b>Cluster DRS Score is 92%, yet one VM is slow. Is the cluster fine?</b><span class="m">one question · one recorded answer</span></div>
+<details class="about"><summary>About this demo</summary><ul>
+<li>One question an L2 specialist asks, and the recorded answer of the Agent E2 pipeline (a local model reading the knowledge base), unedited. The cluster and its readings are a scenario.</li>
+<li>The specialist types the readings into the question; no connector is needed.</li>
+<li>Gate before this page was built: the same question was run 3 times; every run had to carry the answer points written before the run and none of the claims the question carries. All 3 runs passed; run 1 is shown, flaws included.</li>
+</ul></details>
+<div class="wrap"><main><div class="panel"><div class="h">What the specialist sees</div><p class="obj">Cluster · prod-cl02</p><p class="objm">10 hosts · 420 powered-on VMs · DRS fully automated, default migration threshold</p><div class="tiles"><div class="tile b-green"><div class="l">Cluster DRS Score</div><div class="v">92<span class="u">%</span></div><div class="n">steady all morning</div></div><div class="tile b-red"><div class="l">pay-db-01</div><div class="v">slow<span class="u"></span></div><div class="n">slow queries since 09:00</div></div></div></div><div class="panel"><div class="h">The claims on the table</div><ul class="claims"><li>Team lead: the DRS score is high, so the cluster is fine and the problem must be inside the database.</li></ul></div><div class="panel"><div class="h">Where the answer comes from</div><div class="kb"><a href="https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/drs-migration-levels.md" target="_blank" rel="noopener">vsphere/object-types/cluster/configuration/drs-migration-levels</a><span>Cluster DRS Score is a weighted average of the VM DRS Scores; VM DRS Score is execution efficiency.</span><a href="https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention.md" target="_blank" rel="noopener">vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention</a><span>A cluster value hides the VM that waits.</span></div></div><div class="panel"><div class="h">The same question in the benchmark</div><p class="note">Its multiple-choice twin, <a href="https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-045-cluster-drs-score-high-one-vm-slow.md" target="_blank" rel="noopener">A high Cluster DRS Score and one slow VM</a>, in the round of 2026-11-16: runs fully right out of 5, on three local models.</p><div class="scroll twin"><table><thead><tr><th>Local model</th><th>With Agent E2</th><th>Model alone</th></tr></thead><tbody><tr><td>Muse Glimmer 30B</td><td class="n g">5 of 5</td><td class="n">0 of 5</td></tr><tr><td>Gemma 31B</td><td class="n g">5 of 5</td><td class="n">0 of 5</td></tr><tr><td>Qwen 27B</td><td class="n g">4 of 5</td><td class="n">0 of 5</td></tr></tbody></table></div></div></main>
+<aside><div class="ah"><b>Agent E2</b> <span class="pill">knowledge base · local model</span><div class="m">Quick answer · cluster prod-cl02</div></div>
+<div class="chat" id="chat"><div class="msg you">Cluster prod-cl02: 10 hosts, 420 powered-on VMs, DRS fully automated, default migration threshold. The Cluster DRS Score is 92%, steady all morning. Since 09:00 the owners of the VM pay-db-01 report slow queries. My team lead says the DRS score is high, so the cluster is fine and the problem must be inside the database. Is that a valid conclusion?</div><div class="msg e2"><div class="who2">Agent E2</div><p>No. A Cluster DRS Score of 92% does not validate that prod-cl02 is free of performance problems and it does not rule out pay-db-01 as the source of slow queries.</p>
+<p>Cluster DRS Score is a weighted average of VM DRS Scores, a measure of execution efficiency / VM happiness, not contention. Performance Best Practices 9.1 says &gt;80% means no performance impact, but a good cluster score can hide a few VMs with low scores; the VM list under Monitor &gt; vSphere DRS sorts VMs by score lowest first. Cluster metrics are averages; one suffering VM is hidden and low cluster utilization does not rule out VM contention. Performance is unmet demand per consumer.</p>
+<p>ESXi CPU Demand is a sum-of-consumers metric: sum of VMs’ ideal demand with no contention, with no reservation. It is a capacity metric, not a performance signal. Demand above Usage can be reservation alone, so read VM CPU Ready and Co-stop for contention.</p>
+<p>VM CPU Co-stop applies only to multi-vCPU VMs. A vCPU that gets ahead of a sibling that is Ready is stopped to keep vCPUs close in progress; the co-stopped vCPUs stop even when threads are free. Co-stop tends to be smaller than Ready and is typically &lt;1% in high-performing environments.</p>
+<p>What to check next for pay-db-01 since 09:00: VirtualMachine Peak CPU Ready among any vCPU % 20s, Peak CPU Co-stop % 20s, Peak memory wait %, Peak read/write latency among vDisks ms; Cluster worst peak vCPU Ready/Co-stop/memory wait/disk latency and Cluster Performance % depth/breadth; VM limits/shares/resource pool, DRS blockers and placement. Guest OS counters are needed to settle whether the database itself is the cause.</p>
+<p>Assumption: pay-db-01 is multi-vCPU, so Co-stop is applicable.</p><div class="meta">read 35 knowledge files · 3 model calls · 17 s</div></div></div></aside></div>
+<div class="foot">Recorded run · Muse Glimmer 30B (reasoning effort low) · run1 of the gate · knowledge e9d1e1b</div></body></html>

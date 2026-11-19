@@ -1,0 +1,1 @@
+Host esx-07 is quiet: 9 VMs, ESXi CPU Usage about 15% all week. In VCF Operations its ESXi CPU Demand is flat at about 38%. In vCenter the same host shows CPU Demand about 11%, below Usage. My manager reads the VCF Operations gap as unmet demand and asks for another host in the cluster. Is that right? Why do the two tools show different Demand for the same host?

@@ -1,0 +1,34 @@
+title: 'KAVG 4.6 ms, DAVG 0.8 ms. Where does the time go?'
+short_title: Storage Latency Demo
+user: L2 vSphere specialist
+context: 'Quick answer · host esx-04 · esxtop'
+about: |
+  - One question an L2 specialist asks, and the recorded answer of the Agent E2 pipeline (a local model reading the knowledge base), unedited. The host and its readings are a scenario.
+  - The specialist types the readings into the question; no connector is needed.
+  - Gate before this page was built: the same question was run 3 times; every run had to carry the answer points written before the run and none of the claims the question carries. All 3 runs passed; run 1 is shown, flaws included.
+object: {kind: ESXi host, name: esx-04, meta: 'esxtop disk device panel · one LUN'}
+tiles:
+- {label: 'GAVG/cmd', unit: ms, value: 5.4, band: grey, note: 'seen by the VM'}
+- {label: 'KAVG/cmd', unit: ms, value: 4.6, band: orange, note: 'time in the VMkernel'}
+- {label: 'QAVG/cmd', unit: ms, value: 4.5, band: orange, note: 'time in kernel queues'}
+- {label: 'DAVG/cmd', unit: ms, value: 0.8, band: green, note: 'HBA, fabric, array'}
+claims:
+- 'Storage team: the array is fine.'
+- 'Colleague 1: KAVG plus QAVG, so the host adds 9 ms.'
+- 'Colleague 2: every value is below 10 ms, so storage is healthy.'
+knowledge:
+- {id: vsphere/technology/storage/concepts/esxi-storage-latency-stack, what: 'GAVG = KAVG + DAVG; QAVG is part of KAVG; KAVG near 0 on a healthy host.'}
+- {id: vsphere/tools/esxtop/storage, what: 'The esxtop storage counters.'}
+- {id: vsphere/technology/storage/troubleshooting/host-storage-latency, what: 'Where to look when the time is in the host.'}
+twin: {title: 'How the esxtop storage latencies add up', url: 'https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-020-gavg-formula.md', models: [Muse Glimmer 30B, Gemma 31B, Qwen 27B], e2: [5, 5, 5], alone: [0, 1, 0]}
+key:
+  must_say:
+  - 'GAVG = KAVG + DAVG: 4.6 + 0.8 = 5.4 ms. QAVG is part of KAVG; adding it again counts the queue twice, so the host does not add 9 ms.'
+  - 'The array and the fabric are fine: DAVG 0.8 ms.'
+  - 'The time is queueing in the VMkernel (QAVG 4.5 of KAVG 4.6): check the queue depths along the stack and an IOPS limit on a virtual disk.'
+  - 'Below 10 ms is not healthy here: KAVG should be near 0.'
+  must_not:
+  - 'The array is the problem.'
+  - 'The host adds 9 ms.'
+  - 'Everything below 10 ms is healthy.'
+run: {model: meta/muse-glimmer-30b, label: 'Muse Glimmer 30B', params: 'reasoning effort low', shown: run1}
