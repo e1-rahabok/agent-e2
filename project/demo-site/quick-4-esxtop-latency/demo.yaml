@@ -8,11 +8,16 @@ about: |
   - The specialist types the readings into the question; no connector is needed.
   - Gate before this page was built: the same question was run 3 times; every run had to carry the answer points written before the run and none of the claims the question carries. All 3 runs passed; run 1 is shown, flaws included.
 object: {kind: ESXi host, name: esx-04, meta: 'esxtop disk device panel · one LUN'}
-tiles:
-- {label: 'GAVG/cmd', unit: ms, value: 5.4, band: grey, note: 'seen by the VM'}
-- {label: 'KAVG/cmd', unit: ms, value: 4.6, band: orange, note: 'time in the VMkernel'}
-- {label: 'QAVG/cmd', unit: ms, value: 4.5, band: orange, note: 'time in kernel queues'}
-- {label: 'DAVG/cmd', unit: ms, value: 0.8, band: green, note: 'HBA, fabric, array'}
+tables:
+- title: 'esxtop batch export, disk device panel, esx-04, 5-second samples'
+  head: [Time, DEVICE, CMDS/s, DQLEN, ACTV, QUED, LOAD, GAVG/cmd, DAVG/cmd, KAVG/cmd, QAVG/cmd]
+  rows:
+    - ['10:02:05', 'naa.624a9370c1d2', '40,120', '32', '32', '181', '6.7', '5.4', '0.8', '4.6', '4.5']
+    - ['10:02:10', 'naa.624a9370c1d2', '39,870', '32', '32', '178', '6.6', '5.3', '0.8', '4.5', '4.4']
+    - ['10:02:15', 'naa.624a9370c1d2', '40,310', '32', '32', '184', '6.8', '5.5', '0.8', '4.7', '4.6']
+    - ['10:02:20', 'naa.624a9370c1d2', '40,050', '32', '32', '180', '6.6', '5.4', '0.8', '4.6', '4.5']
+    - ['10:02:25', 'naa.624a9370c1d2', '39,960', '32', '32', '179', '6.6', '5.4', '0.8', '4.6', '4.5']
+  note: 'Latencies in ms. ACTV equals DQLEN in every sample and about 180 commands wait (QUED): the device queue is full. LOAD = (ACTV + QUED) / DQLEN.'
 claims:
 - 'Storage team: the array is fine.'
 - 'Colleague 1: KAVG plus QAVG, so the host adds 9 ms.'

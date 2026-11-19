@@ -8,13 +8,10 @@ about: |
   - The specialist types the readings into the question; no connector is needed.
   - Gate before this page was built: the same question was run 3 times; every run had to carry the answer points written before the run and none of the claims the question carries. All 3 runs passed; run 1 is shown, flaws included.
 object: {kind: ESXi host, name: esx-21, meta: '768 GB · no memory tiering · vCenter, past day'}
-tiles:
-- {label: 'Memory State', value: High, band: green, note: 'every sample'}
-- {label: 'Balloon', unit: GB, value: 0, band: green, note: 'every sample'}
-- {label: 'Swap consumed', unit: GB, value: 3.1, band: grey, note: 'flat'}
-- {label: 'Compressed', unit: GB, value: 1.2, band: grey, note: 'flat'}
-- {label: 'Swap in, swap out rates', unit: KBps, value: 0, band: green, note: 'every sample'}
-- {label: 'Compression, decompression rates', unit: KBps, value: 0, band: green, note: 'every sample'}
+charts:
+- {type: line, title: 'Memory State, esx-21, past day', x: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00', '24:00'], ylabels: [High, Clear, Soft, Hard, Low], ymax: 4, series: [{name: State, values: [0, 0, 0, 0, 0, 0, 0, 0, 0]}], note: 'High in every sample. Ballooning starts at Soft.'}
+- {type: line, title: 'Memory held (GB), esx-21, past day', x: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00', '24:00'], ymax: 4, series: [{name: Swap consumed, values: [3.1, 3.1, 3.1, 3.1, 3.1, 3.1, 3.1, 3.1, 3.1], color: '#f97316'}, {name: Compressed, values: [1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2], color: '#eab308'}, {name: Balloon, values: [0, 0, 0, 0, 0, 0, 0, 0, 0], color: '#38bdf8'}]}
+- {type: line, title: 'Memory rates (KBps), esx-21, past day', x: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00', '24:00'], ymax: 100, series: [{name: 'Swap in, swap out, compression, decompression', values: [0, 0, 0, 0, 0, 0, 0, 0, 0]}], note: 'All four rates are 0 in every sample.'}
 claims:
 - 'Ballooning comes before swapping, so a counter must be wrong.'
 - 'The host needs VMs moved off it.'

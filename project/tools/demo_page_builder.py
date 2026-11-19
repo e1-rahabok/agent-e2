@@ -222,9 +222,10 @@ def line_chart(c):
     px = lambda i: l + (w - l - r) * (i / max(1, len(xs) - 1))  # noqa: E731
     py = lambda v: t + (h - t - b) * (1 - v / ymax)  # noqa: E731
     g = [f'<line x1="{l}" y1="{py(0)}" x2="{w - r}" y2="{py(0)}" stroke="#26324a"/>']
-    for k in range(0, 5):
-        v = ymax * k / 4
-        g.append(f'<text x="{l - 6}" y="{py(v) + 4}" text-anchor="end">{v:g}</text>'
+    labels = c.get('ylabels')   # names for the ticks 0..n, for a level such as a memory state
+    for k in range(0, 5 if not labels else len(labels)):
+        v = ymax * k / 4 if not labels else k
+        g.append(f'<text x="{l - 6}" y="{py(v) + 4}" text-anchor="end">{esc(labels[k]) if labels else format(v, "g")}</text>'
                  f'<line x1="{l}" y1="{py(v)}" x2="{w - r}" y2="{py(v)}" stroke="#1b2740"/>')
     for i, x in enumerate(xs):
         g.append(f'<text x="{px(i)}" y="{h - 8}" text-anchor="middle">{esc(x)}</text>')
@@ -232,17 +233,21 @@ def line_chart(c):
     if th:
         g.append(f'<line x1="{l}" y1="{py(th["value"])}" x2="{w - r}" y2="{py(th["value"])}" stroke="#eab308" stroke-dasharray="5 4"/>'
                  f'<text x="{w - r}" y="{py(th["value"]) - 5}" text-anchor="end" style="fill:#eab308">{esc(th["label"])}</text>')
+    legend = []
     for s in c['series']:
+        col = s.get('color', '#38bdf8')
+        legend.append(f'<span style="color:{col}">■</span> {esc(s["name"])}')
         pts = ' '.join(f'{px(i):.1f},{py(v):.1f}' for i, v in enumerate(s['values']))
-        g.append(f'<polyline points="{pts}" fill="none" stroke="#38bdf8" stroke-width="2"/>')
+        g.append(f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="2"/>')
         for i, v in enumerate(s['values']):
             ring = i in (c.get('ring') or [])
-            g.append(f'<circle cx="{px(i):.1f}" cy="{py(v):.1f}" r="{6 if ring else 2.5}" fill="{"none" if ring else "#38bdf8"}" '
+            g.append(f'<circle cx="{px(i):.1f}" cy="{py(v):.1f}" r="{6 if ring else 2.5}" fill="{"none" if ring else col}" '
                      f'stroke="{"#f97316" if ring else "none"}" stroke-width="2"/>')
             if ring:
                 g.append(f'<text x="{px(i):.1f}" y="{py(v) - 10:.1f}" text-anchor="middle" style="fill:#fdba74">{v:g}</text>')
     svg = f'<div class="chart"><svg viewBox="0 0 {w} {h}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(g)}</svg></div>'
-    return f'<div class="h">{esc(c["title"])}</div>{svg}' + (f'<div class="note">{esc(c["note"])}</div>' if c.get('note') else '')
+    leg = f'<div class="note">{" &nbsp; ".join(legend)}</div>' if len(legend) > 1 else ''
+    return f'<div class="h">{esc(c["title"])}</div>{svg}{leg}' + (f'<div class="note">{esc(c["note"])}</div>' if c.get('note') else '')
 
 
 def bar_chart(c):

@@ -5,13 +5,12 @@ user: L2 vSphere specialist
 context: 'Quick answer · host esx-07'
 about: |
   - One question an L2 specialist asks, and the recorded answer of the Agent E2 pipeline (a local model reading the knowledge base), unedited. The host and its readings are a scenario.
-  - The specialist types the readings into the question; no connector is needed.
+  - The specialist attaches two screenshots of the same host and hour, taken in a lab; Agent E2 reads them (every candidate model reads images).
   - Gate before this page was built: the same question was run 3 times; every run had to carry the answer points written before the run and none of the claims the question carries. All 3 runs passed; run 1 is shown, flaws included.
-object: {kind: ESXi host, name: esx-07, meta: '9 VMs · a quiet week'}
-tiles:
-- {label: 'ESXi CPU Usage', unit: '%', value: 15, band: green, note: 'both tools, all week'}
-- {label: 'ESXi CPU Demand, VCF Operations', unit: '%', value: 38, band: grey, note: 'flat all week'}
-- {label: 'ESXi CPU Demand, vCenter', unit: '%', value: 11, band: grey, note: 'below Usage'}
+object: {kind: ESXi host, name: sun05-esxi47, meta: 'a quiet host · the same hour in both tools · the specialist attaches both screenshots'}
+screens:
+- {file: step-1-1-vcf-operations.webp, caption: 'VCF Operations: CPU|Demand about 2,913-2,918 MHz, CPU|Usage about 325-484 MHz.'}
+- {file: step-1-2-vcenter.png, caption: 'vCenter performance chart: Demand average 199 MHz, Usage in MHz average 342 MHz.'}
 claims:
 - 'Manager: the VCF Operations gap is unmet demand, so the cluster needs another host.'
 - 'The two tools disagree, so one of them must be wrong.'

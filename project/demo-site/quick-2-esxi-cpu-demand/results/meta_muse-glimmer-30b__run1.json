@@ -5,96 +5,220 @@
    "effort": "low"
   }
  },
- "knowledge_commit": "e9d1e1b64630624e917aa5ac67baf8a3358d1d0d",
+ "knowledge_commit": "7f3d5b82b442e7a702943e91ee7134d46779716f",
  "steps": {
   "1": {
    "type": "answer",
-   "content": "No. The gap is not unmet demand and the host does not need another host. The host is quiet: ESXi CPU Usage ≈15% all week shows low busy time per core. Capacity headroom is read in ESXi Thread/Core Utilization and VM contention, not in Demand.\n\nWhy the numbers differ:\nESXi CPU Demand is a sum-of-consumers metric. Same name, two formulas.\n\n* vCenter `cpu.demand` is the administration view: sum of the running VMs’ scheduler demand only. It excludes VM CPU reservations and the kernel’s System Resource Reservation. Kernel work is in Usage, not in Demand, so on a quiet host vCenter Demand can sit below Usage.\n* VCF Operations `CPU|Demand` is the operations/capacity view. Per running VM it takes max(demand, CPU reservation) and adds the kernel CPU reservation. That is the capacity model Demand = Max(Utilization,Reservation).\n\nWith 9 VMs and ~15% Usage the host has plenty of free threads. VCF Operations 38% is flat reservation capacity, not work waiting to run. vCenter ~11% is the VMs’ actual scheduler demand, consistent with low Usage. Unmet demand would show as VM CPU Ready/Co-stop and rising Core/Thread Utilization, not as a Demand-Usage gap.\n\nCheck next: ESXi Thread Utilization and Core Utilization for headroom, and per-VM CPU Ready/Co-stop peak 20-second. If Core Utilization <100% and Thread Utilization <~80-90% with no VM contention, the host can take more VMs.",
+   "content": "No. VCF Operations CPU|Demand is not unmet demand; on a quiet host the gap to CPU|Usage is reserved capacity, not a wait.\n\nMechanism: VCF Operations CPU|Demand follows the capacity model: per running VM the higher of its demand and its CPU reservation, plus the kernel’s System Resource Reservation. vCenter `cpu.demand` is the scheduler sum-of-consumers view: ideal VM demand with no contention, reservations excluded. ESXi CPU Reserved Capacity is the VM reservations only; it excludes the kernel reservation that VCF Operations adds. vCenter Usage matches VCF Operations Usage in magnitude; the two Demand values differ because vCenter Demand omits VM and kernel reservations while VCF Operations includes them.\n\nReason: the host is quiet with few VMs, so real work is low and Usage ~300-480 MHz in VCF Operations and ~342 MHz average in vCenter. VCF Operations Demand ~2.9 GHz is the reserved capacity floor, not a shortfall. A reservation acts only under contention; unused reserved CPU is used by other VMs. Demand above Usage can be reservation alone. Performance is decided by VM CPU Ready/Co-stop, not by the Demand-Usage gap.\n\nCheck next: VM CPU Ready and Co-stop peaks on the host’s VMs; ESXi CPU Reserved Capacity and the host System Resource Reservation to quantify the reserved floor; ESXi Thread/Core Utilization for free capacity. `vsphere/technology/cpu/metrics/host/demand`; `vsphere/technology/cpu/metrics/host/reserved-capacity`; `vsphere/architecture/provider-consumer`.",
    "computed": [],
    "files_read": [
-    "vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics",
-    "vsphere/technology/cpu/metrics/host/usage",
-    "vsphere/technology/cpu/metrics/host/demand",
-    "vsphere/technology/cpu/metrics/virtual-motherboard/demand",
-    "vsphere/technology/cpu/metrics/virtual-motherboard/usage",
-    "vsphere/architecture/provider-consumer",
-    "vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom",
-    "vsphere/technology/cpu/concepts/hyper-threading",
-    "vsphere/technology/cpu/concepts/cpu-frequency",
+    "vsphere/tools/vsphere-client/vcenter-statistics",
     "vsphere/technology/cpu/concepts/run-time-vs-run-quality",
-    "vsphere/technology/cpu/metrics/comparisons/consumption-metrics",
+    "vsphere/technology/cpu/metrics/host/demand",
+    "vsphere/technology/cpu/metrics/host/peak-core-usage",
+    "vsphere/object-types/cluster/cluster-performance",
+    "vsphere/object-types/esxi/esxi-performance",
+    "vsphere/object-types/vm/vm-performance",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/demand",
     "vsphere/architecture/metric-sources",
-    "vsphere/technology/cpu/metrics/comparisons/host-contention-metrics",
-    "vsphere/technology/cpu/metrics/host/cpu-utilization-for-resources",
-    "sp5-framework/concepts/performance-vs-capacity",
-    "vsphere/architecture/resource-controls",
-    "sp5-framework/capacity/demand",
-    "vsphere/technology/cpu/concepts/cpu-measurement-levels",
-    "vsphere/architecture/kernel-worlds",
-    "vsphere/architecture/object-relationships",
-    "vsphere/architecture/vm-vs-guest-os",
+    "vsphere/architecture/provider-consumer",
+    "vsphere/technology/cpu/concepts/vcpu-states",
+    "vsphere/technology/cpu/concepts/hyper-threading",
+    "vsphere/technology/cpu/concepts/cpu-topology",
+    "vsphere/technology/cpu/concepts/numa",
+    "sp5-framework/performance/performance-kpi-design",
+    "vsphere/object-types/vm/vmotion",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/other-wait",
+    "vsphere/technology/cpu/concepts/cpu-frequency",
+    "vsphere/technology/cpu/metrics/comparisons/consumption-metrics",
+    "vsphere/tools/esxtop/network-units-vs-vsphere-client",
+    "vcf-operations/features/peak-20-second-metrics",
     "vcf-operations/vcf-operations-role",
-    "vsphere/technology/cpu/metrics/host/utilization",
-    "vsphere/technology/cpu/metrics/host/core-utilization",
+    "sp5-framework/observability/collection-interval",
+    "sp5-framework/capacity/demand",
+    "vsphere/technology/memory/metrics/comparisons/vm-memory-metrics",
+    "vsphere/technology/cpu/metrics/host/cpu-utilization-for-resources",
+    "sp5-framework/outputs/system-engagement",
+    "vsphere/architecture/resource-controls",
+    "vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics",
+    "vsphere/technology/cpu/concepts/cpu-measurement-levels",
+    "vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom",
     "vsphere/technology/cpu/metrics/host/used",
-    "vsphere/technology/cpu/metrics/virtual-motherboard/contention",
+    "vsphere/architecture/vm-vs-guest-os",
+    "sp5-framework/observability/real-time-metrics",
     "vsphere/technology/cpu/metrics/virtual-motherboard/ready",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/run",
+    "vsphere/technology/cpu/metrics/host/usage",
+    "vsphere/technology/cpu/metrics/host/imbalance",
+    "vsphere/object-types/cluster/cluster-health-check",
+    "sp5-framework/performance/performance-management",
+    "vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention",
+    "sp5-framework/concepts/performance-vs-capacity",
+    "sp5-framework/observability/aggregation",
+    "sp5-framework/performance/kpi-vs-sla",
+    "vsphere/object-types/esxi/esxi-health-check",
+    "guest-os/system/guest-os-performance",
+    "vsphere/object-types/vm/vm-health-check",
+    "sp5-framework/capacity/class-of-service-planning",
+    "sp5-framework/concepts/modelling",
+    "sp5-framework/outputs/performance-dashboards",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/usage",
+    "vsphere/technology/cpu/metrics/virtual-motherboard/contention",
     "vsphere/technology/cpu/troubleshooting/run-vs-used-gap",
-    "vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu"
+    "vsphere/technology/cpu/metrics/host/reserved-capacity"
    ],
-   "knowledge_commit": "e9d1e1b64630624e917aa5ac67baf8a3358d1d0d",
+   "knowledge_commit": "7f3d5b82b442e7a702943e91ee7134d46779716f",
    "trace": [
     {
      "step": 1,
      "action": "understand",
      "output": {
-      "kind": "metric-meaning",
+      "kind": "how-it-works",
       "objects": [
        "ESXi host",
        "cluster"
       ],
       "metrics": [
        {
-        "name": "ESXi CPU Usage",
-        "object": "ESXi host",
-        "value": 15,
-        "unit": "%",
-        "interval": "all week",
-        "tool": null
+        "name": "CPU|Demand",
+        "object": "sun05-esxi47.acepod.com",
+        "value": null,
+        "unit": "MHz",
+        "interval": "06:30 PM to 07:40 PM",
+        "tool": "VCF Operations"
        },
        {
-        "name": "ESXi CPU Demand",
-        "object": "ESXi host",
-        "value": 38,
-        "unit": "%",
+        "name": "CPU|Demand",
+        "object": "sun05-esxi47.acepod.com",
+        "value": 2917.92,
+        "unit": "MHz",
         "interval": null,
         "tool": "VCF Operations"
        },
        {
-        "name": "CPU Demand",
-        "object": "ESXi host",
-        "value": 11,
-        "unit": "%",
+        "name": "CPU|Demand",
+        "object": "sun05-esxi47.acepod.com",
+        "value": 2913.32,
+        "unit": "MHz",
         "interval": null,
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "CPU|Usage",
+        "object": "sun05-esxi47.acepod.com",
+        "value": null,
+        "unit": "MHz",
+        "interval": "06:30 PM to 07:40 PM",
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "CPU|Usage",
+        "object": "sun05-esxi47.acepod.com",
+        "value": 483.87,
+        "unit": "MHz",
+        "interval": null,
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "CPU|Usage",
+        "object": "sun05-esxi47.acepod.com",
+        "value": 324.53,
+        "unit": "MHz",
+        "interval": null,
+        "tool": "VCF Operations"
+       },
+       {
+        "name": "Demand",
+        "object": "sun05-esxi47.acepod.com",
+        "value": 203,
+        "unit": "MHz",
+        "interval": "past hour",
+        "tool": "vCenter"
+       },
+       {
+        "name": "Demand",
+        "object": "sun05-esxi47.acepod.com",
+        "value": 223,
+        "unit": "MHz",
+        "interval": "past hour",
+        "tool": "vCenter"
+       },
+       {
+        "name": "Demand",
+        "object": "sun05-esxi47.acepod.com",
+        "value": 182,
+        "unit": "MHz",
+        "interval": "past hour",
+        "tool": "vCenter"
+       },
+       {
+        "name": "Demand",
+        "object": "sun05-esxi47.acepod.com",
+        "value": 199.15,
+        "unit": "MHz",
+        "interval": "past hour",
+        "tool": "vCenter"
+       },
+       {
+        "name": "Usage in MHz",
+        "object": "sun05-esxi47.acepod.com",
+        "value": 432,
+        "unit": "MHz",
+        "interval": "past hour",
+        "tool": "vCenter"
+       },
+       {
+        "name": "Usage in MHz",
+        "object": "sun05-esxi47.acepod.com",
+        "value": 2326,
+        "unit": "MHz",
+        "interval": "past hour",
+        "tool": "vCenter"
+       },
+       {
+        "name": "Usage in MHz",
+        "object": "sun05-esxi47.acepod.com",
+        "value": 236,
+        "unit": "MHz",
+        "interval": "past hour",
+        "tool": "vCenter"
+       },
+       {
+        "name": "Usage in MHz",
+        "object": "sun05-esxi47.acepod.com",
+        "value": 342.494,
+        "unit": "MHz",
+        "interval": "past hour",
         "tool": "vCenter"
        }
       ],
-      "symptom": "Manager reads VCF Operations vs vCenter CPU Demand gap as unmet demand and asks for another host in the cluster",
-      "premise": "A difference between VCF Operations ESXi CPU Demand ~38% and vCenter CPU Demand ~11% with host CPU Usage ~15% indicates unmet demand requiring additional host capacity",
+      "symptom": "This host is quiet, with few VMs. Manager reads the VCF Operations chart as unmet demand and asks for another host in the cluster.",
+      "premise": "VCF Operations CPU|Demand chart represents unmet demand.",
       "claims": [
-       "Is the manager's interpretation that the gap means unmet demand and need another host correct?",
-       "Why do VCF Operations and vCenter show different CPU Demand for the same host esx-07?"
+       "Is reading VCF Operations chart as unmet demand correct?",
+       "Why do the two tools show different Demand for the same host?"
       ],
       "missing": [
-       "vCPU count of host esx-07",
-       "exact metric definitions and aggregation intervals used by VCF Operations vs vCenter",
-       "ESXi version and VCF Operations version",
-       "whether CPU Demand values are per-host normalized or cluster-relative"
+       "host CPU capacity / core count and clock speed",
+       "VCF Operations vs vCenter metric definitions and rollup intervals",
+       "VM vCPU count and version of VCF Operations / vCenter"
+      ],
+      "images": [
+       {
+        "tool": "VCF Operations",
+        "object": "sun05-esxi47.acepod.com",
+        "shows": "CPU|Demand (MHz) time series ~2913-2918 MHz from 06:30 PM to 07:25 PM with points 2,917.92 and 2,913.32; CPU|Usage (MHz) time series ~324-484 MHz over same period with points 483.87 and 324.53"
+       },
+       {
+        "tool": "vCenter",
+        "object": "sun05-esxi47.acepod.com",
+        "shows": "Performance chart for 11/14/2026 6:25 PM to 7:20 PM with Demand Average MHz Latest 203 Maximum 223 Minimum 182 Average 199.15 and Usage in MHz Average MHz Latest 432 Maximum 2,326 Minimum 236 Average 342.494"
+       }
       ]
      },
-     "prompt_tokens": 423,
-     "completion_tokens": 646,
-     "latency": 7.78,
+     "prompt_tokens": 2703,
+     "completion_tokens": 1524,
+     "latency": 19.38,
      "provider": "togetherai"
     },
     {
@@ -102,43 +226,67 @@
      "action": "plan",
      "output": {
       "named": [
-       "vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics",
-       "vsphere/technology/cpu/metrics/host/usage",
+       "vsphere/tools/vsphere-client/vcenter-statistics",
+       "vsphere/technology/cpu/concepts/run-time-vs-run-quality",
        "vsphere/technology/cpu/metrics/host/demand",
-       "vsphere/technology/cpu/metrics/virtual-motherboard/demand",
-       "vsphere/technology/cpu/metrics/virtual-motherboard/usage"
+       "vsphere/technology/cpu/metrics/host/peak-core-usage",
+       "vsphere/object-types/cluster/cluster-performance",
+       "vsphere/object-types/esxi/esxi-performance",
+       "vsphere/object-types/vm/vm-performance",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/demand"
       ],
       "search": [
-       "vsphere/architecture/provider-consumer",
-       "vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom"
+       "vsphere/architecture/metric-sources",
+       "vsphere/architecture/provider-consumer"
       ],
       "mechanism": [
+       "vsphere/technology/cpu/concepts/vcpu-states",
        "vsphere/technology/cpu/concepts/hyper-threading",
+       "vsphere/technology/cpu/concepts/cpu-topology",
+       "vsphere/technology/cpu/concepts/numa",
+       "sp5-framework/performance/performance-kpi-design",
+       "vsphere/object-types/vm/vmotion",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/other-wait",
        "vsphere/technology/cpu/concepts/cpu-frequency",
-       "vsphere/technology/cpu/concepts/run-time-vs-run-quality"
+       "vsphere/technology/cpu/metrics/comparisons/consumption-metrics",
+       "vsphere/tools/esxtop/network-units-vs-vsphere-client",
+       "vcf-operations/features/peak-20-second-metrics"
       ],
       "search_rest": [
-       "vsphere/technology/cpu/metrics/comparisons/consumption-metrics",
-       "vsphere/architecture/metric-sources",
-       "vsphere/technology/cpu/metrics/comparisons/host-contention-metrics",
-       "vsphere/technology/cpu/metrics/host/cpu-utilization-for-resources"
+       "vcf-operations/vcf-operations-role",
+       "sp5-framework/observability/collection-interval",
+       "sp5-framework/capacity/demand",
+       "vsphere/technology/memory/metrics/comparisons/vm-memory-metrics"
       ],
       "more": [
-       "sp5-framework/concepts/performance-vs-capacity",
+       "vsphere/technology/cpu/metrics/host/cpu-utilization-for-resources",
+       "sp5-framework/outputs/system-engagement",
        "vsphere/architecture/resource-controls",
-       "sp5-framework/capacity/demand",
+       "vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics",
        "vsphere/technology/cpu/concepts/cpu-measurement-levels",
-       "vsphere/architecture/kernel-worlds",
-       "vsphere/architecture/object-relationships",
-       "vsphere/architecture/vm-vs-guest-os",
-       "vcf-operations/vcf-operations-role",
-       "vsphere/technology/cpu/metrics/host/utilization",
-       "vsphere/technology/cpu/metrics/host/core-utilization",
+       "vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom",
        "vsphere/technology/cpu/metrics/host/used",
-       "vsphere/technology/cpu/metrics/virtual-motherboard/contention",
+       "vsphere/architecture/vm-vs-guest-os",
+       "sp5-framework/observability/real-time-metrics",
        "vsphere/technology/cpu/metrics/virtual-motherboard/ready",
-       "vsphere/technology/cpu/troubleshooting/run-vs-used-gap",
-       "vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu"
+       "vsphere/technology/cpu/metrics/virtual-motherboard/run",
+       "vsphere/technology/cpu/metrics/host/usage",
+       "vsphere/technology/cpu/metrics/host/imbalance",
+       "vsphere/object-types/cluster/cluster-health-check",
+       "sp5-framework/performance/performance-management",
+       "vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention",
+       "sp5-framework/concepts/performance-vs-capacity",
+       "sp5-framework/observability/aggregation",
+       "sp5-framework/performance/kpi-vs-sla",
+       "vsphere/object-types/esxi/esxi-health-check",
+       "guest-os/system/guest-os-performance",
+       "vsphere/object-types/vm/vm-health-check",
+       "sp5-framework/capacity/class-of-service-planning",
+       "sp5-framework/concepts/modelling",
+       "sp5-framework/outputs/performance-dashboards",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/usage",
+       "vsphere/technology/cpu/metrics/virtual-motherboard/contention",
+       "vsphere/technology/cpu/troubleshooting/run-vs-used-gap"
       ]
      },
      "prompt_tokens": null,
@@ -167,10 +315,19 @@
     {
      "step": 5,
      "action": "answer",
-     "output": "No. The gap is not unmet demand and the host does not need another host. The host is quiet: ESXi CPU Usage ≈15% all week shows low busy time per core. Capacity headroom is read in ESXi Thread/Core Utilization and VM contention, not in Demand.\n\nWhy the numbers differ:\nESXi CPU Demand is a sum-of-consumers metric. Same name, two formulas.\n\n* vCenter `cpu.demand` is the administration view: sum of th",
-     "prompt_tokens": 16637,
-     "completion_tokens": 488,
-     "latency": 6.9,
+     "output": "No. VCF Operations CPU|Demand is not unmet demand on a quiet host; the gap to CPU|Usage is reserved capacity, not a wait.\n\nVCF Operations CPU|Demand follows the capacity model: per running VM the higher of its demand and its CPU reservation, plus the kernel’s CPU reservation. vCenter `cpu.demand` is the scheduler’s sum-of-consumers view: the ideal total demand of the running VMs with no contention",
+     "prompt_tokens": 32854,
+     "completion_tokens": 580,
+     "latency": 9.13,
+     "provider": "togetherai"
+    },
+    {
+     "step": 6,
+     "action": "gap",
+     "output": "No. VCF Operations CPU|Demand is not unmet demand; on a quiet host the gap to CPU|Usage is reserved capacity, not a wait.\n\nMechanism: VCF Operations CPU|Demand follows the capacity model: per running VM the higher of its demand and its CPU reservation, plus the kernel’s System Resource Reservation. vCenter `cpu.demand` is the scheduler sum-of-consumers view: ideal VM demand with no contention, res",
+     "prompt_tokens": 33793,
+     "completion_tokens": 327,
+     "latency": 7.21,
      "provider": "togetherai"
     }
    ]
