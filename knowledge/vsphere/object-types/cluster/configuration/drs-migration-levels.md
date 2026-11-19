@@ -1,7 +1,6 @@
 # DRS migration threshold
 
-## Migration threshold levels (since vSphere 7.0)
-- Before vSphere 7.0: one migration threshold controlled how aggressively fully automated DRS moved VMs.
+## Migration threshold levels
 - Since vSphere 7.0: the threshold is workload-focused. Each level is tuned for a kind of workload.
 - Level 1: DRS recommends only mandatory moves. These fix rule violations, or move VMs off a host entering Maintenance Mode. DRS does not move VMs to improve resource availability at this level.
 - Level 2: tuned for highly stable workloads. DRS recommends vMotion only when the cluster is at or close to contention.
