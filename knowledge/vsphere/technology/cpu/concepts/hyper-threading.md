@@ -46,13 +46,10 @@
 - Setting: `numa.vcpu.preferHT`, per VM.
 - Details: see [`vsphere/technology/cpu/concepts/numa`](numa.md).
 
-## Hyper-Threading accounting: Mechanism
-- SMT (Intel: Hyper-Threading) raises the total throughput of a core.
-- It lowers the throughput of each thread.
+## Accounting Mechanism: 
+- SMT (Intel: Hyper-Threading) raises the total throughput of a core, but lowers the throughput of each thread.
 - The real gain varies with the load.
-- The gain is hard to measure: the core frequency does not change.
-
-## Hyper-Threading accounting: Accounting
+- The gain is hard to measure as the core actual frequency does not change.
 - ESXi records the core gain as 1.25x, regardless of the real gain: a flat 25% throughput benefit for the core when both threads run (Broadcom KB 335065).
 - The real gain for an application can be lower or higher. The counters still use 1.25x.
 - The 1.25x goes into VM CPU Used and VM CPU Usage only; ESXi CPU Used splits the core in half. See section Hyper-Threading accounting: VM CPU Used and ESXi CPU Used.
