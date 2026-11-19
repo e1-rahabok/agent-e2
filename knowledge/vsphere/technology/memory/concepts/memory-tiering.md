@@ -11,8 +11,7 @@
 - Memory tiering transparently monitors VM memory activity.
 - Frequently accessed data stays on DRAM.
 - Infrequently accessed data is placed on the NVMe tier.
-- Tiering starts when host memory consumption reaches about 80% of DRAM capacity. Below that, all pages stay in DRAM.
-- Once DRAM consumption reaches about 80%, new memory is allocated from NVMe. The 80% is fixed, not a setting.
+- Tiering starts when host DRAM consumption reaches about 80%: from then, new memory is allocated from NVMe. Below it, all pages stay in DRAM. The 80% is fixed, not a setting.
 - Pages are classified by recency (how recently accessed) and frequency (how often accessed). Hot pages are those accessed most often in about the past minute; the rest are cold.
 - The classification module computes guest activeness, tier bandwidth, per-VM tier quotas and per-tier activeness thresholds, then places pages; it keeps adjusting as workloads change phase.
 - The whole memory of each VM is scanned in batches; the scan cycle length depends on VM memory size, the scan rate on memory pressure. Pages move at the end of each cycle.
@@ -25,6 +24,7 @@
 - So a guest write to a cold page waits too: an access to a page on NVMe raises a page fault, and the page is fetched to DRAM before the access completes (vSphere 9.1 documentation, pp. 1848, 1872). The fetch shows as NVMe read bandwidth, which counts pages fetched from NVMe when they become active; NVMe write bandwidth counts cold pages moved down (p. 1848).
 - NVMe write bandwidth is demotion: cold pages moved down in the background, off the vCPU's path. It costs device endurance and device time: under heavy writes the device's garbage collection can raise read latency.
 - One fetch costs about 1,000x a DRAM access: about 100-200 µs against about 100 ns. Each fetch delays the touching vCPU once, for the full fetch (a wake-up delay of an idle device included). A few fetches cost little, not nothing; many fetches at a healthy latency still slow a VM.
+- VM memory contention (esxtop %LAT_M; VCF Operations Memory Contention) does not count time spent on pages in the NVMe tier: the memory latency counter is unaware of memory tiering. A VM can wait on NVMe while its memory contention reads near 0. Read the NVMe tier counters (read bandwidth and latency) directly, or NVMe wait ([`vsphere/object-types/cluster/cluster-performance`](../../../object-types/cluster/cluster-performance.md), section NVMe wait formula).
 - Compared with host swapping (including swap to host cache):
   - trigger: swapping is reactive, a last resort under severe memory pressure; tiering is proactive and runs continuously once DRAM consumption passes about 80%;
   - selection: swapping picks pages at random, so active pages go out too and the application stalls; tiering ages pages by recency and frequency and moves only cold ones;
@@ -36,7 +36,6 @@
 - An NVMe device used for tiering is not available to vSAN. Count the lost vSAN capacity when sizing the cluster.
 - Overcommit is counted against DRAM only; tiering is what makes a memory overcommit ratio above 1:1 workable. At the default 1:1 tier ratio, a host can carry up to 2x its DRAM in VM memory. Broadcom's warning not to overcommit on top of tiering is against allocation beyond DRAM + NVMe, where ballooning and swapping run on top of NVMe pages.
 - Consumed covers both tiers; once cold pages move to NVMe, consumed can exceed DRAM.
-- VM memory contention (esxtop %LAT_M; VCF Operations Memory Contention) does not count time spent on pages in the NVMe tier: the memory latency counter is unaware of memory tiering. A VM can wait on NVMe while its memory contention reads near 0. Read the NVMe tier counters (read bandwidth and latency) directly, or NVMe wait ([`vsphere/object-types/cluster/cluster-performance`](../../../object-types/cluster/cluster-performance.md), section NVMe wait formula).
 - The capacity plan sizes DRAM; tiering is not part of the overcommit ratio ([`sp5-framework/capacity/overcommit`](../../../../sp5-framework/capacity/overcommit.md)). In the running stage, consumed memory above DRAM is expected on a tiered host.
 
 ## Sizing (documentation)
@@ -59,7 +58,7 @@
   - a VM excluded from tiering without a full memory reservation competes for DRAM, and its pages can go to the host swap file, which is slower than NVMe;
   - a memory limit on a VM or resource pool reclaims whatever the host has free;
   - demand beyond DRAM + NVMe: swap stays as the last resort, for correctness, for example during evacuations at 3x-4x overcommit.
-- Broadcom does not state that compression and swap now wait until NVMe is full. The host's total memory is DRAM + NVMe, and new pages are allocated from NVMe 1 once DRAM passes 80%, so host-wide reclamation is expected only when both tiers are nearly full.
+- Broadcom does not state that compression and swap now wait until NVMe is full. The host's total memory is DRAM + NVMe, and new pages are allocated from NVMe once DRAM passes 80%, so host-wide reclamation is expected only when both tiers are nearly full.
 - Do not allocate beyond DRAM + NVMe: ballooning and swapping on top of NVMe pages degrade performance. An overcommit ratio above 1:1 against DRAM, within DRAM + NVMe, is the purpose of tiering.
 - Memory reservations (not pinned memory) are served from both tiers. The vendor example, reserved VMs that together exceed DRAM, shows the split; it is not a condition for it.
 - A memory reservation is a floor against reclamation (balloon, compression, swap), not a DRAM placement lock. Once DRAM consumption passes about 80%, cold pages of a reserved tiered VM go to NVMe, whatever the total of the reservations. Only its overhead memory always sits in DRAM. To keep a VM in DRAM, turn tiering off for it and reserve all its memory (vSphere 9.1 documentation, pp. 1871, 1873, 1969).
@@ -101,10 +100,8 @@
   - 200-400 µs: potential for issues;
   - above 400 µs: workload impact expected.
 - NVMe read bandwidth above 200 MB/s on a host: start watching the device latency. A trigger to look, not a limit.
-- Host CPU of a non-tiered host in the cluster above 75%: tiering becomes less efficient.
+- In a cluster that mixes tiered and non-tiered hosts: host CPU above 75% on a non-tiered host can reduce the efficiency of tiering (VCF 9.0 performance study, p. 39).
 - Measured cost at the default 1:1 ratio and 2x VM density (VCF 9.0): VDI 0-8% loss, VMmark 5%, Oracle below 5%, SQL Server and MySQL 5-10%.
-
-- Make sure there is enough CPU headroom to handle the CPU cost of memory tiering (9.1 p. 38).
 
 ## Monitoring counters (vSphere Client, host and VM)
 | Counter | Object | Unit, rollup, level | Meaning |
@@ -118,7 +115,6 @@
 
 - Active memory: vCenter Active (KB); esxtop TCHD per VM, summed for the host (esxtop has no host-wide TCHD); VCF Operations Guest Active.
 - Tier in rate (NVMe read bandwidth) is the performance signal: a VM touches a page that sits on NVMe and waits for it. Tier out rate (NVMe write bandwidth) is cold pages moving down.
-- NVMe read bandwidth above 200 MB/s: start watching NVMe device latency (documentation threshold).
 - Documentation observation: read latency below 200 µs at about 400 MB/s on a strong device; about 300 µs at similar bandwidth on other devices.
 - To investigate one slow VM, check that VM's NVMe read bandwidth.
 - NVMe device wear: `esxcli nvme device log smart get -A <adapter>` shows remaining life and wear rate.
@@ -137,6 +133,7 @@ memstats -r vmtier-stats -u mb -s name:memSize:active:tier1Target:tier1Consumed
 - NVMe consumed at 0 is expected while host DRAM consumption is below about 80%: tiering has not started.
 
 ## Operations
+- Leave CPU headroom for the CPU cost of tiering (9.1 p. 38; the cost: section Mechanism).
 - Use memory tiering actively, as part of memory, not as an occasional buffer.
 - Leave 25% of the NVMe drive unpartitioned (for example 1.2 TB of a 1.6 TB drive). The flash translation layer then has spare blocks for lazy garbage collection, avoiding urgent inline garbage collection under write pressure.
 - Track the read latency of the tier device.
@@ -173,6 +170,7 @@ technology:
 - memory
 - storage
 pillar:
+- performance
 - capacity
 - value
 product:
