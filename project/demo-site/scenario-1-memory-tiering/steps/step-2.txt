@@ -1,9 +1,8 @@
-Is this NVMe read a warm-up after the long weekend, or is it sustained?
+Why were pay-api-01's pages on NVMe on Tuesday morning, and why did the wait stop by 09:55?
 
 Agent E2 read from VCF Operations:
-Host esxi-pay-05: 2 x 32 cores, 1,024 GB DRAM plus a 1,024 GB NVMe memory tier (1:1), VCF 9.1.1. Today is Tuesday, the first business day after a 3-day weekend (Saturday to Monday).
-- NVMe consumed: 0 GB until Friday morning; 50 GB on Friday at 18:00; 280 GB on Tuesday at 08:00.
-- Friday 18:00 to Tuesday 08:30: NVMe write bandwidth up, NVMe read bandwidth near 0.
-- Tuesday 09:10 and 10:15: NVMe read bandwidth 380 MBps and 360 MBps.
-- Tuesday 09:10 and 10:15: NVMe read latency 290 µs and 280 µs.
-- Tuesday 09:10 and 10:15: active memory 790 GB and 785 GB.
+VM pay-api-01: 8 vCPU, 32 GB, memory tiering on, on host esx-sg01-14 (1,024 GB DRAM plus a 1,024 GB NVMe memory tier, 1:1). VCF 9.1.1. Saturday to Monday was a 3-day public holiday; Tuesday is the first business day.
+- Host DRAM consumption: above 80% of DRAM since Sunday 9 days ago.
+- VM active memory: Friday 15:00 11 GB; Saturday, Sunday and Monday 0.3 GB; Tuesday 08:55 0.4 GB; Tuesday 09:15 12 GB; Tuesday 09:55 11 GB.
+- VM NVMe consumed: Friday 15:00 0.4 GB; Saturday 18:00 10 GB; Sunday 08:00 19 GB; Tuesday 08:55 20 GB; Tuesday 09:15 13 GB; Tuesday 09:55 3 GB.
+- VM NVMe read bandwidth: 0 from Friday to Tuesday 09:05; 12 MBps at 09:15; 0.3 MBps at 09:55.

@@ -338,14 +338,15 @@ def build(folder):
             chat.append(f'<div class="sys" data-upto="{n}">' + (f'Check next, from the answer: “{esc(q)}” → ' if q else '') + f'{esc(fol["note"])}</div>')
         if s.get('finding') and s['finding'] != 'TBD':
             finds.append(f'<li data-upto="{n}"><b>{n}</b>{inline(s["finding"])}</li>')
-    asks[len(steps)] = 'Open the change calendar'
     e = sc['end']
-    left.append(f'<section data-view="{last}" data-at="2"><div class="panel"><div class="h">{esc(e["title"])}</div>'
+    asks[len(steps)] = e.get('ask', 'Open the change calendar')
+    left.append(f'<section data-view="{last}" data-at="{len(crumbs) - 1}"><div class="panel"><div class="h">{esc(e["title"])}</div>'
                 + table(['Change', 'When', 'Team', 'What', 'Matches'], [[c['id'], c['when'], c['team'], c['what'], c['match']] for c in e['rows']])
                 + f'<p>{esc(e["note"])}</p></div>'
-                + f'<div class="panel rc"><div class="h">Root cause, written by the specialist</div>{markdown(e["root_cause"])}'
-                + f'<p><b>{esc(e["next"])}</b></p></div></section>')
-    chat.append(f'<div class="sys" data-upto="{last}">Change calendar: CHG-1 and CHG-2 fall at the times Agent E2 flagged.</div>')
+                + f'<div class="panel rc"><div class="h">Root cause, written by the specialist</div>{markdown(e["root_cause"])}</div>'
+                + (f'<div class="panel rc"><div class="h">Fix, proposed by the specialist</div>{markdown(e["remediation"])}</div>' if e.get('remediation') else '')
+                + f'<div class="panel"><p><b>{esc(e["next"])}</b></p></div></section>')
+    chat.append(f'<div class="sys" data-upto="{last}">{esc(e.get("chat", "Change calendar: the changes fall at the times Agent E2 flagged."))}</div>')
     pro = sc['proactive']
     proactive = (f'<div class="panel"><div class="h">Daily health check · {esc(sc["cluster"])}</div><p class="note">{esc(pro["intro"])}</p>'
                  + table(['Object', 'Symptom', 'Started', 'Status'], [[x['object'], x['symptom'], x['started'], x['status']] for x in pro['rows']]) + '</div>')
