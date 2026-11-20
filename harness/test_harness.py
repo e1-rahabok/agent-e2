@@ -11,6 +11,7 @@ import flow_executor  # noqa: E402
 import knowledge_loader  # noqa: E402
 import answer_modes  # noqa: E402
 import answer_check  # noqa: E402
+import answer_service  # noqa: E402
 import expert_agent  # noqa: E402
 import public_web_lookup  # noqa: E402
 import reading_plan  # noqa: E402
@@ -1014,3 +1015,51 @@ class EmbeddingCacheTest(unittest.TestCase):
         _embed_worker(self.dir, 20)
         with open(self.path) as f:
             self.assertGreater(len(json.load(f)), 0)
+
+
+class AnswerServiceTest(unittest.TestCase):
+    """The service PCM calls (answer_service.py): the shipped pipeline behind one endpoint, offline with MockClient."""
+    CFG = dict(ModesTest.CFG, model='mock', embedding_model=None, web={'enabled': False}, consensus_samples=1)
+
+    @classmethod
+    def setUpClass(cls):
+        cls.svc = answer_service.Service(cls.CFG, MockClient(), Retriever(DOCS, CHUNKS))
+
+    def test_facts_go_below_the_question_as_data(self):
+        q = answer_service.question_text({'question': 'Is the platform the cause?', 'role': 'l2', 'facts': {'cpu_ready_percent': 0.6}})
+        self.assertTrue(q.startswith('Is the platform the cause?'))
+        self.assertIn('Level 2 platform engineer', q)
+        self.assertIn(answer_service.FACTS_HEADING, q)
+        self.assertIn('"cpu_ready_percent": 0.6', q)
+
+    def test_question_required(self):
+        with self.assertRaises(ValueError):
+            answer_service.question_text({'facts': {'a': 1}})
+
+    def test_answer_runs_the_pipeline_and_names_its_files(self):
+        out = self.svc.answer({'question': 'What does CPU Ready mean on a VM?', 'facts': {'vm': 'sg-app-117'}})
+        self.assertIn(out['type'], ('answer', 'clarify'))
+        self.assertTrue(out['files_read'])
+        self.assertEqual(out['model'], 'mock')
+
+    def test_http_endpoint(self):
+        import threading
+        import urllib.request
+        from http.server import ThreadingHTTPServer
+        server = ThreadingHTTPServer(('127.0.0.1', 0), answer_service.handler_for(self.svc))
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            base = f'http://127.0.0.1:{server.server_address[1]}'
+            with urllib.request.urlopen(base + '/v1/health') as r:
+                self.assertTrue(json.loads(r.read())['ok'])
+            req = urllib.request.Request(base + '/v1/answer', data=json.dumps({'question': 'What does CPU Ready mean?'}).encode(),
+                                         headers={'Content-Type': 'application/json'})
+            with urllib.request.urlopen(req) as r:
+                self.assertIn(json.loads(r.read())['type'], ('answer', 'clarify'))
+            bad = urllib.request.Request(base + '/v1/answer', data=b'{}', headers={'Content-Type': 'application/json'})
+            with self.assertRaises(urllib.error.HTTPError) as e:
+                urllib.request.urlopen(bad)
+            self.assertEqual(e.exception.code, 400)
+        finally:
+            server.shutdown()
+
