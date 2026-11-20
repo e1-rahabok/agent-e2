@@ -45,6 +45,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | `reading_plan.py` | Stage 2, the reading plan (`AGENT.md`, section 4.2): named files, search, mechanism links, one search per claim, packed by tier with best sections. Also read by the retrieval check. |
 | `expert_agent.py` | The agent: stages 1 and 3-6 (case, compute, ask, answer, check). Design: `AGENT.md`. |
 | `answer_modes.py` | Entry point `answer(mode, ...)`: `agent-e2` (the agent), and the benchmark references `baseline` (the model alone) and `web` (the model alone with web search); prompts; verifier repair; consensus on one reading set; the conversation (`converse`). |
+| `answer_service.py` | Agent E2 as a service for PCM: `POST /v1/answer` (question, live facts, role) runs `answer_modes.converse('agent-e2', ...)` and returns the answer, the files read and the computed facts. Config `service_config.yaml`; web lookup off. |
 | `user_clarification.py` | One clarifying round: the `chat` and `chat_final` prompt rules, `CLARIFY:` parsing; the conversation runs through `answer_modes.converse`. |
 | `user_terms.py` | The user's words matched against [`knowledge/catalog/user-terms.yaml`](../knowledge/catalog/user-terms.yaml): knowledge-base terms for the query, files for tier 2, a note per misconception. Switch `term_map`. |
 | `upfront_knowledge.py` | Up-front blocks of the answer prompt (misconceptions, confusable pairs), generated from the knowledge base; switch `primer` in the config. |

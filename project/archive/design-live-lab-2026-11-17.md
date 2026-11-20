@@ -1,6 +1,6 @@
 # Design: live lab (VCF Operations login, two checks)
 
-Status: design, not built. Scope: the author's home lab (demo). Customer sites are out of scope here. The lab exception is in [plan.md](plan.md), Decisions of 2026-11-17. Release placement is the author's decision and is not set here.
+Status: archived 2026-11-20, superseded (project/plan.md, decision of 2026-11-20): the UI, login, connector and database move to PCM; Agent E2 serves answers through `harness/answer_service.py`. Was: design, not built. Scope: the author's home lab (demo). Customer sites are out of scope here. The lab exception is in [plan.md](plan.md), Decisions of 2026-11-17. Release placement is the author's decision and is not set here.
 
 ## 1. What the user gets
 - A login screen: VCF Operations user ID and password.
