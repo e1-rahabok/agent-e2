@@ -8,6 +8,7 @@ When the author corrects a wording mistake, add it here. A word users also say g
 | Avoid | Use instead | Why |
 |---|---|---|
 | Warm-up (for NVMe reads on a tiered host) | Pages fetched back from NVMe when they become active | Warm-up means an application filling its cache on purpose. NVMe reads are ESXi fetching back pages the guest touches; neither the guest nor the application knows. Cold pages move to NVMe once DRAM consumed reaches about 80%, not because a quiet period passes. |
+| Memory Latency (for the memory row of the KPIs) | Memory Wait | The memory row is Memory Contention plus NVMe wait. Memory Latency names the counter that leaves NVMe out, so a KPI row with that name hides the NVMe wait (author, 2026-11-22). |
 | Tier 0, Tier 1 (for the memory tiers) | DRAM, NVMe | Tier-0 and Tier-1 also name NSX gateways. Keep the tier number only inside a counter or `memstats` field name (author, 2026-11-18). |
 | ESXi Memory Consumed in DRAM (the Cluster Consumption row) | ESXi DRAM Consumed | Memory Consumed is a raw vCenter metric; its meaning is not ours to change. On a tiered host it covers DRAM and NVMe and is against both, as vSphere counts host memory. DRAM in use is a separate metric with its own name (author, 2026-11-22). |
 | utilization above physical capacity | demand above physical capacity | Utilization measures what happens and cannot pass 100%; demand includes unmet demand. |

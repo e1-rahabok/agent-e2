@@ -13,7 +13,7 @@
 | VM contention | CPU Co-stop | `cpu\|20_sec_peak_costopPct` | Peak CPU Co-stop among any vCPU (%) |
 | VM contention | CPU Ready | `cpu\|20_sec_peak_readyPct` | Peak CPU Ready among any vCPU (%) |
 | VM contention | CPU Overlap | `cpu\|20_sec_peak_overlap` | Peak CPU Overlap (%) |
-| VM contention | Memory wait | `mem\|20_sec_peak_host_contentionPct` plus NVMe wait (tiered hosts) | Peak memory wait (%) |
+| VM contention | Memory Wait | `mem\|20_sec_peak_host_contentionPct` plus NVMe wait (tiered hosts) | Memory wait (%) |
 | VM contention | Disk Latency | `virtualDisk\|20_sec_peak_totalLatency_average` | Peak read/write latency among vDisks (ms) |
 | VM contention | Network Dropped Tx | `net\|droppedTxPct_max` | Peak network TX dropped packets (%) |
 | VM utilization | CPU Run | `cpu\|net_run` | CPU Net Run (%) |
@@ -28,12 +28,16 @@
 - CPU uses 4 metrics (Co-stop, Ready, Overlap, Net Run). They do not peak in the same 20-second period, so they cannot be combined. Known limitation: CPU weight is larger.
 - Ready, Co-stop and Overlap have different thresholds: different sensitivity. Ready tends to be 2x Co-stop.
 - High CPU utilization threshold: high utilization means work is done; only above 95% does the VM's own size limit it.
-- Memory wait = Memory Contention + NVMe wait; Memory Contention does not count NVMe fetches. Same bands; NVMe wait reads Latest values. Limits of NVMe wait (vMotion precopy, time base, release, collection): [`vsphere/object-types/cluster/cluster-performance`](../cluster/cluster-performance.md), section Limitations. VM and Guest OS can have memory problems independently.
+- Memory Wait: see section Memory Wait. NVMe wait reads Latest values. Limits of NVMe wait (vMotion precopy, time base, release, collection): [`vsphere/object-types/cluster/cluster-performance`](../cluster/cluster-performance.md), section Limitations. VM and Guest OS can have memory problems independently.
 - Ballooned and Zip Swap are leading indicators, not real performance problems.
 - Compressed and Swapped are combined: both result from the same action (reclaiming a page), so together they tell the complete picture.
 - Zip Swap has a tighter band than Memory Contention (green 0-0.25% vs 0-0.5%) although it is less serious: it is measured on 5-minute samples, Memory Contention on 20-second peaks. A 5-minute average reads lower than a 20-second peak, so its band must be lower too.
 - Zip Swap is divided by Guest OS used memory, not configured memory: configured memory includes memory the Guest OS does not use, so the % would under-report the risk.
 - Network: vCenter has no latency or retransmit counter, so transmit dropped packets are used. Drops are retransmitted and often unnoticed, so the threshold is not low.
+
+## Memory Wait
+- Memory Wait = Memory Contention + NVMe wait, per VM: the share of vCPU time spent waiting for memory, in the bands of Memory Contention. It is the memory row here, and the worst-VM and 90th-percentile memory rows of Cluster Performance and ESXi Performance. The pack calculates it; it is not a vSphere counter.
+- Why: with memory tiering a vCPU that touches a cold page waits for the whole NVMe read, and Memory Contention does not count that wait (it is unaware of tiering). A VM that waits on NVMe can show Memory Contention near 0, and a KPI on Memory Contention alone scores it healthy. NVMe wait is computed ([`vsphere/object-types/cluster/cluster-performance`](../cluster/cluster-performance.md), section NVMe wait formula) and added. Without tiering NVMe wait is 0.
 
 ## Not used
 | Area | Metric | Reason |
