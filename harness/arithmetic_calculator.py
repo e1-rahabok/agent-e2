@@ -15,6 +15,9 @@ One entry point, evaluate(expression). Numbers without thousands separators. The
   min max abs round sum avg
 
 Every function adds a note naming the knowledge file or source that defines the rule.
+
+A second entry point, trend(values, better, change), reads a whole KPI series (a list, not an expression): median, range,
+the worst point's move from the median, and a verdict against the KPI change level.
 """
 import ast
 import math
@@ -151,6 +154,35 @@ class Evaluator:
         if isinstance(node, ast.Tuple):
             raise CalcError('write numbers without thousands separators (13856, not 13,856)')
         raise CalcError(f'not allowed: {ast.dump(node)[:80]}')
+
+
+def trend(values, better='higher', change=None):
+    """How a KPI score moved across a window, so the model never judges the size of a move (KPI change, thresholds-performance).
+
+    values: the points in time order (None skipped). better: 'higher' or 'lower'. change: the KPI change level in points of
+    the score, or None when the KPI has no row. The move is measured from the median of the window, never from one point:
+    the worst point of a flat window is the bottom of its normal movement, not an event.
+    Returns {points, median, low, high, worst, worst_index, worse_move, better_move, verdict, notes}; verdict is
+    'worsened' or 'improved' (a move of at least the change level), 'steady', or None when no change level is set."""
+    xs = [(i, float(v)) for i, v in enumerate(values) if isinstance(v, (int, float)) and not isinstance(v, bool)]
+    if not xs:
+        raise CalcError('trend: no values')
+    srt = sorted(v for _, v in xs)
+    n = len(srt)
+    median = srt[n // 2] if n % 2 else (srt[n // 2 - 1] + srt[n // 2]) / 2
+    sign = 1 if better == 'higher' else -1
+    wi, worst = min(xs, key=lambda x: sign * x[1])
+    best = srt[-1] if sign == 1 else srt[0]
+    worse_move, better_move = round(sign * (median - worst), 2), round(sign * (best - median), 2)
+    verdict = None
+    if change is not None:
+        verdict = 'worsened' if worse_move >= change else 'improved' if better_move >= change else 'steady'
+    note = ('A KPI score moves at every point: it is a weighted average of sub-metrics read from the worst VM and the 90th '
+            'percentile, and the VMs on top change. A move counts only from the median of the window and only at the KPI '
+            'change level or more. See sp5-framework/performance/performance-kpi-design, section Reading a KPI over time, and '
+            'catalog/thresholds-performance, section change.')
+    return {'points': n, 'median': round(median, 2), 'low': srt[0], 'high': srt[-1], 'worst': worst, 'worst_index': wi,
+            'worse_move': worse_move, 'better_move': better_move, 'verdict': verdict, 'notes': [note]}
 
 
 def evaluate(expression):

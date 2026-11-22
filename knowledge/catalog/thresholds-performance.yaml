@@ -1,8 +1,9 @@
 meta:
   id: catalog/thresholds-performance
-  title: 'Performance thresholds: KPI and flow tests'
+  title: 'Performance thresholds: KPI, KPI change and flow tests'
   sections:
     kpi: 'KPI colour levels, the one place: no knowledge file repeats them. Internal target, proactive, no class of service.'
+    change: 'KPI change: the smallest move of a KPI score, in points of the score, that counts as a drop or a rise. A smaller move across the window is the KPI''s normal movement: the trend is steady. Compared with the median of the window, never with one point. Without a row, Agent E2 gives the range and says no change level is set.'
     flow: 'Flow tests: a number that one step of a troubleshooting flow, health check or decision tree compares a reading with to pick the next step. Not a KPI level and not an alert. kb is the flow file, step its numbered step.'
   fields:
     id: Stable key, unique across the threshold files.
@@ -66,3 +67,5 @@ kpi:
 flow:
 - {id: flow-esxi-disk-kernel-latency, metric: "ESXi Disk Kernel Latency (KAVG)", object: HostSystem, layer: hypervisor, operator: '>', value: 0.5, unit: ms, meaning: "commands wait in the VMkernel, mostly in a queue: read QAVG and the queue depths at each level (step 2)", source: knowledge-base, kb: vsphere/technology/storage/troubleshooting/host-storage-latency, step: 1}
 - {id: flow-esxi-disk-device-latency, metric: "ESXi Disk Device Latency (DAVG)", object: HostSystem, layer: physical, operator: '>', value: 5, unit: ms, meaning: "the time is spent from the HBA to the array and back: check the array, then the fabric or the HBA configuration (step 3)", source: knowledge-base, kb: vsphere/technology/storage/troubleshooting/host-storage-latency, step: 1}
+change:
+- {id: change-cluster-performance, metric: "Cluster Performance (%)", object: ClusterComputeResource, operator: '>=', value: 5, unit: '%', meaning: "a move of the score from the median of the window of at least this many points is a drop (or a rise); a smaller move is the score's normal movement, so the trend is steady", source: knowledge-base, kb: sp5-framework/performance/performance-kpi-design}

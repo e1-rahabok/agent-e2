@@ -166,8 +166,8 @@ class CatalogTest(unittest.TestCase):
 
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
-        self.assertEqual(uses, {'decision', 'rule', 'flow'})
-        self.assertEqual(CAT.stats()['thresholds'], 40)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q162); 2 flow tests (Q195)
+        self.assertEqual(uses, {'decision', 'rule', 'change', 'flow'})
+        self.assertEqual(CAT.stats()['thresholds'], 41)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q162); 2 flow tests (Q195); 1 KPI change (2026-11-22)
         self.assertEqual(CAT.stats()['symptoms'], 40)
         self.assertEqual(CAT.stats()['alerts'], 33)  # one alert per object type: ESXi, resource pool, cluster contention split; ESXi drops virtual and physical (2026-11-12)
         self.assertEqual(CAT.stats()['bands'], 20)  # + tiered DRAM consumed, active memory (Q179, 2026-11-12)
@@ -1035,6 +1035,53 @@ class AnswerServiceTest(unittest.TestCase):
     def test_question_required(self):
         with self.assertRaises(ValueError):
             answer_service.question_text({'facts': {'a': 1}})
+
+    # PCM's question of 2026-11-22: "Why the worst at 18 Oct, 10:10?" on a Cluster Performance chart that held 80-83 all day.
+    STEADY = [81.5, 82.0, 81.0, 82.5, 81.8, 80.9, 82.2, 81.4] * 36
+    STEADY[100] = 80.2
+
+    def kpi_facts(self, points):
+        return {'screen': {'page': 'fr-bat-6839 · Capacity · Last 24 hours'},
+                'asked_about_kpi': {'label': 'Cluster Performance', 'better': 'higher', 'unit': '%',
+                                    'points': [[f't{i}', v] for i, v in enumerate(points)]}}
+
+    def test_screen_rules_go_with_the_facts(self):
+        q = answer_service.question_text({'question': 'Why the worst at 10:10?', 'role': 'l2', 'facts': {'screen': {}}})
+        self.assertIn('Never mention JSON', q)
+        self.assertNotIn('Never mention JSON', answer_service.question_text({'question': 'What is CPU Ready?'}))
+
+    def test_steady_kpi_is_computed_as_no_drop(self):
+        q = answer_service.question_text({'question': 'Why the worst at 10:10?', 'facts': self.kpi_facts(self.STEADY)})
+        lines = expert_agent.kpi_trends(q, CAT)
+        self.assertEqual(len(lines), 1)
+        self.assertIn('Verdict: steady. No drop', lines[0])
+        self.assertIn('The worst, 80.2 at t100', lines[0])
+        self.assertIn('KPI change level: 5 points', lines[0])
+
+    def test_real_drop_is_computed_as_worsened(self):
+        pts = list(self.STEADY)
+        pts[100:110] = [70.0] * 10
+        lines = expert_agent.kpi_trends(answer_service.question_text({'question': 'Why?', 'facts': self.kpi_facts(pts)}), CAT)
+        self.assertIn('Verdict: worsened', lines[0])
+
+    def test_kpi_without_change_level_gives_the_range_only(self):
+        facts = {'asked_about_kpi': {'label': 'Cluster Consumption', 'better': 'lower', 'points': [[i, 63 + i % 3] for i in range(50)]}}
+        lines = expert_agent.kpi_trends(answer_service.question_text({'question': 'Why?', 'facts': facts}), CAT)
+        self.assertIn('No KPI change level is set', lines[0])
+
+    def test_pipeline_words_get_one_rewrite(self):
+        class Rewriter:
+            def chat(self, model, messages, **kw):
+                return {'content': 'The chart shows no drop.'}
+        svc = answer_service.Service.__new__(answer_service.Service)
+        svc.client, svc.model, svc.cfg = Rewriter(), 'mock', {}
+        self.assertEqual(answer_service.pipeline_words('The provided JSON holds only the KPI.'), ['json'])
+        self.assertEqual(svc.screen_wording('The provided JSON holds only the KPI.'), 'The chart shows no drop.')
+        self.assertEqual(svc.screen_wording('No drop on this chart.'), 'No drop on this chart.')
+
+    def test_computed_line_is_shown_without_the_model_instruction(self):
+        line = '- X across the window: median 81. Verdict: steady. No drop. Say this first. [arithmetic_calculator.py: note]'
+        self.assertEqual(answer_service._shown(line), 'X across the window: median 81. Verdict: steady. No drop.')
 
     def test_answer_runs_the_pipeline_and_names_its_files(self):
         out = self.svc.answer({'question': 'What does CPU Ready mean on a VM?', 'facts': {'vm': 'sg-app-117'}})
