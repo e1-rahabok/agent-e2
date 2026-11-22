@@ -1088,9 +1088,9 @@ class AnswerServiceTest(unittest.TestCase):
 
     # The parts of Cluster Performance at the KPI's worst point, as PCM sends them (parts_at_worst).
     CLUSTER_PARTS = [('Worst peak vCPU Ready among all VMs', 12.0, 1.1), ('Worst peak vCPU Co-stop among all VMs', 0.5, 0.4),
-                     ('Worst memory wait among all VMs', 0.2, 0.1), ('Worst peak read/write disk latency, all VM vDisks', 18.0, 15.0),
+                     ('Worst memory wait among all VMs', 0.2, 0.1), ('Worst peak disk latency among all VM virtual disks', 18.0, 15.0),
                      ('90th percentile peak vCPU Ready among VMs', 3.0, 0.3), ('90th percentile peak vCPU Co-stop among VMs', 0.1, 0.1),
-                     ('90th percentile memory wait among VMs', 0.0, 0.0), ('90th percentile peak read/write latency among VM virtual disks', 6.0, 5.0),
+                     ('90th percentile memory wait among VMs', 0.0, 0.0), ('90th percentile peak disk latency among VM virtual disks', 6.0, 5.0),
                      ('Highest ESXi (error + dropped) network packets', 0.0, 0.0)]
 
     def parts_facts(self, parts, kpi_value):

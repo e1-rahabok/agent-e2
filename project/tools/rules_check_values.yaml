@@ -107,5 +107,3 @@ metric_comma_pending:
 - 'Cluster Consumption (%), 95th percentile of the last 24 hours'
 - 'Cluster Performance (%), 5th percentile of the last 24 hours (higher is better)'
 - 'Cluster Risk (%), 95th percentile of the last 24 hours'
-- 'Worst peak read/write disk latency, all VM vDisks (ms)'
-- 'Worst peak read/write disk latency, all vDisks of VMs on the host (ms)'
