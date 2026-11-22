@@ -167,7 +167,7 @@ class CatalogTest(unittest.TestCase):
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
         self.assertEqual(uses, {'decision', 'rule', 'change', 'flow'})
-        self.assertEqual(CAT.stats()['thresholds'], 44)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q162); 2 flow tests (Q195); 4 score change (2026-11-22, Q258)
+        self.assertEqual(CAT.stats()['thresholds'], 46)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q162); 2 flow tests (Q195); 6 score change (2026-11-22, Q258, Q259)
         self.assertEqual(CAT.stats()['symptoms'], 40)
         self.assertEqual(CAT.stats()['alerts'], 33)  # one alert per object type: ESXi, resource pool, cluster contention split; ESXi drops virtual and physical (2026-11-12)
         self.assertEqual(CAT.stats()['bands'], 20)  # + tiered DRAM consumed, active memory (Q179, 2026-11-12)
@@ -1065,9 +1065,17 @@ class AnswerServiceTest(unittest.TestCase):
         self.assertIn('Verdict: worsened', lines[0])
 
     def test_kpi_without_change_level_gives_the_range_only(self):
-        facts = {'asked_about_kpi': {'label': 'VM Performance', 'better': 'higher', 'points': [[i, 90 + i % 3] for i in range(50)]}}
+        facts = {'asked_about_kpi': {'label': 'Datastore Latency Score', 'better': 'higher', 'points': [[i, 90 + i % 3] for i in range(50)]}}
         lines = expert_agent.kpi_trends(answer_service.question_text({'question': 'Why?', 'facts': facts}), CAT)
-        self.assertIn('No KPI change level is set', lines[0])  # one VM's level is open (Q259)
+        self.assertIn('No KPI change level is set', lines[0])
+
+    def test_one_vm_score_has_the_larger_level(self):
+        pts = [90 + i % 3 for i in range(60)]
+        pts[20] = 84  # 7 points below the median: inside one VM's normal movement (Q259)
+        facts = {'asked_about_kpi': {'label': 'VM Performance', 'better': 'higher', 'points': [[i, v] for i, v in enumerate(pts)]}}
+        lines = expert_agent.kpi_trends(answer_service.question_text({'question': 'Why?', 'facts': facts}), CAT)
+        self.assertIn('KPI change level: 8 points. Verdict: steady', lines[0])
+        self.assertEqual(CAT.change_level('Guest OS Performance')['value'], 8)
 
     def test_lower_is_better_score_worsens_upward(self):
         pts = [40 + i % 3 for i in range(60)]

@@ -4,6 +4,17 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q259 · Score change · The change level of one VM's scores
+
+- Files: [catalog/thresholds-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml), section `change`.
+- Now: Q258 (answer B) set 5 points for the provider scores and a larger level for one VM's scores, value not given. VM Performance (%) and Guest OS Performance (%) have no row, so Agent E2 gives their range and never calls a move a drop.
+- Question: what is the change level of VM Performance (%) and Guest OS Performance (%), in points from the median of the window?
+  - A. 10 points for both.
+  - B. 15 points for both.
+  - C. Your values, one per score.
+- Recommended: none without field data. One VM's score moves with each 20-second peak of its own counters and has no breadth row to steady it, so its normal movement is wider than a cluster's. A value from a week of real VM Performance charts would settle it.
+- Answer: "8-10 points is definitely a change" (author, 2026-11-22). Applied: 8 points for VM Performance and Guest OS Performance, the low end of the range, since a move of 8 is already a change.
+
 ### Q258 · KPI change · The change level of the other KPI scores
 
 - Files: [catalog/thresholds-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml), section `change`; [Performance KPI design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/performance-kpi-design.md), section Reading a KPI over time.

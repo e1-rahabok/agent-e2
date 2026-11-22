@@ -24,17 +24,6 @@ No open question blocks release 1.0.
 
 ## Future release
 
-### Q259 · Score change · The change level of one VM's scores
-
-- Files: [catalog/thresholds-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml), section `change`.
-- Now: Q258 (answer B) set 5 points for the provider scores and a larger level for one VM's scores, value not given. VM Performance (%) and Guest OS Performance (%) have no row, so Agent E2 gives their range and never calls a move a drop.
-- Question: what is the change level of VM Performance (%) and Guest OS Performance (%), in points from the median of the window?
-  - A. 10 points for both.
-  - B. 15 points for both.
-  - C. Your values, one per score.
-- Recommended: none without field data. One VM's score moves with each 20-second peak of its own counters and has no breadth row to steady it, so its normal movement is wider than a cluster's. A value from a week of real VM Performance charts would settle it.
-- Answer:
-
 ### Q257 · Memory tiering · NVMe consumed as saturation, and the signal that replaces compression and swap
 
 - Files: [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md), section Misconceptions; [Is memory tiering slowing the host?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host.md), section Misconceptions.
