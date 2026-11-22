@@ -1,8 +1,14 @@
 # Line endings: LF where the tools parse text (a Windows checkout otherwise adds CR and the question and export parsers fail).
 # Archived run outputs keep the bytes the runner wrote.
+# Images and office files are binary, also under the text paths above: a text rule there would strip bytes from them.
 benchmark/questions/** text eol=lf
 project/tools/** text eol=lf
 knowledge/** text eol=lf
 *.png binary
 *.jpg binary
 *.jpeg binary
+*.webp binary
+*.gif binary
+*.pdf binary
+*.docx binary
+*.xlsx binary
