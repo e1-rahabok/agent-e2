@@ -95,15 +95,16 @@ models:
   kb: vsphere/object-types/cluster/models/cluster-consumption
 - id: cluster-consumption-cluster-memory-tiering-consumption
   metric: Cluster memory tiering consumption (%)
+  description: 'NVMe tier in use on all tiered hosts ÷ their usable DRAM (Total − HA − Buffer), not ÷ the NVMe tier.'
   group: Saturation
   object: ClusterComputeResource
   interval: 5m
   bands:
     grey: null
-    green: 0-25
-    yellow: 25-50
-    orange: 50-75
-    red: 75-100
+    green: 0-15
+    yellow: 15-30
+    orange: 30-45
+    red: 45-60
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-consumption
 - id: cluster-consumption-cluster-wide-esxi-memory-ballooned
