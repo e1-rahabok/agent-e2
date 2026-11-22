@@ -9,13 +9,13 @@
 - Higher is worse: 0 is no risk, 100 is maximum risk. Cluster Consumption reads the same way; Cluster Performance is higher-is-better.
 - Every sub-metric takes the worst ESXi host. One full host hurts its VMs while the cluster average looks fine. Many clusters have 8 hosts or fewer, so the worst warns early. Different sub-metrics can come from different hosts: fine for monitoring, not for troubleshooting.
 - A risk model, not a KPI: a KPI scores performance only. Users also call it the Cluster Risk KPI.
-- Not a built-in VCF Operations metric. 13 sub-metrics.
+- Not a built-in VCF Operations metric. 12 sub-metrics.
 
 ## Thresholds
 - Colour bands: `catalog/thresholds-capacity`, rows with this file as `kb`. They are shown with this file; this file holds the reasons.
 
-- Excluded: six green ranges. A host that is not busy, has little reserved or is not overcommitted says nothing about risk. While green, these rows are left out instead of scoring 100; they count once they leave green.
-- The excluded green ends where yellow starts: thread utilization below 60%, memory consumed below 80%, reservation below 10%, overcommit below 1.
+- Excluded: six green ranges (thread utilization, active memory, CPU and memory reservation, CPU and memory overcommit). A host that is not busy, has little reserved or is not overcommitted says nothing about risk. While green, these rows are left out instead of scoring 100; they count once they leave green.
+- The excluded green ends where yellow starts: thread utilization below 60%, active memory below 50%, reservation below 10%, overcommit below 1.
 - CPU imbalance is green only at exactly 1 (one running thread per running core). Any imbalance is yellow.
 
 ## Sub-metric formulas
@@ -25,7 +25,6 @@ Per host, then the worst host is kept.
 |---|---|---|
 | CPU thread utilization | % of the host's threads in use, Hyper-Threading aware | `cpu\|utilization_average` |
 | CPU imbalance | Running threads / running cores. Running threads = utilization % × threads; running cores = core utilization % × cores | `cpu\|utilization_average`, `cpu\|coreUtilization_average`, `hardware\|cpuInfo\|numCpuCores` |
-| DRAM Memory Consumed | Memory consumed in DRAM and NVMe, as % of host DRAM. On a tiered host it passes 100% by design: 157% means the host carries 1.57 times its DRAM, the rest in NVMe. | `mem\|consumed_average` |
 | Memory ballooned | Ballooned, as % of host DRAM | `mem\|vmmemctl_average` |
 | Swapped + zipped | (Compressed + swapped), as % of host DRAM | `mem\|compressed_average`, `mem\|swapout_average` |
 | Active memory, tiered hosts | Active memory as % of host DRAM. Excluded while green (below 50%). Left out on hosts without memory tiering | `mem\|active_average`; DRAM `mem:DRAM\|memory_tier_total_capacity`; tier `mem:NVMe\|memory_tier_size` |
@@ -39,9 +38,9 @@ Per host, then the worst host is kept.
 - Threads = 2 × cores when Hyper-Threading is available and active, else the cores.
 
 ## DRAM as the memory base
-- Memory reads ESXi Memory Consumed, not ESXi Memory Utilization: Utilization mixes realms, because its VM term comes from Guest OS counters; Consumed stays in one realm and is conservative, and the reclamation it leaves out counts as saturation ([`vsphere/technology/memory/metrics/host/utilization`](../../../technology/memory/metrics/host/utilization.md), section Reason).
+- Cluster Risk has no memory consumed row, by the author's decision: Memory Consumed (DRAM and NVMe) ÷ DRAM passes 100% on a tiered host by design, so it would read orange or red on a healthy tiered host, and the memory rows overlap. Ballooned, swapped + zipped and active memory cover the pressure.
 - Every memory % and ratio is against the host's DRAM (the DIMMs). A memory tier such as NVMe is never added.
-- Reason: VMs run in DRAM; NVMe holds only cold pages. A % of DRAM + NVMe looks smaller than the real pressure. There is no use case, in risk or performance, for the expanded capacity.
+- Reason: VMs run in DRAM; NVMe holds only cold pages. A % of DRAM + NVMe looks smaller than the real pressure. There is no use case in Cluster Risk for the expanded capacity. Cluster Consumption uses it for capacity ([`vsphere/object-types/cluster/models/cluster-consumption`](cluster-consumption.md)).
 - Source: host `mem:DRAM\|memory_tier_total_capacity`; fallback `mem\|host_provisioned`. With neither, the host's memory rows are left out, never scored against a guess.
 
 ## CPU overcommit: per thread

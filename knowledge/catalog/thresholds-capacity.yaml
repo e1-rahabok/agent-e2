@@ -161,19 +161,6 @@ models:
     red: 1.6-2
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- id: cluster-risk-highest-esxi-memory-consumed
-  metric: Highest ESXi DRAM Memory Consumed (%)
-  group: Utilization
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: Excluded
-    yellow: 80-90
-    orange: 90-95
-    red: 95-100
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
 - id: cluster-risk-worst-esxi-memory-ballooned
   metric: Worst ESXi memory ballooned (%)
   group: Saturation
