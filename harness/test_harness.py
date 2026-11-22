@@ -170,7 +170,7 @@ class CatalogTest(unittest.TestCase):
         self.assertEqual(CAT.stats()['thresholds'], 46)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q162); 2 flow tests (Q195); 6 score change (2026-11-22, Q258, Q259)
         self.assertEqual(CAT.stats()['symptoms'], 40)
         self.assertEqual(CAT.stats()['alerts'], 33)  # one alert per object type: ESXi, resource pool, cluster contention split; ESXi drops virtual and physical (2026-11-12)
-        self.assertEqual(CAT.stats()['bands'], 20)  # + tiered DRAM consumed, active memory (Q179, 2026-11-12)
+        self.assertEqual(CAT.stats()['bands'], 21)  # + tiered DRAM consumed, active memory (Q179, 2026-11-12), Cluster Consumption (2026-11-22)
         self.assertEqual(CAT.stats()['kpi'], 31)
 
 

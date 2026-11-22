@@ -41,6 +41,19 @@ models:
     red: 95-100
   source: knowledge-base
   kb: guest-os/system/guest-os-sizing
+- id: cluster-consumption-cluster-consumption
+  metric: Cluster Consumption (%)
+  group: Utilization
+  object: ClusterComputeResource
+  interval: 5m
+  bands:
+    grey: null
+    green: 0-25
+    yellow: 25-50
+    orange: 50-75
+    red: 75-100
+  source: knowledge-base
+  kb: vsphere/object-types/cluster/models/cluster-consumption
 - id: cluster-consumption-cluster-wide-esxi-cpu-thread-utilization
   metric: Cluster-wide ESXi CPU thread utilization (%)
   group: Utilization
