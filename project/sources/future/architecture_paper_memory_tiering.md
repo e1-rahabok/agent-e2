@@ -1,9 +1,9 @@
-# Architectural Architectural Trade-Offs and Guest-Blind Decoupling in Hypervisor-Level Memory Tiering
+# Guest-Blind Decoupling in Hypervisor-Level Memory Tiering
 
 
 Modern hypervisor memory tiering over NVMe/CXL expands addressable host capacity by dynamically partitioning virtual machine memory into Tier 0 (DRAM) and Tier 1 (NVMe). However, by operating purely at the hardware MMU layer via Extended/Nested Page Table (EPT/NPT) Access and Dirty (A/D) bit tracking, the hypervisor remains entirely decoupled from Guest OS internal memory state. 
 
-This paper examines the structural limitations of this "guest-blind" approach—including the suppression of paravirtualized ballooning (`vmmemctl`), unallocated non-zeroed memory inflation, asymmetric hysteresis during capacity drops, and unnecessary NVMe write endurance degradation. We contrast this model with paravirtualized free-page reporting architectures and define mitigation strategies for enterprise workloads.
+This paper examines this "guest-blind" approach—including the suppression of paravirtualized ballooning (`vmmemctl`), unallocated non-zeroed memory inflation, asymmetric hysteresis during capacity drops, and unnecessary NVMe write endurance degradation. We contrast this model with paravirtualized free-page reporting architectures and define mitigation strategies for enterprise workloads.
 
 ---
 
@@ -25,7 +25,7 @@ ESXi memory tiering operates transparently below the Guest OS abstraction layer.
 
 ---
 
-## 3.0 Limitations of Guest-Blind Tiering
+## 3.0 Guest-Blind Tiering
 
 While hardware transparency guarantees universal compatibility across any guest operating system without requiring guest agents or drivers, it introduces severe micro-architectural blind spots.
 
