@@ -87,7 +87,7 @@
 
 ## In the cluster models
 - Cluster Consumption: Memory Consumed against DRAM + NVMe on tiered hosts, as vSphere counts host memory; ESXi DRAM Consumed, a separate metric, DRAM in use against DRAM (green to 80%); NVMe consumption as saturation, 15/30/45/60% of the usable DRAM of tiered hosts ([`vsphere/object-types/cluster/models/cluster-consumption`](../../../object-types/cluster/models/cluster-consumption.md)).
-- Cluster Performance and VM Performance (%): memory wait = memory latency + NVMe wait, per VM ([`vsphere/object-types/cluster/cluster-performance`](../../../object-types/cluster/cluster-performance.md)).
+- Cluster Performance, ESXi Performance and VM Performance (%): Memory Wait = Memory Contention + NVMe wait, per VM ([`vsphere/object-types/cluster/cluster-performance`](../../../object-types/cluster/cluster-performance.md)).
 - Cluster Risk: active memory 50/62.5/75/100% of DRAM; NVMe read latency 100/200/400/800 µs ([`vsphere/object-types/cluster/models/cluster-risk`](../../../object-types/cluster/models/cluster-risk.md)).
 
 ## Performance thresholds (documentation)

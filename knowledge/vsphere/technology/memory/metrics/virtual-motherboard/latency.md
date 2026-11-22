@@ -3,7 +3,7 @@
 ## Meaning
 - Indicates a performance problem. A primary counter for how well the VM is served.
 - Contrast: CPU Latency does not always indicate a performance problem. See [`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](../../../cpu/metrics/virtual-motherboard/latency.md).
-- Relevance for operations: performance: the only VM memory wait counter, the memory input of the VM KPI as VCF Operations VM Memory Contention, and the first check of [`vsphere/technology/memory/vm-memory-latency-high`](../../vm-memory-latency-high.md).
+- Relevance for operations: performance: the only VM memory wait counter, the memory input of Memory Wait (the VM KPI row) as VCF Operations VM Memory Contention, and the first check of [`vsphere/technology/memory/vm-memory-latency-high`](../../vm-memory-latency-high.md).
 
 ## Unit
 - Percentage of time, not of memory space.

@@ -121,6 +121,9 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
   - Invites: what the Guest OS uses now, so a VM near its configured memory needs more.
   - Better name: VM Memory Consumed (label kept): ESXi pages the VM holds from first touch until ESXi reclaims them, guest cache and freed pages included; it does not drop when the Guest OS frees memory. Guest OS need is read inside the Guest OS.
   - File: [`vsphere/technology/memory/metrics/virtual-motherboard/consumed`](vsphere/technology/memory/metrics/virtual-motherboard/consumed.md)
+- **Memory Wait**: Memory Contention plus NVMe wait: the share of a VM's vCPU time spent waiting for memory. The memory row of VM Performance, and the source of the memory rows of Cluster Performance and ESXi Performance. Created because Memory Contention is unaware of memory tiering and can read near 0 while the VM waits on NVMe.
+  - Also called: memory latency + NVMe wait, Memory Latency (the KPI row)
+  - File: [`vsphere/object-types/vm/vm-performance`](vsphere/object-types/vm/vm-performance.md)
 - **VM Memory Latency**: Share of time a vCPU waits for a page fault to complete: mostly swap-in, plus decompression and copy-on-write breaks. The only VM memory speed counter. VCF Operations: VM Memory Contention.
   - Also called: page-fault latency, Memory Latency (%), esxtop %LAT_M
   - File: [`vsphere/technology/memory/metrics/virtual-motherboard/latency`](vsphere/technology/memory/metrics/virtual-motherboard/latency.md)

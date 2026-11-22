@@ -24,8 +24,8 @@
 |---|---|---|
 | Ready (worst, 90th percentile) | VM `cpu\|20_sec_peak_readyPct` | Worst peak vCPU Ready among all VMs (%); 90th percentile peak vCPU Ready among VMs (%) |
 | Co-stop (worst, 90th percentile) | VM `cpu\|20_sec_peak_costopPct` | Worst peak vCPU Co-stop among all VMs (%); 90th percentile peak vCPU Co-stop among VMs (%) |
-| Memory wait (worst, 90th percentile) | Memory latency, VM `mem\|20_sec_peak_host_contentionPct`, plus NVMe wait on hosts with memory tiering (section NVMe wait formula) | Worst memory wait among all VMs (%): memory latency + NVMe wait; 90th percentile memory wait among VMs (%): memory latency + NVMe wait |
-| Disk latency (worst, 90th percentile) | VM `virtualDisk\|20_sec_peak_totalLatency_average` | Worst peak read/write disk latency, all VM vDisks (ms); 90th percentile read/write latency among VM virtual disks (ms) |
+| Memory wait (worst, 90th percentile) | Memory Wait of each VM (vm-performance, section Memory Wait): Memory Contention, VM `mem\|20_sec_peak_host_contentionPct`, plus NVMe wait on hosts with memory tiering | Worst memory wait among all VMs (%); 90th percentile memory wait among VMs (%) |
+| Disk latency (worst, 90th percentile) | VM `virtualDisk\|20_sec_peak_totalLatency_average` | Worst peak disk latency among all VM virtual disks (ms); 90th percentile peak disk latency among VM virtual disks (ms) |
 | Bad network packets | Per host: (errorsRx + errorsTx + droppedRx + droppedTx) / (packetsRx + packetsTx) × 100 in the last 5-minute cycle; the highest host | Highest ESXi (error + dropped) network packets (%) |
 
 - VMs counted: powered-on VMs on the cluster's hosts. A powered-off VM is left out: its last stats are old.
@@ -34,11 +34,11 @@
 - One VM with 200 ms disk latency and the others at 0: the worst-VM row is red, a quarter into the band; the 90th percentile stays 0. One VM is not a broad problem.
 
 ## NVMe wait formula
-- NVMe wait: the share of vCPU time a VM waits for pages fetched from the NVMe tier, by Little's law. NVMe wait (%) = VM NVMe read bandwidth (MB/s) × 256 pages per MB × host NVMe read latency (s) ÷ VM vCPUs × 100. The VM does not care where it waits for memory, so the bands stay those of memory latency. On a host without tiering, NVMe wait is 0.
+- NVMe wait: the share of vCPU time a VM waits for pages fetched from the NVMe tier, by Little's law. NVMe wait (%) = VM NVMe read bandwidth (MB/s) × 256 pages per MB × host NVMe read latency (s) ÷ VM vCPUs × 100. The VM does not care where it waits for memory, so the bands stay those of Memory Contention. On a host without tiering, NVMe wait is 0.
 - How the formula works (Little's law: items in flight = arrival rate × time each takes): MB/s × 256 is the fetches per second, since 1 MB holds 256 pages of 4 KB; × the read latency is the vCPUs frozen at any moment; ÷ the vCPUs is the share of the VM's vCPU time spent waiting, read like CPU Ready.
 - Example: a VM of 8 vCPUs reads 6 MB/s from NVMe at 290 µs. 6 × 256 = 1,536 fetches per second; × 0.00029 s = 0.445 vCPU frozen on average; ÷ 8 = 5.57% of its vCPU time.
-- Memory latency does not count the NVMe fetches: the memory latency counter is unaware of memory tiering. Adding the two counts no wait twice.
-- NVMe wait is scored here and in VM Performance (%). Its limits, and which way each bends the value: section Limitations.
+- Memory Contention does not count the NVMe fetches: the counter is unaware of memory tiering. Adding the two counts no wait twice.
+- NVMe wait is scored here, in ESXi Performance (%) and in VM Performance (%), as part of Memory Wait. Its limits, and which way each bends the value: section Limitations.
 
 ## Scoring
 - Each sub-metric scores 100-0 against its limits, then the scores are combined in a weighted average where a worse score weighs more. Rule shared by every KPI: [`sp5-framework/performance/performance-kpi-design`](../../../sp5-framework/performance/performance-kpi-design.md), section Scoring.
@@ -60,7 +60,7 @@
 - The host's NVMe read latency stands in for the VM's: no counter gives it per VM.
 - Mixed time base: memory latency is a 20-second peak, the NVMe wait inputs are Latest values. The NVMe part understates a burst.
 - Release: memory latency does not count NVMe fetches in vSphere 9.1. If a later release counts them, the sum counts the wait twice.
-- Collection: NVMe `latency.read` is level 3, `bandwidth.read` level 2. If either is not collected, the memory wait rows hold memory latency alone and understate the wait on a tiered host: say NVMe wait is missing.
+- Collection: NVMe `latency.read` is level 3, `bandwidth.read` level 2. If either is not collected, the Memory Wait rows hold Memory Contention alone and understate the wait on a tiered host: say NVMe wait is missing.
 
 ## Not used
 | Metric | Reason |
@@ -122,6 +122,7 @@ source:
   path: Provider Objects > Performance > Cluster Performance (%)
 corrections: []
 review_notes:
+- 'To check: Section ''NVMe wait formula'': the VCF Operations key of the VM NVMe read bandwidth used by the pack (`mem:NVMe|bandwidth.read_latest`, MBps, from the VM counter mem.bandwidth.read, instance NVMe) and that the host key `mem:NVMe|latency.read_latest` is in µs; read both on a live tiered 9.1 host (VCF-vCommunity-Adapter, memory_wait.py).'
 - 'To check: Section ''Limitations'': one 4 KB page per NVMe fetch, no prefetch or large page; compare a VM''s NVMe read bandwidth with its fault count on a tiered 9.1 host.'
 - 'To check: Section ''Limitations'': each NVMe fetch freezes the touching vCPU for the whole read latency; measure on a tiered 9.1 host.'
 - 'To check: Section ''Limitations'': whether vMotion precopy reads count in the migrating VM''s NVMe read bandwidth; vMotion an idle tiered VM with NVMe consumed above 0 and compare the VM and host NVMe read bandwidth at 20-second samples.'

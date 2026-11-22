@@ -62,13 +62,13 @@ Per host, then the worst host is kept.
 ## Scoring
 - The sub-metrics are scored and combined as for every KPI and model ([`sp5-framework/performance/performance-kpi-design`](../../../../sp5-framework/performance/performance-kpi-design.md), section Scoring), where 100 is best. The published value is flipped: Cluster Risk = 100 − weighted average.
 - Bands are the mirror of the performance KPIs: green 0-25, yellow 25-50, orange 50-75, red 75-100. An alert or widget on Cluster Risk must treat high as bad: red from 75.
-- Worked example: two hosts of 32 cores, 512 GB DRAM; host 1 at 90% thread and 100% core utilization, host 2 at 30% and 60%. Thread utilization 90% enters at the start of red (25, weight 8). Imbalance of host 1 is 57.6 running threads / 32 running cores = 1.8, halfway through red (12.5, weight 11.31). Ballooned, swapped + zipped and the two monster VM ratios are green (100, weight 1 each); the excluded rows are green and left out; no memory tiering. Weighted average (25 × 8 + 12.5 × 11.31 + 4 × 100) ÷ (8 + 11.31 + 4) = 31.80; Cluster Risk ≈ 68.2.
+- Worked example: two hosts of 32 cores, 512 GB DRAM, four VMs of 4 vCPUs and 16 GB each; host 1 at 90% thread and 100% core utilization, host 2 at 30% and 60%. Thread utilization 90% enters at the start of red (25, weight 8). Imbalance of host 1 is 57.6 running threads / 32 running cores = 1.8, halfway through red (12.5, weight 11.31). Ballooned and swapped + zipped read 0 (100); monster ratios 0.25 and 0.08 (93.75, 98); excluded rows left out; no tiering. Weighted average 32.11; Cluster Risk = 67.89.
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out; never counted as 0, because 0 means no risk.
 
 ## Sub-metric weight in Cluster Risk
 - The weight of a sub-metric rises as its score falls. When the score is already high, a sub-metric that gets worse but is still better than the ones driving the score pulls the weighted average up, so Cluster Risk goes down.
 - An Excluded row that leaves green enters at weight 2 at once: the same effect.
-- Example: Cluster Risk 68.2 (worked example in section Scoring); new idle VMs raise the CPU overcommit ratio from 0.5 to 1.125. The row enters yellow (71.88, weight 2.18) and Cluster Risk falls to 64.8. Only from about 2.7 does it raise Cluster Risk above 68.2.
+- Example: Cluster Risk 67.89 (section Scoring); new idle VMs raise the CPU overcommit ratio from 0.5 to 1.12. The row enters yellow (72.00, weight 2.17) and Cluster Risk falls to 64.52. Only from about 2.7 does it raise it above 67.89.
 - Read the sub-metrics before acting on a falling Cluster Risk. A cluster just above orange (50) can drop to yellow after VMs are deployed.
 - It happens only when Cluster Risk is already high. When the other sub-metrics are green, a worse sub-metric always raises it.
 
@@ -129,7 +129,6 @@ source:
   document: Knowledge base
   path: Provider Objects > Other Metrics > Cluster Risk (%); Monster VM
 corrections: []
-review_notes:
-- 'To check after 1.0: Section ''CPU overcommit: per thread'': the management pack that publishes Cluster Risk counts the CPU overcommit row per physical core, not per thread; until its fix, a published ratio reads up to 2x the per-thread value on Hyper-Threading hosts (plan, After 1.0, pack fixes).'
+review_notes: []
 status: draft
 ```

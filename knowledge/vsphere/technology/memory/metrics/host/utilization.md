@@ -15,7 +15,7 @@ VM term        = Max (VM Memory Utilization, VM memory reservation) + VM overhea
 - Relevance for operations: capacity in VCF Operations: the host memory demand of its capacity engine (Time Remaining, Capacity Remaining). The method's cluster models read ESXi Memory Consumed instead, because ESXi Memory Utilization mixes realms (section Reason).
 
 ## Use
-- Not a performance counter: a high value means the host memory is spoken for, not that a VM waits. Memory waits show in VM Memory Contention.
+- Not a performance counter: a high value means the host memory is spoken for, not that a VM waits. Memory waits show in VM Memory Contention, and in Memory Wait on a tiered host.
 
 ## Reason
 - ESXi Memory Utilization is the Guest OS need of each VM, raised to the VM's reservation. Its VM term, VM Memory Utilization, reads Guest OS counters (Guest OS Needed Memory) through VMware Tools, so it mixes realms: an ESXi capacity figure rests on Guest OS data that the hypervisor neither sees nor controls ([`vsphere/architecture/vm-vs-guest-os`](../../../../architecture/vm-vs-guest-os.md), section Two realms).
