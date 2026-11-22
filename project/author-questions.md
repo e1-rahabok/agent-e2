@@ -24,15 +24,15 @@ No open question blocks release 1.0.
 
 ## Future release
 
-### Q258 · KPI change · The change level of the other KPI scores
+### Q259 · Score change · The change level of one VM's scores
 
-- Files: [catalog/thresholds-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml), section `change`; [Performance KPI design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/performance-kpi-design.md), section Reading a KPI over time.
-- Now: one row, Cluster Performance (%): a move of 5 points or more from the median of the window is a drop (your rule of 2026-11-22). Every other KPI score has no row, so Agent E2 gives its range and never calls a move a drop.
-- Question: which KPI scores get a change level, and what value?
-  - A. The same 5 points for every 0-100% KPI score: VM Performance, Guest OS Performance, ESXi Performance, Cluster Performance, Cluster Risk, Cluster Consumption.
-  - B. 5 points for the provider scores (Cluster Performance, Cluster Risk, ESXi Performance); a larger value for one VM's scores, which move more (one VM has no breadth row to steady it).
-  - C. Your values per KPI.
-- Recommended: B. A provider score is steadied by its breadth rows; one VM's score jumps with each 20-second peak, so 5 points would call its normal movement a drop. Value for the VM scores: yours, from the field.
+- Files: [catalog/thresholds-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml), section `change`.
+- Now: Q258 (answer B) set 5 points for the provider scores and a larger level for one VM's scores, value not given. VM Performance (%) and Guest OS Performance (%) have no row, so Agent E2 gives their range and never calls a move a drop.
+- Question: what is the change level of VM Performance (%) and Guest OS Performance (%), in points from the median of the window?
+  - A. 10 points for both.
+  - B. 15 points for both.
+  - C. Your values, one per score.
+- Recommended: none without field data. One VM's score moves with each 20-second peak of its own counters and has no breadth row to steady it, so its normal movement is wider than a cluster's. A value from a week of real VM Performance charts would settle it.
 - Answer:
 
 ### Q257 · Memory tiering · NVMe consumed as saturation, and the signal that replaces compression and swap

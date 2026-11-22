@@ -4,6 +4,17 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q258 · KPI change · The change level of the other KPI scores
+
+- Files: [catalog/thresholds-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml), section `change`; [Performance KPI design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/performance-kpi-design.md), section Reading a KPI over time.
+- Now: one row, Cluster Performance (%): a move of 5 points or more from the median of the window is a drop (your rule of 2026-11-22). Every other KPI score has no row, so Agent E2 gives its range and never calls a move a drop.
+- Question: which KPI scores get a change level, and what value?
+  - A. The same 5 points for every 0-100% KPI score: VM Performance, Guest OS Performance, ESXi Performance, Cluster Performance, Cluster Risk, Cluster Consumption.
+  - B. 5 points for the provider scores (Cluster Performance, Cluster Risk, ESXi Performance); a larger value for one VM's scores, which move more (one VM has no breadth row to steady it).
+  - C. Your values per KPI.
+- Recommended: B. A provider score is steadied by its breadth rows; one VM's score jumps with each 20-second peak, so 5 points would call its normal movement a drop. Value for the VM scores: yours, from the field.
+- Answer: B (author, 2026-11-22). Applied: 5 points for Cluster Performance, Cluster Risk, Cluster Consumption and ESXi Performance; the value for one VM's scores is Q259.
+
 ### Q256 · Benchmark · Do draft questions count in the round?
 
 - Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 6.2 and 12); [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md) (Before you start, item 6).

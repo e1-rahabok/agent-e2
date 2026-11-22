@@ -7,7 +7,7 @@ Tables:
   counters    vCenter chart counters (knowledge/catalog/vcenter-counters.yaml)
   api_counters  counters as the vCenter API returns them, with API units (knowledge/catalog/vcenter-api-counters.yaml)
   esxtop      esxtop panel fields (knowledge/catalog/esxtop-fields.yaml)
-  thresholds  one-value tests, labelled by use: decision, rule (thresholds-capacity.yaml); KPI change (thresholds-performance.yaml,
+  thresholds  one-value tests, labelled by use: decision, rule (thresholds-capacity.yaml); score change (thresholds-performance.yaml,
               change); flow, with its step (thresholds-performance.yaml, flow)
   symptoms, alerts, alert_symptoms   alert definitions: one test per symptom, alerts combine them (thresholds-alerts.yaml)
   bands       capacity model inputs with colour bands (thresholds-capacity.yaml, models)
@@ -234,7 +234,7 @@ class Catalog:
                 **thresholds}
 
     def change_level(self, name):
-        """The KPI change row of a KPI score (thresholds-performance.yaml, change), matched on its name without the unit
+        """The score change row of a 0-100% score (thresholds-performance.yaml, change), matched on its name without the unit
         in brackets: 'Cluster Performance' finds 'Cluster Performance (%)'. None when the KPI has no row."""
         key = _bare(name)
         for r in self._q("SELECT * FROM thresholds WHERE use = 'change'"):
@@ -410,7 +410,7 @@ def _best(scored, limit, keep=0.6):
     return [r for s, r in scored if s >= top * keep][:limit]
 
 
-USE_LABELS = {'decision': 'Capacity decision', 'rule': 'Capacity rule', 'change': 'KPI change', 'flow': 'Flow test'}
+USE_LABELS = {'decision': 'Capacity decision', 'rule': 'Capacity rule', 'change': 'Score change', 'flow': 'Flow test'}
 
 
 def _use_label(r):
