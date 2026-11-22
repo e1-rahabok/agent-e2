@@ -1,13 +1,5 @@
-# Architectural Whitepaper: Micro-Architectural Trade-Offs and Guest-Blind Decoupling in Hypervisor-Level Memory Tiering
+# Architectural Architectural Trade-Offs and Guest-Blind Decoupling in Hypervisor-Level Memory Tiering
 
-**Document ID:** ARCH-2026-MT04  
-**Domain:** Virtualization & Kernel Architecture  
-**Target Engine:** ESXi 9.x / VCF Memory Tiering Over NVMe  
-**Classification:** Technical Engineering Report  
-
----
-
-## Executive Summary
 
 Modern hypervisor memory tiering over NVMe/CXL expands addressable host capacity by dynamically partitioning virtual machine memory into Tier 0 (DRAM) and Tier 1 (NVMe). However, by operating purely at the hardware MMU layer via Extended/Nested Page Table (EPT/NPT) Access and Dirty (A/D) bit tracking, the hypervisor remains entirely decoupled from Guest OS internal memory state. 
 
@@ -15,7 +7,7 @@ This paper examines the structural limitations of this "guest-blind" approach—
 
 ---
 
-## 1.0 Introduction & Evolution of Memory Reclamation
+## 1.0 Evolution of Memory Reclamation
 
 Hypervisor memory management has evolved from reactive, emergency reclamation techniques to proactive, hierarchical tiering. Historically, ESXi relied on a strict reclamation pipeline when physical DRAM approached exhaustion (~99.1% DRAM consumed / `minFree` soft thresholds): Transparent Page Sharing (TPS) for deduplication, guest-cooperative memory ballooning (`vmmemctl`), memory compression, and hypervisor swapping.
 
@@ -23,7 +15,7 @@ With the introduction of Memory Tiering over NVMe in ESXi 9.x, the hypervisor sh
 
 ---
 
-## 2.0 Micro-Architecture of ESXi Memory Tiering
+## 2.0 Architecture of ESXi Memory Tiering
 
 ESXi memory tiering operates transparently below the Guest OS abstraction layer. The architecture relies on three primary kernel mechanisms:
 
@@ -33,7 +25,7 @@ ESXi memory tiering operates transparently below the Guest OS abstraction layer.
 
 ---
 
-## 3.0 Structural Limitations of Guest-Blind Tiering
+## 3.0 Limitations of Guest-Blind Tiering
 
 While hardware transparency guarantees universal compatibility across any guest operating system without requiring guest agents or drivers, it introduces severe micro-architectural blind spots.
 
@@ -56,7 +48,7 @@ This effectively neutralizes guest-cooperative reclamation. Ballooning allows th
 
 ---
 
-## 4.0 Comparative Architectural Analysis
+## 4.0 Comparative Analysis
 
 | Architectural Dimension | ESXi Memory Tiering (NVMe/CXL) | Legacy Guest Ballooning (`vmmemctl`) | Paravirtual Free-Page Reporting |
 | :--- | :--- | :--- | :--- |
