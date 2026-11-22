@@ -25,7 +25,7 @@
 | Ready (worst, 90th percentile) | VM `cpu\|20_sec_peak_readyPct` | Worst peak vCPU Ready among all VMs (%); 90th percentile peak vCPU Ready among VMs (%) |
 | Co-stop (worst, 90th percentile) | VM `cpu\|20_sec_peak_costopPct` | Worst peak vCPU Co-stop among all VMs (%); 90th percentile peak vCPU Co-stop among VMs (%) |
 | Memory wait (worst, 90th percentile) | Memory latency, VM `mem\|20_sec_peak_host_contentionPct`, plus NVMe wait on hosts with memory tiering (section NVMe wait formula) | Worst memory wait among all VMs (%): memory latency + NVMe wait; 90th percentile memory wait among VMs (%): memory latency + NVMe wait |
-| Disk latency (worst, 90th percentile) | VM `virtualDisk\|20_sec_peak_totalLatency_average` | Worst peak read/write disk latency, all VM vDisks (ms); 90th percentile read/write latency among VM virtual disks (ms) |
+| Disk latency (worst, 90th percentile) | VM `virtualDisk\|20_sec_peak_totalLatency_average` | Worst peak read/write disk latency, all VM vDisks (ms); 90th percentile peak read/write latency among VM virtual disks (ms) |
 | Bad network packets | Per host: (errorsRx + errorsTx + droppedRx + droppedTx) / (packetsRx + packetsTx) × 100 in the last 5-minute cycle; the highest host | Highest ESXi (error + dropped) network packets (%) |
 
 - VMs counted: powered-on VMs on the cluster's hosts. A powered-off VM is left out: its last stats are old.

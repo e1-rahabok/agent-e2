@@ -18,6 +18,9 @@ Every function adds a note naming the knowledge file or source that defines the 
 
 A second entry point, trend(values, better, change), reads a whole KPI series (a list, not an expression): median, range,
 the worst point's move from the median, and a verdict against the KPI change level.
+
+A third, kpi_parts(rows), scores the parts of a KPI at one point with their catalog limits and splits the score the KPI
+lost among them, so the model never ranks the parts by eye.
 """
 import ast
 import math
@@ -183,6 +186,69 @@ def trend(values, better='higher', change=None):
             'catalog/thresholds-performance, section change.')
     return {'points': n, 'median': round(median, 2), 'low': srt[0], 'high': srt[-1], 'worst': worst, 'worst_index': wi,
             'worse_move': worse_move, 'better_move': better_move, 'verdict': verdict, 'notes': [note]}
+
+
+SCORE_AT = (100.0, 75.0, 50.0, 25.0)
+BANDS = ('green', 'yellow', 'orange', 'red')
+SRC_SCORING = 'sp5-framework/performance/performance-kpi-design, section Scoring'
+
+
+def part_score(value, limits):
+    """The score of one part (100 best, 0 worst) and its band, from its five limits: the values where the score is 100,
+    75, 50, 25 and 0, falling in a straight line in between (SRC_SCORING). Limits going down mean higher is better.
+    A range with no width (green as one value) holds no value."""
+    lim = [float(x) for x in limits]
+    v = float(value)
+    if lim[-1] < lim[0]:
+        v, lim = -v, [-x for x in lim]
+    if v <= lim[0]:
+        return 100.0, 'green'
+    start = lim[0]
+    for s0, band, end in zip(SCORE_AT, BANDS, lim[1:]):
+        if end == start:
+            continue
+        if v < end or band == 'red':
+            return s0 - min((v - start) / (end - start), 1.0) * 25.0, band
+        start = end
+    return 0.0, 'red'
+
+
+def kpi_parts(rows):
+    """How a KPI at one point is made of its parts (SRC_SCORING).
+
+    rows: [{'name', 'value', 'limits' (five numbers), 'excluded_when_green' (bool)}]; a row without a value is left out.
+    KPI = sum(score x weight) / sum(weight), weight = 2 ^ ((100 - score) / 25). The score the KPI lost, 100 - KPI, is
+    the sum over the parts of (100 - score) x weight / sum(weight): each part's points lost, exact, adding up to the loss.
+    A row marked excluded_when_green is left out while green (catalog/thresholds-performance, kpi).
+    Returns {'kpi', 'lost', 'rows': [{'name', 'value', 'score', 'band', 'weight', 'points_lost', 'share'}] worst first,
+    'left_out': [names], 'notes'}."""
+    scored, left_out = [], []
+    for r in rows:
+        v = r.get('value')
+        if not isinstance(v, (int, float)) or isinstance(v, bool):
+            continue
+        score, band = part_score(v, r['limits'])
+        if r.get('excluded_when_green') and band == 'green':
+            left_out.append(r['name'])
+            continue
+        scored.append({'name': r['name'], 'value': v, 'score': score, 'band': band, 'weight': 2 ** ((100.0 - score) / 25.0)})
+    if not scored:
+        if not left_out:
+            raise CalcError('kpi_parts: no part has a value')
+        return {'kpi': 100.0, 'lost': 0.0, 'rows': [], 'left_out': left_out, 'notes': [f'Every part was left out while green: KPI 100. See {SRC_SCORING}.']}
+    total = sum(r['weight'] for r in scored)
+    kpi = sum(r['score'] * r['weight'] for r in scored) / total
+    lost = 100.0 - kpi
+    for r in scored:
+        r['points_lost'] = (100.0 - r['score']) * r['weight'] / total
+        r['share'] = 100.0 * r['points_lost'] / lost if lost > 0 else 0.0
+    scored.sort(key=lambda r: -r['points_lost'])
+    for r in scored:
+        for k in ('score', 'weight', 'points_lost', 'share'):
+            r[k] = round(r[k], 2)
+    note = (f'Score per part from its five limits, KPI = sum(score x weight) / sum(weight), weight = 2 ^ ((100 - score) / 25); '
+            f'points lost per part = (100 - score) x weight / sum(weight), which add up to 100 - KPI. See {SRC_SCORING}.')
+    return {'kpi': round(kpi, 2), 'lost': round(lost, 2), 'rows': scored, 'left_out': left_out, 'notes': [note]}
 
 
 def evaluate(expression):

@@ -242,6 +242,21 @@ class Catalog:
                 return r
         return None
 
+    def kpi_limits(self, name):
+        """The five limits of a KPI part (thresholds-performance.yaml, kpi), matched on its name without unit and gloss:
+        'Worst memory wait among all VMs' finds 'Worst memory wait among all VMs (%): memory latency + NVMe wait'.
+        A part a person reads at 5 minutes holds the highest 20-second value inside it, so the 20-second limits come first,
+        then 5-minute, then 2-second. Returns {'metric', 'object', 'limits', 'interval', 'excluded_when_green', 'kb'} or None."""
+        key = _part_key(name)
+        for r in self._q('SELECT * FROM kpi'):
+            if _part_key(r['metric']) != key:
+                continue
+            for col, iv in (('s20', '20s'), ('m5', '5m'), ('s2', '2s')):
+                if r[col]:
+                    return {'metric': r['metric'], 'object': r['object'], 'limits': [float(x) for x in r[col].split('/')],
+                            'interval': iv, 'excluded_when_green': bool(r['excluded']), 'kb': r['src']}
+        return None
+
     def thresholds(self, name=None, kb_ids=(), object=None, limit=8):
         """Thresholds and colour bands for a metric name and/or knowledge files."""
         obj = norm_object(object)
@@ -422,6 +437,12 @@ def _use_label(r):
 def _bare(name):
     """A metric name without its unit in brackets, lower case: 'Cluster Performance (%)' -> 'cluster performance'."""
     return re.sub(r'\s*\([^)]*\)\s*$', '', str(name or '')).strip().lower()
+
+
+def _part_key(name):
+    """A KPI part's name without a unit in brackets and without the gloss after a colon, lower case."""
+    s = re.sub(r'\s*\((?:%|ms|µs|us|ratio|mb|gb|kbps|mbps)\)', '', str(name or ''), flags=re.I)
+    return re.sub(r'\s+', ' ', s.split(':')[0]).strip().lower()
 
 
 def _objs(o):

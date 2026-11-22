@@ -153,6 +153,7 @@ def compute(case, question, retriever, used):
         lines.append(line + '. [arithmetic_calculator.py: ' + '; '.join(one.get('notes') or []) + ']')
     lines += nvme_wait(case, question)
     lines += kpi_trends(question, cat)
+    lines += kpi_part_lines(question, cat)
     return ('Computed (exact):\n' + '\n'.join(dict.fromkeys(lines))) if lines else ''
 
 
@@ -240,6 +241,88 @@ def kpi_trends(question, cat):
             moved = t['worse_move'] if t['verdict'] == 'worsened' else t['better_move']
             line += f" KPI change level: {level:g} points. Verdict: {t['verdict']}, by {moved:g} points from the median."
         out.append(line + ' [arithmetic_calculator.py: ' + ' '.join(t['notes']) + ']')
+    return out
+
+
+def _part_sets(node, out):
+    """KPI parts at one point in the facts: an object with a list "parts" of {name, value}, and the KPI's name (kpi),
+    time and value (kpi_value). PCM sends them for the KPI's worst point of the window (parts_at_worst)."""
+    if isinstance(node, dict):
+        ps = node.get('parts')
+        if isinstance(ps, list) and ps and all(isinstance(p, dict) and p.get('name') for p in ps):
+            out.append(node)
+        for v in node.values():
+            if isinstance(v, (dict, list)):
+                _part_sets(v, out)
+    elif isinstance(node, list):
+        for v in node:
+            _part_sets(v, out)
+    return out
+
+
+def _num(v):
+    return f'{v:g}' if isinstance(v, (int, float)) else str(v)
+
+
+def kpi_part_lines(question, cat):
+    """Stage 3 for a KPI's parts the caller sent at one point: each part scored with its catalog limits, the KPI rebuilt,
+    and the score it lost split among the parts (arithmetic_calculator.kpi_parts), so the answer names the part that
+    pulled the KPI down instead of guessing. Nothing is ranked when a part has no catalog row."""
+    facts = facts_in(question)
+    if not facts:
+        return []
+    out = []
+    for ps in _part_sets(facts, [])[:2]:
+        name, when, shown = ps.get('kpi') or 'The KPI', ps.get('time'), ps.get('kpi_value')
+        rows, unknown, by_name = [], [], {}
+        for p in ps['parts']:
+            lim = cat.kpi_limits(p['name'])
+            if lim is None:
+                unknown.append(p['name'])
+                continue
+            rows.append({'name': p['name'], 'value': p.get('value'), 'limits': lim['limits'],
+                         'excluded_when_green': lim['excluded_when_green']})
+            by_name[p['name']] = p
+        head = f"- {name}{f' at {when}' if when else ''}"
+        if unknown:
+            vals = '; '.join(f"{p['name']} {_num(p.get('value'))}{(p.get('unit') or '').strip()}" for p in ps['parts'])
+            out.append(f"{head}: parts {vals}. Not ranked: no catalog limits for {', '.join(unknown)}.")
+            continue
+        try:
+            r = arithmetic_calculator.kpi_parts(rows)
+        except arithmetic_calculator.CalcError:
+            continue
+        off = isinstance(shown, (int, float)) and abs(r['kpi'] - shown) > 1
+        line = f"{head}: rebuilt from its {len(ps['parts'])} parts with the catalog limits, {r['kpi']:g}"
+        if isinstance(shown, (int, float)):
+            line += f" (the chart shows {shown:g})"
+        if off:
+            # The parts are not the ones the KPI was computed from (or a limit differs): no points lost, no order.
+            band = {x['name']: x['band'] for x in r['rows']}
+            vals = '; '.join(f"{p['name']} {_num(p.get('value'))}{(p.get('unit') or '').strip()}"
+                             f"{', ' + band[p['name']] if p['name'] in band else ', left out while green'}" for p in ps['parts'])
+            out.append(line + '. The rebuild differs from the chart by more than 1 point: the parts or a limit differ from '
+                       f'what the KPI was computed from, so no part can be said to have pulled it down. Parts, in no order: {vals}.')
+            continue
+        line += f". It lost {r['lost']:g} points."
+        parts = []
+        for x in r['rows']:
+            p = by_name[x['name']]
+            unit = (p.get('unit') or '').strip()
+            txt = f"{x['name']} {x['value']:g}{unit}: score {x['score']:g}, {x['band']}, {x['points_lost']:g} points lost ({x['share']:.0f}%)"
+            if isinstance(p.get('median'), (int, float)):
+                txt += f", window median {p['median']:g}{unit}"
+            parts.append(txt)
+        line += ' Parts, most points lost first: ' + '; '.join(parts) + '.'
+        if r['left_out']:
+            line += f" Left out while green: {', '.join(r['left_out'])}."
+        top = [x for x in r['rows'] if x['points_lost'] > 0 and r['rows'][0]['points_lost'] - x['points_lost'] <= 0.5]
+        if len(top) == 1:
+            line += f" The part that pulled {name} down most: {top[0]['name']} ({top[0]['share']:.0f}% of the points lost)."
+        elif top:
+            line += (f" The parts that pulled {name} down most, level within half a point: "
+                     + '; '.join(f"{x['name']} ({x['share']:.0f}%)" for x in top) + '.')
+        out.append(line + ' [arithmetic_calculator.py: ' + ' '.join(r['notes']) + ']')
     return out
 
 
