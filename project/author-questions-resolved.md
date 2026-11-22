@@ -4,6 +4,18 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q260 · Cluster Consumption · Memory Tiering Consumption band ends
+
+- Files: [Cluster Consumption](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), section Misconceptions and the Memory Tiering row; [thresholds-capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml), row cluster-consumption-cluster-memory-tiering-consumption.
+- Search strings: "Its bands are linear, 25, 50, 75, 100% of the usable NVMe tier"
+- Now: the knowledge base says green 0-25, yellow 25-50, orange 50-75, red 75-100. The adapter (`Management Pack/app/metrics/cluster/cluster_consumption_metrics.py`, TIERING_ROW, and docs/reference/metrics/cluster-consumption.md) says green ends at 4, yellow at 8, orange at 16, score 0 at 32. The adapter also says the row has not been checked against a live value.
+- Source: VCF-vCommunity-Adapter, main branch, read 2026-11-22.
+- Question: which band ends are right for Memory Tiering Consumption?
+  - A. The adapter's: 4, 8, 16, 32 (doubling, like the other saturation rows).
+  - B. The knowledge base's: 25, 50, 75, 100 (linear).
+- Recommended: A. The adapter computes the published score, and Agent E2 must read the colour the user sees in VCF Operations. If B was meant, the adapter is the one to change.
+- Answer: neither (author, 2026-11-22). Divide by usable DRAM, not by the NVMe tier: the row measures how much memory has moved off DRAM, against usable capacity (HA and buffer not counted). Bands 15, 30, 45, 60. Applied in both repositories: cluster-consumption (row, Usable capacity, Interpretation, Limitations), the catalog row, memory-tiering section In the cluster models; adapter TIERING_ROW, its denominator, tests and page.
+
 ### Q259 · Score change · The change level of one VM's scores
 
 - Files: [catalog/thresholds-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml), section `change`.
