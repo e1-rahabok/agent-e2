@@ -9,7 +9,7 @@
 - Higher is worse: 0 is no risk, 100 is maximum risk. Cluster Consumption reads the same way; Cluster Performance is higher-is-better.
 - Every sub-metric takes the worst ESXi host. One full host hurts its VMs while the cluster average looks fine. Many clusters have 8 hosts or fewer, so the worst warns early. Different sub-metrics can come from different hosts: fine for monitoring, not for troubleshooting.
 - A risk model, not a KPI: a KPI scores performance only. Users also call it the Cluster Risk KPI.
-- Not a built-in VCF Operations metric. 12 sub-metrics.
+- Not a built-in VCF Operations metric. 13 sub-metrics.
 
 ## Thresholds
 - Colour bands: `catalog/thresholds-capacity`, rows with this file as `kb`. They are shown with this file; this file holds the reasons.
@@ -28,7 +28,7 @@ Per host, then the worst host is kept.
 | DRAM Memory Consumed | Memory consumed in DRAM and NVMe, as % of host DRAM. On a tiered host it passes 100% by design: 157% means the host carries 1.57 times its DRAM, the rest in NVMe. | `mem\|consumed_average` |
 | Memory ballooned | Ballooned, as % of host DRAM | `mem\|vmmemctl_average` |
 | Swapped + zipped | (Compressed + swapped), as % of host DRAM | `mem\|compressed_average`, `mem\|swapout_average` |
-| Active memory, tiered hosts | Active memory as % of host DRAM. Excluded while green (below 50%). Left out on hosts without memory tiering | vCenter `mem.active`; DRAM `mem:DRAM\|memory_tier_total_capacity` |
+| Active memory, tiered hosts | Active memory as % of host DRAM. Excluded while green (below 50%). Left out on hosts without memory tiering | `mem\|active_average`; DRAM `mem:DRAM\|memory_tier_total_capacity`; tier `mem:NVMe\|memory_tier_size` |
 | NVMe read latency | Read latency of the NVMe memory tier, at all times: a device waking from a power-saving state explains a high reading, it does not remove the wait. Left out on hosts without memory tiering | `mem:NVMe\|latency.read_latest` (µs) |
 | CPU reservation | Reserved CPU, as % of host CPU capacity | `cpu\|reservedCapacity_average` / `cpu\|totalCapacity_average` |
 | Memory reservation | Reserved memory, as % of host DRAM | `mem\|reservedCapacity_average` |
