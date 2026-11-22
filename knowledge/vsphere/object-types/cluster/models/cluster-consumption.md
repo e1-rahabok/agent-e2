@@ -13,8 +13,8 @@
 | Group | Sub-metric | Cluster-wide value |
 |---|---|---|
 | Utilization | ESXi CPU Thread Utilization | Threads in use on all hosts ÷ CPU usable capacity in threads |
-| Utilization | ESXi Memory Consumed, hosts without tiering | Consumed memory of all hosts ÷ usable DRAM |
-| Utilization | ESXi Memory Consumed in DRAM (tiered hosts) | Memory consumed in DRAM on all tiered hosts ÷ their usable DRAM. Never above 100%; not the Cluster Risk row Highest ESXi DRAM Memory Consumed, which divides memory consumed in DRAM and NVMe by DRAM. Memory Consumed covers both tiers and passes 100% of DRAM by design; tiering starts at 80% of DRAM, so green runs to 80 |
+| Utilization | ESXi Memory Consumed | Consumed memory of all hosts ÷ usable memory: DRAM, plus the NVMe tier on a tiered host. The raw vCenter metric, unchanged: on a tiered host vSphere counts DRAM and NVMe as host memory, and Consumed covers both |
+| Utilization | ESXi DRAM Consumed | DRAM in use on all tiered hosts ÷ their usable DRAM. A separate metric, not Memory Consumed: DRAM in use = Memory Consumed − NVMe tier in use, per host. Never above 100%; tiering starts at about 80% of DRAM, so green runs to 80. Not the Cluster Risk row Highest ESXi DRAM Memory Consumed, which divides Memory Consumed (DRAM and NVMe) by DRAM |
 | Saturation | Memory Tiering Consumption | NVMe tier in use on all tiered hosts ÷ their usable DRAM: how much memory sits beyond DRAM, against the DRAM it spilled from |
 | Saturation | ESXi Memory Ballooned | Ballooned memory of all hosts ÷ usable DRAM |
 | Saturation | ESXi Memory Zip Swap | Compressed plus swapped memory of all hosts ÷ usable DRAM |
@@ -22,12 +22,12 @@
 - Colour bands: `catalog/thresholds-capacity`, rows with this file as `kb`. No green range is excluded: every row with data counts.
 - Threads in use per host = `cpu|utilization_average` % × threads. Memory: `mem|consumed_average`, `mem|vmmemctl_average`, `mem|compressed_average`, `mem|swapout_average`; NVMe tier in use `mem:NVMe|tier.usage`; a host with `mem:NVMe|memory_tier_size` above 0 is a tiered host.
 - Memory reads ESXi Memory Consumed, not ESXi Memory Utilization: Utilization mixes realms, because its VM term comes from Guest OS counters; Consumed stays in one realm and is conservative, and the reclamation it leaves out counts as saturation ([`vsphere/technology/memory/metrics/host/utilization`](../../../technology/memory/metrics/host/utilization.md), section Reason).
-- DRAM is the host's DRAM only, never DRAM plus a memory tier. DRAM and the NVMe tier are kept apart: each memory row reads one of them.
+- Memory Consumed is against the host memory vSphere reports: DRAM, plus the NVMe tier on a tiered host (`mem:NVMe|memory_tier_size`). Every other memory row is against DRAM only, never DRAM plus a memory tier. ESXi DRAM Consumed per host = `mem|consumed_average` − `mem:NVMe|tier.usage`.
 - CPU usable capacity is counted in threads, not MHz. Capacity is quantity: how many VMs fit, not how fast they run.
 
 ## Usable capacity
 - VCF Operations computes usable capacity per cluster from HA admission control and the Capacity Buffer (Demand) of the policy, in MHz for CPU and KB for memory.
-- The model takes it as a percentage of total capacity (`cpu|demand|usableCapacity` ÷ `cpu|capacity_provisioned`; `mem|demand|usableCapacity` ÷ `mem|host_provisioned`) and applies that percentage to the threads and DRAM of the running hosts. The NVMe tier has no usable capacity of its own: every memory row divides by usable DRAM.
+- The model takes it as a percentage of total capacity (`cpu|demand|usableCapacity` ÷ `cpu|capacity_provisioned`; `mem|demand|usableCapacity` ÷ `mem|host_provisioned`) and applies that percentage to the threads, the DRAM and, for Memory Consumed, the DRAM plus NVMe tier of the running hosts. DRAM Consumed, Memory Tiering Consumption, Ballooned and Zip Swap divide by usable DRAM.
 - Hosts left out: not responding, disconnected, powered off or in standby (DPM), in maintenance mode, or with no value in the last 10 minutes. A left-out host stays in total capacity but adds nothing to usable capacity. A host still entering maintenance mode counts as running: its VMs are still on it.
 
 ## Scoring
@@ -44,6 +44,7 @@
 ## Interpretation
 - Read it with Cluster Performance (%). High consumption with green performance: the cluster is busy and serving its VMs; it closes on consumption only when red, or when consumption and performance are both orange and risk is high ([`vsphere/object-types/cluster/models/close-for-business`](close-for-business.md)).
 - Memory consumed high with green saturation rows is a cache doing its job: Windows and Linux keep pages they once touched. A memory shortage shows in the saturation rows first, then in VM memory contention.
+- On a tiered cluster, Memory Consumed can read green while DRAM is full: at the 1:1 tier ratio, DRAM at 85% and 20% of DRAM on NVMe read (85 + 20) ÷ 200 = 52.5%. That is how vSphere counts host memory, not a choice of the model. How full DRAM is shows in ESXi DRAM Consumed, the spill in Memory Tiering Consumption, and active memory against DRAM in Cluster Risk. Memory Consumed is yellow at 70% only when about 55% of DRAM has spilled, near the red of Memory Tiering Consumption.
 - On a host with memory tiering, compression and swap read 0: memory beyond DRAM goes to the NVMe tier first. The tier's consumption is then the saturation signal ([`vsphere/technology/memory/concepts/memory-tiering`](../../../technology/memory/concepts/memory-tiering.md)).
 - Memory Tiering Consumption divides by usable DRAM, not by the NVMe tier. The overcommit ratio and the class-of-service plan are against DRAM, and Ballooned and Zip Swap, the saturation rows tiering replaces, divide by usable DRAM too. The value does not change with the DRAM:NVMe ratio: 30% is 30% of DRAM spilled, whatever the tier size. Only tiered hosts count, so the DRAM of non-tiered hosts in a mixed cluster does not dilute it.
 - Its bands are linear, 15, 30, 45, 60% of usable DRAM, set by the class-of-service plan ([`sp5-framework/capacity/class-of-service-planning`](../../../../sp5-framework/capacity/class-of-service-planning.md)). Spill ≈ memory ratio × 85% concurrent peak − about 80% of DRAM, where tiering starts: Gold (1:1) about 5%, green; Silver (1.2:1) about 20%, yellow; Bronze (1.4:1) about 40%, orange; red is beyond every class. At 60% spill and 30% active memory, active memory reaches 50% of DRAM, the end of green in Cluster Risk.
@@ -53,6 +54,7 @@
 
 ## Limitations
 - CPU usable capacity in threads comes from a ratio in MHz. Exact only when every host has the same clock speed and the same Hyper-Threading setting. Example: host A 32 cores with Hyper-Threading (64 threads), host B 32 cores without (32 threads), each half of the MHz; HA and buffer take 50%: the model counts 48 usable threads, while 32 or 64 remain depending on which host fails.
+- Memory Consumed changes with the DRAM:NVMe ratio on a tiered host: the same VMs read lower with a bigger tier. Read Memory Tiering Consumption beside it, which does not.
 - A tier smaller than DRAM caps Memory Tiering Consumption: with a 0.25:1 tier, a full tier reads 25%, in yellow, and the host swaps next. Ballooned and Zip Swap catch it, one step late.
 - Usable capacity 0 has two cases. Hosts run but HA and buffer leave nothing to VMs: Cluster Consumption is 100 and the rows of that resource are not published. No host runs: nothing is consumed and nothing is published.
 
@@ -60,6 +62,7 @@
 - "Saturation means VMs are slow" → saturation is consumption; check Cluster Performance (%).
 - "Cluster Consumption is the average of the hosts" → it adds up the hosts: a big host counts more. In the example the average is 55%, the cluster-wide value 50% of total.
 - "Cluster Consumption is measured against total capacity" → against usable capacity, after HA and buffer.
+- "On a tiered host, Memory Consumed should be against DRAM" → it is the raw vCenter metric; vSphere counts DRAM and NVMe as host memory, so its capacity is both. The DRAM view is the separate metric ESXi DRAM Consumed.
 - "Cluster Consumption is orange, so the cluster is closed" → it closes on consumption only when red, or when consumption and performance are both orange and risk is orange or red.
 - "Cluster Consumption shows the hottest host" → the hottest host is Cluster Risk (%).
 - "CPU usable capacity is in MHz" → the model counts threads: capacity is quantity, not speed.
@@ -99,6 +102,7 @@ source:
 corrections: []
 review_notes:
 - 'To check: Section ''Sub-metrics'': the Memory Tiering Consumption row (`mem:NVMe|tier.usage`, in MB) on a live host with memory tiering.'
+- 'To check: Section ''Sub-metrics'': ESXi DRAM Consumed as `mem|consumed_average` − `mem:NVMe|tier.usage`; on a live tiered 9.1 host, compare with the DRAM instance of `mem.tier.consumed` (vSphere 9.1 documentation, Monitoring and Performance > Hosts > Memory (MB), p. 2038).'
 - 'To check: Section ''Interpretation'': the band anchors assume DRAM holds at about 80% once tiering runs; on a live tiered 9.1 host, compare DRAM consumed with `mem:NVMe|tier.usage` under load. At about 90%, every band end moves down about 10 points.'
 - 'To check: Section ''Usable capacity'': whether a host in maintenance mode lowers usable capacity twice, once in the VCF Operations usable-capacity percentage and once as a left-out host; a live cluster with one host in maintenance mode.'
 status: draft

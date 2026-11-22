@@ -69,6 +69,7 @@ models:
   kb: vsphere/object-types/cluster/models/cluster-consumption
 - id: cluster-consumption-cluster-wide-esxi-memory-consumed
   metric: Cluster-wide ESXi memory consumed (%)
+  description: 'Consumed memory of all hosts ÷ their usable memory: DRAM, plus the NVMe tier on a tiered host, as vSphere counts host memory.'
   group: Utilization
   object: ClusterComputeResource
   interval: 5m
@@ -80,8 +81,9 @@ models:
     red: 90-100
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-consumption
-- id: cluster-consumption-cluster-wide-esxi-dram-consumed-tiered
-  metric: Cluster-wide ESXi Memory Consumed in DRAM (%)
+- id: cluster-consumption-cluster-wide-esxi-dram-consumed
+  metric: Cluster-wide ESXi DRAM Consumed (%)
+  description: 'DRAM in use on all tiered hosts (Memory Consumed − NVMe tier in use) ÷ their usable DRAM. A separate metric from Memory Consumed.'
   group: Utilization
   object: ClusterComputeResource
   interval: 5m
