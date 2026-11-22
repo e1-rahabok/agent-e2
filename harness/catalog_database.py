@@ -7,7 +7,8 @@ Tables:
   counters    vCenter chart counters (knowledge/catalog/vcenter-counters.yaml)
   api_counters  counters as the vCenter API returns them, with API units (knowledge/catalog/vcenter-api-counters.yaml)
   esxtop      esxtop panel fields (knowledge/catalog/esxtop-fields.yaml)
-  thresholds  one-value tests, labelled by use: decision, rule (thresholds-capacity.yaml); flow, with its step (thresholds-performance.yaml, flow)
+  thresholds  one-value tests, labelled by use: decision, rule (thresholds-capacity.yaml); score change (thresholds-performance.yaml,
+              change); flow, with its step (thresholds-performance.yaml, flow)
   symptoms, alerts, alert_symptoms   alert definitions: one test per symptom, alerts combine them (thresholds-alerts.yaml)
   bands       capacity model inputs with colour bands (thresholds-capacity.yaml, models)
   kpi         KPI colour levels, the one copy (thresholds-performance.yaml, kpi)
@@ -123,7 +124,7 @@ class Catalog:
         # Threshold files are split by use: the section name is the use (one place; no use field on the rows).
         perf, cap, al = (load_yaml(f'thresholds-{n}.yaml') for n in ('performance', 'capacity', 'alerts'))
         # A flow test is the number one step of a flow file compares with; kb is the flow file, step its numbered step.
-        tests = [(cap, 'decisions', 'capacity'), (cap, 'rules', 'capacity'), (perf, 'flow', 'performance')]
+        tests = [(cap, 'decisions', 'capacity'), (cap, 'rules', 'capacity'), (perf, 'change', 'performance'), (perf, 'flow', 'performance')]
         for data, section, pillar in tests:
             use = {'decisions': 'decision', 'rules': 'rule'}.get(section, section)
             for r in data.get(section) or []:
@@ -231,6 +232,15 @@ class Catalog:
                 'esxtop': [_compact(r, ('panel', 'field', 'description')) for r in esx],
                 'metric_files': [_compact(r, ('id', 'title', 'object', 'layer', 'metric_class', 'same_name')) for r in metrics],
                 **thresholds}
+
+    def change_level(self, name):
+        """The score change row of a 0-100% score (thresholds-performance.yaml, change), matched on its name without the unit
+        in brackets: 'Cluster Performance' finds 'Cluster Performance (%)'. None when the KPI has no row."""
+        key = _bare(name)
+        for r in self._q("SELECT * FROM thresholds WHERE use = 'change'"):
+            if _bare(r['metric']) == key:
+                return r
+        return None
 
     def thresholds(self, name=None, kb_ids=(), object=None, limit=8):
         """Thresholds and colour bands for a metric name and/or knowledge files."""
@@ -400,13 +410,18 @@ def _best(scored, limit, keep=0.6):
     return [r for s, r in scored if s >= top * keep][:limit]
 
 
-USE_LABELS = {'decision': 'Capacity decision', 'rule': 'Capacity rule', 'flow': 'Flow test'}
+USE_LABELS = {'decision': 'Capacity decision', 'rule': 'Capacity rule', 'change': 'Score change', 'flow': 'Flow test'}
 
 
 def _use_label(r):
     """What the number is for, first in every line: a KPI level, an alert and a capacity rule for one metric differ."""
     extra = r['class'] or r['criticality'] or (f"step {r['step']}" if r.get('step') else None)
     return USE_LABELS.get(r['use'], r['use']) + (f', {extra}' if extra else '')
+
+
+def _bare(name):
+    """A metric name without its unit in brackets, lower case: 'Cluster Performance (%)' -> 'cluster performance'."""
+    return re.sub(r'\s*\([^)]*\)\s*$', '', str(name or '')).strip().lower()
 
 
 def _objs(o):
