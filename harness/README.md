@@ -60,6 +60,7 @@ The agent's code calls them; the model calls none (`AGENT.md`, section 1).
 | `knowledge_search.search`, `knowledge_search.links` | File ids and best chunks; linked files by type | Stage 2, the reading plan |
 | `catalog_database.lookup`, `catalog_database.facts_for` | Counter unit, rollup, statistics level, esxtop field, thresholds with source, KPI levels, object relations | Stage 1 (names of the case), stage 2 (counter keys), the reading set's catalog facts |
 | `arithmetic_calculator.evaluate` | Result plus source notes | Stage 3, summation conversions |
+| `arithmetic_calculator.trend`, `arithmetic_calculator.kpi_parts` (with `catalog_database.kpi_limits`) | A KPI series against its change level; a KPI's parts at one point scored with their catalog limits, the KPI rebuilt and the points it lost split among the parts | Stage 3, from a caller's facts (`expert_agent.kpi_trends`, `expert_agent.kpi_part_lines`) |
 | `capacity_calculator.plan` | VMs per host, or how full a host or cluster is for a planned VM mix | To wire into stage 3 |
 | `flow_executor.run` | Steps of a flow file, or one step with next and references | To wire into stage 3 with executable steps (Q166) |
 | `public_web_lookup.gather`, `public_web_lookup.block` | Pages the question links, and vendor search results for current facts, trimmed and labelled untrusted | Stage 5, after the knowledge base text |

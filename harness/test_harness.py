@@ -1086,6 +1086,60 @@ class AnswerServiceTest(unittest.TestCase):
         self.assertIn('Verdict: worsened', lines[0])
         self.assertEqual([CAT.change_level(n)['value'] for n in ('Cluster Consumption', 'ESXi Performance (%)')], [5, 5])
 
+    # The parts of Cluster Performance at the KPI's worst point, as PCM sends them (parts_at_worst).
+    CLUSTER_PARTS = [('Worst peak vCPU Ready among all VMs', 12.0, 1.1), ('Worst peak vCPU Co-stop among all VMs', 0.5, 0.4),
+                     ('Worst memory wait among all VMs', 0.2, 0.1), ('Worst peak disk latency among all VM virtual disks', 18.0, 15.0),
+                     ('90th percentile peak vCPU Ready among VMs', 3.0, 0.3), ('90th percentile peak vCPU Co-stop among VMs', 0.1, 0.1),
+                     ('90th percentile memory wait among VMs', 0.0, 0.0), ('90th percentile peak disk latency among VM virtual disks', 6.0, 5.0),
+                     ('Highest ESXi (error + dropped) network packets', 0.0, 0.0)]
+
+    def parts_facts(self, parts, kpi_value):
+        return {'asked_about_kpi': {'label': 'Cluster Performance', 'parts_at_worst': {
+            'kpi': 'Cluster Performance', 'time': '2026-10-19T08:30', 'kpi_value': kpi_value,
+            'parts': [{'name': n, 'unit': ' ms' if 'latency' in n else '%', 'value': v, 'median': m} for n, v, m in parts]}}}
+
+    def test_part_scores_follow_the_five_limits(self):
+        self.assertEqual(arithmetic_calculator.part_score(0, [0, 4, 8, 16, 32]), (100.0, 'green'))
+        self.assertEqual(arithmetic_calculator.part_score(12, [0, 4, 8, 16, 32]), (37.5, 'orange'))
+        self.assertEqual(arithmetic_calculator.part_score(40, [0, 4, 8, 16, 32]), (0.0, 'red'))
+        self.assertEqual(arithmetic_calculator.part_score(0.1, [0, 0, 0.2, 0.4, 0.8]), (62.5, 'yellow'))  # green is one value
+        self.assertEqual(arithmetic_calculator.part_score(512, [1024, 512, 256, 128, 0]), (75.0, 'yellow'))  # higher is better
+
+    def test_points_lost_add_up_and_match_the_worked_example(self):
+        # cluster-performance, section Scoring: 7 rows at 0, 90th percentile Ready 5% (18.75, weight 9.51): KPI 53.2.
+        rows = [{'name': f'r{i}', 'value': 0, 'limits': [0, 1, 2, 4, 8]} for i in range(7)]
+        rows.append({'name': 'p90 ready', 'value': 5, 'limits': [0, 1, 2, 4, 8]})
+        rows.append({'name': 'packets', 'value': 0, 'limits': [0, 0, 0.2, 0.4, 0.8], 'excluded_when_green': True})
+        r = arithmetic_calculator.kpi_parts(rows)
+        self.assertAlmostEqual(r['kpi'], 53.19, places=2)
+        self.assertEqual(r['left_out'], ['packets'])
+        self.assertEqual(r['rows'][0]['name'], 'p90 ready')
+        self.assertAlmostEqual(sum(x['points_lost'] for x in r['rows']), r['lost'], places=1)
+
+    def test_parts_name_the_one_that_pulled_the_kpi_down(self):
+        r = arithmetic_calculator.kpi_parts([{'name': n, 'value': v, 'limits': CAT.kpi_limits(n)['limits'],
+                                              'excluded_when_green': CAT.kpi_limits(n)['excluded_when_green']} for n, v, _ in self.CLUSTER_PARTS])
+        q = answer_service.question_text({'question': 'Why the worst at 19 Oct, 08:30?', 'facts': self.parts_facts(self.CLUSTER_PARTS, r['kpi'])})
+        lines = expert_agent.kpi_part_lines(q, CAT)
+        self.assertEqual(len(lines), 1)
+        self.assertIn('The parts that pulled Cluster Performance down most, level within half a point: Worst peak vCPU Ready among all VMs (47%); 90th percentile peak vCPU Ready among VMs (47%)', lines[0])
+        self.assertIn('Worst peak vCPU Ready among all VMs 12%: score 37.5, orange', lines[0])
+        self.assertIn('window median 1.1%', lines[0])
+        self.assertIn('Left out while green: Highest ESXi (error + dropped) network packets', lines[0])
+
+    def test_parts_that_do_not_rebuild_the_kpi_are_not_ranked(self):
+        q = answer_service.question_text({'question': 'Why?', 'facts': self.parts_facts(self.CLUSTER_PARTS, 80.0)})
+        line = expert_agent.kpi_part_lines(q, CAT)[0]
+        self.assertIn('differs from the chart', line)
+        self.assertIn('no part can be said to have pulled it down. Parts, in no order: Worst peak vCPU Ready among all VMs 12%, orange', line)
+        self.assertNotIn('points lost', line)
+
+    def test_parts_without_catalog_limits_are_listed_not_ranked(self):
+        parts = self.CLUSTER_PARTS[:8] + [('Some new row', 1.0, 0.0)]
+        line = expert_agent.kpi_part_lines(answer_service.question_text({'question': 'Why?', 'facts': self.parts_facts(parts, 40.0)}), CAT)[0]
+        self.assertIn('Not ranked: no catalog limits for Some new row', line)
+        self.assertNotIn('pulled', line)
+
     def test_pipeline_words_get_one_rewrite(self):
         class Rewriter:
             def chat(self, model, messages, **kw):
