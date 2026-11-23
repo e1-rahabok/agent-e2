@@ -5,13 +5,15 @@
 # Without a movement the user sees the 3 level questions. With one: the 2 movement questions, then the first level question.
 # {time} is the time of the KPI's worst point, as the screen writes it.
 # Each question is one Agent E2 can answer from the page's numbers and its knowledge base: facts and the mechanism, never the fix.
+# Checked on the real model with PCM's page facts (2026-11-23). Not asked: what the page does not hold (peer hosts, a run-out
+# date: PCM shows no forecast).
 
 performance:
   cluster:
     good:
       - Does the good average hide VMs that still suffer?
       - Is Cluster Risk also low, or is a problem building?
-      - How much more load fits before contention starts?
+      - Is a good score here a reason to add more VMs?
     medium:
       - Which part pulls Cluster Performance down?
       - Is it a few VMs or most of them?
@@ -30,11 +32,11 @@ performance:
     good:
       - Does any VM on this host still suffer?
       - Is high utilization on this host a problem?
-      - Is this host as good as its peers?
+      - Can a VM here still be slow while this host scores well?
     medium:
       - Which VMs on this host are near their limit?
       - Which resource is the constraint here?
-      - Is this host hotter than the others in the cluster?
+      - Is it a few VMs or most of them?
     bad:
       - Which VMs suffer most, and on which resource?
       - Is the problem this host, or the whole cluster?
@@ -44,7 +46,7 @@ performance:
       - Is the decline on this host only, or cluster-wide?
     dip:
       - Why did this host drop at {time}?
-      - Did other hosts in the cluster drop at the same time?
+      - Which part of ESXi Performance dropped at that time?
   vm:
     good:
       - Is the Guest OS layer also healthy?
@@ -81,4 +83,4 @@ capacity:
       - Is the shortage real demand, or reservations and oversized VMs?
     rising:
       - Why is demand growing in this cluster?
-      - When does usable capacity run out at this rate?
+      - Is the growth steady, or one step up?
