@@ -12,7 +12,7 @@
 - Not a built-in VCF Operations metric. 12 sub-metrics.
 
 ## Thresholds
-- Colour bands: `catalog/thresholds-capacity`, rows with this file as `kb`. They are shown with this file; this file holds the reasons.
+- Limits: `catalog/thresholds-risk`, section `model` (the sub-metrics) and `score` (Cluster Risk itself), lines with this file as `kb`. They are shown with this file; this file holds the reasons.
 
 - Excluded: six green ranges (thread utilization, active memory, CPU and memory reservation, CPU and memory overcommit). A host that is not busy, has little reserved or is not overcommitted says nothing about risk. While green, these rows are left out instead of scoring 100; they count once they leave green.
 - The excluded green ends where yellow starts: thread utilization below 60%, active memory below 50%, reservation below 10%, overcommit below 1.
@@ -23,17 +23,18 @@ Per host, then the worst host is kept.
 
 | Sub-metric | Per host | Source (VCF Operations) |
 |---|---|---|
-| CPU thread utilization | % of the host's threads in use, Hyper-Threading aware | `cpu\|utilization_average` |
-| CPU imbalance | Running threads / running cores. Running threads = utilization % × threads; running cores = core utilization % × cores | `cpu\|utilization_average`, `cpu\|coreUtilization_average`, `hardware\|cpuInfo\|numCpuCores` |
-| Memory ballooned | Ballooned, as % of host DRAM | `mem\|vmmemctl_average` |
-| Swapped + zipped | (Compressed + swapped), as % of host DRAM | `mem\|compressed_average`, `mem\|swapout_average` |
-| Active memory, tiered hosts | Active memory as % of host DRAM. Excluded while green (below 50%). Left out on hosts without memory tiering | `mem\|active_average`; DRAM `mem:DRAM\|memory_tier_total_capacity`; tier `mem:NVMe\|memory_tier_size` |
-| NVMe read latency | Read latency of the NVMe memory tier, at all times: a device waking from a power-saving state explains a high reading, it does not remove the wait. Left out on hosts without memory tiering | `mem:NVMe\|latency.read_latest` (µs) |
-| CPU reservation | Reserved CPU, as % of host CPU capacity | `cpu\|reservedCapacity_average` / `cpu\|totalCapacity_average` |
-| Memory reservation | Reserved memory, as % of host DRAM | `mem\|reservedCapacity_average` |
-| CPU overcommit | vCPUs of powered-on VMs per physical thread | `cpu\|vcpus_allocated_on_all_powered_on_vms`, `hardware\|cpuInfo\|numCpuCores` (threads as below) |
-| Memory overcommit | Memory of powered-on VMs / host DRAM | `mem\|memory_allocated_on_all_powered_on_vms` |
-| Monster VM ratios | Size of the largest powered-on VM / monster size of its host | VM `config\|hardware\|numCpu`, `config\|hardware\|memoryKB` |
+| Highest ESXi CPU thread utilization (%) | % of the host's threads in use, Hyper-Threading aware | `cpu\|utilization_average` |
+| Worst ESXi CPU imbalance (ratio) | Running threads / running cores. Running threads = utilization % × threads; running cores = core utilization % × cores | `cpu\|utilization_average`, `cpu\|coreUtilization_average`, `hardware\|cpuInfo\|numCpuCores` |
+| Worst ESXi memory ballooned (%) | Ballooned, as % of host DRAM | `mem\|vmmemctl_average` |
+| Worst ESXi swapped + zipped memory (%) | (Compressed + swapped), as % of host DRAM | `mem\|compressed_average`, `mem\|swapout_average` |
+| Worst ESXi active memory, tiered hosts (% of DRAM) | Active memory as % of host DRAM. Excluded while green (below 50%). Left out on hosts without memory tiering | `mem\|active_average`; DRAM `mem:DRAM\|memory_tier_total_capacity`; tier `mem:NVMe\|memory_tier_size` |
+| Worst ESXi NVMe read latency (µs) | Read latency of the NVMe memory tier, at all times: a device waking from a power-saving state explains a high reading, it does not remove the wait. Left out on hosts without memory tiering | `mem:NVMe\|latency.read_latest` (µs) |
+| Highest ESXi CPU reservation (%) | Reserved CPU, as % of host CPU capacity | `cpu\|reservedCapacity_average` / `cpu\|totalCapacity_average` |
+| Highest ESXi memory reservation (%) | Reserved memory, as % of host DRAM | `mem\|reservedCapacity_average` |
+| Highest ESXi CPU overcommit ratio | vCPUs of powered-on VMs per physical thread | `cpu\|vcpus_allocated_on_all_powered_on_vms`, `hardware\|cpuInfo\|numCpuCores` (threads as below) |
+| Highest ESXi memory overcommit ratio | Memory of powered-on VMs / host DRAM | `mem\|memory_allocated_on_all_powered_on_vms` |
+| Highest CPU monster VM : host ratio | vCPUs of the largest powered-on VM / CPU monster size of its host | VM `config\|hardware\|numCpu` |
+| Highest memory monster VM : host ratio | Memory of the largest powered-on VM / memory monster size of its host | VM `config\|hardware\|memoryKB` |
 
 - Threads = 2 × cores when Hyper-Threading is available and active, else the cores.
 

@@ -42,8 +42,8 @@ SCREEN_RULES = (
     'see: the chart, the tab, the page, an object by its name. Never mention JSON, the facts, a payload or the data '
     'provided.\n'
     '- If a computed line says a KPI is steady, say first that there is no drop, with the range, then what the KPI measures.\n'
-    '- If a computed line names the part that pulled a KPI down, lead with that part, its value and band, then the next '
-    'step for that resource. Give every part the band the computed line gives it: an orange or red part is never low.\n'
+    '- If a computed line names the sub-metric that moved a score most, lead with that sub-metric, its value and band, then '
+    'the next step for that resource. Give every sub-metric the band the computed line gives it: an orange or red one is never low.\n'
     '- If "screen" names where to look next (drill_down), point there first, by page and tab, before any knowledge-base flow.\n'
     '- If a value the answer needs is not in the data, name the PCM page that shows it, or say PCM does not show it yet.')
 # Words that show the pipeline instead of the screen; an answer that uses one gets one rewrite.

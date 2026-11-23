@@ -52,9 +52,15 @@ class CatalogTest(unittest.TestCase):
         r = CAT.lookup('VM CPU Ready')
         self.assertTrue(any('VM CPU Ready > 8 %' in a['rule'] and a['source'] == 'knowledge-base' for a in r['alerts']))
 
-    def test_capacity_bands_from_catalog(self):
-        bands = CAT.thresholds(name='Worst ESXi memory ballooned')['bands']
-        self.assertEqual((bands[0]['green'], bands[0]['red']), ('0-1', '4-8'))
+    def test_risk_limits_from_catalog(self):
+        # One five-limit format for every scored line (2026-11-22): Cluster Risk in thresholds-risk.yaml, section model.
+        lim = CAT.thresholds(name='Worst ESXi memory ballooned')['limits']
+        self.assertEqual((lim[0]['5m'], lim[0]['section']), ('green 0-1, yellow 1-2, orange 2-4, red 4-8, score 0 beyond 8', 'model'))
+        self.assertEqual(CAT.kpi_limits('Highest ESXi CPU thread utilization')['limits'], [0, 60, 80, 90, 95])
+        self.assertTrue(CAT.kpi_limits('Worst ESXi active memory, tiered hosts')['excluded_when_green'])  # cluster-risk: excluded while green
+        self.assertEqual(CAT.kpi_limits('Worst ESXi CPU imbalance')['limits'], [1, 1, 1.3, 1.6, 2])  # best is 1, green one value
+        self.assertEqual(CAT.score_line('Cluster Risk')['direction'], 'above')
+        self.assertIsNone(CAT.score_line('Cluster Performance'))
 
     def test_object_path(self):
         p = CAT.path('vm', 'cluster')['path']
@@ -66,7 +72,7 @@ class CatalogTest(unittest.TestCase):
         f = CAT.facts_for(['vsphere/technology/cpu/metrics/virtual-motherboard/ready'])
         self.assertIn('cpu.ready', f)
         self.assertIn('statistics level 1', f)
-        self.assertIn('Bands:', CAT.facts_for(['vsphere/object-types/cluster/models/cluster-risk']))
+        self.assertIn('Limits:', CAT.facts_for(['vsphere/object-types/cluster/models/cluster-risk']))
 
     def test_facts_for_named_metric_first(self):
         # H1: the cap of 20 rows dropped the bands of the file the question was about. A row whose metric the
@@ -76,37 +82,37 @@ class CatalogTest(unittest.TestCase):
         q = 'Highest ESXi memory reservation (%): 0, 25, 25. Worst ESXi NVMe read latency (µs): 70, 230. What do the rows tell me?'
         lines = CAT.facts_for(ids, question=q).splitlines()[1:]
         first = ' '.join(lines[:2])
-        self.assertTrue(all(x.startswith('- Bands:') for x in lines[:2]))
+        self.assertTrue(all(x.startswith('- Limits:') for x in lines[:2]))
         self.assertIn('Highest ESXi memory reservation (%)', first)
         self.assertIn('Worst ESXi NVMe read latency (µs)', first)
         self.assertLessEqual(len(lines), 20)
 
     def test_facts_for_file_order_without_a_named_metric(self):
-        # No metric named: rows follow the reading-set order of the files, bands and KPI levels first within a file.
+        # No metric named: rows follow the reading-set order of the files, sizing ranges and limits first within a file.
         risk, vmp = 'vsphere/object-types/cluster/models/cluster-risk', 'vsphere/object-types/vm/vm-performance'
         lines = CAT.facts_for([risk, vmp], max_rows=1000).splitlines()[1:]
         last_risk = max(n for n, x in enumerate(lines) if x.endswith(f'[{risk}]'))
         first_vmp = min(n for n, x in enumerate(lines) if x.endswith(f'[{vmp}]'))
         self.assertLess(last_risk, first_vmp)
-        self.assertTrue(lines[0].startswith('- Bands:'))
+        self.assertTrue(lines[0].startswith('- Limits:'))
 
     def test_facts_for_kpi_levels(self):
         f = CAT.facts_for(['vsphere/object-types/vm/vm-performance'])
-        self.assertIn('KPI levels', f)
-        self.assertIn('Peak CPU Ready among any vCPU (%) (VM contention), higher is worse: 20s green 0-2, yellow 2-4, orange 4-8, red 8-16, score 0 beyond 16; 5m no value', f)
+        self.assertIn('Limits:', f)
+        self.assertIn('Peak CPU Ready among any vCPU (%) (VM contention), higher is worse: 20s green 0-2, yellow 2-4, orange 4-8, red 8-16, score 0 beyond 16. [', f)  # an interval without limits is not shown
 
     def test_reading_set_shows_catalog_values(self):
         ret = Retriever(DOCS, CHUNKS)
         vmp = 'vsphere/object-types/vm/vm-performance'
         ret.search = lambda q, k=8, filters=None, min_hits=3: [{'id': vmp, 'title': DOCS[vmp].title, 'score': 1.0}]
         ctx = reading_plan.reading_set(ret, 'VM Performance', dict(ModesTest.CFG, context_tokens=50000))[0]
-        self.assertIn('KPI levels', ctx)
+        self.assertIn('Limits:', ctx)
         self.assertIn('red 8-16, score 0 beyond 16', ctx)
 
     def test_lookup_returns_kpi(self):
         r = CAT.thresholds(name='Peak CPU Ready among any vCPU')
-        self.assertEqual(r['kpi'][0]['20s'], 'green 0-2, yellow 2-4, orange 4-8, red 8-16, score 0 beyond 16')
-        self.assertEqual(r['kpi'][0]['kb'], 'vsphere/object-types/vm/vm-performance')
+        self.assertEqual(r['limits'][0]['20s'], 'green 0-2, yellow 2-4, orange 4-8, red 8-16, score 0 beyond 16')
+        self.assertEqual(r['limits'][0]['kb'], 'vsphere/object-types/vm/vm-performance')
 
     def test_alert_comes_with_all_its_symptoms(self):
         # An alert is a set of symptoms, not one metric with a free-text condition (2026-11-12).
@@ -170,15 +176,15 @@ class CatalogTest(unittest.TestCase):
         self.assertEqual(CAT.stats()['thresholds'], 46)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q162); 2 flow tests (Q195); 6 score change (2026-11-22, Q258, Q259)
         self.assertEqual(CAT.stats()['symptoms'], 40)
         self.assertEqual(CAT.stats()['alerts'], 33)  # one alert per object type: ESXi, resource pool, cluster contention split; ESXi drops virtual and physical (2026-11-12)
-        self.assertEqual(CAT.stats()['bands'], 20)  # + tiered DRAM consumed, active memory (Q179, 2026-11-12), Cluster Consumption (2026-11-22)
-        self.assertEqual(CAT.stats()['kpi'], 31)
+        self.assertEqual(CAT.stats()['sizing'], 1)  # Guest OS memory utilization for sizing: two-sided, with grey
+        self.assertEqual(CAT.stats()['limits'], 51)  # 31 performance + 6 Consumption + 12 Risk sub-metrics + 2 scores (2026-11-22)
 
 
 class KpiLookupTest(unittest.TestCase):
-    def test_model_found_by_title_with_bands(self):
+    def test_model_found_by_title_with_limits(self):
         r = CAT.lookup('Cluster Risk')
         self.assertTrue(r['metric_files'])
-        self.assertTrue(r['bands'])
+        self.assertTrue(r['limits'])
 
 
 class CalcTest(unittest.TestCase):
@@ -1122,7 +1128,7 @@ class AnswerServiceTest(unittest.TestCase):
         q = answer_service.question_text({'question': 'Why the worst at 19 Oct, 08:30?', 'facts': self.parts_facts(self.CLUSTER_PARTS, r['kpi'])})
         lines = expert_agent.kpi_part_lines(q, CAT)
         self.assertEqual(len(lines), 1)
-        self.assertIn('The parts that pulled Cluster Performance down most, level within half a point: Worst peak vCPU Ready among all VMs (47%); 90th percentile peak vCPU Ready among VMs (47%)', lines[0])
+        self.assertIn('The sub-metrics that pulled Cluster Performance down most, level within half a point: Worst peak vCPU Ready among all VMs (47%); 90th percentile peak vCPU Ready among VMs (47%)', lines[0])
         self.assertIn('Worst peak vCPU Ready among all VMs 12%: score 37.5, orange', lines[0])
         self.assertIn('window median 1.1%', lines[0])
         self.assertIn('Left out while green: Highest ESXi (error + dropped) network packets', lines[0])
@@ -1131,14 +1137,29 @@ class AnswerServiceTest(unittest.TestCase):
         q = answer_service.question_text({'question': 'Why?', 'facts': self.parts_facts(self.CLUSTER_PARTS, 80.0)})
         line = expert_agent.kpi_part_lines(q, CAT)[0]
         self.assertIn('differs from the chart', line)
-        self.assertIn('no part can be said to have pulled it down. Parts, in no order: Worst peak vCPU Ready among all VMs 12%, orange', line)
+        self.assertIn('no sub-metric can be named as the cause. Sub-metrics, in no order: Worst peak vCPU Ready among all VMs 12%, orange', line)
         self.assertNotIn('points lost', line)
 
     def test_parts_without_catalog_limits_are_listed_not_ranked(self):
         parts = self.CLUSTER_PARTS[:8] + [('Some new row', 1.0, 0.0)]
         line = expert_agent.kpi_part_lines(answer_service.question_text({'question': 'Why?', 'facts': self.parts_facts(parts, 40.0)}), CAT)[0]
-        self.assertIn('Not ranked: no catalog limits for Some new row', line)
+        self.assertIn('No breakdown: no catalog limits for Some new row', line)
         self.assertNotIn('pulled', line)
+
+    def test_risk_sub_metrics_add_up_to_the_score(self):
+        # Cluster Risk: the same scoring, published as 100 minus the weighted average (VCF-vCommunity-Adapter publish_kpi).
+        risk = [('Highest ESXi CPU thread utilization', 85.0), ('Worst ESXi CPU imbalance', 1.0), ('Worst ESXi memory ballooned', 0.0),
+                ('Worst ESXi swapped + zipped memory', 0.0), ('Highest ESXi CPU reservation', 5.0), ('Highest ESXi memory reservation', 5.0),
+                ('Highest ESXi CPU overcommit ratio', 2.2), ('Highest ESXi memory overcommit ratio', 0.9),
+                ('Highest CPU monster VM : host ratio', 0.5), ('Highest memory monster VM : host ratio', 0.5)]
+        r = arithmetic_calculator.kpi_parts([{'name': n, 'value': v, 'limits': CAT.kpi_limits(n)['limits'],
+                                              'excluded_when_green': CAT.kpi_limits(n)['excluded_when_green']} for n, v in risk])
+        facts = {'asked_about_kpi': {'parts_at_worst': {'kpi': 'Cluster Risk', 'time': 't', 'kpi_value': round(100 - r['kpi'], 1),
+                                                        'parts': [{'name': n, 'value': v} for n, v in risk]}}}
+        line = expert_agent.kpi_part_lines(answer_service.question_text({'question': 'Why?', 'facts': facts}), CAT)[0]
+        self.assertIn(f"{round(100 - r['kpi'], 2):g} (100 minus the weighted average: higher is worse)", line)
+        self.assertIn('The sub-metric that pushed Cluster Risk up most: Highest ESXi CPU thread utilization', line)
+        self.assertIn('Left out while green: Highest ESXi CPU reservation, Highest ESXi memory reservation, Highest ESXi memory overcommit ratio', line)
 
     def test_pipeline_words_get_one_rewrite(self):
         class Rewriter:

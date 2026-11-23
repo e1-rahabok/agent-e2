@@ -2,7 +2,7 @@ meta:
   id: catalog/thresholds-performance
   title: 'Performance thresholds: KPI, score change and flow tests'
   sections:
-    kpi: 'KPI colour levels, the one place: no knowledge file repeats them. Internal target, proactive, no class of service.'
+    kpi: 'The sub-metrics of the performance KPIs, five limits each (meta, limits_fields), the one place: no knowledge file repeats them. Internal target, proactive, no class of service.'
     change: 'Score change: the smallest move of a 0-100% score on a trend chart, in points of the score, that counts as a drop or a rise: a performance KPI, or a capacity model score read the same way (Cluster Risk, Cluster Consumption). A smaller move across the window is the score''s normal movement: the trend is steady. Compared with the median of the window, never with one point. Provider scores (cluster, host) move less than one VM''s, which has no breadth row to steady it, so a VM score has a larger level (8 points against 5). Without a row, Agent E2 gives the range and says no change level is set.'
     flow: 'Flow tests: a number that one step of a troubleshooting flow, health check or decision tree compares a reading with to pick the next step. Not a KPI level and not an alert. kb is the flow file, step its numbered step.'
   fields:
@@ -22,11 +22,8 @@ meta:
     kb: Knowledge file that states and explains the threshold.
     quote: Only on rows whose number is still also written in prose; text copied from the kb file; lint checks it is still there.
     step: 'flow rows: the number of the step in the kb flow file (## Checks, in order) that compares the reading with value.'
-  kpi_fields: 'One line per object and metric: [green, yellow, orange, red, zero] for 5m, 20s and 2s; null until entered. Each value is where that colour starts; zero is where red ends. Score: 100 at green,
-    75 at yellow, 50 at orange, 25 at red, 0 at zero, a straight line in between; better than green stays 100, worse than zero stays 0. Example [0, 2, 4, 8, 16]: green 0-2, yellow 2-4, orange 4-8, red 8-16,
-    above 16 scores 0. Green equal to yellow: only that value is green. Entered by hand; the 4x rule is a guide for choosing a 20-second value from a 5-minute one, not a formula: it never fills a cell.
-    direction above: higher is worse; below: lower is worse. Unit in the metric name; count for a number of things (VCF Operations unit). group: the KPI group. excluded_when_green: left out of the KPI score
-    while green. kb: the KPI file that explains the metric; Agent E2 shows these values with it.'
+  limits_fields: 'The one description of a line in a kpi, model or score section (this file, catalog/thresholds-capacity, catalog/thresholds-risk). One line per object and metric. Five limits per interval (5m, 20s, 2s): [best, green, yellow, orange, zero-at], the values where the score is 100, 75, 50, 25 and 0; null until entered. The green limit is where green ends and yellow starts; zero-at is where red ends. A limit is the end of a band: green runs from best to the green limit, yellow to the yellow limit, orange to the orange limit, red to zero-at. Inside a band the score falls in a straight line; better than best stays 100, worse than zero-at stays 0. Example [0, 2, 4, 8, 16]: green 0-2, yellow 2-4, orange 4-8, red 8-16, 16 and beyond scores 0. Green limit equal to best: only that value is green. The best limit is not always 0 (Worst ESXi CPU imbalance: 1). Same model and terms as the VCF-vCommunity-Adapter (docs/concepts/kpi-scoring-models.md, metrics/kpi_score.py). Entered by hand; the 4x rule is a guide for choosing a 20-second value from a 5-minute one, not a formula: it never fills a cell.
+    direction above: higher is worse; below: lower is worse. Unit in the metric name; count for a number of things (VCF Operations unit). description: optional, what the metric measures. group: the group of the sub-metric (Score on a score line). excluded_when_green: left out of the score while green (the adapter''s skip when green). kb: the file that explains the metric; Agent E2 shows these values with it.'
   review_notes:
   - 'To check: kpi cells still null: green, yellow, orange, red, zero to enter by hand for each of 5m, 20s and 2s (Q152).'
   - 'To check: flow rows flow-esxi-disk-kernel-latency and flow-esxi-disk-device-latency: the knowledge base gives no sample interval (esxtop or the vCenter 20-second real-time chart); interval stays empty until a source states it.'

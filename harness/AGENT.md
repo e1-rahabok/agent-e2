@@ -117,7 +117,7 @@ The agent plans in code, from what the knowledge base records about itself ([`ha
 
 ### 4.3 Compute
 - The agent runs the exact tools on what the case holds, before the model reads. The model gets `Computed (exact)` lines and computes nothing.
-  - Built: the catalog facts of every file in the reading set (unit, rollup, statistics level, thresholds by use, KPI levels, with source: `catalog_database.facts_for`).
+  - Built: the catalog facts of every file in the reading set (unit, rollup, statistics level, thresholds by use, limits, with source: `catalog_database.facts_for`).
   - Built: NVMe wait of a VM (`nvme_wait`, `arithmetic_calculator.nvme_wait_pct`): from the case, the VM's NVMe read bandwidth, the host's NVMe read latency and the vCPU count, by the formula of cluster-performance, section NVMe wait formula. Memory Contention does not count this wait.
   - Built: each summation counter given in ms (by the case, or written as `cpu.ready.summation = 8,000 ms`) is converted by `arithmetic_calculator.py`, with its rule's source, to % of one vCPU, and to % per vCPU when the vCPU count is known, for the chart interval the question names (Real-time 20 s, 1 Day 300 s, 1 Week 1,800 s, 1 Month 7,200 s, 1 Year 1 day: [vsphere/tools/vsphere-client/vcenter-statistics](../knowledge/vsphere/tools/vsphere-client/vcenter-statistics.md)).
   - To build: the band of a value against its threshold row for that interval and use, with the source ([project/design-thresholds.md](../project/design-thresholds.md); target: the verdict per use from the catalog).

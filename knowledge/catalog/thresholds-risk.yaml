@@ -1,0 +1,23 @@
+meta:
+  id: catalog/thresholds-risk
+  title: 'Cluster Risk: its sub-metrics and its score'
+  sections:
+    model: 'The sub-metrics of Cluster Risk, five limits each: the same line format as the kpi section of catalog/thresholds-performance (meta, limits_fields). Cluster Risk links performance and capacity: it reads how close the hosts are to contention, so it has a file of its own.'
+    score: 'The limits of the Cluster Risk score itself (0-100%, higher is worse: published as 100 minus the weighted average). Same line format.'
+  review_notes: []
+  status: reviewed
+model:
+- {object: ClusterComputeResource, metric: "Highest ESXi CPU thread utilization (%)", group: "Utilization", direction: above, 5m: [0, 60, 80, 90, 95], 20s: null, 2s: null, excluded_when_green: true, kb: vsphere/object-types/cluster/models/cluster-risk}
+- {object: ClusterComputeResource, metric: "Worst ESXi CPU imbalance (ratio)", group: "Utilization", direction: above, 5m: [1, 1, 1.3, 1.6, 2], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-risk}
+- {object: ClusterComputeResource, metric: "Worst ESXi memory ballooned (%)", group: "Saturation", direction: above, 5m: [0, 1, 2, 4, 8], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-risk}
+- {object: ClusterComputeResource, metric: "Worst ESXi swapped + zipped memory (%)", group: "Saturation", direction: above, 5m: [0, 0.25, 0.5, 1, 2], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-risk}
+- {object: ClusterComputeResource, metric: "Worst ESXi active memory, tiered hosts (% of DRAM)", group: "Saturation", direction: above, 5m: [0, 50, 62.5, 75, 100], 20s: null, 2s: null, excluded_when_green: true, kb: vsphere/object-types/cluster/models/cluster-risk}
+- {object: ClusterComputeResource, metric: "Worst ESXi NVMe read latency (µs)", group: "Saturation", direction: above, 5m: [0, 100, 200, 400, 800], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-risk}
+- {object: ClusterComputeResource, metric: "Highest ESXi CPU reservation (%)", group: "Reservation", direction: above, 5m: [0, 10, 40, 60, 80], 20s: null, 2s: null, excluded_when_green: true, kb: vsphere/object-types/cluster/models/cluster-risk}
+- {object: ClusterComputeResource, metric: "Highest ESXi memory reservation (%)", group: "Reservation", direction: above, 5m: [0, 10, 40, 60, 80], 20s: null, 2s: null, excluded_when_green: true, kb: vsphere/object-types/cluster/models/cluster-risk}
+- {object: ClusterComputeResource, metric: "Highest ESXi CPU overcommit ratio", group: "Allocation", direction: above, 5m: [0, 1, 2, 3, 4], 20s: null, 2s: null, excluded_when_green: true, kb: vsphere/object-types/cluster/models/cluster-risk}
+- {object: ClusterComputeResource, metric: "Highest ESXi memory overcommit ratio", group: "Allocation", direction: above, 5m: [0, 1, 1.4, 1.8, 2.2], 20s: null, 2s: null, excluded_when_green: true, kb: vsphere/object-types/cluster/models/cluster-risk}
+- {object: ClusterComputeResource, metric: "Highest CPU monster VM : host ratio", group: "Monster VM", direction: above, 5m: [0, 1, 2, 3, 4], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-risk}
+- {object: ClusterComputeResource, metric: "Highest memory monster VM : host ratio", group: "Monster VM", direction: above, 5m: [0, 1, 2, 3, 4], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-risk}
+score:
+- {object: ClusterComputeResource, metric: "Cluster Risk (%)", group: "Score", direction: above, 5m: [0, 25, 50, 75, 100], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-risk}

@@ -455,7 +455,8 @@ THRESHOLD_SOURCES = ['knowledge-base', 'vsphere-9.1-docs', 'performance-best-pra
 # Threshold files and their sections, named by use. A section name is the use the Harness shows with each value.
 THRESHOLD_SECTIONS = {
     'thresholds-performance.yaml': ('kpi', 'change', 'flow'),
-    'thresholds-capacity.yaml': ('models', 'decisions', 'rules'),
+    'thresholds-capacity.yaml': ('model', 'score', 'sizing', 'decisions', 'rules'),
+    'thresholds-risk.yaml': ('model', 'score'),
     'thresholds-alerts.yaml': ('symptoms', 'alerts'),
 }
 CLASSES = ('gold', 'silver', 'bronze')  # class of service
@@ -495,7 +496,8 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
     objects = set(allowed['object'])
     seen_thresholds, kpi_all, seen_kpi = set(), [], set()
     def check_kpi_line(path, w, lv):
-        """One KPI line: [green, yellow, orange, red, zero] per interval, worsening in its direction; one line per metric."""
+        """One line of a kpi, model or score section: five limits [best, green, yellow, orange, zero-at] per interval, worsening
+        in its direction; one line per metric (catalog/thresholds-performance, meta, limits_fields)."""
         for k in ('object', 'metric', 'group', 'direction', 'kb'):
             if not lv.get(k): bad(path, f'{w}: {k} missing')
         if lv.get('direction') not in ('above', 'below'): bad(path, f'{w}: direction must be above or below')
@@ -504,10 +506,10 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
         for iv in ('5m', '20s', '2s'):
             v = lv.get(iv, 'missing')
             if v == 'missing': bad(path, f'{w}: {iv} missing (write null until a value is entered)')
-            elif v is not None and (not isinstance(v, list) or len(v) != 5): bad(path, f'{w}: {iv} needs [green, yellow, orange, red, zero]')
+            elif v is not None and (not isinstance(v, list) or len(v) != 5): bad(path, f'{w}: {iv} needs five limits [best, green, yellow, orange, zero-at]')
             elif v is not None:
                 x = [float(i) for i in v]
-                if x != sorted(x, reverse=lv.get('direction') == 'below'): bad(path, f'{w}: {iv} values must worsen from green to zero')
+                if x != sorted(x, reverse=lv.get('direction') == 'below'): bad(path, f'{w}: {iv} limits must worsen from best to zero-at')
     def check_alerts(path, data):
         """Symptoms (one test each, written once) and alert definitions that refer to them by id."""
         def objs(o): return o if isinstance(o, list) else [o]
@@ -651,9 +653,10 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
             for section in THRESHOLD_SECTIONS[name]:
                 for n, r in enumerate(data.get(section) or []):
                     w = f'{section} row {n + 1} ({r.get("id") or r.get("metric")})'
-                    if section == 'kpi':
+                    if section in ('kpi', 'model', 'score'):
                         check_kpi_line(path, w, r)
-                        kpi_all.append(r)
+                        kpi_all.append((path, r))
+                        if 'id' in r or 'bands' in r: bad(path, f'{w}: a {section} line has no id or bands: five limits per interval')
                         continue
                     if 'kind' in r: bad(path, f'{w}: kind is gone: the section is the use')
                     if r.get('id') in seen_thresholds: bad(path, f'{w}: duplicate id (ids are unique across the threshold files)')
@@ -661,7 +664,7 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                     if r.get('interval') and r['interval'] not in ('2s', '20s', '5m', '1d'): bad(path, f'{w}: interval must be 2s, 20s, 5m or 1d')
                     if r.get('source') not in THRESHOLD_SOURCES: bad(path, f'{w}: source "{r.get("source")}" not allowed')
                     kb_ok(path, w, r.get('kb'))
-                    if section == 'models':
+                    if section == 'sizing':
                         for k in ('id', 'metric', 'bands', 'source', 'kb'):
                             if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
                         bd = r.get('bands') or {}
@@ -730,10 +733,10 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
     import knowledge_loader as _kb, catalog_database as _cat
     for b in _cat.bands_from_docs(_kb.load()[0]):
         bad(f'knowledge/{b["kb"]}.md', f'colour-band table row "{b["metric"]}": thresholds live only in knowledge/catalog/thresholds-*.yaml')
-    for lv in kpi_all:
-        if lv.get('kb') not in ids: bad('knowledge/catalog/thresholds-performance.yaml', f'kpi line "{lv.get("metric")}": kb "{lv.get("kb")}" does not exist')
+    for path, lv in kpi_all:
+        if lv.get('kb') not in ids: bad(path, f'line "{lv.get("metric")}": kb "{lv.get("kb")}" does not exist')
         elif os.path.exists(f'knowledge/{lv["kb"]}.md') and str(lv.get('metric')).replace('|', '\\|') not in open(f'knowledge/{lv["kb"]}.md', encoding='utf-8').read():
-            bad(f'knowledge/{lv["kb"]}.md', f'KPI table: no cell names the catalog kpi line "{lv.get("metric")}" (column Catalog row (KPI))')
+            bad(f'knowledge/{lv["kb"]}.md', f'sub-metric table: no cell names the catalog line "{lv.get("metric")}"')
 
 def check_source_document(docs, bad):
     """source.document names no author material (book, spreadsheet): sources are stated once (KNOWLEDGE-ENGINEERING.md, section 2).

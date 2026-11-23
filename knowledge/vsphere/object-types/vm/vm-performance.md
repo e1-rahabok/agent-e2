@@ -21,7 +21,7 @@
 | IaaS high utilization | Memory Zip Swap | (`mem\|compressed_average` + `mem\|swapped_average`) ÷ `guest\|used_memory` × 100 | VM Memory Compressed + Swapped (%) |
 
 - 20-second peaks where they exist, not 5-minute averages: the KPI is a leading indicator ([`vcf-operations/features/peak-20-second-metrics`](../../../vcf-operations/features/peak-20-second-metrics.md)).
-- Colour levels: `catalog/thresholds-performance`, section `kpi`, rows with this file as `kb`.
+- Limits: `catalog/thresholds-performance`, section `kpi`, lines with this file as `kb`.
 - Excluded while green, so they do not add a free 100: CPU Overlap below 0.5% (some overlap is normal), Network Dropped Tx at exactly 0 (drops are rare; any drop is yellow), CPU Run below 95% (a VM that is not busy says nothing about its performance; above 95% the VM itself is too small).
 
 ## Reasons

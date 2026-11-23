@@ -265,15 +265,19 @@ def _num(v):
 
 
 def kpi_part_lines(question, cat):
-    """Stage 3 for a KPI's parts the caller sent at one point: each part scored with its catalog limits, the KPI rebuilt,
-    and the score it lost split among the parts (arithmetic_calculator.kpi_parts), so the answer names the part that
-    pulled the KPI down instead of guessing. Nothing is ranked when a part has no catalog row."""
+    """Stage 3 for the sub-metrics of a score the caller sent at one point: each scored with its five catalog limits, the
+    score rebuilt, and the points the score moved split among them (arithmetic_calculator.kpi_parts), so the answer names
+    the sub-metric that moved the score instead of guessing. One method for every score: a KPI (100 best) and a model whose
+    score line says higher is worse (Cluster Risk, Cluster Consumption: 100 minus the weighted average, as the
+    VCF-vCommunity-Adapter publishes them). No breakdown when a sub-metric has no catalog line."""
     facts = facts_in(question)
     if not facts:
         return []
     out = []
     for ps in _part_sets(facts, [])[:2]:
         name, when, shown = ps.get('kpi') or 'The KPI', ps.get('time'), ps.get('kpi_value')
+        sl = cat.score_line(name)
+        flipped = bool(sl and sl['direction'] == 'above')
         rows, unknown, by_name = [], [], {}
         for p in ps['parts']:
             lim = cat.kpi_limits(p['name'])
@@ -286,41 +290,45 @@ def kpi_part_lines(question, cat):
         head = f"- {name}{f' at {when}' if when else ''}"
         if unknown:
             vals = '; '.join(f"{p['name']} {_num(p.get('value'))}{(p.get('unit') or '').strip()}" for p in ps['parts'])
-            out.append(f"{head}: parts {vals}. Not ranked: no catalog limits for {', '.join(unknown)}.")
+            out.append(f"{head}: sub-metrics {vals}. No breakdown: no catalog limits for {', '.join(unknown)}.")
             continue
         try:
             r = arithmetic_calculator.kpi_parts(rows)
         except arithmetic_calculator.CalcError:
             continue
-        off = isinstance(shown, (int, float)) and abs(r['kpi'] - shown) > 1
-        line = f"{head}: rebuilt from its {len(ps['parts'])} parts with the catalog limits, {r['kpi']:g}"
+        value = round(100.0 - r['kpi'], 2) if flipped else r['kpi']
+        how = ' (100 minus the weighted average: higher is worse)' if flipped else ''
+        off = isinstance(shown, (int, float)) and abs(value - shown) > 1
+        line = f"{head}: rebuilt from its {len(ps['parts'])} sub-metrics with the catalog limits, {value:g}{how}"
         if isinstance(shown, (int, float)):
             line += f" (the chart shows {shown:g})"
         if off:
-            # The parts are not the ones the KPI was computed from (or a limit differs): no points lost, no order.
+            # Not the sub-metrics the score was computed from (or a limit differs): no points, no order.
             band = {x['name']: x['band'] for x in r['rows']}
             vals = '; '.join(f"{p['name']} {_num(p.get('value'))}{(p.get('unit') or '').strip()}"
                              f"{', ' + band[p['name']] if p['name'] in band else ', left out while green'}" for p in ps['parts'])
-            out.append(line + '. The rebuild differs from the chart by more than 1 point: the parts or a limit differ from '
-                       f'what the KPI was computed from, so no part can be said to have pulled it down. Parts, in no order: {vals}.')
+            out.append(line + '. The rebuild differs from the chart by more than 1 point: the sub-metrics or a limit differ from '
+                       f'what the score was computed from, so no sub-metric can be named as the cause. Sub-metrics, in no order: {vals}.')
             continue
-        line += f". It lost {r['lost']:g} points."
+        verb, pts = ('pushed', 'points added') if flipped else ('pulled', 'points lost')
+        line += (f". The sub-metrics add {r['lost']:g} points of {name}." if flipped else f". It lost {r['lost']:g} points.")
         parts = []
         for x in r['rows']:
             p = by_name[x['name']]
             unit = (p.get('unit') or '').strip()
-            txt = f"{x['name']} {x['value']:g}{unit}: score {x['score']:g}, {x['band']}, {x['points_lost']:g} points lost ({x['share']:.0f}%)"
+            txt = f"{x['name']} {x['value']:g}{unit}: score {x['score']:g}, {x['band']}, {x['points_lost']:g} {pts} ({x['share']:.0f}%)"
             if isinstance(p.get('median'), (int, float)):
                 txt += f", window median {p['median']:g}{unit}"
             parts.append(txt)
-        line += ' Parts, most points lost first: ' + '; '.join(parts) + '.'
+        line += f' Sub-metrics, most {pts} first: ' + '; '.join(parts) + '.'
         if r['left_out']:
             line += f" Left out while green: {', '.join(r['left_out'])}."
         top = [x for x in r['rows'] if x['points_lost'] > 0 and r['rows'][0]['points_lost'] - x['points_lost'] <= 0.5]
+        way = 'up' if flipped else 'down'
         if len(top) == 1:
-            line += f" The part that pulled {name} down most: {top[0]['name']} ({top[0]['share']:.0f}% of the points lost)."
+            line += f" The sub-metric that {verb} {name} {way} most: {top[0]['name']} ({top[0]['share']:.0f}% of the {pts})."
         elif top:
-            line += (f" The parts that pulled {name} down most, level within half a point: "
+            line += (f" The sub-metrics that {verb} {name} {way} most, level within half a point: "
                      + '; '.join(f"{x['name']} ({x['share']:.0f}%)" for x in top) + '.')
         out.append(line + ' [arithmetic_calculator.py: ' + ' '.join(r['notes']) + ']')
     return out
