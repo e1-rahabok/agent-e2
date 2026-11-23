@@ -24,6 +24,14 @@ No open question blocks release 1.0.
 
 ## Future release
 
+### Q258 · Capacity > Cluster Consumption · The grey band: when is a cluster underused?
+
+- Files: [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml), section sizing and its review note; [user_suggestions.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/user_suggestions.py).
+- Search strings: "grey (below green: wastage)"; "Grey is empty until a source gives it".
+- Now: the catalog defines a grey band for wastage and leaves it empty. Agent E2's suggested questions have no "underused" situation for Cluster Capacity, so a cluster idling at low consumption gets the "good" questions ("How many more VMs can this cluster take?"), not the cost questions ("Why is this cluster so idle?", "Can I free hosts from it?").
+- Question: below which Cluster Consumption (%), 95th percentile of the last 24 hours, is a production cluster underused? Does it differ by class of service?
+- Answer:
+
 ### Q257 · Memory tiering · NVMe consumed as saturation, and the signal that replaces compression and swap
 
 - Files: [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md), section Misconceptions; [Is memory tiering slowing the host?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host.md), section Misconceptions.

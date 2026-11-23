@@ -19,6 +19,9 @@ Every function adds a note naming the knowledge file or source that defines the 
 A second entry point, trend(values, better, change), reads a whole KPI series (a list, not an expression): median, range,
 the worst point's move from the median, and a verdict against the KPI change level.
 
+decline(values, better, change) tells a decline across the window (the last quarter against the first) from a single
+dip; percentile(values, p) is the nearest-rank percentile the screens show.
+
 A third, kpi_parts(rows), scores the parts of a KPI at one point with their catalog limits and splits the score the KPI
 lost among them, so the model never ranks the parts by eye.
 """
@@ -191,6 +194,43 @@ def trend(values, better='higher', change=None):
 SCORE_AT = (100.0, 75.0, 50.0, 25.0)
 BANDS = ('green', 'yellow', 'orange', 'red')
 SRC_SCORING = 'sp5-framework/performance/performance-kpi-design, section Scoring'
+
+
+def percentile(values, p):
+    """Nearest-rank percentile of the numbers in values (None skipped), as the screens show the 95th percentile."""
+    xs = sorted(float(v) for v in values if isinstance(v, (int, float)) and not isinstance(v, bool))
+    if not xs:
+        raise CalcError('percentile: no values')
+    return xs[max(0, math.ceil(p / 100 * len(xs)) - 1)]
+
+
+def decline(values, better='higher', change=None):
+    """Whether a KPI series declined across the window, not only dipped: the median of its last quarter against the median
+    of its first quarter, in points of the score. A decline is a move of at least the KPI change level the worse way; a
+    dip that recovered leaves the two quarters level. Returns {first, last, move, declining}; declining is None without a
+    change level, and the series needs 12 points or more (3 per quarter)."""
+    xs = [float(v) for v in values if isinstance(v, (int, float)) and not isinstance(v, bool)]
+    if len(xs) < 12:
+        raise CalcError('decline: fewer than 12 points')
+    q = len(xs) // 4
+
+    def med(part):
+        s = sorted(part)
+        n = len(s)
+        return s[n // 2] if n % 2 else (s[n // 2 - 1] + s[n // 2]) / 2
+    first, last = med(xs[:q]), med(xs[-q:])
+    move = round((first - last) if better == 'higher' else (last - first), 2)
+    return {'first': round(first, 2), 'last': round(last, 2), 'move': move,
+            'declining': None if change is None else move >= change}
+
+
+def score_band(score):
+    """The band of a 0-100% score where higher is better: green 100-75, yellow 75-50, orange 50-25, red 25-0
+    (sp5-framework/performance/performance-kpi-design, section Scoring)."""
+    for at, band in zip(SCORE_AT, BANDS):
+        if score >= at - 25:
+            return band
+    return 'red'
 
 
 def part_score(value, limits):

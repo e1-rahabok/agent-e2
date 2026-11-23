@@ -12,6 +12,12 @@ Agent E2 owns the knowledge base, the reading plan, the flow executor and the mo
     lead: the opening the person reads first, written by code from the calculator's numbers in plain words (empty when no
     KPI series was sent); the model's text continues from it. computed: the calculator's lines, exact, for review; the
     screen shows the lead, not these.
+    POST /v1/suggest
+      {"facts": {"object": {"kind": "cluster" | "host" | "vm"}, "pillar": "Performance" | "Capacity", "window": "...",
+                 "kpis": [{"label": "...", "better": "higher" | "lower", "points": [[time, value], ...]}, ...]}}
+    -> 200 {"situation": {"pillar", "kind", "level": "good" | "medium" | "bad", "movement": null | "declining" | "dip" | "rising"},
+            "questions": [3 at most], "basis": [...]}
+    The questions a whole page suggests, chosen by its situation, read by code with no model call (user_suggestions.py).
     GET /v1/health -> 200 {"ok": true, "model": "...", "files": n}
 
 The facts are context for the question, not instructions: they are put below the question under a fixed heading.
@@ -31,6 +37,7 @@ import answer_modes  # noqa: E402
 import catalog_database  # noqa: E402
 import expert_agent  # noqa: E402
 import knowledge_loader  # noqa: E402
+import user_suggestions  # noqa: E402
 from knowledge_search import Retriever  # noqa: E402
 from model_client import GatewayClient, LLMError, MockClient, ParamClient  # noqa: E402
 
@@ -47,18 +54,23 @@ SCREEN_RULES = (
     'provided.\n'
     '- When an opening is given below, the person reads it first, as the start of your answer, in the same voice. Continue '
     'from it: never repeat a figure, the time or the verdict it gives (the computed line on how the KPI moved across the '
-    'window holds the same figures), and never say a number is "computed". Do not open with the drop or the level. Open with '
-    'the cause: which part pulled the score down, then where to look next.\n'
+    'window holds the same figures), and never say a number is "computed".\n'
+    '- Answer the question asked, in the first sentence. When it asks why a score moved, what is wrong or what to check, do not '
+    'open with the drop or the level: open with the cause, which part pulled the score down, then where to look next. When it '
+    'asks how a metric works, what it measures or why it is designed so, explain the mechanism from the knowledge base first; '
+    'the page\'s figures come after, as a short example, or not at all.\n'
     '- If the opening says the KPI stayed within its normal movement, do not restate the range: say what the KPI measures and '
     'why this movement is normal.\n'
     '- Other computed lines are exact: give their figures as written when the answer needs them (for example a sub-metric\'s '
-    'own value). If a computed line names the sub-metric that moved a score most, lead with that sub-metric and its band, then '
-    'the next step for that resource. Give every sub-metric the band the computed line gives it: an orange or red one is never low.\n'
+    'own value). For a question on why a score moved or what is wrong: if a computed line names the sub-metric that moved a '
+    'score most, lead with that sub-metric and its band, then the next step for that resource. Give every sub-metric the band '
+    'the computed line gives it: an orange or red one is never low.\n'
     '- With no opening, answer directly first, with the figures.\n'
     '- If "screen" names where to look next (drill_down), point there first, by page and tab, before any knowledge-base flow.\n'
     '- If a value the answer needs is not in the data, name the PCM page that shows it, or say PCM does not show it yet.\n'
     '- Never write a knowledge base file id or path (such as vsphere/technology/...). Name a flow or a metric by its title in words; '
     'PCM lists the files read under Sources.')
+METRIC_FACTS = ('screen', 'object', 'pillar', 'window')  # what a metric question keeps of the page
 OPENING = ('The opening of your answer, already written; the person reads it first: "{lead}" Write what follows it. Do not '
            'repeat it.')
 # Words that show the pipeline instead of the screen; an answer that uses one gets one rewrite.
@@ -224,12 +236,22 @@ class Service:
         self.retriever = retriever
         self.commit = knowledge_loader.git_sha()
         self.cat = catalog_database.get(self.docs)
+        self.suggestions = user_suggestions.table()
 
     def lead(self, facts):
         return lead_text(expert_agent.kpi_trend_rows(facts, self.cat), facts) if facts else ''
 
+    def suggest(self, body):
+        return user_suggestions.suggest(body.get('facts'), self.cat, self.suggestions, screen_time)
+
     def answer(self, body):
-        lead = self.lead(body.get('facts'))
+        # A metric question of the page (user_suggestions.yaml, metric) asks how a KPI works: it is answered from the knowledge
+        # base, with the page named but not its numbers. With the numbers, the model opened with what pulled the score down.
+        if user_suggestions.is_metric(body.get('question'), self.suggestions) and isinstance(body.get('facts'), dict):
+            body = {**body, 'facts': {k: v for k, v in body['facts'].items() if k in METRIC_FACTS}}
+            lead = ''
+        else:
+            lead = self.lead(body.get('facts'))
         turns = body.get('turns')
         if turns:
             turns = [question_text({**body, 'question': turns[0]}, lead)] + list(turns[1:])
@@ -296,11 +318,11 @@ def handler_for(service):
             return self.send(404, {'error': 'not found'})
 
         def do_POST(self):
-            if self.path != '/v1/answer':
+            if self.path not in ('/v1/answer', '/v1/suggest'):
                 return self.send(404, {'error': 'not found'})
             try:
                 body = json.loads(self.rfile.read(int(self.headers.get('Content-Length') or 0)) or b'{}')
-                return self.send(200, service.answer(body))
+                return self.send(200, service.suggest(body) if self.path == '/v1/suggest' else service.answer(body))
             except ValueError as e:
                 return self.send(400, {'error': str(e)})
             except LLMError as e:

@@ -15,6 +15,7 @@ import answer_service  # noqa: E402
 import expert_agent  # noqa: E402
 import public_web_lookup  # noqa: E402
 import reading_plan  # noqa: E402
+import user_suggestions  # noqa: E402
 from model_client import MockClient  # noqa: E402
 from knowledge_search import Retriever  # noqa: E402
 
@@ -1250,7 +1251,7 @@ class AnswerServiceTest(unittest.TestCase):
     def test_the_rules_ask_for_the_cause_and_no_repeat(self):
         q = answer_service.question_text({'question': 'Why the worst at 19 Oct, 08:30?', 'facts': {'screen': {}}})
         self.assertIn('never repeat a figure', q)
-        self.assertIn('Open with the cause', q)
+        self.assertIn('open with the cause, which part pulled the score down', q)
         self.assertIn('With no opening, answer directly first, with the figures', q)
         self.assertNotIn('already written', q)
         q = answer_service.question_text({'question': 'Why?', 'facts': {'screen': {}}}, 'VM Performance fell to 17%.')
@@ -1336,3 +1337,112 @@ class AnswerServiceTest(unittest.TestCase):
         finally:
             server.shutdown()
 
+
+
+def _kpi(label, values, better='higher', minutes=5, start='2026-10-18T10:05:00+08:00'):
+    from datetime import datetime, timedelta
+    t0 = datetime.fromisoformat(start)
+    return {'label': label, 'better': better, 'unit': '%',
+            'points': [[(t0 + timedelta(minutes=minutes * i)).isoformat(), v] for i, v in enumerate(values)]}
+
+
+class UserSuggestionsTest(unittest.TestCase):
+    """Suggested questions by situation (POST /v1/suggest): the level from the KPI band, the movement from the calculator."""
+
+    def page(self, kind, pillar, kpis):
+        return user_suggestions.suggest({'object': {'kind': kind}, 'pillar': pillar, 'window': 'Last 24 hours', 'kpis': kpis}, CAT,
+                                        screen_time=answer_service.screen_time)
+
+    def test_calculator_decline_and_band(self):
+        self.assertTrue(arithmetic_calculator.decline([90] * 6 + [70] * 6 + [50] * 6 + [40] * 6, 'higher', 5)['declining'])
+        self.assertFalse(arithmetic_calculator.decline([90] * 11 + [40] + [90] * 12, 'higher', 5)['declining'])
+        self.assertEqual([arithmetic_calculator.score_band(x) for x in (80, 60, 30, 10)], ['green', 'yellow', 'orange', 'red'])
+        self.assertEqual(arithmetic_calculator.percentile(list(range(1, 101)), 5), 5)
+
+    def test_sg_s_01_declining(self):
+        # The SG-S-01 chart: about 90% for half a day, then falling to the 40s. 288 points at 5 minutes.
+        vals = [90 - (46 * max(0, i - 120) / 168) for i in range(288)]  # ends at 44%, as the chart's low end
+        r = self.page('cluster', 'Performance', [_kpi('Cluster Performance', vals), _kpi('Cluster Risk', [30] * 288, 'lower')])
+        self.assertEqual(r['situation']['movement'], 'declining')
+        self.assertEqual(r['situation']['level'], 'bad')
+        self.assertEqual(r['questions'], ['Why is performance declining?', 'When did the decline start, and what changed then?',
+                                          'How does Cluster Performance (%) work, and what is its formula?'])
+
+    def test_good_cluster_does_not_ask_if_vms_are_served(self):
+        r = self.page('cluster', 'Performance', [_kpi('Cluster Performance', [92, 93, 91, 94] * 72)])
+        self.assertEqual((r['situation']['level'], r['situation']['movement']), ('good', None))
+        self.assertEqual(r['questions'], ['Does the good average hide VMs that still suffer?',
+                                          'How does Cluster Performance (%) work, and what is its formula?',
+                                          'What does Cluster Risk (%) actually measure?'])
+
+    def test_dip_names_the_time(self):
+        vals = [92] * 288
+        vals[100] = 70  # a one-off drop, recovered
+        r = self.page('host', 'Performance', [_kpi('ESXi Performance', vals)])
+        self.assertEqual(r['situation']['movement'], 'dip')
+        self.assertEqual(r['questions'][0], 'Why did this host drop at 18 Oct, 18:25?')
+
+    def test_drop_not_recovered_is_a_decline(self):
+        r = self.page('cluster', 'Performance', [_kpi('Cluster Performance', [92] * 270 + [60] * 18)])
+        self.assertEqual(r['situation']['movement'], 'declining')
+
+    def test_vm_takes_the_worse_layer(self):
+        r = self.page('vm', 'Performance', [_kpi('VM Performance', [95] * 288), _kpi('Guest OS Performance', [60] * 288)])
+        self.assertEqual(r['situation']['level'], 'medium')
+
+    def test_capacity_closed_and_no_growth_in_a_day(self):
+        r = self.page('cluster', 'Capacity', [_kpi('Cluster Consumption', [85] * 288, 'lower'), _kpi('Cluster Performance', [90] * 288),
+                                               _kpi('Cluster Risk', [20] * 288, 'lower')])
+        self.assertEqual((r['situation']['level'], r['situation']['movement']), ('bad', None))
+        self.assertEqual(r['questions'][0], 'Why is this cluster closed for new VMs?')
+
+    def test_capacity_rising_over_a_month(self):
+        vals = [30 + i * 0.1 for i in range(300)]  # 30 days, one point every 144 minutes... read as a rise of 30 points
+        r = self.page('cluster', 'Capacity', [_kpi('Cluster Consumption', vals, 'lower', minutes=144)])
+        self.assertEqual(r['situation']['movement'], 'rising')
+
+    def test_every_page_has_five_metric_questions(self):
+        t = user_suggestions.table()
+        for pillar, kinds in t.items():
+            for kind, sets in kinds.items():
+                self.assertEqual(len(sets['metric']), 5, (pillar, kind))
+                self.assertTrue(all(len(sets[x]) == 3 for x in ('good', 'medium', 'bad')), (pillar, kind))
+
+    def test_metric_question_has_no_opening(self):
+        self.assertTrue(user_suggestions.is_metric('What size of move counts as a real drop?'))
+        self.assertFalse(user_suggestions.is_metric('Why is performance declining?'))
+        svc = answer_service.Service(AnswerServiceTest.CFG, MockClient(), Retriever(DOCS, CHUNKS))
+        facts = {'object': {'kind': 'cluster'}, 'pillar': 'Performance', 'kpis': [_kpi('Cluster Performance', [92] * 200 + [50] * 88)]}
+        self.assertEqual(svc.answer({'question': 'What does Cluster Risk (%) actually measure?', 'facts': facts})['lead'], '')
+        self.assertNotEqual(svc.answer({'question': 'Why is performance declining?', 'facts': facts})['lead'], '')
+        seen = []
+        orig = answer_service.question_text
+        answer_service.question_text = lambda body, lead='': (seen.append(body['facts']), orig(body, lead))[1]
+        try:
+            svc.answer({'question': 'What does Cluster Risk (%) actually measure?', 'facts': {**facts, 'parts_at_worst': {'parts': []}}})
+        finally:
+            answer_service.question_text = orig
+        self.assertEqual(set(seen[0]), {'object', 'pillar'})  # the page named, not its numbers
+
+    def test_outside_release_one(self):
+        r = self.page('host', 'Capacity', [_kpi('ESXi Performance', [90] * 288)])
+        self.assertEqual(r['questions'], [])
+        r = self.page('datastore', 'Performance', [])
+        self.assertEqual(r['questions'], [])
+
+    def test_service_endpoint(self):
+        import urllib.request
+        from http.server import ThreadingHTTPServer
+        import threading
+        svc = answer_service.Service({'model': 'mock', 'gateway': None}, MockClient(), Retriever(DOCS, CHUNKS))
+        server = ThreadingHTTPServer(('127.0.0.1', 0), answer_service.handler_for(svc))
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            body = json.dumps({'facts': {'object': {'kind': 'cluster'}, 'pillar': 'Performance',
+                                         'kpis': [_kpi('Cluster Performance', [92] * 288)]}}).encode()
+            req = urllib.request.Request(f'http://127.0.0.1:{server.server_port}/v1/suggest', body, {'Content-Type': 'application/json'})
+            out = json.loads(urllib.request.urlopen(req).read())
+            self.assertEqual(out['situation']['level'], 'good')
+            self.assertEqual(len(out['questions']), 3)
+        finally:
+            server.shutdown()
