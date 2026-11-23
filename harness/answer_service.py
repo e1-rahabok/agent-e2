@@ -70,6 +70,7 @@ SCREEN_RULES = (
     '- If a value the answer needs is not in the data, name the PCM page that shows it, or say PCM does not show it yet.\n'
     '- Never write a knowledge base file id or path (such as vsphere/technology/...). Name a flow or a metric by its title in words; '
     'PCM lists the files read under Sources.')
+METRIC_FACTS = ('screen', 'object', 'pillar', 'window')  # what a metric question keeps of the page
 OPENING = ('The opening of your answer, already written; the person reads it first: "{lead}" Write what follows it. Do not '
            'repeat it.')
 # Words that show the pipeline instead of the screen; an answer that uses one gets one rewrite.
@@ -244,8 +245,13 @@ class Service:
         return user_suggestions.suggest(body.get('facts'), self.cat, self.suggestions, screen_time)
 
     def answer(self, body):
-        # A metric question of the page (user_suggestions.yaml, metric) asks how a KPI works: no opening on how it moved.
-        lead = '' if user_suggestions.is_metric(body.get('question'), self.suggestions) else self.lead(body.get('facts'))
+        # A metric question of the page (user_suggestions.yaml, metric) asks how a KPI works: it is answered from the knowledge
+        # base, with the page named but not its numbers. With the numbers, the model opened with what pulled the score down.
+        if user_suggestions.is_metric(body.get('question'), self.suggestions) and isinstance(body.get('facts'), dict):
+            body = {**body, 'facts': {k: v for k, v in body['facts'].items() if k in METRIC_FACTS}}
+            lead = ''
+        else:
+            lead = self.lead(body.get('facts'))
         turns = body.get('turns')
         if turns:
             turns = [question_text({**body, 'question': turns[0]}, lead)] + list(turns[1:])

@@ -1415,6 +1415,14 @@ class UserSuggestionsTest(unittest.TestCase):
         facts = {'object': {'kind': 'cluster'}, 'pillar': 'Performance', 'kpis': [_kpi('Cluster Performance', [92] * 200 + [50] * 88)]}
         self.assertEqual(svc.answer({'question': 'What does Cluster Risk (%) actually measure?', 'facts': facts})['lead'], '')
         self.assertNotEqual(svc.answer({'question': 'Why is performance declining?', 'facts': facts})['lead'], '')
+        seen = []
+        orig = answer_service.question_text
+        answer_service.question_text = lambda body, lead='': (seen.append(body['facts']), orig(body, lead))[1]
+        try:
+            svc.answer({'question': 'What does Cluster Risk (%) actually measure?', 'facts': {**facts, 'parts_at_worst': {'parts': []}}})
+        finally:
+            answer_service.question_text = orig
+        self.assertEqual(set(seen[0]), {'object', 'pillar'})  # the page named, not its numbers
 
     def test_outside_release_one(self):
         r = self.page('host', 'Capacity', [_kpi('ESXi Performance', [90] * 288)])
