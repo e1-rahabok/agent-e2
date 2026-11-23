@@ -154,6 +154,7 @@ def compute(case, question, retriever, used):
     lines += nvme_wait(case, question)
     lines += kpi_trends(question, cat)
     lines += kpi_part_lines(question, cat)
+    lines += kpi_step_lines(question, cat)
     return ('Computed (exact):\n' + '\n'.join(dict.fromkeys(lines))) if lines else ''
 
 
@@ -249,6 +250,145 @@ def kpi_trends(question, cat):
             moved = t['worse_move'] if t['verdict'] == 'worsened' else t['better_move']
             line += f" KPI change level: {level:g} points. Verdict: {t['verdict']}, by {moved:g} points from the median."
         out.append(line + ' [arithmetic_calculator.py: ' + ' '.join(t['notes']) + ']')
+    return out
+
+
+def _hourly(node, out):
+    """Sub-metrics over the window, one value an hour: an object with "times" and "rows" of {name, unit, hourly}. PCM sends
+    them with a KPI question (D-125) so a step can be explained, not only the worst point."""
+    if isinstance(node, dict):
+        if isinstance(node.get('times'), list) and isinstance(node.get('rows'), list) and \
+                all(isinstance(r, dict) and isinstance(r.get('hourly'), list) for r in node['rows']):
+            out.append(node)
+        for v in node.values():
+            if isinstance(v, (dict, list)):
+                _hourly(v, out)
+    elif isinstance(node, list):
+        for v in node:
+            _hourly(v, out)
+    return out
+
+
+def _dt(t):
+    from datetime import datetime
+    try:
+        return datetime.fromisoformat(str(t))
+    except ValueError:
+        return None
+
+
+def _nearest(times, when):
+    ds = [(abs((d - when).total_seconds()), i) for i, d in enumerate(_dt(t) for t in times) if d is not None]
+    return min(ds)[1] if ds else None
+
+
+def kpi_step_lines(question, cat):
+    """Stage 3 for when a KPI changed level (arithmetic_calculator.step): the step's time and size against the KPI change
+    level; how the other KPIs on the page moved in the same two hours; and, with the hourly sub-metrics, which ones moved
+    the score across the step, each scored with its catalog limits before and after. Answers "Risk went from green to
+    yellow but Performance did not drop: why?" with the moment of the change, not the worst point."""
+    facts = facts_in(question)
+    if not facts:
+        return []
+    r = kpi_step_row(facts, cat)
+    if not r:
+        return []
+    s, series, st, row, width, when = r['series'], r['others'], r['step'], r['level'], r['width'], r['when']
+    return _step_lines(facts, cat, s, series, st, row, width, when)
+
+
+STEP_FACTOR = 2  # a change of level: at least twice the KPI change level from one hour to the next; less is a slope
+
+
+def kpi_step_row(facts, cat):
+    """The step of the KPI asked about (the first series in the facts), or None: {series, others, step, level, width, when,
+    others_moved: [(name, before, after, moved)]}. One computation for the stage 3 line and the opening the person reads."""
+    series = _series(facts or {}, [], limit=4)
+    if not series:
+        return None
+    s = series[0]
+    row = cat.change_level(s['name'])
+    minutes = s.get('minutes')
+    if not minutes and s.get('times') and len(s['times']) > 1:
+        a, b = _dt(s['times'][0]), _dt(s['times'][1])
+        minutes = (b - a).total_seconds() / 60 if a and b else None
+    if not row or not minutes:
+        return None
+    width = max(2, int(round(60 / minutes)))
+    try:
+        st = arithmetic_calculator.step(s['values'], s['better'], row['value'], width)
+    except arithmetic_calculator.CalcError:
+        return None
+    if st['move'] < STEP_FACTOR * row['value']:
+        return None  # the steepest hour of a slope, not a change of level
+    others = []
+    for o in series[1:]:
+        r = cat.change_level(o['name'])
+        lo, hi = st['index'] - width, st['index'] + width
+        if r is None or hi > len(o['values']) or lo < 0:
+            continue
+        b = sorted(v for v in o['values'][lo:st['index']] if isinstance(v, (int, float)))
+        a = sorted(v for v in o['values'][st['index']:hi] if isinstance(v, (int, float)))
+        if a and b:
+            mb, ma = b[len(b) // 2], a[len(a) // 2]
+            others.append((o['name'], mb, ma, abs(ma - mb) >= r['value'], r['value']))
+    return {'series': s, 'others': others, 'step': st, 'level': row, 'width': width, 'when': _time_of(s, st['index'])}
+
+
+def _step_lines(facts, cat, s, others, st, row, width, when):
+    u = '%' if (s.get('unit') or '%') == '%' else ''
+    way = 'up' if s['better'] == 'lower' else 'down'
+    line = (f"- {s['name']} stepped {way} at {when}: median {st['before']:g}{u} the hour before, {st['after']:g}{u} the hour "
+            f"after, {st['move']:g} points (KPI change level {row['value']:g}). This is the moment the score changed level; its "
+            'worst point may be later.')
+    for name, mb, ma, moved, lv in others:
+        line += (f" {name} in the same two hours: median {mb:g}% the hour before, {ma:g}% the hour after: "
+                 + ('it moved too.' if moved else f"no move (change level {lv:g}): it did not follow."))
+    out = [line + ' [arithmetic_calculator.py: step, median of an hour before against an hour after]']
+    hs = _hourly(facts, [])
+    at = _dt(when) if when else None
+    if not hs or at is None:
+        return out
+    from datetime import timedelta
+    h = hs[0]
+    i0, i1 = _nearest(h['times'], at - timedelta(hours=1)), _nearest(h['times'], at + timedelta(hours=1))
+    if i0 is None or i1 is None or i0 == i1:
+        return out
+    sl = cat.score_line(s['name'])
+    flipped = bool(sl and sl['direction'] == 'above')
+    rows0, rows1, units = [], [], {}
+    for r in h['rows']:
+        lim = cat.kpi_limits(r['name'])
+        if lim is None or len(r['hourly']) <= max(i0, i1):
+            continue
+        units[r['name']] = (r.get('unit') or '').strip()
+        base = {'name': r['name'], 'limits': lim['limits'], 'excluded_when_green': lim['excluded_when_green']}
+        rows0.append({**base, 'value': r['hourly'][i0]})
+        rows1.append({**base, 'value': r['hourly'][i1]})
+    try:
+        k0, k1 = arithmetic_calculator.kpi_parts(rows0), arithmetic_calculator.kpi_parts(rows1)
+    except arithmetic_calculator.CalcError:
+        return out
+    p0 = {x['name']: x for x in k0['rows']}
+    p1 = {x['name']: x for x in k1['rows']}
+    v0 = {r['name']: r['value'] for r in rows0}
+    v1 = {r['name']: r['value'] for r in rows1}
+    moved = []
+    for n in v0:
+        d = p1.get(n, {}).get('points_lost', 0) - p0.get(n, {}).get('points_lost', 0)
+        b0 = p0[n]['band'] if n in p0 else 'green'
+        b1 = p1[n]['band'] if n in p1 else 'green'
+        moved.append((d, n, b0, b1))
+    moved.sort(reverse=True)
+    pts = 'points added' if flipped else 'points lost'
+    parts = [f"{n} {_num(v0[n])}{units[n]} to {_num(v1[n])}{units[n]} ({b0} to {b1}, {d:+.1f} {pts})"
+             for d, n, b0, b1 in moved if d >= 0.5][:6]
+    held = [n for d, n, b0, b1 in moved if abs(d) < 0.5 and b0 == b1]
+    if parts:
+        out.append(f"- Across the step, sub-metrics at {h['times'][i0]} against {h['times'][i1]}, the ones that moved "
+                   f"{s['name']} most first: " + '; '.join(parts) + '.'
+                   + (f" Unchanged: {', '.join(held)}." if held else '')
+                   + ' [arithmetic_calculator.py: kpi_parts at both times, the difference in points per sub-metric]')
     return out
 
 

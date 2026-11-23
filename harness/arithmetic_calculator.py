@@ -19,7 +19,7 @@ Every function adds a note naming the knowledge file or source that defines the 
 A second entry point, trend(values, better, change), reads a whole KPI series (a list, not an expression): median, range,
 the worst point's move from the median, and a verdict against the KPI change level.
 
-decline(values, better, change) tells a decline across the window (the last quarter against the first) from a single
+step(values, better, change, width) finds when a score changed level; decline(values, better, change) tells a decline across the window (the last quarter against the first) from a single
 dip; percentile(values, p) is the nearest-rank percentile the screens show.
 
 A third, kpi_parts(rows), scores the parts of a KPI at one point with their catalog limits and splits the score the KPI
@@ -222,6 +222,34 @@ def decline(values, better='higher', change=None):
     move = round((first - last) if better == 'higher' else (last - first), 2)
     return {'first': round(first, 2), 'last': round(last, 2), 'move': move,
             'declining': None if change is None else move >= change}
+
+
+def step(values, better='higher', change=None, width=12):
+    """Where a KPI series made its largest step the worse way: at each point, the median of the width points before it
+    against the median of the width points from it (width 12 = one hour at 5 minutes), so a single noisy point is no step.
+    Returns {index, before, after, move, stepped}; stepped is True when the move is at least the KPI change level, None
+    without one. A step tells when a score changed level; trend tells how far its worst point is from the median."""
+    xs = [float(v) if isinstance(v, (int, float)) and not isinstance(v, bool) else None for v in values]
+    if sum(v is not None for v in xs) < 2 * width:
+        raise CalcError('step: fewer than two widths of points')
+
+    def med(part):
+        s = sorted(v for v in part if v is not None)
+        if not s:
+            return None
+        n = len(s)
+        return s[n // 2] if n % 2 else (s[n // 2 - 1] + s[n // 2]) / 2
+    sign = 1 if better == 'higher' else -1
+    best = None
+    for i in range(width, len(xs) - width + 1):
+        b, a = med(xs[i - width:i]), med(xs[i:i + width])
+        if b is None or a is None:
+            continue
+        move = sign * (b - a)
+        if best is None or move > best['move']:
+            best = {'index': i, 'before': round(b, 2), 'after': round(a, 2), 'move': round(move, 2)}
+    best['stepped'] = None if change is None else best['move'] >= change
+    return best
 
 
 def score_band(score):

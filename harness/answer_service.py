@@ -166,6 +166,21 @@ def lead_text(rows, facts=None):
     return ' '.join(out)
 
 
+def step_text(r):
+    """One sentence on when the KPI asked about changed level, and whether the other KPIs followed (expert_agent.kpi_step_row).
+    Its worst point can come hours later; a question about a change of colour is about this moment."""
+    if not r:
+        return ''
+    s, st = r['series'], r['step']
+    when = screen_time(str(r['when'])) if r['when'] else 'in the window'
+    out = (f" {s['name']} changed level at {when}: from {_fig(st['before'])}% the hour before to {_fig(st['after'])}% the hour "
+           f"after.")
+    for name, mb, ma, moved, lv in r['others']:
+        out += (f" {name} moved too, from {_fig(mb)}% to {_fig(ma)}%." if moved else
+                f" {name} held: {_fig(mb)}% the hour before, {_fig(ma)}% the hour after.")
+    return out
+
+
 def no_file_refs(text, docs):
     """Knowledge file ids out of the text the person reads; PCM lists the files under Sources. A citation, a path alone in
     brackets or parentheses (a list of paths too), goes; a path the sentence needs ("use `x`") becomes the file's title.
@@ -239,7 +254,12 @@ class Service:
         self.suggestions = user_suggestions.table()
 
     def lead(self, facts):
-        return lead_text(expert_agent.kpi_trend_rows(facts, self.cat), facts) if facts else ''
+        if not facts:
+            return ''
+        rows = expert_agent.kpi_trend_rows(facts, self.cat)
+        if isinstance(facts, dict) and facts.get('asked_about_kpi'):
+            rows = rows[:1]  # a question on one KPI card: the opening is about that KPI; the others are context
+        return (lead_text(rows, facts) + step_text(expert_agent.kpi_step_row(facts, self.cat))).strip()
 
     def suggest(self, body):
         return user_suggestions.suggest(body.get('facts'), self.cat, self.suggestions, screen_time)
