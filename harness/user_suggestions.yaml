@@ -110,3 +110,29 @@ capacity:
       - How does the close-for-business check decide?
       - Why does Cluster Risk count in a capacity decision?
       - Why is high utilization good for capacity but not a performance problem?
+
+# The showcase question of a card (an E2 mark on a KPI, a metric or a case part), first among the card's questions.
+# First row whose card matches and whose condition holds wins; a row without "when" always holds. The conditions are read
+# by code from the card's figures (user_suggestions.py, CARD_CONDITIONS). {before} and {after}: the bands across a step.
+cards:
+  - {pillar: performance, card: Cluster Performance, when: dropped, q: "Which part pulled Cluster Performance down at its worst point, and by how much?"}
+  - {pillar: performance, card: Cluster Performance, q: "How does Cluster Performance (%) work, and what is its formula?"}
+  - {pillar: performance, card: Cluster Risk, when: stepped_other_held, q: "Risk went from {before} to {after}, but Performance did not drop. Explain to me why."}
+  - {pillar: performance, card: Cluster Risk, q: "What does Cluster Risk (%) actually measure?"}
+  - {pillar: performance, card: ESXi Performance, when: not_green, q: "Is this host's score low because the host is overloaded?"}
+  - {pillar: performance, card: ESXi Performance, q: "Can a VM here still be slow while this host scores well?"}
+  - {pillar: performance, card: VM Performance, when: layers_diverged, q: "Why are there 2 charts? Why did VM Performance go down while Guest OS Performance did not?"}
+  - {pillar: performance, card: VM Performance, q: "Why are the Guest OS and the VM two separate charts?"}
+  - {pillar: performance, card: Guest OS Performance, when: layers_diverged, q: "Why are there 2 charts? Why did Guest OS Performance go down while VM Performance did not?"}
+  - {pillar: performance, card: Guest OS Performance, q: "Why are the Guest OS and the VM two separate charts?"}
+  - {pillar: performance, card: Peak CPU Ready among any vCPU, q: "Is CPU Ready above 5% always bad?"}
+  - {pillar: performance, card: Peak vCPU run queue length, q: "Does this VM need more vCPUs?"}
+  - {pillar: performance, card: Free memory, q: "Is low free memory a sign the Guest OS is short of RAM?"}
+  - {pillar: capacity, card: Cluster Consumption, when: memory_consumed_high, q: "Memory Consumed is high. Does this cluster need more RAM?"}
+  - {pillar: capacity, card: Cluster Consumption, q: "What does Cluster Consumption (%) measure, and how is it computed?"}
+  - {pillar: capacity, card: Cluster Performance, when: closed_performance_fine, q: "Why is this cluster closed when its performance is fine?"}
+  - {pillar: capacity, card: Cluster Performance, q: "Why does the capacity check read the 5th percentile of Cluster Performance?"}
+  - {pillar: capacity, card: Cluster Risk, when: closed_not_by_risk, q: "Why does Cluster Risk not decide this cluster's status?"}
+  - {pillar: capacity, card: Cluster Risk, q: "When does Cluster Risk decide whether this cluster takes more VMs?"}
+  - {pillar: case, card: link, q: "What evidence supports this link?"}
+  - {pillar: case, card: layer, q: "Is this layer the cause, or a symptom?"}

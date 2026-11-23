@@ -155,6 +155,7 @@ def compute(case, question, retriever, used):
     lines += kpi_trends(question, cat)
     lines += kpi_part_lines(question, cat)
     lines += kpi_step_lines(question, cat)
+    lines += metric_band_lines(question, cat)
     return ('Computed (exact):\n' + '\n'.join(dict.fromkeys(lines))) if lines else ''
 
 
@@ -251,6 +252,59 @@ def kpi_trends(question, cat):
             line += f" KPI change level: {level:g} points. Verdict: {t['verdict']}, by {moved:g} points from the median."
         out.append(line + ' [arithmetic_calculator.py: ' + ' '.join(t['notes']) + ']')
     return out
+
+
+def _figure_rows(node, out):
+    """Metrics with their figures in the facts: an object with a name, now, worst and 95th percentile (a VM's layers)."""
+    if isinstance(node, dict):
+        if (node.get('name') or node.get('label')) and 'now' in node and 'worst' in node:
+            out.append(node if node.get('name') else {**node, 'name': node['label']})
+        for v in node.values():
+            if isinstance(v, (dict, list)):
+                _figure_rows(v, out)
+    elif isinstance(node, list):
+        for v in node:
+            _figure_rows(v, out)
+    return out
+
+
+def metric_band_lines(question, cat):
+    """Stage 3: the band of each metric's figures on the screen (Now, Worst, 95th percentile), from its five catalog limits
+    (arithmetic_calculator.part_score), or for a 0-100% score from the score bands. The model gives these bands and never
+    its own reading of the limits: it once called Co-stop 7.7% "orange (red beyond 4%)"; the limits 0, 1, 2, 4, 8 make it red."""
+    facts = facts_in(question)
+    if not facts:
+        return []
+    parts, seen = [], set()
+    for m in _figure_rows(facts, []):
+        name = m['name']
+        if name in seen:
+            continue
+        lim = cat.kpi_limits(name)
+        score = lim is None and cat.change_level(name) is not None
+        if lim is None and not score:
+            continue
+        seen.add(name)
+        unit = (m.get('unit') or '').strip()
+        unit = unit if unit in ('%', '') else ' ' + unit
+
+        def band(v):
+            if not isinstance(v, (int, float)) or isinstance(v, bool):
+                return None
+            return arithmetic_calculator.score_band(v) if score else arithmetic_calculator.part_score(v, lim['limits'])[1]
+        figs = []
+        for label, v in (('now', m.get('now')), ('worst', (m.get('worst') or {}).get('v') if isinstance(m.get('worst'), dict) else m.get('worst')),
+                         ('95th percentile', m.get('percentile_95'))):
+            b = band(v)
+            if b:
+                figs.append(f'{label} {_num(v)}{unit} {b}')
+        if figs:
+            note = ' (left out of the score while green)' if lim and lim.get('excluded_when_green') else ''
+            parts.append(f"{name}: {', '.join(figs)}{note}")
+    if not parts:
+        return []
+    return ['- Bands of the figures on the screen, from the catalog limits (give these bands, never your own reading of the '
+            'limits): ' + '; '.join(parts[:24]) + '. [arithmetic_calculator.py: part_score with the five limits; score_band for a score]']
 
 
 def _hourly(node, out):
