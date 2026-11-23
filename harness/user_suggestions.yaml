@@ -1,0 +1,84 @@
+# Suggested questions: what Agent E2 offers the user to ask about a whole page, by the page's situation.
+# Read by user_suggestions.py. Release 1.0: Cluster Performance, Cluster Capacity, ESXi Performance, VM Performance.
+#
+# A page has a level (good, medium, bad) and may have a movement (declining or dip for performance, rising for capacity).
+# Without a movement the user sees the 3 level questions. With one: the 2 movement questions, then the first level question.
+# {time} is the time of the KPI's worst point, as the screen writes it.
+# Each question is one Agent E2 can answer from the page's numbers and its knowledge base: facts and the mechanism, never the fix.
+
+performance:
+  cluster:
+    good:
+      - Does the good average hide VMs that still suffer?
+      - Is Cluster Risk also low, or is a problem building?
+      - How much more load fits before contention starts?
+    medium:
+      - Which part pulls Cluster Performance down?
+      - Is it a few VMs or most of them?
+      - Is one host the cause?
+    bad:
+      - Which VMs are hit hardest, and on which resource?
+      - Is the cause CPU, memory, disk or network?
+      - What should I check first?
+    declining:
+      - Why is performance declining?
+      - When did the decline start, and what changed then?
+    dip:
+      - Why did performance drop at {time}?
+      - Was the drop on one host or across the cluster?
+  host:
+    good:
+      - Does any VM on this host still suffer?
+      - Is high utilization on this host a problem?
+      - Is this host as good as its peers?
+    medium:
+      - Which VMs on this host are near their limit?
+      - Which resource is the constraint here?
+      - Is this host hotter than the others in the cluster?
+    bad:
+      - Which VMs suffer most, and on which resource?
+      - Is the problem this host, or the whole cluster?
+      - Does ballooning or swapping here hurt the VMs?
+    declining:
+      - Why is performance on this host declining?
+      - Is the decline on this host only, or cluster-wide?
+    dip:
+      - Why did this host drop at {time}?
+      - Did other hosts in the cluster drop at the same time?
+  vm:
+    good:
+      - Is the Guest OS layer also healthy?
+      - Does the good average hide a short peak?
+      - Is this VM oversized?
+    medium:
+      - Which layer is closer to its limit?
+      - Which metric is near its limit, and what does it cause?
+      - Is it this VM, or its host?
+    bad:
+      - Is the cause in the VM, its host or its datastore?
+      - Is the problem in the Guest OS or the Virtual Motherboard?
+      - Which metric slowed this VM at its worst point?
+    declining:
+      - Why is this VM's performance declining?
+      - Did its demand grow, or did its host get busier?
+    dip:
+      - Why did this VM drop at {time}?
+      - Was it the Guest OS or the Virtual Motherboard at that time?
+
+capacity:
+  cluster:
+    good:
+      - How many more VMs can this cluster take?
+      - Is the room left real, or held by reservations?
+      - Is the overcommit ratio right for this class of service?
+    medium:
+      - Which is closest to its limit, consumption, performance or risk?
+      - Which resource runs out first?
+      - Can rightsizing VMs win back capacity?
+    bad:
+      - Why is this cluster closed for new VMs?
+      - Is performance already hit, or only capacity?
+      - Is the shortage real demand, or reservations and oversized VMs?
+    rising:
+      - Why is demand growing in this cluster?
+      - When does usable capacity run out at this rate?

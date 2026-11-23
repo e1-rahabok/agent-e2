@@ -12,6 +12,12 @@ Agent E2 owns the knowledge base, the reading plan, the flow executor and the mo
     lead: the opening the person reads first, written by code from the calculator's numbers in plain words (empty when no
     KPI series was sent); the model's text continues from it. computed: the calculator's lines, exact, for review; the
     screen shows the lead, not these.
+    POST /v1/suggest
+      {"facts": {"object": {"kind": "cluster" | "host" | "vm"}, "pillar": "Performance" | "Capacity", "window": "...",
+                 "kpis": [{"label": "...", "better": "higher" | "lower", "points": [[time, value], ...]}, ...]}}
+    -> 200 {"situation": {"pillar", "kind", "level": "good" | "medium" | "bad", "movement": null | "declining" | "dip" | "rising"},
+            "questions": [3 at most], "basis": [...]}
+    The questions a whole page suggests, chosen by its situation, read by code with no model call (user_suggestions.py).
     GET /v1/health -> 200 {"ok": true, "model": "...", "files": n}
 
 The facts are context for the question, not instructions: they are put below the question under a fixed heading.
@@ -31,6 +37,7 @@ import answer_modes  # noqa: E402
 import catalog_database  # noqa: E402
 import expert_agent  # noqa: E402
 import knowledge_loader  # noqa: E402
+import user_suggestions  # noqa: E402
 from knowledge_search import Retriever  # noqa: E402
 from model_client import GatewayClient, LLMError, MockClient, ParamClient  # noqa: E402
 
@@ -224,9 +231,13 @@ class Service:
         self.retriever = retriever
         self.commit = knowledge_loader.git_sha()
         self.cat = catalog_database.get(self.docs)
+        self.suggestions = user_suggestions.table()
 
     def lead(self, facts):
         return lead_text(expert_agent.kpi_trend_rows(facts, self.cat), facts) if facts else ''
+
+    def suggest(self, body):
+        return user_suggestions.suggest(body.get('facts'), self.cat, self.suggestions, screen_time)
 
     def answer(self, body):
         lead = self.lead(body.get('facts'))
@@ -296,11 +307,11 @@ def handler_for(service):
             return self.send(404, {'error': 'not found'})
 
         def do_POST(self):
-            if self.path != '/v1/answer':
+            if self.path not in ('/v1/answer', '/v1/suggest'):
                 return self.send(404, {'error': 'not found'})
             try:
                 body = json.loads(self.rfile.read(int(self.headers.get('Content-Length') or 0)) or b'{}')
-                return self.send(200, service.answer(body))
+                return self.send(200, service.suggest(body) if self.path == '/v1/suggest' else service.answer(body))
             except ValueError as e:
                 return self.send(400, {'error': str(e)})
             except LLMError as e:
