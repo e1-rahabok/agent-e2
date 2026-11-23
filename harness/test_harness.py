@@ -1249,9 +1249,65 @@ class AnswerServiceTest(unittest.TestCase):
 
     def test_the_rules_ask_for_the_cause_and_no_repeat(self):
         q = answer_service.question_text({'question': 'Why the worst at 19 Oct, 08:30?', 'facts': {'screen': {}}})
-        self.assertIn('Never repeat a figure', q)
+        self.assertIn('never repeat a figure', q)
         self.assertIn('Open with the cause', q)
-        self.assertIn('With no computed line, answer directly first, with the figures', q)
+        self.assertIn('With no opening, answer directly first, with the figures', q)
+        self.assertNotIn('already written', q)
+        q = answer_service.question_text({'question': 'Why?', 'facts': {'screen': {}}}, 'VM Performance fell to 17%.')
+        self.assertIn('already written; the person reads it first: "VM Performance fell to 17%."', q)
+
+    # The live answer of 2026-11-23 on sg-api-1617: the box read "VM Performance across the window (288 points): median 67.95
+    # ... Verdict: worsened", and the text repeated it. The opening says the same in the words of the screen.
+    def vm_drop(self, worst=17.0):
+        pts = [62.0 + (i * 7) % 12 for i in range(288)]
+        pts[103] = worst
+        return {'window': 'Last 24 hours', 'asked_about_kpi': {
+            'label': 'VM Performance', 'better': 'higher', 'unit': '%', 'values': pts,
+            'first_point': '2026-10-19T00:00:00+08:00', 'point_minutes': 5}}
+
+    def test_opening_is_plain_words_with_whole_figures(self):
+        f = self.vm_drop()
+        lead = answer_service.lead_text(expert_agent.kpi_trend_rows(f, CAT), f)
+        self.assertTrue(lead.startswith('VM Performance fell to 17% at 19 Oct, 08:35, '), lead)
+        self.assertIn('points below its median of', lead)
+        self.assertIn('in the last 24 hours. That is a real drop, not normal movement: a move of 8 points or more counts.', lead)
+        for word in ('Verdict', 'KPI change level', '288', '2026-10-19', '.95'):
+            self.assertNotIn(word, lead)
+
+    def test_opening_for_a_steady_kpi_says_no_drop(self):
+        f = self.vm_drop(worst=61.0)
+        lead = answer_service.lead_text(expert_agent.kpi_trend_rows(f, CAT), f)
+        self.assertIn('VM Performance stayed within its normal movement in the last 24 hours', lead)
+        self.assertIn('No drop: a move counts from 8 points.', lead)
+
+    def test_opening_for_a_higher_is_worse_score_and_no_level(self):
+        pts = [40 + i % 3 for i in range(60)]
+        pts[30:36] = [52] * 6
+        f = {'asked_about_kpi': {'label': 'Cluster Risk', 'better': 'lower', 'unit': '%', 'points': [[i, v] for i, v in enumerate(pts)]}}
+        self.assertIn('Cluster Risk rose to 52% at 30, 11 points above its median of 41% in the window. That is a real rise',
+                      answer_service.lead_text(expert_agent.kpi_trend_rows(f, CAT), f))
+        f = {'asked_about_kpi': {'label': 'Datastore Latency Score', 'better': 'higher', 'points': [[i, 90 + i % 3] for i in range(50)]}}
+        self.assertIn('No change level is set for Datastore Latency Score, so no move is called a drop here.',
+                      answer_service.lead_text(expert_agent.kpi_trend_rows(f, CAT), f))
+
+    def test_a_rounded_move_stays_on_its_side_of_the_level(self):
+        self.assertEqual(answer_service._fig(7.6, 8), '7.6')
+        self.assertEqual(answer_service._fig(50.95, 8), '51')
+        self.assertEqual(answer_service._fig(67.95), '68')
+
+    def test_text_that_repeats_the_opening_gets_one_rewrite(self):
+        f = self.vm_drop()
+        lead = answer_service.lead_text(expert_agent.kpi_trend_rows(f, CAT), f)
+        svc, rw = self._service_with('Peak CPU Ready pulled it down (red). Check the host next.')
+        out = svc.no_repeat('Performance fell to a worst value of 17.0% at 08:35. Peak CPU Ready pulled it down.', [lead])
+        self.assertEqual(rw.calls, 1)
+        self.assertTrue(out.startswith('Peak CPU Ready'))
+
+    def test_answer_returns_the_opening_for_a_kpi(self):
+        out = self.svc.answer({'question': 'Why did the performance drop?', 'facts': self.vm_drop()})
+        if out['type'] == 'answer':
+            self.assertTrue(out['lead'].startswith('VM Performance fell to 17%'))
+        self.assertEqual(self.svc.answer({'question': 'What does CPU Ready mean on a VM?'})['lead'], '')
 
     def test_answer_runs_the_pipeline_and_names_its_files(self):
         out = self.svc.answer({'question': 'What does CPU Ready mean on a VM?', 'facts': {'vm': 'sg-app-117'}})
