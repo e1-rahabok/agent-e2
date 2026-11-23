@@ -1,7 +1,7 @@
 """Suggested questions for a whole page, chosen by the page's situation (POST /v1/suggest, answer_service.py).
 
 The caller (PCM) sends the page: the object's kind, the pillar, the window and the page's KPI series. Agent E2 reads the
-situation from them with its calculator and catalog, so the caller holds no domain rule (PCM decision D-123):
+situation from them with its calculator and catalog, so the caller holds no domain rule (PCM decision D-124):
 
 - level, from the KPI's band over the window. Performance: the band of the window's low end (the 5th percentile, so
   "good" means about 95% of the points are green) or of Now, whichever is worse; on a VM, the worse of its two layers.
