@@ -51,7 +51,9 @@ SCREEN_RULES = (
     'the next step for that resource. Give every sub-metric the band the computed line gives it: an orange or red one is never low.\n'
     '- With no computed line, answer directly first, with the figures.\n'
     '- If "screen" names where to look next (drill_down), point there first, by page and tab, before any knowledge-base flow.\n'
-    '- If a value the answer needs is not in the data, name the PCM page that shows it, or say PCM does not show it yet.')
+    '- If a value the answer needs is not in the data, name the PCM page that shows it, or say PCM does not show it yet.\n'
+    '- Never write a knowledge base file id or path (such as vsphere/technology/...). Name a flow or a metric by its title in words; '
+    'PCM lists the files read under Sources.')
 # Words that show the pipeline instead of the screen; an answer that uses one gets one rewrite.
 PIPELINE_WORDS = re.compile(r'\bJSON\b|\bpayload\b|\b(?:provided|given|supplied|attached) (?:data|facts|readings)\b'
                             r'|\b(?:data|facts|readings) (?:provided|given|supplied|sent)\b|\bthe facts\b', re.I)
@@ -66,6 +68,10 @@ REWRITE_FIGURES = ('Rewrite this answer. The person already reads these figures 
 PART_LINE = re.compile(r'sub-metrics', re.I)
 MONTHS = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
 ISO_TIME = re.compile(r'\b(\d{4})-(\d\d)-(\d\d)[T ](\d\d):(\d\d)(?::\d\d(?:\.\d+)?)?(?:Z|[+-]\d\d:?\d\d)?')
+# A knowledge path: a top folder of knowledge/ and one or more parts, optional knowledge/ prefix and .md suffix; not inside a URL.
+KB_PATH = r'(?<![\w/.:-])(?:knowledge/)?(?:{tops})(?:/[\w.-]*\w)+?(?:\.md)?(?![\w/-])'
+# Wrappers a model puts around a path: `x`, **x**, [x], [x, y], (x), (see `x`) and harness notes [file.py: ...].
+HARNESS_NOTE = re.compile(r'[ \t]*\[[\w-]+\.(?:py|js|ya?ml|json)\b[^\[\]\n]*\]')
 FIGURE = re.compile(r'(?<![\d.])\d+(?:\.\d+)?(?![\d.]*\d)')
 
 
@@ -89,6 +95,34 @@ def headline_figures(computed):
 
 def repeated_figures(text, figures):
     return sorted(f for f in figures if re.search(r'(?<![\d.])' + re.escape(f) + r'(?![\d]|\.\d)', text or ''))
+
+
+def no_file_refs(text, docs):
+    """Knowledge file ids out of the text the person reads; PCM lists the files under Sources. A citation, a path alone in
+    brackets or parentheses (a list of paths too), goes; a path the sentence needs ("use `x`") becomes the file's title.
+    A path that is no knowledge file goes too. Works on every answer, whatever the model was told (expert_agent asks it
+    to name ids, for the benchmark's check)."""
+    if not text:
+        return text
+    tops = sorted({i.split('/')[0] for i in docs if '/' in i}) or ['vsphere']
+    path = KB_PATH.format(tops='|'.join(map(re.escape, tops)))
+    one = rf'(?:see |source: |sources: )?(?:\*\*)?`?{path}`?(?:\*\*)?'
+    many = rf'{one}(?:\s*(?:[,;]|and)\s*{one})*'
+    text = HARNESS_NOTE.sub('', text)
+    text = re.sub(rf'[ \t]*[(\[]\s*{many}\s*[)\]]', '', text, flags=re.I)
+
+    def title(m):
+        key = re.sub(r'^knowledge/|\.md$', '', m.group('p'))
+        d = docs.get(key)
+        if d is not None and getattr(d, 'title', None):
+            return d.title
+        return key.rsplit('/', 1)[-1].replace('-', ' ').replace('_', ' ')  # no such file: its last part, in words
+    text = re.sub(rf'(?:\*\*)?`?(?P<p>{path})`?(?:\*\*)?', title, text)
+    # What a removal leaves: a space before punctuation, a dangling comma, double spaces.
+    text = re.sub(r'[ \t]+([.,;:!?])', r'\1', text)
+    text = re.sub(r'\s*(?:,\s*)+([.;])', r'\1', text)
+    text = re.sub(r'([^\S\n])[^\S\n]+', r'\1', text)
+    return text
 
 
 def question_text(body):
@@ -138,10 +172,11 @@ class Service:
             turns = [question_text(body)]
         out = answer_modes.converse('agent-e2', self.client, self.model, turns, [], self.cfg, self.retriever)
         computed = [line for s in out['trace'] if s.get('action') == 'compute' for line in (s.get('output') or [])]
-        content = out['result'].get('content')
+        content = no_file_refs(out['result'].get('content'), self.docs)
         if body.get('facts') and out['type'] == 'answer':
             content = self.screen_wording(content)
             content = self.no_repeat(content, [_shown(c) for c in computed])
+            content = no_file_refs(content, self.docs)  # a rewrite may bring a path back
         return {'type': out['type'], 'content': content, 'questions': out.get('questions', []),
                 'files_read': out['used'], 'computed': [_shown(c) for c in computed], 'model': self.model,
                 'knowledge_commit': self.commit}
