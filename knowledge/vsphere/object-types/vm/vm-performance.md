@@ -37,7 +37,11 @@
 
 ## Memory Wait
 - Memory Wait = Memory Contention + NVMe wait, per VM: the share of vCPU time spent waiting for memory, in the bands of Memory Contention. It is the memory row here, and the worst-VM and 90th-percentile memory rows of Cluster Performance and ESXi Performance. The pack calculates it; it is not a vSphere counter.
-- Why: with memory tiering a vCPU that touches a cold page waits for the whole NVMe read, and Memory Contention does not count that wait (it is unaware of tiering). A VM that waits on NVMe can show Memory Contention near 0, and a KPI on Memory Contention alone scores it healthy. NVMe wait is computed ([`vsphere/object-types/cluster/cluster-performance`](../cluster/cluster-performance.md), section NVMe wait formula) and added. Without tiering NVMe wait is 0.
+- Why Agent E2 creates the metric: memory tiering moves the memory wait out of Memory Contention.
+  - Memory Contention is mostly the wait for a page fault on a swapped or compressed page ([`vsphere/technology/memory/metrics/virtual-motherboard/latency`](../../technology/memory/metrics/virtual-motherboard/latency.md)).
+  - On a tiered host, once DRAM consumed passes about 80%, ESXi moves cold pages to the NVMe tier instead of compressing or swapping them. Compression and swap become rare: they are expected only when DRAM and NVMe are both nearly full ([`vsphere/technology/memory/concepts/memory-tiering`](../../technology/memory/concepts/memory-tiering.md)). So Memory Contention reads near 0 by design.
+  - The wait has not gone: a vCPU that touches a cold page waits for the whole NVMe read, and Memory Contention does not count it (the counter is unaware of tiering). A KPI on Memory Contention alone scores that VM healthy.
+  - NVMe wait is computed ([`vsphere/object-types/cluster/cluster-performance`](../cluster/cluster-performance.md), section NVMe wait formula) and added. Without tiering NVMe wait is 0, and Memory Wait equals Memory Contention.
 
 ## Not used
 | Area | Metric | Reason |
