@@ -55,7 +55,9 @@ SCREEN_RULES = (
     '- When an opening is given below, the person reads it first, as the start of your answer, in the same voice. Continue '
     'from it: never repeat a figure, the time or the verdict it gives (the computed line on how the KPI moved across the '
     'window holds the same figures), and never say a number is "computed".\n'
-    '- Answer the question asked, in the first sentence. When it asks why a score moved, what is wrong or what to check, do not '
+    '- Answer the question asked, in the first sentence; when it asks several things, answer them in the order asked. Never '
+    'open by restating the opening\'s verdict (that the KPI fell or that the drop is real): the person has just read it. '
+    'When it asks why a score moved, what is wrong or what to check, do not '
     'open with the drop or the level: open with the cause, which part pulled the score down, then where to look next. When it '
     'asks how a metric works, what it measures or why it is designed so, explain the mechanism from the knowledge base first; '
     'the page\'s figures come after, as a short example, or not at all.\n'
@@ -80,9 +82,10 @@ REWRITE = ('Rewrite this answer for a person who sees the PCM screen and typed o
            '{words}. Say the chart, this page or PCM instead. Keep every fact, number, name and the order. Reply with the '
            'answer only.\n\n{text}')
 REWRITE_FIGURES = ('Rewrite this answer. The person already reads these figures above it: {figures}. Remove them, the time of the '
-                   'worst point and any sentence that only restates the verdict. Open with the cause: which part pulled the '
-                   'KPI down, then where to look next. Keep every other fact, name and number. Do not say computed, '
-                   'calculator, the box above or the model. Reply with the answer only.\n\n{text}')
+                   'worst point, and any sentence that only restates the verdict or the rule for a drop (such as "a move of 5 '
+                   'points or more counts"). Keep the order of the answer and what it answers first. Keep every other fact, '
+                   'name and number. Do not say computed, calculator, the box above or the model. Reply with the answer '
+                   'only.\n\n{text}')
 # The stage 3 line on how a KPI moved across the window (expert_agent.kpi_trends): the opening's figures, exact.
 TREND_LINE = re.compile(r'across the window \(\d+ points\)')
 # A computed line that lists the sub-metrics holds figures the answer may use (a part's own value).
