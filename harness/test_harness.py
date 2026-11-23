@@ -1446,3 +1446,31 @@ class UserSuggestionsTest(unittest.TestCase):
             self.assertEqual(len(out['questions']), 3)
         finally:
             server.shutdown()
+
+
+class KpiStepTest(unittest.TestCase):
+    """When a KPI changed level (arithmetic_calculator.step, expert_agent.kpi_step_row), and which parts moved it."""
+
+    def facts(self, risk, perf, hourly=None):
+        k = {**_kpi('Cluster Risk', risk, 'lower'), **({'parts_hourly': hourly} if hourly else {})}
+        return {'asked_about_kpi': k, 'other_kpis': [_kpi('Cluster Performance', perf)]}
+
+    def test_a_step_is_found_and_the_other_kpi_held(self):
+        r = expert_agent.kpi_step_row(self.facts([11] * 80 + [40] * 208, [91] * 288), CAT)
+        self.assertEqual((r['step']['before'], r['step']['after']), (11, 40))
+        self.assertEqual(r['others'][0][3], False)
+        self.assertIn('Cluster Performance held: 91% the hour before, 91% the hour after.', answer_service.step_text(r))
+
+    def test_a_slope_is_not_a_step(self):
+        self.assertIsNone(expert_agent.kpi_step_row(self.facts([10 + i * 0.1 for i in range(288)], [91] * 288), CAT))
+
+    def test_the_parts_that_moved_are_scored(self):
+        times = [f'2026-10-18T{10 + h // 1:02d}:00:00+08:00' for h in range(14)]
+        rows = [{'name': 'Highest ESXi memory reservation', 'unit': '%', 'hourly': [9] * 7 + [47] * 7},
+                {'name': 'Worst ESXi memory ballooned', 'unit': '%', 'hourly': [0] * 14}]
+        f = self.facts([11] * 80 + [40] * 88, [91] * 168, {'times': times, 'rows': rows})
+        q = 'Why?\n\n' + expert_agent.FACTS_HEADING + '\n' + json.dumps(f)
+        lines = expert_agent.kpi_step_lines(q, CAT)
+        self.assertEqual(len(lines), 2)
+        self.assertIn('Highest ESXi memory reservation 9% to 47%', lines[1])
+        self.assertIn('Unchanged: Worst ESXi memory ballooned', lines[1])
