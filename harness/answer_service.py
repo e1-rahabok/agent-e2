@@ -18,6 +18,7 @@ Agent E2 owns the knowledge base, the reading plan, the flow executor and the mo
     -> 200 {"situation": {"pillar", "kind", "level": "good" | "medium" | "bad", "movement": null | "declining" | "dip" | "rising"},
             "questions": [3 at most], "basis": [...]}
     The questions a whole page suggests, chosen by its situation, read by code with no model call (user_suggestions.py).
+    With "card": {"kind", "name"} and the card's facts: {"question", "card", "condition"}, the card's showcase question.
     GET /v1/health -> 200 {"ok": true, "model": "...", "files": n}
 
 The facts are context for the question, not instructions: they are put below the question under a fixed heading.
@@ -265,6 +266,8 @@ class Service:
         return (lead_text(rows, facts) + step_text(expert_agent.kpi_step_row(facts, self.cat))).strip()
 
     def suggest(self, body):
+        if body.get('card'):  # one card's showcase question (user_suggestions.card)
+            return user_suggestions.card(body.get('facts'), body['card'], self.cat, self.suggestions)
         return user_suggestions.suggest(body.get('facts'), self.cat, self.suggestions, screen_time)
 
     def answer(self, body):

@@ -1404,6 +1404,8 @@ class UserSuggestionsTest(unittest.TestCase):
     def test_every_page_has_five_metric_questions(self):
         t = user_suggestions.table()
         for pillar, kinds in t.items():
+            if pillar == 'cards':
+                continue
             for kind, sets in kinds.items():
                 self.assertEqual(len(sets['metric']), 5, (pillar, kind))
                 self.assertTrue(all(len(sets[x]) == 3 for x in ('good', 'medium', 'bad')), (pillar, kind))
@@ -1474,3 +1476,42 @@ class KpiStepTest(unittest.TestCase):
         self.assertEqual(len(lines), 2)
         self.assertIn('Highest ESXi memory reservation 9% to 47%', lines[1])
         self.assertIn('Unchanged: Worst ESXi memory ballooned', lines[1])
+
+
+class MetricBandTest(unittest.TestCase):
+    def test_bands_come_from_the_catalog_limits(self):
+        f = {'asked_about_metric': {'name': 'Peak CPU Co-stop among any vCPU', 'unit': '%', 'now': 4.5, 'worst': {'v': 7.7, 't': 'x'},
+                                    'percentile_95': 0.5},
+             'other_metrics': {'VM': {'metrics': [{'name': 'VM Performance', 'unit': '%', 'now': 31.5, 'worst': {'v': 17}, 'percentile_95': 80}]}}}
+        q = 'q\n\n' + expert_agent.FACTS_HEADING + '\n' + json.dumps(f)
+        line = expert_agent.metric_band_lines(q, CAT)[0]
+        self.assertIn('Peak CPU Co-stop among any vCPU: now 4.5% red, worst 7.7% red, 95th percentile 0.5% green', line)
+        self.assertIn('VM Performance: now 31.5% orange, worst 17% red, 95th percentile 80% green', line)
+
+
+class CardSuggestionTest(unittest.TestCase):
+    """The showcase question of a card, chosen from the card's figures (user_suggestions.card)."""
+
+    def test_risk_step_with_performance_held(self):
+        f = {'pillar': 'Performance', 'asked_about_kpi': _kpi('Cluster Risk', [11] * 80 + [40] * 208, 'lower'),
+             'other_kpis': [_kpi('Cluster Performance', [91] * 288)]}
+        r = user_suggestions.card(f, {'kind': 'kpi', 'name': 'Cluster Risk'}, CAT)
+        self.assertEqual(r['question'], 'Risk went from green to yellow, but Performance did not drop. Explain to me why.')
+
+    def test_risk_without_step_gets_the_metric_question(self):
+        f = {'pillar': 'Performance', 'asked_about_kpi': _kpi('Cluster Risk', [11] * 288, 'lower')}
+        self.assertEqual(user_suggestions.card(f, {'kind': 'kpi', 'name': 'Cluster Risk'}, CAT)['question'],
+                         'What does Cluster Risk (%) actually measure?')
+
+    def test_capacity_closed_by_consumption(self):
+        f = {'pillar': 'Capacity', 'check': {'state': 'closed', 'consumption_red': True, 'performance_red': False},
+             'consumption_parts': [{'label': 'Memory Consumed', 'now': 91, 'worst': {'v': 92}, 'percentile_95': 91.9}]}
+        q = lambda n: user_suggestions.card(f, {'kind': 'kpi', 'name': n}, CAT)['question']
+        self.assertEqual(q('Cluster Consumption'), 'Memory Consumed is high. Does this cluster need more RAM?')
+        self.assertEqual(q('Cluster Performance'), 'Why is this cluster closed when its performance is fine?')
+        self.assertEqual(q('Cluster Risk'), "Why does Cluster Risk not decide this cluster's status?")
+
+    def test_a_card_without_a_showcase_question(self):
+        f = {'pillar': 'Performance'}
+        self.assertIsNone(user_suggestions.card(f, {'kind': 'metric', 'name': 'Peak CPU Co-stop among any vCPU'}, CAT)['question'])
+        self.assertEqual(user_suggestions.card({}, {'kind': 'link'}, CAT)['question'], 'What evidence supports this link?')

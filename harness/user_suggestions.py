@@ -44,7 +44,8 @@ def is_metric(question, tbl=None):
     """Whether the question is one of the metric questions (how a KPI works), as offered on a page: those are answered from
     the knowledge base, with no opening on how the page's KPI moved."""
     q = re.sub(r'\s+', ' ', str(question or '')).strip().lower()
-    return any(q == m.lower() for kinds in (tbl or table()).values() for sets in kinds.values() for m in sets.get('metric') or [])
+    return any(q == m.lower() for kinds in (tbl or table()).values() if isinstance(kinds, dict)
+               for sets in kinds.values() for m in sets.get('metric') or [])
 
 
 def _bare(name):
@@ -173,3 +174,92 @@ def suggest(facts, cat, tbl=None, screen_time=lambda x: x):
     when = screen_time(str(worst_at)) if worst_at else 'its worst point'
     out['questions'] = [q.replace('at {time}', f'at {when}' if worst_at else 'at its worst point') for q in qs]
     return out
+
+
+# ---------------------------------------------------------------- the showcase question of a card
+
+def _kpi(facts):
+    return facts.get('asked_about_kpi') or facts.get('asked_about_metric') or {}
+
+
+def _risk_band(v):
+    return calc.score_band(100 - v)  # Cluster Risk: higher is worse, bands of 25 points
+
+
+def _stepped_other_held(facts, cat):
+    r = expert_agent.kpi_step_row(facts, cat)
+    if not r or not r['others'] or any(moved for _n, _b, _a, moved, _l in r['others']):
+        return None
+    b0, b1 = _risk_band(r['step']['before']), _risk_band(r['step']['after'])
+    return {'before': b0, 'after': b1} if b0 != b1 else None
+
+
+def _dropped(facts, cat):
+    rows = expert_agent.kpi_trend_rows(facts, cat)
+    return bool(rows) and rows[0]['trend']['verdict'] == 'worsened'
+
+
+def _band_of(v):
+    return calc.score_band(v) if isinstance(v, (int, float)) and not isinstance(v, bool) else None
+
+
+def _not_green(facts, cat):
+    return _band_of(_kpi(facts).get('now')) not in (None, 'green')
+
+
+def _layers_diverged(facts, cat):
+    """The card's score fell (a real drop) while the other layer's score stayed green at its 95th percentile."""
+    if not _dropped(facts, cat):
+        return False
+    me = _bare(_kpi(facts).get('name') or _kpi(facts).get('label'))
+    other = 'guest os performance' if me == 'vm performance' else 'vm performance'
+    for m in expert_agent._figure_rows(facts.get('other_metrics') or {}, []):
+        if _bare(m['name']) == other:
+            return _band_of(m.get('percentile_95')) == 'green'
+    return False
+
+
+def _memory_consumed_high(facts, cat):
+    """Memory Consumed, a part of Cluster Consumption, out of green at its 95th percentile (its catalog limits)."""
+    lim = cat.kpi_limits('Cluster-wide ESXi memory consumed')
+    for p in expert_agent._figure_rows(facts.get('consumption_parts') or [], []):
+        v = p.get('percentile_95')
+        if 'memory consumed' in str(p.get('name')).lower() and lim and isinstance(v, (int, float)):
+            return calc.part_score(v, lim['limits'])[1] != 'green'
+    return False
+
+
+def _closed_performance_fine(facts, cat):
+    c = facts.get('check') or {}
+    return c.get('state') == 'closed' and c.get('performance_red') is False
+
+
+def _closed_not_by_risk(facts, cat):
+    c = facts.get('check') or {}
+    return c.get('state') == 'closed' and bool(c.get('consumption_red') or c.get('performance_red'))
+
+
+CARD_CONDITIONS = {'stepped_other_held': _stepped_other_held, 'dropped': _dropped, 'not_green': _not_green,
+                   'layers_diverged': _layers_diverged, 'memory_consumed_high': _memory_consumed_high,
+                   'closed_performance_fine': _closed_performance_fine, 'closed_not_by_risk': _closed_not_by_risk}
+
+
+def card(facts, card_ref, cat, tbl=None):
+    """The showcase question for a card: {question, card, condition}. card_ref: {kind, name}; kind kpi or metric names the
+    card by its title; case, link and layer are the parts of a case. Empty question when the card has none."""
+    tbl = tbl or table()
+    facts = facts or {}
+    kind = str((card_ref or {}).get('kind') or '')
+    if kind in ('case', 'link', 'layer'):
+        pillar, name = 'case', kind
+    else:
+        pillar, name = str(facts.get('pillar') or '').strip().lower(), _bare((card_ref or {}).get('name'))
+    for row in tbl.get('cards') or []:
+        if row['pillar'] != pillar or _bare(row['card']) != name:
+            continue
+        when = row.get('when')
+        hit = CARD_CONDITIONS[when](facts, cat) if when else True
+        if hit:
+            q = row['q'].format(**hit) if isinstance(hit, dict) else row['q']
+            return {'question': q, 'card': row['card'], 'condition': when}
+    return {'question': None, 'card': name, 'condition': None}
