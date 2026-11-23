@@ -10,8 +10,11 @@ Tables:
   thresholds  one-value tests, labelled by use: decision, rule (thresholds-capacity.yaml); score change (thresholds-performance.yaml,
               change); flow, with its step (thresholds-performance.yaml, flow)
   symptoms, alerts, alert_symptoms   alert definitions: one test per symptom, alerts combine them (thresholds-alerts.yaml)
-  bands       capacity model inputs with colour bands (thresholds-capacity.yaml, models)
-  kpi         KPI colour levels, the one copy (thresholds-performance.yaml, kpi)
+  sizing      sizing ranges, two-sided with grey for wastage (thresholds-capacity.yaml, sizing)
+  limits      five limits of every scored line, the one copy: sub-metrics of the performance KPIs (thresholds-performance.yaml,
+              kpi), of Cluster Consumption (thresholds-capacity.yaml, model) and of Cluster Risk (thresholds-risk.yaml, model),
+              and the limits of the Cluster Consumption and Cluster Risk scores (section score). Format: thresholds-performance.yaml,
+              meta, limits_fields
   metrics     one row per knowledge metric file, from its metadata
   objects, relations   object model (knowledge/catalog/objects.yaml)
 """
@@ -91,12 +94,12 @@ class Catalog:
           CREATE TABLE thresholds (id TEXT, use TEXT, criticality TEXT, class TEXT, pillar TEXT, metric TEXT, object TEXT, layer TEXT,
                                    instance TEXT, interval TEXT, operator TEXT, value REAL, value_high REAL, unit TEXT,
                                    condition TEXT, meaning TEXT, source TEXT, kb TEXT, step INT);
-          CREATE TABLE bands (kb TEXT, grp TEXT, metric TEXT, object TEXT, grey TEXT, green TEXT, yellow TEXT, orange TEXT, red TEXT, source TEXT, pillar TEXT, interval TEXT);
+          CREATE TABLE sizing (kb TEXT, grp TEXT, metric TEXT, object TEXT, grey TEXT, green TEXT, yellow TEXT, orange TEXT, red TEXT, source TEXT, pillar TEXT, interval TEXT);
           CREATE TABLE metrics (id TEXT, title TEXT, object TEXT, layer TEXT, technology TEXT, metric_class TEXT, instance TEXT,
                                 same_name TEXT, same_meaning TEXT, status TEXT);
           CREATE TABLE objects (type TEXT, role TEXT, layer TEXT, supplies TEXT, charts INT, note TEXT, kb TEXT);
           CREATE TABLE relations (src TEXT, dst TEXT, kind TEXT, cardinality TEXT);
-          CREATE TABLE kpi (object TEXT, metric TEXT, grp TEXT, direction TEXT, m5 TEXT, s20 TEXT, s2 TEXT, excluded INT, src TEXT);
+          CREATE TABLE limits (object TEXT, metric TEXT, grp TEXT, direction TEXT, m5 TEXT, s20 TEXT, s2 TEXT, excluded INT, src TEXT, section TEXT);
           CREATE TABLE formulas (formula TEXT, source TEXT);
           CREATE TABLE symptoms (id TEXT, object TEXT, layer TEXT, metric TEXT, interval TEXT, operator TEXT, value REAL, unit TEXT,
                                  role TEXT, source TEXT, kb TEXT, test TEXT);
@@ -122,7 +125,7 @@ class Catalog:
         for f in es.get('formulas') or []:
             c.execute('INSERT INTO formulas VALUES (?,?)', (f['formula'], f'esxtop {f["panel"]} panel, {doc}, p. {f["page"]}'))
         # Threshold files are split by use: the section name is the use (one place; no use field on the rows).
-        perf, cap, al = (load_yaml(f'thresholds-{n}.yaml') for n in ('performance', 'capacity', 'alerts'))
+        perf, cap, al, risk = (load_yaml(f'thresholds-{n}.yaml') for n in ('performance', 'capacity', 'alerts', 'risk'))
         # A flow test is the number one step of a flow file compares with; kb is the flow file, step its numbered step.
         tests = [(cap, 'decisions', 'capacity'), (cap, 'rules', 'capacity'), (perf, 'change', 'performance'), (perf, 'flow', 'performance')]
         for data, section, pillar in tests:
@@ -132,9 +135,9 @@ class Catalog:
                           (r['id'], use, r.get('criticality'), r.get('class'), r.get('pillar') or pillar, r['metric'], r.get('object'),
                            r.get('layer'), r.get('instance'), r.get('interval'), r['operator'], r['value'], r.get('value_high'),
                            r.get('unit'), r.get('condition'), r.get('meaning'), r['source'], r['kb'], r.get('step')))
-        for r in cap.get('models') or []:
+        for r in cap.get('sizing') or []:
             b = r['bands']
-            c.execute('INSERT INTO bands VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+            c.execute('INSERT INTO sizing VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
                       (r['kb'], r.get('group') or '', r['metric'], r.get('object') or '', b.get('grey'), b['green'], b['yellow'],
                        b['orange'], b['red'], r['source'], 'capacity', r.get('interval')))
         # Alerts: a symptom is one test, written once; an alert definition combines symptoms (all or any, on itself or its children).
@@ -154,11 +157,12 @@ class Catalog:
             rule = f" {a['match'].upper()} ".join(parts)
             c.execute('INSERT INTO alerts VALUES (?,?,?,?,?,?,?,?,?)', (a['id'], a['name'], a['criticality'], a['pillar'], _objs(a['object']),
                       a['wait_cycles'], rule, a['source'], a['kb']))
-        # KPI levels: the one place for performance colour levels; no knowledge file repeats them.
-        for lv in perf.get('kpi') or []:
-            c.execute('INSERT INTO kpi VALUES (?,?,?,?,?,?,?,?,?)', (lv['object'], lv['metric'], lv.get('group'), lv['direction'],
-                      *(None if lv.get(k) is None else '/'.join(str(x) for x in lv[k]) for k in ('5m', '20s', '2s')),
-                      int(bool(lv.get('excluded_when_green'))), lv['kb']))
+        # Five limits per scored line, the one place: no knowledge file repeats them. One format in three files.
+        for data, section in ((perf, 'kpi'), (cap, 'model'), (cap, 'score'), (risk, 'model'), (risk, 'score')):
+            for lv in data.get(section) or []:
+                c.execute('INSERT INTO limits VALUES (?,?,?,?,?,?,?,?,?,?)', (lv['object'], lv['metric'], lv.get('group'), lv['direction'],
+                          *(None if lv.get(k) is None else '/'.join(str(x) for x in lv[k]) for k in ('5m', '20s', '2s')),
+                          int(bool(lv.get('excluded_when_green'))), lv['kb'], section))
         for d in self.docs.values():
             if d.meta.get('retriever_guide') != 'metric-meaning' or '/tools/' in d.id:  # metric files, KPIs and models
                 continue
@@ -243,12 +247,12 @@ class Catalog:
         return None
 
     def kpi_limits(self, name):
-        """The five limits of a KPI part (thresholds-performance.yaml, kpi), matched on its name without unit and gloss:
-        'Worst memory wait among all VMs' finds 'Worst memory wait among all VMs (%): memory latency + NVMe wait'.
+        """The five limits of a sub-metric of a KPI or model (a kpi or model line), matched on its name without unit and gloss:
+        'Worst memory wait among all VMs' finds 'Worst memory wait among all VMs (%)'.
         A part a person reads at 5 minutes holds the highest 20-second value inside it, so the 20-second limits come first,
         then 5-minute, then 2-second. Returns {'metric', 'object', 'limits', 'interval', 'excluded_when_green', 'kb'} or None."""
         key = _part_key(name)
-        for r in self._q('SELECT * FROM kpi'):
+        for r in self._q("SELECT * FROM limits WHERE section != 'score'"):
             if _part_key(r['metric']) != key:
                 continue
             for col, iv in (('s20', '20s'), ('m5', '5m'), ('s2', '2s')):
@@ -257,8 +261,18 @@ class Catalog:
                             'interval': iv, 'excluded_when_green': bool(r['excluded']), 'kb': r['src']}
         return None
 
+    def score_line(self, name):
+        """The score line of a 0-100% score (section score): direction above means higher is worse, published as 100 minus
+        the weighted average of its sub-metric scores (Cluster Risk, Cluster Consumption). None for a KPI without one."""
+        key = _part_key(name)
+        for r in self._q("SELECT * FROM limits WHERE section = 'score'"):
+            if _part_key(r['metric']) == key:
+                return {'metric': r['metric'], 'direction': r['direction'], 'limits': [float(x) for x in (r['m5'] or r['s20']).split('/')],
+                        'kb': r['src']}
+        return None
+
     def thresholds(self, name=None, kb_ids=(), object=None, limit=8):
-        """Thresholds and colour bands for a metric name and/or knowledge files."""
+        """Thresholds, sizing ranges and five-limit lines for a metric name and/or knowledge files."""
         obj = norm_object(object)
         key = (name or '').lower()
         words = [w for w in re.findall(r'[a-z0-9%]+', key) if len(w) > 2]
@@ -270,13 +284,13 @@ class Catalog:
                 s //= 2
             if s:
                 th.append((s, r))
-        for r in self._q('SELECT * FROM bands'):
+        for r in self._q('SELECT * FROM sizing'):
             s = 40 if r['kb'] in kb_ids else 0
             s += _score(key, words, exact=[r['metric'].lower()], text=r['metric'].lower(), desc='') if key else 0
             if s:
                 bd.append((s, r))
         lv = []
-        for r in self._q('SELECT * FROM kpi'):
+        for r in self._q('SELECT * FROM limits'):
             s = 40 if r['src'] in kb_ids else 0
             s += _score(key, words, exact=[r['metric'].lower()], text=r['metric'].lower(), desc='') if key else 0
             if obj and r['object'] != obj:
@@ -296,8 +310,8 @@ class Catalog:
         th, bd, lv, al = _best(th, limit), _best(bd, limit), _best(lv, limit), _best(list(al.values()), limit)
         return {'thresholds': [_compact(r, ('use', 'criticality', 'class', 'metric', 'object', 'instance', 'interval', 'operator', 'value',
                                             'value_high', 'unit', 'condition', 'meaning', 'source', 'kb', 'step')) for r in th],
-                'bands': [_compact(r, ('metric', 'grp', 'grey', 'green', 'yellow', 'orange', 'red', 'interval', 'pillar', 'kb')) for r in bd],
-                'kpi': [_kpi(r) for r in lv],
+                'sizing': [_compact(r, ('metric', 'grp', 'grey', 'green', 'yellow', 'orange', 'red', 'interval', 'pillar', 'kb')) for r in bd],
+                'limits': [_limits(r) for r in lv],
                 'alerts': [_alert(r) for r in al]}
 
     def object_info(self, type_):
@@ -335,7 +349,7 @@ class Catalog:
         """Compact catalog facts for knowledge files in Agent E2's reading set (harness/reading_plan.py).
 
         Order, before the max_rows cap (H1, project/plan.md): first the rows whose metric the question names; then by
-        file, in reading-set order (ids come in tier order, so the main files lead); within a file, bands and KPI levels
+        file, in reading-set order (ids come in tier order, so the main files lead); within a file, sizing ranges and limits
         before thresholds, counters and alerts. Before 2026-11-19 the rows went by kind (counters first), so on a long
         reading set the cap dropped the bands of the file the question was about."""
         if not ids:
@@ -349,15 +363,15 @@ class Catalog:
             named = bool(q) and any(len(n.split()) >= 2 and n in q for n in map(_norm_name, names) if n)
             rows.append((0 if named else 1, rank.get(kb, len(ids)), kind, line))
 
-        for r in self._q(f'SELECT * FROM bands WHERE kb IN ({marks})', tuple(ids)):
+        for r in self._q(f'SELECT * FROM sizing WHERE kb IN ({marks})', tuple(ids)):
             grey = f"grey {r['grey']}, " if r['grey'] else ''
             add(0, r['kb'], (r['metric'],),
-                f"- Bands: {r['metric']} ({r['grp']}): {grey}green {r['green']}, yellow {r['yellow']}, orange {r['orange']}, red {r['red']}. [{r['kb']}]")
-        for r in self._q(f'SELECT * FROM kpi WHERE src IN ({marks})', tuple(ids)):
+                f"- Sizing range: {r['metric']} ({r['grp']}): {grey}green {r['green']}, yellow {r['yellow']}, orange {r['orange']}, red {r['red']}. [{r['kb']}]")
+        for r in self._q(f'SELECT * FROM limits WHERE src IN ({marks})', tuple(ids)):
             worse = 'higher is worse' if r['direction'] == 'above' else 'lower is worse'
-            vals = '; '.join(f"{iv} {_ranges(r[col])}" for iv, col in (('20s', 's20'), ('5m', 'm5'), ('2s', 's2')))
+            vals = '; '.join(f"{iv} {_ranges(r[col])}" for iv, col in (('20s', 's20'), ('5m', 'm5'), ('2s', 's2')) if r[col])
             ex = '; left out of the score while green' if r['excluded'] else ''
-            add(1, r['src'], (r['metric'],), f"- KPI levels: {r['object']} {r['metric']} ({r['grp']}), {worse}: {vals}{ex}. [{r['src']}]")
+            add(1, r['src'], (r['metric'],), f"- Limits: {r['object']} {r['metric']} ({r['grp']}), {worse}: {vals}{ex}. [{r['src']}]")
         for r in self._q(f'SELECT * FROM thresholds WHERE kb IN ({marks})', tuple(ids)):
             hi = f"-{r['value_high']:g}" if r['value_high'] is not None else ''
             cond = f" with {r['condition']}" if r['condition'] else ''
@@ -386,7 +400,7 @@ class Catalog:
 
     def stats(self):
         return {t: self._q(f'SELECT COUNT(*) AS n FROM {t}')[0]['n']
-                for t in ('counters', 'api_counters', 'esxtop', 'thresholds', 'symptoms', 'alerts', 'bands', 'kpi', 'metrics', 'objects', 'relations')}
+                for t in ('counters', 'api_counters', 'esxtop', 'thresholds', 'symptoms', 'alerts', 'sizing', 'limits', 'metrics', 'objects', 'relations')}
 
 
 def _norm_name(s):
@@ -440,9 +454,11 @@ def _bare(name):
 
 
 def _part_key(name):
-    """A KPI part's name without a unit in brackets and without the gloss after a colon, lower case."""
-    s = re.sub(r'\s*\((?:%|ms|µs|us|ratio|mb|gb|kbps|mbps)\)', '', str(name or ''), flags=re.I)
-    return re.sub(r'\s+', ' ', s.split(':')[0]).strip().lower()
+    """A sub-metric's name without the gloss after a colon and without its trailing unit in brackets ("(%)", "(% of DRAM)"),
+    lower case. Brackets inside the name stay: "Highest ESXi (error + dropped) network packets"."""
+    s = str(name or '').split(':')[0]
+    s = re.sub(r'\s*\([^()]*\)\s*$', '', s)
+    return re.sub(r'\s+', ' ', s).strip().lower()
 
 
 def _objs(o):
@@ -473,10 +489,10 @@ def _ranges(cell):
     return ', '.join(cols) + f', score 0 beyond {v[4]}'
 
 
-def _kpi(r):
+def _limits(r):
     return {'object': r['object'], 'metric': r['metric'], 'group': r['grp'], 'worse': r['direction'],
             **{iv: _ranges(r[col]) for iv, col in (('5m', 'm5'), ('20s', 's20'), ('2s', 's2'))},
-            **({'excluded_when_green': True} if r['excluded'] else {}), 'kb': r['src']}
+            **({'excluded_when_green': True} if r['excluded'] else {}), 'kb': r['src'], 'section': r['section']}
 
 
 def _compact(r, keys):

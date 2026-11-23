@@ -1,8 +1,10 @@
 meta:
   id: catalog/thresholds-capacity
-  title: 'Capacity thresholds: models, decisions, planning rules'
+  title: 'Capacity thresholds: Cluster Consumption, sizing, decisions, planning rules'
   sections:
-    models: Capacity and risk model inputs with colour bands (grey for wastage, green, yellow, orange, red).
+    model: 'The sub-metrics of Cluster Consumption, five limits each: the same line format as the kpi section of catalog/thresholds-performance (meta, limits_fields). Cluster Risk has its own file, catalog/thresholds-risk.'
+    score: 'The limits of the Cluster Consumption score itself (0-100%, higher is worse). Same line format.'
+    sizing: 'Sizing ranges, two-sided: grey (below green: wastage), green, yellow, orange, red. Not a scored sub-metric: no score, no weight.'
     decisions: 'Close for business: when a cluster takes no more VMs. Reads model and KPI scores over 24 hours.'
     rules: 'Planning and sizing rules: one value, above X means Y.'
   fields:
@@ -23,11 +25,20 @@ meta:
     kb: Knowledge file that states and explains the threshold.
     quote: Text copied from the kb file; lint checks it is still there.
     interval: 'Usually empty: capacity reads sustained values.'
-    bands: 'grey (below green: wastage), green, yellow, orange, red. Grey is empty until a source gives it.'
+    bands: 'sizing rows: grey (below green: wastage), green, yellow, orange, red, each a range. Grey is empty until a source gives it.'
   review_notes:
   - 'To check: grey (wastage) band values, empty until a source gives them.'
   status: reviewed
-models:
+model:
+- {object: ClusterComputeResource, metric: "Cluster-wide ESXi CPU thread utilization (%)", group: "Utilization", direction: above, 5m: [0, 55, 70, 85, 100], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-consumption}
+- {object: ClusterComputeResource, metric: "Cluster-wide ESXi memory consumed (%)", description: "Consumed memory of all hosts ÷ their usable memory: DRAM, plus the NVMe tier on a tiered host, as vSphere counts host memory.", group: "Utilization", direction: above, 5m: [0, 70, 80, 90, 100], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-consumption}
+- {object: ClusterComputeResource, metric: "Cluster-wide ESXi DRAM Consumed (%)", description: "DRAM in use on all tiered hosts (Memory Consumed − NVMe tier in use) ÷ their usable DRAM. A separate metric from Memory Consumed.", group: "Utilization", direction: above, 5m: [0, 80, 85, 90, 100], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-consumption}
+- {object: ClusterComputeResource, metric: "Cluster memory tiering consumption (%)", description: "NVMe tier in use on all tiered hosts ÷ their usable DRAM (Total − HA − Buffer), not ÷ the NVMe tier.", group: "Saturation", direction: above, 5m: [0, 15, 30, 45, 60], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-consumption}
+- {object: ClusterComputeResource, metric: "Cluster-wide ESXi memory ballooned (%)", group: "Saturation", direction: above, 5m: [0, 1, 2, 4, 8], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-consumption}
+- {object: ClusterComputeResource, metric: "Cluster-wide ESXi swapped + zipped memory (%)", group: "Saturation", direction: above, 5m: [0, 0.25, 0.5, 1, 2], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-consumption}
+score:
+- {object: ClusterComputeResource, metric: "Cluster Consumption (%)", group: "Score", direction: above, 5m: [0, 25, 50, 75, 100], 20s: null, 2s: null, kb: vsphere/object-types/cluster/models/cluster-consumption}
+sizing:
 - id: guest-os-sizing-guest-os-memory-utilization-for-sizing
   metric: Guest OS memory utilization for sizing (%)
   group: null
@@ -41,256 +52,6 @@ models:
     red: 95-100
   source: knowledge-base
   kb: guest-os/system/guest-os-sizing
-- id: cluster-consumption-cluster-consumption
-  metric: Cluster Consumption (%)
-  group: Utilization
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-25
-    yellow: 25-50
-    orange: 50-75
-    red: 75-100
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-consumption
-- id: cluster-consumption-cluster-wide-esxi-cpu-thread-utilization
-  metric: Cluster-wide ESXi CPU thread utilization (%)
-  group: Utilization
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-55
-    yellow: 55-70
-    orange: 70-85
-    red: 85-100
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-consumption
-- id: cluster-consumption-cluster-wide-esxi-memory-consumed
-  metric: Cluster-wide ESXi memory consumed (%)
-  description: 'Consumed memory of all hosts ÷ their usable memory: DRAM, plus the NVMe tier on a tiered host, as vSphere counts host memory.'
-  group: Utilization
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-70
-    yellow: 70-80
-    orange: 80-90
-    red: 90-100
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-consumption
-- id: cluster-consumption-cluster-wide-esxi-dram-consumed
-  metric: Cluster-wide ESXi DRAM Consumed (%)
-  description: 'DRAM in use on all tiered hosts (Memory Consumed − NVMe tier in use) ÷ their usable DRAM. A separate metric from Memory Consumed.'
-  group: Utilization
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-80
-    yellow: 80-85
-    orange: 85-90
-    red: 90-100
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-consumption
-- id: cluster-consumption-cluster-memory-tiering-consumption
-  metric: Cluster memory tiering consumption (%)
-  description: 'NVMe tier in use on all tiered hosts ÷ their usable DRAM (Total − HA − Buffer), not ÷ the NVMe tier.'
-  group: Saturation
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-15
-    yellow: 15-30
-    orange: 30-45
-    red: 45-60
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-consumption
-- id: cluster-consumption-cluster-wide-esxi-memory-ballooned
-  metric: Cluster-wide ESXi memory ballooned (%)
-  group: Saturation
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-1
-    yellow: 1-2
-    orange: 2-4
-    red: 4-8
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-consumption
-- id: cluster-consumption-cluster-wide-esxi-swapped-zipped-memory
-  metric: Cluster-wide ESXi swapped + zipped memory (%)
-  group: Saturation
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-0.25
-    yellow: 0.25-0.5
-    orange: 0.5-1
-    red: 1-2
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-consumption
-- id: cluster-risk-highest-esxi-cpu-thread-utilization
-  metric: Highest ESXi CPU thread utilization (%)
-  group: Utilization
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: Excluded
-    yellow: 60-80
-    orange: 80-90
-    red: 90-95
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
-- id: cluster-risk-worst-esxi-cpu-imbalance-ratio
-  metric: Worst ESXi CPU imbalance (ratio)
-  group: Utilization
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: '1'
-    yellow: 1-1.3
-    orange: 1.3-1.6
-    red: 1.6-2
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
-- id: cluster-risk-worst-esxi-memory-ballooned
-  metric: Worst ESXi memory ballooned (%)
-  group: Saturation
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-1
-    yellow: 1-2
-    orange: 2-4
-    red: 4-8
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
-- id: cluster-risk-worst-esxi-swapped-zipped-memory
-  metric: Worst ESXi swapped + zipped memory (%)
-  group: Saturation
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-0.25
-    yellow: 0.25-0.5
-    orange: 0.5-1
-    red: 1-2
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
-- id: cluster-risk-worst-esxi-active-memory-tiered
-  metric: Worst ESXi active memory, tiered hosts (% of DRAM)
-  group: Saturation
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-50
-    yellow: 50-62.5
-    orange: 62.5-75
-    red: 75-100
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
-- id: cluster-risk-worst-esxi-memory-tiering-latency-s
-  metric: Worst ESXi NVMe read latency (µs)
-  group: Saturation
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-100
-    yellow: 100-200
-    orange: 200-400
-    red: 400-800
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
-- id: cluster-risk-highest-esxi-cpu-reservation
-  metric: Highest ESXi CPU reservation (%)
-  group: Reservation
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: Excluded
-    yellow: 10-40
-    orange: 40-60
-    red: 60-80
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
-- id: cluster-risk-highest-esxi-memory-reservation
-  metric: Highest ESXi memory reservation (%)
-  group: Reservation
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: Excluded
-    yellow: 10-40
-    orange: 40-60
-    red: 60-80
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
-- id: cluster-risk-highest-esxi-cpu-overcommit-ratio
-  metric: Highest ESXi CPU overcommit ratio
-  group: Allocation
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: Excluded
-    yellow: 1-2
-    orange: 2-3
-    red: 3-4
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
-- id: cluster-risk-highest-esxi-memory-overcommit-ratio
-  metric: Highest ESXi memory overcommit ratio
-  group: Allocation
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: Excluded
-    yellow: 1-1.4
-    orange: 1.4-1.8
-    red: 1.8-2.2
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
-- id: cluster-risk-highest-cpu-monster-vm-host-ratio
-  metric: 'Highest CPU monster VM : host ratio'
-  group: Monster VM
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-1
-    yellow: 1-2
-    orange: 2-3
-    red: 3-4
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
-- id: cluster-risk-highest-memory-monster-vm-host-ratio
-  metric: 'Highest memory monster VM : host ratio'
-  group: Monster VM
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-1
-    yellow: 1-2
-    orange: 2-3
-    red: 3-4
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
 decisions:
 - id: closure-cluster-consumption-red
   metric: Cluster Consumption (%), 95th percentile of the last 24 hours

@@ -68,7 +68,7 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 
 ## Memory
 - Memory is cache. Unused memory is waste: aim high, with a narrow green band.
-- Two range schemes for Guest OS memory utilization; option 2 is recommended: a wide grey (waste) zone, then a narrow green band near the top. Its colour bands: `catalog/thresholds-capacity`, rows with this file as `kb`, shown with this file; this file holds the reasons.
+- Two range schemes for Guest OS memory utilization; option 2 is recommended: a wide grey (waste) zone, then a narrow green band near the top. Its sizing range: `catalog/thresholds-capacity`, section `sizing`, the row with this file as `kb`, shown with this file; this file holds the reasons.
 - Below the green band is grey: waste.
 - Grey is a fifth range, below green, and exists only in capacity management: unused capacity is waste. Performance has no grey range: there is no wasted performance.
 - Green is 10 points wide. Windows and Linux cache memory, so a high value is normal.

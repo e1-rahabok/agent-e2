@@ -47,7 +47,7 @@
 
 ## Scoring
 - Each metric maps to a score: green 100-75, yellow 75-50, orange 50-25, red 25-0.
-- Five limits per metric: the values where the score is 100, 75, 50, 25 and 0. Inside a range the score falls in a straight line. Past the 0 limit it stays 0; before the best limit it stays 100. In `catalog/thresholds-performance`, section `kpi`, each cell holds them as [green, yellow, orange, red, zero]: where each colour starts, and where red ends. Red is a range, not open ended: without the zero limit no score can be computed.
+- Five limits per metric: the values where the score is 100, 75, 50, 25 and 0. Inside a range the score falls in a straight line. Past the 0 limit it stays 0; before the best limit it stays 100. In the catalog each cell holds them as [best, green, yellow, orange, zero-at], the adapter's terms: a limit is where a colour band ends. Red is a range, not open ended: without the zero-at limit no score can be computed.
 - Direction: lower is better for most metrics (CPU Ready), so the limits go up. Higher is better for a few (Guest OS free memory), so the limits go down. One calculation handles both.
 - The best limit is not always 0. For ESXi CPU Imbalance it is 1, one running thread per running core, so every value up to 1 scores 100.
 - Combine as a weighted average where a worse score weighs more:

@@ -27,7 +27,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 ## 3. How it knows the knowledge base
 - At start, `knowledge_loader.py` loads every indexed file: the metadata block becomes filter fields and links; the body is chunked by `##` heading, each chunk prefixed with the file title and id.
 - `knowledge_search.py` builds a keyword index (BM25) and an embedding index over the chunks, fused by rank, with metadata filters and link expansion.
-- `catalog_database.py` compiles `knowledge/catalog/*.yaml` and the colour bands in the KPI files into an in-memory SQLite database.
+- `catalog_database.py` compiles `knowledge/catalog/*.yaml` and the colour-band tables of knowledge files (lint rejects them) into an in-memory SQLite database.
 - `flow_executor.py` reads the numbered steps of each health-check, troubleshooting and decision-tree file (its `retriever_guide`, wherever it sits) directly; there is no second copy.
 - So the harness knows the content by structure: ids, headings, tags, links and catalog rows. How the agent plans with it: `AGENT.md`, section 4.2. How the knowledge is shaped for this: [`KNOWLEDGE-ENGINEERING.md`](../KNOWLEDGE-ENGINEERING.md) and its rule modules in [`project/knowledge-rules/`](../project/knowledge-rules). Full ingest, query and answer contract: [`ARCHITECTURE.md`](../ARCHITECTURE.md), section Local LLM use.
 
@@ -36,7 +36,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 |---|---|
 | `knowledge_loader.py` | Load `knowledge/`: metadata split off, body chunked by `##` heading, chunks prefixed with title and id. |
 | `knowledge_search.py` | Hybrid search (BM25 + embeddings, reciprocal rank fusion), metadata filters, links of a file by type. |
-| `catalog_database.py` | Metric catalog in SQLite: lookups by counter, chart label, esxtop field or title; chart and API units; thresholds; colour bands; object relations and paths. |
+| `catalog_database.py` | Metric catalog in SQLite: lookups by counter, chart label, esxtop field or title; chart and API units; thresholds; five limits of every scored line; sizing ranges; object relations and paths. |
 | `arithmetic_calculator.py` | Safe arithmetic plus domain functions (summation ms ↔ %, units with vCenter KB/kb rules, CPU capacity, esxtop state sums). Each result names its source. |
 | `capacity_calculator.py` | Planning calculator (`capacity_calculator.plan`; not yet wired into the agent, `AGENT.md` section 7): how many VMs of a class fit per host, or how full a host or cluster is for a VM mix. Allocation, reservation and utilization × CPU and memory; defaults are catalog rows `planning-*`. Method: [`sp5-framework/capacity/class-of-service-planning`](../knowledge/sp5-framework/capacity/class-of-service-planning.md), section Planning calculator. |
 | `public_web_lookup.py` | Public web knowledge: URLs in the question read before the model starts; search only for current facts (a pattern list); system names dropped from queries; private addresses refused; pages trimmed and labelled untrusted. Config key `web`. |
@@ -58,7 +58,7 @@ The agent's code calls them; the model calls none (`AGENT.md`, section 1).
 | Tool | Returns | Called in |
 |---|---|---|
 | `knowledge_search.search`, `knowledge_search.links` | File ids and best chunks; linked files by type | Stage 2, the reading plan |
-| `catalog_database.lookup`, `catalog_database.facts_for` | Counter unit, rollup, statistics level, esxtop field, thresholds with source, KPI levels, object relations | Stage 1 (names of the case), stage 2 (counter keys), the reading set's catalog facts |
+| `catalog_database.lookup`, `catalog_database.facts_for` | Counter unit, rollup, statistics level, esxtop field, thresholds with source, limits, object relations | Stage 1 (names of the case), stage 2 (counter keys), the reading set's catalog facts |
 | `arithmetic_calculator.evaluate` | Result plus source notes | Stage 3, summation conversions |
 | `arithmetic_calculator.trend`, `arithmetic_calculator.kpi_parts` (with `catalog_database.kpi_limits`) | A KPI series against its change level; a KPI's parts at one point scored with their catalog limits, the KPI rebuilt and the points it lost split among the parts | Stage 3, from a caller's facts (`expert_agent.kpi_trends`, `expert_agent.kpi_part_lines`) |
 | `capacity_calculator.plan` | VMs per host, or how full a host or cluster is for a planned VM mix | To wire into stage 3 |

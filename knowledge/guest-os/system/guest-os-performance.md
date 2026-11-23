@@ -18,7 +18,7 @@
 | Guest OS utilization | Free memory | `guest\|mem.free_latest` ÷ 1024 (KB to MB) | MB | 1,024 or more | Free memory (MB) |
 | Guest OS utilization | Page-out rate | `guest\|page.outRate_latest` | pages/s | 0 | Memory page-out rate (pages/s) |
 
-- Colour levels: `catalog/thresholds-performance`, section `kpi`, rows with this file as `kb`.
+- Limits: `catalog/thresholds-performance`, section `kpi`, lines with this file as `kb`.
 - Free memory is higher-is-better, so its limits go down: 1 GB or more free scores 100; the green range ends at 512 MB.
 - The run queue stat is already per vCPU: VCF Operations divides the guest's total queue by the vCPU count ([`guest-os/cpu/metrics/run-queue`](../cpu/metrics/run-queue.md), section Scale in VCF Operations).
 - Free memory uses the latest value, not the lowest 20-second value: it measures space, and the latest value matters.

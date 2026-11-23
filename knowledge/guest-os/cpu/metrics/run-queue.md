@@ -26,7 +26,7 @@
 - So halving the vCPUs does not double the per vCPU value. Compare the same busy hours before and after, against the KPI levels, with Ready, Co-stop, Usage against Demand and N%L ([`sp5-framework/capacity/rightsizing`](../../../sp5-framework/capacity/rightsizing.md), section Before vs after).
 
 ## Thresholds
-- Colour levels per processor: the Guest OS KPI row "Peak vCPU run queue length (count)" in the threshold catalog (one place per number). The VCF Operations value is already per vCPU, so it compares directly with the KPI levels; a PerfMon or `vmstat` total is divided by the vCPU count first.
+- Limits per processor: the Guest OS kpi line "Peak vCPU run queue length (count)" in the threshold catalog (one place per number). The VCF Operations value is already per vCPU, so it compares directly with the KPI levels; a PerfMon or `vmstat` total is divided by the vCPU count first.
 - The alert symptoms on these metrics (red above 20 for the 20-second peak, above 4 for the 5-minute value) are tested on the same per vCPU value, so one value works for a VM of any size. 20 per vCPU is high on purpose (a total of 160 threads on 8 vCPUs, 320 on 16): the alert fires only on an extreme queue, to avoid false positives. The KPI turns red at 16. When the alert fires, read the two checks in [`guest-os/guest-os-alerts`](../../guest-os-alerts.md), section Guest OS CPU run queue.
 - PerfMon UI text: divide by processors; below 10 per processor is normally acceptable. MSDN: above 2 sustained indicates congestion. SQL Server documentation: 3.
 - Utilization can be 100% with a low queue: the workload runs as fast as it can. Adding vCPUs then slows it (more context switching).

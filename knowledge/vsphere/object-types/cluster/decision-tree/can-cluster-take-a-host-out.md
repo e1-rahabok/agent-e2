@@ -33,7 +33,7 @@ flowchart TD
    - a VM whose CPU or memory reservation is too large to run on any remaining host (p. 1955): the cluster has room in total, but in no single host.
    Found → no, or power those VMs off for the window, or change the rule to a preferential "should run on" rule. None → step 4.
 4. Remaining capacity (ClusterComputeResource). Spread the load of the cluster over the hosts that remain:
-   - CPU: threads in use on all hosts ÷ threads of the remaining hosts. Keep it below the red band of the catalog row `cluster-consumption-cluster-wide-esxi-cpu-thread-utilization` (`catalog/thresholds-capacity`).
+   - CPU: threads in use on all hosts ÷ threads of the remaining hosts. Keep it below the orange limit, where red starts, of the catalog line Cluster-wide ESXi CPU thread utilization (%) (`catalog/thresholds-capacity`, section `model`).
    - Memory: consumed memory of all hosts ÷ DRAM of the remaining hosts. Ballooning starts only near 99% of a host, so a high value is a risk, not slowness; keep the hosts out of the low memory state ([`vsphere/technology/memory/concepts/host-memory-states`](../../../technology/memory/concepts/host-memory-states.md)).
    - Cluster Performance (%) already orange or red → no: one host fewer adds contention ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md)).
    - Fits → step 5. Does not fit → no; move or power off workload first, or wait for a quieter window.

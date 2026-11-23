@@ -12,14 +12,14 @@
 ## Sub-metrics
 | Group | Sub-metric | Cluster-wide value |
 |---|---|---|
-| Utilization | ESXi CPU Thread Utilization | Threads in use on all hosts ÷ CPU usable capacity in threads |
-| Utilization | ESXi Memory Consumed | Consumed memory of all hosts ÷ usable memory: DRAM, plus the NVMe tier on a tiered host. The raw vCenter metric, unchanged: on a tiered host vSphere counts DRAM and NVMe as host memory, and Consumed covers both |
-| Utilization | ESXi DRAM Consumed | DRAM in use on all tiered hosts ÷ their usable DRAM. A separate metric, not Memory Consumed: DRAM in use = Memory Consumed − NVMe tier in use, per host. Never above 100%; tiering starts at about 80% of DRAM, so green runs to 80. Cluster Risk has no memory consumed row. |
-| Saturation | Memory Tiering Consumption | NVMe tier in use on all tiered hosts ÷ their usable DRAM: how much memory sits beyond DRAM, against the DRAM it spilled from |
-| Saturation | ESXi Memory Ballooned | Ballooned memory of all hosts ÷ usable DRAM |
-| Saturation | ESXi Memory Zip Swap | Compressed plus swapped memory of all hosts ÷ usable DRAM |
+| Utilization | Cluster-wide ESXi CPU thread utilization (%) | Threads in use on all hosts ÷ CPU usable capacity in threads |
+| Utilization | Cluster-wide ESXi memory consumed (%) | Consumed memory of all hosts ÷ usable memory: DRAM, plus the NVMe tier on a tiered host. The raw vCenter metric, unchanged: on a tiered host vSphere counts DRAM and NVMe as host memory, and Consumed covers both |
+| Utilization | Cluster-wide ESXi DRAM Consumed (%) | DRAM in use on all tiered hosts ÷ their usable DRAM. A separate metric, not Memory Consumed: DRAM in use = Memory Consumed − NVMe tier in use, per host. Never above 100%; tiering starts at about 80% of DRAM, so green runs to 80. Cluster Risk has no memory consumed row. |
+| Saturation | Cluster memory tiering consumption (%) | NVMe tier in use on all tiered hosts ÷ their usable DRAM: how much memory sits beyond DRAM, against the DRAM it spilled from |
+| Saturation | Cluster-wide ESXi memory ballooned (%) | Ballooned memory of all hosts ÷ usable DRAM |
+| Saturation | Cluster-wide ESXi swapped + zipped memory (%) | Compressed plus swapped memory of all hosts ÷ usable DRAM |
 
-- Colour bands: `catalog/thresholds-capacity`, rows with this file as `kb`. No green range is excluded: every row with data counts.
+- Limits: `catalog/thresholds-capacity`, section `model` (the sub-metrics) and `score` (Cluster Consumption itself), lines with this file as `kb`. No green band is excluded: every sub-metric with data counts.
 - Threads in use per host = `cpu|utilization_average` % × threads. Memory: `mem|consumed_average`, `mem|vmmemctl_average`, `mem|compressed_average`, `mem|swapout_average`; NVMe tier in use `mem:NVMe|tier.usage`; a host with `mem:NVMe|memory_tier_size` above 0 is a tiered host.
 - Memory reads ESXi Memory Consumed, not ESXi Memory Utilization: Utilization mixes realms, because its VM term comes from Guest OS counters; Consumed stays in one realm and is conservative, and the reclamation it leaves out counts as saturation ([`vsphere/technology/memory/metrics/host/utilization`](../../../technology/memory/metrics/host/utilization.md), section Reason).
 - Memory Consumed is against the host memory vSphere reports: DRAM, plus the NVMe tier on a tiered host (`mem:NVMe|memory_tier_size`). Every other memory row is against DRAM only, never DRAM plus a memory tier. ESXi DRAM Consumed per host = `mem|consumed_average` − `mem:NVMe|tier.usage`.
@@ -37,7 +37,7 @@
 - Worked example, CPU: threads in use 25.6 + 22.4 = 48 of 96 (50% of total; the average of 40% and 70% would be 55%). Against usable (76.8 threads): 62.5%, in yellow, score 62.5, weight 2.83.
 - Worked example, memory: consumed 307.2 + 179.2 = 486.4 GB of 614.4 GB usable: 79.17%, near the end of yellow, score 52.08, weight 3.78.
 - Worked example, saturation: Ballooned and Zip Swap read 0, green, score 100, weight 1 each; they count, because no green range of this model is excluded.
-- Worked example, result: weighted average (62.5 × 2.83 + 52.08 × 3.78 + 100 + 100) ÷ (2.83 + 3.78 + 1 + 1) = 66.64; Cluster Consumption = 100 − 66.64 = 33.36. The bands of each row: `catalog/thresholds-capacity`, rows `cluster-consumption-*`.
+- Worked example, result: weighted average (62.5 × 2.83 + 52.08 × 3.78 + 100 + 100) ÷ (2.83 + 3.78 + 1 + 1) = 66.64; Cluster Consumption = 100 − 66.64 = 33.36. The limits of each sub-metric: `catalog/thresholds-capacity`, section `model`.
 - A worse sub-metric can lower Cluster Consumption: its weight rises as its score falls, so a row that gets worse but stays below the rows driving the score lowers the weighted average. Same mechanism as Cluster Risk ([`vsphere/object-types/cluster/models/cluster-risk`](cluster-risk.md), section Sub-metric weight in Cluster Risk).
 - Missing data: a row with no data is left out, never counted as 0, because 0 means nothing consumed.
 

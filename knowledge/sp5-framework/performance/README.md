@@ -39,7 +39,7 @@
 | Provider | ESXi host | ESXi Performance (%) | Worst VM and 90th percentile; host bad packets | [`vsphere/object-types/esxi/esxi-performance`](../../vsphere/object-types/esxi/esxi-performance.md) |
 | Provider | Cluster | Cluster Performance (%) | Worst VM and 90th percentile; worst host bad packets | [`vsphere/object-types/cluster/cluster-performance`](../../vsphere/object-types/cluster/cluster-performance.md) |
 
-- Design shared by every KPI (which metrics qualify, 20-second peaks, scoring, the daily actual): [`sp5-framework/performance/performance-kpi-design`](performance-kpi-design.md). Colour levels: `catalog/thresholds-performance`.
+- Design shared by every KPI (which metrics qualify, 20-second peaks, scoring, the daily actual): [`sp5-framework/performance/performance-kpi-design`](performance-kpi-design.md). Limits: `catalog/thresholds-performance`, section `kpi`.
 - KPI vs SLA, and KPIs per layer of the business: [`sp5-framework/performance/kpi-vs-sla`](kpi-vs-sla.md).
 - Not built yet: a datastore KPI, a vSAN KPI (disk latency of every VM on the vSAN datastore), an NSX KPI.
 

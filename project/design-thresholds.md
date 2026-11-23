@@ -27,7 +27,8 @@ Not indexed.
 | File | Content |
 |---|---|
 | [`knowledge/catalog/thresholds-performance.yaml`](../knowledge/catalog/thresholds-performance.yaml) | `kpi`: 31 lines (2026-11-11: `sla` and `sli` removed), green, yellow, orange, red, zero for 5m, 20s and 2s (2026-11-12: green and zero added), entered by hand, with `group`, `kb`, `excluded_when_green` (2026-11-10: one place; 20 rows that served no use case went back to prose; 2 capacity rows moved); `flow`: 2 flow tests (KAVG, DAVG; host-storage-latency step 1; 2026-11-15, Q195) |
-| [`knowledge/catalog/thresholds-capacity.yaml`](../knowledge/catalog/thresholds-capacity.yaml) | `models`: 18 rows with a grey (wastage) band. `decisions`: 6 close-for-business rows. `rules`: 12 planning and sizing rows (2026-11-10: 7 vendor and default rows went back to prose) |
+| [`knowledge/catalog/thresholds-capacity.yaml`](../knowledge/catalog/thresholds-capacity.yaml) | `model`: 6 sub-metrics of Cluster Consumption and `score`: the Cluster Consumption score, in the `kpi` line format (five limits, 2026-11-22; were `models` rows with colour-band ranges). `sizing`: 1 two-sided range with a grey (wastage) band, not scored. `decisions`: 6 close-for-business rows. `rules`: planning and sizing rows. |
+| [`knowledge/catalog/thresholds-risk.yaml`](../knowledge/catalog/thresholds-risk.yaml) | `model`: 12 sub-metrics of Cluster Risk and `score`: the Cluster Risk score, in the `kpi` line format (2026-11-22). Its own file: Cluster Risk links performance and capacity. |
 | [`knowledge/catalog/thresholds-alerts.yaml`](../knowledge/catalog/thresholds-alerts.yaml) | `symptoms`: 40, one test each; `alerts`: 33 definitions, one object type each (2026-11-12; were 24 with object lists, and before that 20 rows with a free-text `condition`), each with `criticality`, `pillar`, `match`, symptom `sets` (self or children with a population) and `wait_cycles` |
 | Knowledge files | No colour-band table: the file holds the reasons; Agent E2 shows the catalog values with it. Alert files hold no values (2026-11-12): one file per object type, each alert explained under a heading with its catalog name. Capacity flow steps still carry their numbers (marked by `quote` in the row) until they move |
 
@@ -164,7 +165,8 @@ reading key = (object, metric, instance, interval or window statistic)
 |---|---|---|
 | `readings.yaml` | Reading keys and mapping | Yes |
 | `thresholds-performance.yaml` | KPI levels (9 values per metric), SLI tests, SLA targets, performance rules | Yes |
-| `thresholds-capacity.yaml` | Capacity and risk models, decisions, planning and sizing rules | Yes |
+| `thresholds-capacity.yaml` | Cluster Consumption (sub-metrics and score), sizing ranges, decisions, planning and sizing rules | Yes |
+| `thresholds-risk.yaml` | Cluster Risk (sub-metrics and score) | Yes |
 | `thresholds-alerts.yaml` | Symptoms (one test each) and alert definitions (built 2026-11-12); cancel cycles to do (section 9) | Yes |
 | `thresholds-availability.yaml` | KAI (internal target) and SLA (contract) | Two rows (99.95%, 100%); rest open to contributors |
 | `thresholds-security.yaml` | KSI (security and compliance internal target) and SLA | Open to contributors |

@@ -51,7 +51,7 @@
 - Accounting:
   - relative utilization, against usable capacity: exclude the HA host;
   - keep the hypervisor overhead of the other hosts: it is part of the load.
-- Colour bands of a running cluster: Cluster Consumption (%), against usable capacity, with its rows in `catalog/thresholds-capacity` ([`vsphere/object-types/cluster/models/cluster-consumption`](../../vsphere/object-types/cluster/models/cluster-consumption.md)).
+- Limits of a running cluster: Cluster Consumption (%), against usable capacity, with its lines in `catalog/thresholds-capacity`, sections `model` and `score` ([`vsphere/object-types/cluster/models/cluster-consumption`](../../vsphere/object-types/cluster/models/cluster-consumption.md)).
 
 
 ## Contention

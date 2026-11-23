@@ -129,7 +129,7 @@ flowchart LR
 | Path | Where | What it holds |
 |---|---|---|
 | Retrieved | [`ready`](knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/ready.md) | The mechanism, `internal_derive` to `vcpu-states` and `provider-consumer`, and misconception lines such as "Ready 2% is always low" → read it against Run |
-| Looked up | `vcenter-counters.yaml`, row `cpu.ready`; `thresholds-performance.yaml`, row "Peak CPU Ready among any vCPU (%)" | Unit, rollup, statistics level and page; the 20-second colour bands, with `kb` pointing to the file that explains them |
+| Looked up | `vcenter-counters.yaml`, row `cpu.ready`; `thresholds-performance.yaml`, row "Peak CPU Ready among any vCPU (%)" | Unit, rollup, statistics level and page; the 20-second limits, with `kb` pointing to the file that explains them |
 | Up front | The `provider-consumer` line marked `up_front` | "ESXi CPU Ready is high, so the host waits for CPU" → Ready is a consumer metric |
 | Glossary and term map | Entries Readiness and Max Limited; the term-map row for "steal time" | The user's words lead to the Ready file |
 | Code | `arithmetic_calculator.summation_to_percent(ms, interval_seconds, vcpus)` | The ms to % conversion, done exactly |
