@@ -1175,6 +1175,65 @@ class AnswerServiceTest(unittest.TestCase):
         line = '- X across the window: median 81. Verdict: steady. No drop. Say this first. [arithmetic_calculator.py: note]'
         self.assertEqual(answer_service._shown(line), 'X across the window: median 81. Verdict: steady. No drop.')
 
+    SG_S_01 = ('Cluster Performance across the window (288 points): median 84.7, lowest 41.9, highest 93.2. The worst, 41.9 at '
+               '2026-10-19T08:30:00+08:00, is 42.8 points below the median. KPI change level: 5 points. Verdict: worsened, '
+               'by 42.8 points from the median.')
+    PARTS = ('Cluster Performance at 2026-10-19T08:30:00+08:00: rebuilt from its 9 sub-metrics, 41.93. Sub-metrics, most points '
+             'lost first: Highest ESXi (error + dropped) network packets 0.43%: score 0, red, 29 points lost (29%).')
+
+    def test_computed_time_is_shown_in_the_screen_format(self):
+        shown = answer_service._shown('- ' + self.SG_S_01 + ' [arithmetic_calculator.py: note]')
+        self.assertIn('41.9 at 19 Oct, 08:30,', shown)
+        self.assertNotIn('2026-10-19', shown)
+        self.assertIn('median 84.7, lowest 41.9, highest 93.2', shown)
+
+    def test_headline_figures_leave_out_times_and_part_values(self):
+        figs = answer_service.headline_figures([answer_service._shown(self.SG_S_01), answer_service._shown(self.PARTS)])
+        self.assertEqual(figs, {'84.7', '41.9', '93.2', '42.8', '288'})
+
+    def _service_with(self, reply):
+        class Rewriter:
+            calls = 0
+
+            def chat(self, model, messages, **kw):
+                Rewriter.calls += 1
+                return {'content': reply}
+        svc = answer_service.Service.__new__(answer_service.Service)
+        svc.client, svc.model, svc.cfg = Rewriter(), 'mock', {}
+        return svc, Rewriter
+
+    def test_text_that_repeats_the_computed_figures_gets_one_rewrite(self):
+        shown = [answer_service._shown(self.SG_S_01)]
+        svc, rw = self._service_with('Highest ESXi network packets pulled it down, at 0.43%. Open the Performance tab.')
+        out = svc.no_repeat('The drop to 41.9% at 08:30 is 42.8 points below the window median of 84.7%.', shown)
+        self.assertEqual(rw.calls, 1)
+        self.assertEqual(answer_service.repeated_figures(out, answer_service.headline_figures(shown)), [])
+        self.assertTrue(out.startswith('Highest ESXi network packets'))
+
+    def test_text_with_a_part_value_is_kept_as_it_is(self):
+        svc, rw = self._service_with('x')
+        text = 'Highest ESXi network packets pulled it down, at 0.43%. Open the Performance tab.'
+        self.assertEqual(svc.no_repeat(text, [answer_service._shown(self.SG_S_01), answer_service._shown(self.PARTS)]), text)
+        self.assertEqual(rw.calls, 0)
+
+    def test_no_computed_line_keeps_the_figures_in_the_text(self):
+        svc, rw = self._service_with('x')
+        text = 'CPU Ready is 6.5% on this VM, above the 5% line.'
+        self.assertEqual(svc.no_repeat(text, []), text)
+        self.assertEqual(rw.calls, 0)
+
+    def test_a_rewrite_that_still_repeats_is_dropped(self):
+        shown = [answer_service._shown(self.SG_S_01)]
+        svc, rw = self._service_with('Still 41.9 and 42.8 and 84.7.')
+        text = 'The drop to 41.9, 42.8 below 84.7.'
+        self.assertEqual(svc.no_repeat(text, shown), text)
+
+    def test_the_rules_ask_for_the_cause_and_no_repeat(self):
+        q = answer_service.question_text({'question': 'Why the worst at 19 Oct, 08:30?', 'facts': {'screen': {}}})
+        self.assertIn('Never repeat a figure', q)
+        self.assertIn('Open with the cause', q)
+        self.assertIn('With no computed line, answer directly first, with the figures', q)
+
     def test_answer_runs_the_pipeline_and_names_its_files(self):
         out = self.svc.answer({'question': 'What does CPU Ready mean on a VM?', 'facts': {'vm': 'sg-app-117'}})
         self.assertIn(out['type'], ('answer', 'clarify'))

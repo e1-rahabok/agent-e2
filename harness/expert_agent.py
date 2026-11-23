@@ -236,7 +236,7 @@ def kpi_trends(question, cat):
             line += ' No KPI change level is set for this KPI: give the range and do not call a move a drop.'
         elif t['verdict'] == 'steady':
             line += (f" KPI change level: {level:g} points. Verdict: steady. No drop: the worst point is the KPI's normal "
-                     'movement, not an event. Say this first.')
+                     'movement, not an event.')
         else:
             moved = t['worse_move'] if t['verdict'] == 'worsened' else t['better_move']
             line += f" KPI change level: {level:g} points. Verdict: {t['verdict']}, by {moved:g} points from the median."
