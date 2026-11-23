@@ -1365,13 +1365,15 @@ class UserSuggestionsTest(unittest.TestCase):
         r = self.page('cluster', 'Performance', [_kpi('Cluster Performance', vals), _kpi('Cluster Risk', [30] * 288, 'lower')])
         self.assertEqual(r['situation']['movement'], 'declining')
         self.assertEqual(r['situation']['level'], 'bad')
-        self.assertEqual(r['questions'][0], 'Why is performance declining?')
-        self.assertEqual(len(r['questions']), 3)
+        self.assertEqual(r['questions'], ['Why is performance declining?', 'When did the decline start, and what changed then?',
+                                          'How does Cluster Performance (%) work, and what is its formula?'])
 
     def test_good_cluster_does_not_ask_if_vms_are_served(self):
         r = self.page('cluster', 'Performance', [_kpi('Cluster Performance', [92, 93, 91, 94] * 72)])
         self.assertEqual((r['situation']['level'], r['situation']['movement']), ('good', None))
-        self.assertIn('Does the good average hide VMs that still suffer?', r['questions'])
+        self.assertEqual(r['questions'], ['Does the good average hide VMs that still suffer?',
+                                          'How does Cluster Performance (%) work, and what is its formula?',
+                                          'What does Cluster Risk (%) actually measure?'])
 
     def test_dip_names_the_time(self):
         vals = [92] * 288
@@ -1398,6 +1400,13 @@ class UserSuggestionsTest(unittest.TestCase):
         vals = [30 + i * 0.1 for i in range(300)]  # 30 days, one point every 144 minutes... read as a rise of 30 points
         r = self.page('cluster', 'Capacity', [_kpi('Cluster Consumption', vals, 'lower', minutes=144)])
         self.assertEqual(r['situation']['movement'], 'rising')
+
+    def test_every_page_has_five_metric_questions(self):
+        t = user_suggestions.table()
+        for pillar, kinds in t.items():
+            for kind, sets in kinds.items():
+                self.assertEqual(len(sets['metric']), 5, (pillar, kind))
+                self.assertTrue(all(len(sets[x]) == 3 for x in ('good', 'medium', 'bad')), (pillar, kind))
 
     def test_outside_release_one(self):
         r = self.page('host', 'Capacity', [_kpi('ESXi Performance', [90] * 288)])

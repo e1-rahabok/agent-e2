@@ -2,7 +2,9 @@
 # Read by user_suggestions.py. Release 1.0: Cluster Performance, Cluster Capacity, ESXi Performance, VM Performance.
 #
 # A page has a level (good, medium, bad) and may have a movement (declining or dip for performance, rising for capacity).
-# Without a movement the user sees the 3 level questions. With one: the 2 movement questions, then the first level question.
+# Each page also has metric questions: how its KPIs work, answered from the knowledge base, the strength of Agent E2.
+# The user sees 3: with a movement, 2 movement questions and 1 metric question; good with no movement, 1 level question and
+# 2 metric questions (nothing is wrong, so the metric itself is worth learning); medium or bad, 2 level and 1 metric.
 # {time} is the time of the KPI's worst point, as the screen writes it.
 # Each question is one Agent E2 can answer from the page's numbers and its knowledge base: facts and the mechanism, never the fix.
 # Checked on the real model with PCM's page facts (2026-11-23). Not asked: what the page does not hold (peer hosts, a run-out
@@ -28,6 +30,12 @@ performance:
     dip:
       - Why did performance drop at {time}?
       - Was the drop on one host or across the cluster?
+    metric:
+      - How does Cluster Performance (%) work, and what is its formula?
+      - What does Cluster Risk (%) actually measure?
+      - Why does Cluster Performance read the worst VM and the 90th percentile, not the average?
+      - Why is Cluster Performance not the same as cluster utilization?
+      - What size of move counts as a real drop?
   host:
     good:
       - Does any VM on this host still suffer?
@@ -47,6 +55,12 @@ performance:
     dip:
       - Why did this host drop at {time}?
       - Which part of ESXi Performance dropped at that time?
+    metric:
+      - How does ESXi Performance (%) work, and what is its formula?
+      - Why does ESXi Performance read the VMs on the host, not the host's utilization?
+      - How is ESXi Performance different from Cluster Performance?
+      - Why is host ballooning or swapping not part of ESXi Performance?
+      - What size of move counts as a real drop?
   vm:
     good:
       - Is the Guest OS layer also healthy?
@@ -66,6 +80,12 @@ performance:
     dip:
       - Why did this VM drop at {time}?
       - Was it the Guest OS or the Virtual Motherboard at that time?
+    metric:
+      - How does VM Performance (%) work, and what is its formula?
+      - Why are the Guest OS and the VM two separate charts?
+      - What does Guest OS Performance (%) measure?
+      - Why are some metrics left out of the score while they are green?
+      - Why does a VM's score move more than a cluster's?
 
 capacity:
   cluster:
@@ -84,3 +104,9 @@ capacity:
     rising:
       - Why is demand growing in this cluster?
       - Is the growth steady, or one step up?
+    metric:
+      - What does Cluster Consumption (%) measure, and how is it computed?
+      - Why is capacity read against usable capacity, not total capacity?
+      - How does the close-for-business check decide?
+      - Why does Cluster Risk count in a capacity decision?
+      - Why is high utilization good for capacity but not a performance problem?

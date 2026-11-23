@@ -11,6 +11,9 @@ situation from them with its calculator and catalog, so the caller holds no doma
   recovered by Now) or dip (the worst point at least the change level from the median, and Now back within it). Capacity: rising Cluster Consumption, read only over
   7 days or more, since a 24-hour window shows the daily cycle, not growth.
 
+Shown: with a movement, 2 movement questions and 1 metric question (how the page's KPI works, from the knowledge base); good
+with no movement, 1 level and 2 metric questions; medium or bad, 2 level and 1 metric.
+
 No model call: the situation is arithmetic and the questions are fixed text (user_suggestions.yaml).
 """
 import os
@@ -158,7 +161,8 @@ def suggest(facts, cat, tbl=None, screen_time=lambda x: x):
     if level is None:
         out['basis'].append('No KPI series with 12 points or more.')
         return out
-    qs = sets[level][:3] if not movement else sets[movement][:2] + sets[level][:1]
+    m = sets.get('metric') or []
+    qs = sets[movement][:2] + m[:1] if movement else sets[level][:1] + m[:2] if level == 'good' else sets[level][:2] + m[:1]
     when = screen_time(str(worst_at)) if worst_at else 'its worst point'
     out['questions'] = [q.replace('at {time}', f'at {when}' if worst_at else 'at its worst point') for q in qs]
     return out
