@@ -54,13 +54,17 @@ SCREEN_RULES = (
     'provided.\n'
     '- When an opening is given below, the person reads it first, as the start of your answer, in the same voice. Continue '
     'from it: never repeat a figure, the time or the verdict it gives (the computed line on how the KPI moved across the '
-    'window holds the same figures), and never say a number is "computed". Do not open with the drop or the level. Open with '
-    'the cause: which part pulled the score down, then where to look next.\n'
+    'window holds the same figures), and never say a number is "computed".\n'
+    '- Answer the question asked, in the first sentence. When it asks why a score moved, what is wrong or what to check, do not '
+    'open with the drop or the level: open with the cause, which part pulled the score down, then where to look next. When it '
+    'asks how a metric works, what it measures or why it is designed so, explain the mechanism from the knowledge base first; '
+    'the page\'s figures come after, as a short example, or not at all.\n'
     '- If the opening says the KPI stayed within its normal movement, do not restate the range: say what the KPI measures and '
     'why this movement is normal.\n'
     '- Other computed lines are exact: give their figures as written when the answer needs them (for example a sub-metric\'s '
-    'own value). If a computed line names the sub-metric that moved a score most, lead with that sub-metric and its band, then '
-    'the next step for that resource. Give every sub-metric the band the computed line gives it: an orange or red one is never low.\n'
+    'own value). For a question on why a score moved or what is wrong: if a computed line names the sub-metric that moved a '
+    'score most, lead with that sub-metric and its band, then the next step for that resource. Give every sub-metric the band '
+    'the computed line gives it: an orange or red one is never low.\n'
     '- With no opening, answer directly first, with the figures.\n'
     '- If "screen" names where to look next (drill_down), point there first, by page and tab, before any knowledge-base flow.\n'
     '- If a value the answer needs is not in the data, name the PCM page that shows it, or say PCM does not show it yet.\n'
@@ -240,7 +244,8 @@ class Service:
         return user_suggestions.suggest(body.get('facts'), self.cat, self.suggestions, screen_time)
 
     def answer(self, body):
-        lead = self.lead(body.get('facts'))
+        # A metric question of the page (user_suggestions.yaml, metric) asks how a KPI works: no opening on how it moved.
+        lead = '' if user_suggestions.is_metric(body.get('question'), self.suggestions) else self.lead(body.get('facts'))
         turns = body.get('turns')
         if turns:
             turns = [question_text({**body, 'question': turns[0]}, lead)] + list(turns[1:])

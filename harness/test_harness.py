@@ -1251,7 +1251,7 @@ class AnswerServiceTest(unittest.TestCase):
     def test_the_rules_ask_for_the_cause_and_no_repeat(self):
         q = answer_service.question_text({'question': 'Why the worst at 19 Oct, 08:30?', 'facts': {'screen': {}}})
         self.assertIn('never repeat a figure', q)
-        self.assertIn('Open with the cause', q)
+        self.assertIn('open with the cause, which part pulled the score down', q)
         self.assertIn('With no opening, answer directly first, with the figures', q)
         self.assertNotIn('already written', q)
         q = answer_service.question_text({'question': 'Why?', 'facts': {'screen': {}}}, 'VM Performance fell to 17%.')
@@ -1407,6 +1407,14 @@ class UserSuggestionsTest(unittest.TestCase):
             for kind, sets in kinds.items():
                 self.assertEqual(len(sets['metric']), 5, (pillar, kind))
                 self.assertTrue(all(len(sets[x]) == 3 for x in ('good', 'medium', 'bad')), (pillar, kind))
+
+    def test_metric_question_has_no_opening(self):
+        self.assertTrue(user_suggestions.is_metric('What size of move counts as a real drop?'))
+        self.assertFalse(user_suggestions.is_metric('Why is performance declining?'))
+        svc = answer_service.Service(AnswerServiceTest.CFG, MockClient(), Retriever(DOCS, CHUNKS))
+        facts = {'object': {'kind': 'cluster'}, 'pillar': 'Performance', 'kpis': [_kpi('Cluster Performance', [92] * 200 + [50] * 88)]}
+        self.assertEqual(svc.answer({'question': 'What does Cluster Risk (%) actually measure?', 'facts': facts})['lead'], '')
+        self.assertNotEqual(svc.answer({'question': 'Why is performance declining?', 'facts': facts})['lead'], '')
 
     def test_outside_release_one(self):
         r = self.page('host', 'Capacity', [_kpi('ESXi Performance', [90] * 288)])
