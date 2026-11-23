@@ -18,7 +18,7 @@
 | VM contention | Network Dropped Tx | `net\|droppedTxPct_max` | Peak network TX dropped packets (%) |
 | VM utilization | CPU Run | `cpu\|net_run` | CPU Net Run (%) |
 | IaaS high utilization | Memory Ballooned | `mem\|balloonPct` | VM Memory Ballooned (%) |
-| IaaS high utilization | Memory Zip Swap | (`mem\|compressed_average` + `mem\|swapped_average`) ÷ `guest\|used_memory` × 100 | VM Memory Compressed + Swapped (%) |
+| IaaS high utilization | Memory Zip Swap | (`mem\|compressed_average` + `mem\|swapped_average`) ÷ `guest\|used_memory` × 100 | VM swapped + zipped memory (%) |
 
 - 20-second peaks where they exist, not 5-minute averages: the KPI is a leading indicator ([`vcf-operations/features/peak-20-second-metrics`](../../../vcf-operations/features/peak-20-second-metrics.md)).
 - Limits: `catalog/thresholds-performance`, section `kpi`, lines with this file as `kb`.
