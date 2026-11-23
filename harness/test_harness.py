@@ -1161,6 +1161,25 @@ class AnswerServiceTest(unittest.TestCase):
         self.assertIn('The sub-metric that pushed Cluster Risk up most: Highest ESXi CPU thread utilization', line)
         self.assertIn('Left out while green: Highest ESXi CPU reservation, Highest ESXi memory reservation, Highest ESXi memory overcommit ratio', line)
 
+    def test_file_ids_leave_the_answer(self):
+        # Live answer on SG-S-01 (2026-11-23): flows named by path after a colon, outside brackets and parentheses.
+        text = ('Use these flows:\n- CPU Ready or Co-stop: `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`.\n'
+                '- Network: vsphere/technology/network/metrics/host/packets-dropped.\n'
+                'Its VMs wait (`sp5-framework/performance/cluster-performance`) [vsphere/a/b, vsphere/c/d]. '
+                'See **knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md**. Or `vsphere/made/up-file`.\n'
+                'Keep [1], (optional), read/write, 10/20/30, https://x.example/vsphere/technology/a and 5/2 = 2.5 [arithmetic_calculator.py: 5 / 2]')
+        out = answer_service.no_file_refs(text, DOCS)
+        title = DOCS['vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high'].title
+        self.assertIn(f'- CPU Ready or Co-stop: {title}.', out)
+        self.assertIn(f"- Network: {DOCS['vsphere/technology/network/metrics/host/packets-dropped'].title}.", out)
+        self.assertIn('Its VMs wait. See ' + title + '. Or up file.', out)
+        self.assertIn('Keep [1], (optional), read/write, 10/20/30, https://x.example/vsphere/technology/a and 5/2 = 2.5', out)
+        self.assertNotIn('arithmetic_calculator', out)
+        self.assertNotRegex(out.replace('https://x.example/vsphere/technology/a', ''), r'vsphere/|sp5-framework/')
+
+    def test_screen_rules_forbid_file_ids(self):
+        self.assertIn('Never write a knowledge base file id', answer_service.SCREEN_RULES)
+
     def test_pipeline_words_get_one_rewrite(self):
         class Rewriter:
             def chat(self, model, messages, **kw):
