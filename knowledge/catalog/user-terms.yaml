@@ -17,6 +17,11 @@ meta:
   - 'To check: each note against the file it cites.'
   status: reviewed
 rows:
+- id: vm-and-guest-os-charts
+  match: ['\b(two|2) (charts|scores|kpis|layers)\b', 'guest os\b[^.?\n]{0,40}\b(while|but|not)\b[^.?\n]{0,40}\bvm\b', '\bvm\b[^.?\n]{0,40}\b(while|but|not)\b[^.?\n]{0,40}\bguest os\b']
+  means: VM Guest OS two realms visibility four areas virtual motherboard unmet demand queues
+  note: 'VM Performance and Guest OS Performance read two realms. The Guest OS sees its own queues (run queue, disk queue, paging), not the hypervisor''s unmet demand (Ready, Co-stop, contention, outstanding IO): it only experiences frozen time or slowness. So one can fall while the other holds.'
+  files: [vsphere/architecture/vm-vs-guest-os, guest-os/system/guest-os-performance]
 - id: vm-slow
   match: ['\btriage\b', '\b(vm|virtual machine|server|application|app)s? (is|are|was|were|feels?|got|running|seems?) (very |really |so )?(slow|sluggish|laggy|unresponsive)', '\bslow (vm|virtual machine|server|application)', 'performance (issue|problem|degradation|complaint)']
   means: VM slow troubleshooting flow contention Guest OS
