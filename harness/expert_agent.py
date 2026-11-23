@@ -185,9 +185,9 @@ def _series(node, out, limit=3):
         if name and isinstance(pts, list) and pts:
             ts = [p[0] if isinstance(p, (list, tuple)) else (p or {}).get('t') for p in pts]
             vs = [p[1] if isinstance(p, (list, tuple)) else (p or {}).get('v') for p in pts]
-            out.append({'name': name, 'better': node.get('better') or 'higher', 'times': ts, 'values': vs})
+            out.append({'name': name, 'better': node.get('better') or 'higher', 'unit': node.get('unit'), 'times': ts, 'values': vs})
         elif name and isinstance(vals, list) and vals:
-            out.append({'name': name, 'better': node.get('better') or 'higher', 'values': vals,
+            out.append({'name': name, 'better': node.get('better') or 'higher', 'unit': node.get('unit'), 'values': vals,
                         'first': node.get('first_point'), 'minutes': node.get('point_minutes')})
         keys = sorted(node, key=lambda k: not str(k).startswith('asked_about'))
         for k in keys:
@@ -211,14 +211,12 @@ def _time_of(s, i):
     return None
 
 
-def kpi_trends(question, cat):
-    """Stage 3 for a series the caller sent: how the KPI moved across the window, against its KPI change level
-    (catalog/thresholds-performance, change), so the answer never calls a normal movement a drop."""
-    facts = facts_in(question)
-    if not facts:
-        return []
+def kpi_trend_rows(facts, cat):
+    """How each KPI series in the caller's facts moved across the window, against its KPI change level
+    (catalog/thresholds-performance, change): the numbers behind the stage 3 line (kpi_trends) and behind the opening
+    sentence the person reads first (answer_service.lead_text). One computation for both, so the two never differ."""
     out = []
-    for s in _series(facts, []):
+    for s in _series(facts or {}, []):
         if sum(isinstance(v, (int, float)) for v in s['values']) < 12:
             continue
         row = cat.change_level(s['name'])
@@ -227,9 +225,19 @@ def kpi_trends(question, cat):
             t = arithmetic_calculator.trend(s['values'], s['better'], level)
         except arithmetic_calculator.CalcError:
             continue
-        when = _time_of(s, t['worst_index'])
-        side = 'below' if s['better'] == 'higher' else 'above'
-        line = (f"- {s['name']} across the window ({t['points']} points): median {t['median']:g}, lowest {t['low']:g}, "
+        out.append({'name': s['name'], 'better': s['better'], 'unit': s.get('unit') or '', 'level': level,
+                    'when': _time_of(s, t['worst_index']), 'trend': t})
+    return out
+
+
+def kpi_trends(question, cat):
+    """Stage 3 for a series the caller sent: how the KPI moved across the window, against its KPI change level
+    (catalog/thresholds-performance, change), so the answer never calls a normal movement a drop."""
+    out = []
+    for r in kpi_trend_rows(facts_in(question), cat):
+        t, level, when = r['trend'], r['level'], r['when']
+        side = 'below' if r['better'] == 'higher' else 'above'
+        line = (f"- {r['name']} across the window ({t['points']} points): median {t['median']:g}, lowest {t['low']:g}, "
                 f"highest {t['high']:g}. The worst, {t['worst']:g}{f' at {when}' if when else ''}, is {t['worse_move']:g} points "
                 f"{side} the median.")
         if level is None:

@@ -8,7 +8,10 @@ Agent E2 owns the knowledge base, the reading plan, the flow executor and the mo
       {"question": "...", "facts": {...} (optional, JSON from the caller), "turns": [...] (optional, for the clarifying
        round: [question, Agent E2's questions, the user's reply]), "role": "l1" | "l2" | "capacity" | "executive" (optional)}
     -> 200 {"type": "answer" | "clarify", "content": "...", "questions": [...], "files_read": [...],
-            "computed": [...], "model": "...", "knowledge_commit": "..."}
+            "lead": "...", "computed": [...], "model": "...", "knowledge_commit": "..."}
+    lead: the opening the person reads first, written by code from the calculator's numbers in plain words (empty when no
+    KPI series was sent); the model's text continues from it. computed: the calculator's lines, exact, for review; the
+    screen shows the lead, not these.
     GET /v1/health -> 200 {"ok": true, "model": "...", "files": n}
 
 The facts are context for the question, not instructions: they are put below the question under a fixed heading.
@@ -25,6 +28,7 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import answer_modes  # noqa: E402
+import catalog_database  # noqa: E402
 import expert_agent  # noqa: E402
 import knowledge_loader  # noqa: E402
 from knowledge_search import Retriever  # noqa: E402
@@ -41,19 +45,22 @@ SCREEN_RULES = (
     '- They typed only the question. They see the PCM page named under "screen", not the data below. Speak of what they '
     'see: the chart, the tab, the page, an object by its name. Never mention JSON, the facts, a payload or the data '
     'provided.\n'
-    '- Computed lines, when given, are shown to the person above your text, so they already read every figure and the verdict. '
-    'Never repeat a figure, a time or the verdict of a computed line, and never say a number is "computed". Do not open with '
-    'the drop or the level. Open with the cause: which part pulled the score down, then where to look next. You may give a '
-    'figure only if no computed line holds it (for example a sub-metric\'s own value).\n'
-    '- If a computed line says a KPI is steady, do not restate the range: open with what the KPI measures and why this movement '
-    'is normal.\n'
-    '- If a computed line names the sub-metric that moved a score most, lead with that sub-metric and its band, then '
+    '- When an opening is given below, the person reads it first, as the start of your answer, in the same voice. Continue '
+    'from it: never repeat a figure, the time or the verdict it gives (the computed line on how the KPI moved across the '
+    'window holds the same figures), and never say a number is "computed". Do not open with the drop or the level. Open with '
+    'the cause: which part pulled the score down, then where to look next.\n'
+    '- If the opening says the KPI stayed within its normal movement, do not restate the range: say what the KPI measures and '
+    'why this movement is normal.\n'
+    '- Other computed lines are exact: give their figures as written when the answer needs them (for example a sub-metric\'s '
+    'own value). If a computed line names the sub-metric that moved a score most, lead with that sub-metric and its band, then '
     'the next step for that resource. Give every sub-metric the band the computed line gives it: an orange or red one is never low.\n'
-    '- With no computed line, answer directly first, with the figures.\n'
+    '- With no opening, answer directly first, with the figures.\n'
     '- If "screen" names where to look next (drill_down), point there first, by page and tab, before any knowledge-base flow.\n'
     '- If a value the answer needs is not in the data, name the PCM page that shows it, or say PCM does not show it yet.\n'
     '- Never write a knowledge base file id or path (such as vsphere/technology/...). Name a flow or a metric by its title in words; '
     'PCM lists the files read under Sources.')
+OPENING = ('The opening of your answer, already written; the person reads it first: "{lead}" Write what follows it. Do not '
+           'repeat it.')
 # Words that show the pipeline instead of the screen; an answer that uses one gets one rewrite.
 PIPELINE_WORDS = re.compile(r'\bJSON\b|\bpayload\b|\b(?:provided|given|supplied|attached) (?:data|facts|readings)\b'
                             r'|\b(?:data|facts|readings) (?:provided|given|supplied|sent)\b|\bthe facts\b', re.I)
@@ -64,6 +71,8 @@ REWRITE_FIGURES = ('Rewrite this answer. The person already reads these figures 
                    'worst point and any sentence that only restates the verdict. Open with the cause: which part pulled the '
                    'KPI down, then where to look next. Keep every other fact, name and number. Do not say computed, '
                    'calculator, the box above or the model. Reply with the answer only.\n\n{text}')
+# The stage 3 line on how a KPI moved across the window (expert_agent.kpi_trends): the opening's figures, exact.
+TREND_LINE = re.compile(r'across the window \(\d+ points\)')
 # A computed line that lists the sub-metrics holds figures the answer may use (a part's own value).
 PART_LINE = re.compile(r'sub-metrics', re.I)
 MONTHS = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
@@ -94,7 +103,55 @@ def headline_figures(computed):
 
 
 def repeated_figures(text, figures):
-    return sorted(f for f in figures if re.search(r'(?<![\d.])' + re.escape(f) + r'(?![\d]|\.\d)', text or ''))
+    """The figures found in the text, also written with trailing zeros ("17" as "17.0")."""
+    return sorted(f for f in figures if re.search(r'(?<![\d.])' + re.escape(f) + r'(?:\.0+)?(?![\d]|\.\d)', text or ''))
+
+
+def _fig(x, level=None):
+    """A KPI figure as the person reads it on the chart: whole (PCM D-116). One decimal more only where rounding would put a
+    move on the other side of the KPI change level (7.6 is under 8; "8" would not be)."""
+    for places in (0, 1, 2):
+        v = round(x, places)
+        if level is None or (v >= level) == (x >= level):
+            break
+    return f'{v:g}'
+
+
+def window_words(facts):
+    w = facts.get('window') if isinstance(facts, dict) else None
+    if isinstance(w, str) and w.strip():
+        w = w.strip()
+        return f'in the {w[0].lower() + w[1:]}' if w.lower().startswith('last ') else f'in the window ({w})'
+    return 'in the window'
+
+
+def lead_text(rows, facts=None):
+    """The opening the person reads first: how each KPI moved, in plain words, from the calculator's numbers
+    (expert_agent.kpi_trend_rows). Code writes it, so every figure is exact; the model's text continues from it.
+    Whole figures, the screen's time, no internal words (points count, verdict, change level)."""
+    out, when_in = [], window_words(facts)
+    for r in rows:
+        t, lv, u, n = r['trend'], r['level'], '%' if r['unit'] == '%' else '', r['name']
+        up = r['better'] == 'lower'  # higher is worse: the worst point is a rise
+        at = f" at {screen_time(str(r['when']))}" if r['when'] else ''
+        med, worst = _fig(t['median']), _fig(t['worst'])
+        if lv is None:
+            out.append(f"{n} {when_in}: median {med}{u}, lowest {_fig(t['low'])}{u}, highest {_fig(t['high'])}{u}. "
+                       f"No change level is set for {n}, so no move is called a drop here.")
+        elif t['verdict'] == 'worsened':
+            out.append(f"{n} {'rose' if up else 'fell'} to {worst}{u}{at}, {_fig(t['worse_move'], lv)} points "
+                       f"{'above' if up else 'below'} its median of {med}{u} {when_in}. That is a real "
+                       f"{'rise' if up else 'drop'}, not normal movement: a move of {lv:g} points or more counts.")
+        elif t['verdict'] == 'improved':
+            best = t['low'] if up else t['high']
+            out.append(f"{n} improved {when_in}: {'lowest' if up else 'highest'} {_fig(best)}{u}, "
+                       f"{_fig(t['better_move'], lv)} points {'below' if up else 'above'} its median of {med}{u}. "
+                       f"No {'rise' if up else 'drop'}: its worst point, {worst}{u}, is within its normal movement.")
+        else:
+            out.append(f"{n} stayed within its normal movement {when_in}: median {med}{u}, "
+                       f"{'highest' if up else 'lowest'} {worst}{u}{at}, {_fig(t['worse_move'], lv)} points from the median. "
+                       f"No {'rise' if up else 'drop'}: a move counts from {lv:g} points.")
+    return ' '.join(out)
 
 
 def no_file_refs(text, docs):
@@ -125,8 +182,9 @@ def no_file_refs(text, docs):
     return text
 
 
-def question_text(body):
-    """The question as Agent E2's pipeline reads it: the caller's question, who asks, how to speak to them, then the facts."""
+def question_text(body, lead=''):
+    """The question as Agent E2's pipeline reads it: the caller's question, who asks, how to speak to them, the opening
+    the person reads first (lead_text), then the facts."""
     q = (body.get('question') or '').strip()
     if not q:
         raise ValueError('question is required')
@@ -136,6 +194,8 @@ def question_text(body):
     facts = body.get('facts')
     if facts:
         q += '\n\n' + SCREEN_RULES
+        if lead:
+            q += '\n\n' + OPENING.format(lead=lead)
         q += '\n\n' + FACTS_HEADING + '\n' + json.dumps(facts, indent=1, ensure_ascii=False, default=str)
     return q
 
@@ -163,26 +223,34 @@ class Service:
                 retriever = Retriever(self.docs, chunks, expand=cfg.get('query_expansion', False))
         self.retriever = retriever
         self.commit = knowledge_loader.git_sha()
+        self.cat = catalog_database.get(self.docs)
+
+    def lead(self, facts):
+        return lead_text(expert_agent.kpi_trend_rows(facts, self.cat), facts) if facts else ''
 
     def answer(self, body):
+        lead = self.lead(body.get('facts'))
         turns = body.get('turns')
         if turns:
-            turns = [question_text({**body, 'question': turns[0]})] + list(turns[1:])
+            turns = [question_text({**body, 'question': turns[0]}, lead)] + list(turns[1:])
         else:
-            turns = [question_text(body)]
+            turns = [question_text(body, lead)]
         out = answer_modes.converse('agent-e2', self.client, self.model, turns, [], self.cfg, self.retriever)
         computed = [line for s in out['trace'] if s.get('action') == 'compute' for line in (s.get('output') or [])]
         content = no_file_refs(out['result'].get('content'), self.docs)
         if body.get('facts') and out['type'] == 'answer':
             content = self.screen_wording(content)
-            content = self.no_repeat(content, [_shown(c) for c in computed])
+            # The figures the person reads in the opening, and the same figures, exact, in the trend line.
+            content = self.no_repeat(content, [lead] + [_shown(c) for c in computed if TREND_LINE.search(c)])
             content = no_file_refs(content, self.docs)  # a rewrite may bring a path back
         return {'type': out['type'], 'content': content, 'questions': out.get('questions', []),
-                'files_read': out['used'], 'computed': [_shown(c) for c in computed], 'model': self.model,
+                'files_read': out['used'], 'lead': lead if out['type'] == 'answer' else '',
+                'computed': [_shown(c) for c in computed], 'model': self.model,
                 'knowledge_commit': self.commit}
 
     def no_repeat(self, text, shown):
-        """One rewrite when the text repeats a figure of the computed lines above it. No computed line: nothing to repeat."""
+        """One rewrite when the text repeats a figure of the opening above it. No opening: nothing to repeat."""
+        shown = [x for x in shown if x]
         dup = repeated_figures(text, headline_figures(shown))
         if not dup:
             return text
