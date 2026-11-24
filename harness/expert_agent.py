@@ -14,6 +14,7 @@ The model makes no tool calls, so no tool-call format can break and no fallback 
 import json
 import re
 
+import answer_shape
 import arithmetic_calculator
 import catalog_database
 import reading_plan
@@ -642,12 +643,13 @@ def history_msgs(history):
 
 
 # ---------- the pipeline ----------
-def prepare(client, model, question, images, cfg, trace, retriever, kind, prompts, history=None):
+def prepare(client, model, question, images, cfg, trace, retriever, kind, prompts, history=None, shape=None):
     """Stages 1-4: everything before the model writes. The result is shared by every consensus sample, so the
     samples differ only in the model's reasoning, never in what it read. prompts: answer_modes.PROMPTS.
     history: the current topic's earlier turns, [{question, answer}], oldest first, all of them; given only when the
     question continues the topic (topic_decision.py). Stages 1 and 2 then read it with the earlier questions, so "Explain
-    again" is searched on what it refers to."""
+    again" is searched on what it refers to. shape: the answer shape the user's own words ask for (answer_shape.by_code
+    on the caller's bare question), or None: the case's kind then decides (answer_shape.choose)."""
     kw = {'provider_order': cfg.get('provider_order', {}).get(model)}
     read_as = f'{earlier_questions(history)}\n\nQuestion:\n{question}' if history else question
     if history:
@@ -667,7 +669,13 @@ def prepare(client, model, question, images, cfg, trace, retriever, kind, prompt
         if not reasons:
             p = prompts['chat_final']
         _step(trace, 'ask', '', ('allowed: ' + ', '.join(reasons)) if reasons else 'no: nothing missing, no premise')
-    system = p['kb'] + ANSWER_RULES + (OPEN_SHAPE if kind != 'choice' else '')
+    system, fmt = p['kb'], p['format']
+    if kind != 'choice':  # an open answer takes the shape the question asks for (answer_shape.py)
+        shape = answer_shape.choose(shape, case)
+        fmt = p['format'].replace(answer_shape.OPEN_FORMAT, answer_shape.FORMATS[shape])
+        system = system.replace(answer_shape.OPEN_FORMAT, answer_shape.FORMATS[shape])
+        _step(trace, 'shape', '', shape)
+    system += ANSWER_RULES + (OPEN_SHAPE if kind != 'choice' else '')
     if kind != 'choice' and cfg.get('term_map', True) and user_terms.label_hits(question, case):
         system += user_terms.LABEL_ORDER   # the teaching order of a product label, inside the answer shape (Q208)
     up_front = upfront_knowledge.build(retriever.docs, cfg.get('primer') or {})
@@ -685,7 +693,7 @@ def prepare(client, model, question, images, cfg, trace, retriever, kind, prompt
             + ('\n\n' + public_web_lookup.block(pages) if pages else '')
             + (f'\n\n{CONTINUES}' if history else '')
             + f'\n\nQuestion:\n{question}')
-    return {'case': case, 'used': used, 'seen': reading + '\n' + computed, 'format': p['format'],
+    return {'case': case, 'used': used, 'seen': reading + '\n' + computed, 'format': fmt, 'shape': shape,
             'msgs': [{'role': 'system', 'content': system}] + history_msgs(history) + [_user(text, images)], 'kw': kw}
 
 

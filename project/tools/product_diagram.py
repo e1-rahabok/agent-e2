@@ -146,6 +146,8 @@ box(X4, yb2, 170, 'flow_executor.py', ['steps of a flow file', 'executable steps
 box(X4, yb2 + 70, 170, 'capacity_calculator.py', ['planning calculator'], 'notyet', h=48, mono_title=True, title_size=12)
 box(X5, yb2, W5, 'public_web_lookup.py', ['URLs in the question: fetch', 'current-fact words: vendor search', 'system names dropped,',
                             'private IPs refused, trim 2K'], 'tool', mono_title=True)
+box(X1, yb2, W1, 'answer_shape.py', ['explain, advise, diagnose,', 'general; code reads the', 'user\'s words, else the case',
+                              'next steps: diagnose only'], 'tool', mono_title=True)
 box(X6, yb2, W6, 'topic_decision.py', ['continues the topic, or new:', 'user choice, then code,', 'then one model call',
                                'continuing: earlier turns sent'], 'tool', mono_title=True)
 
