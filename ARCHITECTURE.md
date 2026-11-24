@@ -9,6 +9,43 @@
 
 - Why the system can win, and what it must do, is in [MISSION.md](MISSION.md).
 
+## Agent E2 in PCM
+Agent E2 is the knowledge service of [PCM](https://github.com/e1-rahabok/private-cloud-management) (Private Cloud Management). It stays a logically independent application: its own repository, release, tests, benchmark and process. PCM is its main caller and holds none of its logic ([PCM D-078](https://github.com/e1-rahabok/private-cloud-management/blob/main/decisions.md)).
+
+```mermaid
+flowchart LR
+  subgraph PCM["PCM: separate repository and process"]
+    UI["screens, Agent E2 panel"]
+    D["data: VCF Operations, synthetic ACME"]
+    C["identity, roles,<br/>conversation and topics"]
+  end
+  subgraph E2["Agent E2: this repository"]
+    S["harness/answer_service.py<br/>POST /v1/answer, /v1/suggest<br/>GET /v1/health"]
+    P["agent, harness, knowledge/"]
+    S --> P
+  end
+  M(["model server<br/>(local GPU; lab: gateway)"])
+  UI -->|"question, facts (screen + KPI series),<br/>role, history, topic_choice"| S
+  S -->|"lead, answer, files read, computed,<br/>topic, shape, knowledge commit"| UI
+  P -->|OpenAI-compatible API| M
+```
+
+| Owner | Owns |
+|---|---|
+| PCM | Every screen, the data and its connectors (VCF Operations), actions, the user's identity and role, the conversation (topics and turns, kept per context), what the panel shows |
+| Agent E2 | Domain knowledge and every domain decision: the knowledge base, catalog bands and KPI change levels, the reading plan, the flows, the calculator, the opening (`lead`, written by code), the suggested questions by situation, whether a question continues the topic, the answer shape, the model call |
+
+- One way only. PCM calls Agent E2; Agent E2 imports no PCM code, reads no PCM database and calls no PCM endpoint. It knows PCM only as JSON on its endpoint. `harness/` depends on no folder outside the product (section Repository).
+- One owner per domain rule. PCM computes no verdict, band or drop (PCM D-103, D-124): a domain rule in PCM would be a second copy that drifts from the knowledge base.
+- Stateless. The service stores nothing. The caller keeps the conversation and sends the current topic's earlier turns (`history`); Agent E2 decides whether the new question continues it ([`harness/topic_decision.py`](harness/topic_decision.py)) and reports the decision, so the caller can show it and undo it (PCM D-128, D-129).
+- Facts are data. The caller's live facts go below the question under a fixed heading, never as instructions. Web lookup is off in the service, so live facts never reach a search.
+- The contract is the endpoint, not PCM. Any caller that sends a question, with or without facts, gets the same pipeline. What is written for a screen (the screen rules, the opening, the rewrites that remove data words and repeated figures) applies only when facts are sent. Fields that describe a PCM screen (`screen`, `drill_down`, `parts_at_worst`, `parts_hourly`) are optional inputs, documented in [`harness/answer_service.py`](harness/answer_service.py) and PCM `spec/workspaces/l2/frame.md`.
+- Runs without PCM. The benchmark, the retrieval check and the unit tests use no PCM. The service runs alone (`python3 harness/answer_service.py`) and answers `curl`.
+- Same pipeline as the proof. The service wraps `answer_modes.converse('agent-e2', ...)`, the pipeline the benchmark scores. The service-only layers (opening, screen rules, rewrites, topic decision, suggestions) are checked by unit tests and [`benchmark/runner/topic_check.py`](benchmark/runner/topic_check.py), not by the benchmark score.
+- Versioned answers. Every answer names the model and the `knowledge_commit`, so a PCM screen ties an answer to one exact knowledge base.
+- Deployment: a second service next to PCM (lab: the same VM, systemd unit `agent-e2`, its own checkout in `/opt/agent-e2`, loopback `127.0.0.1:8090`; PCM `deploy/install-agent-e2.sh`). When it is down, PCM works and its panel says Agent E2 is not available.
+- One repository later (PCM D-078, open). If this repository moves into PCM, the boundary stays the folder and the endpoint, not the repository; the knowledge base stays authored, not generated from a specification.
+
 ## Repository
 
 One repository holds three groups, and only the product is deployed. The folder-by-folder map is [REPOSITORY-MAP.md](REPOSITORY-MAP.md).
@@ -35,11 +72,12 @@ flowchart LR
   B -->|runs questions through| H
   T -->|checks| K
   T -->|checks| B
+  PCM["PCM<br/>(separate repository)"] -->|HTTP: answer_service.py| A
 ```
 
 - Product: what runs at the customer site.
   - `knowledge/`: Level 400 mechanisms, metrics, misconceptions and flows (health checks, troubleshooting, decision trees), plus exact data in [`knowledge/catalog/`](knowledge/catalog). Up-front text and domain code in `harness/` act on it ([`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), section 2). Version 1.0 covers vSphere 9.1 metrics, the VCF Operations metrics and models computed on vSphere objects, and the Guest OS layer, for performance and capacity. The end scope is the private cloud stack (vSAN, NSX, Kubernetes, and VCF Operations beyond its vSphere metrics).
-  - `harness/`: the software around the model. It holds hybrid retrieval, link expansion, the exact tools (catalog lookup and calculator; the planning calculator and the flow executor are built but not yet called by the agent), the answer verifier, web fetch and search, and the agent itself. It reads `knowledge/` and depends on no other folder.
+  - `harness/`: the software around the model. It holds hybrid retrieval, link expansion, the exact tools (catalog lookup and calculator; the planning calculator and the flow executor are built but not yet called by the agent), the answer verifier, web fetch and search, and the agent itself. It also holds the service for callers ([`harness/answer_service.py`](harness/answer_service.py), section Agent E2 in PCM) and its parts: the topic decision, the answer shape and the suggested questions. It reads `knowledge/` and depends on no other folder.
   - Agent: the expert's procedure as code, a neuro-symbolic expert system ([`harness/AGENT.md`](harness/AGENT.md)). It reads the question into a case, plans the reading set from the knowledge base's map ([`harness/reading_plan.py`](harness/reading_plan.py)), runs the exact tools, decides whether to ask, calls the model to read and write, and checks the answer.
   - Model: an open-weight vision model on local GPUs, chosen by the benchmark ([`benchmark/models.md`](benchmark/models.md)). It is not stored here.
 - Proof: shows that the product works by passing the benchmark. A higher score than a frontier model is an outcome, not a goal.
@@ -67,6 +105,7 @@ This is one level down from the Product group: how the agent and the harness dri
 | Knowledge | Level 400 facts, mechanisms, misconceptions, flows (markdown) and exact data (YAML catalog); up-front misconceptions | `knowledge/` | Nothing. It is the first source, and where it speaks, it wins. |
 | Agent | The expert's procedure as code: six stages from question to checked answer ([`harness/AGENT.md`](harness/AGENT.md)) | [`harness/expert_agent.py`](harness/expert_agent.py), [`harness/reading_plan.py`](harness/reading_plan.py) | The case, the reading set, which exact tools run on which values, whether to ask, and when the answer is accepted. |
 | Harness | The execution environment and the guardrails: hybrid search engine (BM25 + vectors), SQLite catalog, calculator, planning calculator and flow executor (not yet called), web fetch and search, budgets, and the answer verifier | `harness/` | Nothing on its own. It runs what the agent asks for and enforces the limits. |
+| Service | The boundary to callers (PCM): three endpoints, no state ([`harness/answer_service.py`](harness/answer_service.py)) | [`harness/answer_service.py`](harness/answer_service.py), `topic_decision.py`, `answer_shape.py`, `user_suggestions.py` | Whether a question continues the topic, the answer shape, the opening (code, from the calculator), the suggested questions by situation; the wording a screen needs. Never what is read. |
 | Model | An open-weight vision LLM on local GPUs ([`benchmark/models.md`](benchmark/models.md)). Vision is a hard requirement: the model reads the pixels of every uploaded screenshot ([MISSION.md](MISSION.md), Non-functional) | served by vLLM, llama.cpp or Ollama | How to read the question and the images into the case, and how to turn the reading set into an answer: which options are right, which mechanism applies. It does not choose what to read. |
 
 - The agent leads and the model reads. The model does not know what the knowledge base holds, so it cannot plan the lookups. The knowledge base records its own map (file kinds, links, catalog, flows), so the agent can ([`harness/AGENT.md`](harness/AGENT.md), section 2).
@@ -81,6 +120,7 @@ This is one level down from the Product group: how the agent and the harness dri
 |---|---|---|
 | Agent (code) | What to read (the reading plan), what to compute, whether to ask, whether the answer stands | - |
 | Model | How the question reads (the case) and what the reading set means for it (the answer) | 2 in the common case; up to 4 with a gap follow-up and a repair; n answer samples with consensus |
+| Service (code) | Topic, answer shape, opening, suggested questions | 0 in the common case; 1 for the topic when code cannot decide; up to 2 rewrites of a screen answer (data words, repeated figures) |
 | Harness | Nothing on its own: tools, budgets, verifier | - |
 
 - The split stage by stage, and the evidence for it, are in [`harness/AGENT.md`](harness/AGENT.md), sections 2 and 3.
@@ -113,7 +153,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 |---|---|---|
 | Chat model (enterprise GPU; one GPU is an ideal, not a constraint; up to four large GPUs) | GPU, via vLLM, llama.cpp or Ollama | OpenAI-compatible API on the local network |
 | Embedding model (qwen3-embedding-0.6b) | CPU | For hybrid search |
-| Harness | CPU | Python: the agent, retrieval, catalog (SQLite in memory), calculator, verifier |
+| Harness and service | CPU | Python: the agent, retrieval, catalog (SQLite in memory), calculator, verifier; `answer_service.py` on the loopback for PCM |
 | Index | Disk | Chunks and vectors built from `knowledge/`, tied to one git commit (the index version) |
 
 - Updates arrive as a bundle (knowledge, catalog, index, and optionally new weights), either downloaded or imported offline. No customer data is sent out. Lab exception (author, 2026-11-17): the author's lab VCF may send its live data to the gateway model; customer sites keep this rule and the local model.
@@ -132,7 +172,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
     3. No outbound access from the Agent E2 VM. Agent E2 says it cannot read the page and asks the user to paste the relevant text; answers come from the knowledge base.
   - Every option keeps the rule that no customer data leaves the site.
 - The benchmark reaches the same open-weight models through the Vercel AI Gateway; at a customer site, [`harness/model_client.py`](harness/model_client.py) points at the local server instead. The harness code is the same.
-- The deployment is one VM with a GPU (passthrough or vGPU) on the customer's own VCF. VMware Private AI Foundation with NVIDIA is the natural platform (to verify against current product documentation).
+- The deployment is the Agent E2 service next to PCM (section Agent E2 in PCM) and the model server on a GPU VM (passthrough or vGPU) on the customer's own VCF; both can share one VM. VMware Private AI Foundation with NVIDIA is the natural platform (to verify against current product documentation).
 - The assistant's own GPU VM is monitored by the same rules: [`knowledge/vsphere/technology/gpu/gpu-monitoring.md`](knowledge/vsphere/technology/gpu/gpu-monitoring.md).
 
 ## 6. Harness checks
@@ -149,7 +189,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 - Reading a wrong answer: if the needed file is not in context, it is a retrieval or knowledge problem; if the file is in context but the answer is wrong, it is a model or prompt problem; if the file is missing from the knowledge base, it is a knowledge gap.
 
 ## 7. Status
-- Milestones and what is built are in [`project/plan.md`](project/plan.md). Not built yet: the rest of the agent's build order ([`harness/AGENT.md`](harness/AGENT.md), section 7), query rewriting with glossary synonyms, and the offline bundle. Screenshots are read in 1.0, and the screen library comes in 1.1. Data files come in 1.2, and a live VCF Operations connection after 1.0.
+- Milestones and what is built are in [`project/plan.md`](project/plan.md). Not built yet: the rest of the agent's build order ([`harness/AGENT.md`](harness/AGENT.md), section 7), query rewriting with glossary synonyms, and the offline bundle. Screenshots are read in 1.0, and the screen library comes in 1.1. Data files come in 1.2. Live VCF Operations data reaches Agent E2 only through its caller: PCM owns the connector, and Agent E2 has none of its own (section Agent E2 in PCM). Release 1.0 needs PCM to call Agent E2 through the service ([`project/plan.md`](project/plan.md), M6).
 
 ## 8. Local LLM use
 - The design target is a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.
@@ -163,7 +203,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 ### No fast first-stage model
 - Not used: a second, fast model in front of the reasoning model (a "System 1" classifier). Decided.
 - Manual use (an admin asks, with screenshots or CSV): requests are few, and a person waits for each one. The reading plan routes the question to the right file and flow (the flow tier, named files, links, search), and CSV files are parsed by code.
-- Automated use (a daily health check over VCF Operations): tens of millions of metrics cannot pass through any model, so the fast stage is code. It pulls KPI and model results, scores them against the threshold catalog, keeps the objects in red or orange, and groups them by what they share. The reasoning model then reads only those findings, with their flows. Code is exact and repeatable, traceable to a threshold row, and uses no GPU memory.
+- Automated use (a daily health check over VCF Operations): tens of millions of metrics cannot pass through any model, so the fast stage is code. PCM pulls KPI and model results; Agent E2's code scores them against the threshold catalog, keeps the objects in red or orange, and groups them by what they share. The reasoning model then reads only those findings, with their flows. Code is exact and repeatable, traceable to a threshold row, and uses no GPU memory.
 
 ### Ingest
 1. Index `knowledge/**/*.md`. Do not index `benchmark/` (it holds answer keys, and indexing it invalidates the evaluation), `project/`, `harness/`, or the root documents ([`README.md`](README.md), [`CLAUDE.md`](CLAUDE.md), [`MISSION.md`](MISSION.md), `ARCHITECTURE.md`, [`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md)).
@@ -189,7 +229,9 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 
 ### Answer
 - Answer from the retrieved text first. Where it is silent, the model may answer from its own knowledge and says so; where the two differ, the knowledge base wins. Prefer mechanism and reason over a definition.
-- Cite each file `id` used.
+- Cite each file `id` used; the benchmark checks the cited ids. The service turns a citation into the file's title, or removes it, before a person reads the answer (`answer_service.no_file_refs`).
+- The shape follows the question ([`harness/answer_shape.py`](harness/answer_shape.py)): explain (the mechanism, no page figures, no next steps), advise (the value, then the reason and the trade-off), diagnose (conclusion, evidence, mechanism, then what to check next), or general. Code reads the user's own words; the case's kind decides when code cannot tell.
+- On a screen, code writes the opening (`lead`) in plain words from the calculator's numbers, and the model continues from it without repeating its figures: one voice, exact numbers (PCM D-119).
 - Each file in the reading set shows its `status`. The answer prompt has no draft rule, and answers never mention review status (MISSION.md, D1). Release content is reviewed (284 of 285 knowledge files are draft ; project/plan.md, M6).
 - Use the terms of [`knowledge/glossary.md`](knowledge/glossary.md): preferred names, other names, confusable terms.
 - Quote a threshold only when a file states it with its source.
@@ -207,7 +249,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 - Troubleshooting follows the check order of [`project/knowledge-rules/flows.md`](project/knowledge-rules/flows.md), unless the file states another order. (The order has one place; it was restated here without configuration.)
 
 ### Trace
-Recorded for every answer (`traces.jsonl` in the benchmark; the answer log at the site).
+Recorded for every answer in the benchmark (`traces.jsonl`). The service stores nothing: it returns the files read, the computed lines, the topic decision, the shape, the model and the knowledge commit, and an answer log at a site is the caller's to keep.
 
 | Field | Content |
 |---|---|
