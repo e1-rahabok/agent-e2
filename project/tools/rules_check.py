@@ -765,8 +765,87 @@ def check_flows(docs, bad):
             self.id, self.meta, self.title = i, fm, body.lstrip().split('\n', 1)[0].lstrip('# ')
             parts = [p.strip() for p in re.split(r'\n(?=## )', body.strip()) if p.strip()]
             self.sections = [(p.split('\n', 1)[0].lstrip('# ').strip() if p.startswith('## ') else 'Intro', p) for p in parts]
-    for i, msg in flow_executor.check({i: _Doc(i, fm, body) for i, (fm, body) in docs.items()}):
+    flow_docs = {i: _Doc(i, fm, body) for i, (fm, body) in docs.items()}
+    for i, msg in flow_executor.check(flow_docs):
         bad(f'knowledge/{i}.md', msg)
+    for i in flow_executor.flow_ids(flow_docs):
+        for msg in flow_chart_problems(docs[i][1], flow_executor.steps_of(flow_docs[i])):
+            bad(f'knowledge/{i}.md', msg)
+
+
+# The Mermaid chart of a flow is the master of its structure: the author edits the chart, Claude updates the numbered steps
+# (project/knowledge-rules/flows.md, author 2026-11-24). This check keeps the two the same.
+MERMAID_BLOCK = re.compile(r'```mermaid\n(.*?)\n```', re.S)
+CHART_NODE = re.compile(r'([A-Za-z_]\w*)\s*(?:\(\[|\[\[|\[\(|\(\(|\{\{|\[|\{|\(|>)(.*?)(?:\]\)|\]\]|\)\]|\)\)|\}\}|\]|\}|\))\s*$')
+CHART_ARROW = re.compile(r'\s*(?:-->|-\.->|==>)\s*(?:\|[^|]*\|\s*)?')
+STEP_NODE = re.compile(r'^"?(\d+|[a-h])\.\s')
+STEP_BRANCH = re.compile(r'→\s*(?:go to\s+)?step\s+(\d+|[a-h])\b', re.I)
+
+
+def chart_edges(chart):
+    """Step-to-step edges of a Mermaid flowchart: {(from, to)}, step keys as text, and the set of step keys with a box.
+    A box is a step when its text starts with the step key ('1. ...', 'a. ...'). An arrow through boxes that are not steps
+    (another flow, a verdict) counts as an edge between the steps on either side."""
+    key, succ = {}, {}
+    for line in chart.split('\n')[1:]:
+        line = line.strip()
+        if not line or line.startswith(('subgraph', 'end', '%%', 'classDef', 'class ', 'style', 'direction', 'linkStyle', 'click')):
+            continue
+        groups = []
+        for part in CHART_ARROW.split(line):
+            ids = []
+            for p in part.split('&'):
+                p = p.strip()
+                m = CHART_NODE.match(p)
+                node = m.group(1) if m else (re.match(r'([A-Za-z_]\w*)', p) or [None])[0]
+                if m:
+                    k = STEP_NODE.match(m.group(2).strip())
+                    if k:
+                        key[node] = k.group(1).lower()
+                if node:
+                    ids.append(node)
+            groups.append(ids)
+        for a, b in zip(groups, groups[1:]):
+            for x in a:
+                succ.setdefault(x, set()).update(b)
+    edges = set()
+    for node, k in key.items():
+        seen, todo = set(), list(succ.get(node, ()))
+        while todo:
+            n = todo.pop()
+            if n in seen:
+                continue
+            seen.add(n)
+            if n in key:
+                if key[n] != k:
+                    edges.add((k, key[n]))
+            else:
+                todo.extend(succ.get(n, ()))
+    return edges, set(key.values())
+
+
+def flow_chart_problems(text, steps):
+    """A flow needs one Mermaid flowchart that matches its steps: a box per step, and the same branches. A step's branches
+    are its '→ step N'; a step with none ends the flow."""
+    charts = [c for c in MERMAID_BLOCK.findall(text) if re.match(r'\s*(flowchart|graph)\b', c)]
+    if not charts:
+        return ['flow without a Mermaid flowchart: the chart is the master of the flow (project/knowledge-rules/flows.md)']
+    edges, boxes = chart_edges(charts[0])
+    keys = [k.lower() for k, _ in steps]
+    out = []
+    for k in sorted(set(keys) - boxes):
+        out.append(f'step {k} has no box in the chart (box text starts "{k}. ")')
+    for k in sorted(boxes - set(keys)):
+        out.append(f'chart box {k} has no step {k}')
+    text_edges = set()
+    for k, t in steps:
+        targets = [r.lower() for r in STEP_BRANCH.findall(t)]
+        text_edges.update((k.lower(), r) for r in targets if r != k.lower())
+    for a, b in sorted(edges - text_edges):
+        out.append(f'chart arrow {a} → {b} is not in the steps (step {a} needs "→ step {b}")')
+    for a, b in sorted(text_edges - edges):
+        out.append(f'step {a} goes to step {b}, but the chart has no arrow {a} → {b}')
+    return out
 
 
 if __name__ == '__main__':

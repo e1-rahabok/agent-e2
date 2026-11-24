@@ -10,19 +10,27 @@
 - Some workloads show impact earlier than others.
 - Check the indicators in the order below.
 
+```mermaid
+flowchart TD
+  Sa[a. Ballooning] -->|no ballooning| Ea[Not affected]
+  Sa -->|ballooning| Sb[b. Consumed against Active]
+  Sb --> Sc[c. Host swap and compression]
+  Sc --> Sd[d. Guest OS swap]
+```
+
 ## Step a: ballooning
 - Menu path: Monitor, Performance, Advanced. In the drop-down at the upper right, select Memory. Read Ballooned memory (Average).
 - No ballooning: ESX is not under heavy memory pressure. Overcommitment is not affecting this VM.
 - The indicator is valid only if the balloon driver is installed in the VM and is not prevented from working.
-- Some ballooning is normal. It is not a sign of a problem by itself.
+- Some ballooning is normal. It is not a sign of a problem by itself. → step b.
 
 ## Step b: consumed vs active
 - Menu path: Monitor, Performance, Advanced. Select Memory. Compare Consumed memory with Active memory.
-- Consumed above Active: the guest is currently getting all the memory it requires for best performance.
+- Consumed above Active: the guest is currently getting all the memory it requires for best performance. → step c.
 
 ## Step c: host-level swapping and compression
 - Menu path: Monitor, Utilization. Expand the Guest Memory pane. Read Swapped and Compressed.
-- Non-zero Swapped or Compressed: host-level swapping or compression is active. This is a sign of more significant memory pressure.
+- Non-zero Swapped or Compressed: host-level swapping or compression is active. This is a sign of more significant memory pressure. → step d.
 
 ## Step d: guest OS swap
 - Check for swap activity inside the guest OS.

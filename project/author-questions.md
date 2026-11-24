@@ -24,6 +24,17 @@ No open question blocks release 1.0.
 
 ## Future release
 
+### Q262 · Decision trees · Three trees with no branches
+
+- Files: [Does this ESXi host have CPU headroom?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom.md), [Downsizing a large, idle VM](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/decision-tree/oversized-vm-downsizing.md), [Is memory overcommit affecting this VM?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm.md); the Mermaid chart in each.
+- Now: each is a list of checks in order with no branch, so its new chart is a straight line (is-overcommit has one branch: no ballooning, not affected). The decisions sit in section Interpretation as prose (for example, Core Utilization below 100% or Thread Utilization below 50%: cores are free).
+- Question: draw the branches in each chart. Claude then updates the numbered steps to match.
+  - A. Yes, I edit the three charts.
+  - B. Claude drafts the branches from section Interpretation; I review the charts.
+  - C. Leave them as straight lines.
+- Recommended: B. The branches are already written in Interpretation; turning them into arrows is drafting, and you review the result visually.
+- Answer:
+
 ### Q261 · Health check · Is the log a performance check?
 
 - Files: [Health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-check.md), sections Order of checks and the chart; [flows.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/flows.md), the Order line.

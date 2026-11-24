@@ -5,11 +5,20 @@
 - The answer is downsize or keep, with the vCPU usage pattern that proves it.
 - An operational question, answered by a decision tree; not a health check. The VM health check reads it in its efficiency step ([`vsphere/object-types/vm/vm-health-check`](../../../object-types/vm/vm-health-check.md)).
 
+```mermaid
+flowchart TD
+  S1[1. Utilization over a long window] --> S2[2. Guest OS: Run Queue and Context Switch]
+  S2 --> S3[3. Contention]
+  S3 --> S4[4. Usage Disparity]
+  S4 --> S5[5. Usage against Run]
+  S5 --> E5[Downsize or keep, see Interpretation]
+```
+
 ## Checks, in order
-1. Utilization over a long window (example: 90 days): Usage (%), Demand, Idle (%).
-2. Guest OS: CPU Run Queue and Context Switch.
-3. Contention: Co-stop, Ready, Other Wait, Swap Wait.
-4. Usage Disparity: Peak among vCPUs, Max - Min.
+1. Utilization over a long window (example: 90 days): Usage (%), Demand, Idle (%). → step 2.
+2. Guest OS: CPU Run Queue and Context Switch. → step 3.
+3. Contention: Co-stop, Ready, Other Wait, Swap Wait. → step 4.
+4. Usage Disparity: Peak among vCPUs, Max - Min. → step 5.
 5. Compare Usage with Run: Usage above 90% with Run below 90% is likely Turbo, not demand.
 
 ## Interpretation
