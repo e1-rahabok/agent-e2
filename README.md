@@ -51,7 +51,7 @@
 
 **Mission:**
 
-- An open-weight model, running locally on as little GPU as possible (customer data stays on site), answering Level 400 private cloud management questions better than frontier models.
+- An open-weight model, running locally on enterprise GPU (customer data stays on site), answering Level 400 VCF private cloud management questions better than frontier models.
 
 ## Why it is possible
 
