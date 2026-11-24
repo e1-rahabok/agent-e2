@@ -5,11 +5,20 @@
 - The answer is yes or no, with the free cores or threads and the contention that confirms it.
 - An operational question, answered by a decision tree; not a health check. The ESXi health check reads it in its capacity step ([`vsphere/object-types/esxi/esxi-health-check`](../../../object-types/esxi/esxi-health-check.md), step 8).
 
+```mermaid
+flowchart TD
+  S1[1. Contention: Ready and Co-stop per vCPU] --> S2[2. Core Utilization]
+  S2 --> S3[3. Thread Utilization]
+  S3 --> S4[4. Usage MHz]
+  S4 --> S5[5. Peak Core Usage and Imbalance]
+  S5 --> E5[Headroom: yes or no, see Interpretation]
+```
+
 ## Checks, in order
-1. Contention first: VM Ready and Co-stop on the host's VMs, per vCPU.
-2. Core Utilization (%).
-3. Thread Utilization (%).
-4. Usage (MHz), for performance.
+1. Contention first: VM Ready and Co-stop on the host's VMs, per vCPU. → step 2.
+2. Core Utilization (%). → step 3.
+3. Thread Utilization (%). → step 4.
+4. Usage (MHz), for performance. → step 5.
 5. Peak Core Usage and Imbalance.
 
 ## Interpretation
