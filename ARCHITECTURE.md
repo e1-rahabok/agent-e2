@@ -111,7 +111,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 ## 5. Local deployment
 | Component | Runs on | Notes |
 |---|---|---|
-| Chat model (one GPU as the stretch target; two to four allowed) | GPU, via vLLM, llama.cpp or Ollama | OpenAI-compatible API on the local network |
+| Chat model (enterprise GPU; one GPU is an ideal, not a constraint; up to four large GPUs) | GPU, via vLLM, llama.cpp or Ollama | OpenAI-compatible API on the local network |
 | Embedding model (qwen3-embedding-0.6b) | CPU | For hybrid search |
 | Harness | CPU | Python: the agent, retrieval, catalog (SQLite in memory), calculator, verifier |
 | Index | Disk | Chunks and vectors built from `knowledge/`, tied to one git commit (the index version) |

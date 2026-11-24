@@ -8,7 +8,7 @@ How Claude works in this repository. Read at the start of every session. The des
 - Update [`project/plan.md`](project/plan.md) with every change set.
 
 ## Purpose
-- Knowledge base and harness for an AI assistant on private cloud operations (vSphere and VCF metrics first), running locally (one GPU is the stretch target); customer data stays on site. Why it can work: [`MISSION.md`](MISSION.md).
+- Knowledge base and harness for an AI assistant on private cloud operations (vSphere and VCF metrics first), running locally on enterprise GPU (one GPU is an ideal, not a constraint; up to four large GPUs are acceptable); customer data stays on site. Why it can work: [`MISSION.md`](MISSION.md).
 - Primary reader of `knowledge/`: the AI. The author reviews for QA.
 - Write at Level 400: mechanisms, reasons, trade-offs, edge cases. No Level 200 definitions. Assume the reader knows vSphere basics: cluster, DRS, resource pools, shares, reservations, limits, vCPU, NUMA.
 

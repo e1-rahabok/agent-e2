@@ -227,7 +227,7 @@
 <text x="1194" y="703" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">Knowledge base: reading set,</text>
 <text x="1194" y="718" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">web block (untrusted),</text>
 <text x="1194" y="733" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">question + images</text>
-<text x="1194" y="748" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">over_window: flag &gt; 64K</text>
+<text x="1194" y="748" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">over_window: flag &gt; 128K</text>
 <rect x="1430" y="562" width="190" height="139" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
 <text x="1439" y="580" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">5 Answer</text>
 <text x="1439" y="598" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">expert_agent.write</text>
@@ -281,9 +281,9 @@
 <text x="254" y="1158" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">MockClient: unit tests, offline</text>
 <rect x="740" y="1062" width="225" height="94" rx="16" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
 <text x="749" y="1080" font-size="13" font-weight="bold" fill="#4a2400" text-anchor="start">Open-weight vision LLM</text>
-<text x="749" y="1098" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">one GPU stretch target, up to 4</text>
+<text x="749" y="1098" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">enterprise GPU, up to 4</text>
 <text x="749" y="1113" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">vLLM, llama.cpp or Ollama</text>
-<text x="749" y="1128" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">context window 64K</text>
+<text x="749" y="1128" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">context window 128K</text>
 <text x="749" y="1143" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">reads screenshot pixels</text>
 <rect x="1010" y="1062" width="175" height="79" rx="16" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
 <text x="1019" y="1080" font-size="13" font-weight="bold" fill="#4a2400" text-anchor="start">Embedding model</text>

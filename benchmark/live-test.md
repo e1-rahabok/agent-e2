@@ -8,7 +8,7 @@ The gaps the gateway leaves open are in [models.md](models.md), section What the
 |---|---|
 | Works without Internet | No outbound connection during the whole test, checked at the network, not assumed. Customer data never leaves the site; Internet access is optional |
 | Scores like the benchmark | The same questions, local weights at the deployed precision; final score compared with the gateway run of the same model |
-| Fits the hardware | The chosen hardware tier (one GPU is the stretch target, two to four allowed); the chosen context window; no out-of-memory error |
+| Fits the hardware | The chosen hardware tier (enterprise GPU; one GPU is an ideal, not a constraint; up to four large GPUs); the chosen context window; no out-of-memory error |
 | Fast enough to use | Time per answer and per model turn on the target GPU, on Agent E2 |
 | An operator can use it | A session with the author: real questions and screenshots, judged by the author |
 | Can be updated offline | A new knowledge bundle is imported and served without a network |
@@ -41,7 +41,7 @@ The gaps the gateway leaves open are in [models.md](models.md), section What the
 2. Build the VM, attach the GPU, copy the bundle in. Then block egress.
 3. Prove the block: an outbound request from the VM fails; the firewall log shows the attempt dropped.
 4. Smoke test: one question on Base and on Agent E2; the trace shows the case, the reading plan, the computed facts and the checks working.
-5. Benchmark: every question of the run set, Agent E2 and Base, 5 runs, at `context_window: 64000`, with the deployment profile (`consensus_samples: 3`; [harness/README.md](../harness/README.md), section 6a), since this run is the release score. Every question is multiple choice, so it is scored on the VM.
+5. Benchmark: every question of the run set, Agent E2 and Base, 5 runs, at `context_window: 128000`, with the deployment profile (`consensus_samples: 3`; [harness/README.md](../harness/README.md), section 6a), since this run is the release score. Every question is multiple choice, so it is scored on the VM.
 6. Report: the runner scores the letters on the VM and builds the report; nothing needs a connected machine.
 7. Compare: paired, question by question, with the gateway run of the same model on Agent E2 (`design.md`, section 8). Note any question that changes.
 8. Speed: median and 95th percentile time per answer and per model turn, on Agent E2; GPU memory at peak.

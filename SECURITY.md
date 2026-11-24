@@ -28,7 +28,7 @@ How Agent E2 handles the risks of an AI application, and how to report a problem
 | Supply chain: code dependencies | Low | Python standard library plus `pyyaml` and `requests`. No other runtime dependencies. |
 | Training-data poisoning | Not applicable | The model is not trained or fine-tuned on customer data or on this repository. Knowledge is supplied at run time by retrieval. |
 | Benchmark contamination | Guarded | Answer keys are never indexed and never sent to the model; a held-out question set is drawn at release and kept outside the repository ([benchmark/design.md](benchmark/design.md), section 7.5). |
-| Resource exhaustion | Guarded | Model calls (at most 4 per answer, plus consensus samples), the reading set (32K tokens), the context window (64K), fetched pages (about 2,000 tokens each, at most 3 links) and answer tokens are capped per question. |
+| Resource exhaustion | Guarded | Model calls (at most 4 per answer, plus consensus samples), the reading set (32K tokens), the context window (128K; the whole conversation is sent), fetched pages (about 2,000 tokens each, at most 3 links) and answer tokens are capped per question. |
 
 ## Review checks
 - `knowledge/` holds only markdown and YAML: no executable content.

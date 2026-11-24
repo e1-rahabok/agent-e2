@@ -17,7 +17,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
   4. combine 3 or more files and follow a troubleshooting flow in order (multi-document reasoning);
   5. call tools correctly and in the right order (catalog, calculator, flow);
   6. read dense screenshots: esxtop tables, vCenter and VCF Operations charts (OCR of small UI text, chart reading);
-  7. run on as little GPU as passes the release gate, at the customer site (one GPU is the stretch target, not a limit; MISSION.md, section 1).
+  7. run on enterprise GPU at the customer site (one GPU is an ideal, not a constraint; up to four large GPUs; MISSION.md, section 1).
 - Traits 1 and 2 pull against each other. Memory supplies the basics; part of the same memory holds the Level 300 rules of thumb the knowledge base corrects.
 
 ### The risk: prior override
@@ -67,7 +67,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 | 120B MoE, 6-12B active | ~125 GB | ~66 GB | one 96 GB GPU at 4-bit | ~2-4x |
 
 - Add the KV cache for the reading set (32K tokens per question, `context_tokens`).
-- Only two limits count: fit for the goal, and hardware cost (as little GPU as passes the gate; one GPU is the stretch target, criterion 3). Parameter count is not a limit.
+- Only fit for the goal counts. Hardware is enterprise GPU, up to four large GPUs (criterion 3). Parameter count is not a limit.
 - 8B-14B: too weak at multi-step reasoning and tool use.
 - 27-32B dense: the current bet. 70B dense: the next challenger, when a current-generation vision model of that size exists. MoE with few active parameters: fast but weak at tool use in our runs.
 
@@ -93,16 +93,16 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - Guard: before release, the chosen model is run once on the benchmark from local weights, at the deployed precision, on the target GPU. The release score is that run ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M5 and M6).
 
 ## 3. Selection criteria
-Two limits decide:
+One limit decides, on a fixed hardware rule:
 - Fit for the goal: the model knows vSphere basics and can become a narrow Level 400 VMware expert with this harness. Criteria 1, 4, 5 and 7 test this; the benchmark decides the rest.
-- Hardware cost: the less GPU the better, weighed against the score. One GPU is the stretch target, not a cut-off. Criterion 3.
+- Hardware: enterprise GPU, up to four large GPUs. One GPU is an ideal, not a constraint: the score decides, not the GPU count. Criterion 3.
 
 Country of origin is not a criterion. Parameter count is not a criterion; memory and speed are.
 
 All are required. A model that fails one is not a candidate.
 1. Vision: reads screenshots. A hard requirement of Agent E2 (MISSION.md, Non-functional), not a benchmark choice. Administrators upload several screenshots per question, from esxtop, the vCenter UI and the VCF Operations UI. Checked by the `vision` tag in the gateway model list; the runner refuses a model without it when screenshot questions are in the run.
 2. Open weights, with a licence that allows commercial on-premises use. Checked per model before deployment.
-3. Runs on customer hardware: all weights at 4-bit or better, plus the KV cache for the context window. One GPU of at most 96 GB is the stretch target; two to four GPUs are acceptable when the score needs them.
+3. Runs on customer hardware: all weights at 4-bit or better, plus the KV cache for the context window. Enterprise GPU: one GPU is an ideal, not a constraint; two to four large GPUs are acceptable.
    - Memory is set by total parameters, also for a mixture-of-experts (MoE) model: every expert must be loaded. Speed is set by active parameters.
    - A 4-bit model needs about 0.55 GB per billion total parameters; 8-bit about 1.05 GB. Add about 10-15 GB for the KV cache and runtime: a question fills about 40K tokens (the 32K reading set, the up-front blocks, images, the answer), about 10 GB of KV cache at 16-bit on a 32B dense model with 64 layers and 8 KV heads, about 5 GB at 8-bit. Consensus samples share the prompt's cache. Each question answered at the same time adds its own cache.
    - Two tiers, reported separately so the author can weigh score against hardware cost:
@@ -112,9 +112,9 @@ All are required. A model that fails one is not a candidate.
 | A | 48 GB | dense up to about 70B at 4-bit or 35B at 8-bit; MoE up to about 70B total |
 | B | 96 GB | MoE up to about 150B total, for example 120B with 6-12B active |
 
-   - Tier C, two to four GPUs: allowed. It doubles or quadruples the hardware cost, so it must earn its place by the challenger rule in section 1.
+   - Tier C, two to four large GPUs: acceptable, like tiers A and B.
 4. Structured output (a JSON schema) for the case ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.1). Tool calling is no longer needed: in the expert-led agent the model makes no tool calls. The frontier reference uses tool calling for web search.
-5. Context window of at least 64K tokens: system prompt + up-front blocks (3K) + the 32K reading set + images + answer. The three candidates take 128K or more.
+5. Context window of at least 128K tokens: system prompt + up-front blocks (3K) + the 32K reading set + images + the whole conversation (no turn is cut) + answer. The three candidates take 128K or more.
 6. Available both on the benchmark gateway and as downloadable weights, so the tested model is the deployed model.
 7. Latest generation only: one model per family and generation. An older generation or a smaller sibling of the same generation is a duplicate.
 

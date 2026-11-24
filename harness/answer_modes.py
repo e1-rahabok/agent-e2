@@ -123,8 +123,9 @@ MODES = ('baseline', AGENT, 'web')  # baseline and web are benchmark references:
 CONSENSUS_MODES = (AGENT,)        # baseline and web stay one sample: they measure the model alone
 
 
-def answer(mode, client, model, question, images, cfg, retriever, kind='choice'):
+def answer(mode, client, model, question, images, cfg, retriever, kind='choice', history=None, followup=False):
     """Run one question in one mode. kind: choice (letters), open (free text), chat or chat_final (conversation).
+    history, followup: the conversation's earlier turns (Agent E2 only; expert_agent.prepare).
     With cfg consensus_samples n > 1 (choice questions, Agent E2): n samples of the answer on one reading set; the letters
     stand only when every sample gives the same set, otherwise the answer is Unsure (harness/README.md, section Consensus).
     Returns (result, ids used, trace)."""
@@ -137,7 +138,7 @@ def answer(mode, client, model, question, images, cfg, retriever, kind='choice')
     if mode == 'web':
         res, used = web_search_on(client, model, question, images, cfg, trace, kind)
         return res, used, trace
-    prep = expert_agent.prepare(client, model, question, images, cfg, trace, retriever, kind, PROMPTS)
+    prep = expert_agent.prepare(client, model, question, images, cfg, trace, retriever, kind, PROMPTS, history, followup)
     n = cfg.get('consensus_samples') or 1
     if n > 1 and kind == 'choice':
         res, used = _consensus(n, client, model, question, cfg, trace, retriever, prep)
@@ -192,17 +193,19 @@ def _consensus(n, client, model, question, cfg, trace, retriever, prep):
     return out, used
 
 
-def converse(mode, client, model, turns, images, cfg, retriever):
+def converse(mode, client, model, turns, images, cfg, retriever, history=None, followup=False):
     """The shipped assistant: one question, or the question, Agent E2's clarifying questions and the user's reply.
 
     turns: [question] or [question, clarifying reply, user's reply].
+    history: the conversation's earlier turns, [{question, answer}], oldest first, all of them; followup: the question
+    names nothing the knowledge base holds (expert_agent.is_followup).
     Returns a dict: type 'clarify' (questions) or 'answer' (result), plus ids used and trace.
     """
     if len(turns) >= 3:
         question, kind = user_clarification.joined(turns[0], turns[1], turns[2]), 'chat_final'
     else:
         question, kind = turns[0], 'chat'
-    res, used, trace = answer(mode, client, model, question, images, cfg, retriever, kind)
+    res, used, trace = answer(mode, client, model, question, images, cfg, retriever, kind, history, followup)
     asked = user_clarification.parse(res.get('content') or '')
     if asked and kind == 'chat':
         _step(trace, 'clarify', '', asked)
@@ -210,7 +213,7 @@ def converse(mode, client, model, turns, images, cfg, retriever):
     if asked:  # asked a second time: the rule allows one round; one repair turn to answer
         _step(trace, 'clarify_again', '', asked)
         res, used, trace2 = answer(mode, client, model, question + '\n\nAnswer now. Do not ask the user again.',
-                                   images, cfg, retriever, 'chat_final')
+                                   images, cfg, retriever, 'chat_final', history, followup)
         trace += trace2
     return {'type': 'answer', 'result': res, 'used': used, 'trace': trace}
 

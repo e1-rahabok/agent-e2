@@ -737,6 +737,67 @@ class ClarifyTest(unittest.TestCase):
                 self.assertNotIn('CLARIFY', prompt)
 
 
+class ConversationTest(unittest.TestCase):
+    """The earlier turns of a conversation (expert_agent.prepare, answer_service.conversation): all of them reach the model."""
+
+    class Recorder:
+        def __init__(self):
+            self.answer_msgs, self.case_inputs = [], []
+
+        def chat(self, model, messages, tools=None, deterministic=False, **kw):
+            if deterministic:
+                self.case_inputs.append(messages[-1]['content'] if isinstance(messages[-1]['content'], str) else str(messages[-1]['content']))
+                return {'content': '{}', 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
+            self.answer_msgs.append(messages)
+            return {'content': 'Thread Utilization counts busy threads.', 'tool_calls': [], 'prompt_tokens': 1,
+                    'completion_tokens': 1, 'latency': 0, 'served_model': model, 'provider': 'mock'}
+
+    CFG = dict(ClarifyTest.CFG)
+    HISTORY = [{'question': 'Memory Consumed is high. Does this cluster need more memory?', 'answer': 'No: Ballooned is 0%.'},
+               {'question': 'What does CPU Thread Utilization actually measure?', 'answer': 'The share of busy threads.'}]
+
+    def test_earlier_turns_are_chat_messages_in_order(self):
+        c = self.Recorder()
+        answer_modes.converse('agent-e2', c, 'm', ['I do not understand. Explain again.'], [], self.CFG, Retriever(DOCS, CHUNKS),
+                              self.HISTORY, True)
+        msgs = c.answer_msgs[0]
+        self.assertEqual([m['role'] for m in msgs], ['system', 'user', 'assistant', 'user', 'assistant', 'user'])
+        self.assertEqual(msgs[3]['content'], self.HISTORY[1]['question'])
+        self.assertEqual(msgs[4]['content'], self.HISTORY[1]['answer'])
+        self.assertIn(expert_agent.CONTINUES, msgs[-1]['content'])
+
+    def test_no_turn_is_cut(self):
+        c, long = self.Recorder(), [{'question': f'Question {i}?', 'answer': f'Answer {i}.'} for i in range(40)]
+        answer_modes.converse('agent-e2', c, 'm', ['Why?'], [], self.CFG, Retriever(DOCS, CHUNKS), long, True)
+        self.assertEqual(len(c.answer_msgs[0]), 1 + 80 + 1)
+
+    def test_followup_reads_with_the_earlier_questions(self):
+        self.assertTrue(expert_agent.is_followup(DOCS, 'I do not understand. Explain again.'))
+        self.assertFalse(expert_agent.is_followup(DOCS, 'What is VM CPU Ready?'))
+        c, trace = self.Recorder(), []
+        answer_modes.converse('agent-e2', c, 'm', ['Explain again.'], [], self.CFG, Retriever(DOCS, CHUNKS), self.HISTORY, True)
+        self.assertIn('CPU Thread Utilization', c.case_inputs[0])     # stage 1 reads the earlier questions
+        c = self.Recorder()
+        answer_modes.converse('agent-e2', c, 'm', ['What is VM CPU Ready?'], [], self.CFG, Retriever(DOCS, CHUNKS), self.HISTORY, False)
+        self.assertNotIn('CPU Thread Utilization', c.case_inputs[0])  # a new topic is read on its own words
+
+    def test_service_checks_history_and_drops_the_opening(self):
+        self.assertEqual(answer_service.conversation(None), [])
+        with self.assertRaises(ValueError):
+            answer_service.conversation([{'question': 'Q'}])
+        with self.assertRaises(ValueError):
+            answer_service.conversation('Q')
+        c = self.Recorder()
+        svc = answer_service.Service(dict(AnswerServiceTest.CFG, verify=False, gap_followup=False), c, Retriever(DOCS, CHUNKS))
+        facts = {'screen': {'page': 'SG-S-01 · Capacity · Last 24 hours'},
+                 'asked_about_kpi': {'label': 'Cluster Performance', 'better': 'higher', 'unit': '%',
+                                     'points': [[f't{i}', 80 + i % 3] for i in range(60)]}}
+        out = svc.answer({'question': 'I do not understand. Explain again.', 'facts': facts, 'history': self.HISTORY})
+        self.assertEqual(out['lead'], '')
+        self.assertNotIn('The opening of your answer', c.answer_msgs[0][-1]['content'])
+        self.assertEqual(len(c.answer_msgs[0]), 6)
+
+
 class WebTest(unittest.TestCase):
     """harness/public_web_lookup.py: URL fetch and need-based search, offline (the HTTP call is replaced)."""
     PAGE = ('<html><head><title>VM Contention Dashboard</title><script>var x=1;</script></head><body>'

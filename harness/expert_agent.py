@@ -620,13 +620,45 @@ def coverage(tiers):
     return 'weak' if not any(t in ('flow', 'named') for t in tiers.values()) else 'named'
 
 
+# ---------- the conversation ----------
+# A model call is stateless: it knows only the messages sent with it. The caller (PCM) keeps the conversation and sends
+# every earlier turn with the new question, so the model reads them as the conversation they were. No turn is cut: the
+# hardware is enterprise GPU (MISSION.md, section 1), and a prompt above the deployed window is flagged (context_over).
+CONTINUES = ('This question continues the conversation above. Read it in that context: words such as "it", "this", '
+             '"again" or "explain" refer to what was asked and answered before. Answer the question now asked.')
+
+
+def is_followup(docs, question):
+    """A follow-up names nothing the knowledge base holds ("Explain again", "Why?"), so a search on its own words reads
+    nothing useful; the earlier questions then join the search. A question that names a metric or a user term starts its
+    own topic, and its words alone decide what is read, so an earlier topic does not crowd its reading set."""
+    return not reading_plan.anchors(docs, question) and not user_terms.match(question)
+
+
+def earlier_questions(history):
+    return 'Earlier questions in this conversation, oldest first:\n' + '\n'.join(f'- {t["question"]}' for t in history)
+
+
+def history_msgs(history):
+    """The earlier turns as the chat messages they were: the person's question, Agent E2's answer."""
+    out = []
+    for t in history or []:
+        out += [{'role': 'user', 'content': t['question']}, {'role': 'assistant', 'content': t['answer']}]
+    return out
+
+
 # ---------- the pipeline ----------
-def prepare(client, model, question, images, cfg, trace, retriever, kind, prompts):
+def prepare(client, model, question, images, cfg, trace, retriever, kind, prompts, history=None, followup=False):
     """Stages 1-4: everything before the model writes. The result is shared by every consensus sample, so the
-    samples differ only in the model's reasoning, never in what it read. prompts: answer_modes.PROMPTS."""
+    samples differ only in the model's reasoning, never in what it read. prompts: answer_modes.PROMPTS.
+    history: the conversation's earlier turns, [{question, answer}], oldest first, all of them. followup: the question
+    names nothing the knowledge base holds (is_followup): stages 1 and 2 read it with the earlier questions."""
     kw = {'provider_order': cfg.get('provider_order', {}).get(model)}
-    case = understand(client, model, question, images, cfg, trace, kw)                                   # 1
-    reading, used, hits, tiers = reading_plan.reading_set(retriever, question, cfg, case=case)                 # 2
+    read_as = f'{earlier_questions(history)}\n\nQuestion:\n{question}' if history and followup else question
+    if read_as is not question:
+        _step(trace, 'followup', '', f'{len(history)} earlier questions join the search')
+    case = understand(client, model, read_as, images, cfg, trace, kw)                                    # 1
+    reading, used, hits, tiers = reading_plan.reading_set(retriever, read_as, cfg, case=case)                  # 2
     _step(trace, 'plan', question[:200], {t: [i for i in used if tiers[i] == t] for t in reading_plan.ORDER if t in tiers.values()})
     computed = compute(case, question, retriever, used)                                                  # 3
     if computed:
@@ -656,9 +688,10 @@ def prepare(client, model, question, images, cfg, trace, retriever, kind, prompt
                'say the question is outside the knowledge base.\n\n' if cover == 'weak' else '')
             + f'Knowledge base:\n{reading}'
             + ('\n\n' + public_web_lookup.block(pages) if pages else '')
+            + (f'\n\n{CONTINUES}' if history else '')
             + f'\n\nQuestion:\n{question}')
     return {'case': case, 'used': used, 'seen': reading + '\n' + computed, 'format': p['format'],
-            'msgs': [{'role': 'system', 'content': system}, _user(text, images)], 'kw': kw}
+            'msgs': [{'role': 'system', 'content': system}] + history_msgs(history) + [_user(text, images)], 'kw': kw}
 
 
 def write(client, model, question, cfg, trace, retriever, kind, prep, verified):
