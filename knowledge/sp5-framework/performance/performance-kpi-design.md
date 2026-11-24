@@ -48,7 +48,7 @@
 
 ## Is a value a problem
 - A colour is the label the limits give a value. "A problem because it is orange" restates the limit, since the limits set the colour from the value: it explains nothing. A KPI colour says even less than a sub-metric colour: a weighted average reads orange for one red among greens and for many yellows, two different problems ([`sp5-framework/concepts/modelling`](../concepts/modelling.md), section Three ways to combine the colours).
-- A KPI value is a problem when the consumers waited more than the baseline the team maintains (section KPI definition). Read it in this order:
+- Read a KPI value in this order:
   1. What the figure is. The screen's 95th percentile is the value 95% of the window was better than. On a score where higher is better it lies near the worst end, with the worst 5% below it (72 minutes of a day), not near the top: compared with the median it looks impossible until read this way.
   2. Against what the object does normally: the median of the window, and 75%, where green ends: a KPI of 75% or more is the baseline held ([`sp5-framework/concepts/modelling`](../concepts/modelling.md), section Scale 0-100%).
   3. What the VMs waited for: each sub-metric out of green, in its own unit, with what it costs a VM. Peak vCPU Ready 14.7% on the worst VM: its most delayed vCPU stood ready but unscheduled for about 3 of 20 seconds. Bad packets 0.43% on a host: about 4 in 1,000 packets dropped or errored; TCP resends them, and every VM on that host sees the delay.
