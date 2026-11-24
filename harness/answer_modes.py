@@ -7,6 +7,7 @@ conversation kinds of the shipped assistant (user_clarification.py).
 import json
 import re
 
+import answer_shape
 import user_clarification
 import answer_check
 import public_web_lookup
@@ -32,8 +33,7 @@ SYSTEM_KB = (
     '- If neither the knowledge base nor your own knowledge settles every option, choose only the Unsure option.\n'
     + UNSURE_RULE + FORMAT)
 
-OPEN_FORMAT = ('Answer in plain text, at most 250 words. Give the conclusion first, then the mechanism and the reason, '
-               'then what to check next. If the information available does not settle the question, say so instead of guessing.')
+OPEN_FORMAT = answer_shape.OPEN_FORMAT   # replaced per question by the shape it asks for (answer_shape.py, expert_agent.prepare)
 
 OPEN_RULE = 'A wrong answer is worse than saying the question is not settled: an operator would act on it. Do not guess.\n'
 
@@ -123,9 +123,9 @@ MODES = ('baseline', AGENT, 'web')  # baseline and web are benchmark references:
 CONSENSUS_MODES = (AGENT,)        # baseline and web stay one sample: they measure the model alone
 
 
-def answer(mode, client, model, question, images, cfg, retriever, kind='choice', history=None):
+def answer(mode, client, model, question, images, cfg, retriever, kind='choice', history=None, shape=None):
     """Run one question in one mode. kind: choice (letters), open (free text), chat or chat_final (conversation).
-    history: the current topic's earlier turns (Agent E2 only; expert_agent.prepare).
+    history: the current topic's earlier turns; shape: the answer shape by code (Agent E2 only; expert_agent.prepare).
     With cfg consensus_samples n > 1 (choice questions, Agent E2): n samples of the answer on one reading set; the letters
     stand only when every sample gives the same set, otherwise the answer is Unsure (harness/README.md, section Consensus).
     Returns (result, ids used, trace)."""
@@ -138,12 +138,14 @@ def answer(mode, client, model, question, images, cfg, retriever, kind='choice',
     if mode == 'web':
         res, used = web_search_on(client, model, question, images, cfg, trace, kind)
         return res, used, trace
-    prep = expert_agent.prepare(client, model, question, images, cfg, trace, retriever, kind, PROMPTS, history)
+    prep = expert_agent.prepare(client, model, question, images, cfg, trace, retriever, kind, PROMPTS, history, shape)
     n = cfg.get('consensus_samples') or 1
     if n > 1 and kind == 'choice':
         res, used = _consensus(n, client, model, question, cfg, trace, retriever, prep)
     else:
         res, used = expert_agent.write(client, model, question, cfg, trace, retriever, kind, prep, _verified)
+    if prep.get('shape'):
+        res = {**res, 'shape': prep['shape']}
     return res, used, trace
 
 
@@ -193,7 +195,7 @@ def _consensus(n, client, model, question, cfg, trace, retriever, prep):
     return out, used
 
 
-def converse(mode, client, model, turns, images, cfg, retriever, history=None):
+def converse(mode, client, model, turns, images, cfg, retriever, history=None, shape=None):
     """The shipped assistant: one question, or the question, Agent E2's clarifying questions and the user's reply.
 
     turns: [question] or [question, clarifying reply, user's reply].
@@ -205,7 +207,7 @@ def converse(mode, client, model, turns, images, cfg, retriever, history=None):
         question, kind = user_clarification.joined(turns[0], turns[1], turns[2]), 'chat_final'
     else:
         question, kind = turns[0], 'chat'
-    res, used, trace = answer(mode, client, model, question, images, cfg, retriever, kind, history)
+    res, used, trace = answer(mode, client, model, question, images, cfg, retriever, kind, history, shape)
     asked = user_clarification.parse(res.get('content') or '')
     if asked and kind == 'chat':
         _step(trace, 'clarify', '', asked)
@@ -213,7 +215,7 @@ def converse(mode, client, model, turns, images, cfg, retriever, history=None):
     if asked:  # asked a second time: the rule allows one round; one repair turn to answer
         _step(trace, 'clarify_again', '', asked)
         res, used, trace2 = answer(mode, client, model, question + '\n\nAnswer now. Do not ask the user again.',
-                                   images, cfg, retriever, 'chat_final', history)
+                                   images, cfg, retriever, 'chat_final', history, shape)
         trace += trace2
     return {'type': 'answer', 'result': res, 'used': used, 'trace': trace}
 

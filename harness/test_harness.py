@@ -12,6 +12,7 @@ import knowledge_loader  # noqa: E402
 import answer_modes  # noqa: E402
 import answer_check  # noqa: E402
 import answer_service
+import answer_shape
 import topic_decision  # noqa: E402
 import expert_agent  # noqa: E402
 import public_web_lookup  # noqa: E402
@@ -818,6 +819,69 @@ class TopicTest(unittest.TestCase):
         for bad in ([{'question': 'Q'}], 'Q'):
             with self.assertRaises(ValueError):
                 answer_service.conversation(bad)
+
+
+class AnswerShapeTest(unittest.TestCase):
+    """The shape of an open answer follows what the question asks (answer_shape.py)."""
+    CASES = {
+        'What does CPU Thread Utilization actually measure?': 'explain',
+        'What does Cluster Consumption (%) measure, and how is it computed?': 'explain',
+        'Why is capacity read against usable capacity, not total capacity?': 'explain',
+        'How does VM Performance (%) work, and what is its formula?': 'explain',
+        'Explain again, simpler.': 'explain',
+        'Memory Consumed is high. Does this cluster need more memory?': 'diagnose',
+        'How many more VMs can this cluster take?': 'diagnose',
+        'Why did Cluster Performance drop at 10:10?': 'diagnose',
+        'Why is performance declining?': 'diagnose',
+        'Why the worst at 18 Oct, 10:10?': 'diagnose',
+        'Is 4% CPU Ready a problem for this VM?': 'diagnose',
+        'What should I check next?': 'diagnose',
+        'Is the platform the cause?': 'diagnose',
+        'How should I size memory for a new SQL Server VM?': 'advise',
+        'Why?': None,
+        'And at the 5-minute interval?': None,
+    }
+
+    def test_code_reads_the_users_words(self):
+        for q, want in self.CASES.items():
+            self.assertEqual(answer_shape.by_code(q), want, q)
+
+    def test_case_kind_decides_when_code_cannot(self):
+        self.assertEqual(answer_shape.choose(None, {'kind': 'troubleshooting'}), 'diagnose')
+        self.assertEqual(answer_shape.choose(None, {'kind': 'metric-meaning'}), 'explain')
+        self.assertEqual(answer_shape.choose(None, {}), 'general')
+        self.assertEqual(answer_shape.choose('explain', {'kind': 'troubleshooting'}), 'explain')
+
+    FACTS = {'screen': {'page': 'SG-S-01 · Capacity · Last 24 hours',
+                        'drill_down': {'page': 'SG-S-01 (cluster) · Capacity tab', 'shows': 'What makes up Consumption'}},
+             'pillar': 'Capacity', 'window': '24h',
+             'asked_about_kpi': {'label': 'Cluster Performance', 'better': 'higher', 'unit': '%',
+                                 'points': [[f't{i}', 80 + i % 3] for i in range(60)]}}
+
+    def ask(self, q):
+        c = TopicTest.Recorder()
+        svc = answer_service.Service(dict(AnswerServiceTest.CFG, verify=False, gap_followup=False), c, Retriever(DOCS, CHUNKS))
+        out = svc.answer({'question': q, 'facts': self.FACTS})
+        return out, c.answer_msgs[0][0]['content'], c.answer_msgs[0][-1]['content']
+
+    def test_explain_question_gets_no_page_figures_and_no_next_step(self):
+        out, system, user = self.ask('What does CPU Thread Utilization actually measure?')
+        self.assertEqual((out['shape'], out['lead']), ('explain', ''))
+        self.assertIn(answer_shape.FORMATS['explain'], system)
+        self.assertNotIn('then what to check next', system)
+        self.assertNotIn('What makes up Consumption', user)          # the drill-down is not sent
+        self.assertNotIn('asked_about_kpi', user)
+        self.assertIn('SG-S-01 · Capacity', user)                    # the page is still named
+
+    def test_verdict_question_keeps_the_page_and_the_next_step(self):
+        out, system, user = self.ask('Why is performance declining?')
+        self.assertEqual(out['shape'], 'diagnose')
+        self.assertIn('then what to check next', system)
+        self.assertIn('What makes up Consumption', user)
+
+    def test_clarifying_rule_survives_the_shape(self):
+        for kind in ('chat', 'chat_final'):
+            self.assertIn(answer_shape.OPEN_FORMAT, answer_modes.PROMPTS[kind]['kb'])
 
 
 class WebTest(unittest.TestCase):

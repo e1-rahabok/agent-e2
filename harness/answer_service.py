@@ -41,6 +41,7 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import answer_modes  # noqa: E402
+import answer_shape  # noqa: E402
 import catalog_database  # noqa: E402
 import expert_agent  # noqa: E402
 import knowledge_loader  # noqa: E402
@@ -289,6 +290,14 @@ def question_text(body, lead=''):
     return q
 
 
+def concept_facts(facts):
+    """What a question on what a metric is or how it works keeps of the page: the page named, no figures, no drill-down."""
+    out = {k: v for k, v in facts.items() if k in METRIC_FACTS}
+    if isinstance(out.get('screen'), dict):
+        out['screen'] = {k: v for k, v in out['screen'].items() if k != 'drill_down'}
+    return out
+
+
 def conversation(history):
     """The earlier turns the caller sent, checked: a list of {question, answer} strings, oldest first. Every turn is kept."""
     if history is None:
@@ -347,10 +356,15 @@ class Service:
         topic = topic_decision.decide(self.client, self.model, first, history, body.get('topic_choice'), self.docs, self.cfg,
                                       (self.cfg.get('provider_order') or {}).get(self.model))
         history = history if topic['continues'] else []
-        # A metric question of the page (user_suggestions.yaml, metric) asks how a KPI works: it is answered from the knowledge
-        # base, with the page named but not its numbers. With the numbers, the model opened with what pulled the score down.
-        if user_suggestions.is_metric(body.get('question'), self.suggestions) and isinstance(body.get('facts'), dict):
-            body = {**body, 'facts': {k: v for k, v in body['facts'].items() if k in METRIC_FACTS}}
+        # The shape the user's own words ask for (answer_shape.py), read on the bare question: the facts and rules added to
+        # it below hold words such as "cause" and "next". A reply in a clarifying round takes its question's shape.
+        shape = answer_shape.by_code(first)
+        if user_suggestions.is_metric(body.get('question'), self.suggestions):
+            shape = 'explain'
+        # A question on what a metric is or how it works is answered from the knowledge base, with the page named but not
+        # its numbers or where to look next. With the numbers, the model opened with what pulled the score down.
+        if shape == 'explain' and isinstance(body.get('facts'), dict):
+            body = {**body, 'facts': concept_facts(body['facts'])}
             lead = ''
         elif history:
             lead = ''  # the opening reads the page once, at the start of a topic; a turn that continues it does not repeat it
@@ -361,7 +375,7 @@ class Service:
             turns = [question_text({**body, 'question': turns[0]}, lead)] + list(turns[1:])
         else:
             turns = [question_text(body, lead)]
-        out = answer_modes.converse('agent-e2', self.client, self.model, turns, [], self.cfg, self.retriever, history)
+        out = answer_modes.converse('agent-e2', self.client, self.model, turns, [], self.cfg, self.retriever, history, shape)
         computed = [line for s in out['trace'] if s.get('action') == 'compute' for line in (s.get('output') or [])]
         content = no_file_refs(out['result'].get('content'), self.docs)
         if body.get('facts') and out['type'] == 'answer':
@@ -371,7 +385,8 @@ class Service:
             content = no_file_refs(content, self.docs)  # a rewrite may bring a path back
         return {'type': out['type'], 'content': content, 'questions': out.get('questions', []),
                 'files_read': out['used'], 'lead': lead if out['type'] == 'answer' else '',
-                'computed': [_shown(c) for c in computed], 'topic': topic, 'model': self.model,
+                'computed': [_shown(c) for c in computed], 'topic': topic, 'shape': out['result'].get('shape'),
+                'model': self.model,
                 'knowledge_commit': self.commit}
 
     def no_repeat(self, text, shown):
