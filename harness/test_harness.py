@@ -11,7 +11,8 @@ import flow_executor  # noqa: E402
 import knowledge_loader  # noqa: E402
 import answer_modes  # noqa: E402
 import answer_check  # noqa: E402
-import answer_service  # noqa: E402
+import answer_service
+import topic_decision  # noqa: E402
 import expert_agent  # noqa: E402
 import public_web_lookup  # noqa: E402
 import reading_plan  # noqa: E402
@@ -737,16 +738,20 @@ class ClarifyTest(unittest.TestCase):
                 self.assertNotIn('CLARIFY', prompt)
 
 
-class ConversationTest(unittest.TestCase):
-    """The earlier turns of a conversation (expert_agent.prepare, answer_service.conversation): all of them reach the model."""
+class TopicTest(unittest.TestCase):
+    """Topics in a conversation (topic_decision.py, expert_agent.prepare, answer_service): a question that continues the
+    topic gets every earlier turn of it; a new topic is read alone."""
 
     class Recorder:
-        def __init__(self):
-            self.answer_msgs, self.case_inputs = [], []
+        def __init__(self, topic_reply='{"continues": false}'):
+            self.answer_msgs, self.case_inputs, self.topic_calls, self.topic_reply = [], [], 0, topic_reply
 
         def chat(self, model, messages, tools=None, deterministic=False, **kw):
+            if deterministic and messages[0]['content'] == topic_decision.RULE:
+                self.topic_calls += 1
+                return {'content': self.topic_reply, 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
             if deterministic:
-                self.case_inputs.append(messages[-1]['content'] if isinstance(messages[-1]['content'], str) else str(messages[-1]['content']))
+                self.case_inputs.append(str(messages[-1]['content']))
                 return {'content': '{}', 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
             self.answer_msgs.append(messages)
             return {'content': 'Thread Utilization counts busy threads.', 'tool_calls': [], 'prompt_tokens': 1,
@@ -755,47 +760,64 @@ class ConversationTest(unittest.TestCase):
     CFG = dict(ClarifyTest.CFG)
     HISTORY = [{'question': 'Memory Consumed is high. Does this cluster need more memory?', 'answer': 'No: Ballooned is 0%.'},
                {'question': 'What does CPU Thread Utilization actually measure?', 'answer': 'The share of busy threads.'}]
+    FACTS = {'screen': {'page': 'SG-S-01 · Capacity · Last 24 hours'},
+             'asked_about_kpi': {'label': 'Cluster Performance', 'better': 'higher', 'unit': '%',
+                                 'points': [[f't{i}', 80 + i % 3] for i in range(60)]}}
+
+    def decide(self, q, history, choice='auto', reply='{"continues": false}'):
+        c = self.Recorder(reply)
+        return topic_decision.decide(c, 'm', q, history, choice, DOCS, self.CFG), c.topic_calls
+
+    def test_decision_order(self):
+        self.assertEqual(self.decide('Explain again.', []), ({'continues': False, 'by': 'first'}, 0))
+        self.assertEqual(self.decide('I do not understand. Explain again.', self.HISTORY), ({'continues': True, 'by': 'code'}, 0))
+        self.assertEqual(self.decide('What is VM CPU Ready?', self.HISTORY), ({'continues': False, 'by': 'model'}, 1))
+        self.assertEqual(self.decide('What is VM CPU Ready?', self.HISTORY, reply='{"continues": true}'), ({'continues': True, 'by': 'model'}, 1))
+        self.assertEqual(self.decide('What is VM CPU Ready?', self.HISTORY, reply='no idea'), ({'continues': True, 'by': 'unsure'}, 1))
+        self.assertEqual(self.decide('Explain again.', self.HISTORY, 'new'), ({'continues': False, 'by': 'user'}, 0))
+        self.assertEqual(self.decide('What is VM CPU Ready?', self.HISTORY, 'continue'), ({'continues': True, 'by': 'user'}, 0))
+        with self.assertRaises(ValueError):
+            self.decide('Why?', self.HISTORY, 'maybe')
 
     def test_earlier_turns_are_chat_messages_in_order(self):
         c = self.Recorder()
-        answer_modes.converse('agent-e2', c, 'm', ['I do not understand. Explain again.'], [], self.CFG, Retriever(DOCS, CHUNKS),
-                              self.HISTORY, True)
+        answer_modes.converse('agent-e2', c, 'm', ['I do not understand. Explain again.'], [], self.CFG, Retriever(DOCS, CHUNKS), self.HISTORY)
         msgs = c.answer_msgs[0]
         self.assertEqual([m['role'] for m in msgs], ['system', 'user', 'assistant', 'user', 'assistant', 'user'])
-        self.assertEqual(msgs[3]['content'], self.HISTORY[1]['question'])
-        self.assertEqual(msgs[4]['content'], self.HISTORY[1]['answer'])
+        self.assertEqual((msgs[3]['content'], msgs[4]['content']), (self.HISTORY[1]['question'], self.HISTORY[1]['answer']))
         self.assertIn(expert_agent.CONTINUES, msgs[-1]['content'])
+        self.assertIn('CPU Thread Utilization', c.case_inputs[0])     # stage 1 reads the earlier questions
 
     def test_no_turn_is_cut(self):
         c, long = self.Recorder(), [{'question': f'Question {i}?', 'answer': f'Answer {i}.'} for i in range(40)]
-        answer_modes.converse('agent-e2', c, 'm', ['Why?'], [], self.CFG, Retriever(DOCS, CHUNKS), long, True)
+        answer_modes.converse('agent-e2', c, 'm', ['Why?'], [], self.CFG, Retriever(DOCS, CHUNKS), long)
         self.assertEqual(len(c.answer_msgs[0]), 1 + 80 + 1)
 
-    def test_followup_reads_with_the_earlier_questions(self):
-        self.assertTrue(expert_agent.is_followup(DOCS, 'I do not understand. Explain again.'))
-        self.assertFalse(expert_agent.is_followup(DOCS, 'What is VM CPU Ready?'))
-        c, trace = self.Recorder(), []
-        answer_modes.converse('agent-e2', c, 'm', ['Explain again.'], [], self.CFG, Retriever(DOCS, CHUNKS), self.HISTORY, True)
-        self.assertIn('CPU Thread Utilization', c.case_inputs[0])     # stage 1 reads the earlier questions
-        c = self.Recorder()
-        answer_modes.converse('agent-e2', c, 'm', ['What is VM CPU Ready?'], [], self.CFG, Retriever(DOCS, CHUNKS), self.HISTORY, False)
-        self.assertNotIn('CPU Thread Utilization', c.case_inputs[0])  # a new topic is read on its own words
+    def service(self, c):
+        return answer_service.Service(dict(AnswerServiceTest.CFG, verify=False, gap_followup=False), c, Retriever(DOCS, CHUNKS))
 
-    def test_service_checks_history_and_drops_the_opening(self):
-        self.assertEqual(answer_service.conversation(None), [])
-        with self.assertRaises(ValueError):
-            answer_service.conversation([{'question': 'Q'}])
-        with self.assertRaises(ValueError):
-            answer_service.conversation('Q')
+    def test_service_continues_a_topic(self):
         c = self.Recorder()
-        svc = answer_service.Service(dict(AnswerServiceTest.CFG, verify=False, gap_followup=False), c, Retriever(DOCS, CHUNKS))
-        facts = {'screen': {'page': 'SG-S-01 · Capacity · Last 24 hours'},
-                 'asked_about_kpi': {'label': 'Cluster Performance', 'better': 'higher', 'unit': '%',
-                                     'points': [[f't{i}', 80 + i % 3] for i in range(60)]}}
-        out = svc.answer({'question': 'I do not understand. Explain again.', 'facts': facts, 'history': self.HISTORY})
-        self.assertEqual(out['lead'], '')
-        self.assertNotIn('The opening of your answer', c.answer_msgs[0][-1]['content'])
+        out = self.service(c).answer({'question': 'I do not understand. Explain again.', 'facts': self.FACTS, 'history': self.HISTORY})
+        self.assertEqual((out['topic'], out['lead']), ({'continues': True, 'by': 'code'}, ''))
         self.assertEqual(len(c.answer_msgs[0]), 6)
+        self.assertNotIn('The opening of your answer', c.answer_msgs[0][-1]['content'])
+
+    def test_service_new_topic_drops_the_history(self):
+        c = self.Recorder('{"continues": false}')
+        out = self.service(c).answer({'question': 'What is VM CPU Ready?', 'history': self.HISTORY})
+        self.assertEqual(out['topic'], {'continues': False, 'by': 'model'})
+        self.assertEqual(len(c.answer_msgs[0]), 2)                       # system and the question: no earlier turn
+        self.assertNotIn('CPU Thread Utilization', c.case_inputs[0])
+        c = self.Recorder()
+        out = self.service(c).answer({'question': 'Explain again.', 'history': self.HISTORY, 'topic_choice': 'new'})
+        self.assertEqual((out['topic']['by'], len(c.answer_msgs[0])), ('user', 2))
+
+    def test_service_checks_history(self):
+        self.assertEqual(answer_service.conversation(None), [])
+        for bad in ([{'question': 'Q'}], 'Q'):
+            with self.assertRaises(ValueError):
+                answer_service.conversation(bad)
 
 
 class WebTest(unittest.TestCase):

@@ -7,10 +7,14 @@ Agent E2 owns the knowledge base, the reading plan, the flow executor and the mo
     POST /v1/answer
       {"question": "...", "facts": {...} (optional, JSON from the caller), "turns": [...] (optional, for the clarifying
        round: [question, Agent E2's questions, the user's reply]), "history": [{"question": "...", "answer": "..."}, ...]
-       (optional: every earlier turn of the conversation, oldest first; the service holds no state, so the caller keeps the
-       conversation and sends all of it, uncut), "role": "l1" | "l2" | "capacity" | "executive" (optional)}
+       (optional: every earlier turn of the current topic, oldest first, uncut; the service holds no state, so the caller
+       keeps the conversation), "topic_choice": "auto" | "new" | "continue" (optional, default auto: Agent E2 decides; new
+       or continue: the user chose), "role": "l1" | "l2" | "capacity" | "executive" (optional)}
     -> 200 {"type": "answer" | "clarify", "content": "...", "questions": [...], "files_read": [...],
-            "lead": "...", "computed": [...], "model": "...", "knowledge_commit": "..."}
+            "lead": "...", "computed": [...], "topic": {"continues": true | false, "by": "user" | "first" | "code" |
+            "model" | "unsure"}, "model": "...", "knowledge_commit": "..."}
+    topic: whether the question continued the topic of `history` (topic_decision.py); when it did not, `history` was not
+    used and the caller starts a new topic with this turn.
     lead: the opening the person reads first, written by code from the calculator's numbers in plain words (empty when no
     KPI series was sent); the model's text continues from it. computed: the calculator's lines, exact, for review; the
     screen shows the lead, not these.
@@ -40,6 +44,7 @@ import answer_modes  # noqa: E402
 import catalog_database  # noqa: E402
 import expert_agent  # noqa: E402
 import knowledge_loader  # noqa: E402
+import topic_decision  # noqa: E402
 import user_suggestions  # noqa: E402
 from knowledge_search import Retriever  # noqa: E402
 from model_client import GatewayClient, LLMError, MockClient, ParamClient  # noqa: E402
@@ -338,22 +343,25 @@ class Service:
 
     def answer(self, body):
         history = conversation(body.get('history'))
+        first = ((body.get('turns') or [None])[0] or body.get('question') or '').strip()  # a clarifying reply: its question
+        topic = topic_decision.decide(self.client, self.model, first, history, body.get('topic_choice'), self.docs, self.cfg,
+                                      (self.cfg.get('provider_order') or {}).get(self.model))
+        history = history if topic['continues'] else []
         # A metric question of the page (user_suggestions.yaml, metric) asks how a KPI works: it is answered from the knowledge
         # base, with the page named but not its numbers. With the numbers, the model opened with what pulled the score down.
         if user_suggestions.is_metric(body.get('question'), self.suggestions) and isinstance(body.get('facts'), dict):
             body = {**body, 'facts': {k: v for k, v in body['facts'].items() if k in METRIC_FACTS}}
             lead = ''
         elif history:
-            lead = ''  # the opening reads the page once, at the start of the conversation; a later turn does not repeat it
+            lead = ''  # the opening reads the page once, at the start of a topic; a turn that continues it does not repeat it
         else:
             lead = self.lead(body.get('facts'), body.get('question'))
-        followup = bool(history) and expert_agent.is_followup(self.docs, (body.get('question') or '').strip())
         turns = body.get('turns')
         if turns:
             turns = [question_text({**body, 'question': turns[0]}, lead)] + list(turns[1:])
         else:
             turns = [question_text(body, lead)]
-        out = answer_modes.converse('agent-e2', self.client, self.model, turns, [], self.cfg, self.retriever, history, followup)
+        out = answer_modes.converse('agent-e2', self.client, self.model, turns, [], self.cfg, self.retriever, history)
         computed = [line for s in out['trace'] if s.get('action') == 'compute' for line in (s.get('output') or [])]
         content = no_file_refs(out['result'].get('content'), self.docs)
         if body.get('facts') and out['type'] == 'answer':
@@ -363,7 +371,7 @@ class Service:
             content = no_file_refs(content, self.docs)  # a rewrite may bring a path back
         return {'type': out['type'], 'content': content, 'questions': out.get('questions', []),
                 'files_read': out['used'], 'lead': lead if out['type'] == 'answer' else '',
-                'computed': [_shown(c) for c in computed], 'model': self.model,
+                'computed': [_shown(c) for c in computed], 'topic': topic, 'model': self.model,
                 'knowledge_commit': self.commit}
 
     def no_repeat(self, text, shown):

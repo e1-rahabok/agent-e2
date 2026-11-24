@@ -54,6 +54,12 @@ python3 -m unittest benchmark/runner/test_runner.py
 python3 benchmark/runner/retrieval_check.py
 ```
 - Recall of each question's `knowledge` files in search and in Agent E2's reading set (the code-only case: no model call). Add `--embeddings` for hybrid search (needs `AI_GATEWAY_API_KEY`).
+
+## Topic check
+```bash
+python3 benchmark/runner/topic_check.py
+```
+- Does Agent E2 tell a question that continues the topic from one that starts a new topic ([harness/topic_decision.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/topic_decision.py))? Scores the labelled pairs of [topic_check_pairs.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/topic_check_pairs.yaml) three ways: always continue, code alone, code then the model. Counts lost context (the worse error) apart from extra context. `--no-model` runs offline; the model step needs `AI_GATEWAY_API_KEY` (one call per pair the code cannot settle). Add a pair for every wrong decision seen in the live test.
 - Why it is needed, how to read the result, what to do when it is low: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md).
 
 ## Methodology
