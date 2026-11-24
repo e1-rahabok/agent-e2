@@ -1,6 +1,6 @@
 # Sources
 
-Source documents the knowledge is written from: the author's material, vendor PDFs and source notes. The latest copies of the author's books and spreadsheets are at https://isvara.io. The knowledge base is a superset of these sources (KNOWLEDGE-ENGINEERING.md, section 2). The author adds sources; Claude may edit them (author, 2026-11-14). Not indexed, not shipped, not read at run time.
+Source documents the knowledge is written from: the author's material, vendor PDFs and source notes. Extraction from the author's books is complete; isvara.io is a product made from the knowledge, not a source. The knowledge base is the one master and a superset of these sources (KNOWLEDGE-ENGINEERING.md, section 2). The author adds sources; Claude may edit them (author, 2026-11-14). Not indexed, not shipped, not read at run time.
 
 What is here:
 - Source notes: one Markdown file per topic, a few pages long, written by the author with Claude from the author's material, documentation and the environment (KNOWLEDGE-ENGINEERING.md, section 6).

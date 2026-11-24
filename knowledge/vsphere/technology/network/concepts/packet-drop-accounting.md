@@ -45,8 +45,14 @@ sequenceDiagram
     TOR--xTOR: 6. Buffers full: tail drop or WRED. InDiscards +1
 ```
 
-- Steps 1-5 count 0: the guest, the vNIC, the port group, the virtual network and the physical NIC all completed their part.
-- Step 6: the switch ASIC drops the frame and counts it as an input discard or input queue drop.
+- The path of one transmitted frame, and what each hop counts:
+  1. Guest OS: puts a TX descriptor on the ring it shares with the vNIC. Drop count 0.
+  2. VM vNIC: the VMkernel reads the frame from the ring. Drop count 0.
+  3. Port group: receives the frame. Drop count 0.
+  4. ESXi virtual network: forwards it to the uplink. Drop count 0.
+  5. ESXi physical NIC: serializes it onto the cable. Drop count 0.
+  6. Top-of-rack switch: its buffers are full, so the switch ASIC drops the frame (tail drop, or WRED) and counts it as an input discard (InDiscards) or input queue drop.
+- Hops 1-5 all completed their part, so every vSphere and guest counter stays at 0.
 - Recovery is TCP in the guest: no acknowledgement returns, the retransmission timer expires (or duplicate acknowledgements arrive), and the guest sends the payload again in a new frame.
 - vSphere metrics cannot show this drop. Evidence: TCP retransmissions in the Guest OS, and the switch's discard counters (network team).
 

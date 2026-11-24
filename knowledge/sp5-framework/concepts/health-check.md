@@ -28,7 +28,7 @@ flowchart TD
     A1[Log] --> A2[Saturation] --> A3[Configuration] --> A4[Known bug]
   end
   subgraph PF["2. Is it fast? Performance"]
-    P1[Contention] --> P2[Consumption] --> P3[Configuration] --> P4[Known bug] --> P5[Log]
+    P1[Contention] --> P2[Consumption] --> P3[Configuration] --> P4[Known bug]
   end
   subgraph SC["3. Is it secure? Security"]
     S1[Configuration] --> S2[Known bug] --> S3[Log]
@@ -37,7 +37,7 @@ flowchart TD
     C1[Consumption] --> C2[Configuration] --> C3[Contention] --> C4[Inventory]
   end
   A4 --> P1
-  P5 --> S1
+  P4 --> S1
   S3 --> C1
   C4 --> D([Done: a failed step opens its troubleshooting flow])
 ```
@@ -46,6 +46,11 @@ flowchart TD
 - Is it secure? Running well does not mean safe from attack.
 - Will it be enough? A healthy present does not mean a healthy future. Efficiency (waste) is read here.
 - Within each pillar, the what before the why: establish the fact, then explain it.
+- The checks inside each pillar, in order:
+  - Availability: log, saturation, configuration, known bug.
+  - Performance: contention, consumption, configuration, known bug.
+  - Security: configuration, known bug, log.
+  - Capacity: consumption, configuration, contention, inventory.
 - Configuration and known bugs sit inside each pillar, not after them: a configuration issue or a bug can cause an outage, slowness or a security loophole.
 
 ## Running the daily check
