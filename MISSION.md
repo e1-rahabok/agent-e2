@@ -4,21 +4,20 @@ Not indexed.
 Related reading: [ARCHITECTURE.md](ARCHITECTURE.md) explains how the parts run, [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) how the expertise is codified, [harness/AGENT.md](harness/AGENT.md) the agent, [benchmark/design.md](benchmark/design.md) how the claim is proved, and [benchmark/models.md](benchmark/models.md) which model is used.
 
 ## 1. Mission
-- Iwan 'E1' Rahabok built Agent E2 to make his expertise in VCF performance and capacity management available.
-- Agent E2 proves that it works on the benchmark: the result shows that it scored higher than the frontier models of the leading vendors (Google, OpenAI, Anthropic).
-- It does this with four parts that work as one brain:
+- Provides the VMware Cloud Foundation (VCF) 9 performance and capacity management knowledge available locally in a private cloud.
+- Agent E2 does this with four parts that work as one brain:
   - The Agent
   - The Harness
   - The Knowledge
-  - The LLM: one or more standard open-weight models, running locally on minimal GPU. It is not a customized or fine-tuned model.
+  - The LLM: one or more standard open-weight models, running on-premise with enterprise GPU. It is not a customized or fine-tuned model.
 - Locally means on the customer's own infrastructure. There is no cloud AI service, no customer data (questions, screenshots, files) leaves the customer network, and there is no per-token fee.
 - A user's prompt or question can include a URL. Agent E2 opens the page and checks what it says.
 - In troubleshooting, Agent E2 finds the facts and analyses them: what is wrong, the evidence, the mechanism, and what to check next. The fix is the human specialist's decision; Agent E2 does not do the final solutioning.
 - Agent E2 is more than an LLM answering one question; it is also a consultant that leads a conversation. Ask it "Can you guide me over capacity planning for a vSphere cluster? What should I consider? You're my expert consultant", and it interviews the user for what the plan needs, computes the numbers in code, and explains each number and the trade-off behind it. The agent knows which inputs are still missing and does the arithmetic; the model words the questions and the advice. The benchmark measures single-turn knowledge, so the conversation is measured in the live test (section 5, Ways to ask, 4 and 7).
 - Scope: version 1.0 covers vSphere 9.1 metrics, the VCF Operations metrics and models computed on vSphere objects, and the Guest OS layer.
 - Later releases add vSAN, NSX, Kubernetes, Linux flows, and VCF Operations beyond its vSphere metrics. The end scope is the private cloud stack.
+- Agent E2 proves that it works on the benchmark: the result shows that it scored higher than the frontier models of the leading vendors (Google, OpenAI, Anthropic).
 - The benchmark is comprehensive. Each question is scored on the mean of 5 runs, and the bar is Level 400 at least 80%, confident-wrong at most 3%, no misconception stated as true, and the held-out set at most 11 points below. Details are in [benchmark/design.md](benchmark/design.md), section 7.5.
-- These are targets, not rules. The aim is the smallest hardware (GPU, CPU, memory) that passes the benchmark.
 - Few rules hold in IT operations management. Every assumption here, the author's included, is open to challenge with evidence.
 
 
