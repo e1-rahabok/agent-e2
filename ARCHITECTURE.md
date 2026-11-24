@@ -1,7 +1,5 @@
 # Architecture
 
-This document covers the whole system: how the repository is organized, and how the model, agent, harness and knowledge work together at run time. Not indexed.
-
 ## Components
 | Component | Design document |
 |---|---|
