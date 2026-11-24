@@ -243,15 +243,55 @@ def kpi_trends(question, cat):
                 f"highest {t['high']:g}. The worst, {t['worst']:g}{f' at {when}' if when else ''}, is {t['worse_move']:g} points "
                 f"{side} the median.")
         if level is None:
-            line += ' No KPI change level is set for this KPI: give the range and do not call a move a drop.'
+            line += f" No change level is set for {r['name']}: give the range and do not call a move a drop."
         elif t['verdict'] == 'steady':
-            line += (f" KPI change level: {level:g} points. Verdict: steady. No drop: the worst point is the KPI's normal "
+            line += (f" Change level: {level:g} points. Verdict: steady. No drop: the worst point is the score's normal "
                      'movement, not an event.')
         else:
             moved = t['worse_move'] if t['verdict'] == 'worsened' else t['better_move']
-            line += f" KPI change level: {level:g} points. Verdict: {t['verdict']}, by {moved:g} points from the median."
+            line += f" Change level: {level:g} points. Verdict: {t['verdict']}, by {moved:g} points from the median."
         out.append(line + ' [arithmetic_calculator.py: ' + ' '.join(t['notes']) + ']')
     return out
+
+
+def capacity_check_row(facts, cat):
+    """Close for business on a cluster's Capacity page, in its order (vsphere/object-types/cluster/decision-tree/
+    can-cluster-take-more-vms): Consumption first; contention (Cluster Performance (%)) overrides; Risk decides only when
+    both are orange. Values: the latest Periodic Cluster Check the caller sent (95th percentile of 24 hours for Consumption
+    and Risk, 5th for Performance), else the same percentiles of the series. Limits: catalog/thresholds-capacity,
+    decisions. None when the facts are not a cluster's Capacity page or card."""
+    if not isinstance(facts, dict) or str(facts.get('pillar') or '').lower() != 'capacity':
+        return None
+    lim = {r['id']: r['value'] for r in cat._q("SELECT id, value FROM thresholds WHERE use = 'decision' AND id LIKE 'closure-cluster-%'")}
+    if len(lim) < 6:
+        return None
+    chk = facts.get('check') or {}
+    vals = {k: chk.get(k) for k in ('consumption', 'performance', 'risk')}
+    if not all(isinstance(v, (int, float)) for v in vals.values()):
+        ser = {_bare_name(x['name']): x for x in _series(facts, [], limit=6)}
+        for k, name, p in (('consumption', 'cluster consumption', 95), ('performance', 'cluster performance', 5), ('risk', 'cluster risk', 95)):
+            x = ser.get(name)
+            if not isinstance(vals[k], (int, float)) and x:
+                try:
+                    vals[k] = arithmetic_calculator.percentile(x['values'], p)
+                except arithmetic_calculator.CalcError:
+                    pass
+    c, pf, r = vals['consumption'], vals['performance'], vals['risk']
+    if not isinstance(c, (int, float)):
+        return None
+    c_lv = 'red' if c > lim['closure-cluster-consumption-red'] else 'orange' if c > lim['closure-cluster-consumption-orange'] else 'clear'
+    p_lv = None if not isinstance(pf, (int, float)) else 'red' if pf < lim['closure-cluster-performance-red'] else \
+        'orange' if pf < lim['closure-cluster-performance-orange'] else 'clear'
+    production = facts.get('production', True) is not False
+    r_lim = lim['closure-cluster-risk-prod' if production else 'closure-cluster-risk-nonprod']
+    both = c_lv == 'orange' and p_lv == 'orange'
+    closed = 'red' in (c_lv, p_lv) or (both and isinstance(r, (int, float)) and r > r_lim)
+    return {'consumption': c, 'performance': pf, 'risk': r, 'c_level': c_lv, 'p_level': p_lv, 'both_orange': both,
+            'closed': closed, 'production': production, 'limits': lim, 'risk_limit': r_lim, 'from_check': bool(chk)}
+
+
+def _bare_name(n):
+    return re.sub(r'\s*\(.*?\)\s*$', '', str(n or '')).strip().lower()
 
 
 def _figure_rows(node, out):
@@ -393,7 +433,7 @@ def _step_lines(facts, cat, s, others, st, row, width, when):
     u = '%' if (s.get('unit') or '%') == '%' else ''
     way = 'up' if s['better'] == 'lower' else 'down'
     line = (f"- {s['name']} stepped {way} at {when}: median {st['before']:g}{u} the hour before, {st['after']:g}{u} the hour "
-            f"after, {st['move']:g} points (KPI change level {row['value']:g}). This is the moment the score changed level; its "
+            f"after, {st['move']:g} points (change level {row['value']:g}). This is the moment the score changed level; its "
             'worst point may be later.')
     for name, mb, ma, moved, lv in others:
         line += (f" {name} in the same two hours: median {mb:g}% the hour before, {ma:g}% the hour after: "
@@ -477,7 +517,7 @@ def kpi_part_lines(question, cat):
         return []
     out = []
     for ps in _part_sets(facts, [])[:2]:
-        name, when, shown = ps.get('kpi') or 'The KPI', ps.get('time'), ps.get('kpi_value')
+        name, when, shown = ps.get('kpi') or 'The score', ps.get('time'), ps.get('kpi_value')
         sl = cat.score_line(name)
         flipped = bool(sl and sl['direction'] == 'above')
         rows, unknown, by_name = [], [], {}

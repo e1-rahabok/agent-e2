@@ -183,8 +183,8 @@ def trend(values, better='higher', change=None):
     verdict = None
     if change is not None:
         verdict = 'worsened' if worse_move >= change else 'improved' if better_move >= change else 'steady'
-    note = ('A KPI score moves at every point: it is a weighted average of sub-metrics read from the worst VM and the 90th '
-            'percentile, and the VMs on top change. A move counts only from the median of the window and only at the KPI '
+    note = ('A score such as Cluster Performance (%) moves at every point: it is a weighted average of sub-metrics read from the worst VM and the 90th '
+            'percentile, and the VMs on top change. A move counts only from the median of the window and only at its '
             'change level or more. See sp5-framework/performance/performance-kpi-design, section Reading a KPI over time, and '
             'catalog/thresholds-performance, section change.')
     return {'points': n, 'median': round(median, 2), 'low': srt[0], 'high': srt[-1], 'worst': worst, 'worst_index': wi,
@@ -285,7 +285,7 @@ def kpi_parts(rows):
     """How a KPI at one point is made of its parts (SRC_SCORING).
 
     rows: [{'name', 'value', 'limits' (five numbers), 'excluded_when_green' (bool)}]; a row without a value is left out.
-    KPI = sum(score x weight) / sum(weight), weight = 2 ^ ((100 - score) / 25). The score the KPI lost, 100 - KPI, is
+    the score = sum(score x weight) / sum(weight), weight = 2 ^ ((100 - score) / 25). The score the KPI lost, 100 - KPI, is
     the sum over the parts of (100 - score) x weight / sum(weight): each part's points lost, exact, adding up to the loss.
     A row marked excluded_when_green is left out while green (catalog/thresholds-performance, kpi).
     Returns {'kpi', 'lost', 'rows': [{'name', 'value', 'score', 'band', 'weight', 'points_lost', 'share'}] worst first,
@@ -303,7 +303,7 @@ def kpi_parts(rows):
     if not scored:
         if not left_out:
             raise CalcError('kpi_parts: no part has a value')
-        return {'kpi': 100.0, 'lost': 0.0, 'rows': [], 'left_out': left_out, 'notes': [f'Every part was left out while green: KPI 100. See {SRC_SCORING}.']}
+        return {'kpi': 100.0, 'lost': 0.0, 'rows': [], 'left_out': left_out, 'notes': [f'Every part was left out while green: score 100. See {SRC_SCORING}.']}
     total = sum(r['weight'] for r in scored)
     kpi = sum(r['score'] * r['weight'] for r in scored) / total
     lost = 100.0 - kpi
@@ -314,8 +314,8 @@ def kpi_parts(rows):
     for r in scored:
         for k in ('score', 'weight', 'points_lost', 'share'):
             r[k] = round(r[k], 2)
-    note = (f'Score per part from its five limits, KPI = sum(score x weight) / sum(weight), weight = 2 ^ ((100 - score) / 25); '
-            f'points lost per part = (100 - score) x weight / sum(weight), which add up to 100 - KPI. See {SRC_SCORING}.')
+    note = (f'Score per part from its five limits, the score = sum(score x weight) / sum(weight), weight = 2 ^ ((100 - score) / 25); '
+            f'points lost per part = (100 - score) x weight / sum(weight), which add up to 100 minus the score. See {SRC_SCORING}.')
     return {'kpi': round(kpi, 2), 'lost': round(lost, 2), 'rows': scored, 'left_out': left_out, 'notes': [note]}
 
 

@@ -1063,7 +1063,7 @@ class AnswerServiceTest(unittest.TestCase):
         self.assertEqual(len(lines), 1)
         self.assertIn('Verdict: steady. No drop', lines[0])
         self.assertIn('The worst, 80.2 at t100', lines[0])
-        self.assertIn('KPI change level: 5 points', lines[0])
+        self.assertIn('Change level: 5 points', lines[0])
 
     def test_real_drop_is_computed_as_worsened(self):
         pts = list(self.STEADY)
@@ -1074,14 +1074,14 @@ class AnswerServiceTest(unittest.TestCase):
     def test_kpi_without_change_level_gives_the_range_only(self):
         facts = {'asked_about_kpi': {'label': 'Datastore Latency Score', 'better': 'higher', 'points': [[i, 90 + i % 3] for i in range(50)]}}
         lines = expert_agent.kpi_trends(answer_service.question_text({'question': 'Why?', 'facts': facts}), CAT)
-        self.assertIn('No KPI change level is set', lines[0])
+        self.assertIn('No change level is set', lines[0])
 
     def test_one_vm_score_has_the_larger_level(self):
         pts = [90 + i % 3 for i in range(60)]
         pts[20] = 84  # 7 points below the median: inside one VM's normal movement (Q259)
         facts = {'asked_about_kpi': {'label': 'VM Performance', 'better': 'higher', 'points': [[i, v] for i, v in enumerate(pts)]}}
         lines = expert_agent.kpi_trends(answer_service.question_text({'question': 'Why?', 'facts': facts}), CAT)
-        self.assertIn('KPI change level: 8 points. Verdict: steady', lines[0])
+        self.assertIn('Change level: 8 points. Verdict: steady', lines[0])
         self.assertEqual(CAT.change_level('Guest OS Performance')['value'], 8)
 
     def test_lower_is_better_score_worsens_upward(self):
@@ -1515,3 +1515,27 @@ class CardSuggestionTest(unittest.TestCase):
         f = {'pillar': 'Performance'}
         self.assertIsNone(user_suggestions.card(f, {'kind': 'metric', 'name': 'Peak CPU Co-stop among any vCPU'}, CAT)['question'])
         self.assertEqual(user_suggestions.card({}, {'kind': 'link'}, CAT)['question'], 'What evidence supports this link?')
+
+
+class CapacityOpeningTest(unittest.TestCase):
+    """The Capacity tab opening: Consumption, then contention (it overrides), then Risk (only when both are orange)."""
+
+    def text(self, c, p, r):
+        return answer_service.capacity_text(expert_agent.capacity_check_row(
+            {'pillar': 'Capacity', 'check': {'consumption': c, 'performance': p, 'risk': r}}, CAT))
+
+    def test_consumption_red_closes(self):
+        t = self.text(82, 77.5, 51.2)
+        self.assertTrue(t.startswith('Consumption: 82% (95th percentile, last 24 hours), above the close-for-business limit of 80%.'))
+        self.assertTrue(t.endswith('Closed for new VMs and VM upsizes.'))
+        self.assertNotIn('KPI', t)
+
+    def test_contention_overrides(self):
+        self.assertIn('it overrides', self.text(30, 15, 10))
+        self.assertTrue(self.text(30, 15, 10).endswith('Closed for new VMs and VM upsizes.'))
+
+    def test_risk_decides_only_when_both_orange(self):
+        self.assertIn('it decides', self.text(70, 30, 65))
+        self.assertTrue(self.text(70, 30, 65).endswith('Closed for new VMs and VM upsizes.'))
+        self.assertTrue(self.text(70, 30, 50).endswith('Open for new VMs.'))
+        self.assertIn('does not decide', self.text(30, 45, 90))
