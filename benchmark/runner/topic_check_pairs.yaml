@@ -1,0 +1,167 @@
+# Labelled pairs for benchmark/runner/topic_check.py: does Agent E2 tell a question that continues the topic from one that
+# starts a new topic (harness/topic_decision.py)? Each pair: the topic's earlier turns, the new question, and the label.
+# continues: true = the question needs the earlier turns; false = it can be fully understood alone and is on another subject.
+# The first two come from the author's screenshots of 2026-11-24 (SG-S-01, Capacity tab). Add a pair for every wrong
+# decision seen in the live test.
+pairs:
+  - id: T01
+    history:
+      - {question: "Memory Consumed is high. Does this cluster need more memory?", answer: "No. Memory Consumed is 76.8% but Ballooned and Zip Swap stay at 0%: the hosts keep guest caches in memory because nothing asks for it back."}
+      - {question: "What does CPU Thread Utilization actually measure?", answer: "The share of the cluster's physical threads running a vCPU or a kernel world, averaged over the sample interval."}
+    question: "I don't understand. Explain again. Do you remember the previous conversation?"
+    continues: true
+  - id: T02
+    history:
+      - {question: "Memory Consumed is high. Does this cluster need more memory?", answer: "No. Memory Consumed is 76.8% but Ballooned and Zip Swap stay at 0%."}
+    question: "What does CPU Thread Utilization actually measure?"
+    continues: false
+  - id: T03
+    history:
+      - {question: "Why did Cluster Performance drop at 10:10?", answer: "VM CPU Ready on fr-svc-5526 rose to 9% while its host ran at 92% Thread Utilization."}
+    question: "Why?"
+    continues: true
+  - id: T04
+    history:
+      - {question: "Why did Cluster Performance drop at 10:10?", answer: "VM CPU Ready on fr-svc-5526 rose to 9% while its host ran at 92% Thread Utilization."}
+    question: "Is Co-stop also high on that VM?"
+    continues: true
+  - id: T05
+    history:
+      - {question: "Why did Cluster Performance drop at 10:10?", answer: "VM CPU Ready on fr-svc-5526 rose to 9% while its host ran at 92% Thread Utilization."}
+    question: "How many more VMs can this cluster take?"
+    continues: false
+  - id: T06
+    history:
+      - {question: "What does Cluster Consumption (%) measure, and how is it computed?", answer: "The share of usable capacity in use: the higher of CPU and memory consumption against usable capacity after HA."}
+    question: "Why usable and not total?"
+    continues: true
+  - id: T07
+    history:
+      - {question: "What does Cluster Consumption (%) measure, and how is it computed?", answer: "The share of usable capacity in use: the higher of CPU and memory consumption against usable capacity after HA."}
+    question: "Can you give an example with 8 hosts?"
+    continues: true
+  - id: T08
+    history:
+      - {question: "What does Cluster Consumption (%) measure, and how is it computed?", answer: "The share of usable capacity in use, against usable capacity after HA."}
+    question: "What is VM CPU Ready and when should I worry about it?"
+    continues: false
+  - id: T09
+    history:
+      - {question: "Is 4% CPU Ready a problem for this VM?", answer: "On a 4-vCPU VM, 4% at the 20-second interval is 800 ms per vCPU: users may notice it at peaks."}
+    question: "And at the 5-minute interval?"
+    continues: true
+  - id: T10
+    history:
+      - {question: "Is 4% CPU Ready a problem for this VM?", answer: "On a 4-vCPU VM, 4% at the 20-second interval is 800 ms per vCPU."}
+    question: "What about Co-stop?"
+    continues: true
+  - id: T11
+    history:
+      - {question: "Is 4% CPU Ready a problem for this VM?", answer: "On a 4-vCPU VM, 4% at the 20-second interval is 800 ms per vCPU."}
+    question: "Should I add 2 more vCPUs to fix it?"
+    continues: true
+  - id: T12
+    history:
+      - {question: "Is 4% CPU Ready a problem for this VM?", answer: "On a 4-vCPU VM, 4% at the 20-second interval is 800 ms per vCPU."}
+    question: "Why is datastore latency high on ds-gold-02 this morning?"
+    continues: false
+  - id: T13
+    history:
+      - {question: "Explain this finding.", answer: "Memory Ballooned on sg-db-04 reached 2 GB at 09:40: the host reclaimed memory from the guest."}
+    question: "Which host was it on?"
+    continues: true
+  - id: T14
+    history:
+      - {question: "Explain this finding.", answer: "Memory Ballooned on sg-db-04 reached 2 GB at 09:40: the host reclaimed memory from the guest."}
+    question: "Does ballooning hurt the guest's performance?"
+    continues: true
+  - id: T15
+    history:
+      - {question: "Explain this finding.", answer: "Memory Ballooned on sg-db-04 reached 2 GB at 09:40."}
+    question: "What does Cluster Risk (%) measure?"
+    continues: false
+  - id: T16
+    history:
+      - {question: "What does Guest OS CPU Run Queue measure?", answer: "Threads in the guest waiting for a vCPU, per vCPU, inside Windows or Linux."}
+    question: "How is it different from VM CPU Ready?"
+    continues: true
+  - id: T17
+    history:
+      - {question: "What does Guest OS CPU Run Queue measure?", answer: "Threads in the guest waiting for a vCPU, per vCPU."}
+    question: "Ok thanks. Now, how do I size memory for a new SQL Server VM?"
+    continues: false
+  - id: T18
+    history:
+      - {question: "Is the platform the cause?", answer: "No. VM CPU Ready and Co-stop stayed low; the wait is inside the Guest OS: its run queue rose to 3 per vCPU."}
+    question: "Are you sure? The application team says it is VMware."
+    continues: true
+  - id: T19
+    history:
+      - {question: "Is the platform the cause?", answer: "No. VM CPU Ready and Co-stop stayed low; the wait is inside the Guest OS."}
+    question: "What should I check next?"
+    continues: true
+  - id: T20
+    history:
+      - {question: "Is the platform the cause?", answer: "No. VM CPU Ready and Co-stop stayed low; the wait is inside the Guest OS."}
+    question: "What is the difference between Memory Consumed and Memory Active?"
+    continues: false
+  - id: T21
+    history:
+      - {question: "How many more VMs can this cluster take?", answer: "About 14 of the Silver size: memory runs out first, at the usable capacity after HA."}
+    question: "And if I turn off HA admission control?"
+    continues: true
+  - id: T22
+    history:
+      - {question: "How many more VMs can this cluster take?", answer: "About 14 of the Silver size: memory runs out first."}
+    question: "What if they are 16 vCPU VMs instead?"
+    continues: true
+  - id: T23
+    history:
+      - {question: "How many more VMs can this cluster take?", answer: "About 14 of the Silver size: memory runs out first."}
+    question: "Why does ESXi Core Utilization look higher than Thread Utilization?"
+    continues: false
+  - id: T24
+    history:
+      - {question: "Why is capacity read against usable capacity, not total capacity?", answer: "Because HA reserves a host's worth of capacity for failover; total counts capacity the cluster cannot use."}
+    question: "Simpler please."
+    continues: true
+  - id: T25
+    history:
+      - {question: "Why is capacity read against usable capacity, not total capacity?", answer: "Because HA reserves a host's worth of capacity for failover."}
+    question: "Does vSAN also take some of it?"
+    continues: true
+  - id: T26
+    history:
+      - {question: "Why is capacity read against usable capacity, not total capacity?", answer: "Because HA reserves a host's worth of capacity for failover."}
+    question: "Why does the NOC wall show this cluster orange?"
+    continues: false
+  - id: T27
+    history:
+      - {question: "Why the worst at 18 Oct, 10:10?", answer: "Network dropped packets on fr-esx-218 peaked at 10:10, while its vmnic2 showed receive errors."}
+    question: "Is that a driver problem?"
+    continues: true
+  - id: T28
+    history:
+      - {question: "Why the worst at 18 Oct, 10:10?", answer: "Network dropped packets on fr-esx-218 peaked at 10:10."}
+    question: "What does Memory Zip Swap mean?"
+    continues: false
+  - id: T29
+    history:
+      - {question: "What does Memory Consumed include?", answer: "Every page the host backs for the VM: guest caches, free pages it once touched, and the overhead."}
+    question: "So it is not what the guest uses?"
+    continues: true
+  - id: T30
+    history:
+      - {question: "What does Memory Consumed include?", answer: "Every page the host backs for the VM: guest caches and touched pages."}
+    question: "Which metric shows that memory is really short then?"
+    continues: true
+  - id: T31
+    history:
+      - {question: "What does Memory Consumed include?", answer: "Every page the host backs for the VM."}
+    question: "How do I read esxtop's %RDY column?"
+    continues: false
+  - id: T32
+    history:
+      - {question: "Is this VM performing well over the last 24 hours?", answer: "Mostly. VM Performance stayed green except 14:00-14:30, when disk latency rose to 40 ms."}
+    question: "What happened at 14:00?"
+    continues: true
