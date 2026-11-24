@@ -1654,7 +1654,7 @@ class MetricBandTest(unittest.TestCase):
         q = 'q\n\n' + expert_agent.FACTS_HEADING + '\n' + json.dumps(f)
         line = expert_agent.metric_band_lines(q, CAT)[0]
         self.assertIn('Peak CPU Co-stop among any vCPU: now 4.5% red, worst 7.7% red, 95th percentile 0.5% green', line)
-        self.assertIn('VM Performance: now 31.5% orange, worst 17% red, 95th percentile 80% green', line)
+        self.assertIn('VM Performance: now 31.5% orange, worst 17% red, 5th percentile 80% green', line)  # PCM D-131
 
 
 class ProblemValueTest(unittest.TestCase):
@@ -1692,14 +1692,16 @@ class ProblemValueTest(unittest.TestCase):
 
     def test_depth_and_breadth_say_few_or_many(self):
         line = expert_agent.depth_breadth_lines(self.q({'asked_about_kpi': self.card()}), CAT)[0]
-        self.assertIn('peak vCPU Ready: worst VM 14.7% (orange), 90th percentile 0.8% (green): the worst VMs only, not broad', line)
+        self.assertIn('peak vCPU Ready: worst VM 14.7% (orange), 90th percentile 0.8% (green): not cluster-wide: fewer than 10% of the VMs', line)
         self.assertIn('peak vCPU Co-stop: worst VM 6.1% (orange), 90th percentile 1.2% (orange): broad', line)
         self.assertIn('Highest ESXi (error + dropped) network packets 0.43% (red): the highest host only; no breadth row', line)
         self.assertIn('Green at both: memory wait', line)
+        self.assertIn('In short: broad on peak vCPU Co-stop; not cluster-wide on peak vCPU Ready', line)
+        self.assertIn('the cause says whose', line)
 
     def test_percentile_in_words_and_mirrored_bands(self):
         line = expert_agent.metric_band_lines(self.q({'asked_about_kpi': self.card()}), CAT)[0]
-        self.assertIn('95th percentile 48.2% orange (95% of the window at 48.2% or better; the worst 5%, about 1 h 12 min, below it)', line)
+        self.assertIn('5th percentile 48.2% orange (95% of the window at 48.2% or better; the worst 5%, about 1 h 12 min, below it)', line)
         self.assertIn('never the reason it is a problem', line)
         risk = {'name': 'Cluster Risk', 'unit': '%', 'better': 'lower', 'now': 30, 'worst': {'v': 80}, 'percentile_95': 60}
         line = expert_agent.metric_band_lines(self.q({'asked_about_kpi': risk}), CAT)[0]
@@ -1710,13 +1712,14 @@ class ProblemValueTest(unittest.TestCase):
         svc = answer_service.Service.__new__(answer_service.Service)
         svc.cat = CAT
         lead = svc.lead(facts, 'Is 48% a problem for this cluster?')
-        self.assertTrue(lead.startswith('48% is the 95th percentile of Cluster Performance in the last 24 hours: 95% of the '
+        self.assertTrue(lead.startswith('48% is the 5th percentile of Cluster Performance in the last 24 hours: 95% of the '
                                         'window at 48% or better; the worst 5%, about 1 h 12 min, below it. Cluster Performance fell'), lead)
         self.assertEqual(answer_service.figure_text('Is 33% a problem?', facts, CAT), '')
         self.assertTrue(answer_service.figure_text('Why 86%?', facts, CAT).startswith('86% is the latest value'))
 
     def test_percentile_name_is_no_repeated_figure(self):
-        self.assertNotIn('95', answer_service.headline_figures(['48% is the 95th percentile: 95% of the window at 48% or better']))
+        self.assertNotIn('95', answer_service.headline_figures(['48% is the 5th percentile: 95% of the window at 48% or better']))
+        self.assertNotIn('5', answer_service.headline_figures(['48% is the 5th percentile']))
 
     def test_colour_as_a_reason_is_found(self):
         for t in ('Yes, 48.2% (the 95th percentile) is a problem because it is orange.',
