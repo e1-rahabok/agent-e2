@@ -14,19 +14,16 @@ performance:
   cluster:
     good:
       - Does the good average hide VMs that still suffer?
-      - Is Cluster Risk also low, or is a problem building?
       - Is a good score here a reason to add more VMs?
     medium:
-      - Which part pulls Cluster Performance down?
+      - Which metrics pulls the Cluster Performance down?
       - Is it a few VMs or most of them?
-      - Is one host the cause?
+      - Is one host the cause of the slowness?
     bad:
       - Which VMs are hit hardest, and on which resource?
       - Is the cause CPU, memory, disk or network?
-      - What should I check first?
     declining:
-      - Why is performance declining?
-      - When did the decline start, and what changed then?
+      - Why is performance declining?      
     dip:
       - Why did performance drop at {time}?
       - Was the drop on one host or across the cluster?
@@ -54,38 +51,29 @@ performance:
       - Is the decline on this host only, or cluster-wide?
     dip:
       - Why did this host drop at {time}?
-      - Which part of ESXi Performance dropped at that time?
     metric:
       - How does ESXi Performance (%) work, and what is its formula?
       - Why does ESXi Performance read the VMs on the host, not the host's utilization?
-      - How is ESXi Performance different from Cluster Performance?
-      - Why is host ballooning or swapping not part of ESXi Performance?
-      - What size of move counts as a real drop?
+      - Why is host ballooning or swapping not part of ESXi Performance?      
   vm:
     good:
-      - Is the Guest OS layer also healthy?
       - Does the good average hide a short peak?
       - Is this VM oversized?
     medium:
-      - Which layer is closer to its limit?
-      - Which metric is near its limit, and what does it cause?
-      - Is it this VM, or its host?
+      - Is the issue caused by this VM itself, or its parent ESXi host?
     bad:
-      - Is the cause in the VM, its host or its datastore?
-      - Is the problem in the Guest OS or the Virtual Motherboard?
+      - Is the cause in the VM itself, its parent host or its datastore?      
       - Which metric slowed this VM at its worst point?
     declining:
       - Why is this VM's performance declining?
-      - Did its demand grow, or did its host get busier?
+      - Did its demand grow, or did its parent ESXi host get busier?
     dip:
       - Why did this VM drop at {time}?
-      - Was it the Guest OS or the Virtual Motherboard at that time?
     metric:
       - How does VM Performance (%) work, and what is its formula?
       - Why are the Guest OS and the VM two separate charts?
       - What does Guest OS Performance (%) measure?
       - Why are some metrics left out of the score while they are green?
-      - Why does a VM's score move more than a cluster's?
 
 capacity:
   cluster:
@@ -94,16 +82,13 @@ capacity:
       - Is the room left real, or held by reservations?
       - Is the overcommit ratio right for this class of service?
     medium:
-      - Which is closest to its limit, consumption, performance or risk?
       - Which resource runs out first?
-      - Can rightsizing VMs win back capacity?
+      - Can rightsizing VMs win back Cluster capacity?
     bad:
       - Why is this cluster closed for new VMs?
-      - Is performance already hit, or only capacity?
       - Is the shortage real demand, or reservations and oversized VMs?
     rising:
       - Why is demand growing in this cluster?
-      - Is the growth steady, or one step up?
     metric:
       - What does Cluster Consumption (%) measure, and how is it computed?
       - Why is capacity read against usable capacity, not total capacity?
