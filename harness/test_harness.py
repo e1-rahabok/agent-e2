@@ -1526,16 +1526,21 @@ class CapacityOpeningTest(unittest.TestCase):
 
     def test_consumption_red_closes(self):
         t = self.text(82, 77.5, 51.2)
-        self.assertTrue(t.startswith('Consumption: 82% (95th percentile, last 24 hours), above the close-for-business limit of 80%.'))
-        self.assertTrue(t.endswith('Closed for new VMs and VM upsizes.'))
+        self.assertTrue(t.startswith('- **Consumption:** 82% (95th percentile, last 24 hours), above the close-for-business limit of 80%.'))
+        self.assertTrue(t.endswith('**Closed for new VMs and VM upsizes.**'))
         self.assertNotIn('KPI', t)
 
     def test_contention_overrides(self):
         self.assertIn('it overrides', self.text(30, 15, 10))
-        self.assertTrue(self.text(30, 15, 10).endswith('Closed for new VMs and VM upsizes.'))
+        self.assertTrue(self.text(30, 15, 10).endswith('**Closed for new VMs and VM upsizes.**'))
 
     def test_risk_decides_only_when_both_orange(self):
         self.assertIn('it decides', self.text(70, 30, 65))
-        self.assertTrue(self.text(70, 30, 65).endswith('Closed for new VMs and VM upsizes.'))
-        self.assertTrue(self.text(70, 30, 50).endswith('Open for new VMs.'))
+        self.assertTrue(self.text(70, 30, 65).endswith('**Closed for new VMs and VM upsizes.**'))
+        self.assertTrue(self.text(70, 30, 50).endswith('**Open for new VMs.**'))
         self.assertIn('does not decide', self.text(30, 45, 90))
+
+    def test_one_bullet_per_check_and_the_decision_apart(self):
+        lines = self.text(50, 48, 55).split('\n')
+        self.assertEqual([l.split(':**')[0] for l in lines[:3]], ['- **Consumption', '- **Contention', '- **Risk'])
+        self.assertEqual(lines[3:], ['', '**Open for new VMs.**'])

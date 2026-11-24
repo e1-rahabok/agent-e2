@@ -170,46 +170,52 @@ def lead_text(rows, facts=None):
             out.append(f"{n} stayed within its normal movement {when_in}: median {med}{u}, "
                        f"{'highest' if up else 'lowest'} {worst}{u}{at}, {_fig(t['worse_move'], lv)} points from the median. "
                        f"No {'rise' if up else 'drop'}: a move counts from {lv:g} points.")
-    return ' '.join(out)
+    return out[0] if len(out) == 1 else '\n'.join(f'- {x}' for x in out)  # several KPIs: one bullet each
 
 
 def capacity_text(r):
     """The opening on a cluster's Capacity tab, in the order of close for business: Consumption, then contention, which
-    overrides, then Risk, which decides only when both are orange. Metrics and limits, no adjective (author, 2026-11-24)."""
+    overrides, then Risk, which decides only when both are orange. Metrics and limits, no adjective (author, 2026-11-24).
+    Markdown, one bullet per check with a bold label, then the decision on its own line: the person scans it, and the
+    model's text below it is formatted the same way."""
     if not r:
         return ''
     L, f = r['limits'], _fig
     c = r['consumption']
     if r['c_level'] == 'red':
-        t = (f"Consumption: {f(c)}% (95th percentile, last 24 hours), above the close-for-business limit of "
+        t = (f"{f(c)}% (95th percentile, last 24 hours), above the close-for-business limit of "
              f"{f(L['closure-cluster-consumption-red'])}%.")
     elif r['c_level'] == 'orange':
-        t = (f"Consumption: {f(c)}% (95th percentile, last 24 hours), above {f(L['closure-cluster-consumption-orange'])}% "
+        t = (f"{f(c)}% (95th percentile, last 24 hours), above {f(L['closure-cluster-consumption-orange'])}% "
              f"and not above {f(L['closure-cluster-consumption-red'])}%: orange.")
     else:
-        t = (f"Consumption: {f(c)}% (95th percentile, last 24 hours), not above {f(L['closure-cluster-consumption-orange'])}%: "
+        t = (f"{f(c)}% (95th percentile, last 24 hours), not above {f(L['closure-cluster-consumption-orange'])}%: "
              f"the cluster is about {f(c)}% full.")
+    bullets = [('Consumption', t)]
     p = r['performance']
     if isinstance(p, (int, float)):
         if r['p_level'] == 'red':
-            t += (f" Contention: Cluster Performance (%) {f(p)}% (5th percentile), below {f(L['closure-cluster-performance-red'])}%: "
-                  'it overrides: closed until the contention is fixed.')
+            t = (f"Cluster Performance (%) {f(p)}% (5th percentile), below {f(L['closure-cluster-performance-red'])}%: "
+                 'it overrides: closed until the contention is fixed.')
         elif r['p_level'] == 'orange':
-            t += (f" Contention: Cluster Performance (%) {f(p)}% (5th percentile), below {f(L['closure-cluster-performance-orange'])}% "
-                  f"and not below {f(L['closure-cluster-performance-red'])}%: orange, no override.")
+            t = (f"Cluster Performance (%) {f(p)}% (5th percentile), below {f(L['closure-cluster-performance-orange'])}% "
+                 f"and not below {f(L['closure-cluster-performance-red'])}%: orange, no override.")
         else:
-            t += (f" Contention: Cluster Performance (%) {f(p)}% (5th percentile), not below "
-                  f"{f(L['closure-cluster-performance-orange'])}%: no override.")
+            t = (f"Cluster Performance (%) {f(p)}% (5th percentile), not below "
+                 f"{f(L['closure-cluster-performance-orange'])}%: no override.")
+        bullets.append(('Contention', t))
     k = r['risk']
     if isinstance(k, (int, float)):
         if r['both_orange']:
-            t += (f" Risk: Cluster Risk (%) {f(k)}% (95th percentile), {'above' if k > r['risk_limit'] else 'not above'} the "
-                  f"{'production' if r['production'] else 'non-production'} limit of {f(r['risk_limit'])}%: it decides, as "
-                  'Consumption and Cluster Performance (%) are both orange.')
+            t = (f"Cluster Risk (%) {f(k)}% (95th percentile), {'above' if k > r['risk_limit'] else 'not above'} the "
+                 f"{'production' if r['production'] else 'non-production'} limit of {f(r['risk_limit'])}%: it decides, as "
+                 'Consumption and Cluster Performance (%) are both orange.')
         else:
-            t += (f" Risk: Cluster Risk (%) {f(k)}% (95th percentile) does not decide: Consumption and Cluster Performance (%) "
-                  'are not both orange.')
-    return t + (' Closed for new VMs and VM upsizes.' if r['closed'] else ' Open for new VMs.')
+            t = (f"Cluster Risk (%) {f(k)}% (95th percentile) does not decide: Consumption and Cluster Performance (%) "
+                 'are not both orange.')
+        bullets.append(('Risk', t))
+    verdict = 'Closed for new VMs and VM upsizes.' if r['closed'] else 'Open for new VMs.'
+    return '\n'.join(f'- **{label}:** {text}' for label, text in bullets) + f'\n\n**{verdict}**'
 
 
 def step_text(r):
