@@ -60,6 +60,13 @@ python3 benchmark/runner/retrieval_check.py
 python3 benchmark/runner/topic_check.py
 ```
 - Does Agent E2 tell a question that continues the topic from one that starts a new topic ([harness/topic_decision.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/topic_decision.py))? Scores the labelled pairs of [topic_check_pairs.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/topic_check_pairs.yaml) three ways: always continue, code alone, code then the model. Counts lost context (the worse error) apart from extra context. `--no-model` runs offline; the model step needs `AI_GATEWAY_API_KEY` (one call per pair the code cannot settle). Add a pair for every wrong decision seen in the live test.
+
+## Screen answer check
+```bash
+python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
+```
+- Does Agent E2 answer a question typed on a PCM screen the way it asks ([harness/answer_service.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/answer_service.py))? Runs each wording of [screen_answer_check.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/screen_answer_check.yaml) through the service on the real model, with the page's facts as PCM sends them ([screen_answer_check_pages.json](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/screen_answer_check_pages.json), PCM story M-5), and checks by code: the page's values used exactly when needed, the answer shape, and what the answer must or must not say. No judge: read the answers in `--out` too. Needs `AI_GATEWAY_API_KEY`; about 36 answers, 3 minutes at 8 workers. Run it before and after a change to how the service reads a question or shapes an answer; add the wordings of every wrong answer seen in the live test, several per type (CLAUDE.md, Working with the author).
+
 - Why it is needed, how to read the result, what to do when it is low: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md).
 
 ## Methodology
