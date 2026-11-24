@@ -1544,3 +1544,11 @@ class CapacityOpeningTest(unittest.TestCase):
         lines = self.text(50, 48, 55).split('\n')
         self.assertEqual([l.split(':**')[0] for l in lines[:3]], ['- **Consumption', '- **Contention', '- **Risk'])
         self.assertEqual(lines[3:], ['', '**Open for new VMs.**'])
+
+
+class TakesVmsTest(unittest.TestCase):
+    def test_only_questions_on_taking_vms(self):
+        for q in ('How many more VMs can this cluster take?', 'Is this cluster open for new VMs?', 'Can I add a VM here?'):
+            self.assertTrue(answer_service.TAKES_VMS.search(q), q)
+        for q in ('What does Cluster Risk (%) measure?', 'Why is Consumption rising?', 'Which host is busiest?'):
+            self.assertFalse(answer_service.TAKES_VMS.search(q), q)

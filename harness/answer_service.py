@@ -100,6 +100,9 @@ ISO_TIME = re.compile(r'\b(\d{4})-(\d\d)-(\d\d)[T ](\d\d):(\d\d)(?::\d\d(?:\.\d+
 KB_PATH = r'(?<![\w/.:-])(?:knowledge/)?(?:{tops})(?:/[\w.-]*\w)+?(?:\.md)?(?![\w/-])'
 # Wrappers a model puts around a path: `x`, **x**, [x], [x, y], (x), (see `x`) and harness notes [file.py: ...].
 HARNESS_NOTE = re.compile(r'[ \t]*\[[\w-]+\.(?:py|js|ya?ml|json)\b[^\[\]\n]*\]')
+# A question on whether the cluster can take more VMs (or is open or closed): the close-for-business opening answers it.
+TAKES_VMS = re.compile(r'\b(?:more|new|extra|another|additional|add|fit|room|headroom|upsiz\w*|open|clos\w*)\b.*\bVMs?\b'
+                       r'|\bVMs?\b.*\b(?:more|fit|take|accept|add|upsiz\w*|open|clos\w*)\b|close for business', re.I)
 FIGURE = re.compile(r'(?<![\d.])\d+(?:\.\d+)?(?![\d.]*\d)')
 
 
@@ -305,10 +308,10 @@ class Service:
         self.cat = catalog_database.get(self.docs)
         self.suggestions = user_suggestions.table()
 
-    def lead(self, facts):
+    def lead(self, facts, question=''):
         if not facts:
             return ''
-        cap = capacity_text(expert_agent.capacity_check_row(facts, self.cat))
+        cap = capacity_text(expert_agent.capacity_check_row(facts, self.cat)) if TAKES_VMS.search(question or '') else ''
         if cap:
             return cap  # a cluster's Capacity page or card: the close-for-business reading, in its order
         rows = expert_agent.kpi_trend_rows(facts, self.cat)
@@ -328,7 +331,7 @@ class Service:
             body = {**body, 'facts': {k: v for k, v in body['facts'].items() if k in METRIC_FACTS}}
             lead = ''
         else:
-            lead = self.lead(body.get('facts'))
+            lead = self.lead(body.get('facts'), body.get('question'))
         turns = body.get('turns')
         if turns:
             turns = [question_text({**body, 'question': turns[0]}, lead)] + list(turns[1:])
