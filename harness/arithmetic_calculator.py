@@ -261,6 +261,32 @@ def score_band(score):
     return 'red'
 
 
+def score_time(values, better='higher'):
+    """How long a 0-100% score spent past each band limit in the window, so an answer says how long a problem lasted
+    instead of naming a colour. better: 'higher' (a KPI: worse below 75, 50, 25) or 'lower' (a score published as 100
+    minus the weighted average, Cluster Risk: worse above 25, 50, 75). Returns {points, past: [{limit, points}] green limit
+    first, run: {start, end, points} the longest unbroken stretch past the green limit, or None}. Points, not minutes: the
+    caller knows the point length."""
+    xs = [float(v) if isinstance(v, (int, float)) and not isinstance(v, bool) else None for v in values]
+    n = sum(v is not None for v in xs)
+    if not n:
+        raise CalcError('score_time: no values')
+    limits = (75.0, 50.0, 25.0) if better == 'higher' else (25.0, 50.0, 75.0)
+
+    def past(v, lim):
+        return v is not None and (v < lim if better == 'higher' else v > lim)
+    out = [{'limit': lim, 'points': sum(past(v, lim) for v in xs)} for lim in limits]
+    run, start = None, None
+    for i, v in enumerate(xs + [None]):
+        if past(v, limits[0]):
+            start = i if start is None else start
+        elif start is not None:
+            if run is None or i - start > run['points']:
+                run = {'start': start, 'end': i - 1, 'points': i - start}
+            start = None
+    return {'points': n, 'past': out, 'run': run}
+
+
 def part_score(value, limits):
     """The score of one part (100 best, 0 worst) and its band, from its five limits: the values where the score is 100,
     75, 50, 25 and 0, falling in a straight line in between (SRC_SCORING). Limits going down mean higher is better.

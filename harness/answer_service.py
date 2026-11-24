@@ -47,6 +47,7 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import answer_modes  # noqa: E402
+import arithmetic_calculator  # noqa: E402
 import answer_shape  # noqa: E402
 import catalog_database  # noqa: E402
 import expert_agent  # noqa: E402
@@ -80,8 +81,16 @@ SCREEN_RULES = (
     'why this movement is normal.\n'
     '- Other computed lines are exact: give their figures as written when the answer needs them (for example a sub-metric\'s '
     'own value). For a question on why a score moved or what is wrong: if a computed line names the sub-metric that moved a '
-    'score most, lead with that sub-metric and its band, then the next step for that resource. Give every sub-metric the band '
-    'the computed line gives it: an orange or red one is never low.\n'
+    'score most, lead with that sub-metric, its value and what the value means for the VMs (what they waited for and how '
+    'much, in the sub-metric\'s own unit), then the next step for that resource. Give every sub-metric the band the computed '
+    'line gives it: an orange or red one is never low.\n'
+    '- A colour (green, yellow, orange, red) is the label the limits give a value. It explains nothing: never write that a '
+    'value is a problem, or fine, because of its colour. The colour may follow a value as its label.\n'
+    '- When the question asks whether a value is a problem (bad, fine, normal, acceptable), answer yes or no in the first '
+    'sentence, then the reason in this order: against what the object does normally (the window median) and where green '
+    'ends; what the VMs waited for, per sub-metric, in its own unit; how broad (the depth and breadth line: the worst VMs '
+    'only, or many VMs; one host); how long (the time line). Then the next step. The score proves that VMs waited; whether '
+    'an application suffered is read in its Guest OS and in the application.\n'
     '- With no opening, answer directly first, with the figures.\n'
     '- If "screen" names where to look next (drill_down), point there first, by page and tab, before any knowledge-base flow.\n'
     '- If a value the answer needs is not in the data, name the PCM page that shows it, or say PCM does not show it yet.\n'
@@ -104,6 +113,22 @@ REWRITE_FIGURES = ('Rewrite this answer. The person already reads these figures 
                    'points or more counts"). Keep the order of the answer and what it answers first. Keep every other fact, '
                    'name and number. Do not say computed, calculator, the box above or the model. Reply with the answer '
                    'only.\n\n{text}')
+# A colour given as the reason a value is a problem or fine ("a problem because it is orange"): circular, since the limits
+# set the colour from the value. An answer that does it gets one rewrite (performance-kpi-design, section Is a value a problem).
+COLOUR = r'(?:green|yellow|orange|red)'
+COLOUR_REASON = re.compile(
+    rf'\b(?:because|since)\b[^.;:\n]{{0,60}}?\b(?:is|was|are|were|sits|stays|reads|turned|falls|fell|lies)\s+(?:now\s+|still\s+)?'
+    rf'(?:in\s+|into\s+|within\s+)?(?:the\s+)?{COLOUR}\b'
+    rf'|\b(?:is|was|are|were)\s+(?:in\s+(?:the\s+)?)?{COLOUR}(?:\s+(?:band|range|zone))?,?\s+(?:so|which means|meaning)\b'
+    rf'|\b{COLOUR}\s+(?:band|range|zone)?\s*(?:means|indicates|shows)\s+(?:it\s+is\s+|there\s+is\s+)?(?:a\s+)?'
+    rf'(?:problem|issue|concern|fine|healthy|bad|ok)\b', re.I)
+REWRITE_COLOUR = ('Rewrite this answer. It gives a colour as the reason a value is a problem or fine: "{hits}". A colour is only '
+                  'the label the limits give a value, so it explains nothing. Replace each such reason with what the value '
+                  'means for the VMs: what they waited for and how much (in the metric\'s own unit), how many VMs, and for '
+                  'how long, using only facts already in the answer. The colour may stay as a label after a value. Keep every '
+                  'other fact, number, name and the order. Reply with the answer only.\n\n{text}')
+# A figure the question names ("Is 48% a problem?"): the opening first says what that figure is on the card.
+ASKED_FIGURE = re.compile(r'(?<![\d.])(\d+(?:\.\d+)?)\s*%')
 # The stage 3 line on how a KPI moved across the window (expert_agent.kpi_trends): the opening's figures, exact.
 TREND_LINE = re.compile(r'across the window \(\d+ points\)')
 # A computed line that lists the sub-metrics holds figures the answer may use (a part's own value).
@@ -117,6 +142,7 @@ HARNESS_NOTE = re.compile(r'[ \t]*\[[\w-]+\.(?:py|js|ya?ml|json)\b[^\[\]\n]*\]')
 # A question on whether the cluster can take more VMs (or is open or closed): the close-for-business opening answers it.
 TAKES_VMS = re.compile(r'\b(?:more|new|extra|another|additional|add|fit|room|headroom|upsiz\w*|open|clos\w*)\b.*\bVMs?\b'
                        r'|\bVMs?\b.*\b(?:more|fit|take|accept|add|upsiz\w*|open|clos\w*)\b|close for business', re.I)
+PERCENTILE_WORDS = re.compile(r'\b95th percentile\b|\b95% of the window\b|\bworst 5%', re.I)
 FIGURE = re.compile(r'(?<![\d.])\d+(?:\.\d+)?(?![\d.]*\d)')
 
 
@@ -132,6 +158,7 @@ def headline_figures(computed):
     for line in computed:
         if PART_LINE.search(line):
             continue
+        line = PERCENTILE_WORDS.sub(' ', line)  # "95th percentile", "95% of the window": the name of a figure, not one
         for f in FIGURE.findall(ISO_TIME.sub(' ', re.sub(r'\b\d{1,2} [A-Z][a-z]{2}, \d\d:\d\d', ' ', line))):
             if '.' in f or float(f) >= 10:
                 out.add(f)
@@ -188,6 +215,48 @@ def lead_text(rows, facts=None):
                        f"{'highest' if up else 'lowest'} {worst}{u}{at}, {_fig(t['worse_move'], lv)} points from the median. "
                        f"No {'rise' if up else 'drop'}: a move counts from {lv:g} points.")
     return out[0] if len(out) == 1 else '\n'.join(f'- {x}' for x in out)  # several KPIs: one bullet each
+
+
+def figure_text(question, facts, cat):
+    """The opening's first sentence when the question names a figure of the KPI card asked about ("Is 48% a problem?"):
+    which figure it is and what it means, so the answer starts from the number the person asked about. The screen's 95th
+    percentile of a score where higher is better is near the worst end of the window, not the top: say so in words.
+    Empty when no number in the question is a figure of the card."""
+    k = facts.get('asked_about_kpi') if isinstance(facts, dict) else None
+    name = (k.get('label') or k.get('name')) if isinstance(k, dict) else None
+    if not name:
+        return ''
+    w = k.get('worst')
+    figures = [('percentile_95', k.get('percentile_95')), ('now', k.get('now')),
+               ('worst', w.get('v') if isinstance(w, dict) else w)]
+    s = (expert_agent._series(k, [], limit=1) or [None])[0]
+    if s:
+        try:
+            figures.append(('median', arithmetic_calculator.trend(s['values'], s['better'])['median']))
+        except arithmetic_calculator.CalcError:
+            pass
+    sl = cat.score_line(name)
+    worse_up = bool(sl and sl['direction'] == 'above') or k.get('better') == 'lower'
+    when_in = window_words(facts)
+    for q in ASKED_FIGURE.findall(question or ''):
+        q = float(q)
+        for key, v in figures:
+            if not isinstance(v, (int, float)) or isinstance(v, bool) or abs(v - q) >= (0.5 if q.is_integer() else 0.05):
+                continue
+            f = _fig(v)
+            if key == 'percentile_95':
+                return (f"{f}% is the 95th percentile of {name} {when_in}: "
+                        f"{expert_agent.percentile_words(float(f), '%', worse_up, k)}.")
+            if key == 'now':
+                return f"{f}% is the latest value of {name} on the chart."
+            if key == 'worst':
+                return f"{f}% is the worst point of {name} {when_in}."
+            return f"{f}% is the median of {name} {when_in}: its normal level."
+    return ''
+
+
+def colour_reasons(text):
+    return [m.group(0) for m in COLOUR_REASON.finditer(text or '')]
 
 
 def capacity_text(r):
@@ -349,7 +418,11 @@ class Service:
         rows = expert_agent.kpi_trend_rows(facts, self.cat)
         if isinstance(facts, dict) and facts.get('asked_about_kpi'):
             rows = rows[:1]  # a question on one KPI card: the opening is about that KPI; the others are context
-        return (lead_text(rows, facts) + step_text(expert_agent.kpi_step_row(facts, self.cat))).strip()
+        fig = figure_text(question, facts, self.cat)  # the figure the person asked about comes first
+        trend = (lead_text(rows, facts) + step_text(expert_agent.kpi_step_row(facts, self.cat))).strip()
+        if not fig:
+            return trend
+        return f'{fig}\n{trend}' if trend.startswith('- ') else f'{fig} {trend}'.strip()  # several KPIs: their bullets below
 
     def suggest(self, body):
         if body.get('card'):  # one card's showcase question (user_suggestions.card)
@@ -392,6 +465,8 @@ class Service:
         out = answer_modes.converse('agent-e2', self.client, self.model, turns, [], self.cfg, self.retriever, history, shape)
         computed = [line for s in out['trace'] if s.get('action') == 'compute' for line in (s.get('output') or [])]
         content = no_file_refs(out['result'].get('content'), self.docs)
+        if out['type'] == 'answer':
+            content = self.no_colour_reason(content)
         if body.get('facts') and out['type'] == 'answer':
             content = self.screen_wording(content)
             # The figures the person reads in the opening, and the same figures, exact, in the trend line.
@@ -413,6 +488,17 @@ class Service:
                                temperature=self.cfg.get('temperature'), max_tokens=self.cfg.get('max_tokens', 2000))
         again = (res.get('content') or '').strip()
         return again if again and not pipeline_words(again) and len(repeated_figures(again, set(dup))) < len(dup) else text
+
+    def no_colour_reason(self, text):
+        """One rewrite when the answer gives a colour as the reason a value is a problem or fine. The rewrite is kept only
+        when it has no such reason left and no pipeline words."""
+        hits = colour_reasons(text)
+        if not hits:
+            return text
+        res = self.client.chat(self.model, [{'role': 'user', 'content': REWRITE_COLOUR.format(hits='"; "'.join(hits), text=text)}],
+                               temperature=self.cfg.get('temperature'), max_tokens=self.cfg.get('max_tokens', 2000))
+        again = (res.get('content') or '').strip()
+        return again if again and not colour_reasons(again) and not pipeline_words(again) else text
 
     def screen_wording(self, text):
         """One rewrite when the answer speaks of the data instead of the screen ("the provided JSON")."""
