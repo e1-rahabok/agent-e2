@@ -327,7 +327,7 @@ def depth_breadth_lines(question, cat):
                 how = 'broad: at least 10% of the VMs waited this much or more'
             elif db != 'green':
                 few.append(res)
-                how = 'the worst VMs only, not broad'
+                how = 'not cluster-wide: fewer than 10% of the VMs'
             else:
                 quiet.append(res)
                 continue
@@ -340,8 +340,10 @@ def depth_breadth_lines(question, cat):
         if broad:
             summary.append(f"broad on {', '.join(broad)}")
         if few:
-            summary.append(f"the worst VMs only on {', '.join(few)}")
-        line += ('. In short: ' + '; '.join(summary) if summary else '') + '. With fewer than 10 VMs the 90th percentile is the worst VM.'
+            summary.append(f"not cluster-wide on {', '.join(few)}")
+        line += (('. In short: ' + '; '.join(summary) if summary else '') + '. With fewer than 10 VMs the 90th percentile is '
+                 'the worst VM. The count says how widespread; the cause says whose: a CPU limit or a vCPU count is the VM\'s, '
+                 'VMs on one host are that host\'s placement')
         out.append(line + ' [arithmetic_calculator.py: part_score of each depth and breadth row with its five limits]')
     return out
 
@@ -442,7 +444,7 @@ def _figure_rows(node, out):
 
 
 def metric_band_lines(question, cat):
-    """Stage 3: the band of each metric's figures on the screen (Now, Worst, 95th percentile), from its five catalog limits
+    """Stage 3: the band of each metric's figures on the screen (Now, Worst, and the 5th or 95th percentile by direction), from its five catalog limits
     (arithmetic_calculator.part_score), or for a 0-100% score from the score bands. The model gives these bands and never
     its own reading of the limits: it once called Co-stop 7.7% "orange (red beyond 4%)"; the limits 0, 1, 2, 4, 8 make it red."""
     facts = facts_in(question)
@@ -472,12 +474,13 @@ def metric_band_lines(question, cat):
         worse_up = bool(sl and sl['direction'] == 'above') or m.get('better') == 'lower' or \
             (not score and lim['limits'][-1] > lim['limits'][0])
         figs = []
+        pname = percentile_name(worse_up)
         for label, v in (('now', m.get('now')), ('worst', (m.get('worst') or {}).get('v') if isinstance(m.get('worst'), dict) else m.get('worst')),
-                         ('95th percentile', m.get('percentile_95'))):
+                         (pname, m.get('percentile_95'))):
             b = band(v)
             if b:
                 fig = f'{label} {_num(v)}{unit} {b}'
-                if label == '95th percentile':
+                if label == pname:
                     fig += f" ({percentile_words(v, unit, worse_up, m)})"
                 figs.append(fig)
         if figs:
@@ -490,10 +493,15 @@ def metric_band_lines(question, cat):
             + '. [arithmetic_calculator.py: part_score with the five limits; score_band for a score]']
 
 
+def percentile_name(worse_up):
+    """The name PCM gives the percentile figure beside a chart (PCM D-131): the value 95% of the points were better than
+    is the 5th percentile where higher is better, the 95th where higher is worse. PCM's field is percentile_95 for both."""
+    return '95th percentile' if worse_up else '5th percentile'
+
+
 def percentile_words(v, unit, worse_up, m):
-    """What the screen's 95th percentile means, in words: PCM gives the value 95% of the points were better than, so on a
-    score where higher is better it is near the worst end of the window, not the top. With the window's points, the worst
-    5% as a time span."""
+    """What the screen's percentile figure means, in words: the value 95% of the points were better than, near the worst
+    end of the window. With the window's points, the worst 5% as a time span."""
     n, mins = 0, None
     for s in _series(m, [], limit=1):
         n, mins = sum(isinstance(x, (int, float)) for x in s['values']), point_minutes(s)

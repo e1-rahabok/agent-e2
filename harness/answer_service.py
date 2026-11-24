@@ -90,9 +90,11 @@ SCREEN_RULES = (
     'value is a problem, or fine, because of its colour. The colour may follow a value as its label.\n'
     '- When the question asks whether a value is a problem (bad, fine, normal, acceptable), answer yes or no in the first '
     'sentence, then the reason in this order: against what the object does normally (the window median) and where green '
-    'ends; what the VMs waited for, per sub-metric, in its own unit; how broad (the depth and breadth line: the worst VMs '
-    'only, or many VMs; one host); how long (the time line). Then the next step. The score proves that VMs waited; whether '
-    'an application suffered is read in its Guest OS and in the application.\n'
+    'ends; what the VMs waited for, per sub-metric, in its own unit; how broad (the depth and breadth line: not '
+    'cluster-wide, under 10% of the VMs, or broad; one host); how long (the time line). Then the next step. The screen names the value 95% of the '
+    'window was better than the 5th percentile on a score where higher is better and the 95th where higher is worse: use '
+    'its name. The score proves that VMs waited; whether an application suffered is read in its Guest OS and in the '
+    'application.\n'
     '- With no opening, answer directly first, with the figures.\n'
     '- If "screen" names where to look next (drill_down), point there first, by page and tab, before any knowledge-base flow.\n'
     '- If a value the answer needs is not in the data, name the PCM page that shows it, or say PCM does not show it yet.\n'
@@ -144,7 +146,7 @@ HARNESS_NOTE = re.compile(r'[ \t]*\[[\w-]+\.(?:py|js|ya?ml|json)\b[^\[\]\n]*\]')
 # A question on whether the cluster can take more VMs (or is open or closed): the close-for-business opening answers it.
 TAKES_VMS = re.compile(r'\b(?:more|new|extra|another|additional|add|fit|room|headroom|upsiz\w*|open|clos\w*)\b.*\bVMs?\b'
                        r'|\bVMs?\b.*\b(?:more|fit|take|accept|add|upsiz\w*|open|clos\w*)\b|close for business', re.I)
-PERCENTILE_WORDS = re.compile(r'\b95th percentile\b|\b95% of the window\b|\bworst 5%', re.I)
+PERCENTILE_WORDS = re.compile(r'\b(?:95th|5th) percentile\b|\b95% of the window\b|\bworst 5%', re.I)
 FIGURE = re.compile(r'(?<![\d.])\d+(?:\.\d+)?(?![\d.]*\d)')
 
 
@@ -247,7 +249,7 @@ def figure_text(question, facts, cat):
                 continue
             f = _fig(v)
             if key == 'percentile_95':
-                return (f"{f}% is the 95th percentile of {name} {when_in}: "
+                return (f"{f}% is the {expert_agent.percentile_name(worse_up)} of {name} {when_in}: "
                         f"{expert_agent.percentile_words(float(f), '%', worse_up, k)}.")
             if key == 'now':
                 return f"{f}% is the latest value of {name} on the chart."

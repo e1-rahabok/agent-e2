@@ -33,12 +33,13 @@
 - The worst-VM rows have higher limits than the 90th-percentile rows: one VM with a limit in a large cluster is an outlier, not a cluster problem.
 - Not the average of the VM KPIs: a cluster serves VMs, so guest contention matters little to it, and the host physical network matters to it but not to a VM.
 - VM stats are 20-second peaks, not 5-minute averages, to catch short bursts: that makes the KPI a leading indicator.
+- The line between a few VMs and a cluster-wide problem is 10% of the VMs, not a count: the breadth row reads the VM at position 90% of the count, rounded up, so it moves only when more than 10% wait. Of 100 VMs, 10 can be bad before it moves; of 20, 2 (a third is 15%); of 9 or fewer, none: the row is the worst VM.
 
 ## Reading a KPI over time
 - Two numbers each KPI has:
   - actual: volatile, per object (the VM's score);
   - baseline: steady, for many objects. One set of levels and one baseline for every object of a type: the KPI is never per class of service.
-  - Daily KPI actual: the 99th percentile of the day's 288 scores counted from the worst (higher is better, so statistically the 1st percentile): the score that 99% of the intervals reach or exceed; the worst 2 intervals (10 minutes) are ignored. The 95th percentile (70 minutes ignored) is too lenient for large organisations. For capacity, the summary over time is part of each model.
+  - Daily KPI actual: the 1st percentile of the day's 288 scores (higher is better, so the worst end is the low end): the score that 99% of the intervals reach or exceed; the worst 2 intervals (10 minutes) are ignored. The 5th percentile (70 minutes ignored) is too lenient for large organisations. A percentile is named by its rank counted from the lowest value, so the name follows the direction of the metric: the same 1% cut is the 99th percentile of a metric where higher is worse. For capacity, the summary over time is part of each model.
 - The class of service shows in the result, not in the baseline. Gold has less contention by design (less overcommit, more reservation and shares), so a Gold VM tends to score higher than a Silver VM. To check the promise, group the VMs per class and compare each group's KPI: Gold should score above Silver, Silver above Bronze ([`sp5-framework/performance/kpi-vs-sla`](kpi-vs-sla.md), section Two steps of maturity). The promise is relative, contention 1x, 2x, 3x ([`sp5-framework/capacity/class-of-service-planning`](../capacity/class-of-service-planning.md)), not a minimum KPI per class.
 - A trend moves a little at every point, even on a quiet object: a provider KPI's depth and breadth rows follow whichever VM is on top, and a chart point holds the lowest score inside it. Small steps on a flat line are its normal movement, not events.
 - A drop is a move of at least the KPI's change level (`catalog/thresholds-performance`, section `change`) from the median of the window: 5 points for a cluster or ESXi host KPI, 8 points for a VM or Guest OS KPI. Points of the score, not percent: a fall from 90% to 85% is 5 points, a relative fall of 5.6%. Smaller: the line is steady; say so first, before any cause. Explaining the lowest point of a steady line sends the engineer after a cause that does not exist. A steady line is not a healthy line: a line that stays low is a lasting problem, read as in section Is a value a problem.
@@ -49,10 +50,10 @@
 ## Is a value a problem
 - A colour is the label the limits give a value. "A problem because it is orange" restates the limit, since the limits set the colour from the value: it explains nothing. A KPI colour says even less than a sub-metric colour: a weighted average reads orange for one red among greens and for many yellows, two different problems ([`sp5-framework/concepts/modelling`](../concepts/modelling.md), section Three ways to combine the colours).
 - Read a KPI value in this order:
-  1. What the figure is. The screen's 95th percentile is the value 95% of the window was better than. On a score where higher is better it lies near the worst end, with the worst 5% below it (72 minutes of a day), not near the top: compared with the median it looks impossible until read this way.
+  1. What the figure is. Beside a chart, the screen gives the value 95% of the window was better than: the 5th percentile on a score where higher is better, the 95th where higher is worse. Either way it lies near the worst end, with the worst 5% beyond it (72 minutes of a day).
   2. Against what the object does normally: the median of the window, and 75%, where green ends: a KPI of 75% or more is the baseline held ([`sp5-framework/concepts/modelling`](../concepts/modelling.md), section Scale 0-100%).
   3. What the VMs waited for: each sub-metric out of green, in its own unit, with what it costs a VM. Peak vCPU Ready 14.7% on the worst VM: its most delayed vCPU stood ready but unscheduled for about 3 of 20 seconds. Bad packets 0.43% on a host: about 4 in 1,000 packets dropped or errored; TCP resends them, and every VM on that host sees the delay.
-  4. How broad: the depth row (worst VM) against the breadth row (90th percentile), section Depth and breadth. Depth out of green with breadth green: a few VMs, not the cluster. Breadth out of green: at least 10% of the VMs waited that much or more. A row read on the highest host (bad packets): one host.
+  4. How broad: the depth row (worst VM) against the breadth row (90th percentile), section Depth and breadth. Depth out of green with breadth green: not cluster-wide, fewer than 10% of the VMs. Breadth out of green: at least 10% of the VMs waited that much or more. A row read on the highest host (bad packets): one host.
   5. How long: the time past each band limit and the longest unbroken stretch. Ten minutes at the worst point and a whole morning below green call for different action.
 - Then the verdict, then the next step: the resource of the sub-metric that cost the most points, then its flow. The colour may follow a value as its label, never as its reason.
 - The score proves that VMs waited. Whether an application suffered is read in its Guest OS and in the application (section One KPI per realm).
@@ -89,7 +90,7 @@ weight = 2 ^ ((100 - score) / 25)
 - "KPI means any key indicator, availability included" → KPI is performance only: the P is performance. Availability has KAI (key availability indicator); security, compliance included, has KSI (key security indicator). In daily speech users say availability KPI, business KPI or marketing KPI for any key indicator: translate by the pillar it measures.
 - "Cluster Performance is the average of its VM KPIs" → a provider KPI reads depth (worst VM) and breadth (90th percentile) of VM contention, plus the host network.
 - "It is orange, so it is a problem" → the limits set the colour from the value, so the colour restates the value. Say what the VMs waited for, how many and for how long (section Is a value a problem).
-- "Average the daily KPI" → read the 99th percentile of the day's 288 scores; an average hides the bad intervals.
+- "Average the daily KPI" → read the 1st percentile of the day's 288 scores (the score 99% of the intervals reach or exceed); an average hides the bad intervals.
 
 ## Metadata
 ```yaml
