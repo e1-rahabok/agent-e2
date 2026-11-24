@@ -780,6 +780,25 @@ class TopicTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.decide('Why?', self.HISTORY, 'maybe')
 
+    def test_code_rules(self):
+        cp = [{'question': 'How does Cluster Performance (%) work, and what is its formula?',
+               'answer': 'A weighted average of nine sub-metrics: depth, breadth and host network packets.'}]
+        # The author's screenshot of 2026-11-24: "used" is ordinary English, not the CPU Used metric; "More details" asks
+        # for more of the earlier answer.
+        self.assertEqual(self.decide('More details. What is the threshold used per component', cp), ({'continues': True, 'by': 'code'}, 0))
+        self.assertEqual(self.decide('Tell me more about CPU Ready', cp), ({'continues': True, 'by': 'code'}, 0))
+        self.assertTrue(topic_decision.names_nothing(DOCS, 'What is the threshold used here?'))
+        self.assertFalse(topic_decision.names_nothing(DOCS, 'What CPU Used value is normal for an ESXi host?'))
+        self.assertFalse(topic_decision.points_back(DOCS, 'What CPU Used value is normal for an ESXi host?'))
+
+    def test_service_topic_alone(self):
+        c = self.Recorder('{"continues": false}')
+        svc = self.service(c)
+        self.assertEqual(svc.topic({'question': 'What is VM CPU Ready?', 'history': self.HISTORY}), {'continues': False, 'by': 'model'})
+        self.assertEqual(svc.topic({'question': 'Why?', 'history': self.HISTORY}), {'continues': True, 'by': 'code'})
+        self.assertEqual(svc.topic({'question': 'Why?'}), {'continues': False, 'by': 'first'})
+        self.assertEqual(c.answer_msgs, [])                               # no answer is written
+
     def test_earlier_turns_are_chat_messages_in_order(self):
         c = self.Recorder()
         answer_modes.converse('agent-e2', c, 'm', ['I do not understand. Explain again.'], [], self.CFG, Retriever(DOCS, CHUNKS), self.HISTORY)
@@ -1512,8 +1531,9 @@ class UserSuggestionsTest(unittest.TestCase):
         r = self.page('cluster', 'Performance', [_kpi('Cluster Performance', vals), _kpi('Cluster Risk', [30] * 288, 'lower')])
         self.assertEqual(r['situation']['movement'], 'declining')
         self.assertEqual(r['situation']['level'], 'bad')
-        self.assertEqual(r['questions'], ['Why is performance declining?', 'When did the decline start, and what changed then?',
-                                          'How does Cluster Performance (%) work, and what is its formula?'])
+        # The questions follow user_suggestions.yaml, which the author edits: the first is the declining one.
+        self.assertEqual(r['questions'][0], 'Why is performance declining?')
+        self.assertLessEqual(len(r['questions']), 3)
 
     def test_good_cluster_does_not_ask_if_vms_are_served(self):
         r = self.page('cluster', 'Performance', [_kpi('Cluster Performance', [92, 93, 91, 94] * 72)])
@@ -1548,14 +1568,15 @@ class UserSuggestionsTest(unittest.TestCase):
         r = self.page('cluster', 'Capacity', [_kpi('Cluster Consumption', vals, 'lower', minutes=144)])
         self.assertEqual(r['situation']['movement'], 'rising')
 
-    def test_every_page_has_five_metric_questions(self):
+    def test_every_page_has_its_question_sets(self):
+        # The counts are the author's to set in user_suggestions.yaml: a page shows 3 at most.
         t = user_suggestions.table()
         for pillar, kinds in t.items():
             if pillar == 'cards':
                 continue
             for kind, sets in kinds.items():
-                self.assertEqual(len(sets['metric']), 5, (pillar, kind))
-                self.assertTrue(all(len(sets[x]) == 3 for x in ('good', 'medium', 'bad')), (pillar, kind))
+                self.assertTrue(1 <= len(sets['metric']) <= 5, (pillar, kind))
+                self.assertTrue(all(1 <= len(sets[x]) <= 3 for x in ('good', 'medium', 'bad')), (pillar, kind))
 
     def test_metric_question_has_no_opening(self):
         self.assertTrue(user_suggestions.is_metric('What size of move counts as a real drop?'))

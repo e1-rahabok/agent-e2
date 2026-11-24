@@ -165,3 +165,23 @@ pairs:
       - {question: "Is this VM performing well over the last 24 hours?", answer: "Mostly. VM Performance stayed green except 14:00-14:30, when disk latency rose to 40 ms."}
     question: "What happened at 14:00?"
     continues: true
+  - id: T33
+    history:
+      - {question: "How does Cluster Performance (%) work, and what is its formula?", answer: "A weighted average of nine sub-metrics, each mapped to a score from 0 to 100 against its own limits, worse scores weighted more. Depth: the worst 20-second peak of vCPU Ready, Co-stop, memory wait and disk latency among the powered-on VMs. Breadth: the 90th percentile of the same peaks. Host network: the highest ESXi error and dropped packets (%)."}
+    question: "More details. What is the threshold used per component"
+    continues: true
+  - id: T34
+    history:
+      - {question: "How does Cluster Performance (%) work, and what is its formula?", answer: "A weighted average of nine sub-metrics: depth (the worst VM's peak CPU Ready, Co-stop, memory wait, disk latency), breadth (the 90th percentile of the same) and host network packets."}
+    question: "Tell me more about the breadth part"
+    continues: true
+  - id: T35
+    history:
+      - {question: "How does Cluster Performance (%) work, and what is its formula?", answer: "A weighted average of nine sub-metrics: depth, breadth and host network packets."}
+    question: "Which limits are used for each sub-metric?"
+    continues: true
+  - id: T36
+    history:
+      - {question: "How does Cluster Performance (%) work, and what is its formula?", answer: "A weighted average of nine sub-metrics: depth, breadth and host network packets."}
+    question: "What CPU Used value is normal for an ESXi host?"
+    continues: false

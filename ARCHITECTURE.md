@@ -20,7 +20,7 @@ flowchart LR
     C["identity, roles,<br/>conversation and topics"]
   end
   subgraph E2["Agent E2: this repository"]
-    S["harness/answer_service.py<br/>POST /v1/answer, /v1/suggest<br/>GET /v1/health"]
+    S["harness/answer_service.py<br/>POST /v1/answer, /v1/suggest, /v1/topic<br/>GET /v1/health"]
     P["agent, harness, knowledge/"]
     S --> P
   end
