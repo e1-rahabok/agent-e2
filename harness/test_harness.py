@@ -1657,6 +1657,103 @@ class MetricBandTest(unittest.TestCase):
         self.assertIn('VM Performance: now 31.5% orange, worst 17% red, 95th percentile 80% green', line)
 
 
+class ProblemValueTest(unittest.TestCase):
+    """"Is 48% a problem?" (SG-S-01, 2026-11-24): the live answer said "a problem because it is orange". A colour is the label
+    the limits give a value; the reason is what the VMs waited for, how broad, how long (performance-kpi-design, section Is
+    a value a problem). The figures that carry that reason, and the guard on a colour given as a reason."""
+
+    PARTS = [('Worst peak vCPU Ready among all VMs', '%', 14.7), ('90th percentile peak vCPU Ready among VMs', '%', 0.8),
+             ('Worst peak vCPU Co-stop among all VMs', '%', 6.1), ('90th percentile peak vCPU Co-stop among VMs', '%', 1.2),
+             ('Worst memory wait among all VMs', '%', 0.0), ('90th percentile memory wait among VMs', '%', 0.0),
+             ('Highest ESXi (error + dropped) network packets', '%', 0.43)]
+
+    def card(self):
+        vals = [86.0] * 200 + [60.0] * 40 + [40.0] * 8 + [86.0] * 40
+        return {'label': 'Cluster Performance', 'better': 'higher', 'unit': '%', 'values': vals,
+                'first_point': '2026-10-18T08:35:00+08:00', 'point_minutes': 5, 'now': 86, 'worst': {'v': 40, 't': 'x'},
+                'percentile_95': 48.2,
+                'parts_at_worst': {'kpi': 'Cluster Performance', 'time': '2026-10-19T08:30:00+08:00', 'kpi_value': 40,
+                                   'parts': [{'name': n, 'unit': u, 'value': v} for n, u, v in self.PARTS]}}
+
+    def q(self, facts):
+        return 'q\n\n' + expert_agent.FACTS_HEADING + '\n' + json.dumps(facts)
+
+    def test_score_time_counts_points_past_each_limit(self):
+        t = arithmetic_calculator.score_time([90, 70, 70, 40, 90, 70, 20], 'higher')
+        self.assertEqual([x['points'] for x in t['past']], [5, 2, 1])
+        self.assertEqual(t['run'], {'start': 1, 'end': 3, 'points': 3})
+        t = arithmetic_calculator.score_time([10, 30, 80, 10], 'lower')  # Cluster Risk: worse above 25, 50, 75
+        self.assertEqual([x['points'] for x in t['past']], [2, 1, 1])
+
+    def test_time_line_gives_how_long(self):
+        line = expert_agent.kpi_time_lines(self.q({'window': 'Last 24 hours', 'asked_about_kpi': self.card()}), CAT)[0]
+        self.assertIn('below 75% (where green ends) 4 h; below 50% 40 min; below 25% never', line)
+        self.assertIn('Longest unbroken stretch below 75%: 4 h, from 2026-10-19T01:15:00+08:00', line)
+
+    def test_depth_and_breadth_say_few_or_many(self):
+        line = expert_agent.depth_breadth_lines(self.q({'asked_about_kpi': self.card()}), CAT)[0]
+        self.assertIn('peak vCPU Ready: worst VM 14.7% (orange), 90th percentile 0.8% (green): the worst VMs only, not broad', line)
+        self.assertIn('peak vCPU Co-stop: worst VM 6.1% (orange), 90th percentile 1.2% (orange): broad', line)
+        self.assertIn('Highest ESXi (error + dropped) network packets 0.43% (red): the highest host only; no breadth row', line)
+        self.assertIn('Green at both: memory wait', line)
+
+    def test_percentile_in_words_and_mirrored_bands(self):
+        line = expert_agent.metric_band_lines(self.q({'asked_about_kpi': self.card()}), CAT)[0]
+        self.assertIn('95th percentile 48.2% orange (95% of the window at 48.2% or better; the worst 5%, about 1 h 12 min, below it)', line)
+        self.assertIn('never the reason it is a problem', line)
+        risk = {'name': 'Cluster Risk', 'unit': '%', 'better': 'lower', 'now': 30, 'worst': {'v': 80}, 'percentile_95': 60}
+        line = expert_agent.metric_band_lines(self.q({'asked_about_kpi': risk}), CAT)[0]
+        self.assertIn('Cluster Risk: now 30% yellow, worst 80% red, 95th percentile 60% orange (95% of the window at 60% or lower', line)
+
+    def test_opening_starts_with_the_figure_asked_about(self):
+        facts = {'window': 'Last 24 hours', 'asked_about_kpi': self.card()}
+        svc = answer_service.Service.__new__(answer_service.Service)
+        svc.cat = CAT
+        lead = svc.lead(facts, 'Is 48% a problem for this cluster?')
+        self.assertTrue(lead.startswith('48% is the 95th percentile of Cluster Performance in the last 24 hours: 95% of the '
+                                        'window at 48% or better; the worst 5%, about 1 h 12 min, below it. Cluster Performance fell'), lead)
+        self.assertEqual(answer_service.figure_text('Is 33% a problem?', facts, CAT), '')
+        self.assertTrue(answer_service.figure_text('Why 86%?', facts, CAT).startswith('86% is the latest value'))
+
+    def test_percentile_name_is_no_repeated_figure(self):
+        self.assertNotIn('95', answer_service.headline_figures(['48% is the 95th percentile: 95% of the window at 48% or better']))
+
+    def test_colour_as_a_reason_is_found(self):
+        for t in ('Yes, 48.2% (the 95th percentile) is a problem because it is orange.',
+                  'It is fine since the score is still in the green band.',
+                  'Co-stop is red, so act on it today.',
+                  'Orange means it is a problem.'):
+            self.assertTrue(answer_service.colour_reasons(t), t)
+        for t in ('Ready 14.7% on the worst VM (orange): in its worst 20 seconds a vCPU waited about 3 seconds for a core.',
+                  'The worst VM is orange because it waited 14.7% of its time for a core.',
+                  'Impact is red from 400 µs.'):
+            self.assertEqual(answer_service.colour_reasons(t), [], t)
+
+    def test_colour_as_a_reason_gets_one_rewrite(self):
+        class Rewriter:
+            calls = 0
+
+            def __init__(self, reply):
+                self.reply = reply
+
+            def chat(self, model, messages, **kw):
+                Rewriter.calls += 1
+                return {'content': self.reply}
+        svc = answer_service.Service.__new__(answer_service.Service)
+        svc.model, svc.cfg = 'mock', {}
+        good = 'Yes: for about 72 minutes the worst VM waited up to 14.7% of its time for a core.'
+        svc.client = Rewriter(good)
+        self.assertEqual(svc.no_colour_reason('Yes, it is a problem because it is orange.'), good)
+        svc.client = Rewriter('Still a problem because it is orange.')
+        self.assertEqual(svc.no_colour_reason('A problem because it is orange.'), 'A problem because it is orange.')
+        self.assertEqual(svc.no_colour_reason(good), good)
+        self.assertEqual(Rewriter.calls, 2)
+
+    def test_screen_rules_forbid_a_colour_as_reason(self):
+        self.assertIn('never write that a value is a problem, or fine, because of its colour', answer_service.SCREEN_RULES)
+        self.assertIn('how broad (the depth and breadth line', answer_service.SCREEN_RULES)
+
+
 class CardSuggestionTest(unittest.TestCase):
     """The showcase question of a card, chosen from the card's figures (user_suggestions.card)."""
 

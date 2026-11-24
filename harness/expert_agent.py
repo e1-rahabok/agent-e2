@@ -156,6 +156,8 @@ def compute(case, question, retriever, used):
     lines += kpi_trends(question, cat)
     lines += kpi_part_lines(question, cat)
     lines += kpi_step_lines(question, cat)
+    lines += kpi_time_lines(question, cat)
+    lines += depth_breadth_lines(question, cat)
     lines += metric_band_lines(question, cat)
     return ('Computed (exact):\n' + '\n'.join(dict.fromkeys(lines))) if lines else ''
 
@@ -212,6 +214,122 @@ def _time_of(s, i):
         except ValueError:
             return None
     return None
+
+
+def point_minutes(s):
+    """The length of one point of a series from _series, in minutes: given (point_minutes), or the gap of its first two
+    times. None when neither is known."""
+    if s.get('minutes'):
+        return s['minutes']
+    if s.get('times') and len(s['times']) > 1:
+        a, b = _dt(s['times'][0]), _dt(s['times'][1])
+        return (b - a).total_seconds() / 60 if a and b else None
+    return None
+
+
+def duration(minutes):
+    """Minutes as a person reads a time span: 72 -> "1 h 12 min", 45 -> "45 min"."""
+    m = int(round(minutes))
+    return f'{m // 60} h {m % 60} min' if m >= 60 and m % 60 else f'{m // 60} h' if m >= 60 else f'{m} min'
+
+
+def kpi_time_lines(question, cat):
+    """Stage 3: how long each 0-100% score in the caller's facts spent past its band limits in the window
+    (arithmetic_calculator.score_time), and its longest unbroken stretch past the green limit. How long a problem lasted
+    is part of whether it is one; a colour alone says nothing about it (performance-kpi-design, section Is a value a
+    problem)."""
+    facts = facts_in(question)
+    if not facts:
+        return []
+    out = []
+    for s in _series(facts, []):
+        if cat.change_level(s['name']) is None:
+            continue  # not a 0-100% score
+        mins = point_minutes(s)
+        sl = cat.score_line(s['name'])
+        better = 'lower' if (sl and sl['direction'] == 'above') or s['better'] == 'lower' else 'higher'
+        try:
+            t = arithmetic_calculator.score_time(s['values'], better)
+        except arithmetic_calculator.CalcError:
+            continue
+        side = 'below' if better == 'higher' else 'above'
+
+        def span(p):
+            return duration(p * mins) if mins else f'{p} points'
+        parts = [f"{side} {x['limit']:g}%{' (where green ends)' if i == 0 else ''} {span(x['points']) if x['points'] else 'never'}"
+                 for i, x in enumerate(t['past'])]
+        line = (f"- {s['name']}, time {side} its band limits in the window ({t['points']} points"
+                f"{f' of {mins:g} minutes' if mins else ''}): " + '; '.join(parts) + '.')
+        r = t['run']
+        if r:
+            a, b = _time_of(s, r['start']), _time_of(s, r['end'])
+            line += (f" Longest unbroken stretch {side} {t['past'][0]['limit']:g}%: {span(r['points'])}"
+                     + (f', from {a} to {b}' if a and b else '') + '.')
+        out.append(line + ' [arithmetic_calculator.py: score_time, points past each band limit of the score]')
+    return out
+
+
+def _resource(name):
+    """The resource of a depth or breadth row: 'Worst peak vCPU Ready among all VMs (%)' and '90th percentile peak vCPU
+    Ready among VMs (%)' are both 'peak vCPU Ready'. None for a row that is neither."""
+    m = re.match(r'(?i)\s*(worst|90th percentile)\s+(.*?)\s+among\b', str(name or ''))
+    return (m.group(1).lower().startswith('worst'), m.group(2).strip()) if m else None
+
+
+def depth_breadth_lines(question, cat):
+    """Stage 3 for a provider KPI's sub-metrics at one point (parts_at_worst): each resource's depth row (the worst VM)
+    against its breadth row (the 90th percentile of the VMs), so the answer says whether a few VMs waited or many
+    (performance-kpi-design, section Depth and breadth). A breadth row past green means at least 10% of the VMs waited
+    that much or more; a depth row past green with its breadth row green means the worst VMs only. A row with no pair
+    (bad packets of the highest host) is one host."""
+    facts = facts_in(question)
+    if not facts:
+        return []
+    out = []
+    for ps in _part_sets(facts, [])[:2]:
+        pairs, single = {}, []
+        for p in ps['parts']:
+            lim = cat.kpi_limits(p['name'])
+            v = p.get('value')
+            if lim is None or not isinstance(v, (int, float)) or isinstance(v, bool):
+                continue
+            band = arithmetic_calculator.part_score(v, lim['limits'])[1]
+            unit = (p.get('unit') or '').strip()
+            r = _resource(p['name'])
+            if r:
+                pairs.setdefault(r[1], {})['depth' if r[0] else 'breadth'] = (v, unit, band)
+            elif band != 'green':
+                one = 'host' if re.search(r'esxi|host', p['name'], re.I) else 'object'
+                single.append(f"{p['name']} {_num(v)}{unit} ({band}): the highest {one} only; no breadth row")
+        if not any(len(x) == 2 for x in pairs.values()):
+            continue
+        broad, few, quiet, txt = [], [], [], []
+        for res, x in pairs.items():
+            if len(x) != 2:
+                continue
+            (dv, du, db), (bv, bu, bb) = x['depth'], x['breadth']
+            if bb != 'green':
+                broad.append(res)
+                how = 'broad: at least 10% of the VMs waited this much or more'
+            elif db != 'green':
+                few.append(res)
+                how = 'the worst VMs only, not broad'
+            else:
+                quiet.append(res)
+                continue
+            txt.append(f"{res}: worst VM {_num(dv)}{du} ({db}), 90th percentile {_num(bv)}{bu} ({bb}): {how}")
+        when = ps.get('time')
+        line = f"- Depth and breadth of {ps.get('kpi') or 'the score'}{f' at {when}' if when else ''}: " + ('; '.join(txt + single) or 'every row green')
+        if quiet:
+            line += f". Green at both: {', '.join(quiet)}"
+        summary = []
+        if broad:
+            summary.append(f"broad on {', '.join(broad)}")
+        if few:
+            summary.append(f"the worst VMs only on {', '.join(few)}")
+        line += ('. In short: ' + '; '.join(summary) if summary else '') + '. With fewer than 10 VMs the 90th percentile is the worst VM.'
+        out.append(line + ' [arithmetic_calculator.py: part_score of each depth and breadth row with its five limits]')
+    return out
 
 
 def kpi_trend_rows(facts, cat):
@@ -332,20 +450,42 @@ def metric_band_lines(question, cat):
         def band(v):
             if not isinstance(v, (int, float)) or isinstance(v, bool):
                 return None
-            return arithmetic_calculator.score_band(v) if score else arithmetic_calculator.part_score(v, lim['limits'])[1]
+            if not score:
+                return arithmetic_calculator.part_score(v, lim['limits'])[1]
+            b = arithmetic_calculator.score_band(v)
+            return arithmetic_calculator.BANDS[3 - arithmetic_calculator.BANDS.index(b)] if worse_up else b
+        sl = cat.score_line(name) if score else None
+        worse_up = bool(sl and sl['direction'] == 'above') or m.get('better') == 'lower' or \
+            (not score and lim['limits'][-1] > lim['limits'][0])
         figs = []
         for label, v in (('now', m.get('now')), ('worst', (m.get('worst') or {}).get('v') if isinstance(m.get('worst'), dict) else m.get('worst')),
                          ('95th percentile', m.get('percentile_95'))):
             b = band(v)
             if b:
-                figs.append(f'{label} {_num(v)}{unit} {b}')
+                fig = f'{label} {_num(v)}{unit} {b}'
+                if label == '95th percentile':
+                    fig += f" ({percentile_words(v, unit, worse_up, m)})"
+                figs.append(fig)
         if figs:
             note = ' (left out of the score while green)' if lim and lim.get('excluded_when_green') else ''
             parts.append(f"{name}: {', '.join(figs)}{note}")
     if not parts:
         return []
-    return ['- Bands of the figures on the screen, from the catalog limits (give these bands, never your own reading of the '
-            'limits): ' + '; '.join(parts[:24]) + '. [arithmetic_calculator.py: part_score with the five limits; score_band for a score]']
+    return ['- Bands of the figures on the screen, from the catalog limits. Give these bands, never your own reading of the '
+            'limits; a band is the label of a value, never the reason it is a problem: ' + '; '.join(parts[:24])
+            + '. [arithmetic_calculator.py: part_score with the five limits; score_band for a score]']
+
+
+def percentile_words(v, unit, worse_up, m):
+    """What the screen's 95th percentile means, in words: PCM gives the value 95% of the points were better than, so on a
+    score where higher is better it is near the worst end of the window, not the top. With the window's points, the worst
+    5% as a time span."""
+    n, mins = 0, None
+    for s in _series(m, [], limit=1):
+        n, mins = sum(isinstance(x, (int, float)) for x in s['values']), point_minutes(s)
+    worst5 = f', about {duration(0.05 * n * mins)}' if n and mins else ''
+    return (f"95% of the window at {_num(v)}{unit} or {'lower' if worse_up else 'better'}; the worst 5%{worst5}, "
+            f"{'above' if worse_up else 'below'} it")
 
 
 def _hourly(node, out):
@@ -403,10 +543,7 @@ def kpi_step_row(facts, cat):
         return None
     s = series[0]
     row = cat.change_level(s['name'])
-    minutes = s.get('minutes')
-    if not minutes and s.get('times') and len(s['times']) > 1:
-        a, b = _dt(s['times'][0]), _dt(s['times'][1])
-        minutes = (b - a).total_seconds() / 60 if a and b else None
+    minutes = point_minutes(s)
     if not row or not minutes:
         return None
     width = max(2, int(round(60 / minutes)))
