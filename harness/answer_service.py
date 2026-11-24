@@ -54,15 +54,15 @@ SCREEN_RULES = (
     'see: the chart, the tab, the page, an object by its name. Never mention JSON, the facts, a payload or the data '
     'provided.\n'
     '- When an opening is given below, the person reads it first, as the start of your answer, in the same voice. Continue '
-    'from it: never repeat a figure, the time or the verdict it gives (the computed line on how the KPI moved across the '
+    'from it: never repeat a figure, the time or the verdict it gives (the computed line on how the score moved across the '
     'window holds the same figures), and never say a number is "computed".\n'
     '- Answer the question asked, in the first sentence; when it asks several things, answer them in the order asked. Never '
-    'open by restating the opening\'s verdict (that the KPI fell or that the drop is real): the person has just read it. '
+    'open by restating the opening\'s verdict (that the score fell or that the drop is real): the person has just read it. '
     'When it asks why a score moved, what is wrong or what to check, do not '
     'open with the drop or the level: open with the cause, which part pulled the score down, then where to look next. When it '
     'asks how a metric works, what it measures or why it is designed so, explain the mechanism from the knowledge base first; '
     'the page\'s figures come after, as a short example, or not at all.\n'
-    '- If the opening says the KPI stayed within its normal movement, do not restate the range: say what the KPI measures and '
+    '- If the opening says the score stayed within its normal movement, do not restate the range: say what the score measures and '
     'why this movement is normal.\n'
     '- Other computed lines are exact: give their figures as written when the answer needs them (for example a sub-metric\'s '
     'own value). For a question on why a score moved or what is wrong: if a computed line names the sub-metric that moved a '
@@ -71,6 +71,9 @@ SCREEN_RULES = (
     '- With no opening, answer directly first, with the figures.\n'
     '- If "screen" names where to look next (drill_down), point there first, by page and tab, before any knowledge-base flow.\n'
     '- If a value the answer needs is not in the data, name the PCM page that shows it, or say PCM does not show it yet.\n'
+    '- Name a score by its name as the page shows it (Cluster Performance (%), Cluster Risk (%), VM Performance (%)), never '
+    '"the KPI": the word is stretched across the industry; the name is exact. Name contention, consumption or risk by the '
+    'metric and its limit, never by an adjective such as "high" alone.\n'
     '- Never write a knowledge base file id or path (such as vsphere/technology/...). Name a flow or a metric by its title in words; '
     'PCM lists the files read under Sources.')
 METRIC_FACTS = ('screen', 'object', 'pillar', 'window')  # what a metric question keeps of the page
@@ -170,6 +173,45 @@ def lead_text(rows, facts=None):
     return ' '.join(out)
 
 
+def capacity_text(r):
+    """The opening on a cluster's Capacity tab, in the order of close for business: Consumption, then contention, which
+    overrides, then Risk, which decides only when both are orange. Metrics and limits, no adjective (author, 2026-11-24)."""
+    if not r:
+        return ''
+    L, f = r['limits'], _fig
+    c = r['consumption']
+    if r['c_level'] == 'red':
+        t = (f"Consumption: {f(c)}% (95th percentile, last 24 hours), above the close-for-business limit of "
+             f"{f(L['closure-cluster-consumption-red'])}%.")
+    elif r['c_level'] == 'orange':
+        t = (f"Consumption: {f(c)}% (95th percentile, last 24 hours), above {f(L['closure-cluster-consumption-orange'])}% "
+             f"and not above {f(L['closure-cluster-consumption-red'])}%: orange.")
+    else:
+        t = (f"Consumption: {f(c)}% (95th percentile, last 24 hours), not above {f(L['closure-cluster-consumption-orange'])}%: "
+             f"the cluster is about {f(c)}% full.")
+    p = r['performance']
+    if isinstance(p, (int, float)):
+        if r['p_level'] == 'red':
+            t += (f" Contention: Cluster Performance (%) {f(p)}% (5th percentile), below {f(L['closure-cluster-performance-red'])}%: "
+                  'it overrides: closed until the contention is fixed.')
+        elif r['p_level'] == 'orange':
+            t += (f" Contention: Cluster Performance (%) {f(p)}% (5th percentile), below {f(L['closure-cluster-performance-orange'])}% "
+                  f"and not below {f(L['closure-cluster-performance-red'])}%: orange, no override.")
+        else:
+            t += (f" Contention: Cluster Performance (%) {f(p)}% (5th percentile), not below "
+                  f"{f(L['closure-cluster-performance-orange'])}%: no override.")
+    k = r['risk']
+    if isinstance(k, (int, float)):
+        if r['both_orange']:
+            t += (f" Risk: Cluster Risk (%) {f(k)}% (95th percentile), {'above' if k > r['risk_limit'] else 'not above'} the "
+                  f"{'production' if r['production'] else 'non-production'} limit of {f(r['risk_limit'])}%: it decides, as "
+                  'Consumption and Cluster Performance (%) are both orange.')
+        else:
+            t += (f" Risk: Cluster Risk (%) {f(k)}% (95th percentile) does not decide: Consumption and Cluster Performance (%) "
+                  'are not both orange.')
+    return t + (' Closed for new VMs and VM upsizes.' if r['closed'] else ' Open for new VMs.')
+
+
 def step_text(r):
     """One sentence on when the KPI asked about changed level, and whether the other KPIs followed (expert_agent.kpi_step_row).
     Its worst point can come hours later; a question about a change of colour is about this moment."""
@@ -260,6 +302,9 @@ class Service:
     def lead(self, facts):
         if not facts:
             return ''
+        cap = capacity_text(expert_agent.capacity_check_row(facts, self.cat))
+        if cap:
+            return cap  # a cluster's Capacity page or card: the close-for-business reading, in its order
         rows = expert_agent.kpi_trend_rows(facts, self.cat)
         if isinstance(facts, dict) and facts.get('asked_about_kpi'):
             rows = rows[:1]  # a question on one KPI card: the opening is about that KPI; the others are context
