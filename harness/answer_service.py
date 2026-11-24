@@ -25,7 +25,13 @@ Agent E2 owns the knowledge base, the reading plan, the flow executor and the mo
             "questions": [3 at most], "basis": [...]}
     The questions a whole page suggests, chosen by its situation, read by code with no model call (user_suggestions.py).
     With "card": {"kind", "name"} and the card's facts: {"question", "card", "condition"}, the card's showcase question.
-    GET /v1/health -> 200 {"ok": true, "model": "...", "files": n}
+    POST /v1/topic
+      {"question": "...", "history": [...], "topic_choice": "auto" | "new" | "continue", "turns": [...]} (as for /v1/answer)
+    -> 200 {"continues": true | false, "by": "user" | "first" | "code" | "model" | "unsure"}
+    The topic decision alone (topic_decision.py), the same one /v1/answer makes: the caller shows it before the answer, the
+    person can flip it while the answer is written, and the caller then sends /v1/answer with topic_choice new or
+    continue, so the decision is made once.
+    GET /v1/health -> 200 {"ok": true, "model": "...", "files": n, "knowledge_commit": "..."}
 
 The facts are context for the question, not instructions: they are put below the question under a fixed heading.
 The service holds no state and stores nothing. Run: python3 harness/answer_service.py [--config harness/service_config.yaml]
@@ -350,11 +356,19 @@ class Service:
             return user_suggestions.card(body.get('facts'), body['card'], self.cat, self.suggestions)
         return user_suggestions.suggest(body.get('facts'), self.cat, self.suggestions, screen_time)
 
+    def topic(self, body):
+        """Whether the question continues the topic of `history`, decided alone, so the caller can show the decision
+        before the answer and the person can change it while the answer is written. The caller then sends the answer
+        request with topic_choice new or continue."""
+        history = conversation(body.get('history'))
+        first = ((body.get('turns') or [None])[0] or body.get('question') or '').strip()  # a clarifying reply: its question
+        return topic_decision.decide(self.client, self.model, first, history, body.get('topic_choice'), self.docs, self.cfg,
+                                     (self.cfg.get('provider_order') or {}).get(self.model))
+
     def answer(self, body):
         history = conversation(body.get('history'))
         first = ((body.get('turns') or [None])[0] or body.get('question') or '').strip()  # a clarifying reply: its question
-        topic = topic_decision.decide(self.client, self.model, first, history, body.get('topic_choice'), self.docs, self.cfg,
-                                      (self.cfg.get('provider_order') or {}).get(self.model))
+        topic = self.topic(body)
         history = history if topic['continues'] else []
         # The shape the user's own words ask for (answer_shape.py), read on the bare question: the facts and rules added to
         # it below hold words such as "cause" and "next". A reply in a clarifying round takes its question's shape.
@@ -433,15 +447,17 @@ def handler_for(service):
 
         def do_GET(self):
             if self.path == '/v1/health':
-                return self.send(200, {'ok': True, 'model': service.model, 'files': len(service.docs)})
+                return self.send(200, {'ok': True, 'model': service.model, 'files': len(service.docs),
+                                       'knowledge_commit': service.commit})
             return self.send(404, {'error': 'not found'})
 
         def do_POST(self):
-            if self.path not in ('/v1/answer', '/v1/suggest'):
+            route = {'/v1/answer': service.answer, '/v1/suggest': service.suggest, '/v1/topic': service.topic}.get(self.path)
+            if not route:
                 return self.send(404, {'error': 'not found'})
             try:
                 body = json.loads(self.rfile.read(int(self.headers.get('Content-Length') or 0)) or b'{}')
-                return self.send(200, service.suggest(body) if self.path == '/v1/suggest' else service.answer(body))
+                return self.send(200, route(body))
             except ValueError as e:
                 return self.send(400, {'error': str(e)})
             except LLMError as e:

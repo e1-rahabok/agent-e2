@@ -8,9 +8,14 @@ search; when it does not, the question is read alone and the page's opening is s
 Order of the decision, first match wins:
   1. user: the user chose (PCM's undo, its New topic button, a suggested question): `topic_choice` new or continue.
   2. first: no earlier turn, so a new topic.
-  3. code: the question names nothing the knowledge base holds (no metric file, no term-map row) and points back: a
-     word that refers to the earlier turns ("it", "that", "again", "instead", "also"), an opening such as "And", "So",
-     "What about", or five words or fewer ("Why?", "Simpler please."). It cannot stand alone, so it continues.
+  3. code, two rules; each can only continue, never start a new topic:
+     - more: the question asks for more of the earlier answer ("More details", "Tell me more", "Go deeper", "per
+       component", "each of them"). It continues whatever else it names.
+     - points back: the question names nothing the knowledge base holds (no metric file by a phrase of two or more words,
+       no term-map row) and refers to the earlier turns ("it", "that", "again", "instead", "also"), opens with "And",
+       "So", "What about", or has five words or fewer ("Why?", "Simpler please."). It cannot stand alone, so it continues.
+       One plain word that is also a metric title ("used", "performance", "system") is ordinary English, so it does not
+       count as naming a metric: "the threshold used" names no metric.
      "This cluster" and "this VM" are not a pointer: they name the page the user is on.
   4. model: anything else may be a new subject or a narrower question on the same one ("Is Co-stop also high on that
      VM?"). One model call at temperature 0 reads the earlier turns and the question.
@@ -29,7 +34,7 @@ RULE = ('Decide whether the new question continues the earlier conversation or s
         'Test: could a VMware expert answer the new question correctly if they saw it alone, without the earlier '
         'conversation?\n'
         '- No, it needs the earlier turns: it refers to them (it, that, the VM, the host, the drop), or asks about their '
-        'answer. It continues.\n'
+        'answer: more detail, a part of it, or a value per part (per component, each sub-metric). It continues.\n'
         '- Yes, but it asks about the same subject: a narrower, wider or related question on the same metric, object or '
         'event. It continues.\n'
         '- Yes, and it asks about a different subject: another metric, another object or another task. New topic.\n'
@@ -37,17 +42,24 @@ RULE = ('Decide whether the new question continues the earlier conversation or s
         'Reply with JSON only, nothing else: {"continues": true} or {"continues": false}')
 POINTS_BACK = re.compile(r"\b(?:it|its|that|those|them|they|again|instead|also|too|then|earlier|previous|above|same|"
                          r"simpler|example|explain|elaborate|sure|next)\b|^\s*(?:and|but|so|or|what about|how about|what if)\b", re.I)
+MORE = re.compile(r"\b(?:more|further|deeper)\s+(?:details?|detail(?:ed)?|depth|info(?:rmation)?|on\s+(?:it|that|this|those))\b"
+                  r"|\b(?:tell|show|give)\s+me\s+more\b|\bgo\s+deeper\b|\bin\s+(?:more\s+)?detail\b|\bdrill\s+(?:in|down)\b"
+                  r"|\bbreak\s+(?:it|that|this)\s+down\b|\bbreakdown\b|\b(?:per|each)\s+(?:component|part|sub-?metric|item|one)s?\b"
+                  r"|\beach\s+of\s+(?:them|those|these)\b|^\s*(?:more|continue|go on|expand|elaborate)\b", re.I)
 SHORT = 5   # words: a question this short cannot carry a subject of its own
 JSON = re.compile(r'\{[^{}]*"continues"\s*:\s*(true|false)[^{}]*\}', re.I)
 
 
 def names_nothing(docs, question):
     """The question names no metric file and no user term."""
-    return not reading_plan.anchors(docs, question) and not user_terms.match(question)
+    return not reading_plan.anchors(docs, question, strict=True) and not user_terms.match(question)
 
 
 def points_back(docs, question):
-    """Code's rule: names nothing, and refers back or is too short to stand alone."""
+    """Code's rules: asks for more of the earlier answer; or names nothing, and refers back or is too short to stand
+    alone."""
+    if MORE.search(question):
+        return True
     return names_nothing(docs, question) and (bool(POINTS_BACK.search(question)) or len(question.split()) <= SHORT)
 
 
