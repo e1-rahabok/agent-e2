@@ -1,0 +1,220 @@
+# Questions a person types on a PCM screen, for benchmark/runner/screen_answer_check.py. Each runs through the service
+# (harness/answer_service.py) with the page's facts as PCM sends them (screen_answer_check_pages.json, PCM story M-5).
+# A development check of the service, not the benchmark: the benchmark is multiple choice and has no page.
+#
+# Fields, all checked by code:
+#   page: the PCM page the question is asked on (a key of screen_answer_check_pages.json).
+#   page_values: true when the answer needs the page's values (what happened to this object, why its score moved, whether
+#     a value is a problem, which VM or part is worst, a time or a figure the question names); false when the question is
+#     about how a score or metric works in general (what it measures, its formula, what it includes or leaves out, why).
+#     false: no opening, no page figures, no next step.
+#   shape: the shapes accepted (answer_shape.py: explain, advise, diagnose, general).
+#   must: patterns that must all be in the answer (case-insensitive regex).
+#   must_some: {n, of}: at least n of the patterns.
+#   must_not: patterns that must not be in the answer.
+# Add the wordings of every wrong answer seen in the live test, as several wordings of its kind, not one.
+asks:
+  # --- What a score includes or leaves out (author's screenshot, 2026-11-24: "What metrics are omitted from cluster
+  #     performance (%?) Provide reasons" got the page's drop, the excluded-green rule and next steps, not the list).
+  - id: S01
+    page: SG-S-01 Performance
+    question: What metrics are omitted from cluster performance (%?) Provide reasons
+    page_values: false
+    shape: [explain]
+    must_some: {n: 6, of: ['% VMs with CPU Ready|percentage of VMs', 'VM utilization', 'Consumed', 'CPU utilization', 'DRS',
+                           'datastore', 'Other Wait', 'Overlap', 'bus reset|aborts', 'vMotion']}
+    must_not: ['To investigate', 'fell to', 'Details under']
+  - id: S02
+    page: SG-S-01 Performance
+    question: Which metrics are left out of Cluster Performance (%), and why?
+    page_values: false
+    shape: [explain]
+    must_some: {n: 6, of: ['% VMs with CPU Ready|percentage of VMs', 'VM utilization', 'Consumed', 'CPU utilization', 'DRS',
+                           'datastore', 'Other Wait', 'Overlap', 'bus reset|aborts', 'vMotion']}
+  - id: S03
+    page: SG-S-01 Performance
+    question: List the metrics that Cluster Performance does not use.
+    page_values: false
+    shape: [explain, general]
+    must_some: {n: 6, of: ['% VMs with CPU Ready|percentage of VMs', 'VM utilization', 'Consumed', 'CPU utilization', 'DRS',
+                           'datastore', 'Other Wait', 'Overlap', 'bus reset|aborts', 'vMotion']}
+  - id: S04
+    page: SG-S-01 Performance
+    question: what's excluded from the cluster performance score
+    page_values: false
+    shape: [explain]
+    must_some: {n: 4, of: ['DRS', 'Other Wait', 'Overlap', 'vMotion', 'CPU utilization', 'Consumed']}
+  - id: S05
+    page: SG-S-01 Performance
+    question: Why is vMotion count not part of Cluster Performance?
+    page_values: false
+    shape: [explain]
+    must: ['stun|downtime']
+  - id: S06
+    page: SG-S-01 Performance
+    question: Is the VM DRS Score used in Cluster Performance?
+    page_values: false
+    shape: [explain, general]
+    must: ['\bno\b|not used|not part|is not', 'efficiency']
+  - id: S07
+    page: SG-S-01 Performance
+    question: Why isn't ESXi CPU utilization in the Cluster Performance score?
+    page_values: false
+    shape: [explain]
+    must: ['contention|does not impact|not impact']
+  - id: S08
+    page: SG-S-01 Performance
+    question: Why are ballooning and swapping not in Cluster Performance?
+    page_values: false
+    shape: [explain]
+    must: ['Cluster Risk']
+  - id: S09
+    page: SG-S-01 Performance
+    question: What goes into Cluster Performance (%)? List the sub-metrics.
+    page_values: false
+    shape: [explain, general]
+    must: ['Ready', 'Co-stop', 'latency', 'packet', 'memory']
+  - id: S10
+    page: SG-S-01 Performance
+    question: Which sub-metric is left out while it is zero?
+    page_values: false
+    shape: [explain, general]
+    must: ['packet']
+  # --- How a score works (the page's metric questions and free wordings of them).
+  - id: S11
+    page: SG-S-01 Performance
+    question: How does Cluster Performance (%) work, and what is its formula?
+    page_values: false
+    shape: [explain]
+    must: ['worst', '90th']
+  - id: S12
+    page: SG-S-01 Performance
+    question: Tell me the formula of Cluster Performance.
+    page_values: false
+    shape: [explain, general]
+    must: ['weight']
+  - id: S13
+    page: SG-S-01 Performance
+    question: Why does Cluster Performance read the worst VM and the 90th percentile, not the average?
+    page_values: false
+    shape: [explain]
+  - id: S14
+    page: SG-S-01 Performance
+    question: What size of move counts as a real drop?
+    page_values: false
+    shape: [explain, general]
+    must: ['\b5 points|five points']
+  - id: S15
+    page: SG-S-01 Performance
+    question: How is Cluster Risk different from Cluster Performance?
+    page_values: false
+    shape: [explain]
+  - id: S16
+    page: SG-S-01 Performance
+    question: Why is the Co-stop limit tighter than the Ready limit?
+    page_values: false
+    shape: [explain]
+  - id: S17
+    page: SG-S-01 Capacity
+    question: What does Cluster Consumption (%) measure?
+    page_values: false
+    shape: [explain]
+  - id: S18
+    page: sg-api-1617 Performance
+    question: Which metrics are not used in VM Performance (%), and why?
+    page_values: false
+    shape: [explain]
+    must_some: {n: 5, of: ['Other Wait', 'Consumed|Active|Granted', 'Outstanding', 'Snapshot', 'Datastore latency', 'Broadcast|multicast',
+                           'Error packets', 'Receive dropped', 'Packets per second', 'DRS', 'stun|downtime']}
+  - id: S19
+    page: sg-api-1617 Performance
+    question: Why are some metrics left out of the score while they are green?
+    page_values: false
+    shape: [explain]
+    must: ['free 100|100']
+  - id: S20
+    page: sg-esx-110 Performance
+    question: Why is host ballooning or swapping not part of ESXi Performance?
+    page_values: false
+    shape: [explain]
+  # --- About this object's values: the page's figures, the opening and, for a cause, what to check next.
+  - id: P01
+    page: SG-S-01 Performance
+    question: Why did performance drop at 19 Oct, 08:30?
+    page_values: true
+    shape: [diagnose]
+  - id: P02
+    page: SG-S-01 Performance
+    question: Which metrics pulls the Cluster Performance down?
+    page_values: true
+    shape: [diagnose, general]
+  - id: P03
+    page: SG-S-01 Performance
+    question: What is pulling the score down?
+    page_values: true
+    shape: [diagnose, general]
+  - id: P04
+    page: SG-S-01 Performance
+    question: Is 42% a problem for this cluster?
+    page_values: true
+    shape: [diagnose]
+  - id: P05
+    page: SG-S-01 Performance
+    question: Which VMs are hit hardest, and on which resource?
+    page_values: true
+    shape: [diagnose, general]
+  - id: P06
+    page: SG-S-01 Performance
+    question: Is the cause CPU, memory, disk or network?
+    page_values: true
+    shape: [diagnose]
+  - id: P07
+    page: SG-S-01 Performance
+    question: Was the drop on one host or across the cluster?
+    page_values: true
+    shape: [diagnose, general]
+  - id: P08
+    page: SG-S-01 Performance
+    question: What are the sub-metrics at their worst right now?
+    page_values: true
+    shape: [diagnose, general]
+  - id: P09
+    page: SG-S-01 Performance
+    question: Which sub-metrics are left out of the score right now?
+    page_values: true
+    shape: [explain, diagnose, general]
+  - id: P10
+    page: SG-S-01 Performance
+    question: What should I check next?
+    page_values: true
+    shape: [diagnose]
+  - id: P11
+    page: SG-S-01 Performance
+    question: What happened at 08:30?
+    page_values: true
+    shape: [diagnose, general]
+  - id: P12
+    page: SG-S-01 Capacity
+    question: Can this cluster take more VMs?
+    page_values: true
+    shape: [diagnose, advise, general]
+  - id: P13
+    page: SG-S-01 Capacity
+    question: What is the consumption of this cluster?
+    page_values: true
+    shape: [diagnose, general, explain]
+  - id: P14
+    page: sg-api-1617 Performance
+    question: Which metric slowed this VM at its worst point?
+    page_values: true
+    shape: [diagnose, general]
+  - id: P15
+    page: sg-api-1617 Performance
+    question: Is the issue caused by this VM itself, or its parent ESXi host?
+    page_values: true
+    shape: [diagnose]
+  - id: P16
+    page: sg-esx-110 Performance
+    question: Which VMs on this host suffer most?
+    page_values: true
+    shape: [diagnose, general]

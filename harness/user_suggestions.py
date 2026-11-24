@@ -40,14 +40,6 @@ def table(path=os.path.join(HERE, 'user_suggestions.yaml')):
         return yaml.safe_load(f)
 
 
-def is_metric(question, tbl=None):
-    """Whether the question is one of the metric questions (how a KPI works), as offered on a page: those are answered from
-    the knowledge base, with no opening on how the page's KPI moved."""
-    q = re.sub(r'\s+', ' ', str(question or '')).strip().lower()
-    return any(q == m.lower() for kinds in (tbl or table()).values() if isinstance(kinds, dict)
-               for sets in kinds.values() for m in sets.get('metric') or [])
-
-
 def _bare(name):
     return re.sub(r'\s*\(.*?\)\s*$', '', str(name or '')).strip().lower()
 

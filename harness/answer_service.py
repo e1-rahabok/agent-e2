@@ -12,7 +12,9 @@ Agent E2 owns the knowledge base, the reading plan, the flow executor and the mo
        or continue: the user chose), "role": "l1" | "l2" | "capacity" | "executive" (optional)}
     -> 200 {"type": "answer" | "clarify", "content": "...", "questions": [...], "files_read": [...],
             "lead": "...", "computed": [...], "topic": {"continues": true | false, "by": "user" | "first" | "code" |
-            "model" | "unsure"}, "model": "...", "knowledge_commit": "..."}
+            "model" | "unsure"}, "shape": "...", "page_values": true | false, "model": "...", "knowledge_commit": "..."}
+    shape and page_values: what the question asks, read by the model (answer_shape.decide). page_values false: a question
+    on how a score works in general; the page is named, its values and the opening are not used.
     topic: whether the question continued the topic of `history` (topic_decision.py); when it did not, `history` was not
     used and the caller starts a new topic with this turn.
     lead: the opening the person reads first, written by code from the calculator's numbers in plain words (empty when no
@@ -64,7 +66,7 @@ ROLES = {'l1': 'a Level 1 NOC operator who follows the SOP', 'l2': 'a Level 2 pl
 FACTS_HEADING = expert_agent.FACTS_HEADING
 # The person typed a question on a PCM screen: they see the screen, never the data PCM sent (PCM D-101).
 SCREEN_RULES = (
-    'How to answer a person on a PCM screen:\n'
+    expert_agent.RULES_HEADING + '\n'
     '- They typed only the question. They see the PCM page named under "screen", not the data below. Speak of what they '
     'see: the chart, the tab, the page, an object by its name. Never mention JSON, the facts, a payload or the data '
     'provided.\n'
@@ -445,14 +447,15 @@ class Service:
         first = ((body.get('turns') or [None])[0] or body.get('question') or '').strip()  # a clarifying reply: its question
         topic = self.topic(body)
         history = history if topic['continues'] else []
-        # The shape the user's own words ask for (answer_shape.py), read on the bare question: the facts and rules added to
-        # it below hold words such as "cause" and "next". A reply in a clarifying round takes its question's shape.
-        shape = answer_shape.by_code(first)
-        if user_suggestions.is_metric(body.get('question'), self.suggestions):
-            shape = 'explain'
-        # A question on what a metric is or how it works is answered from the knowledge base, with the page named but not
-        # its numbers or where to look next. With the numbers, the model opened with what pulled the score down.
-        if shape == 'explain' and isinstance(body.get('facts'), dict):
+        # What the question asks (answer_shape.decide), read by the model on the bare question: the facts and rules added
+        # to it below hold words such as "cause" and "next". A reply in a clarifying round takes its question's reading; a
+        # turn that continues a topic is read with the topic's earlier questions.
+        asks = answer_shape.decide(self.client, self.model, first, [t['question'] for t in history], self.cfg,
+                                   (self.cfg.get('provider_order') or {}).get(self.model))
+        shape = asks['shape']
+        # A question on how a score works in general is answered from the knowledge base, with the page named but not its
+        # numbers or where to look next. With the numbers, the model opened with what pulled the score down.
+        if not asks['page_values'] and isinstance(body.get('facts'), dict):
             body = {**body, 'facts': concept_facts(body['facts'])}
             lead = ''
         elif history:
@@ -477,6 +480,7 @@ class Service:
         return {'type': out['type'], 'content': content, 'questions': out.get('questions', []),
                 'files_read': out['used'], 'lead': lead if out['type'] == 'answer' else '',
                 'computed': [_shown(c) for c in computed], 'topic': topic, 'shape': out['result'].get('shape'),
+                'page_values': asks['page_values'],
                 'model': self.model,
                 'knowledge_commit': self.commit}
 

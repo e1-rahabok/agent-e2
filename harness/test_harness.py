@@ -744,13 +744,17 @@ class TopicTest(unittest.TestCase):
     topic gets every earlier turn of it; a new topic is read alone."""
 
     class Recorder:
-        def __init__(self, topic_reply='{"continues": false}'):
+        def __init__(self, topic_reply='{"continues": false}', asks_reply='unreadable'):
             self.answer_msgs, self.case_inputs, self.topic_calls, self.topic_reply = [], [], 0, topic_reply
+            self.asks_reply, self.asks_inputs = asks_reply, []
 
         def chat(self, model, messages, tools=None, deterministic=False, **kw):
             if deterministic and messages[0]['content'] == topic_decision.RULE:
                 self.topic_calls += 1
                 return {'content': self.topic_reply, 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
+            if deterministic and messages[0]['content'] == answer_shape.RULE:
+                self.asks_inputs.append(messages[-1]['content'])
+                return {'content': self.asks_reply, 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
             if deterministic:
                 self.case_inputs.append(str(messages[-1]['content']))
                 return {'content': '{}', 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
@@ -841,29 +845,42 @@ class TopicTest(unittest.TestCase):
 
 
 class AnswerShapeTest(unittest.TestCase):
-    """The shape of an open answer follows what the question asks (answer_shape.py)."""
-    CASES = {
-        'What does CPU Thread Utilization actually measure?': 'explain',
-        'What does Cluster Consumption (%) measure, and how is it computed?': 'explain',
-        'Why is capacity read against usable capacity, not total capacity?': 'explain',
-        'How does VM Performance (%) work, and what is its formula?': 'explain',
-        'Explain again, simpler.': 'explain',
-        'Memory Consumed is high. Does this cluster need more memory?': 'diagnose',
-        'How many more VMs can this cluster take?': 'diagnose',
-        'Why did Cluster Performance drop at 10:10?': 'diagnose',
-        'Why is performance declining?': 'diagnose',
-        'Why the worst at 18 Oct, 10:10?': 'diagnose',
-        'Is 4% CPU Ready a problem for this VM?': 'diagnose',
-        'What should I check next?': 'diagnose',
-        'Is the platform the cause?': 'diagnose',
-        'How should I size memory for a new SQL Server VM?': 'advise',
-        'Why?': None,
-        'And at the 5-minute interval?': None,
-    }
+    """What a question asks, read by the model (answer_shape.decide): the answer's shape and whether it needs the page."""
 
-    def test_code_reads_the_users_words(self):
-        for q, want in self.CASES.items():
-            self.assertEqual(answer_shape.by_code(q), want, q)
+    def test_reply_is_read_strictly(self):
+        self.assertEqual(answer_shape.parse('{"page_values": false, "shape": "explain"}'),
+                         {'page_values': False, 'shape': 'explain'})
+        self.assertEqual(answer_shape.parse('Sure: {"page_values": true, "shape": "diagnose"} done'),
+                         {'page_values': True, 'shape': 'diagnose'})
+        for bad in ('{}', 'no json', '{"page_values": "no", "shape": "explain"}', '{"page_values": true, "shape": "list"}'):
+            self.assertIsNone(answer_shape.parse(bad), bad)
+
+    def test_unreadable_reply_keeps_the_page(self):
+        c = TopicTest.Recorder(asks_reply='I think it is a concept question.')
+        self.assertEqual(answer_shape.decide(c, 'm', 'What is Cluster Risk?'),
+                         {'page_values': True, 'shape': None, 'by': 'unsure'})
+
+    def test_follow_up_is_read_with_its_topic(self):
+        c = TopicTest.Recorder(asks_reply='{"page_values": true, "shape": "diagnose"}')
+        self.assertEqual(answer_shape.decide(c, 'm', 'Why?', ['Why did performance drop at 08:30?'])['shape'], 'diagnose')
+        self.assertIn('- Why did performance drop at 08:30?', c.asks_inputs[0])
+        self.assertTrue(c.asks_inputs[0].endswith('New question: Why?'))
+
+    def test_stages_one_and_two_never_read_the_screen_rules(self):
+        # The screen rules name Cluster Risk (%), VM Performance (%) and the Guest OS: read as the question, they put those
+        # files first and pushed Cluster Performance out of the files read whole ("List the metrics that Cluster
+        # Performance does not use." got Cluster Risk's list).
+        import expert_agent
+        body = {'question': 'List the metrics that Cluster Performance does not use.', 'facts': self.FACTS, 'role': 'l2'}
+        full = answer_service.question_text(body, lead='Cluster Performance fell to 42%.')
+        read = expert_agent.without_rules(full)
+        self.assertIn(answer_service.SCREEN_RULES, full)
+        self.assertNotIn(expert_agent.RULES_HEADING, read)
+        self.assertNotIn('fell to 42%', read)                         # the opening is an instruction too
+        self.assertTrue(read.startswith('List the metrics that Cluster Performance does not use.'))
+        self.assertIn('The person asking is', read)
+        self.assertEqual(expert_agent.facts_in(read), self.FACTS)     # the page's facts stay
+        self.assertEqual(expert_agent.without_rules('Why is Ready high?'), 'Why is Ready high?')
 
     def test_case_kind_decides_when_code_cannot(self):
         self.assertEqual(answer_shape.choose(None, {'kind': 'troubleshooting'}), 'diagnose')
@@ -877,26 +894,39 @@ class AnswerShapeTest(unittest.TestCase):
              'asked_about_kpi': {'label': 'Cluster Performance', 'better': 'higher', 'unit': '%',
                                  'points': [[f't{i}', 80 + i % 3] for i in range(60)]}}
 
-    def ask(self, q):
-        c = TopicTest.Recorder()
+    def ask(self, q, reply):
+        c = TopicTest.Recorder(asks_reply=reply)
         svc = answer_service.Service(dict(AnswerServiceTest.CFG, verify=False, gap_followup=False), c, Retriever(DOCS, CHUNKS))
         out = svc.answer({'question': q, 'facts': self.FACTS})
-        return out, c.answer_msgs[0][0]['content'], c.answer_msgs[0][-1]['content']
+        return out, c.answer_msgs[0][0]['content'], c.answer_msgs[0][-1]['content'], c.asks_inputs
 
-    def test_explain_question_gets_no_page_figures_and_no_next_step(self):
-        out, system, user = self.ask('What does CPU Thread Utilization actually measure?')
-        self.assertEqual((out['shape'], out['lead']), ('explain', ''))
+    def test_general_question_gets_no_page_figures_and_no_next_step(self):
+        out, system, user, asked = self.ask('What metrics are omitted from cluster performance (%?) Provide reasons',
+                                            '{"page_values": false, "shape": "explain"}')
+        self.assertEqual((out['shape'], out['lead'], out['page_values']), ('explain', '', False))
+        self.assertEqual(asked, ['Question: What metrics are omitted from cluster performance (%?) Provide reasons'])  # bare
         self.assertIn(answer_shape.FORMATS['explain'], system)
         self.assertNotIn('then what to check next', system)
         self.assertNotIn('What makes up Consumption', user)          # the drill-down is not sent
         self.assertNotIn('asked_about_kpi', user)
         self.assertIn('SG-S-01 · Capacity', user)                    # the page is still named
 
-    def test_verdict_question_keeps_the_page_and_the_next_step(self):
-        out, system, user = self.ask('Why is performance declining?')
-        self.assertEqual(out['shape'], 'diagnose')
+    def test_page_question_keeps_the_page_and_the_next_step(self):
+        out, system, user, _ = self.ask('Why is performance declining?', '{"page_values": true, "shape": "diagnose"}')
+        self.assertEqual((out['shape'], out['page_values']), ('diagnose', True))
         self.assertIn('then what to check next', system)
         self.assertIn('What makes up Consumption', user)
+
+    def test_explain_shape_can_keep_the_page(self):
+        # "Which sub-metrics are left out right now?": how the score works, read on this page's values.
+        out, system, user, _ = self.ask('Which sub-metrics are left out right now?', '{"page_values": true, "shape": "explain"}')
+        self.assertEqual((out['shape'], out['page_values']), ('explain', True))
+        self.assertIn('asked_about_kpi', user)
+
+    def test_unreadable_decision_keeps_the_page_and_the_case_decides_the_shape(self):
+        out, system, user, _ = self.ask('Why is performance declining?', 'unreadable')
+        self.assertTrue(out['page_values'])
+        self.assertIn('asked_about_kpi', user)
 
     def test_clarifying_rule_survives_the_shape(self):
         for kind in ('chat', 'chat_final'):
@@ -1578,18 +1608,20 @@ class UserSuggestionsTest(unittest.TestCase):
                 self.assertTrue(1 <= len(sets['metric']) <= 5, (pillar, kind))
                 self.assertTrue(all(1 <= len(sets[x]) <= 3 for x in ('good', 'medium', 'bad')), (pillar, kind))
 
-    def test_metric_question_has_no_opening(self):
-        self.assertTrue(user_suggestions.is_metric('What size of move counts as a real drop?'))
-        self.assertFalse(user_suggestions.is_metric('Why is performance declining?'))
-        svc = answer_service.Service(AnswerServiceTest.CFG, MockClient(), Retriever(DOCS, CHUNKS))
+    def test_general_question_has_no_opening(self):
         facts = {'object': {'kind': 'cluster'}, 'pillar': 'Performance', 'kpis': [_kpi('Cluster Performance', [92] * 200 + [50] * 88)]}
-        self.assertEqual(svc.answer({'question': 'What does Cluster Risk (%) actually measure?', 'facts': facts})['lead'], '')
-        self.assertNotEqual(svc.answer({'question': 'Why is performance declining?', 'facts': facts})['lead'], '')
+
+        def svc(reply):
+            return answer_service.Service(AnswerServiceTest.CFG, TopicTest.Recorder(asks_reply=reply), Retriever(DOCS, CHUNKS))
+        general, page = '{"page_values": false, "shape": "explain"}', '{"page_values": true, "shape": "diagnose"}'
+        self.assertEqual(svc(general).answer({'question': 'What does Cluster Risk (%) actually measure?', 'facts': facts})['lead'], '')
+        self.assertNotEqual(svc(page).answer({'question': 'Why is performance declining?', 'facts': facts})['lead'], '')
         seen = []
         orig = answer_service.question_text
         answer_service.question_text = lambda body, lead='': (seen.append(body['facts']), orig(body, lead))[1]
         try:
-            svc.answer({'question': 'What does Cluster Risk (%) actually measure?', 'facts': {**facts, 'parts_at_worst': {'parts': []}}})
+            svc(general).answer({'question': 'What does Cluster Risk (%) actually measure?',
+                                 'facts': {**facts, 'parts_at_worst': {'parts': []}}})
         finally:
             answer_service.question_text = orig
         self.assertEqual(set(seen[0]), {'object', 'pillar'})  # the page named, not its numbers

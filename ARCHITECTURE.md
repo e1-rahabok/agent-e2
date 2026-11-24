@@ -120,7 +120,7 @@ This is one level down from the Product group: how the agent and the harness dri
 |---|---|---|
 | Agent (code) | What to read (the reading plan), what to compute, whether to ask, whether the answer stands | - |
 | Model | How the question reads (the case) and what the reading set means for it (the answer) | 2 in the common case; up to 4 with a gap follow-up and a repair; n answer samples with consensus |
-| Service (code) | Topic, answer shape, opening, suggested questions | 0 in the common case; 1 for the topic when code cannot decide; up to 2 rewrites of a screen answer (data words, repeated figures) |
+| Service (code) | Topic, answer shape, opening, suggested questions | 1 for what the question asks (answer shape, page values); 1 more for the topic when code cannot decide; up to 2 rewrites of a screen answer (data words, repeated figures) |
 | Harness | Nothing on its own: tools, budgets, verifier | - |
 
 - The split stage by stage, and the evidence for it, are in [`harness/AGENT.md`](harness/AGENT.md), sections 2 and 3.
@@ -230,7 +230,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 ### Answer
 - Answer from the retrieved text first. Where it is silent, the model may answer from its own knowledge and says so; where the two differ, the knowledge base wins. Prefer mechanism and reason over a definition.
 - Cite each file `id` used; the benchmark checks the cited ids. The service turns a citation into the file's title, or removes it, before a person reads the answer (`answer_service.no_file_refs`).
-- The shape follows the question ([`harness/answer_shape.py`](harness/answer_shape.py)): explain (the mechanism, no page figures, no next steps), advise (the value, then the reason and the trade-off), diagnose (conclusion, evidence, mechanism, then what to check next), or general. Code reads the user's own words; the case's kind decides when code cannot tell.
+- The shape follows the question ([`harness/answer_shape.py`](harness/answer_shape.py)): explain (the mechanism, no page figures, no next steps), advise (the value, then the reason and the trade-off), diagnose (conclusion, evidence, mechanism, then what to check next), or general. The model reads the user's bare question in one call at temperature 0 and also decides whether it needs the page's values (page_values) or is about how a score works in general (no opening, no figures); keyword patterns did this before and missed new wordings. Unreadable reply: the page is kept and the case's kind decides the shape. Measured on [`benchmark/runner/screen_answer_check.py`](benchmark/runner/screen_answer_check.py).
 - On a screen, code writes the opening (`lead`) in plain words from the calculator's numbers, and the model continues from it without repeating its figures: one voice, exact numbers (PCM D-119).
 - Each file in the reading set shows its `status`. The answer prompt has no draft rule, and answers never mention review status (MISSION.md, D1). Release content is reviewed (284 of 285 knowledge files are draft ; project/plan.md, M6).
 - Use the terms of [`knowledge/glossary.md`](knowledge/glossary.md): preferred names, other names, confusable terms.
