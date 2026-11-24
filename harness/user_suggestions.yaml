@@ -9,6 +9,7 @@
 # Each question is one Agent E2 can answer from the page's numbers and its knowledge base: facts and the mechanism, never the fix.
 # Checked on the real model with PCM's page facts (2026-11-23). Not asked: what the page does not hold (peer hosts, a run-out
 # date: PCM shows no forecast).
+# Performance has shorter time (minutes to hours). Capacity uses longer time (days to months) when making a rightsizing decision
 
 performance:
   cluster:
@@ -58,7 +59,6 @@ performance:
   vm:
     good:
       - Does the good average hide a short peak?
-      - Is this VM oversized?
     medium:
       - Is the issue caused by this VM itself, or its parent ESXi host?
     bad:
