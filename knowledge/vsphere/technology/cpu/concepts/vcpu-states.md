@@ -48,6 +48,7 @@ stateDiagram-v2
 - Wait → Run: direct return to Run.
 - Run or Wait → Co-stop: a sibling vCPU is too far behind.
 - Co-stop → Ready: co-start. The vCPU must still get a thread.
+- Run → Zombie: the vCPU is removed, or the VM dies. Zombie is the last state; the vCPU then leaves the scheduler.
 - A CPU limit shows up inside Ready.
 - Idle is part of Wait.
 - When VM 1's vCPU is in Co-stop, Ready or Wait, the physical thread is free. VM 2 can run on it.

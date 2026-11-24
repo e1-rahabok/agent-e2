@@ -9,7 +9,7 @@ How Claude works in this repository. Read at the start of every session. The des
 
 ## Purpose
 - Knowledge base and harness for an AI assistant on private cloud operations (vSphere and VCF metrics first), running locally on enterprise GPU (one GPU is an ideal, not a constraint; up to four large GPUs are acceptable); customer data stays on site. Why it can work: [`MISSION.md`](MISSION.md).
-- Primary reader of `knowledge/`: the AI. The author reviews for QA.
+- Primary reader of `knowledge/`: the AI. The author reviews it for QA in that machine form, as the model gets it ([`project/tools/model_view.py`](project/tools/model_view.py)); no second copy is written for people.
 - Write at Level 400: mechanisms, reasons, trade-offs, edge cases. No Level 200 definitions. Assume the reader knows vSphere basics: cluster, DRS, resource pools, shares, reservations, limits, vCPU, NUMA.
 
 ## Rules for knowledge files
@@ -32,7 +32,7 @@ How Claude works in this repository. Read at the start of every session. The des
 - Ask the author only when the source text is ambiguous, contradicts official docs or the knowledge base, or the answer needs field experience. Do not ask the author to confirm virtualization basics.
 - No invented thresholds. Keep every `corrections` entry until the vendor document it corrects is updated. A row in `knowledge/catalog/thresholds-*.yaml` that has a `quote` quotes its knowledge file: when that text changes, update the row.
 - [`project/sources/`](project/sources) holds the source documents. The author adds them; Claude may edit them (author, 2026-11-14).
-- The knowledge is sourced from [`project/sources/`](project/sources) and https://isvara.io (the latest books and spreadsheets), stated once in KNOWLEDGE-ENGINEERING.md section 2. The knowledge base is a superset: never name the book or write "the source document" in knowledge files or their metadata; `source.document` is `Knowledge base` plus any vendor document (author, 2026-11-14). A file digested from a source note names the note in `source.path`; the note holds the evidence ([`project/sources/README.md`](project/sources/README.md)).
+- One master: the knowledge base. isvara.io (to be generated from it, next project) and the author's books (written by hand, informal style) are products for people, not sources (author, 2026-11-24). Extraction from the books is complete. New knowledge comes from [`project/sources/`](project/sources), stated once in KNOWLEDGE-ENGINEERING.md section 2. The knowledge base is a superset of the books: never name the book or write "the source document" in knowledge files or their metadata; `source.document` is `Knowledge base` plus any vendor document (author, 2026-11-14). A file digested from a source note names the note in `source.path`; the note holds the evidence ([`project/sources/README.md`](project/sources/README.md)).
 
 ## Working with the author
 - [`MISSION.md`](MISSION.md) holds goals and stretch targets, not hard rules. Few rules hold in IT operations management: challenge every assumption, the author's and the repository's included, when evidence says it blocks the mission.
@@ -40,7 +40,7 @@ How Claude works in this repository. Read at the start of every session. The des
 - Questions for the author go in [`project/author-questions.md`](project/author-questions.md), section Release 1.0 (blocks release 1.0) or Future release (later release), one entry each: ID, section, files, search strings, what the knowledge base says now, and an empty `Answer:` line. Do not list them elsewhere.
 - A bad answer the author reports is a type of question that fails, not one wording (author, 2026-11-24). Find the type and its cause. Prefer the model's reading over a new code rule (keyword patterns, regexes), and remove the rules it replaces. Add 20 or more wordings of the type, with neighbours that must not change, to [`benchmark/runner/screen_answer_check.yaml`](benchmark/runner/screen_answer_check.yaml); run [`screen_answer_check.py`](benchmark/runner/screen_answer_check.py) on the real model before and after, read the answers, and report the table. Then fix, verify and merge without asking; ask only for field experience or a change of scope.
 - About the book: give a verbatim search string. About a file: link it (the link tools turn file references into clickable GitHub links). Name the item to check (question, option letters, section).
-- Extract the book one Heading 3 at a time. Add that section's questions and continue; do not wait for answers.
+- Before proposing to remove, archive or replace anything: look at it, list every consumer (the model, code, the author as reviewer, isvara.io), and say what each one loses (author, 2026-11-24).
 - When the author corrects a wording mistake, add it to the Words to avoid table in [`project/knowledge-rules/vocabulary.md`](project/knowledge-rules/vocabulary.md); if users also say the word, add it to the Also called line of its entry in [`knowledge/glossary.md`](knowledge/glossary.md).
 - One English word per concept: the agent's vocabulary in [`knowledge/glossary.md`](knowledge/glossary.md), words to avoid in [`project/knowledge-rules/vocabulary.md`](project/knowledge-rules/vocabulary.md), repository terms in [`project/terms.md`](project/terms.md). A new term is added there as a proposal and flagged for the author before use.
 

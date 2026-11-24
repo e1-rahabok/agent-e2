@@ -73,7 +73,7 @@ flowchart LR
     VMout["VM to network<br/>TX / Egress / Outgoing"]
 ```
 
-- Reading the diagram: 100 packets arriving at a VM count as 100 RX at the driver, 100 ingress at the firewall, 100 incoming on a dashboard. The traffic in the other direction is TX, egress and outgoing.
+- Example: 100 packets (150 KB) arriving at a VM count as 100 RX at the driver layer (DMA ring buffer), 100 ingress at the policy layer (stateful firewall rule), 100 incoming on a monitoring dashboard. Same traffic, three vocabularies. The traffic in the other direction is TX, egress and outgoing.
 
 
 ## vCenter counters on switches and port groups

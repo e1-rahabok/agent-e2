@@ -24,6 +24,16 @@ No open question blocks release 1.0.
 
 ## Future release
 
+### Q261 · Health check · Is the log a performance check?
+
+- Files: [Health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-check.md), sections Order of checks and the chart; [flows.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/flows.md), the Order line.
+- Now: flows.md and the file's text give performance as contention, consumption, configuration, known bug. The chart had a fifth step, Log, after known bug. The model never sees the chart, so the chart now follows the text (2026-11-24).
+- Question: does the performance part of a health check read logs?
+  - A. No. Keep it as now.
+  - B. Yes, last, after known bug. Add it to the text and flows.md.
+- Recommended: A. Plan, Not doing: log analysis (logs are mostly about availability and security, not performance); availability and security already read logs.
+- Answer:
+
 ### Q258 · Capacity > Cluster Consumption · The grey band: when is a cluster underused?
 
 - Files: [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml), section sizing and its review note; [user_suggestions.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/user_suggestions.py).
