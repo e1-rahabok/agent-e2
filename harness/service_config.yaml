@@ -30,7 +30,7 @@ rerank: false
 web:
   enabled: false              # off in the service: the caller's live facts must not reach a web search (customer data stays on site)
 consensus_samples: 1
-context_window: 64000
+context_window: 128000             # the deployed model's window; the conversation is sent whole (MISSION.md, section 5)
 image_tokens: 1500
 primer:
   rules: true

@@ -84,7 +84,7 @@ web:                          # public web knowledge (harness/public_web_lookup.
 consensus_samples: 1          # multiple choice, Agent E2: n answer samples on one reading set; unanimous letters stand, else Unsure (harness/README.md, section Consensus).
                               # The benchmark keeps 1: score_report.py projects consensus of 3 exactly from the 5 runs, at a third of the cost. The deployed
                               # profile sets 3 (round of 2026-11-13, projected: confident-wrong multiple choice 10-18% -> 2-6%)
-context_window: 64000         # the deployed model's window (MISSION.md, section 5); a prompt above it is flagged in the trace (context_over)
+context_window: 128000        # the deployed model's window (MISSION.md, section 5; the conversation is sent whole); a prompt above it is flagged in the trace (context_over)
 image_tokens: 1500            # estimated prompt tokens per image, for the window check; re-check against the deployed model
 primer:                       # up-front blocks in Agent E2's answer prompt (harness/upfront_knowledge.py)
   rules: true                 # Level 300 misconceptions: the ## Misconceptions lines marked up_front in their files

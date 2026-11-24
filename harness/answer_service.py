@@ -6,7 +6,9 @@ Agent E2 owns the knowledge base, the reading plan, the flow executor and the mo
 
     POST /v1/answer
       {"question": "...", "facts": {...} (optional, JSON from the caller), "turns": [...] (optional, for the clarifying
-       round: [question, Agent E2's questions, the user's reply]), "role": "l1" | "l2" | "capacity" | "executive" (optional)}
+       round: [question, Agent E2's questions, the user's reply]), "history": [{"question": "...", "answer": "..."}, ...]
+       (optional: every earlier turn of the conversation, oldest first; the service holds no state, so the caller keeps the
+       conversation and sends all of it, uncut), "role": "l1" | "l2" | "capacity" | "executive" (optional)}
     -> 200 {"type": "answer" | "clarify", "content": "...", "questions": [...], "files_read": [...],
             "lead": "...", "computed": [...], "model": "...", "knowledge_commit": "..."}
     lead: the opening the person reads first, written by code from the calculator's numbers in plain words (empty when no
@@ -282,6 +284,16 @@ def question_text(body, lead=''):
     return q
 
 
+def conversation(history):
+    """The earlier turns the caller sent, checked: a list of {question, answer} strings, oldest first. Every turn is kept."""
+    if history is None:
+        return []
+    if not isinstance(history, list) or not all(isinstance(t, dict) and isinstance(t.get('question'), str)
+                                                and isinstance(t.get('answer'), str) for t in history):
+        raise ValueError('history must be a list of {"question": "...", "answer": "..."}')
+    return [{'question': t['question'].strip(), 'answer': t['answer'].strip()} for t in history if t['question'].strip()]
+
+
 def pipeline_words(text):
     return sorted({m.group(0).lower() for m in PIPELINE_WORDS.finditer(text or '')})
 
@@ -325,19 +337,23 @@ class Service:
         return user_suggestions.suggest(body.get('facts'), self.cat, self.suggestions, screen_time)
 
     def answer(self, body):
+        history = conversation(body.get('history'))
         # A metric question of the page (user_suggestions.yaml, metric) asks how a KPI works: it is answered from the knowledge
         # base, with the page named but not its numbers. With the numbers, the model opened with what pulled the score down.
         if user_suggestions.is_metric(body.get('question'), self.suggestions) and isinstance(body.get('facts'), dict):
             body = {**body, 'facts': {k: v for k, v in body['facts'].items() if k in METRIC_FACTS}}
             lead = ''
+        elif history:
+            lead = ''  # the opening reads the page once, at the start of the conversation; a later turn does not repeat it
         else:
             lead = self.lead(body.get('facts'), body.get('question'))
+        followup = bool(history) and expert_agent.is_followup(self.docs, (body.get('question') or '').strip())
         turns = body.get('turns')
         if turns:
             turns = [question_text({**body, 'question': turns[0]}, lead)] + list(turns[1:])
         else:
             turns = [question_text(body, lead)]
-        out = answer_modes.converse('agent-e2', self.client, self.model, turns, [], self.cfg, self.retriever)
+        out = answer_modes.converse('agent-e2', self.client, self.model, turns, [], self.cfg, self.retriever, history, followup)
         computed = [line for s in out['trace'] if s.get('action') == 'compute' for line in (s.get('output') or [])]
         content = no_file_refs(out['result'].get('content'), self.docs)
         if body.get('facts') and out['type'] == 'answer':

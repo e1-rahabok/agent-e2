@@ -179,7 +179,7 @@ s4 = box(X4, ys, W4, '4 Ask? (kind chat)', ['allowed when the case has', 'a miss
 s5p = box(X5, ys, W5, 'Prompt', ['system: rules by kind', '+ ANSWER_RULES', '+ OPEN_SHAPE (open kinds)',
                                  '+ LABEL_ORDER (label hit)', '+ up-front block', 'user: case JSON, Computed',
                                  '(exact), coverage note,', 'Knowledge base: reading set,', 'web block (untrusted),',
-                                 'question + images', 'over_window: flag > 64K'], 'stage')
+                                 'question + images', 'over_window: flag > 128K'], 'stage')
 s5 = box(X6, ys, W6, '5 Answer', ['expert_agent.write', 'card sampling, 4,000', 'tokens max', 'ANSWER + REASON,',
                                   'a file id per claim;', 'knowledge base first,', 'it wins on conflict'], 'stage')
 s6 = box(X7, ys, W7, '6 Check', ['expert_agent.gaps: the draft names a', 'metric file not in the reading set:',
@@ -207,8 +207,8 @@ band(1030, 200, 'Model', ['harness/model_client.py:', 'the only place the', 'end
 cl = box(X1, 1062, 470, 'model_client.py client', ['GatewayClient: benchmark, Vercel AI Gateway',
                                           'local OpenAI-compatible server at the site', 'ParamClient: the model card sampling',
                                           'deterministic=True: temperature 0 (the case)', 'MockClient: unit tests, offline'], 'model', mono_title=True)
-box(X3 - 15, 1062, 225, 'Open-weight vision LLM', ['one GPU stretch target, up to 4', 'vLLM, llama.cpp or Ollama',
-                                                    'context window 64K', 'reads screenshot pixels'], 'model', rx=16)
+box(X3 - 15, 1062, 225, 'Open-weight vision LLM', ['enterprise GPU, up to 4', 'vLLM, llama.cpp or Ollama',
+                                                    'context window 128K', 'reads screenshot pixels'], 'model', rx=16)
 box(X4 + 30, 1062, 175, 'Embedding model', ['qwen3-embedding-0.6b', 'on CPU, for hybrid', 'search (knowledge_search.py)'], 'model', rx=16)
 
 # ---------------------------------------------------------------- outputs
