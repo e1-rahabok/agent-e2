@@ -80,6 +80,16 @@ flowchart LR
 
 ## 2. Where the knowledge lives
 
+### What the knowledge is
+
+![Agent E2 Knowledge: the method and the product, the layer stack, three ways to find a fact, the anatomy of a file, and the five paths to the model](images/knowledge-structure.svg)
+
+- Read it top to bottom. 1 the two bodies and what they share; 2 the layers of the product; 3 the slices of one fact; 4 the anatomy of a file; 5 the paths to the model, drawn in detail further down.
+- The method (SP5 Framework) says how to operate VCF. The product says what VCF is and does. Every answer uses both.
+- A metric lives in the layer that produces it, not in the object that stores it: a VM is a virtual motherboard, the Guest OS is a separate layer.
+- The folder tree holds one slice of a fact. Tags and links hold the others.
+- Source: [`project/tools/knowledge_diagram.py`](project/tools/knowledge_diagram.py) draws the SVG; the file counts in it are typed in, so update them with [`project/tools/knowledge_stats.py`](project/tools/knowledge_stats.py) and run it from the repository root.
+
 - Agent E2 combines two bodies of knowledge in every answer, the same two the author carries as a consultant:
   - the method, the SP5 Framework: how to operate VCF, in VCF terms and examples (`sp5-framework/`);
   - the product, VCF 9.x: what each component is and does (`vsphere/`, `vcf-operations/`), and the Guest OS above the VM (`guest-os/`).
@@ -90,6 +100,8 @@ flowchart LR
 - Sources are stated once, here. Extraction from the author's books and spreadsheets is complete. New knowledge comes from [`project/sources/`](project/sources): source notes, vendor documents, the environment. The knowledge base is a superset of the books: it adds vendor documents, mechanisms and corrections. A knowledge file therefore never names the author's books or spreadsheets. Its `source.document` is `Knowledge base`, plus any vendor document with its version, which can go stale. Its `source.path` may name a source note (section 6). `corrections` record differences from vendor documents only.
 - Scope is VCF only, with nothing about competitor products. Folder rules: [`project/knowledge-rules/placement.md`](project/knowledge-rules/placement.md).
 - Agent E2 is purpose-built, so its domain knowledge is not only in what search returns. Up-front text, code and the agent's instructions carry VMware knowledge too. All of it is deployed to the site, and the author reviews all of it.
+### How a fact reaches the model
+
 - The home of a fact is decided by how it must reach the model, not by its subject. There are five paths, each for a failure the others cannot prevent:
 
 ```mermaid
