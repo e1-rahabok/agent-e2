@@ -16,6 +16,10 @@ flowchart TD
   S4 -->|no| S6[6. Check VM sizing and in-guest causes]
   S4 -->|yes| S5[5. Why does DRS not move VMs off the host?]
   S5 --> E5[Remove the blocker or lower the threshold]
+  S6 -->|CPU| T6a["VM CPU Contention or Latency is high"]
+  S6 -->|memory| T6b["VM memory latency (contention) is high"]
+  click T6a "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md" "VM CPU Contention or Latency is high" _blank
+  click T6b "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/vm-memory-latency-high.md" "VM memory latency (contention) is high" _blank
 ```
 
 ## Checks, in order

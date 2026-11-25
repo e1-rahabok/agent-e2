@@ -20,6 +20,16 @@ flowchart TD
   S6 --> S7
   S7 --> S8[8. Configuration]
   S8 --> S9[9. Efficiency: sizing]
+  S3 -.->|not green| T3["VM CPU Contention or Latency is high"]
+  S4 -.->|not green| T4["VM memory latency (contention) is high"]
+  S5 -.->|not green| T5["VM disk latency is high"]
+  S6 -.->|receive drops| T6["vNIC receive drops"]
+  S9 -.->|oversized| D9["Downsizing a large, idle VM"]
+  click T3 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md" "VM CPU Contention or Latency is high" _blank
+  click T4 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/vm-memory-latency-high.md" "VM memory latency (contention) is high" _blank
+  click T5 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/troubleshooting/vm-storage-performance-checks.md" "VM disk latency is high" _blank
+  click T6 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/vnic-rx-drops.md" "vNIC receive drops" _blank
+  click D9 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/decision-tree/oversized-vm-downsizing.md" "Downsizing a large, idle VM" _blank
 ```
 
 ## Principle

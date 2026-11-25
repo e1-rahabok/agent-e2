@@ -12,6 +12,7 @@ flowchart TD
   S2 --> S3[3. Power management and frequency]
   S3 --> S4[4. Sibling threads busy?]
   S4 --> E4[Frequency, Hyper-Threading or System: not vCPU count]
+  click E1 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md" "VM CPU Contention or Latency is high" _blank
 ```
 
 ## Checks, in order
