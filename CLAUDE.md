@@ -6,6 +6,7 @@ How Claude works in this repository. Read at the start of every session. The des
 - Read [`project/plan.md`](project/plan.md) first: mission, milestones, decisions, what we are not doing, open work.
 - Check every change against the plan. Say so when a request conflicts with an earlier decision, or when a change adds to a duplicate instead of removing it.
 - Update [`project/plan.md`](project/plan.md) with every change set.
+- Before writing any text, read [`project/knowledge-rules/writing.md`](project/knowledge-rules/writing.md): knowledge, documents, diagram labels, commit messages, PR text. Before every commit, reread what you wrote against it and against `avoid_ai_speak`: no slogans, no "X, not Y", headings as noun phrases. Lint does not check style.
 
 ## Purpose
 - Knowledge base and harness for an AI assistant on private cloud operations (vSphere and VCF metrics first), running locally on enterprise GPU (one GPU is an ideal, not a constraint; up to four large GPUs are acceptable); customer data stays on site. Why it can work: [`MISSION.md`](MISSION.md).
