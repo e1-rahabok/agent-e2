@@ -62,14 +62,14 @@ out.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" vi
 out.append('<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" '
            'orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555555"/></marker></defs>')
 out.append(f'<rect width="{W}" height="{H}" fill="#ffffff"/>')
-t(24, 34, 'Agent E2, Knowledge: what "Private Cloud Operations Management with VMware Cloud Foundation" knowledge is made of', 20, 'bold', '#111')
-t(24, 54, '288 files, about 327K tokens. Two bodies of knowledge, one layered product, three ways to find a fact, '
-          'one anatomy for every file. Read top to bottom.', 12.5, 'normal', '#444')
+t(24, 34, 'Agent E2 knowledge structure', 20, 'bold', '#111')
+t(24, 54, 'Private Cloud Operations Management with VMware Cloud Foundation: 288 files, about 327K tokens. '
+          'Bands from top to bottom: bodies, layers, slices, file anatomy, paths to the model.', 12.5, 'normal', '#444')
 
 # ------------------------------------------------------------------ 1. two bodies
 y1 = 70
-band(y1, 345, 1, 'Two bodies of knowledge, in every answer',
-     'The method says how to operate VCF. The product says what VCF is and does. Shared vocabulary and exact values serve both.')
+band(y1, 345, 1, 'Method and product',
+     'Every answer uses both. The method covers how to operate VCF. The product covers what VCF is and does. Vocabulary and exact values serve both.')
 by = y1 + 68
 # Method
 box(30, by, 520, 'Method: the SP5 Framework', [], 'method', h=262)
@@ -89,7 +89,7 @@ for n, (a, b, c) in enumerate(subs):
         t(190, yy + 28, c, 11, 'normal', '#0d2a4d')
 # Product
 box(580, by, 760, 'Product: VCF 9.x', [], 'prod', h=262)
-t(590, by + 38, 'What each component is and does, down to the counter.', 11.5, 'normal', '#173a16')
+t(590, by + 38, 'What each component is and does, with its counters.', 11.5, 'normal', '#173a16')
 # vsphere
 out.append(f'<rect x="592" y="{by + 50}" width="736" height="124" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>')
 t(602, by + 68, 'vsphere/   204 files', 12, 'bold', '#173a16', mono=True)
@@ -114,24 +114,24 @@ t(978, by + 202, 'guest-os/   16 files', 12, 'bold', '#4a2400', mono=True)
 t(978, by + 219, 'Windows and Linux: a separate layer, not Broadcom', 10.5, 'normal', '#4a2400')
 t(978, by + 233, 'products, not part of the VM. cpu, memory, storage, system.', 10.5, 'normal', '#4a2400')
 # shared
-box(1370, by, 400, 'Shared by both', [], 'shared', h=262)
+box(1370, by, 400, 'Shared', [], 'shared', h=262)
 out.append(f'<rect x="1382" y="{by + 36}" width="376" height="100" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>')
 t(1392, by + 54, 'glossary.md   1 file', 12, 'bold', '#2a1650', mono=True)
 t(1392, by + 72, 'The agent\'s vocabulary: one English word per', 11, 'normal', '#2a1650')
 t(1392, by + 86, 'concept, other names users say, confusable', 11, 'normal', '#2a1650')
 t(1392, by + 100, 'pairs (Usage vs Utilization, KPI vs SLA).', 11, 'normal', '#2a1650')
-t(1392, by + 122, 'Wrong words produce wrong reasoning.', 11, 'bold', '#2a1650')
+t(1392, by + 122, 'One English word per concept.', 11, 'bold', '#2a1650')
 out.append(f'<rect x="1382" y="{by + 146}" width="376" height="104" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>')
 t(1392, by + 164, 'catalog/   9 YAML files', 12, 'bold', '#2a1650', mono=True)
 t(1392, by + 182, 'Exact values, loaded into SQLite, not chunked:', 11, 'normal', '#2a1650')
 t(1392, by + 196, 'vCenter counters, esxtop fields, thresholds,', 11, 'normal', '#2a1650')
 t(1392, by + 210, 'object model, user terms.', 11, 'normal', '#2a1650')
-t(1392, by + 232, 'A number must not depend on retrieval luck.', 11, 'bold', '#2a1650')
+t(1392, by + 232, 'A lookup by key returns the exact value.', 11, 'bold', '#2a1650')
 
 # ------------------------------------------------------------------ 2. layers
 y2 = y1 + 345 + 15
-band(y2, 225, 2, 'The product is a stack: a metric lives in the layer that produces it',
-     'Not in the object that stores it. A VM is a virtual motherboard; the Guest OS above it is a separate layer. Tag: layer.')
+band(y2, 225, 2, 'Layers of the product',
+     'Tag: layer. A VM is a virtual motherboard and the Guest OS above it is a separate layer, so the layer that produces a metric decides its home.')
 ly = y2 + 68
 layers = [
     ('guest', 'guest-os', 'Windows or Linux inside the VM', 'Not a Broadcom product, not part of the VM.', 'Folder: knowledge/guest-os/'),
@@ -149,15 +149,15 @@ for n, (k, a, b, c, d) in enumerate(layers):
     t(xx + 10, ly + 72, d, 11, 'normal', ink)
     if n < 3:
         arrow([(xx + 422, ly + 52), (xx + 433, ly + 52)])
-t(30, ly + 124, 'Consumer and provider show up as two vantage points on one resource: a consumer VM seen from the virtual motherboard, '
-                'the provider ESXi seen from the hypervisor. Same word, different layer, different meaning.', 11.5, 'normal', '#333')
-t(30, ly + 142, 'Why it matters: "ESXi CPU Ready is high, so the host waits for CPU" is a wrong reading, because Ready is a consumer metric. '
+t(30, ly + 124, 'Vantage points: a consumer VM is seen from the virtual motherboard, and the provider ESXi from the hypervisor. '
+                'The same word can mean different things in two layers.', 11.5, 'normal', '#333')
+t(30, ly + 142, 'Example: reading ESXi CPU Ready as the host waiting for CPU is wrong, because Ready is a consumer metric. '
                 'The layer tag keeps the two apart in search.', 11.5, 'normal', '#333')
 
 # ------------------------------------------------------------------ 3. slices
 y3 = y2 + 225 + 15
-band(y3, 312, 3, 'One fact, three ways to find it',
-     'The folder tree holds one slice. Tags and links hold the others. Retrieval filters on any tag; the model follows any link.')
+band(y3, 312, 3, 'Slices of one fact',
+     'The folder tree holds one slice. Tags and links hold the others. Retrieval filters on any tag, and the model follows any link.')
 sy = y3 + 68
 box(560, sy, 680, 'VM CPU Ready', [
     'knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/ready.md',
@@ -175,12 +175,12 @@ for n, (a, b, c, d, e) in enumerate(slices):
     t(xx + 10, sy + 177, e, 11.5, 'normal', '#222')
     arrow([(900 if n == 1 else (660 if n == 0 else 1140), sy + 64), (xx + 280, sy + 99)])
 t(30, sy + 232, 'Tags: scope, technology, pillar, product, object, layer, instance, metric_class. '
-                'Links: internal_derive, same_name, same_meaning, related. Together they are the expert\'s map of what is read together.', 11.5, 'normal', '#333')
+                'Links: internal_derive, same_name, same_meaning, related. Together they list which files are read together.', 11.5, 'normal', '#333')
 
 # ------------------------------------------------------------------ 4. file anatomy
 y4 = y3 + 312 + 15
-band(y4, 340, 4, 'One file: the same anatomy for every fact',
-     'One fact per bullet, so a mistake stays on one line. Templates keep section names the same, so a question finds the same kind of section everywhere.')
+band(y4, 340, 4, 'Anatomy of a file',
+     'One fact per bullet, so a mistake sits on one line. Templates fix the section names, so one question finds the same section in every file.')
 ay = y4 + 68
 # kinds
 box(30, ay, 430, 'Seven kinds of file (retriever_guide)', [], 'data', h=256)
@@ -196,7 +196,7 @@ for n, (a, c, d) in enumerate(kinds):
     t(40, yy + 12, a, 11.5, 'bold', '#222', mono=True)
     t(190, yy + 12, c, 11.5, 'bold', '#1f5fae', 'end')
     t(200, yy + 12, d, 10.5, 'normal', '#222')
-t(40, ay + 246, 'The harness reads the kind, not the folder.', 11, 'bold', '#222')
+t(40, ay + 246, 'The harness reads the kind from the metadata.', 11, 'bold', '#222')
 # anatomy
 box(490, ay, 400, 'Inside a file', [], 'prod', h=256)
 parts = [('# Title', 'A name a question uses.'),
@@ -211,11 +211,11 @@ for n, (a, d) in enumerate(parts):
     t(508, yy + 24, d, 10.5, 'normal', '#173a16')
 t(500, ay + 244, 'A ## section is the unit of retrieval.', 11, 'bold', '#173a16')
 # metadata
-box(920, ay, 850, 'What the metadata block holds', [], 'shared', h=256)
-groups = [('Find it', ['scope  technology  pillar  product', 'object  layer  instance  metric_class'], 'Tags filter retrieval.'),
-          ('Link it', ['internal_derive  same_name', 'same_meaning  related'], 'Links choose what is read together.'),
-          ('Trust it', ['source.document  source.path  status', 'corrections  review_notes'], 'Vendor version, draft or reviewed, what to check.'),
-          ('Deliver it', ['up_front  images'], 'The marked misconception goes with every question.')]
+box(920, ay, 850, 'Metadata block', [], 'shared', h=256)
+groups = [('Search tags', ['scope  technology  pillar  product', 'object  layer  instance  metric_class'], 'Tags filter retrieval.'),
+          ('Links', ['internal_derive  same_name', 'same_meaning  related'], 'Links choose what is read together.'),
+          ('Provenance', ['source.document  source.path  status', 'corrections  review_notes'], 'Vendor version, draft or reviewed, what to check.'),
+          ('Delivery', ['up_front  images'], 'The marked misconception goes with every question.')]
 for n, (a, ls, d) in enumerate(groups):
     xx = 932 + (n % 2) * 420
     yy = ay + 38 + (n // 2) * 108
@@ -227,14 +227,14 @@ for n, (a, ls, d) in enumerate(groups):
 
 # ------------------------------------------------------------------ 5. five paths
 y5 = y4 + 340 + 15
-band(y5, 150, 5, 'The home of a fact follows its path to the model',
-     'Five paths, each for a failure the others cannot prevent. One home per fact; the next diagram, in the next subsection, shows them in detail.')
+band(y5, 150, 5, 'Paths to the model',
+     'Five paths, each for a failure the others cannot prevent. Each fact has one home. The next diagram draws the paths in detail.')
 py = y5 + 68
 paths = [('Retrieved', 'Mechanisms, metrics, flows', 'knowledge/**/*.md'),
          ('Looked up exactly', 'Units, rollups, thresholds', 'knowledge/catalog/*.yaml'),
          ('Given up front', 'Widest misconceptions, pairs', 'up_front lines + glossary'),
          ('Executed as code', 'Arithmetic, answer checks', 'harness/*.py'),
-         ('Instructed', 'Conduct for every answer', 'answer_modes.py, expert_agent.py')]
+         ('Agent instructions', 'Conduct for every answer', 'answer_modes.py, expert_agent.py')]
 for n, (a, b, c) in enumerate(paths):
     xx = 30 + n * 350
     box(xx, py, 335, f'{n + 1}  {a}', [b, c], 'data', h=64)
