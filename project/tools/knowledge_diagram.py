@@ -66,11 +66,19 @@ t(24, 34, 'Agent E2 knowledge structure', 20, 'bold', '#111')
 t(24, 54, 'Knowledge of private cloud operations management with VMware Cloud Foundation: 288 files, about 327K tokens. '
           'Bands: method and product, layers, slices of one fact, anatomy of a file, paths to the model.', 12.5, 'normal', '#444')
 
+# colour key: one meaning per colour, in every band
+lx = 1130
+for label, kind in (('Method (SP5 Framework)', 'method'), ('Product (VMware, hardware)', 'prod'), ('Guest OS', 'guest'), ('Applies to all', 'data')):
+    fill, stroke, ink = C[kind]
+    out.append(f'<rect x="{lx}" y="22" width="14" height="14" rx="3" fill="{fill}" stroke="{stroke}" stroke-width="1.4"/>')
+    t(lx + 20, 34, label, 11.5, 'normal', '#333')
+    lx += 20 + len(label) * 6.3 + 22
+
 # ------------------------------------------------------------------ 1. method and product
 y1 = 70
 B1 = 384
 band(y1, B1, 1, 'Method | Product',
-     'Method explains how private cloud is managed. Product is the knowledge of the IT products involved. Each has its supporting files.')
+     'Method explains how private cloud is managed. Product is the knowledge of the IT products involved. Each has supporting files, drawn with a dashed outline.')
 by = y1 + 68
 BH = 304
 # Method
@@ -131,7 +139,7 @@ layers = [
     ('guest', 'guest-os', 'Windows or Linux inside the VM', 'Not a Broadcom product, not part of the VM.', 'Folder: knowledge/guest-os/'),
     ('prod', 'virtual-motherboard', 'The VM as the hypervisor presents it', 'Example: vCPU Ready, the consumer view.', 'Folder: technology/*/metrics/virtual-motherboard/'),
     ('prod', 'hypervisor', 'ESXi: kernel worlds, schedulers, overhead', 'The provider view of the same resource.', 'Folder: vsphere/architecture/ and metrics/host/'),
-    ('data', 'physical', 'Cores, memory, NICs, disks', 'The hardware under the hypervisor.', 'Tag only: no folder of its own.'),
+    ('prod', 'physical', 'Cores, memory, NICs, disks', 'The hardware under the hypervisor.', 'Tag only: no folder of its own.'),
 ]
 for n, (k, a, b, c, d) in enumerate(layers):
     xx = 30 + n * 435
@@ -163,10 +171,12 @@ slices = [
 ]
 for n, (a, b, c, d, e) in enumerate(slices):
     xx = 30 + n * 590
-    box(xx, sy + 100, 560, f'{a}   ({b})', [], 'data', h=100)
-    t(xx + 10, sy + 142, c, 13, 'bold', '#222', mono=True)
-    t(xx + 10, sy + 162, d, 11.5, 'normal', '#222')
-    t(xx + 10, sy + 177, e, 11.5, 'normal', '#222')
+    kind = 'method' if a == 'Pillar' else 'prod'  # the pillars belong to the SP5 Framework
+    ink = C[kind][2]
+    box(xx, sy + 100, 560, f'{a}   ({b})', [], kind, h=100)
+    t(xx + 10, sy + 142, c, 13, 'bold', ink, mono=True)
+    t(xx + 10, sy + 162, d, 11.5, 'normal', ink)
+    t(xx + 10, sy + 177, e, 11.5, 'normal', ink)
     arrow([(900 if n == 1 else (660 if n == 0 else 1140), sy + 64), (xx + 280, sy + 99)])
 t(30, sy + 232, 'Tags: scope, technology, pillar, product, object, layer, instance, metric_class. '
                 'Links: internal_derive, same_name, same_meaning, related. Together they list which files are read together.', 11.5, 'normal', '#333')
@@ -188,11 +198,11 @@ kinds = [('metric-meaning', '107', 'What does this number mean on this object?')
 for n, (a, c, d) in enumerate(kinds):
     yy = ay + 34 + n * 29
     t(40, yy + 12, a, 11.5, 'bold', '#222', mono=True)
-    t(190, yy + 12, c, 11.5, 'bold', '#1f5fae', 'end')
+    t(190, yy + 12, c, 11.5, 'bold', '#222', 'end')
     t(200, yy + 12, d, 10.5, 'normal', '#222')
 t(40, ay + 246, 'The harness reads the kind from the metadata.', 11, 'bold', '#222')
 # anatomy
-box(490, ay, 400, 'Inside a file', [], 'prod', h=256)
+box(490, ay, 400, 'Inside a file', [], 'data', h=256)
 parts = [('# Title', 'A name a question uses.'),
          ('## Sections', 'Meaning, Formula, Includes / excludes, Reason.'),
          ('## Misconceptions', 'A wrong reading in the user\'s words, and its fix.'),
@@ -200,12 +210,12 @@ parts = [('# Title', 'A name a question uses.'),
          ('## Metadata (yaml)', 'Last. Tags, links, provenance.')]
 for n, (a, d) in enumerate(parts):
     yy = ay + 40 + n * 36
-    out.append(f'<rect x="500" y="{yy - 4}" width="380" height="32" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>')
-    t(508, yy + 11, a, 11.5, 'bold', '#173a16', mono=True)
-    t(508, yy + 24, d, 10.5, 'normal', '#173a16')
-t(500, ay + 244, 'A ## section is the unit of retrieval.', 11, 'bold', '#173a16')
+    out.append(f'<rect x="500" y="{yy - 4}" width="380" height="32" rx="4" fill="#ffffff" stroke="#666666" stroke-width="1"/>')
+    t(508, yy + 11, a, 11.5, 'bold', '#222', mono=True)
+    t(508, yy + 24, d, 10.5, 'normal', '#222')
+t(500, ay + 244, 'A ## section is the unit of retrieval.', 11, 'bold', '#222')
 # metadata
-box(920, ay, 850, 'Metadata block', [], 'shared', h=256)
+box(920, ay, 850, 'Metadata block', [], 'data', h=256)
 groups = [('Search tags', ['scope  technology  pillar  product', 'object  layer  instance  metric_class'], 'Tags filter retrieval.'),
           ('Links', ['internal_derive  same_name', 'same_meaning  related'], 'Links choose what is read together.'),
           ('Provenance', ['source.document  source.path  status', 'corrections  review_notes'], 'Vendor version, draft or reviewed, what to check.'),
@@ -213,11 +223,11 @@ groups = [('Search tags', ['scope  technology  pillar  product', 'object  layer 
 for n, (a, ls, d) in enumerate(groups):
     xx = 932 + (n % 2) * 420
     yy = ay + 38 + (n // 2) * 108
-    out.append(f'<rect x="{xx}" y="{yy}" width="404" height="96" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>')
-    t(xx + 10, yy + 18, a, 12.5, 'bold', '#2a1650')
+    out.append(f'<rect x="{xx}" y="{yy}" width="404" height="96" rx="4" fill="#ffffff" stroke="#666666" stroke-width="1"/>')
+    t(xx + 10, yy + 18, a, 12.5, 'bold', '#222')
     for m, l in enumerate(ls):
-        t(xx + 10, yy + 38 + m * 15, l, 11, 'normal', '#2a1650', mono=True)
-    t(xx + 10, yy + 82, d, 11, 'normal', '#2a1650')
+        t(xx + 10, yy + 38 + m * 15, l, 11, 'normal', '#222', mono=True)
+    t(xx + 10, yy + 82, d, 11, 'normal', '#222')
 
 # ------------------------------------------------------------------ 5. five paths
 y5 = y4 + 340 + 15
