@@ -1,7 +1,7 @@
 # Knowledge engineering
 
-This document describes what Agent E2 knows, how each kind of knowledge reaches the model, and why it is shaped that way. It is the design overview for reviewers; the detailed rules for writers are modules in [project/knowledge-rules/](project/knowledge-rules/). Not indexed.
-Related reading: why the system can win is in [MISSION.md](MISSION.md); how the parts run, including ingest and indexing, in [ARCHITECTURE.md](ARCHITECTURE.md); what the agent is told about the knowledge base, in [harness/AGENT.md](harness/AGENT.md); the plan and open gaps, in [project/plan.md](project/plan.md).
+This document describes the framework to get VMware knowledge codified. How human expertise and experience becomes purpose-built for machine (code + LLM). The output files is not designed for human.
+It is the design overview for reviewers; the detailed rules for writers are modules in [project/knowledge-rules/](project/knowledge-rules/). 
 
 ## From expertise to knowledge the model reads
 
