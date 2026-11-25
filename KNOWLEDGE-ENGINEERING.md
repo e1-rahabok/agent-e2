@@ -7,6 +7,43 @@ Related reading: why the system can win is in [MISSION.md](MISSION.md); how the 
 
 ![Agent E2 knowledge workflow: sources, source note, codify, check and use by the AI, with a loop from wrong answers back to the source note](images/knowledge-workflow.svg)
 
+<details>
+<summary>Text of the diagram, for readers that cannot see it</summary>
+
+**From expertise to knowledge the model reads.** Five stages. A wrong answer is traced to its cause and fixed at the source.
+Colour key: grey = Source or other system; green = Knowledge; purple = Check or proof; blue = Agent and harness; orange = Model.
+
+Boxes, nested as drawn:
+- n1 **1  Sources**
+  - n2 **Books, spreadsheets, diagrams** (Source or other system): The author's own material.
+  - n3 **Documentation** (Source or other system): Manuals, white papers, expert answers.
+  - n4 **Environment** (Source or other system): Screenshots, API, GUI, lab tests.
+- n5 **2  Source note**: project/sources/
+  - n6 **One note per topic** (Source or other system): A few pages. Each claim about vendor behaviour, and each measured number, is tied to its evidence.
+- n7 **3  Codify**: One form per kind, one home per fact
+  - n8 **Markdown** (Knowledge): Mechanisms, misconceptions, flows.
+  - n9 **Catalog YAML** (Knowledge): Counters, thresholds, object model.
+  - n10 **Tags and links** (Knowledge): The expert's map: which files are read together.
+- n11 **4  Check**
+  - n12 **Lint** (Check or proof): On every merge.
+  - n13 **Retrieval check and benchmark** (Check or proof): Are the right files found, and does the whole system answer correctly?
+  - n14 **Author review** (Check or proof): Status reviewed: the gate of release 1.0.
+- n15 **5  Used by the AI**: Drafts are served with their status. | Release 1.0 ships only reviewed files.
+  - n16 **Agent and harness** (Agent and harness): Five paths to the model.
+  - n17 **Model** (Model): Reads, applies and answers with citations.
+
+Arrows (from, to, label):
+- n16 Agent and harness --> n17 Model
+- n1 1  Sources --> n5 2  Source note
+- n5 2  Source note --> n7 3  Codify
+- n7 3  Codify --> n11 4  Check
+- n11 4  Check --> n15 5  Used by the AI
+- n15 5  Used by the AI ..> n5 2  Source note: a wrong answer is traced to a missing fact, a retrieval miss or a model error
+
+Arrows: `-->` solid, `..>` dashed.
+
+</details>
+
 - Experts hold judgment, not definitions. Each kind of judgment gets its own form: prose for reasons, misconception lines for wrong readings, YAML for exact numbers, and numbered steps for the order of checks.
 - Tags and links carry the expert's mental map: which files must be read together.
 - Every file passes lint before it is merged. Draft files are served before the author has reviewed them, with their status in the reading set; release 1.0 ships only reviewed files ([project/plan.md](project/plan.md), M6). Section 7 says how review progress is tracked.
@@ -54,18 +91,147 @@ Related reading: why the system can win is in [MISSION.md](MISSION.md); how the 
 
 ![Agent E2 knowledge structure: method and product, layers, slices of one fact, anatomy of a file, paths to the model](images/knowledge-structure.svg)
 
+<details>
+<summary>Text of the diagram, for readers that cannot see it</summary>
+
+**Agent E2 knowledge structure.** Knowledge of private cloud operations management with VMware Cloud Foundation: 288 files, about 327K tokens. Bands: method and product, layers, slices of one fact, anatomy of a file, paths to the model.
+Colour key: blue = Method (SP5 Framework); green = Product (VMware, hardware); orange = Guest OS; grey = Applies to all.
+
+Boxes, nested as drawn:
+- n1 **Method | Product**: 1 | Method explains how private cloud is managed. Product is the knowledge of the IT products involved. Each has supporting files, drawn with a dashed outline.
+  - n2 **Method: IT Operations Framework** (Method (SP5 Framework)): The SP5 Framework: how private cloud is managed, with VCF terms and examples. | knowledge/sp5-framework/   57 files
+    - n3 **concepts/  14**: the framework across pillars: health check, SLAs, class of service, modelling
+    - n4 **observability/  13**: how to read telemetry: input types, interval, units, Triple See Method
+    - n5 **outputs/  13**: how insight reaches people: alerts, dashboards, reports, NOC screen
+    - n6 **capacity/  12**: supply, demand, overcommit, forecasting, planning, sizing, reclamation
+    - n7 **performance/  5**: KPI design, KPI vs SLA, noisy neighbour
+    - n8 **glossary.md  1**: supporting file: one English word per concept, other names users say, confusable pairs such as Usage vs Utilization
+  - n9 **Product: IT products** (Product (VMware, hardware)): VMware Cloud Foundation, Windows and Linux. Hardware appears as the physical layer under ESXi.
+    - n10 **vsphere/   204 files**
+      - n11 **architecture/  7** (Product (VMware, hardware)): what every metric depends on: provider/consumer, overhead
+      - n12 **technology/  150** (Product (VMware, hardware)): raw metrics by technology: cpu gpu memory storage network
+      - n13 **object-types/  39** (Product (VMware, hardware)): content by object type: vm, esxi, cluster ...
+      - n14 **tools/  8** (Product (VMware, hardware)): how tools show counters: esxtop, vSphere Client
+    - n15 **vcf-operations/   10 files**: The product VCF Operations: its role, alert definitions, report suite, dashboards and features as built.
+    - n16 **guest-os/   16 files** (Guest OS): Windows and Linux above the VM: a separate layer, not VMware products. cpu, memory, storage, system.
+    - n17 **catalog/   9 YAML files**: supporting files: exact values loaded into SQLite and looked up by key: vCenter counters, esxtop fields, thresholds, object model, user terms.
+- n18 **Layers of the product**: 2 | Tag: layer. A VM is a virtual motherboard and the Guest OS above it is a separate layer, so the layer that produces a metric decides its home. | Vantage points: a consumer VM is seen from the virtual motherboard, and the provider ESXi from the hypervisor. The same word can mean different things in two layers. | Example: reading ESXi CPU Ready as the host waiting for CPU is wrong, because Ready is a consumer metric. The layer tag keeps the two apart in search.
+  - n19 **guest-os** (Guest OS): Windows or Linux inside the VM Not a Broadcom product, not part of the VM. Folder: knowledge/guest-os/
+  - n20 **virtual-motherboard** (Product (VMware, hardware)): The VM as the hypervisor presents it Example: vCPU Ready, the consumer view. Folder: technology/*/metrics/virtual-motherboard/
+  - n21 **hypervisor** (Product (VMware, hardware)): ESXi: kernel worlds, schedulers, overhead The provider view of the same resource. Folder: vsphere/architecture/ and metrics/host/
+  - n22 **physical** (Product (VMware, hardware)): Cores, memory, NICs, disks The hardware under the hypervisor. Tag only: no folder of its own.
+- n23 **Slices of one fact**: 3 | The folder tree holds one slice. Tags and links hold the others. Retrieval filters on any tag, and the model follows any link. | Tags: scope, technology, pillar, product, object, layer, instance, metric_class. Links: internal_derive, same_name, same_meaning, related. Together they list which files are read together.
+  - n24 **VM CPU Ready** (Product (VMware, hardware)): knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/ready.md One metric, one object type, one file. Kind: metric-meaning. Class: contention.
+  - n25 **Technology   (Folder and tag)** (Product (VMware, hardware)): cpu Read contention first, then consumption. Folder: vsphere/technology/cpu/
+  - n26 **Object   (Tag and link)** (Product (VMware, hardware)): VirtualMachine Listed in vm-health-check, part of the VM Performance KPI (vm-performance).
+  - n27 **Pillar   (Tag and link)** (Method (SP5 Framework)): performance Used by performance-kpi-design and by the cluster KPI in the SP5 Framework.
+- n28 **Anatomy of a file**: 4 | One fact per bullet, so a mistake sits on one line. Templates fix the section names, so one question finds the same section in every file.
+  - n29 **Seven kinds of file (retriever_guide)** (Applies to all): metric-meaning 107 What does this number mean on this object? how-it-works 129 How does it work? Why does the metric behave so? what-to-set 29 What to configure, which alerts, and why. troubleshooting 12 It is slow or down. Why? Order of checks. decision-tree 7 Can it, should it, how much? health-check 3 Is it healthy? What to check, in what order. term-meaning 1 The glossary. The harness reads the kind from the metadata.
+  - n30 **Inside a file** (Applies to all): A ## section is the unit of retrieval.
+    - n31 **# Title**: A name a question uses.
+    - n32 **## Sections**: Meaning, Formula, Includes / excludes, Reason.
+    - n33 **## Misconceptions**: A wrong reading in the user's words, and its fix.
+    - n34 **Mermaid chart**: Master of a flow; steps follow it.
+    - n35 **## Metadata (yaml)**: Last. Tags, links, provenance.
+  - n36 **Metadata block** (Applies to all)
+    - n37 **Search tags**: scope  technology  pillar  product object  layer  instance  metric_class Tags filter retrieval.
+    - n38 **Links**: internal_derive  same_name same_meaning  related Links choose what is read together.
+    - n39 **Provenance**: source.document  source.path  status corrections  review_notes Vendor version, draft or reviewed, what to check.
+    - n40 **Delivery**: up_front  images The marked misconception goes with every question.
+- n41 **Paths to the model**: 5 | Five ways knowledge reaches the model: retrieved, looked up, given up front, run as code, set as agent instructions. Each fact has one home.
+  - n42 **1  Retrieved** (Applies to all): Mechanisms, metrics, flows knowledge/**/*.md
+  - n43 **2  Looked up exactly** (Applies to all): Units, rollups, thresholds knowledge/catalog/*.yaml
+  - n44 **3  Given up front** (Applies to all): Widest misconceptions, pairs up_front lines + glossary
+  - n45 **4  Executed as code** (Applies to all): Arithmetic, answer checks harness/*.py
+  - n46 **5  Agent instructions** (Applies to all): Conduct for every answer answer_modes.py, expert_agent.py
+
+Arrows (from, to, label):
+- n19 guest-os --> n20 virtual-motherboard
+- n20 virtual-motherboard --> n21 hypervisor
+- n21 hypervisor --> n22 physical
+- n24 VM CPU Ready --> n25 Technology   (Folder and tag)
+- n24 VM CPU Ready --> n26 Object   (Tag and link)
+- n24 VM CPU Ready --> n27 Pillar   (Tag and link)
+
+Arrows: `-->` solid, `..>` dashed.
+
+</details>
+
 - Bands 1 to 5: method and product with their supporting files, the layers of the product, the slices of one fact, the anatomy of a file, and the paths to the model (drawn in detail below).
 - Method: the SP5 Framework, an IT Operations Framework that explains how private cloud is managed. Product: the IT products involved, VMware Cloud Foundation, Windows and Linux. Every answer uses both. The glossary supports the method and the catalog supports the product.
 - A VM is a virtual motherboard and the Guest OS is a separate layer, so the layer that produces a metric decides where it lives.
 - The folder tree holds one slice of a fact. Tags and links hold the others.
 - Source: [`project/tools/knowledge_diagram.py`](project/tools/knowledge_diagram.py) draws the SVG. The file counts in it are typed in: update them from [`project/tools/knowledge_stats.py`](project/tools/knowledge_stats.py) and run the script from the repository root.
-- The other diagrams of this document are SVG too, drawn by [`project/tools/document_diagrams.py`](project/tools/document_diagrams.py) with the shared helpers of [`project/tools/diagram_kit.py`](project/tools/diagram_kit.py). Every diagram has its facts in the text around it, because the model and a reader of the raw file get no picture.
+- The other diagrams of this document are SVG too, drawn by [`project/tools/document_diagrams.py`](project/tools/document_diagrams.py) with the shared helpers of [`project/tools/diagram_kit.py`](project/tools/diagram_kit.py). Under every SVG image sits a `<details>` block with the text of the diagram: its boxes, nested as drawn, and every arrow with its two ends and its label. [`project/tools/diagram_text.py`](project/tools/diagram_text.py) generates it from the SVG, so a reader of the raw file, Claude included, gets the whole diagram and the two cannot drift. Do not edit a block by hand; lint reports a block that differs from its image.
 
 ### How a fact reaches the model
 
 - The home of a fact is decided by how it must reach the model, not by its subject. There are five paths, each for a failure the others cannot prevent:
 
 ![Agent E2 knowledge paths: five paths from the home of a fact to the model, each with the reason for the path](images/knowledge-paths.svg)
+
+<details>
+<summary>Text of the diagram, for readers that cannot see it</summary>
+
+**How a fact reaches the model.** Five paths. Each blocks a failure the others cannot. Each fact has one home.
+Colour key: green = Knowledge; blue = Agent and harness code; orange = Model; grey = Route and result.
+
+Boxes, nested as drawn:
+- n1 **1  Retrieved when a question needs it** (Route and result): Too large to send with every question: about 327K tokens.
+- n2 **knowledge/**/*.md** (Knowledge): Mechanisms, metrics, misconceptions, flows
+- n3 **Search and links** (Route and result): The agent plans the reading set
+- n4 **Reading set** (Route and result)
+- n5 **Model** (Model): Reads the reading set, the exact values, the up-front block and the rules.
+- n6 **2  Looked up exactly** (Route and result): An exact value must not depend on ranking or on the model's memory.
+- n7 **knowledge/catalog/*.yaml** (Knowledge): Units, rollups, thresholds, user terms
+- n8 **Lookup by key in SQLite** (Route and result): Loaded at start-up, not chunked
+- n9 **Exact values** (Route and result)
+- n10 **3  Given up front, every question** (Route and result): A confident wrong belief is never looked up, so the correction must be in place first.
+- n11 **up_front lines and glossary.md** (Knowledge): Widest misconceptions, confusable pairs
+- n12 **upfront_knowledge.py** (Route and result): Builds the up-front block
+- n13 **Up-front block** (Route and result)
+- n14 **Answer** (Agent and harness code): With file citations.
+- n15 **4  Executed as code** (Route and result): Small models slip on arithmetic and skip steps. Code does not.
+- n16 **harness/*.py** (Agent and harness code): arithmetic_calculator, answer_check, user_terms
+- n17 **Code runs on the case** (Route and result): Uses the case's values
+- n18 **Exact values** (Route and result)
+- n19 **5  Agent instructions** (Route and result): Conduct for every answer, not a fact about one metric.
+- n20 **answer_modes.py, expert_agent.py** (Agent and harness code): Knowledge base first, threshold only with its source, Unsure
+- n21 **Prompt rules** (Route and result): Added to every question
+- n22 **Every answer** (Route and result)
+
+Arrows (from, to, label):
+- n1 1  Retrieved when a question needs it --> n2 knowledge/**/*.md
+- n2 knowledge/**/*.md --> n3 Search and links
+- n3 Search and links --> n4 Reading set
+- n4 Reading set --> n5 Model
+- n6 2  Looked up exactly --> n7 knowledge/catalog/*.yaml
+- n7 knowledge/catalog/*.yaml --> n8 Lookup by key in SQLite
+- n8 Lookup by key in SQLite --> n9 Exact values
+- n9 Exact values --> n5 Model
+- n10 3  Given up front, every question --> n11 up_front lines and glossary.md
+- n11 up_front lines and glossary.md --> n12 upfront_knowledge.py
+- n12 upfront_knowledge.py --> n13 Up-front block
+- n13 Up-front block --> n5 Model
+- n15 4  Executed as code --> n16 harness/*.py
+- n16 harness/*.py --> n17 Code runs on the case
+- n17 Code runs on the case --> n18 Exact values
+- n18 Exact values --> n5 Model
+- n19 5  Agent instructions --> n20 answer_modes.py, expert_agent.py
+- n20 answer_modes.py, expert_agent.py --> n21 Prompt rules
+- n21 Prompt rules --> n22 Every answer
+- n22 Every answer --> n5 Model
+- n5 Model --> n14 Answer
+
+Notes on the diagram:
+- Path and reason
+- Home
+- Route
+- Reaches the model as
+
+Arrows: `-->` solid, `..>` dashed.
+
+</details>
 
 | Path | Holds | Home | Why this path |
 |---|---|---|---|
@@ -112,6 +278,41 @@ Related reading: why the system can win is in [MISSION.md](MISSION.md); how the 
 ### What the model sees of a file
 
 ![What the model sees of a knowledge file: chunks and search, the reading plan, the up-front block, and the parts it never sees](images/file-as-model-sees.svg)
+
+<details>
+<summary>Text of the diagram, for readers that cannot see it</summary>
+
+**What the model sees of a file.** A ## section is the unit of retrieval. Metadata is read by code and never embedded.
+Colour key: green = Part of a knowledge file; blue = Harness; grey = Not used by the model.
+
+Boxes, nested as drawn:
+- n1 **One knowledge file**
+  - n2 **# Title** (Part of a knowledge file)
+  - n3 **## Sections** (Part of a knowledge file)
+  - n4 **## Misconceptions** (Part of a knowledge file)
+  - n5 **Mermaid chart** (Part of a knowledge file)
+  - n6 **## Metadata (yaml, last)** (Part of a knowledge file): tags links up_front status, source, review_notes, corrections
+- n7 **Chunks** (Harness): One chunk per ## section. Each chunk starts with Title (id) > Heading.
+- n8 **Search** (Harness): Chunks, and filters from the tags.
+- n9 **Reading plan** (Harness): Follows the links.
+- n10 **Not indexed** (Not used by the model): Removed: the numbered steps carry the flow.
+- n11 **Up-front block** (Harness): Sent with every question.
+- n12 **Review only** (Not used by the model): Never embedded.
+
+Arrows (from, to, label):
+- n2 # Title --> n7 Chunks
+- n3 ## Sections --> n7 Chunks
+- n4 ## Misconceptions --> n7 Chunks
+- n5 Mermaid chart --> n10 Not indexed
+- n7 Chunks --> n8 Search
+- n6 ## Metadata (yaml, last) --> n8 Search: filters
+- n6 ## Metadata (yaml, last) --> n9 Reading plan: links
+- n6 ## Metadata (yaml, last) --> n11 Up-front block: marked misconceptions
+- n6 ## Metadata (yaml, last) ..> n12 Review only: audit fields
+
+Arrows: `-->` solid, `..>` dashed.
+
+</details>
 
 - A `##` section is the unit of retrieval. A heading names its topic in words a question uses, because the title and heading go in front of every chunk ([`harness/knowledge_loader.py`](harness/knowledge_loader.py)).
 - A file link `` [`id`](path.md) `` reaches the model as the id alone; the path is for reviewers on GitHub.
@@ -214,6 +415,38 @@ This is the one definition of the levels, and the benchmark uses it ([`benchmark
 ## 6. Workflow: from source to reviewed file
 
 ![From source to reviewed file: source note, digest, home file and links, check](images/source-to-reviewed.svg)
+
+<details>
+<summary>Text of the diagram, for readers that cannot see it</summary>
+
+**From source to reviewed file.** Each fact gets one home file. Other files link to it and hold no copy.
+Colour key: grey = Source or evidence; blue = Work step; green = Knowledge files; purple = Check.
+
+Boxes, nested as drawn:
+- n1 **Books, spreadsheets, diagrams** (Source or evidence): The author's own material.
+- n2 **Source note** (Source or evidence): One topic, a few pages. Vendor and measured claims are tagged E1, E2. Lives in project/sources/.
+- n3 **Home file** (Knowledge files): The fact. source.path names the note.
+- n4 **Digest** (Work step): Each fact gets one home file.
+- n5 **Check** (Check): Lint, retrieval check, author review.
+- n6 **Documentation** (Source or evidence): Manuals, white papers, expert answers.
+- n7 **Other files** (Knowledge files): A link to the home, no copy.
+- n8 **Environment** (Source or evidence): Screenshots, API, GUI, lab tests.
+- n9 **evidence/ files** (Source or evidence): Screenshots, API output, lab results.
+
+Arrows (from, to, label):
+- n8 Environment --> n9 evidence/ files
+- n1 Books, spreadsheets, diagrams --> n2 Source note
+- n6 Documentation --> n2 Source note
+- n9 evidence/ files --> n2 Source note
+- n2 Source note --> n4 Digest
+- n4 Digest --> n3 Home file
+- n4 Digest --> n7 Other files
+- n3 Home file --> n5 Check
+- n7 Other files --> n5 Check
+
+Arrows: `-->` solid, `..>` dashed.
+
+</details>
 
 1. Gather. Most of the knowledge (over 80%) comes from the author's books, spreadsheets and diagrams. The rest comes from documentation (manuals, white papers, blogs, expert answers) and from the environment (screenshots, live instances through the API or GUI, lab tests). For a vendor document, use the current version and read its revision date.
 2. Write the source note. The author and Claude write one Markdown note per topic, a few pages long, in [`project/sources/`](project/sources). It carries its release and date and an `## Evidence` section. Each claim about vendor behaviour, and each measured number, is tagged with its evidence (`[E1]`). The author's own judgment needs no tag: it is the knowledge base's own source. Format: [project/sources/README.md](project/sources/README.md).

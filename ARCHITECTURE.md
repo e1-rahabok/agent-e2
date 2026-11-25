@@ -14,6 +14,34 @@ Agent E2 is the knowledge service of [PCM](https://github.com/e1-rahabok/private
 
 ![Agent E2 in PCM: PCM and Agent E2 as two processes, the HTTP calls between them, and the model server](images/agent-e2-in-pcm.svg)
 
+<details>
+<summary>Text of the diagram, for readers that cannot see it</summary>
+
+**Agent E2 in PCM.** Two repositories, two processes. PCM calls Agent E2 over HTTP; Agent E2 calls no PCM code, database or endpoint.
+Colour key: grey = PCM; blue = Agent and harness; green = Knowledge; orange = Model.
+
+Boxes, nested as drawn:
+- n1 **PCM**: Separate repository and process
+  - n2 **Screens and the Agent E2 panel** (PCM)
+  - n3 **Data** (PCM): VCF Operations, synthetic ACME.
+  - n4 **Identity, roles, conversation and topics** (PCM): The caller keeps the conversation.
+- n5 **Agent E2**: This repository
+  - n6 **harness/answer_service.py** (Agent and harness): POST /v1/answer, /v1/suggest, /v1/topic GET /v1/health
+  - n7 **Agent and harness** (Agent and harness): Case, reading plan, tools, verifier.
+  - n8 **knowledge/** (Knowledge): Read by the agent through the harness.
+- n9 **Model server** (Model): Local GPU. Lab: gateway.
+
+Arrows (from, to, label):
+- n6 harness/answer_service.py --> n7 Agent and harness
+- n7 Agent and harness --> n8 knowledge/
+- n7 Agent and harness --> n9 Model server: OpenAI-compatible API
+- n1 PCM --> n5 Agent E2: question, facts (screen and KPI series), role, history, topic_choice
+- n5 Agent E2 --> n1 PCM: lead, answer, files read, computed, topic, shape, knowledge commit
+
+Arrows: `-->` solid, `..>` dashed.
+
+</details>
+
 | Owner | Owns |
 |---|---|
 | PCM | Every screen, the data and its connectors (VCF Operations), actions, the user's identity and role, the conversation (topics and turns, kept per context), what the panel shows |
@@ -36,6 +64,39 @@ One repository holds three groups, and only the product is deployed. The folder-
 
 ![Repository groups: product (knowledge, harness, agent, model), proof (benchmark) and project (plan, tools)](images/repository-groups.svg)
 
+<details>
+<summary>Text of the diagram, for readers that cannot see it</summary>
+
+**Repository: product, proof and project.** One repository, three groups. Only the product is deployed to the site.
+Colour key: green = Knowledge; blue = Agent and harness; orange = Model; purple = Check or proof; grey = Other.
+
+Boxes, nested as drawn:
+- n1 **Product**: checks | Deployed to the site | runs questions through | retrieves | plans from the map of | runs the tools of | calls to read and write | HTTP: answer_service.py
+  - n2 **knowledge/** (Knowledge): Codified expertise. The only indexed folder.
+  - n3 **harness/** (Agent and harness): Retrieval, tools, verifier, rules.
+  - n4 **Agent** (Agent and harness): The expert's procedure as code: case, reading plan, checks.
+  - n5 **Open-weight model** (Model): On a local GPU.
+- n6 **Proof**: Not deployed
+  - n7 **benchmark/** (Check or proof): Questions, models, runner, results.
+- n8 **Project**: Not deployed
+  - n9 **project/tools/** (Check or proof): rules_check.py, rules_check_values.yaml.
+  - n10 **project/** (Other): Plan, decisions, author questions, reviews.
+- n11 **PCM** (Other): Separate repository.
+
+Arrows (from, to, label):
+- n3 harness/ --> n2 knowledge/
+- n4 Agent --> n2 knowledge/
+- n4 Agent --> n3 harness/
+- n4 Agent --> n5 Open-weight model
+- n7 benchmark/ --> n3 harness/
+- n9 project/tools/ --> n7 benchmark/: checks
+- n9 project/tools/ --> n2 knowledge/
+- n11 PCM --> n4 Agent
+
+Arrows: `-->` solid, `..>` dashed.
+
+</details>
+
 - Product: what runs at the customer site.
   - `knowledge/`: Level 400 mechanisms, metrics, misconceptions and flows (health checks, troubleshooting, decision trees), plus exact data in [`knowledge/catalog/`](knowledge/catalog). Up-front text and domain code in `harness/` act on it ([`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), section 2). Version 1.0 covers vSphere 9.1 metrics, the VCF Operations metrics and models computed on vSphere objects, and the Guest OS layer, for performance and capacity. The end scope is the private cloud stack (vSAN, NSX, Kubernetes, and VCF Operations beyond its vSphere metrics).
   - `harness/`: the software around the model. It holds hybrid retrieval, link expansion, the exact tools (catalog lookup and calculator; the planning calculator and the flow executor are built but not yet called by the agent), the answer verifier, web fetch and search, and the agent itself. It also holds the service for callers ([`harness/answer_service.py`](harness/answer_service.py), section Agent E2 in PCM) and its parts: the topic decision, the answer shape and the suggested questions. It reads `knowledge/` and depends on no other folder.
@@ -53,6 +114,106 @@ One repository holds three groups, and only the product is deployed. The folder-
 This is one level down from the Product group: how the agent and the harness drive the model and use the knowledge, module by module, for one question. There are four layers: `knowledge/` (what is read), the `harness/` tools (built at start-up and called only by agent code), the agent's six stages (where the decisions are made, in code), and the model endpoint (`model_client.py`).
 
 ![Agent E2 Product: knowledge, harness tools, the six agent stages and the model endpoint, with the four model calls numbered](images/product-architecture.svg)
+
+<details>
+<summary>Text of the diagram, for readers that cannot see it</summary>
+
+**Agent E2, Product: how the agent and the harness drive the model and use the knowledge.** Code leads, the model reads. Code decides what to read, compute and ask; the model is called 2 times in the common case, 4 at most, plus consensus samples. One pipeline for every question.
+
+Boxes, nested as drawn:
+- n1 **knowledge/**: Legend | The only folder the harness | pipeline order | knowledge (data the harness reads) | reads at run time. | harness tool (code, exact) | model call (numbered) | Indexed; Level 400. | agent stage (code decides) | code calls a tool | Text the model reads and | the map the code plans with. | data flow | model endpoint | data passed between stages | loop back (bounded) | built, not yet called
+  - n2 **Knowledge files *.md**: metric, concept, mechanism, flow body split by ## heading ## Misconceptions: lines marked up_front KPI files: colour bands
+  - n3 **## Metadata (yaml): the map**: same_name, internal_derive, related retriever_guide: health-check, troubleshooting, decision-tree flows: ## Checks, in order object, status, images
+  - n4 **catalog/*.yaml**: vcenter-counters, vcenter-api-counters esxtop-fields, objects thresholds-performance, thresholds-capacity (planning-*), thresholds-alerts
+  - n5 **catalog/user-terms.yaml**: user words to KB terms and files misconception note premise flag, product label
+  - n6 **glossary.md**: preferred word per concept Also called, Not to confuse with Product label, Invites, Better name
+- n13 **harness/: tools**: Built at start-up; called | only by code, never the model. | counter keys, facts_for | words, labels | pages | issues, repair prompt
+  - n14 **knowledge_loader.py**: load knowledge/**/*.md split at ## Metadata chunk by ##, prefix title + id drop Mermaid and link paths glossary entries
+  - n15 **knowledge_search.py**: Retriever: BM25 + embeddings, reciprocal rank fusion search(query, filters, k) links / backlinks by type vectors cached in .cache/
+  - n16 **catalog_database.py**: SQLite in memory lookup: counter, label, esxtop facts_for(ids): unit, rollup, stats level, thresholds, bands object relations and paths
+  - n17 **user_clarification.py**: ASK_RULE (kind chat) FINAL_RULE (chat_final) parse CLARIFY: at most 3 questions
+  - n18 **upfront_knowledge.py**: up-front block, 3K tokens max misconceptions marked up_front confusable pairs (glossary)
+  - n19 **model_client.py**: the model client (see the model band)
+  - n20 **answer_check.py**: hard: no ANSWER line, letter not an option, Unsure mixed: one repair soft: no REASON, unknown file id, ungrounded number: recorded only
+  - n21 **Operator**: question, screenshots, links benchmark runner (Proof): same path, kind choice, same budgets
+  - n22 **answer_shape.py**: explain, advise, diagnose, general; code reads the user's words, else the case next steps: diagnose only
+  - n23 **user_terms.py**: match: rows ranked by hits case_labels: from screenshots query words, files, notes
+  - n24 **arithmetic_calculator.py**: safe arithmetic (ast) summation_to_percent, units, cpu_states result names its source
+  - n25 **flow_executor.py**: steps of a flow file executable steps: Q166
+  - n26 **public_web_lookup.py**: URLs in the question: fetch current-fact words: vendor search system names dropped, private IPs refused, trim 2K
+  - n27 **topic_decision.py**: continues the topic, or new: user choice, then code, then one model call continuing: earlier turns sent
+  - n28 **capacity_calculator.py**: planning calculator
+- n29 **Agent**: search, links | lookup | to build | ask rule | up-front | harness/expert_agent.py, | reading_plan.py, answer_modes.py | prepare: stages 1-4, | once per question | write: stages 5-6, | once per sample | 3 gap, once | 4 repair, once | Consensus, kind choice | answer_modes._consensus: n samples | on one reading set | next sample: | same letters? | stages 5-6 again | agreed, or n = 1 | disagree or Unsure | 2 the draft | case, reading set, computed facts into the prompt
+  - n30 **1 Understand**: expert_agent.understand model reads question + images into the case: JSON schema UNDERSTAND, temperature 0 parse_case: known fields only; not JSON: code-only case reading_plan.objects_in: code reads object words, always
+  - n31 **2 Plan: reading_plan.reading_set**: code only; same question, same set T1 Flow: best file of the case kind, filter retriever_guide; whole T2 Named: term rows, titles, counter keys, case metrics; first 3 whole T3 Search: hits 1-3, whole (k 10) T4 Mechanism: same_name and internal_derive (8) of named, top 2 hits and the flow T5 Claims: one search per option, at most 20 T6 Rest: hits 4-10, 2nd claim hit, related: 4 out + 4 back Pack 32K in tier order: term notes, catalog facts, then files whole or best sections, 400 tokens each
+  - n32 **3 Compute (exact)**: expert_agent.compute, before the model reads: counter in ms + chart interval (20 s, 300 s, 1,800 s, 7,200 s, 1 day) + vCPUs: % of one vCPU and % per vCPU, with source expert_agent.coverage: weak when no flow and no named file to build: flow path, band verdict, capacity plan
+  - n33 **4 Ask? (kind chat)**: allowed when the case has a missing fact or a premise, or a premise term row hits yes: prompt chat, model may reply CLARIFY: no: prompt chat_final choice, open: never ask
+  - n34 **Prompt**: system: rules by kind + ANSWER_RULES + OPEN_SHAPE (open kinds) + LABEL_ORDER (label hit) + up-front block user: case JSON, Computed (exact), coverage note, Knowledge base: reading set, web block (untrusted), question + images over_window: flag > 128K
+  - n35 **5 Answer**: expert_agent.write card sampling, 4,000 tokens max ANSWER + REASON, a file id per claim; knowledge base first, it wins on conflict
+  - n36 **6 Check**: expert_agent.gaps: the draft names a metric file not in the reading set: add its best sections (reading_plan.sections_of, at most 2 files), answer again answer_check.check (kind choice): a hard issue gets one repair turn grounding: numbers and file ids
+  - n37 **answer_modes.converse**: turn 1: kind chat turn 3: question + asked + reply, kind chat_final answer_modes.answer( agent-e2), kind: choice, open, chat, chat_final
+  - n38 **Case**: kind, objects, metrics (value, unit, interval, tool), vcpus, symptom, premise, claims, missing
+  - n39 **Reading set**: text within 32K tokens ids used, tier of each id
+  - n40 **Computed (exact)**: lines with source file coverage: weak or named
+- n41 **Model**: harness/model_client.py: | the only place the | endpoint differs between | benchmark and site | embed
+  - n42 **Trace, per answer**: understand, plan by tier, compute, coverage, ask, web, answer, gap, verify, repair, consensus, context_over; written by every step
+  - n43 **model_client.py client**: GatewayClient: benchmark, Vercel AI Gateway local OpenAI-compatible server at the site ParamClient: the model card sampling deterministic=True: temperature 0 (the case) MockClient: unit tests, offline
+  - n44 **Open-weight vision LLM**: enterprise GPU, up to 4 vLLM, llama.cpp or Ollama context window 128K reads screenshot pixels
+  - n45 **Embedding model**: qwen3-embedding-0.6b on CPU, for hybrid search (knowledge_search.py)
+  - n46 **Clarifying questions**: answer starts CLARIFY: (chat) one round, at most 3 reply: turn 3 via converse
+  - n47 **Answer**: file ids, computed facts, ids read
+  - n48 **Unsure**: not settled: samples disagree
+
+Arrows (from, to, label):
+- n1 knowledge/ --> n13 harness/: tools
+- n21 Operator --> n37 answer_modes.converse
+- n37 answer_modes.converse --> n30 1 Understand
+- n30 1 Understand --> n31 2 Plan: reading_plan.reading_set
+- n31 2 Plan: reading_plan.reading_set --> n32 3 Compute (exact)
+- n32 3 Compute (exact) --> n33 4 Ask? (kind chat)
+- n33 4 Ask? (kind chat) --> n34 Prompt
+- n34 Prompt --> n35 5 Answer
+- n35 5 Answer --> n36 6 Check
+- n36 6 Check --> n29 Agent
+- n29 Agent ..> n35 5 Answer
+- n29 Agent --> n47 Answer
+- n29 Agent --> n48 Unsure
+- n47 Answer --> n46 Clarifying questions
+- n46 Clarifying questions ..> n21 Operator: user replies: turn 3, kind chat_final
+- n30 1 Understand --> n38 Case
+- n38 Case --> n31 2 Plan: reading_plan.reading_set
+- n31 2 Plan: reading_plan.reading_set --> n39 Reading set
+- n39 Reading set --> n40 Computed (exact)
+- n29 Agent --> n34 Prompt
+- n32 3 Compute (exact) --> n40 Computed (exact)
+- n14 knowledge_loader.py ..> n15 knowledge_search.py
+- n15 knowledge_search.py ..> n31 2 Plan: reading_plan.reading_set
+- n23 user_terms.py ..> n31 2 Plan: reading_plan.reading_set
+- n16 catalog_database.py ..> n31 2 Plan: reading_plan.reading_set: summation_to_percent
+- n13 harness/: tools ..> n32 3 Compute (exact)
+- n24 arithmetic_calculator.py ..> n32 3 Compute (exact)
+- n28 capacity_calculator.py ..> n32 3 Compute (exact)
+- n17 user_clarification.py ..> n33 4 Ask? (kind chat)
+- n18 upfront_knowledge.py ..> n34 Prompt
+- n26 public_web_lookup.py ..> n34 Prompt
+- n20 answer_check.py ..> n36 6 Check
+- n30 1 Understand --> n43 model_client.py client: 1 the case
+- n35 5 Answer --> n43 model_client.py client
+- n43 model_client.py client --> n44 Open-weight vision LLM
+- n43 model_client.py client --> n41 Model
+
+Notes on the diagram:
+- loaded once at start-up: files to chunks and links; YAML and KPI bands to SQLite; term rows; up-front block
+- Notes
+- Stages 1-4 run once per question (expert_agent.prepare), so every consensus sample reads the same reading set: a disagreement is doubt in the reasoning, not a different search.
+- The model never chooses a file or a tool. It reads the question into the case (call 1) and the reading set into the answer (call 2). Calls 3 and 4 fire only on a gap or a hard verifier issue.
+- Tiers T1-T3 are read whole (named: the first 3), the rest as their best sections; the order is the priority when the 32K budget runs out. Settings: search_k, context_tokens, plan_* in the runner config.
+- Dashed grey: flow_executor.py (executable flow steps, Q166) and capacity_calculator.py (planning calculator) are built and unit-tested; wiring them into stage 3 is open work (harness/AGENT.md, section 7).
+- Same code for benchmark and site: only the endpoint in model_client.py differs. public_web_lookup.py sends only public requests; customer data stays on site.
+
+Arrows: `-->` solid, `..>` dashed.
+
+</details>
 
 - Read it left to right through the agent band: 1 Understand, 2 Plan, 3 Compute, 4 Ask, Prompt, 5 Answer, 6 Check, Consensus. The stage view, with its evidence, is in [`harness/AGENT.md`](harness/AGENT.md), section 3.
 - Orange lines are the model calls: 1 is the case (temperature 0) and 2 the draft. Calls 3 (the gap follow-up) and 4 (the repair) fire only when the agent finds a gap or a hard verifier issue. Consensus repeats 5 and 6 on the same reading set.

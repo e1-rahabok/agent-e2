@@ -303,6 +303,7 @@ def main():
     check_flow_map(bad, pdocs)
     check_source_document({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
     check_image_text(allowed, bad)
+    check_diagram_text(bad)
     check_titles(bad)  # titles and headings are machine input: harness/knowledge_loader.py puts both in front of every chunk (Q181)
 
     # every image file must be linked from a knowledge file, so the AI gets its context
@@ -337,6 +338,11 @@ def check_image_text(allowed, bad):
             for pat, use in (allowed.get('avoid_ai_speak') or {}).items():
                 if re.search(pat, line):
                     bad(f, f'line {i}: AI-speak "{re.search(pat, line).group(0)}": {use} (project/knowledge-rules/writing.md)')
+
+def check_diagram_text(bad):
+    """The text of each SVG diagram under its image in the root documents is generated from the SVG (diagram_text.py)."""
+    import diagram_text
+    diagram_text.check(bad)
 
 def check_terminology(docs, bad):
     """Glossary entries and misconceptions, as the harness reads them (project/knowledge-rules/terminology.md)."""
