@@ -1,9 +1,9 @@
 # Thresholds in Agent E2: design and implementation
 
-Status: design, with Q152-Q158 answered (2026-11-10). Built: one copy of the KPI levels (2026-11-10); sections named by use and alerts in their own file (2026-11-11) (section 3). Section 3 describes what is built; sections 4-14 the target; section 15 the work.
+Status: design, with Q152-Q158 answered. Built: one copy of the KPI levels; sections named by use; alerts in their own file (section 3). Section 3 describes what is built; sections 4-14 the target; section 15 the work.
 Not indexed.
 
-2026-11-11: the performance SLA and the SLI are removed from operations (the SLA is a business contract, and the KPI is enough). The `sla` and `sli` sections of `thresholds-performance.yaml` and their 7 rows are gone; the Harness, lint and tests no longer know the uses. Rows and sections below that still show `sla` or `sli` for performance are the earlier design, kept for the record; the availability and security SLA (contract) rows of the future files stay.
+The performance SLA and the SLI are removed from operations (the SLA is a business contract, and the KPI is enough). The `sla` and `sli` sections of `thresholds-performance.yaml` and their 7 rows are gone; the Harness, lint and tests no longer know the uses. Rows and sections below that still show `sla` or `sli` for performance are the earlier design, kept for the record; the availability and security SLA (contract) rows of the future files stay.
 
 ## 1. Goal
 
@@ -17,7 +17,7 @@ Not indexed.
 - Capacity principle: capacity management takes the long view, weeks and months, so done properly it raises no alert. A capacity alert means something is amiss: a software bug, or a hardware availability issue that took capacity away.
 - Alert and KPI are independent: different purpose, set separately. KPI is proactive, an internal target; an alert is reactive, a guard rail when people ignore the KPI, and fires when the issue has become urgent.
 - An alert has a dimension the KPI does not have: wait cycle and cancel cycle. They remove one-off spikes and flapping.
-- Performance has one use, the KPI (internal baseline). No performance SLA or SLI (2026-11-11). Alerts read the KPI metrics with their own values.
+- Performance has one use, the KPI (internal baseline). No performance SLA or SLI. Alerts read the KPI metrics with their own values.
 - KPI is performance only: the P is performance. Availability has KAI (key availability indicator); security, compliance included, has KSI (key security indicator). Users say availability KPI or business KPI in daily speech; Agent E2 translates by the pillar measured (term map row `kpi-other-pillar`).
 - Symptom and condition are one thing in VCF Operations: a test on a metric, property or event. A symptom definition is reusable across alert definitions; a condition is written inside one.
 
@@ -26,13 +26,13 @@ Not indexed.
 ### 3.1 Files
 | File | Content |
 |---|---|
-| [`knowledge/catalog/thresholds-performance.yaml`](../knowledge/catalog/thresholds-performance.yaml) | `kpi`: 31 lines (2026-11-11: `sla` and `sli` removed), green, yellow, orange, red, zero for 5m, 20s and 2s (2026-11-12: green and zero added), entered by hand, with `group`, `kb`, `excluded_when_green` (2026-11-10: one place; 20 rows that served no use case went back to prose; 2 capacity rows moved); `flow`: 2 flow tests (KAVG, DAVG; host-storage-latency step 1; 2026-11-15, Q195) |
-| [`knowledge/catalog/thresholds-capacity.yaml`](../knowledge/catalog/thresholds-capacity.yaml) | `model`: 6 sub-metrics of Cluster Consumption and `score`: the Cluster Consumption score, in the `kpi` line format (five limits, 2026-11-22; were `models` rows with colour-band ranges). `sizing`: 1 two-sided range with a grey (wastage) band, not scored. `decisions`: 6 close-for-business rows. `rules`: planning and sizing rows. |
-| [`knowledge/catalog/thresholds-risk.yaml`](../knowledge/catalog/thresholds-risk.yaml) | `model`: 12 sub-metrics of Cluster Risk and `score`: the Cluster Risk score, in the `kpi` line format (2026-11-22). Its own file: Cluster Risk links performance and capacity. |
-| [`knowledge/catalog/thresholds-alerts.yaml`](../knowledge/catalog/thresholds-alerts.yaml) | `symptoms`: 40, one test each; `alerts`: 33 definitions, one object type each (2026-11-12; were 24 with object lists, and before that 20 rows with a free-text `condition`), each with `criticality`, `pillar`, `match`, symptom `sets` (self or children with a population) and `wait_cycles` |
-| Knowledge files | No colour-band table: the file holds the reasons; Agent E2 shows the catalog values with it. Alert files hold no values (2026-11-12): one file per object type, each alert explained under a heading with its catalog name. Capacity flow steps still carry their numbers (marked by `quote` in the row) until they move |
+| [`knowledge/catalog/thresholds-performance.yaml`](../knowledge/catalog/thresholds-performance.yaml) | `kpi`: 31 lines, green, yellow, orange, red, zero for 5m, 20s and 2s, entered by hand, with `group`, `kb`, `excluded_when_green`; `flow`: 2 flow tests (KAVG, DAVG; host-storage-latency step 1; Q195) |
+| [`knowledge/catalog/thresholds-capacity.yaml`](../knowledge/catalog/thresholds-capacity.yaml) | `model`: 6 sub-metrics of Cluster Consumption and `score`: the Cluster Consumption score, in the `kpi` line format (five limits; were `models` rows with colour-band ranges). `sizing`: 1 two-sided range with a grey (wastage) band, not scored. `decisions`: 6 close-for-business rows. `rules`: planning and sizing rows. |
+| [`knowledge/catalog/thresholds-risk.yaml`](../knowledge/catalog/thresholds-risk.yaml) | `model`: 12 sub-metrics of Cluster Risk and `score`: the Cluster Risk score, in the `kpi` line format. Its own file: Cluster Risk links performance and capacity. |
+| [`knowledge/catalog/thresholds-alerts.yaml`](../knowledge/catalog/thresholds-alerts.yaml) | `symptoms`: 40, one test each; `alerts`: 33 definitions, one object type each (were 24 with object lists, and before that 20 rows with a free-text `condition`), each with `criticality`, `pillar`, `match`, symptom `sets` (self or children with a population) and `wait_cycles` |
+| Knowledge files | No colour-band table: the file holds the reasons; Agent E2 shows the catalog values with it. Alert files hold no values: one file per object type, each alert explained under a heading with its catalog name. Capacity flow steps still carry their numbers (marked by `quote` in the row) until they move |
 
-- The section name is the use (2026-11-11): rows carry no `kind` or `use` field; the Harness stores the use as a column and puts it first in every result.
+- The section name is the use: rows carry no `kind` or `use` field; the Harness stores the use as a column and puts it first in every result.
 - Alert rows hold the main test, with the other tests and the wait time inside the `condition` text ("for 15 minutes"). Splitting them into symptoms is still to do (section 8.4).
 - Rows are joined by the metric's English name; no key.
 
@@ -40,7 +40,7 @@ Not indexed.
 1. Start-up: [`harness/catalog_database.py`](../harness/catalog_database.py) loads the three files into an in-memory SQLite catalog: tables `thresholds` (one-value tests with `use`: alert, decision, rule, flow; plus `criticality`, `class`, `pillar`, `interval`, `instance`), `kpi`, and `bands` (capacity model rows).
 2. Term map ([`harness/user_terms.py`](../harness/user_terms.py), [`knowledge/catalog/user-terms.yaml`](../knowledge/catalog/user-terms.yaml)): the user's words pull the metric's knowledge files into the context. No threshold is fetched here.
 3. Agent E2's reading set: `Catalog.facts_for(ids)` adds up to 20 "Catalog facts (exact)" lines for the files in the reading set: counters, rule rows, and the KPI levels of a KPI file (all three intervals, "no value" where empty).
-4. The agent's code calls `Catalog.lookup` with each metric name of the case (harness/AGENT.md, stage 1; the model calls no tool since 2026-11-14). It scores every counter, esxtop field, metric file and threshold row against the name (word overlap, `_score`) and returns the 8 best of each, with the KPI levels of each matched band.
+4. The agent's code calls `Catalog.lookup` with each metric name of the case (harness/AGENT.md, stage 1; the model calls no tool). It scores every counter, esxtop field, metric file and threshold row against the name (word overlap, `_score`) and returns the 8 best of each, with the KPI levels of each matched band.
 5. The LLM reads the rows, picks one, compares the value itself and writes the answer.
 6. Prompt rules ([`harness/answer_modes.py`](../harness/answer_modes.py), [`harness/upfront_knowledge.py`](../harness/upfront_knowledge.py)): "Quote a threshold only when the knowledge base states it"; "For a threshold, call catalog. Its values are exact."
 7. Verifier ([`harness/answer_check.py`](../harness/answer_check.py)): a number with a unit in the reason line that is not in the question or the context is recorded as "ungrounded" in the trace. Soft: it does not trigger a repair.
@@ -51,15 +51,15 @@ Not indexed.
 | # | Gap | Effect on an answer |
 |---|---|---|
 | G1 | Lookup by fuzzy name | "Ready" returns VM, ESXi and cluster rows mixed; the LLM picks |
-| G2 | Fixed 2026-11-11: results and reading-set facts carry `interval` and `instance` where a row has them | - |
-| G3 | Fixed 2026-11-11: every value is labelled with its use ("Alert, red: VM CPU Ready > 8", "Capacity decision: ...") | - |
+| G2 | Fixed: results and reading-set facts carry `interval` and `instance` where a row has them | - |
+| G3 | Fixed: every value is labelled with its use ("Alert, red: VM CPU Ready > 8", "Capacity decision: ...") | - |
 | G4 | The LLM compares the value | Errors on ranges, open ends and lower-is-worse metrics |
-| G5 | Fixed 2026-11-10: lookups and reading-set facts return the KPI levels (`kpi`) | - |
-| G6 | Fixed 2026-11-10: reading-set facts include the KPI levels of a KPI file in the context | - |
+| G5 | Fixed: lookups and reading-set facts return the KPI levels (`kpi`) | - |
+| G6 | Fixed: reading-set facts include the KPI levels of a KPI file in the context | - |
 | G7 | Wait cycles are free text inside `condition` | Agent E2 cannot compute when an alert fires or clears |
 | G8 | No signal that the answer depends on a missing fact | Asking is left to the LLM's judgment |
 | G9 | Ungrounded-number check is soft and reason-line only | A wrong threshold in the answer body passes |
-| G10 | Fixed 2026-11-10: `kpi` is the one catalog copy; the Markdown table stays for retrieval, checked by lint | - |
+| G10 | Fixed: `kpi` is the one catalog copy; the Markdown table stays for retrieval, checked by lint | - |
 
 ## 4. Use cases
 
@@ -167,7 +167,7 @@ reading key = (object, metric, instance, interval or window statistic)
 | `thresholds-performance.yaml` | KPI levels (9 values per metric), SLI tests, SLA targets, performance rules | Yes |
 | `thresholds-capacity.yaml` | Cluster Consumption (sub-metrics and score), sizing ranges, decisions, planning and sizing rules | Yes |
 | `thresholds-risk.yaml` | Cluster Risk (sub-metrics and score) | Yes |
-| `thresholds-alerts.yaml` | Symptoms (one test each) and alert definitions (built 2026-11-12); cancel cycles to do (section 9) | Yes |
+| `thresholds-alerts.yaml` | Symptoms (one test each) and alert definitions; cancel cycles to do (section 9) | Yes |
 | `thresholds-availability.yaml` | KAI (internal target) and SLA (contract) | Two rows (99.95%, 100%); rest open to contributors |
 | `thresholds-security.yaml` | KSI (security and compliance internal target) and SLA | Open to contributors |
 
@@ -175,7 +175,7 @@ reading key = (object, metric, instance, interval or window statistic)
 | Field | Values | Why |
 |---|---|---|
 | `id` | unique across all files | Reference from other files and from questions |
-| `use` | kpi, sli, sla, kai, ksi, model, decision, rule, symptom, alert | First filter of every lookup. Not a row field: the section name is the use (built 2026-11-11), so it cannot disagree with where the row sits |
+| `use` | kpi, sli, sla, kai, ksi, model, decision, rule, symptom, alert | First filter of every lookup. Not a row field: the section name is the use, so it cannot disagree with where the row sits |
 | `reading` | key from `readings.yaml` | The join across files and uses |
 | `direction` | above, below | Lower is worse for free memory, KPI scores, SLA |
 | `interval` or `window` + `statistic` | 2s, 20s, 5m; 24h p95; calendar month mean | What the number applies to; KPI rows carry all three intervals as `kpi` columns |
@@ -190,7 +190,7 @@ meta:
     kpi: 'Proactive. Is it performing now? Rolling window, 20-second accuracy, no deadline. Yellow is read in the daily check.'
     sli: 'Pass or fail of one 5-minute interval against the contract.'
     sla: 'Monthly mean of SLI passes, per class of service. Lagging.'
-kpi:             # the one copy (built 2026-11-10, renamed from levels 2026-11-11, without reading keys yet)
+kpi:             # the one copy (renamed from levels; without reading keys yet)
 - {object: VirtualMachine, metric: "Peak CPU Ready among any vCPU (%)", direction: above, 5m: null, 20s: [2, 4, 8], 2s: null}
 # target: reading: vm.cpu.ready.vcpu-max replaces object and metric
 sli:
@@ -211,7 +211,7 @@ sla:
   quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
 rules: []
 ```
-- Fifteen values per metric (nine until 2026-11-12): green, yellow, orange, red, zero for 5m, 20s and 2s, entered by hand; the 4x rule is a guide for choosing a 20-second value from a 5-minute one (a spike rarely lasts 300 seconds), not a formula: it never fills a cell.
+- Fifteen values per metric: green, yellow, orange, red, zero for 5m, 20s and 2s, entered by hand; the 4x rule is a guide for choosing a 20-second value from a 5-minute one (a spike rarely lasts 300 seconds), not a formula: it never fills a cell.
 - The green start and the red end stay in the KPI file's Markdown table; Agent E2 reads the published score in 1.0 and does not recompute it.
 - The why comes from the KPI file, which the lookup names.
 - One boundary rule: a value on an edge belongs to the better band (as Close for Business does).
@@ -257,15 +257,15 @@ rules: []          # overcommit per class, monster VM, idle VM, Guest OS sizing 
 - 1.0: Agent E2 reads the published scores; the parameters serve explanation. Recomputing is after 1.0 (section 15.3).
 
 ### 8.4 `thresholds-alerts.yaml`
-Built 2026-11-12. As built, it differs from the proposal below in three points:
+Built. As built, it differs from the proposal below in three points:
 - Wait cycles are on the alert (`wait_cycles`), as the knowledge files state them ("for 15 minutes, all of"). A shared symptom (VM CPU Usage above 1 GHz, in 10 alerts) is used with different waits; on the symptom it would need one copy per wait. Broadcom's advice (delay on the symptom) stays a review note.
 - Symptom sets: `sets`, each with `relation` (self, or child with `object` and `population`), `match` and `symptoms`; the alert's `match` combines the sets. Covers "cluster when more than 25% of hosts". The key is not `on`: YAML reads `on` as true.
 - No `type`, `reading`, `class`, `persona` or cancel cycles yet: no row needs them, and section 9 is not approved.
 - Fixes found during the migration: VM disk latency is four alerts (read and write separate, as storage-alerts says), not two; infrastructure contention alerts are on ESXi, resource pool and cluster, not on the cluster only; the 3 capacity alerts carry their population.
 - Lint: every symptom used, every reference exists, a symptom is defined on the alert's object, no two symptoms with the same test, no `condition` anywhere.
-- Restructured 2026-11-12 (an alert fires on one object type, not on a technology): one alert definition per object type (the infrastructure contention rows split into ESXi, resource pool and cluster; ESXi dropped packets into virtual and physical network, as the source counts 2). Alert `kb` is the object type's alert file (`vsphere/object-types/<object>/<object>-alerts`, [`guest-os/guest-os-alerts`](../knowledge/guest-os/guest-os-alerts.md); one file per VCF Operations object type, no `alerts/` folder), which explains each alert under a `##` heading carrying its `name`; a symptom's `kb` is the file of the metric it tests. No `quote`: the alert files hold no values, and lint rejects a value in an alert's section or a misconception's correction. The harness shows an alert with its own file only (not with every metric file it tests). CPU contention on ESXi, resource pool and cluster now reads a share of the member VMs (child VirtualMachine, > 25%), as the source states; memory contention the same since Q145 (c). VM CPU contention without the Contention symptom and orange halved (Q144); VM dropped packets gated by VM CPU Usage (Q147).
+- Restructured (an alert fires on one object type, not on a technology): one alert definition per object type (the infrastructure contention rows split into ESXi, resource pool and cluster; ESXi dropped packets into virtual and physical network, as the source counts 2). Alert `kb` is the object type's alert file (`vsphere/object-types/<object>/<object>-alerts`, [`guest-os/guest-os-alerts`](../knowledge/guest-os/guest-os-alerts.md); one file per VCF Operations object type, no `alerts/` folder), which explains each alert under a `##` heading carrying its `name`; a symptom's `kb` is the file of the metric it tests. No `quote`: the alert files hold no values, and lint rejects a value in an alert's section or a misconception's correction. The harness shows an alert with its own file only (not with every metric file it tests). CPU contention on ESXi, resource pool and cluster now reads a share of the member VMs (child VirtualMachine, > 25%), as the source states; memory contention the same since Q145 (c). VM CPU contention without the Contention symptom and orange halved (Q144); VM dropped packets gated by VM CPU Usage (Q147).
 
-Proposal (2026-11-10):
+Proposal:
 ```yaml
 cycle: 5m        # VCF Operations collection cycle: wait 3 = 15 minutes
 symptoms:
@@ -463,15 +463,15 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 ## 15. Work list
 
 ### 15.1 1.0, in order
-1. Done 2026-11-10: answers to Q152-Q158; `levels` as the one copy of the KPI levels; lookups and reading-set facts return them.
+1. Done: answers to Q152-Q158; `levels` as the one copy of the KPI levels; lookups and reading-set facts return them.
 2. `readings.yaml` for every reading that has a threshold today.
-3. Migration to the performance, capacity and alerts files. Done 2026-11-11: sections by use (`sla`, `sli`, `kpi`; `models`, `decisions`, `rules`; `alerts`), `class` and `criticality` as fields, use labels in every result. Alert rows into symptoms and alert definitions: done 2026-11-12 (section 8.4). Still to do: cancel cycles (step 10); reading keys (step 2).
+3. Migration to the performance, capacity and alerts files. Done: sections by use (`sla`, `sli`, `kpi`; `models`, `decisions`, `rules`; `alerts`), `class` and `criticality` as fields, use labels in every result. Alert rows into symptoms and alert definitions: done (section 8.4). Still to do: cancel cycles (step 10); reading keys (step 2).
 4. Catalog tables, lookup with verdicts, the case's metric names, reading-set facts, unit tests.
 5. Up-front block, clarifying triggers, verifier check.
 6. `thresholds-availability.yaml` with its two rows.
 7. [`project/knowledge-rules/thresholds.md`](knowledge-rules/thresholds.md): the threshold files of this design.
 8. Benchmark: questions for U4, U5, U9, and a clarifying set (asked when it should, did not ask when it should not).
-9. Done 2026-11-12: alert definitions (id, name, criticality, pillar, match, symptom sets, wait cycles) for the recommended alerts; persona not added.
+9. Done: alert definitions (id, name, criticality, pillar, match, symptom sets, wait cycles) for the recommended alerts; persona not added.
 10. Cancel cycles of the recommended alerts set by section 9, once approved.
 
 ### 15.2 Open to contributors

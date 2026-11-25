@@ -21,11 +21,11 @@ Related reading: why Agent E2 can win is in [MISSION.md](../MISSION.md); the who
 - Planning a lookup needs a map of what the knowledge base holds. That map is the author's proprietary knowledge, and the Internet text the model learned from does not contain it. A model cannot plan a search through ground it has never seen, and its worst errors are beliefs it never looks up.
 - The agent can plan, because the knowledge base records its own map (file kinds, `same_name` and `internal_derive` links, the catalog, flows, the term map).
 
-| Finding (the previous generation: benchmark 2026-11-12 and 2026-11-13, retrieval check 2026-11-13; [archived](../project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md)) | Reading |
+| Finding (the previous generation, [archived](../project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md)) | Reading |
 |---|---|
 | Agentic and classic within the margin for every model (-6, -3, +1 points); agentic at 2-3.5 times the tokens and twice the latency | The model's own tool use adds nothing yet |
 | 4.8-7.4 tool calls per multiple-choice answer; Muse at the 8-call limit on 359 of 595 | The model searches in circles |
-| A needed file in the agent's search results but never opened (20-question sample, 2026-11-13): Gemma read 49% and saw 64%; Muse read 62% and saw 80% | The model cannot tell which hit matters |
+| A needed file in the agent's search results but never opened (20-question sample): Gemma read 49% and saw 64%; Muse read 62% and saw 80% | The model cannot tell which hit matters |
 | Qwen agentic: the same letters in all 5 runs on 35% of the questions | Lookups chosen by the model change from run to run |
 | Primed start (same sample): given the classic context, no tool call on 32 of 40 (Gemma) and 38 of 40 (Muse) answers | The model does not ask for what is missing, so a gap must be found by code |
 | Every needed file read: Muse agentic loses 1.7 of its 22 lost points | The model reads and reasons well |
@@ -111,7 +111,7 @@ Arrows: `-->` solid, `..>` dashed.
 - Not built: `layer` as a field; showing the case back to the user before the answer (a product screen, M6).
 
 ### 4.2 Plan: the reading set
-The agent plans in code, from what the knowledge base records about itself ([`harness/reading_plan.py`](reading_plan.py)). The tiers are packed into the context budget in this order (`context_tokens`, 32K since 2026-11-15):
+The agent plans in code, from what the knowledge base records about itself ([`harness/reading_plan.py`](reading_plan.py)). The tiers are packed into the context budget in this order (`context_tokens`, 32K):
 
 | Tier | Files | Form |
 |---|---|---|
@@ -119,25 +119,22 @@ The agent plans in code, from what the knowledge base records about itself ([`ha
 | 2 Named | Files the question names exactly, strongest name first: term-map rows; titles of two or more words, hyphenated names and counter keys resolved through the catalog; the metrics of the case; last, titles matched by one plain word (Latency, Wait, Disk). Kept for the objects the question names | The first 3 whole (`plan_named_whole`), the rest as best sections |
 | 3 Search | Top 3 hits of hybrid search on the question | Whole |
 | 4 Mechanism | `same_name` and `internal_derive` (up to 8 each) of the named files, the top 2 hits, then the flow (the files its steps read) | Best sections, 400 tokens each |
-| 5 Claims | The top hit of one search per claim: each option (prefixed by its part, such as "ESXi 01:", when a question has several option lists), or each part the case reads in an open question; at most 10 | Best sections |
+| 5 Claims | The top hit of one search per claim: each option (prefixed by its part, such as "ESXi 01:", when a question has several option lists), or each part the case reads in an open question; at most 20 (`plan_claims_max`) | Best sections |
 | 6 Rest | Search hits 4-10 (`search_k`); the second hit per claim; `related` files of the top 2 hits, of each named file and of each file the claims found: up to 4 the file declares (`plan_related_n`) and up to 4 that declare it (`plan_related_back`; a related link is symmetric in meaning) | Best sections |
 
-- Search reads a table's header (the metric names) and not its data rows, whose times and numbers would outweigh the question's words. An ask that names no topic ("Which statements are correct?") is not searched as a claim (structure review 2026-11-14).
+- Search reads a table's header (the metric names) and not its data rows, whose times and numbers would outweigh the question's words. An ask that names no topic ("Which statements are correct?") is not searched as a claim.
 - Why tiers 4 and 5: the claims of a Level 400 question test different mechanisms, and the mechanism file seldom shares the question's words. The links record which file a metric derives from, and one search per claim finds the file for each claim.
-- Budget 32K (since ; 16K before). Retrieval check, BM25, 275 questions, with the named tier capped. With options: 16K gave 171 complete and main file missing on 21; 24K 204 and 10; 32K 209 and 7; 48K 210 and 7. Stem only: 119 and 39; 133 and 35; 134 and 34; 134 and 34. The gain stops at 32K. The hardware allows it: enterprise GPU, up to four large GPUs (decision of 2026-11-15), and the context window is 128K. The budget stays at 32K for quality, not hardware: 48K added 1 complete question. The risk is distraction by files the question does not need. The benchmark round reads that risk from the traces, as wrong answers with every needed file present; if they rise, the budget goes to 24K.
+- Budget 32K (16K before). Retrieval check, BM25, 275 questions, with the named tier capped. With options: 16K gave 171 complete and main file missing on 21; 24K 204 and 10; 32K 209 and 7; 48K 210 and 7. Stem only: 119 and 39; 133 and 35; 134 and 34; 134 and 34. The gain stops at 32K. The hardware allows it: enterprise GPU, up to four large GPUs, and the context window is 128K. The budget stays at 32K for quality, not hardware: 48K added 1 complete question. The risk is distraction by files the question does not need. The benchmark round reads that risk from the traces, as wrong answers with every needed file present; if they rise, the budget goes to 24K.
+- Budget re-tested with `search_k` 10 and `plan_claims_max` 20 (were 6 and 10), BM25, 291 questions: complete 62% at 16K (main file missing on 14), 79% at 24K (5), 82% at 32K (1), 82% at 48K (1). The gain still stops at 32K. The two settings moved complete from 78% to 82%, with the new term rows; `plan_derive_n` 16 added nothing and is not taken.
 - Named files are read whole only for the first 3. A question names many metric files through ordinary title words, and every named file used to be read whole, ahead of search. Across the 275 questions the tier pulled 1,611 files, of which 318 were needed (20%); one-word matches pulled 769, of which 70 were needed (9%). The tier took a median of 4,900 tokens of the 16K budget, and over 8,000 on 55 questions, so the last search hit, often the main file, fell out. Retrieval check, BM25, against all named files read whole: reading the first 3 whole, strongest names first, moved complete from 165 to 171 and main file missing from 26 to 21 (with options), and 117 to 119 and 39 to 39 (stem only). Tried and not taken: the first 4, 5 or 6 whole (169, 169, 168 with options); one-word matches moved behind search as sections (main file missing 21 with options, but 41 stem only).
+- Related tier: up to 4 declared links and 4 back links per file (`plan_related_n`, `plan_related_back`), also from the files the claims found. Retrieval check, BM25, 291 questions: related from the claims alone gave 83% complete; with 4 and 4, 87% complete, recall 96%, main file missing on 0. Tried and not taken: 8 and 8 reached 88% complete but lost the main file of 0115.
+- Tried and not taken: reading as a whole file a decision tree that a selected file links to. Complete fell from 254 to 252 of 291 on the retrieval check.
+- The term map stays on (`term_map`). Retrieval check, BM25, 275 questions: with options it cost 2 complete questions; on the stem only, the field reading, it gained 8. The benchmark tests the shipped configuration, so no setting is switched off for the benchmark's sake.
 - Sections: the candidate list averages 21 files, against room for about 14 whole files. With whole files, 10 points of needed-file recall were planned and then cut by the budget (plan 78%, context 68%, BM25). A secondary file therefore gives its best sections (BM25 on the question). The retrieval check counts a file as read when its sections are.
 - Deterministic: the same question gets the same reading set. Consensus samples then differ only in reasoning, so a disagreement marks doubt in the reasoning, not a different search.
-- Measured with the retrieval check on the 196 questions (2026-11-14, the code-only case; `python3 benchmark/runner/retrieval_check.py`, `--embeddings` for hybrid):
-
-| Search | Recall | Every needed file | Main file missing | 3 needed files | 4 | 5 or more |
-|---|---|---|---|---|---|---|
-| BM25 | 76% (77% after Q211) | 109 of 196 (56%; 110 after Q211) | 25 | 52% | 33% (36% after Q211) | 21% |
-| Hybrid | 80% | 117 of 196 (60%) | 19 | 57% | 40% | 26% |
-
-- Outputs: [benchmark/results/retrieval-2026-11-14/](../benchmark/results/retrieval-2026-11-14/hybrid.md). The design was measured against classic mode before it was built: hybrid recall 69% to 80%, complete 46% to 59% ([archived](../project/archive/benchmark-results-before-2026-11-14/retrieval-2026-11-14/plan-hybrid.md)). Generations are not compared further.
+- Measured with the retrieval check (`python3 benchmark/runner/retrieval_check.py`, `--embeddings` for hybrid). Current numbers: [project/plan.md](../project/plan.md), milestone M3.
 - Not tuned to the questions: there is one design, with the tiers as the knowledge base defines its links. Two settings were tried (section size 250 or 400 tokens, derive cap 3 or 8), and they came within 2 questions of each other.
-- Still short of the release level of the retrieval check (main file 100%, recall 95%, complete 90%). The next levers, in order: the model's case measured on the retrieval check, then the knowledge changes of section 6.
+- Release level of the retrieval check: main file 100%, recall 95%, complete 90%. While it is not met, the next levers, in order: the model's case measured on the retrieval check, then the knowledge changes of section 6.
 
 ### 4.3 Compute
 - The agent runs the exact tools on what the case holds, before the model reads. The model gets `Computed (exact)` lines and computes nothing.
@@ -187,6 +184,7 @@ The agent plans in code, from what the knowledge base records about itself ([`ha
 | Budget | Reading set 32K; context window 128K (`context_window`; a prompt above it is flagged, `context_over`); at most 4 model calls (case, answer, gap, repair) plus consensus samples | 8 tool calls, 12K tokens of tool output |
 
 - The benchmark uses the deployment budgets, so the score predicts the product. Time per question on the target GPU is 2 model turns in the common case, to be measured in the live test (M5). Validity sample (Gemma on the gateway, 9 questions): 2 model calls per answer, 11-23K prompt tokens per answer (both calls), 19-59 seconds.
+- No cap is set for hardware size. Each cap is set for answer quality or safety: the 32K reading budget, the first 3 named files read whole, `search_k`, the 250-word open answer (a ceiling against verbose answers), the timeouts and page sizes of the web lookup, and the benchmark's cost and time limits.
 
 ## 6. What the knowledge must give the agent
 The plan is only as good as the map. These are the changes the knowledge needs, in order; each becomes a rule in [project/knowledge-rules/](../project/knowledge-rules) and a lint check once built:
@@ -199,9 +197,9 @@ The plan is only as good as the map. These are the changes the knowledge needs, 
 
 ## 7. Build order
 Each step is proved by its own check.
-1. Done : the reading plan on the code-only case; the retrieval check (section 4.2).
-2. Done : the case by the model, the summation conversions, the ask rule, the answer prompt and shape, the gap follow-up, the coverage note, and consensus on one reading set; unit tests with the mock client; a live validity sample on one model (every answer readable, 2 model calls each).
-3. Next: the round that proves it, with Agent E2 and Base on the candidates and the frontier reference ([project/plan.md](../project/plan.md), M4), after the author's go.
+1. Done: the reading plan on the code-only case; the retrieval check (section 4.2).
+2. Done: the case by the model, the summation conversions, the ask rule, the answer prompt and shape, the gap follow-up, the coverage note, and consensus on one reading set; unit tests with the mock client; a live validity sample on one model (every answer readable, 2 model calls each).
+3. Done: the first round, with Agent E2 and Base on the candidates and the frontier reference ([benchmark/results/README.md](../benchmark/results/README.md)). The next round waits for the author's go ([project/plan.md](../project/plan.md), M4).
 4. To build, each with unit tests on worked examples, and with the retrieval check where it changes the reading set: the model's case in the retrieval check (`--case-model`); executable flow steps, starting with the VM CPU Contention or Latency flow (Q166); threshold bands in stage 3; the planning calculator in stage 3; the knowledge changes of section 6.
 
 ## 8. Walkthrough of one question

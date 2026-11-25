@@ -26,28 +26,28 @@ An English word has a general meaning and a VMware operations meaning. Each word
 | question | One benchmark item: one file in [`benchmark/questions/`](../benchmark/questions) with prompt, answer key and metadata. A benchmark question plays a question a VMware administrator asks the product | case, test case, golden case, exam question |
 | question set | All the questions of the benchmark | golden set, case set |
 | main file | The one knowledge file that holds a question's answer or misconception; tag `knowledge_main`. A proposal, for the author to confirm | first file, primary file |
-| release gate | The limits Agent E2 must meet to ship (benchmark/design.md, section 7.5): final score, Level 400, confident-wrong, misconceptions, held-out set (the gap to the frontier model is reported, not a gate) | passing score, pass mark |
+| release gate | The reference limits for the author's release decision (benchmark/design.md, section 7.5): final score, Level 400, confident-wrong, misconceptions, held-out set (the gap to the frontier model is reported, not a gate) | passing score, pass mark |
 | topic | One subject inside a conversation with Agent E2. A conversation (one per PCM context: an object, tab and window) holds topics; a topic holds turns, each a question and its answer. Agent E2 decides whether a question continues the current topic ([`harness/topic_decision.py`](../harness/topic_decision.py)); the user can flip it | thread, session, chat (for one subject) |
 | prompt | The `## Prompt` text of a question: the only text sent to the candidate | question text |
 | quiz | The author's quiz documents (vSphere Metric Quiz.docx, the book's chapter quizzes): a source of questions, `origin: quiz` | - |
 | author question | One entry in [`project/author-questions.md`](author-questions.md) | - |
 | knowledge base | The content in `knowledge/` | KB (in prose) |
 | Agent E2 | The product: model, harness, agent and knowledge base as shipped. Always both words, like Agent 007. Will run on isvara.io, replacing AskIO | Isvara (the website, not the product); E2 alone |
-| neuro-symbolic expert system | What Agent E2 is (2026-11-14): code holds the expert's procedure and the knowledge base's map, and decides what to read, compute and ask; the model reads the question and the reading set and writes ([`harness/AGENT.md`](../harness/AGENT.md)) (Q210) | agentic RAG, classic RAG, mode (for Agent E2 itself) |
-| agent | The expert's procedure as code ([`harness/AGENT.md`](../harness/AGENT.md)): it reads the question into a case, plans the reading set from the knowledge base's map, runs the exact tools, decides whether to ask, calls the model to read and write, and checks the answer. The decisions are code; the model is called. Changed 2026-11-14 (it was the model plus the tool loop, in agentic mode, now removed) (Q210) | tool loop (the old meaning) |
+| neuro-symbolic expert system | What Agent E2 is: code holds the expert's procedure and the knowledge base's map, and decides what to read, compute and ask; the model reads the question and the reading set and writes ([`harness/AGENT.md`](../harness/AGENT.md)) (Q210) | agentic RAG, classic RAG, mode (for Agent E2 itself) |
+| agent | The expert's procedure as code ([`harness/AGENT.md`](../harness/AGENT.md)): it reads the question into a case, plans the reading set from the knowledge base's map, runs the exact tools, decides whether to ask, calls the model to read and write, and checks the answer. The decisions are code; the model is called. (Q210) | tool loop (the old meaning) |
 | case | The agent's structured reading of one question: kind, objects, layer, metrics with values, symptom, premise, claims, missing facts, what each screenshot shows ([`harness/AGENT.md`](../harness/AGENT.md), section 4.1; the case state of Q166). The product's word: in operations a case is an issue to investigate. The benchmark still says question for its items (Q210) | question state, query object |
 | reading set | The files and sections the agent gives the model for one question, chosen by the reading plan ([`harness/reading_plan.py`](../harness/reading_plan.py)) (Q210) | context (alone), seed |
 | reading plan | The code that builds the reading set: tiers of named files, search hits, mechanism links and one search per claim ([`harness/AGENT.md`](../harness/AGENT.md), section 4.2) (Q210) | retrieval (alone), routing |
 | harness | The execution environment and guardrails around the model (`harness/`): search engine, catalog, calculator, flow executor, budgets, the verifier. The agent runs on it and uses its tools | wrapper |
 | runner | The benchmark code ([`benchmark/runner/`](../benchmark/runner)) | - |
 | Enterprise Readiness | The category of mandatory-by-policy components an enterprise requires (availability, recoverability, security, observability, governance, IT operations management, dev/test/QA copies). It is not virtualization overhead | enterprise requirement cost, enterprise overhead |
-| judge | The model that scored free-text answers 0-3; archived 2026-11-14 (Q199): every question is multiple choice | grader |
+| judge | The model that scored free-text answers 0-3; archived (Q199): every question is multiple choice | grader |
 | candidate | A model in the benchmark | model under test, AI under test |
 | test | A code test only: [`harness/test_harness.py`](../harness/test_harness.py), [`benchmark/runner/test_runner.py`](../benchmark/runner/test_runner.py) | the benchmark |
 | retrieval check | [`benchmark/runner/retrieval_check.py`](../benchmark/runner/retrieval_check.py): are the files each question needs found, without a model. Guide: [`benchmark/retrieval-check.md`](../benchmark/retrieval-check.md) | retrieval test, harness-only test |
 | frontier reference | The frontier model scored as the bar to beat | - |
 | answer key | `## Answers` (the correct letters), `## Explanation`, metadata `misconception` | key (alone) |
-| answer type | How a question is scored: deterministic (option letters); the only type since 2026-11-14 (Q199) | kind, format, multiple choice vs conversation |
+| answer type | How a question is scored: deterministic (option letters); the only type (Q199) | kind, format, multiple choice vs conversation |
 | input type | What the administrator gives besides the prompt: text, table, screenshot | input kind |
 | level | 100, 200, 300 or 400 ([`benchmark/design.md`](../benchmark/design.md), section 3.2) | recall, multi-hop |
 | attachment | A file listed in a question's `attachments` | - |
@@ -56,10 +56,10 @@ An English word has a general meaning and a VMware operations meaning. Each word
 
 ## Examples
 - The benchmark has 5 runs, and each run goes through the same questions.
-- A question's credit is the mean of its 5 runs. Since 2026-11-13 the worst run is reported as consistency.
+- A question's credit is the mean of its 5 runs. The worst run is reported as consistency.
 
 ## Code file names
-A reviewer reads a large system top down: folder, then file name, then code. The file name is the first explanation, so it must say what the file is without opening it (author, 2026-11-18). Applies to every code file (`.py`, `.yaml`, `.sh`) in `harness/`, [`benchmark/runner/`](../benchmark/runner), [`project/tools/`](tools).
+A reviewer reads a large system top down: folder, then file name, then code. The file name is the first explanation, so it must say what the file is without opening it. Applies to every code file (`.py`, `.yaml`, `.sh`) in `harness/`, [`benchmark/runner/`](../benchmark/runner), [`project/tools/`](tools).
 - Name what the file is, in 2 to 3 words, noun first: `knowledge_search.py`, `round_executor.py`. No abbreviation (`kb`, `llm`, `calc`, `refs`) and no lone generic word (`web`, `core`, `health`, `primer`).
 - Python files join words with `_` (Python cannot import a name with `-`); knowledge YAML files use `-`, like every knowledge id.
 - A test file is `test_<what it tests>`.

@@ -171,11 +171,11 @@ flowchart LR
 | Folder | Holds |
 |---|---|
 | [`project/README.md`](project/README.md) | What the project folder holds |
-| [`project/plan.md`](project/plan.md) | Milestones, decisions, open work. Read first |
+| [`project/plan.md`](project/plan.md) | Milestones, open work. Read first |
 | [`project/consultations.md`](project/consultations.md) | The consultations Agent E2 leads: capacity planning (1.0) and 14 after 1.0, one entry each, for the author to edit |
 | [`project/author-questions.md`](project/author-questions.md), [`project/author-questions-resolved.md`](project/author-questions-resolved.md) | Open questions for the author (Release 1.0, Future release); answered ones, kept as history |
 | [`project/design-thresholds.md`](project/design-thresholds.md) | Threshold catalog design: use cases, files, fields. Proposal |
-| [`project/archive/`](project/archive) | Records no longer maintained: reviews, the plan's decisions before 2026-11-14, results of earlier benchmark generations, legacy code and designs |
+| [`project/archive/`](project/archive) | Records no longer maintained: reviews, the plan's decision logs, results of earlier benchmark generations, legacy code and designs |
 | [`project/terms.md`](project/terms.md) | Repository terms (words to avoid when writing knowledge: [`project/knowledge-rules/vocabulary.md`](project/knowledge-rules/vocabulary.md)) |
 | [`project/sources/`](project/sources) | Source documents: book chapters, vendor PDFs, technical notes. The author adds them; Claude may edit them |
 | [`project/knowledge-rules/`](project/knowledge-rules) | Rules for knowledge files, one module each: placement, flows, metadata, thresholds, writing, terminology, vocabulary (words to avoid) |

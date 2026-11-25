@@ -90,14 +90,15 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | [benchmark/design.md](benchmark/design.md)           | How the benchmark proves the claim; final score                                                             |
 | [benchmark/models.md](benchmark/models.md)           | Model design: which frozen model to ship, size and hardware; frontier reference                             |
 | [benchmark/live-test.md](benchmark/live-test.md)     | The system deployed on a local model: setup, steps, pass criteria                                        |
-| [project/plan.md](project/plan.md)                   | Milestones, decisions, open work                                                                            |
+| [project/plan.md](project/plan.md)                   | Milestones, open work                                                                            |
 | [project/consultations.md](project/consultations.md) | The consultations Agent E2 leads: capacity planning in 1.0, 14 more after 1.0                                |
 | [CONTRIBUTING.md](CONTRIBUTING.md)                   | How to add or change a file                                                                                 |
 
 ## Status
 
-- Goal not achieved yet. Agent E2, the neuro-symbolic expert system, was built on 2026-11-14 and has not run a round. The next round runs two runs per candidate model, Base (the model alone) and Agent E2, and the frontier reference ([`benchmark/RUN.md`](benchmark/RUN.md)).
-- Benchmark questions (2026-11-16): 291 run, 8 deferred (not run). 8 of the run set are screenshot questions. The run set by area and level:
+- Goal not achieved yet. Latest round ([`benchmark/results/README.md`](benchmark/results/README.md)): Agent E2 on Muse-Glimmer-30B scored 84% final, the frontier reference 79%. It fails the release gate on the final score (limit 85%) and on confident-wrong (15%, limit 3%). The knowledge base and the harness have changed since that round.
+- A round runs two runs per candidate model, Base (the model alone) and Agent E2, and the frontier reference ([`benchmark/RUN.md`](benchmark/RUN.md)).
+- Benchmark questions: 291 run, 8 deferred (not run). 8 of the run set are screenshot questions. The run set by area and level:
 
 | Area | Level 100 | Level 200 | Level 300 | Level 400 | Total |
 |---|---|---|---|---|---|
@@ -111,9 +112,9 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | Questions | 7 | 11 | 111 | 162 | 291 |
 
 - A question counts in every area it touches, so the area rows add up to more than 291. Current counts: `python3 project/tools/question_coverage.py`.
-- Retrieval check (2026-11-16, BM25 with options, 299 questions): needed files found for 92% (228 complete, 76%; main file missing on 4). Question text only: 77% (157 complete, 53%; main file missing on 35). Source: [question bank audit](project/question-bank-audit-2026-11-15.md), section 7. Hybrid search last measured at 80% (117 of 196) before the structure review of 2026-11-14 ([output](benchmark/results/retrieval-2026-11-14/hybrid.md)).
+- Retrieval check: current numbers in [`project/plan.md`](project/plan.md), milestone M3.
 - Earlier generations (classic and agentic modes) and their results are archived in [`project/archive/`](project/archive) and not compared.
-- Plan, milestones and decisions: [`project/plan.md`](project/plan.md).
+- Plan and milestones: [`project/plan.md`](project/plan.md).
 
 ## Checks
 

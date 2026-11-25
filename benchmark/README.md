@@ -45,7 +45,7 @@ Arrows: `-->` solid, `..>` dashed.
   - `product`: every product the question touches (values from [project/tools/rules_check_values.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/rules_check_values.yaml));
   - `technology`: every area it touches (cpu, memory, storage, network, system): [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.5.
 - Counts of every tag over the run set: `python3 project/tools/question_coverage.py`. The set has no target size: it changes as questions are added, rewritten and retired ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3).
-- File name: `L<level>-<nnn>-<slug>.md`, three digits, numbered from 001 within each level, in id order. The last number of a level is its count.
+- File name: `L<level>-<nnn>-<slug>.md`, three digits, numbered from 001 within each level, in id order. Three digits keep the files in level order in a folder listing once a level passes 99 questions. The last number of a level is its count.
 - The id is a 4-digit running number in the metadata only (`id: "0007"`). It never changes and is never reused. The runner and the results use it; people do not need it. A new question takes the next free id, counting the archived questions too.
 - A question that changes level: edit `level:`, then run `python3 project/tools/question_renumber.py`. It renumbers the files so each level runs from 001 without gaps, and updates the question links in the documents listed in `DOCS` of [project/tools/link_rewriter.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/link_rewriter.py). The id, the results and the attachments stay.
 - Attachments live in a folder named by the id: [benchmark/questions/0007](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/0007).
@@ -94,7 +94,7 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 | Tag | Meaning | Values |
 |---|---|---|
 | `level` | Expertise level ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.2) | `100`, `200`, `300`, `400` |
-| `answer_type` | How the answer is scored (section 3.3). Every question of the run set is `deterministic` since 2026-11-14 (Q199) | `deterministic` (option letters, compared by the runner), `judged` (free text, scored 0-3 by the judge) |
+| `answer_type` | How the answer is scored (section 3.3). Every question of the run set is `deterministic` (Q199) | `deterministic` (option letters, compared by the runner), `judged` (free text, scored 0-3 by the judge) |
 | `misconception` | The letters a Level 300 reader would pick. Deterministic only. Never sent to the candidate | Letters `A`-`Y` |
 | `misconception_type` | The misconception types the question tests, from `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400. A list; may be empty at Level 100-200 | Values in [project/tools/rules_check_values.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/rules_check_values.yaml), `misconception_type` |
 
@@ -112,13 +112,13 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 | `origin` | Source of the question | `book` (the author's book and samples), `quiz` (the author's quiz documents), `real-ticket` (a field question, support ticket or real exchange), `synthetic` (drafted by Claude; counts only after author approval) |
 | `source_path` | Where in the source, for QA: a heading path or the quiz question | Free text |
 
-### Tags removed (2026-11-05)
+### Tags removed
 One tag per concept ([project/terms.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/terms.md)):
 - `scope`: every question had `vsphere`. It is a knowledge-file tag (how general a fact is: vendor-neutral, vsphere, guest-os); for a question, `product` says the same and more.
 - `area`: the main item of `technology`. Two tags for one concept; `technology` stays, as a list. The author's rule for `area: operations-management` (performance troubleshooting, capacity planning, rightsizing) is now `task`: troubleshoot or decide-capacity.
 - `tests` (concept, distinction, judgment, troubleshooting): replaced by `task`, which names the administrator's job and avoids the word test ([project/terms.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/terms.md)).
 - `pillar`: on one question only. Performance against capacity is now in `task` (decide-capacity) and in the knowledge files the question links.
-- `format`, old `level` values, old `input` values: replaced on 2026-11-05 by `answer_type`, levels 100-400 and `input` [text, table, screenshot].
+- `format`, old `level` values, old `input` values: replaced by `answer_type`, levels 100-400 and `input` [text, table, screenshot].
 
 ## Scoring
 - Classes, Stable correct and the final score: `design.md`, section 7. Runner details: `runner/README.md`, section Methodology.

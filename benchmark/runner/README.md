@@ -111,7 +111,7 @@ python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
 - Two runs per candidate: Base and Agent E2. Agent E2 is the shipped system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)); Base is the same model alone. The frontier reference runs one mode, `web`: search is available and Opus decides whether to use it, as in a chat product. There is no run with search removed: a user cannot switch it off, so that run measures nothing a user meets.
 - Agent E2 answers pass the answer verifier ([harness/answer_check.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/answer_check.py)): a missing ANSWER line, a letter that is not an option, or Unsure mixed with other letters gets one repair turn. Baseline and web are not verified.
 - Recall column: the needed files whose text reached the model (the reading set and any gap follow-up). Agent E2 only: Base and web read no knowledge base.
-- Classic and agentic modes were removed ; `run_executor.py` refuses them.
+- Classic and agentic modes were removed; `run_executor.py` refuses them.
 
 ### Index version
 - The knowledge base changes with every commit. A score is only meaningful next to the knowledge that produced it.
@@ -139,7 +139,7 @@ python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
 - Limit: a Claude Code cloud background command stops after 2 hours (see Long runs below).
 
 **Adaptive concurrency** ([adaptive_concurrency.py](adaptive_concurrency.py), `adaptive_concurrency` in `runner_config.yaml`; `--no-adaptive` turns it off):
-- Each model starts at its proven value: `concurrency` (12), or its entry in `concurrency_by_model` (anthropic/claude-opus-5.5: 3; the provider rate-limits above that in a short trial; `adaptive_concurrency.py` kept 5 in the baseline run and 7 in the web run of 2026-11-13). The proven value is the floor: the runner never goes below it. `--concurrency N` sets one proven value for every model.
+- Each model starts at its proven value: `concurrency` (12), or its entry in `concurrency_by_model` (anthropic/claude-opus-5.5: 3; the provider rate-limits above that in a short trial). The proven value is the floor: the runner never goes below it. `--concurrency N` sets one proven value for every model.
 - It then probes upward in steps of 2, up to 2 steps (12, 14, 16). Each level is measured over a window of 40 answers (the first answers after a change are dropped).
 - A step is kept only if the window has no error and the answers per minute rise by at least half of the ideal gain (12 to 14: at least +8.3% of the ideal +16.7%; 14 to 16: at least +7.1%). A step that fails returns to the last level that held, and probing stops.
 - Any HTTP 429 returns the model to its proven value for the rest of the run. A 429 at the proven value changes nothing and prints a warning: that model's proven value is too high, so lower its entry in `concurrency_by_model` and resume.
@@ -192,7 +192,7 @@ python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
   - Reason: a local server (vLLM, and others that read the card) applies these by default, so the benchmark sees what a user sees. Until every model ran at 0.2.
   - The frontier reference sends none: the provider's default, as a chat user meets it.
   - Agent E2's case call (stage 1) runs at temperature 0: a reading step, not an answer.
-  - The gateway accepted top_p and top_k for all three candidates (one call each, 2026-11-13). Whether every provider honours top_k is not known.
+  - The gateway accepted top_p and top_k for all three candidates. Whether every provider honours top_k is not known.
 - `--temperature` replaces the settings for every model: an experiment, not the release run.
 
 ## What it does

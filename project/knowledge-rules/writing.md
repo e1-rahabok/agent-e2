@@ -12,8 +12,8 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
   - no filler words or stock phrases of generated text;
   - no praise, hedging or summary lines;
   - no adjective where a number or a mechanism can stand; name the thing.
-  - say what a thing is before what it does: a label or opening line names the thing in concrete nouns. Verbs such as covers, serves and uses with nothing named read as generated text (author, 2026-11-25).
-  - The list of flagged phrases, each with its plain replacement: [`project/tools/rules_check_values.yaml`](../tools/rules_check_values.yaml), `avoid_ai_speak`. The review checks them; lint stopped checking writing style on 2026-11-10 ([`project/plan.md`](../plan.md)). The same rule applies to documents, commit messages and pull request text.
+  - say what a thing is before what it does: a label or opening line names the thing in concrete nouns. Verbs such as covers, serves and uses with nothing named read as generated text.
+  - The list of flagged phrases, each with its plain replacement: [`project/tools/rules_check_values.yaml`](../tools/rules_check_values.yaml), `avoid_ai_speak`. The review checks them; lint does not check writing style. The same rule applies to documents, commit messages and pull request text.
 - Titles and headings are noun phrases that name the topic, as in a reference book: "Sub-metric formulas", not "How each sub-metric is calculated".
   - No questions, no openers How, Why, What, When, Where, Which, Who; no commands ("Design the alerts as a set"); no claims ("CPU Ready does not apply to ESXi"); no slogans ("Begin with the end in mind"). A claim is a fact: it goes in a bullet under the heading. Sentence headings are a habit of generated text, so they count as AI-speak.
   - Reason: [`harness/knowledge_loader.py`](../../harness/knowledge_loader.py) puts the file title and the heading in front of every chunk. Words such as how, why, is and does name no topic, so they add nothing to search; a claim in a heading sits outside the one-fact-per-bullet rule, where a review misses it.
@@ -23,11 +23,12 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
   - Fixed section names, from the templates in [`project/templates/`](../templates): metric `Meaning`, `Formula`, `Includes / excludes`, `Reason`; concept `Definition`, `Mechanism`, `Formula`; configuration `Setting`, `Reason`, `Exceptions`; flows `Purpose`, `Symptom` or `Question`, `Flow`, `Checks, in order` (read by [`harness/flow_executor.py`](../../harness/flow_executor.py)), `Order rationale`, `Interpretation`; alerts `Coverage and receivers`, `Not alerted, and why`; every file `Misconceptions`.
   - Lint checks the word limits, a list after a colon in a title, and the openers How, Why, What, When, Where, Which, Who (decision tree titles exempt). The review checks commands, claims and slogans: no pattern finds them.
 - Write full sentences. No slogans ("Three sides, three metrics."), no aphorisms in place of the mechanism, no "X, not Y" where a plain statement says it.
+- Judge a line for a slogan or an "X, not Y" with the lines around it. Read alone, a plain line can look like a slogan.
 - One vSphere object type per metric file (exceptions: KNOWLEDGE-ENGINEERING.md, section 5).
 - Refer to another knowledge file as a link with its id: [`id`](relative/path.md). GitHub makes it clickable for review; the harness keeps only `id` for the model ([`ARCHITECTURE.md`](../../ARCHITECTURE.md), section Ingest). The same in every Markdown file of the repository, [`knowledge/glossary.md`](../../knowledge/glossary.md) included: its parser keeps only `id` as well. [`project/tools/link_rewriter.py`](../tools/link_rewriter.py) adds missing links; lint fails on a bare id.
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation. The model never gets the chart, so every fact a chart shows is also in the text; never write "the diagram shows" (check with [`project/tools/model_view.py`](../tools/model_view.py)).
 - Tables: short cells (about 12 words). At most 4 columns when cells hold text; number tables such as colour bands can have more. When rows carry long explanations, use one bullet block per row instead (bold item, one sub-bullet per field). GitHub renders a fixed-width column, so wide tables wrap every cell. Split a wide table in two, or move long explanations to bullets under the table.
-- Every metric file says whether the counter is for operations: its use, or "not for operations" with the reason (author, 2026-11-15). The vSphere Client and VCF Operations show counters that only serve the kernel, and administrators misuse them; Agent E2 advises on which metrics matter.
+- Every metric file says whether the counter is for operations: its use, or "not for operations" with the reason. The vSphere Client and VCF Operations show counters that only serve the kernel, and administrators misuse them; Agent E2 advises on which metrics matter.
 - Every metric file ends its body with `## Misconceptions`, written in the misconception format of KNOWLEDGE-ENGINEERING.md, section 4.
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Avoid "need", "want", "wish".
 - Quotation marks only for verbatim text. Paraphrase without quotes, so the author can search the book for real quotes.
@@ -43,7 +44,7 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 7. Plain sentences; grammar and elegance do not matter. Drop stories and personal asides; keep a one-line analogy only when it explains a mechanism a user may ask about.
 8. Leave `## Metadata` to Claude: review notes, corrections and links are kept consistent there.
 9. Titles and headings are noun phrases: no question, command or claim. Headings at most 9 words, titles at most 8 (lint).
-10. After editing: commit, or tell Claude which files changed. Claude runs lint, updates the glossary, term map, threshold catalog and links, notes the source in the metadata, runs the retrieval check (reactivated 2026-11-13, Q206) and merges.
+10. After editing: commit, or tell Claude which files changed. Claude runs lint, updates the glossary, term map, threshold catalog and links, notes the source in the metadata, runs the retrieval check (Q206) and merges.
 
 ## Format choices
 - Each format choice serves both readers:
@@ -84,4 +85,4 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 - A file digested from a source note in [`project/sources/`](../sources) names the note in `source.path`; the note holds the evidence ([project/sources/README.md](../sources/README.md); KNOWLEDGE-ENGINEERING.md, section 6).
 - Theory and practice: theoretical advice covers the technology itself (Windows, Linux, Kubernetes), not only what VMware Tools or VCF Operations collects; practical advice states what each product can and cannot do (for example, which Guest OS counters VMware Tools collects).
 - Oldest release covered: no knowledge about outdated releases; Linux starts at 5.0. Keep the knowledge base compact.
-- [`project/sources/`](../sources) holds the source documents: the author adds them; Claude may edit them (author, 2026-11-14).
+- [`project/sources/`](../sources) holds the source documents: the author adds them; Claude may edit them.

@@ -15,7 +15,7 @@ Each entry has a status, the user's prompt, why a consultant beats a plain LLM, 
 ## Release 1.0
 
 ### C00 · Capacity planning for a new cluster
-- Status: Release 1.0 (decided 2026-11-14). Calculator built ([harness/capacity_calculator.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/capacity_calculator.py)); the conversation to build ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.7)
+- Status: Release 1.0. Calculator built ([harness/capacity_calculator.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/capacity_calculator.py)); the conversation to build ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.7)
 - Prompt: "Can you guide me over capacity planning for a vSphere cluster? What should I consider? You're my expert consultant."
 - Why a consultant: a plain LLM sizes from GHz and an overcommit ratio per core, forgets HA and what ESXi, vSAN and NSX take, and checks one model instead of six.
 - Checklist (code asks only for what is missing): host specification (cores, base clock, Hyper-Threading, DRAM, memory tiering); VM classes with overcommit per physical thread, reservation and expected concurrent peak; typical VM size per class; HA hosts; threads and memory taken by ESXi, vSAN and NSX; CPU that cannot be reserved. Each missing input is offered from the catalog default and named as one.
@@ -167,7 +167,7 @@ Each entry has a status, the user's prompt, why a consultant beats a plain LLM, 
 - Code computes: traffic per uplink under each teaming policy; NetIOC shares under contention.
 - The model explains: the layout and how it fails over.
 - Knowledge: [nic-teaming](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/concepts/nic-teaming.md), [netioc](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/concepts/netioc.md), [network-configuration-review](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/configuration/network-configuration-review.md)
-- Gaps and blockers: thin: no flow or design guide for the whole network; the NIC teaming file is new (2026-11-14).
+- Gaps and blockers: thin: no flow or design guide for the whole network; the NIC teaming file is new.
 - Author notes:
 
 ### C14 · Storage design

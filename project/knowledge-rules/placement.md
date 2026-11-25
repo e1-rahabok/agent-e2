@@ -83,7 +83,7 @@ flowchart LR
 ```
 
 - The author's book sees metrics from 3 perspectives: technology, pillar of operations, product. A folder tree holds one hierarchy; tags (`technology`, `pillar`, `product`, `object`) hold the others, and retrieval and the website browse by any of them.
-- Two bodies of knowledge, as an expert consultant carries them (2026-11-11):
+- Two bodies of knowledge, as an expert consultant carries them:
   - the method, the SP5 Framework: how to operate VCF. Decide, design, read, present: `sp5-framework/`. Written for VMware administrators, in VCF terms with VCF examples and diagrams. Not a general IT framework.
   - the product, VCF 9.x: what each component is, counts, shows and does: `vsphere/`, `vcf-operations/`; the Guest OS above the VM: `guest-os/`.
   - The test for a file: does it say how to operate (method), or how a component behaves (product)? A file that does both is split, and the two files are linked: the product file lists the method file in `internal_derive`, the method file lists the product file in `related`.
@@ -91,12 +91,13 @@ flowchart LR
   - raw metrics follow the technology route: `vsphere/technology/<tech>/`;
   - multi-technology content follows the object route: `vsphere/object-types/<object>/`;
   - what VCF Operations is and ships: `vcf-operations/`.
-- Folders group files. Two kinds of folder (2026-11-12):
+- Folders group files. Two kinds of folder:
   - slice folders name a part of the knowledge the id must carry: an area (`sp5-framework`, `vsphere`, `vcf-operations`, `guest-os`), a pillar or part of the method, a technology, an object type, and `metrics/<object>/` (`virtual-motherboard`, `host`, `cluster`, `datastore`, `distributed-switch`). They stay even with one file: `vsphere/object-types/datastore/` holds only datastore-alerts today;
   - kind folders name a kind of file (`concepts`, `metrics`, `configuration`, `health-check`, `troubleshooting`, `decision-tree`, `kpis`, `models`, `comparisons`, `alerts`, `features`, `dashboards`, `reports`, `screens`). A kind folder exists only with 2 or more files; one file sits in the parent folder. When a second file of the kind arrives, both move into the new folder and moved_ids.yaml records it. Lint checks it.
   - The kind of a file is its `retriever_guide`, not its folder. The harness (reading plan, flow executor, catalog, search filters) and lint read the metadata; the file name carries the kind for a reader (`vm-health-check`, `vm-alerts`, `vm-performance`).
 - Inside the method, one folder per part of the framework: `concepts/` across pillars, `observability/`, `outputs/`, and one folder per pillar (`performance/`, `capacity/`).
 - Placement rules, so a fact lives in one place:
+  - Writer rules live in the knowledge rules (this folder), never in a knowledge file. The model reads every knowledge file, so a writer rule there is a second copy that the model reads as knowledge. The glossary opens with one line that says what it is.
   - A raw metric about one technology goes in `technology/`, even when it belongs to one object. VM CPU Ready: `vsphere/technology/cpu/metrics/virtual-motherboard/`.
   - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object type gets a health check, and only object types do (`<object>-health-check`, `retriever_guide: health-check`): numbered steps in the order availability, performance, security, capacity, with configuration as the drill-down ([flows.md](flows.md)), starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
   - VCF Operations is an observability tool, not a peer of vSphere, vSAN, NSX or the Guest OS: it has nothing to say without a system to manage. Content about a managed object lives with that object, even when VCF Operations computes it:
@@ -105,15 +106,15 @@ flowchart LR
     - how VCF Operations shows a counter (rollup, 20-second peak): `vcf-operations/features/`. VCF Operations is not a vSphere tool: it also monitors vSAN, NSX and the Guest OS. `vsphere/tools/` holds the vSphere tools only: esxtop and the vSphere Client.
   - `vcf-operations/` holds only VCF Operations itself: its role, features (real-time metrics), the dashboards and reports as built in it, how an alert definition works, and later its own sizing, health and performance troubleshooting. See [`vcf-operations/vcf-operations-role`](../../knowledge/vcf-operations/vcf-operations-role.md). How to design a dashboard, report or alert is method: `sp5-framework/outputs/`.
   - A concept is a general idea; a file that documents an actual implementation is not a concept. In `vcf-operations/`, only the role file says what the product is for; implementations are features, dashboards, reports and alert definitions. A topic that is both gets two files: the idea in `sp5-framework/`, the implementation in `vcf-operations/` (example: [`sp5-framework/observability/real-time-metrics`](../../knowledge/sp5-framework/observability/real-time-metrics.md) and [`vcf-operations/features/real-time-metrics`](../../knowledge/vcf-operations/features/real-time-metrics.md)).
-  - Alerts have three parts, and each fact lives in one (2026-11-12):
+  - Alerts have three parts, and each fact lives in one:
     - the method, top down: what an alert is, how to design the set, personas, threshold design (`sp5-framework/outputs/`);
     - the recommended set, one file per object type in VCF Operations, because an alert fires on one object type, not on a technology: `vsphere/object-types/<object>/<object>-alerts`, and [`guest-os/guest-os-alerts`](../../knowledge/guest-os/guest-os-alerts.md) for the Guest OS. Each alert is a `##` section under its catalog name: what it detects, why each symptom is in it, who receives it, which flow to open. A section per resource left out says why. No values: thresholds, populations and waits live only in `catalog/thresholds-alerts.yaml`, whose rows point to the file (`kb`) and come with it into the context. An object type with no alert in the set still gets its file, which says why (datastore cluster, distributed switch);
     - the product, bottom up: how VCF Operations builds and evaluates an alert definition (symptoms, conditions, wait and cancel cycles, meta tags, recommendations, management packs), and after 1.0 the alerts it ships: `vcf-operations/`.
     - Never a `*-alerts` file under `technology/`: lint rejects it. The technology view (which alerts test VM CPU Ready) is a catalog query: each symptom's `kb` is its metric file.
   - The `product` tag still names `vcf-operations` on a file whose metric VCF Operations computes.
   - How a tool shows the counters (esxtop panels and fields, vCenter statistics levels and rollups, units per tool) goes in `vsphere/tools/<ui>/`. The metric's meaning stays in its metric file.
-  - A KPI, model, alert set or health check of one object is the method applied to that object: it stays with the object (`vsphere/object-types/<object>/`) and links to the method file. This is not object-first folders (declined 2026-11-04 and 2026-11-06): metrics stay by technology.
-  - Flows (author, 2026-11-25):
+  - A KPI, model, alert set or health check of one object is the method applied to that object: it stays with the object (`vsphere/object-types/<object>/`) and links to the method file. This is not object-first folders (declined twice): metrics stay by technology.
+  - Flows:
     - Place a flow at its entry point: the object and layer where the symptom or question is stated, not where the cause turns out to be. The user names the symptom ("my VM is slow"), and the reading plan finds the flow by that name; placing by cause needs the answer before the flow is found. Example: a VM starved in a DRS cluster is a VM symptom: `vm/troubleshooting/`, though the cause is DRS.
     - Then: one technology → `technology/<tech>/`; several technologies → `object-types/<object>/`. Each in a `troubleshooting/` or `decision-tree/` folder once there are 2.
     - Across objects, hand off: a flow stops at the object boundary and links the other object's flow (`→ <id>`); it never repeats that flow's steps. In the chart the other flow is one box. Each step lives in one flow.

@@ -32,13 +32,13 @@ Related reading: [ARCHITECTURE.md](ARCHITECTURE.md) explains how the parts run, 
   - does Agent E2, as shipped, pass the release gate, and how does it compare with a frontier model;
   - which frozen model to ship (model choice is the fourth lever).
 - What a change to the knowledge base, harness or agent adds is read first from the free checks (the retrieval check, traces, unit tests), and then from the next round that proves the product.
-- Agent E2 has had one pipeline since 2026-11-14: the neuro-symbolic expert system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)). Classic and agentic mode were removed. A round has two runs per candidate, Base (the model alone) and Agent E2, plus the frontier reference in its web mode.
+- Agent E2 has one pipeline: the neuro-symbolic expert system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)). A round has two runs per candidate, Base (the model alone) and Agent E2, plus the frontier reference in its web mode.
 
 ## 3. Why it is possible
 Six mechanisms, in order of weight.
 
 1. **Open-book exam.** A frontier model wins on breadth of memorised knowledge plus depth of reasoning. In one narrow domain, retrieval supplies the knowledge, so what remains is reading 5-10 retrieved files and applying their rules: reading comprehension and a short chain of reasoning. On that task, current 27-32B dense models come close to frontier models.
-2. **The frontier model memorised the wrong answers.** Its vSphere knowledge comes from forums, blogs and old documentation, and these repeat the misconceptions that the author's books correct: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS". Measured on 196 questions (benchmark of 2026-11-13), the frontier model without the knowledge base gave the misconception answer on 2% of multiple-choice answers and 3% of judged answers (4% with web search), and it was confidently wrong on 11% of answers (12% with web search).
+2. **The frontier model memorised the wrong answers.** Its vSphere knowledge comes from forums, blogs and old documentation, and these repeat the misconceptions that the author's books correct: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS". In the latest round the frontier model with web search and without the knowledge base was confidently wrong on 17% of answers ([benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md)).
 3. **Currency.** vSphere 9.1 and VCF 9.1.1 behaviour (memory tiering, vHT, GPU counters) is newer than most training data. By rule, the knowledge base is written from the current release.
 4. **Exactness from tools.** Models of every size slip on arithmetic, units and lookups (ms summation to %, KB vs kb, rollups). A calculator and a metric catalog return exact values. The agent's code calls them on the question's values, and the model calls no tool.
 5. **Knowledge built for a small reader.** Most enterprise retrieval fails on messy documents, so this corpus is written to be retrieved: one fact per bullet, one object per metric file, same-name misconceptions linked, layers kept apart, and metadata for filtering.
@@ -61,7 +61,7 @@ Six mechanisms, in order of weight.
 - The best local configuration stays below the frontier reference by more than the margin, even after the knowledge base covers the questions (retrieval check at 100%) and the override rate is near 0. The gap is then the model's reasoning, and the next lever is a larger frozen model ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 1).
 
 ### Status
-- Not achieved yet. On 2026-11-14 Agent E2 was rebuilt as one pipeline, the neuro-symbolic expert system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)): the agent plans what the model reads and computes the exact values, and the model reads and writes. No round has run on it yet.
+- Not achieved yet. In the latest round Agent E2 on the best local model scored 84% final against the frontier reference's 79%, and failed the release gate on the final score and the confident-wrong rate ([benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md)).
 
 ## 4. Model size
 - Size, speed and hardware are covered in [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section Model size and speed.
@@ -82,6 +82,7 @@ These are the requirements for the shipped assistant. Findings from the author's
 
 - Clarifying questions: at most one round per question, then Agent E2 answers. A consultation (Ways to ask, 7) is the exception: the user asked to be guided, so the agent asks step by step until the plan has its inputs.
   - A question that makes sense is answered without asking why.
+  - An urgent incident (P1) gets the clarifying round too: Agent E2 does not jump to an answer when a missing fact changes it.
   - Ask when the question is odd or illogical. A wrong premise usually points to a gap in product knowledge, so name the premise and ask what problem the user saw. Example: "Should I add vCPUs because CPU Ready is high?"
   - Ask when the text and an attachment disagree (the text says CPU Usage, the screenshot shows CPU Utilization), or when one missing fact (object, layer, interval) changes the answer.
   - Ask when a term is used for different things: "Do you mean A, B or C?" Jargon is often used interchangeably although the meanings differ: "cluster risk" can mean Cluster Risk (%), capacity runway or availability risk. A frontier model silently picks one and answers the wrong question. Agent E2 knows the common misconceptions, so it asks.
@@ -112,7 +113,7 @@ These are the requirements for the shipped assistant. Findings from the author's
 ### Non-functional
 | Area | Requirement |
 |---|---|
-| Data stays on site | No customer data leaves the customer network, and Agent E2 answers without Internet access. A call out carries only requests for public knowledge (a URL the user gives, an update download), never customer data. Updates also arrive as an offline bundle. Lab exception (author, 2026-11-17): the author's own lab may send its live VCF Operations data to the gateway model; customer sites keep the rule and the local model. |
+| Data stays on site | No customer data leaves the customer network, and Agent E2 answers without Internet access. A call out carries only requests for public knowledge (a URL the user gives, an update download), never customer data. Updates also arrive as an offline bundle. Lab exception: the author's own lab may send its live VCF Operations data to the gateway model; customer sites keep the rule and the local model. The lab is the author's own system and no customer site, so its data is no customer data. |
 | One tested system | The app calls `harness/` for retrieval, tools, prompt and verifier. Prompt and settings are versioned in the repository, because an edited prompt is an untested prompt. |
 | Vision | A hard requirement. Administrators upload screenshots, often several per question, and every current foundation model family reads images. Agent E2 reads the pixels of every uploaded image; there is no text-only mode and no text-only model. |
 | Model | Open weights with a commercial licence, vision (above), and at least 128K context (a conversation is sent whole, every turn). Hardware: enterprise GPU on premises (one GPU is an ideal, not a constraint; up to four large GPUs are acceptable). The benchmark chooses the model. |

@@ -50,6 +50,8 @@
 ### Root cause analysis
 - The most important content of an RCA report is the corrective action that prevents a repeat, above all the alerts that flag signs of recurrence. Without them the issue cannot be caught before it returns.
 - The root cause often differs from the symptom: another object, a message that looks unrelated. It usually starts as a log message that never became an alarm in the UI.
+- A root cause is human or system. Human: an operator mistake or an incomplete runbook. System: a software bug or a hardware fault.
+- "Nobody did anything wrong" is no root cause. A change made by the runbook is a trigger; the gap in the runbook is the cause.
 - An alert from a log message must not give false positives. Validate it before setting it up.
 
 ### Log message validation before alerting

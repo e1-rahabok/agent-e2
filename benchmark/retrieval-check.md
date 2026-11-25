@@ -10,12 +10,12 @@ Script: [benchmark/runner/retrieval_check.py](https://github.com/e1-rahabok/agen
 - It catches regressions. Every new knowledge file changes word statistics and ranking. A file added for one chapter can push another question's file out of the top results. Without this check, the drop would surface only in the next benchmark, mixed with model noise.
 - It keeps changes honest. Rule (`CLAUDE.md`, Validation): a change to structure or retrieval needs a before and after number. This check gives that number for every change set.
 - The reading plan follows `related` links both ways (`plan_related_back`), from the top search hits, the named files and the files the claims found.
-- Runs on the run set as it is (author, 2026-11-13, Q206), re-baselined when the question set changes.
+- Runs on the run set as it is (Q206), re-baselined when the question set changes.
 
 ## What it does
 - Input: every benchmark question that lists `knowledge` ids, the files a correct answer depends on ([benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md)).
 - For each question it builds Agent E2's reading set ([harness/reading_plan.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/reading_plan.py)) from the code-only reading of the question (no model call), on the same `## Prompt` text the model sees, options included:
-  1. Search: the top 6 files (`--k`, default 6; the reading plan itself searches `search_k`, 10 on 2026-11-16).
+  1. Search: the top 6 files (`--k`, default 6; the reading plan itself searches `search_k` files, set in `runner_config.yaml`).
   2. Reading set: the tiers of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.2 (flow, named files, search, mechanism links, one search per claim, the rest), cut to the context budget (`context_tokens: 32000`). Settings: [benchmark/runner/runner_config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/runner_config.yaml).
 - It never drops an unknown id: a needed file that no longer exists (moved, renamed) stops the check, because dropping it would raise recall falsely. Moved files go in [project/tools/moved_ids.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/moved_ids.yaml).
 
@@ -48,12 +48,12 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_check.py --embeddings 
   - the needed files are the question writer's judgment; a missing id in a question makes recall look better than it is;
   - a file counted as in the reading set can be there as its best sections only (tiers 4-6), or cut by the budget;
   - the model's case (stage 1) can add files the code-only reading does not; it is not in this check yet (`--case-model`, planned). A screenshot-only stem, such as 0037, has no words to search: the check reports its main file as missing, and the case model's reading of the image is what brings it in a run;
-  - questions with status `deferred`, `retired` or `awaiting-input` are skipped, as in the run (291 on 2026-11-16);
+  - questions with status `deferred`, `retired` or `awaiting-input` are skipped, as in the run;
   - BM25 and hybrid give different numbers. Compare like with like, and record the mode.
-- Current numbers and history: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3.
+- Current numbers: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3.
 
 ## What is a good number
-- Levels agreed by the author (Q130, 2026-11-12). Baseline of the Agent E2 generation (2026-11-14, 196 questions): BM25 recall 76%, 109 of 196 complete (56%), main file missing on 25; hybrid recall 80%, 117 of 196 complete (60%), main file missing on 19: bad. After Q211 (2026-11-14) BM25 reads 77%, 110 of 196; current numbers: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3. Output: [benchmark/results/retrieval-2026-11-14/](../benchmark/results/retrieval-2026-11-14/hybrid.md). Earlier generations are archived and not compared.
+- Levels agreed by the author (Q130). Current numbers: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3. Earlier generations are archived and not compared.
 
 ### Why the retrieval number must be higher than the release score
 - Release gate ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5): final score at least 85% on Agent E2, Level 400 at least 80%, confident-wrong at most 3%.
@@ -88,7 +88,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_check.py --embeddings 
 
 ## Known limitation: needed files that no tier selects
 - Most of the needed files that miss the reading set are not cut by the budget. No tier selects them: not the flow, not a named object or user term, not search, not a link from a file already read.
-- Retrieval check of 2026-11-16: 78 of the 81 missed files were in no tier; the other 3 were cut by the budget.
+- Last measured: 78 of the 81 missed files were in no tier; the other 3 were cut by the budget.
 - Raising `context_tokens` does not help these files. They need a link, a user-term row, the user's words in the file, or a ranking change (see the table below).
 - Status: accepted for release 1.0. The fix is after 1.0 ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), After 1.0).
 
@@ -108,6 +108,6 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_check.py --embeddings 
 | Budget too small | File ranked inside the list but cut | Shorten the files ahead of it; test a larger `context_tokens` |
 | Ranking problem across many questions | Same pattern in many rows | A harness experiment: query expansion, hybrid search, re-ranker, routing |
 
-- Measure each fix with the check before keeping it. Keep a fix only when context recall or complete questions go up, or stay the same while the content becomes more correct (record that reason in the plan).
+- Measure each fix with the check before keeping it. Keep a fix only when context recall or complete questions go up, or stay the same while the content becomes more correct (give that reason in the pull request text).
 - Never fit the knowledge base to one question: a fix must be a general fact, term or link that helps every question on the topic. The held-out set guards against fitting ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10).
-- Record every run in [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (M3): date, change, mode, context recall, complete questions, and the questions that gained or lost.
+- After every run, update the M3 status row of [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) with the current numbers. The before and after, the mode and the questions that gained or lost go in the pull request text.
