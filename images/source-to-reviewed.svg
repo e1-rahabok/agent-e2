@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="520" viewBox="0 0 1800 520" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555555"/></marker></defs>
+<rect width="1800" height="520" fill="#ffffff"/>
+<text x="24" y="34" font-size="20" font-weight="bold" fill="#111" text-anchor="start">From source to reviewed file</text>
+<text x="24" y="54" font-size="12.5" font-weight="normal" fill="#444" text-anchor="start">Each fact gets one home file. Other files link to it and hold no copy.</text>
+<rect x="1333.9" y="66" width="14" height="14" rx="3" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1353.9" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Source or evidence</text>
+<rect x="1489.3000000000002" y="66" width="14" height="14" rx="3" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="1509.3000000000002" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Work step</text>
+<rect x="1588.0000000000002" y="66" width="14" height="14" rx="3" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="1608.0000000000002" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Knowledge files</text>
+<rect x="1724.5000000000002" y="66" width="14" height="14" rx="3" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="1744.5000000000002" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Check</text>
+<rect x="30" y="110" width="270" height="90" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="40" y="129" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Books, spreadsheets, diagrams</text>
+<text x="40" y="148" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">The author's own material.</text>
+<rect x="30" y="230" width="270" height="90" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="40" y="249" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Documentation</text>
+<text x="40" y="268" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Manuals, white papers, expert answers.</text>
+<rect x="30" y="350" width="270" height="90" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="40" y="369" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Environment</text>
+<text x="40" y="388" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Screenshots, API, GUI, lab tests.</text>
+<rect x="340" y="350" width="230" height="90" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="350" y="369" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">evidence/ files</text>
+<text x="350" y="388" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Screenshots, API output,</text>
+<text x="350" y="403" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">lab results.</text>
+<path d="M 302 395 L 338 395" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="620" y="130" width="290" height="290" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="630" y="149" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Source note</text>
+<text x="630" y="168" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">One topic, a few pages.</text>
+<text x="630" y="183" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Vendor and measured claims are</text>
+<text x="630" y="198" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">tagged E1, E2.</text>
+<text x="630" y="213" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Lives in project/sources/.</text>
+<path d="M 302 155 L 618 155" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 302 275 L 618 275" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 572 395 L 596 395 L 596 360 L 618 360" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="960" y="200" width="240" height="150" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="970" y="219" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">Digest</text>
+<text x="970" y="238" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">Each fact gets one</text>
+<text x="970" y="253" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">home file.</text>
+<path d="M 912 275 L 958 275" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="1250" y="140" width="230" height="100" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="1260" y="159" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start">Home file</text>
+<text x="1260" y="178" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">The fact. source.path names</text>
+<text x="1260" y="193" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">the note.</text>
+<rect x="1250" y="290" width="230" height="100" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="1260" y="309" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start">Other files</text>
+<text x="1260" y="328" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">A link to the home,</text>
+<text x="1260" y="343" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">no copy.</text>
+<path d="M 1202 250 L 1226 250 L 1226 190 L 1248 190" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 1202 300 L 1226 300 L 1226 340 L 1248 340" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="1530" y="200" width="240" height="150" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="1540" y="219" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start">Check</text>
+<text x="1540" y="238" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">Lint, retrieval check,</text>
+<text x="1540" y="253" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">author review.</text>
+<path d="M 1482 190 L 1506 190 L 1506 250 L 1528 250" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 1482 340 L 1506 340 L 1506 300 L 1528 300" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+</svg>

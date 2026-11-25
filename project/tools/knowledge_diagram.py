@@ -6,62 +6,13 @@ Run from the repository root:
     python3 project/tools/knowledge_diagram.py
 """
 import os
-from xml.sax.saxutils import escape
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from diagram_kit import out, C, t, box, band, arrow, begin, finish  # noqa: E402
 
 W, H = 1800, 1572
-LH = 15
-out = []
-
-C = {
-    'method': ('#e4edfa', '#1f5fae', '#0d2a4d'),
-    'prod': ('#e6f4e4', '#2e7d32', '#173a16'),
-    'guest': ('#fdebd3', '#c25e00', '#4a2400'),
-    'shared': ('#efe9f8', '#5e35b1', '#2a1650'),
-    'data': ('#f2f2f2', '#666666', '#222222'),
-    'white': ('#ffffff', '#888888', '#333333'),
-}
-
-
-def t(x, y, s, size=12, weight='normal', fill='#222', anchor='start', mono=False):
-    f = ' font-family="ui-monospace,Menlo,Consolas,monospace"' if mono else ''
-    out.append(f'<text x="{x}" y="{y}" font-size="{size}" font-weight="{weight}" fill="{fill}" '
-               f'text-anchor="{anchor}"{f}>{escape(s)}</text>')
-
-
-def box(x, y, w, title, lines, kind, h=None, dash=False, mono=False):
-    fill, stroke, ink = C[kind]
-    h = h or (28 + LH * len(lines) + 8)
-    d = ' stroke-dasharray="6 4"' if dash else ''
-    out.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{fill}" stroke="{stroke}" stroke-width="1.4"{d}/>')
-    t(x + 10, y + 19, title, 13, 'bold', ink, mono=mono)
-    for n, ln in enumerate(lines):
-        t(x + 10, y + 38 + n * LH, ln, 11.5, 'normal', ink)
-    return (x, y, w, h)
-
-
-def band(y, h, num, label, sub):
-    out.append(f'<rect x="10" y="{y}" width="{W - 20}" height="{h}" rx="10" fill="#fafafa" stroke="#c9c9c9"/>')
-    out.append(f'<circle cx="38" cy="{y + 28}" r="14" fill="#333"/>')
-    t(38, y + 33, str(num), 14, 'bold', '#fff', 'middle')
-    t(62, y + 33, label, 16, 'bold', '#222')
-    t(62, y + 52, sub, 12, 'normal', '#555')
-
-
-def arrow(pts, label=None, lx=None, ly=None, color='#555555', dash=False):
-    d = 'M ' + ' L '.join(f'{x} {y}' for x, y in pts)
-    ds = ' stroke-dasharray="5 4"' if dash else ''
-    out.append(f'<path d="{d}" fill="none" stroke="{color}" stroke-width="1.5"{ds} marker-end="url(#ah)"/>')
-    if label:
-        wpx = len(label) * 6.1 + 8
-        out.append(f'<rect x="{lx - wpx / 2:.0f}" y="{ly - 11}" width="{wpx:.0f}" height="15" fill="#fafafa"/>')
-        t(lx, ly, label, 10.5, 'normal', color, 'middle')
-
-
-out.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
-           f'font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">')
-out.append('<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" '
-           'orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555555"/></marker></defs>')
-out.append(f'<rect width="{W}" height="{H}" fill="#ffffff"/>')
+begin(W, H)
 t(24, 34, 'Agent E2 knowledge structure', 20, 'bold', '#111')
 t(24, 54, 'Knowledge of private cloud operations management with VMware Cloud Foundation: 288 files, about 327K tokens. '
           'Bands: method and product, layers, slices of one fact, anatomy of a file, paths to the model.', 12.5, 'normal', '#444')
@@ -245,11 +196,5 @@ for n, (a, b, c) in enumerate(paths):
     if n < 4:
         pass
 
-out.append('</svg>')
-
 here = os.path.dirname(os.path.abspath(__file__))
-root = os.path.dirname(os.path.dirname(here))
-path = os.path.join(root, 'images', 'knowledge-structure.svg')
-with open(path, 'w', encoding='utf-8') as f:
-    f.write('\n'.join(out) + '\n')
-print('wrote', path)
+finish(os.path.join(os.path.dirname(os.path.dirname(here)), 'images', 'knowledge-structure.svg'))

@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="780" viewBox="0 0 1500 780" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555555"/></marker></defs>
+<rect width="1500" height="780" fill="#ffffff"/>
+<text x="24" y="34" font-size="20" font-weight="bold" fill="#111" text-anchor="start">Repository: product, proof and project</text>
+<text x="24" y="54" font-size="12.5" font-weight="normal" fill="#444" text-anchor="start">One repository, three groups. Only the product is deployed to the site.</text>
+<rect x="973.0" y="66" width="14" height="14" rx="3" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="993.0" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Knowledge</text>
+<rect x="1071.7" y="66" width="14" height="14" rx="3" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="1091.7" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Agent and harness</text>
+<rect x="1220.8" y="66" width="14" height="14" rx="3" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
+<text x="1240.8" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Model</text>
+<rect x="1294.3" y="66" width="14" height="14" rx="3" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="1314.3" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Check or proof</text>
+<rect x="1424.5" y="66" width="14" height="14" rx="3" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1444.5" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Other</text>
+<rect x="30" y="100" width="960" height="560" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
+<text x="42" y="122" font-size="14" font-weight="bold" fill="#222" text-anchor="start">Product</text>
+<text x="42" y="138" font-size="11" font-weight="normal" fill="#555" text-anchor="start">Deployed to the site</text>
+<rect x="60" y="160" width="270" height="90" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="70" y="179" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">knowledge/</text>
+<text x="70" y="198" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">Codified expertise.</text>
+<text x="70" y="213" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">The only indexed folder.</text>
+<rect x="420" y="160" width="270" height="90" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="430" y="179" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">harness/</text>
+<text x="430" y="198" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">Retrieval, tools,</text>
+<text x="430" y="213" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">verifier, rules.</text>
+<rect x="240" y="400" width="310" height="90" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="250" y="419" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">Agent</text>
+<text x="250" y="438" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">The expert's procedure as code:</text>
+<text x="250" y="453" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">case, reading plan, checks.</text>
+<rect x="700" y="400" width="260" height="90" rx="6" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
+<text x="710" y="419" font-size="13" font-weight="bold" fill="#4a2400" text-anchor="start">Open-weight model</text>
+<text x="710" y="438" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">On a local GPU.</text>
+<path d="M 418 205 L 332 205" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="344" y="185" width="63" height="15" fill="#ffffff" opacity="0.92"/>
+<text x="375" y="196" font-size="10.5" font-weight="normal" fill="#555555" text-anchor="middle">retrieves</text>
+<path d="M 290 398 L 290 252" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="222" y="319" width="136" height="15" fill="#ffffff" opacity="0.92"/>
+<text x="290" y="330" font-size="10.5" font-weight="normal" fill="#555555" text-anchor="middle">plans from the map of</text>
+<path d="M 500 398 L 500 252" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="444" y="319" width="112" height="15" fill="#ffffff" opacity="0.92"/>
+<text x="500" y="330" font-size="10.5" font-weight="normal" fill="#555555" text-anchor="middle">runs the tools of</text>
+<path d="M 552 445 L 698 445" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="551" y="425" width="148" height="15" fill="#ffffff" opacity="0.92"/>
+<text x="625" y="436" font-size="10.5" font-weight="normal" fill="#555555" text-anchor="middle">calls to read and write</text>
+<rect x="1030" y="100" width="440" height="190" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
+<text x="1042" y="122" font-size="14" font-weight="bold" fill="#222" text-anchor="start">Proof</text>
+<text x="1042" y="138" font-size="11" font-weight="normal" fill="#555" text-anchor="start">Not deployed</text>
+<rect x="1050" y="160" width="400" height="90" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="1060" y="179" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">benchmark/</text>
+<text x="1060" y="198" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">Questions, models, runner, results.</text>
+<rect x="1030" y="320" width="440" height="340" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
+<text x="1042" y="342" font-size="14" font-weight="bold" fill="#222" text-anchor="start">Project</text>
+<text x="1042" y="358" font-size="11" font-weight="normal" fill="#555" text-anchor="start">Not deployed</text>
+<rect x="1050" y="370" width="400" height="100" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="1060" y="389" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">project/tools/</text>
+<text x="1060" y="408" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">rules_check.py,</text>
+<text x="1060" y="423" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">rules_check_values.yaml.</text>
+<rect x="1050" y="520" width="400" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1060" y="539" font-size="13" font-weight="bold" fill="#222222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">project/</text>
+<text x="1060" y="558" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Plan, decisions, author questions,</text>
+<text x="1060" y="573" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">reviews.</text>
+<path d="M 1050 200 L 692 200" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="799" y="179" width="142" height="15" fill="#ffffff" opacity="0.92"/>
+<text x="870" y="190" font-size="10.5" font-weight="normal" fill="#555555" text-anchor="middle">runs questions through</text>
+<path d="M 1250 368 L 1250 252" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="1258" y="299" width="45" height="15" fill="#ffffff" opacity="0.92"/>
+<text x="1280" y="310" font-size="10.5" font-weight="normal" fill="#555555" text-anchor="middle">checks</text>
+<path d="M 1050 420 L 1010 420 L 1010 128 L 195 128 L 195 158" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="578" y="111" width="45" height="15" fill="#ffffff" opacity="0.92"/>
+<text x="600" y="122" font-size="10.5" font-weight="normal" fill="#555555" text-anchor="middle">checks</text>
+<rect x="240" y="700" width="310" height="60" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="250" y="719" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">PCM</text>
+<text x="250" y="738" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Separate repository.</text>
+<path d="M 395 698 L 395 492" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="446" y="589" width="148" height="15" fill="#ffffff" opacity="0.92"/>
+<text x="520" y="600" font-size="10.5" font-weight="normal" fill="#555555" text-anchor="middle">HTTP: answer_service.py</text>
+</svg>

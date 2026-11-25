@@ -12,23 +12,7 @@
 ## Agent E2 in PCM
 Agent E2 is the knowledge service of [PCM](https://github.com/e1-rahabok/private-cloud-management) (Private Cloud Management). It stays a logically independent application: its own repository, release, tests, benchmark and process. PCM is its main caller and holds none of its logic ([PCM D-078](https://github.com/e1-rahabok/private-cloud-management/blob/main/decisions.md)).
 
-```mermaid
-flowchart LR
-  subgraph PCM["PCM: separate repository and process"]
-    UI["screens, Agent E2 panel"]
-    D["data: VCF Operations, synthetic ACME"]
-    C["identity, roles,<br/>conversation and topics"]
-  end
-  subgraph E2["Agent E2: this repository"]
-    S["harness/answer_service.py<br/>POST /v1/answer, /v1/suggest, /v1/topic<br/>GET /v1/health"]
-    P["agent, harness, knowledge/"]
-    S --> P
-  end
-  M(["model server<br/>(local GPU; lab: gateway)"])
-  UI -->|"question, facts (screen + KPI series),<br/>role, history, topic_choice"| S
-  S -->|"lead, answer, files read, computed,<br/>topic, shape, knowledge commit"| UI
-  P -->|OpenAI-compatible API| M
-```
+![Agent E2 in PCM: PCM and Agent E2 as two processes, the HTTP calls between them, and the model server](images/agent-e2-in-pcm.svg)
 
 | Owner | Owns |
 |---|---|
@@ -50,30 +34,7 @@ flowchart LR
 
 One repository holds three groups, and only the product is deployed. The folder-by-folder map is [REPOSITORY-MAP.md](REPOSITORY-MAP.md).
 
-```mermaid
-flowchart LR
-  subgraph Product["Product: deployed to the site"]
-    K["knowledge/<br/>codified expertise<br/>(the only indexed folder)"]
-    H["harness/<br/>retrieval, tools,<br/>verifier, rules"]
-    A["agent<br/>the expert's procedure as code:<br/>case, reading plan, checks"]
-    M(["open-weight model<br/>on a local GPU"])
-    H -->|retrieves| K
-    A -->|plans from the map of| K
-    A -->|runs the tools of| H
-    A -->|calls to read and write| M
-  end
-  subgraph Proof["Proof: not deployed"]
-    B["benchmark/<br/>questions, models,<br/>runner, results"]
-  end
-  subgraph Project["Project: not deployed"]
-    P["project/<br/>plan, decisions,<br/>author questions, reviews"]
-    T["project/tools/<br/>rules_check.py, rules_check_values.yaml"]
-  end
-  B -->|runs questions through| H
-  T -->|checks| K
-  T -->|checks| B
-  PCM["PCM<br/>(separate repository)"] -->|HTTP: answer_service.py| A
-```
+![Repository groups: product (knowledge, harness, agent, model), proof (benchmark) and project (plan, tools)](images/repository-groups.svg)
 
 - Product: what runs at the customer site.
   - `knowledge/`: Level 400 mechanisms, metrics, misconceptions and flows (health checks, troubleshooting, decision trees), plus exact data in [`knowledge/catalog/`](knowledge/catalog). Up-front text and domain code in `harness/` act on it ([`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), section 2). Version 1.0 covers vSphere 9.1 metrics, the VCF Operations metrics and models computed on vSphere objects, and the Guest OS layer, for performance and capacity. The end scope is the private cloud stack (vSAN, NSX, Kubernetes, and VCF Operations beyond its vSphere metrics).
@@ -97,7 +58,7 @@ This is one level down from the Product group: how the agent and the harness dri
 - Orange lines are the model calls: 1 is the case (temperature 0) and 2 the draft. Calls 3 (the gap follow-up) and 4 (the repair) fire only when the agent finds a gap or a hard verifier issue. Consensus repeats 5 and 6 on the same reading set.
 - Purple dashed lines show agent code calling a tool. The model calls no tool and never chooses a file.
 - Grey dashed lines are built but not yet called: the `flow_executor.py` executable steps (Q166) and the `capacity_calculator.py` planning calculator.
-- Source: [`project/tools/product_diagram.py`](project/tools/product_diagram.py) draws the SVG. Change it along with any change to `harness/` that the diagram shows, and run it from the repository root. The diagram is laid out by hand, not with Mermaid, because Mermaid's automatic layout pulled the stages out of order at this size.
+- Source: [`project/tools/product_diagram.py`](project/tools/product_diagram.py) draws the SVG. Change it along with any change to `harness/` that the diagram shows, and run it from the repository root. The diagram is laid out by hand, not with Mermaid, because Mermaid's automatic layout pulled the stages out of order at this size. The Agent E2 in PCM and Repository diagrams are drawn by [`project/tools/document_diagrams.py`](project/tools/document_diagrams.py) in the same way.
 
 ## 1. Parts
 | Part | What it is | Where | What it decides |
