@@ -1,228 +1,222 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1532" viewBox="0 0 1800 1532" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1572" viewBox="0 0 1800 1572" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
 <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555555"/></marker></defs>
-<rect width="1800" height="1532" fill="#ffffff"/>
+<rect width="1800" height="1572" fill="#ffffff"/>
 <text x="24" y="34" font-size="20" font-weight="bold" fill="#111" text-anchor="start">Agent E2 knowledge structure</text>
-<text x="24" y="54" font-size="12.5" font-weight="normal" fill="#444" text-anchor="start">Private Cloud Operations Management with VMware Cloud Foundation: 288 files, about 327K tokens. Bands from top to bottom: bodies, layers, slices, file anatomy, paths to the model.</text>
-<rect x="10" y="70" width="1780" height="345" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
+<text x="24" y="54" font-size="12.5" font-weight="normal" fill="#444" text-anchor="start">Knowledge of private cloud operations management with VMware Cloud Foundation: 288 files, about 327K tokens. Bands: method and product, layers, slices of one fact, anatomy of a file, paths to the model.</text>
+<rect x="10" y="70" width="1780" height="384" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
 <circle cx="38" cy="98" r="14" fill="#333"/>
 <text x="38" y="103" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">1</text>
-<text x="62" y="103" font-size="16" font-weight="bold" fill="#222" text-anchor="start">Method and product</text>
-<text x="62" y="122" font-size="12" font-weight="normal" fill="#555" text-anchor="start">Every answer uses both. The method covers how to operate VCF. The product covers what VCF is and does. Vocabulary and exact values serve both.</text>
-<rect x="30" y="138" width="520" height="262" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
-<text x="40" y="157" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">Method: the SP5 Framework</text>
-<text x="40" y="176" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">How to operate VCF, in VCF terms and examples.</text>
+<text x="62" y="103" font-size="16" font-weight="bold" fill="#222" text-anchor="start">Method | Product</text>
+<text x="62" y="122" font-size="12" font-weight="normal" fill="#555" text-anchor="start">Method explains how private cloud is managed. Product is the knowledge of the IT products involved. Each has its supporting files.</text>
+<rect x="30" y="138" width="540" height="304" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="40" y="157" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">Method: IT Operations Framework</text>
+<text x="40" y="176" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">The SP5 Framework: how private cloud is managed, with VCF terms and examples.</text>
 <text x="40" y="191" font-size="11.5" font-weight="bold" fill="#0d2a4d" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">knowledge/sp5-framework/   57 files</text>
-<rect x="42" y="204" width="496" height="34" rx="4" fill="#ffffff" stroke="#1f5fae" stroke-width="1"/>
+<rect x="42" y="204" width="516" height="34" rx="4" fill="#ffffff" stroke="#1f5fae" stroke-width="1"/>
 <text x="50" y="218" font-size="11.5" font-weight="bold" fill="#0d2a4d" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">concepts/  14</text>
 <text x="190" y="218" font-size="11" font-weight="normal" fill="#0d2a4d" text-anchor="start">the framework across pillars: health check,</text>
 <text x="190" y="232" font-size="11" font-weight="normal" fill="#0d2a4d" text-anchor="start">SLAs, class of service, modelling</text>
-<rect x="42" y="242" width="496" height="34" rx="4" fill="#ffffff" stroke="#1f5fae" stroke-width="1"/>
+<rect x="42" y="242" width="516" height="34" rx="4" fill="#ffffff" stroke="#1f5fae" stroke-width="1"/>
 <text x="50" y="256" font-size="11.5" font-weight="bold" fill="#0d2a4d" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">observability/  13</text>
 <text x="190" y="256" font-size="11" font-weight="normal" fill="#0d2a4d" text-anchor="start">how to read telemetry: input types, interval,</text>
 <text x="190" y="270" font-size="11" font-weight="normal" fill="#0d2a4d" text-anchor="start">units, Triple See Method</text>
-<rect x="42" y="280" width="496" height="34" rx="4" fill="#ffffff" stroke="#1f5fae" stroke-width="1"/>
+<rect x="42" y="280" width="516" height="34" rx="4" fill="#ffffff" stroke="#1f5fae" stroke-width="1"/>
 <text x="50" y="294" font-size="11.5" font-weight="bold" fill="#0d2a4d" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">outputs/  13</text>
 <text x="190" y="294" font-size="11" font-weight="normal" fill="#0d2a4d" text-anchor="start">how insight reaches people: alerts,</text>
 <text x="190" y="308" font-size="11" font-weight="normal" fill="#0d2a4d" text-anchor="start">dashboards, reports, NOC screen</text>
-<rect x="42" y="318" width="496" height="34" rx="4" fill="#ffffff" stroke="#1f5fae" stroke-width="1"/>
+<rect x="42" y="318" width="516" height="34" rx="4" fill="#ffffff" stroke="#1f5fae" stroke-width="1"/>
 <text x="50" y="332" font-size="11.5" font-weight="bold" fill="#0d2a4d" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">capacity/  12</text>
 <text x="190" y="332" font-size="11" font-weight="normal" fill="#0d2a4d" text-anchor="start">supply, demand, overcommit, forecasting,</text>
 <text x="190" y="346" font-size="11" font-weight="normal" fill="#0d2a4d" text-anchor="start">planning, sizing, reclamation</text>
-<rect x="42" y="356" width="496" height="34" rx="4" fill="#ffffff" stroke="#1f5fae" stroke-width="1"/>
+<rect x="42" y="356" width="516" height="34" rx="4" fill="#ffffff" stroke="#1f5fae" stroke-width="1"/>
 <text x="50" y="370" font-size="11.5" font-weight="bold" fill="#0d2a4d" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">performance/  5</text>
 <text x="190" y="370" font-size="11" font-weight="normal" fill="#0d2a4d" text-anchor="start">KPI design, KPI vs SLA, noisy neighbour</text>
-<rect x="580" y="138" width="760" height="262" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
-<text x="590" y="157" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start">Product: VCF 9.x</text>
-<text x="590" y="176" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">What each component is and does, with its counters.</text>
-<rect x="592" y="188" width="736" height="124" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
-<text x="602" y="206" font-size="12" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">vsphere/   204 files</text>
-<rect x="602" y="216" width="172" height="86" rx="4" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1"/>
-<text x="608" y="234" font-size="11" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">architecture/  7</text>
-<text x="608" y="251" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">what every metric depends on:</text>
-<text x="608" y="265" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">provider/consumer, overhead</text>
-<rect x="783" y="216" width="172" height="86" rx="4" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1"/>
-<text x="789" y="234" font-size="11" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">technology/  150</text>
-<text x="789" y="251" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">raw metrics by technology:</text>
-<text x="789" y="265" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">cpu gpu memory storage net</text>
-<rect x="964" y="216" width="172" height="86" rx="4" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1"/>
-<text x="970" y="234" font-size="11" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">object-types/  39</text>
-<text x="970" y="251" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">content by object type:</text>
-<text x="970" y="265" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">vm, esxi, cluster ...</text>
-<rect x="1145" y="216" width="172" height="86" rx="4" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1"/>
-<text x="1151" y="234" font-size="11" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">tools/  8</text>
-<text x="1151" y="251" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">how tools show counters:</text>
-<text x="1151" y="265" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">esxtop, vSphere Client</text>
-<rect x="592" y="322" width="360" height="68" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
-<text x="602" y="340" font-size="12" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">vcf-operations/   10 files</text>
-<text x="602" y="357" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">The product VCF Operations: its role, alert definitions,</text>
-<text x="602" y="371" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">report suite, dashboards and features as built.</text>
-<rect x="968" y="322" width="360" height="68" rx="4" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
-<text x="978" y="340" font-size="12" font-weight="bold" fill="#4a2400" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">guest-os/   16 files</text>
-<text x="978" y="357" font-size="10.5" font-weight="normal" fill="#4a2400" text-anchor="start">Windows and Linux: a separate layer, not Broadcom</text>
-<text x="978" y="371" font-size="10.5" font-weight="normal" fill="#4a2400" text-anchor="start">products, not part of the VM. cpu, memory, storage, system.</text>
-<rect x="1370" y="138" width="400" height="262" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
-<text x="1380" y="157" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start">Shared</text>
-<rect x="1382" y="174" width="376" height="100" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>
-<text x="1392" y="192" font-size="12" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">glossary.md   1 file</text>
-<text x="1392" y="210" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">The agent's vocabulary: one English word per</text>
-<text x="1392" y="224" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">concept, other names users say, confusable</text>
-<text x="1392" y="238" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">pairs (Usage vs Utilization, KPI vs SLA).</text>
-<text x="1392" y="260" font-size="11" font-weight="bold" fill="#2a1650" text-anchor="start">One English word per concept.</text>
-<rect x="1382" y="284" width="376" height="104" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>
-<text x="1392" y="302" font-size="12" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">catalog/   9 YAML files</text>
-<text x="1392" y="320" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">Exact values, loaded into SQLite, not chunked:</text>
-<text x="1392" y="334" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">vCenter counters, esxtop fields, thresholds,</text>
-<text x="1392" y="348" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">object model, user terms.</text>
-<text x="1392" y="370" font-size="11" font-weight="bold" fill="#2a1650" text-anchor="start">A lookup by key returns the exact value.</text>
-<rect x="10" y="430" width="1780" height="225" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
-<circle cx="38" cy="458" r="14" fill="#333"/>
-<text x="38" y="463" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">2</text>
-<text x="62" y="463" font-size="16" font-weight="bold" fill="#222" text-anchor="start">Layers of the product</text>
-<text x="62" y="482" font-size="12" font-weight="normal" fill="#555" text-anchor="start">Tag: layer. A VM is a virtual motherboard and the Guest OS above it is a separate layer, so the layer that produces a metric decides its home.</text>
-<rect x="30" y="498" width="420" height="104" rx="6" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
-<text x="40" y="518" font-size="13" font-weight="bold" fill="#4a2400" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">guest-os</text>
-<text x="40" y="536" font-size="11.5" font-weight="bold" fill="#4a2400" text-anchor="start">Windows or Linux inside the VM</text>
-<text x="40" y="556" font-size="11" font-weight="normal" fill="#4a2400" text-anchor="start">Not a Broadcom product, not part of the VM.</text>
-<text x="40" y="570" font-size="11" font-weight="normal" fill="#4a2400" text-anchor="start">Folder: knowledge/guest-os/</text>
-<path d="M 452 550 L 463 550" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
-<rect x="465" y="498" width="420" height="104" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
-<text x="475" y="518" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">virtual-motherboard</text>
-<text x="475" y="536" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start">The VM as the hypervisor presents it</text>
-<text x="475" y="556" font-size="11" font-weight="normal" fill="#173a16" text-anchor="start">Example: vCPU Ready, the consumer view.</text>
-<text x="475" y="570" font-size="11" font-weight="normal" fill="#173a16" text-anchor="start">Folder: technology/*/metrics/virtual-motherboard/</text>
-<path d="M 887 550 L 898 550" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
-<rect x="900" y="498" width="420" height="104" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
-<text x="910" y="518" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">hypervisor</text>
-<text x="910" y="536" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start">ESXi: kernel worlds, schedulers, overhead</text>
-<text x="910" y="556" font-size="11" font-weight="normal" fill="#173a16" text-anchor="start">The provider view of the same resource.</text>
-<text x="910" y="570" font-size="11" font-weight="normal" fill="#173a16" text-anchor="start">Folder: vsphere/architecture/ and metrics/host/</text>
-<path d="M 1322 550 L 1333 550" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
-<rect x="1335" y="498" width="420" height="104" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
-<text x="1345" y="518" font-size="13" font-weight="bold" fill="#222222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">physical</text>
-<text x="1345" y="536" font-size="11.5" font-weight="bold" fill="#222222" text-anchor="start">Cores, memory, NICs, disks</text>
-<text x="1345" y="556" font-size="11" font-weight="normal" fill="#222222" text-anchor="start">The hardware under the hypervisor.</text>
-<text x="1345" y="570" font-size="11" font-weight="normal" fill="#222222" text-anchor="start">Tag only: no folder of its own.</text>
-<text x="30" y="622" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Vantage points: a consumer VM is seen from the virtual motherboard, and the provider ESXi from the hypervisor. The same word can mean different things in two layers.</text>
-<text x="30" y="640" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Example: reading ESXi CPU Ready as the host waiting for CPU is wrong, because Ready is a consumer metric. The layer tag keeps the two apart in search.</text>
-<rect x="10" y="670" width="1780" height="312" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
-<circle cx="38" cy="698" r="14" fill="#333"/>
-<text x="38" y="703" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">3</text>
-<text x="62" y="703" font-size="16" font-weight="bold" fill="#222" text-anchor="start">Slices of one fact</text>
-<text x="62" y="722" font-size="12" font-weight="normal" fill="#555" text-anchor="start">The folder tree holds one slice. Tags and links hold the others. Retrieval filters on any tag, and the model follows any link.</text>
-<rect x="560" y="738" width="680" height="64" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
-<text x="570" y="757" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">VM CPU Ready</text>
-<text x="570" y="776" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/ready.md</text>
-<text x="570" y="791" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">One metric, one object type, one file. Kind: metric-meaning. Class: contention.</text>
-<rect x="30" y="838" width="560" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
-<text x="40" y="857" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Technology   (Folder and tag)</text>
-<text x="40" y="880" font-size="13" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">cpu</text>
-<text x="40" y="900" font-size="11.5" font-weight="normal" fill="#222" text-anchor="start">Read contention first,</text>
-<text x="40" y="915" font-size="11.5" font-weight="normal" fill="#222" text-anchor="start">then consumption. Folder: vsphere/technology/cpu/</text>
-<path d="M 660 802 L 310 837" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
-<rect x="620" y="838" width="560" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
-<text x="630" y="857" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Object   (Tag and link)</text>
-<text x="630" y="880" font-size="13" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">VirtualMachine</text>
-<text x="630" y="900" font-size="11.5" font-weight="normal" fill="#222" text-anchor="start">Listed in vm-health-check, part of the</text>
-<text x="630" y="915" font-size="11.5" font-weight="normal" fill="#222" text-anchor="start">VM Performance KPI (vm-performance).</text>
-<path d="M 900 802 L 900 837" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
-<rect x="1210" y="838" width="560" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
-<text x="1220" y="857" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Pillar   (Tag and link)</text>
-<text x="1220" y="880" font-size="13" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">performance</text>
-<text x="1220" y="900" font-size="11.5" font-weight="normal" fill="#222" text-anchor="start">Used by performance-kpi-design and by</text>
-<text x="1220" y="915" font-size="11.5" font-weight="normal" fill="#222" text-anchor="start">the cluster KPI in the SP5 Framework.</text>
-<path d="M 1140 802 L 1490 837" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
-<text x="30" y="970" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Tags: scope, technology, pillar, product, object, layer, instance, metric_class. Links: internal_derive, same_name, same_meaning, related. Together they list which files are read together.</text>
-<rect x="10" y="997" width="1780" height="340" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
-<circle cx="38" cy="1025" r="14" fill="#333"/>
-<text x="38" y="1030" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">4</text>
-<text x="62" y="1030" font-size="16" font-weight="bold" fill="#222" text-anchor="start">Anatomy of a file</text>
-<text x="62" y="1049" font-size="12" font-weight="normal" fill="#555" text-anchor="start">One fact per bullet, so a mistake sits on one line. Templates fix the section names, so one question finds the same section in every file.</text>
-<rect x="30" y="1065" width="430" height="256" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
-<text x="40" y="1084" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Seven kinds of file (retriever_guide)</text>
-<text x="40" y="1111" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">metric-meaning</text>
-<text x="190" y="1111" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">107</text>
-<text x="200" y="1111" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">What does this number mean on this object?</text>
-<text x="40" y="1140" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">how-it-works</text>
-<text x="190" y="1140" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">129</text>
-<text x="200" y="1140" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">How does it work? Why does the metric behave so?</text>
-<text x="40" y="1169" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">what-to-set</text>
-<text x="190" y="1169" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">29</text>
-<text x="200" y="1169" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">What to configure, which alerts, and why.</text>
-<text x="40" y="1198" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">troubleshooting</text>
-<text x="190" y="1198" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">12</text>
-<text x="200" y="1198" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">It is slow or down. Why? Order of checks.</text>
-<text x="40" y="1227" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">decision-tree</text>
-<text x="190" y="1227" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">7</text>
-<text x="200" y="1227" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">Can it, should it, how much?</text>
-<text x="40" y="1256" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">health-check</text>
-<text x="190" y="1256" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">3</text>
-<text x="200" y="1256" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">Is it healthy? What to check, in what order.</text>
-<text x="40" y="1285" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">term-meaning</text>
-<text x="190" y="1285" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">1</text>
-<text x="200" y="1285" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">The glossary.</text>
-<text x="40" y="1311" font-size="11" font-weight="bold" fill="#222" text-anchor="start">The harness reads the kind from the metadata.</text>
-<rect x="490" y="1065" width="400" height="256" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
-<text x="500" y="1084" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start">Inside a file</text>
-<rect x="500" y="1101" width="380" height="32" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
-<text x="508" y="1116" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace"># Title</text>
-<text x="508" y="1129" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">A name a question uses.</text>
-<rect x="500" y="1137" width="380" height="32" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
-<text x="508" y="1152" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">## Sections</text>
-<text x="508" y="1165" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">Meaning, Formula, Includes / excludes, Reason.</text>
-<rect x="500" y="1173" width="380" height="32" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
-<text x="508" y="1188" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">## Misconceptions</text>
-<text x="508" y="1201" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">A wrong reading in the user's words, and its fix.</text>
-<rect x="500" y="1209" width="380" height="32" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
-<text x="508" y="1224" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">Mermaid chart</text>
-<text x="508" y="1237" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">Master of a flow; steps follow it.</text>
-<rect x="500" y="1245" width="380" height="32" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
-<text x="508" y="1260" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">## Metadata (yaml)</text>
-<text x="508" y="1273" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">Last. Tags, links, provenance.</text>
-<text x="500" y="1309" font-size="11" font-weight="bold" fill="#173a16" text-anchor="start">A ## section is the unit of retrieval.</text>
-<rect x="920" y="1065" width="850" height="256" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
-<text x="930" y="1084" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start">Metadata block</text>
-<rect x="932" y="1103" width="404" height="96" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>
-<text x="942" y="1121" font-size="12.5" font-weight="bold" fill="#2a1650" text-anchor="start">Search tags</text>
-<text x="942" y="1141" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">scope  technology  pillar  product</text>
-<text x="942" y="1156" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">object  layer  instance  metric_class</text>
-<text x="942" y="1185" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">Tags filter retrieval.</text>
-<rect x="1352" y="1103" width="404" height="96" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>
-<text x="1362" y="1121" font-size="12.5" font-weight="bold" fill="#2a1650" text-anchor="start">Links</text>
-<text x="1362" y="1141" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">internal_derive  same_name</text>
-<text x="1362" y="1156" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">same_meaning  related</text>
-<text x="1362" y="1185" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">Links choose what is read together.</text>
-<rect x="932" y="1211" width="404" height="96" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>
-<text x="942" y="1229" font-size="12.5" font-weight="bold" fill="#2a1650" text-anchor="start">Provenance</text>
-<text x="942" y="1249" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">source.document  source.path  status</text>
-<text x="942" y="1264" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">corrections  review_notes</text>
-<text x="942" y="1293" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">Vendor version, draft or reviewed, what to check.</text>
-<rect x="1352" y="1211" width="404" height="96" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>
-<text x="1362" y="1229" font-size="12.5" font-weight="bold" fill="#2a1650" text-anchor="start">Delivery</text>
-<text x="1362" y="1249" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">up_front  images</text>
-<text x="1362" y="1293" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">The marked misconception goes with every question.</text>
-<rect x="10" y="1352" width="1780" height="150" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
-<circle cx="38" cy="1380" r="14" fill="#333"/>
-<text x="38" y="1385" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">5</text>
-<text x="62" y="1385" font-size="16" font-weight="bold" fill="#222" text-anchor="start">Paths to the model</text>
-<text x="62" y="1404" font-size="12" font-weight="normal" fill="#555" text-anchor="start">Five paths, each for a failure the others cannot prevent. Each fact has one home. The next diagram draws the paths in detail.</text>
-<rect x="30" y="1420" width="335" height="64" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
-<text x="40" y="1439" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">1  Retrieved</text>
-<text x="40" y="1458" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Mechanisms, metrics, flows</text>
-<text x="40" y="1473" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">knowledge/**/*.md</text>
-<rect x="380" y="1420" width="335" height="64" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
-<text x="390" y="1439" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">2  Looked up exactly</text>
-<text x="390" y="1458" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Units, rollups, thresholds</text>
-<text x="390" y="1473" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">knowledge/catalog/*.yaml</text>
-<rect x="730" y="1420" width="335" height="64" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
-<text x="740" y="1439" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">3  Given up front</text>
-<text x="740" y="1458" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Widest misconceptions, pairs</text>
-<text x="740" y="1473" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">up_front lines + glossary</text>
-<rect x="1080" y="1420" width="335" height="64" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
-<text x="1090" y="1439" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">4  Executed as code</text>
-<text x="1090" y="1458" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Arithmetic, answer checks</text>
-<text x="1090" y="1473" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">harness/*.py</text>
-<rect x="1430" y="1420" width="335" height="64" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
-<text x="1440" y="1439" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">5  Agent instructions</text>
-<text x="1440" y="1458" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Conduct for every answer</text>
-<text x="1440" y="1473" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">answer_modes.py, expert_agent.py</text>
+<rect x="42" y="394" width="516" height="34" rx="4" fill="#f5f8fd" stroke="#1f5fae" stroke-width="1" stroke-dasharray="5 3"/>
+<text x="50" y="408" font-size="11.5" font-weight="bold" fill="#0d2a4d" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">glossary.md  1</text>
+<text x="190" y="408" font-size="11" font-weight="normal" fill="#0d2a4d" text-anchor="start">supporting file: one English word per concept, other names</text>
+<text x="190" y="422" font-size="11" font-weight="normal" fill="#0d2a4d" text-anchor="start">users say, confusable pairs such as Usage vs Utilization</text>
+<rect x="590" y="138" width="1180" height="304" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="600" y="157" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start">Product: IT products</text>
+<text x="600" y="176" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">VMware Cloud Foundation, Windows and Linux. Hardware appears as the physical layer under ESXi.</text>
+<rect x="602" y="188" width="1156" height="124" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
+<text x="612" y="206" font-size="12" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">vsphere/   204 files</text>
+<rect x="612" y="216" width="276" height="86" rx="4" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1"/>
+<text x="618" y="234" font-size="11" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">architecture/  7</text>
+<text x="618" y="251" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">what every metric depends on:</text>
+<text x="618" y="265" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">provider/consumer, overhead</text>
+<rect x="899" y="216" width="276" height="86" rx="4" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1"/>
+<text x="905" y="234" font-size="11" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">technology/  150</text>
+<text x="905" y="251" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">raw metrics by technology:</text>
+<text x="905" y="265" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">cpu gpu memory storage network</text>
+<rect x="1186" y="216" width="276" height="86" rx="4" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1"/>
+<text x="1192" y="234" font-size="11" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">object-types/  39</text>
+<text x="1192" y="251" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">content by object type:</text>
+<text x="1192" y="265" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">vm, esxi, cluster ...</text>
+<rect x="1473" y="216" width="276" height="86" rx="4" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1"/>
+<text x="1479" y="234" font-size="11" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">tools/  8</text>
+<text x="1479" y="251" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">how tools show counters:</text>
+<text x="1479" y="265" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">esxtop, vSphere Client</text>
+<rect x="602" y="322" width="571" height="68" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
+<text x="612" y="340" font-size="12" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">vcf-operations/   10 files</text>
+<text x="612" y="357" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">The product VCF Operations: its role, alert definitions,</text>
+<text x="612" y="371" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">report suite, dashboards and features as built.</text>
+<rect x="1187" y="322" width="571" height="68" rx="4" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
+<text x="1197" y="340" font-size="12" font-weight="bold" fill="#4a2400" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">guest-os/   16 files</text>
+<text x="1197" y="357" font-size="10.5" font-weight="normal" fill="#4a2400" text-anchor="start">Windows and Linux above the VM: a separate layer, not VMware</text>
+<text x="1197" y="371" font-size="10.5" font-weight="normal" fill="#4a2400" text-anchor="start">products. cpu, memory, storage, system.</text>
+<rect x="602" y="400" width="1156" height="34" rx="4" fill="#f6fbf5" stroke="#2e7d32" stroke-width="1" stroke-dasharray="5 3"/>
+<text x="612" y="414" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">catalog/   9 YAML files</text>
+<text x="790" y="414" font-size="11" font-weight="normal" fill="#173a16" text-anchor="start">supporting files: exact values loaded into SQLite and looked up by key: vCenter counters, esxtop fields,</text>
+<text x="790" y="428" font-size="11" font-weight="normal" fill="#173a16" text-anchor="start">thresholds, object model, user terms.</text>
+<rect x="10" y="469" width="1780" height="225" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
+<circle cx="38" cy="497" r="14" fill="#333"/>
+<text x="38" y="502" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">2</text>
+<text x="62" y="502" font-size="16" font-weight="bold" fill="#222" text-anchor="start">Layers of the product</text>
+<text x="62" y="521" font-size="12" font-weight="normal" fill="#555" text-anchor="start">Tag: layer. A VM is a virtual motherboard and the Guest OS above it is a separate layer, so the layer that produces a metric decides its home.</text>
+<rect x="30" y="537" width="420" height="104" rx="6" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
+<text x="40" y="557" font-size="13" font-weight="bold" fill="#4a2400" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">guest-os</text>
+<text x="40" y="575" font-size="11.5" font-weight="bold" fill="#4a2400" text-anchor="start">Windows or Linux inside the VM</text>
+<text x="40" y="595" font-size="11" font-weight="normal" fill="#4a2400" text-anchor="start">Not a Broadcom product, not part of the VM.</text>
+<text x="40" y="609" font-size="11" font-weight="normal" fill="#4a2400" text-anchor="start">Folder: knowledge/guest-os/</text>
+<path d="M 452 589 L 463 589" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="465" y="537" width="420" height="104" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="475" y="557" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">virtual-motherboard</text>
+<text x="475" y="575" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start">The VM as the hypervisor presents it</text>
+<text x="475" y="595" font-size="11" font-weight="normal" fill="#173a16" text-anchor="start">Example: vCPU Ready, the consumer view.</text>
+<text x="475" y="609" font-size="11" font-weight="normal" fill="#173a16" text-anchor="start">Folder: technology/*/metrics/virtual-motherboard/</text>
+<path d="M 887 589 L 898 589" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="900" y="537" width="420" height="104" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="910" y="557" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">hypervisor</text>
+<text x="910" y="575" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start">ESXi: kernel worlds, schedulers, overhead</text>
+<text x="910" y="595" font-size="11" font-weight="normal" fill="#173a16" text-anchor="start">The provider view of the same resource.</text>
+<text x="910" y="609" font-size="11" font-weight="normal" fill="#173a16" text-anchor="start">Folder: vsphere/architecture/ and metrics/host/</text>
+<path d="M 1322 589 L 1333 589" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="1335" y="537" width="420" height="104" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1345" y="557" font-size="13" font-weight="bold" fill="#222222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">physical</text>
+<text x="1345" y="575" font-size="11.5" font-weight="bold" fill="#222222" text-anchor="start">Cores, memory, NICs, disks</text>
+<text x="1345" y="595" font-size="11" font-weight="normal" fill="#222222" text-anchor="start">The hardware under the hypervisor.</text>
+<text x="1345" y="609" font-size="11" font-weight="normal" fill="#222222" text-anchor="start">Tag only: no folder of its own.</text>
+<text x="30" y="661" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Vantage points: a consumer VM is seen from the virtual motherboard, and the provider ESXi from the hypervisor. The same word can mean different things in two layers.</text>
+<text x="30" y="679" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Example: reading ESXi CPU Ready as the host waiting for CPU is wrong, because Ready is a consumer metric. The layer tag keeps the two apart in search.</text>
+<rect x="10" y="709" width="1780" height="312" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
+<circle cx="38" cy="737" r="14" fill="#333"/>
+<text x="38" y="742" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">3</text>
+<text x="62" y="742" font-size="16" font-weight="bold" fill="#222" text-anchor="start">Slices of one fact</text>
+<text x="62" y="761" font-size="12" font-weight="normal" fill="#555" text-anchor="start">The folder tree holds one slice. Tags and links hold the others. Retrieval filters on any tag, and the model follows any link.</text>
+<rect x="560" y="777" width="680" height="64" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="570" y="796" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">VM CPU Ready</text>
+<text x="570" y="815" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/ready.md</text>
+<text x="570" y="830" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">One metric, one object type, one file. Kind: metric-meaning. Class: contention.</text>
+<rect x="30" y="877" width="560" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="40" y="896" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Technology   (Folder and tag)</text>
+<text x="40" y="919" font-size="13" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">cpu</text>
+<text x="40" y="939" font-size="11.5" font-weight="normal" fill="#222" text-anchor="start">Read contention first,</text>
+<text x="40" y="954" font-size="11.5" font-weight="normal" fill="#222" text-anchor="start">then consumption. Folder: vsphere/technology/cpu/</text>
+<path d="M 660 841 L 310 876" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="620" y="877" width="560" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="630" y="896" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Object   (Tag and link)</text>
+<text x="630" y="919" font-size="13" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">VirtualMachine</text>
+<text x="630" y="939" font-size="11.5" font-weight="normal" fill="#222" text-anchor="start">Listed in vm-health-check, part of the</text>
+<text x="630" y="954" font-size="11.5" font-weight="normal" fill="#222" text-anchor="start">VM Performance KPI (vm-performance).</text>
+<path d="M 900 841 L 900 876" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="1210" y="877" width="560" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1220" y="896" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Pillar   (Tag and link)</text>
+<text x="1220" y="919" font-size="13" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">performance</text>
+<text x="1220" y="939" font-size="11.5" font-weight="normal" fill="#222" text-anchor="start">Used by performance-kpi-design and by</text>
+<text x="1220" y="954" font-size="11.5" font-weight="normal" fill="#222" text-anchor="start">the cluster KPI in the SP5 Framework.</text>
+<path d="M 1140 841 L 1490 876" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="30" y="1009" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Tags: scope, technology, pillar, product, object, layer, instance, metric_class. Links: internal_derive, same_name, same_meaning, related. Together they list which files are read together.</text>
+<rect x="10" y="1036" width="1780" height="340" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
+<circle cx="38" cy="1064" r="14" fill="#333"/>
+<text x="38" y="1069" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">4</text>
+<text x="62" y="1069" font-size="16" font-weight="bold" fill="#222" text-anchor="start">Anatomy of a file</text>
+<text x="62" y="1088" font-size="12" font-weight="normal" fill="#555" text-anchor="start">One fact per bullet, so a mistake sits on one line. Templates fix the section names, so one question finds the same section in every file.</text>
+<rect x="30" y="1104" width="430" height="256" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="40" y="1123" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Seven kinds of file (retriever_guide)</text>
+<text x="40" y="1150" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">metric-meaning</text>
+<text x="190" y="1150" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">107</text>
+<text x="200" y="1150" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">What does this number mean on this object?</text>
+<text x="40" y="1179" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">how-it-works</text>
+<text x="190" y="1179" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">129</text>
+<text x="200" y="1179" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">How does it work? Why does the metric behave so?</text>
+<text x="40" y="1208" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">what-to-set</text>
+<text x="190" y="1208" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">29</text>
+<text x="200" y="1208" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">What to configure, which alerts, and why.</text>
+<text x="40" y="1237" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">troubleshooting</text>
+<text x="190" y="1237" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">12</text>
+<text x="200" y="1237" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">It is slow or down. Why? Order of checks.</text>
+<text x="40" y="1266" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">decision-tree</text>
+<text x="190" y="1266" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">7</text>
+<text x="200" y="1266" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">Can it, should it, how much?</text>
+<text x="40" y="1295" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">health-check</text>
+<text x="190" y="1295" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">3</text>
+<text x="200" y="1295" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">Is it healthy? What to check, in what order.</text>
+<text x="40" y="1324" font-size="11.5" font-weight="bold" fill="#222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">term-meaning</text>
+<text x="190" y="1324" font-size="11.5" font-weight="bold" fill="#1f5fae" text-anchor="end">1</text>
+<text x="200" y="1324" font-size="10.5" font-weight="normal" fill="#222" text-anchor="start">The glossary.</text>
+<text x="40" y="1350" font-size="11" font-weight="bold" fill="#222" text-anchor="start">The harness reads the kind from the metadata.</text>
+<rect x="490" y="1104" width="400" height="256" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="500" y="1123" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start">Inside a file</text>
+<rect x="500" y="1140" width="380" height="32" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
+<text x="508" y="1155" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace"># Title</text>
+<text x="508" y="1168" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">A name a question uses.</text>
+<rect x="500" y="1176" width="380" height="32" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
+<text x="508" y="1191" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">## Sections</text>
+<text x="508" y="1204" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">Meaning, Formula, Includes / excludes, Reason.</text>
+<rect x="500" y="1212" width="380" height="32" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
+<text x="508" y="1227" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">## Misconceptions</text>
+<text x="508" y="1240" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">A wrong reading in the user's words, and its fix.</text>
+<rect x="500" y="1248" width="380" height="32" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
+<text x="508" y="1263" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">Mermaid chart</text>
+<text x="508" y="1276" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">Master of a flow; steps follow it.</text>
+<rect x="500" y="1284" width="380" height="32" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>
+<text x="508" y="1299" font-size="11.5" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">## Metadata (yaml)</text>
+<text x="508" y="1312" font-size="10.5" font-weight="normal" fill="#173a16" text-anchor="start">Last. Tags, links, provenance.</text>
+<text x="500" y="1348" font-size="11" font-weight="bold" fill="#173a16" text-anchor="start">A ## section is the unit of retrieval.</text>
+<rect x="920" y="1104" width="850" height="256" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="930" y="1123" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start">Metadata block</text>
+<rect x="932" y="1142" width="404" height="96" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>
+<text x="942" y="1160" font-size="12.5" font-weight="bold" fill="#2a1650" text-anchor="start">Search tags</text>
+<text x="942" y="1180" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">scope  technology  pillar  product</text>
+<text x="942" y="1195" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">object  layer  instance  metric_class</text>
+<text x="942" y="1224" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">Tags filter retrieval.</text>
+<rect x="1352" y="1142" width="404" height="96" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>
+<text x="1362" y="1160" font-size="12.5" font-weight="bold" fill="#2a1650" text-anchor="start">Links</text>
+<text x="1362" y="1180" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">internal_derive  same_name</text>
+<text x="1362" y="1195" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">same_meaning  related</text>
+<text x="1362" y="1224" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">Links choose what is read together.</text>
+<rect x="932" y="1250" width="404" height="96" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>
+<text x="942" y="1268" font-size="12.5" font-weight="bold" fill="#2a1650" text-anchor="start">Provenance</text>
+<text x="942" y="1288" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">source.document  source.path  status</text>
+<text x="942" y="1303" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">corrections  review_notes</text>
+<text x="942" y="1332" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">Vendor version, draft or reviewed, what to check.</text>
+<rect x="1352" y="1250" width="404" height="96" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>
+<text x="1362" y="1268" font-size="12.5" font-weight="bold" fill="#2a1650" text-anchor="start">Delivery</text>
+<text x="1362" y="1288" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">up_front  images</text>
+<text x="1362" y="1332" font-size="11" font-weight="normal" fill="#2a1650" text-anchor="start">The marked misconception goes with every question.</text>
+<rect x="10" y="1391" width="1780" height="150" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
+<circle cx="38" cy="1419" r="14" fill="#333"/>
+<text x="38" y="1424" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">5</text>
+<text x="62" y="1424" font-size="16" font-weight="bold" fill="#222" text-anchor="start">Paths to the model</text>
+<text x="62" y="1443" font-size="12" font-weight="normal" fill="#555" text-anchor="start">Five ways knowledge reaches the model: retrieved, looked up, given up front, run as code, set as agent instructions. Each fact has one home.</text>
+<rect x="30" y="1459" width="335" height="64" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="40" y="1478" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">1  Retrieved</text>
+<text x="40" y="1497" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Mechanisms, metrics, flows</text>
+<text x="40" y="1512" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">knowledge/**/*.md</text>
+<rect x="380" y="1459" width="335" height="64" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="390" y="1478" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">2  Looked up exactly</text>
+<text x="390" y="1497" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Units, rollups, thresholds</text>
+<text x="390" y="1512" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">knowledge/catalog/*.yaml</text>
+<rect x="730" y="1459" width="335" height="64" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="740" y="1478" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">3  Given up front</text>
+<text x="740" y="1497" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Widest misconceptions, pairs</text>
+<text x="740" y="1512" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">up_front lines + glossary</text>
+<rect x="1080" y="1459" width="335" height="64" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1090" y="1478" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">4  Executed as code</text>
+<text x="1090" y="1497" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Arithmetic, answer checks</text>
+<text x="1090" y="1512" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">harness/*.py</text>
+<rect x="1430" y="1459" width="335" height="64" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1440" y="1478" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">5  Agent instructions</text>
+<text x="1440" y="1497" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Conduct for every answer</text>
+<text x="1440" y="1512" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">answer_modes.py, expert_agent.py</text>
 </svg>

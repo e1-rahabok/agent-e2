@@ -84,8 +84,8 @@ flowchart LR
 
 ![Agent E2 knowledge structure: method and product, layers, slices of one fact, anatomy of a file, paths to the model](images/knowledge-structure.svg)
 
-- Bands 1 to 5: the method and the product with what they share, the layers of the product, the slices of one fact, the anatomy of a file, and the paths to the model (drawn in detail below).
-- The method (SP5 Framework) covers how to operate VCF. The product covers what VCF is and does. Every answer uses both.
+- Bands 1 to 5: method and product with their supporting files, the layers of the product, the slices of one fact, the anatomy of a file, and the paths to the model (drawn in detail below).
+- Method: the SP5 Framework, an IT Operations Framework that explains how private cloud is managed. Product: the IT products involved, VMware Cloud Foundation, Windows and Linux. Every answer uses both. The glossary supports the method and the catalog supports the product.
 - A VM is a virtual motherboard and the Guest OS is a separate layer, so the layer that produces a metric decides where it lives.
 - The folder tree holds one slice of a fact. Tags and links hold the others.
 - Source: [`project/tools/knowledge_diagram.py`](project/tools/knowledge_diagram.py) draws the SVG. The file counts in it are typed in: update them from [`project/tools/knowledge_stats.py`](project/tools/knowledge_stats.py) and run the script from the repository root.

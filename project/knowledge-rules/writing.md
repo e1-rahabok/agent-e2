@@ -12,6 +12,7 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
   - no filler words or stock phrases of generated text;
   - no praise, hedging or summary lines;
   - no adjective where a number or a mechanism can stand; name the thing.
+  - say what a thing is before what it does: a label or opening line names the thing in concrete nouns. Verbs such as covers, serves and uses with nothing named read as generated text (author, 2026-11-25).
   - The list of flagged phrases, each with its plain replacement: [`project/tools/rules_check_values.yaml`](../tools/rules_check_values.yaml), `avoid_ai_speak`. The review checks them; lint stopped checking writing style on 2026-11-10 ([`project/plan.md`](../plan.md)). The same rule applies to documents, commit messages and pull request text.
 - Titles and headings are noun phrases that name the topic, as in a reference book: "Sub-metric formulas", not "How each sub-metric is calculated".
   - No questions, no openers How, Why, What, When, Where, Which, Who; no commands ("Design the alerts as a set"); no claims ("CPU Ready does not apply to ESXi"); no slogans ("Begin with the end in mind"). A claim is a fact: it goes in a bullet under the heading. Sentence headings are a habit of generated text, so they count as AI-speak.
