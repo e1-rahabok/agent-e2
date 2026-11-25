@@ -300,6 +300,7 @@ def main():
     check_catalog(allowed, ids, {fm.get('id'): FILE_LINK.sub(r'\1', body) for fm, body in docs.values()}, bad)
     check_metric_names(allowed, bad)
     check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
+    check_flow_map(bad, pdocs)
     check_source_document({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
     check_titles(bad)  # titles and headings are machine input: harness/knowledge_loader.py puts both in front of every chunk (Q181)
 
@@ -388,8 +389,11 @@ def check_moved(ids, bad):
                 bad(f, f'line {i}: moved id "{o}": use "{MOVED[o]}" (run project/tools/link_rewriter.py for links)')
 
 
-def check_flow_map(bad):
-    """REPOSITORY-MAP.md, section Flows, lists every flow file."""
+def check_flow_map(bad, docs):
+    """REPOSITORY-MAP.md, section Flows, lists every flow file, and its map of hand-offs is current."""
+    import flow_map_diagram
+    if os.path.exists('REPOSITORY-MAP.md') and flow_map_diagram.updated(open('REPOSITORY-MAP.md', encoding='utf-8').read(), docs) != open('REPOSITORY-MAP.md', encoding='utf-8').read():
+        bad('REPOSITORY-MAP.md', 'the map of hand-offs is out of date: run python3 project/tools/flow_map_diagram.py')
     text = open('REPOSITORY-MAP.md', encoding='utf-8').read() if os.path.exists('REPOSITORY-MAP.md') else ''
     for f in sorted(glob.glob('knowledge/**/*.md', recursive=True)):
         guide = (split(f)[0] or {}).get('retriever_guide')

@@ -37,7 +37,7 @@
 - Availability is read from soft errors, vMotion stun time and lock-ups, mostly in logs (VCF Operations Log Management).
 - Utilization is read in two places. Inside performance, consumption comes right after contention, to tell whether the object's own demand explains the contention. As capacity, it comes last. Utilization at 100% with no contention is not a performance problem.
 - Every performance flow checks configuration, the VM slow flow included.
-- VM-level flow: [`sp5-framework/performance/vm-slow`](../performance/vm-slow.md).
+- VM-level flow: [`vsphere/object-types/vm/troubleshooting/vm-slow`](../../vsphere/object-types/vm/troubleshooting/vm-slow.md).
 
 ### First incident: forgivable once
 - The first time an issue happens: troubleshoot, write the RCA, set up an alert.
@@ -100,7 +100,7 @@ internal_derive:
 related:
 - sp5-framework/concepts/health-check
 - sp5-framework/performance/performance-management
-- sp5-framework/performance/vm-slow
+- vsphere/object-types/vm/troubleshooting/vm-slow
 - sp5-framework/concepts/proactive-operations
 - sp5-framework/concepts/health-risk-efficiency
 - sp5-framework/observability/input-types

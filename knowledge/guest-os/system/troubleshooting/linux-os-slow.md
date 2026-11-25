@@ -4,7 +4,7 @@
 - The application team says an application on Linux is slow. They see Linux tools (top, vmstat, iostat, sar), not vSphere or Kubernetes metrics, and they usually do not tell the Guest OS from the VM.
 - First quantify the slowness in counters they can see. The Guest OS is a separate realm: it cannot see the VM's waits, and the VM cannot see Linux's queues.
 - Written for Linux 5.0 and later.
-- Started from [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 1. It ends with one of two verdicts: the wait is inside Linux, or it points below Linux to the VM.
+- Started from [`vsphere/object-types/vm/troubleshooting/vm-slow`](../../../vsphere/object-types/vm/troubleshooting/vm-slow.md), step 1. It ends with one of two verdicts: the wait is inside Linux, or it points below Linux to the VM.
 
 ## Flow
 ```mermaid
@@ -25,7 +25,7 @@ flowchart TD
 2. CPU queue (Guest OS). Run queue: `r` in vmstat ([`guest-os/cpu/metrics/run-queue`](../../cpu/metrics/run-queue.md)). Linux includes running threads, so compare it with the vCPU count: above it, threads wait for a vCPU. Load average (`uptime`, `/proc/loadavg`) counts tasks running or runnable (state R) plus tasks in uninterruptible sleep (state D, usually waiting for disk IO): a high load with idle vCPUs points to IO, not CPU. It is a count for the whole Guest OS, not divided by the vCPU count, so read it against the vCPU count. The kernel samples that count every 5 seconds and keeps three exponentially decaying averages (1, 5 and 15 minutes): the 1-minute figure still carries older samples, and a burst shorter than 5 seconds can fall between two samples. Pressure stall information: `/proc/pressure/cpu` gives the share of time at least one task waited for a CPU. Queue above vCPU count → step 3. Otherwise → step 4.
 3. Why the queue (Guest OS). Per vCPU user and system time (mpstat), the context switch rate (`cs` in vmstat; [`guest-os/cpu/metrics/context-switch`](../../cpu/metrics/context-switch.md)).
    - Queue high, vCPUs not all busy, or one vCPU busy and the rest idle → locks, threads that cannot run in parallel, kernel work: the application or the configuration, not the vCPU count.
-   - Queue high, every vCPU busy → the workload demands more runtime than Linux gets. Before adding vCPUs, check VM CPU contention in [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 4: a vCPU waiting for a physical thread is invisible to Linux ([`vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu`](../../../vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu.md)).
+   - Queue high, every vCPU busy → the workload demands more runtime than Linux gets. Before adding vCPUs, check VM CPU contention in [`vsphere/object-types/vm/troubleshooting/vm-slow`](../../../vsphere/object-types/vm/troubleshooting/vm-slow.md), step 4: a vCPU waiting for a physical thread is invisible to Linux ([`vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu`](../../../vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu.md)).
    - → step 4.
 4. Memory (Guest OS).
    - Swap-in and swap-out (`si`, `so` in vmstat) together with a high disk queue → likely a memory performance problem.
@@ -39,7 +39,7 @@ flowchart TD
 6. Network (Guest OS). Ring-full drops on the vmxnet3 interface: `pkts rx OOB` per receive queue in `ethtool -S` (`ip -s link` RX dropped leaves them out): the guest's receive ring is full, caused and fixed inside Linux ([`vsphere/technology/network/vnic-rx-drops`](../../../vsphere/technology/network/vnic-rx-drops.md)). → step 7.
 7. Verdict.
    - A wait found inside Linux (queue, memory stall, disk wait with low VM latency, ring full) → the cause is in the Guest OS or the application: Guest OS sizing ([`guest-os/system/guest-os-sizing`](../guest-os-sizing.md)) and configuration ([`guest-os/system/guest-os-configuration-review`](../guest-os-configuration-review.md)). Still confirm the VM has no contention in the window: a VM wait makes Linux queues worse.
-   - No wait inside Linux, or the signs point down (every vCPU busy, disk wait with high VM latency) → the VM: [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 2, with the window from step 1.
+   - No wait inside Linux, or the signs point down (every vCPU busy, disk wait with high VM latency) → the VM: [`vsphere/object-types/vm/troubleshooting/vm-slow`](../../../vsphere/object-types/vm/troubleshooting/vm-slow.md), step 2, with the window from step 1.
 
 ## Order rationale
 - Quantify first: the application team describes the symptom in Linux terms; the time window and the slow transaction steer every later check.
@@ -84,7 +84,7 @@ internal_derive:
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 - guest-os/cpu/metrics/run-queue
 - guest-os/cpu/metrics/context-switch
-- sp5-framework/performance/vm-slow
+- vsphere/object-types/vm/troubleshooting/vm-slow
 - guest-os/storage/disk-queue
 - vsphere/technology/network/vnic-rx-drops
 - guest-os/system/guest-os-sizing

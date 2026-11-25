@@ -17,7 +17,7 @@
 - Consumer: one VM, container or application. Other consumers have no problem, or are independent.
 - Provider: the shared infrastructure, because the problem hits many consumers, possibly at random: different VMs at different times.
 - Clear the infrastructure first. If it struggles to serve most VMs, troubleshooting one VM is pointless. Only when the infrastructure is free of contention, troubleshoot the VM.
-- Infrastructure health is judged from its VMs, not from infrastructure metrics: does it serve every VM well? Flow: [`sp5-framework/performance/vm-slow`](../performance/vm-slow.md).
+- Infrastructure health is judged from its VMs, not from infrastructure metrics: does it serve every VM well? Flow: [`vsphere/object-types/vm/troubleshooting/vm-slow`](../../vsphere/object-types/vm/troubleshooting/vm-slow.md).
 
 ## Three parts: contention, consumption, configuration
 - Contention: first and most visible. It is the primary counter for performance, and the only part that is colour coded.
@@ -67,7 +67,7 @@ object:
 - Datacenter
 internal_derive:
 - sp5-framework/outputs/dashboard-design
-- sp5-framework/performance/vm-slow
+- vsphere/object-types/vm/troubleshooting/vm-slow
 related:
 - vcf-operations/dashboards/vm-performance-dashboard
 - vcf-operations/features/peak-20-second-metrics

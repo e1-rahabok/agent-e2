@@ -46,12 +46,12 @@
 ## Question map
 | Question or signal | Start with |
 |---|---|
-| Users say the VM is slow | [`sp5-framework/performance/vm-slow`](vm-slow.md) |
+| Users say the VM is slow | [`vsphere/object-types/vm/troubleshooting/vm-slow`](../../vsphere/object-types/vm/troubleshooting/vm-slow.md) |
 | Windows or Linux is slow | [`guest-os/system/troubleshooting/ms-windows-slow`](../../guest-os/system/troubleshooting/ms-windows-slow.md), [`guest-os/system/troubleshooting/linux-os-slow`](../../guest-os/system/troubleshooting/linux-os-slow.md) |
 | VM Performance (%) yellow or worse | [`vsphere/object-types/vm/vm-health-check`](../../vsphere/object-types/vm/vm-health-check.md), steps 2-6 |
 | ESXi Performance (%) yellow or worse | [`vsphere/object-types/esxi/esxi-health-check`](../../vsphere/object-types/esxi/esxi-health-check.md), step 3 |
-| Cluster Performance (%) yellow or worse | [`vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`](../../vsphere/object-types/cluster/troubleshooting/cluster-vm-contention.md) |
-| A VM gets less than it demands in a DRS cluster | [`vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster`](../../vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster.md) |
+| Cluster Performance (%) yellow or worse | [`vsphere/object-types/cluster/cluster-vm-contention`](../../vsphere/object-types/cluster/cluster-vm-contention.md) |
+| A VM gets less than it demands in a DRS cluster | [`vsphere/object-types/vm/troubleshooting/vm-insufficient-resources-in-drs-cluster`](../../vsphere/object-types/vm/troubleshooting/vm-insufficient-resources-in-drs-cluster.md) |
 | CPU Ready, Co-stop or Contention high | [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](../../vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md) |
 | CPU Other Wait high | [`vsphere/technology/cpu/troubleshooting/vm-other-wait-high`](../../vsphere/technology/cpu/troubleshooting/vm-other-wait-high.md) |
 | CPU Run and Used differ | [`vsphere/technology/cpu/troubleshooting/run-vs-used-gap`](../../vsphere/technology/cpu/troubleshooting/run-vs-used-gap.md) |
@@ -100,7 +100,7 @@ internal_derive:
 related:
 - sp5-framework/performance/performance-kpi-design
 - sp5-framework/performance/kpi-vs-sla
-- sp5-framework/performance/vm-slow
+- vsphere/object-types/vm/troubleshooting/vm-slow
 - sp5-framework/performance/noisy-neighbour
 - sp5-framework/capacity/capacity-management
 - sp5-framework/concepts/health-check

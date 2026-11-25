@@ -10,7 +10,7 @@ vsphere/cluster-resource-management/concepts/scalable-shares: vsphere/object-typ
 vsphere/cluster-resource-management/concepts/vcls: vsphere/object-types/cluster/concepts/vcls
 vsphere/cluster-resource-management/configuration/drs-migration-levels: vsphere/object-types/cluster/configuration/drs-migration-levels
 vsphere/cluster-resource-management/configuration/resource-settings-guidance: vsphere/object-types/vm/configuration/resource-settings-guidance
-vsphere/cluster-resource-management/diagnosis/vm-insufficient-resources-in-drs-cluster: vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
+vsphere/cluster-resource-management/diagnosis/vm-insufficient-resources-in-drs-cluster: vsphere/object-types/vm/troubleshooting/vm-insufficient-resources-in-drs-cluster
 vsphere/cpu/architecture/bios-settings: vsphere/object-types/esxi/configuration/bios-settings
 vsphere/cpu/architecture/hardware-assisted-virtualization: vsphere/technology/cpu/concepts/hardware-assisted-virtualization
 vsphere/cpu/architecture/host-power-management: vsphere/technology/cpu/configuration/host-power-management
@@ -222,7 +222,7 @@ vsphere/resource-management/concepts/scalable-shares: vsphere/object-types/resou
 vsphere/resource-management/concepts/vcls: vsphere/object-types/cluster/concepts/vcls
 vsphere/resource-management/configuration/drs-migration-levels: vsphere/object-types/cluster/configuration/drs-migration-levels
 vsphere/resource-management/configuration/resource-settings-guidance: vsphere/object-types/vm/configuration/resource-settings-guidance
-vsphere/resource-management/diagnosis/vm-insufficient-resources-in-drs-cluster: vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
+vsphere/resource-management/diagnosis/vm-insufficient-resources-in-drs-cluster: vsphere/object-types/vm/troubleshooting/vm-insufficient-resources-in-drs-cluster
 vsphere/storage/concepts/esxi-storage-latency-stack: vsphere/technology/storage/concepts/esxi-storage-latency-stack
 vsphere/storage/concepts/guest-os-vs-vm-storage: vsphere/technology/storage/concepts/guest-os-vs-vm-storage
 vsphere/storage/concepts/snapshot-impact: vsphere/technology/storage/concepts/snapshot-impact
@@ -270,7 +270,7 @@ vsphere/system/concepts/rightsizing: sp5-framework/capacity/rightsizing
 vsphere/system/concepts/vm-footprint-sizing: sp5-framework/capacity/vm-footprint-sizing
 vsphere/system/concepts/vsphere-client-performance-guidance: vsphere/tools/vsphere-client/performance-guidance
 vsphere/system/configuration/bios-settings: vsphere/object-types/esxi/configuration/bios-settings
-vsphere/system/diagnosis/cluster-vm-contention: vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
+vsphere/system/diagnosis/cluster-vm-contention: vsphere/object-types/cluster/cluster-vm-contention
 vsphere/system/metrics/cluster/cluster-consumption: vsphere/object-types/cluster/models/cluster-consumption
 vsphere/system/metrics/cluster/cluster-performance: vsphere/object-types/cluster/cluster-performance
 vsphere/system/metrics/cluster/cluster-risk: vsphere/object-types/cluster/models/cluster-risk
@@ -293,9 +293,9 @@ vsphere/technology/storage/metrics/virtual-motherboard/provisioned-space: vspher
 vsphere/technology/storage/metrics/virtual-motherboard/snapshot-space: vsphere/technology/storage/metrics/virtual-motherboard/disk-space
 vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk-used: vsphere/technology/storage/metrics/virtual-motherboard/disk-space
 # 2026-11-08 (author): diagnosis/ split into troubleshooting/ and health-check/; overview-what-to-monitor became health checks; capacity and risk scores moved from kpis/ to models/.
-operations-management/performance/diagnosis/vm-slow-triage: sp5-framework/performance/vm-slow
-vsphere/object-types/cluster/diagnosis/cluster-vm-contention: vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
-vsphere/object-types/cluster/diagnosis/vm-insufficient-resources-in-drs-cluster: vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
+operations-management/performance/diagnosis/vm-slow-triage: vsphere/object-types/vm/troubleshooting/vm-slow
+vsphere/object-types/cluster/diagnosis/cluster-vm-contention: vsphere/object-types/cluster/cluster-vm-contention
+vsphere/object-types/cluster/diagnosis/vm-insufficient-resources-in-drs-cluster: vsphere/object-types/vm/troubleshooting/vm-insufficient-resources-in-drs-cluster
 vsphere/technology/cpu/diagnosis/vm-cpu-contention-high: vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
 vsphere/technology/cpu/diagnosis/vm-other-wait-high: vsphere/technology/cpu/troubleshooting/vm-other-wait-high
 vsphere/technology/cpu/diagnosis/run-vs-used-gap: vsphere/technology/cpu/troubleshooting/run-vs-used-gap
@@ -401,7 +401,7 @@ operations-management/capacity/vm-footprint-sizing: sp5-framework/capacity/vm-fo
 operations-management/performance/kpi-vs-sla: sp5-framework/performance/kpi-vs-sla
 operations-management/performance/noisy-neighbour: sp5-framework/performance/noisy-neighbour
 operations-management/performance/performance-kpi-design: sp5-framework/performance/performance-kpi-design
-operations-management/performance/troubleshooting/vm-slow-triage: sp5-framework/performance/vm-slow
+operations-management/performance/troubleshooting/vm-slow-triage: vsphere/object-types/vm/troubleshooting/vm-slow
 operations-management/sp5-framework/alert-design: sp5-framework/outputs/alert-design
 operations-management/sp5-framework/alerts-and-insights: sp5-framework/outputs/alerts-and-insights
 operations-management/sp5-framework/class-of-service: sp5-framework/concepts/class-of-service
@@ -432,7 +432,7 @@ vcf-operations/concepts/report-design: sp5-framework/outputs/report-design
 vcf-operations/concepts/report-suite: vcf-operations/report-suite
 vcf-operations/concepts/alert-definitions: vcf-operations/alert-definitions
 vcf-operations/concepts/real-time-metrics: vcf-operations/features/real-time-metrics
-sp5-framework/performance/troubleshooting/vm-slow-triage: sp5-framework/performance/vm-slow
+sp5-framework/performance/troubleshooting/vm-slow-triage: vsphere/object-types/vm/troubleshooting/vm-slow
 vsphere/tools/vcf-operations/peak-20-second-metrics: vcf-operations/features/peak-20-second-metrics
 vsphere/object-types/cluster/kpis/cluster-sla-sli: vsphere/object-types/cluster/cluster-performance
 sp5-framework/capacity/health-check/can-cluster-take-more-vms: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
@@ -477,7 +477,7 @@ guest-os/system/configuration/guest-os-alerts: guest-os/guest-os-alerts
 vcf-operations/concepts/vcf-operations-role: vcf-operations/vcf-operations-role
 vcf-operations/reports/report-suite: vcf-operations/report-suite
 vcf-operations/alerts/alert-definitions: vcf-operations/alert-definitions
-sp5-framework/performance/troubleshooting/vm-slow: sp5-framework/performance/vm-slow
+sp5-framework/performance/troubleshooting/vm-slow: vsphere/object-types/vm/troubleshooting/vm-slow
 vsphere/object-types/resource-pool/configuration/resource-pool-design: vsphere/object-types/resource-pool/resource-pool-design
 vsphere/object-types/resource-pool/alerts/resource-pool-alerts: vsphere/object-types/resource-pool/resource-pool-alerts
 vsphere/object-types/vm/metrics/vmotion: vsphere/object-types/vm/vmotion
@@ -512,3 +512,6 @@ vsphere/technology/storage/metrics/virtual-motherboard/disk-space-virtual-disk-u
 guest-os/system/concepts/guest-os-configuration-review: guest-os/system/guest-os-configuration-review
 guest-os/system/concepts/guest-os-sizing: guest-os/system/guest-os-sizing
 vsphere/tools/esxtop/units-vs-vsphere-client: vsphere/tools/esxtop/network-units-vs-vsphere-client
+sp5-framework/performance/vm-slow: vsphere/object-types/vm/troubleshooting/vm-slow
+vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster: vsphere/object-types/vm/troubleshooting/vm-insufficient-resources-in-drs-cluster
+vsphere/object-types/cluster/troubleshooting/cluster-vm-contention: vsphere/object-types/cluster/cluster-vm-contention

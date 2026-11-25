@@ -44,7 +44,7 @@ related:
 - vcf-operations/features/peak-20-second-metrics
 - vsphere/technology/memory/metrics/virtual-motherboard/active
 - vsphere/object-types/vm/vm-alerts
-- sp5-framework/performance/vm-slow
+- vsphere/object-types/vm/troubleshooting/vm-slow
 source:
   document: Knowledge base; VCF Operations 9.1 documentation (Broadcom TechDocs), Performance Dashboards > VM Contention Dashboard
   path: 'Conversation on the VM Contention dashboard: VM Performance supersedes VM Contention, which is marked (DEP) in VCF Operations 9.1; the 9.1 documentation was not updated'

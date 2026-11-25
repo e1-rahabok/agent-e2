@@ -33,7 +33,7 @@ vsish -e get /net/portsets/DvsPortset-0/ports/<port>/vmxnet3/rxSummary
 3. Consumption (VirtualMachine). Network VMs (firewalls, routers) or VMs expecting high packet rates ([`vsphere/technology/network/metrics/virtual-motherboard/packets`](metrics/virtual-motherboard/packets.md)). → step 4.
 4. CPU (VirtualMachine). The vCPU that drains the receive ring: Guest OS CPU busy on that vCPU, or VM CPU Ready and Co-stop holding it back, leave the ring full ([`vsphere/technology/network/concepts/packet-drop-accounting`](concepts/packet-drop-accounting.md), section Receive drop; [`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../cpu/metrics/virtual-motherboard/ready.md); [`vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`](../cpu/metrics/virtual-motherboard/co-stop.md); Broadcom KB 312565). One vCPU busy while the others idle: one receive queue (section Single receive queue). → step 5.
 5. Configuration (VirtualMachine). Receive ring size in the Guest OS driver; whether the VM requests NetQ RSS ([`vsphere/technology/network/configuration/rss-and-interrupt-coalescing`](configuration/rss-and-interrupt-coalescing.md)). → step 6.
-6. Known bug and log (VirtualMachine, HostSystem). VMXNET3 can lose packets in very high bursts when buffers run out (Broadcom KB 324556, legacy 2039495); events in the window ([`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), its known bug and log checks).
+6. Known bug and log (VirtualMachine, HostSystem). VMXNET3 can lose packets in very high bursts when buffers run out (Broadcom KB 324556, legacy 2039495); events in the window ([`vsphere/object-types/vm/troubleshooting/vm-slow`](../../object-types/vm/troubleshooting/vm-slow.md), its known bug and log checks).
 
 ## Order rationale
 - Confirm the drops at the port first: Guest OS loss can come from elsewhere in the path.
@@ -83,7 +83,7 @@ internal_derive:
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
 - vsphere/technology/network/configuration/rss-and-interrupt-coalescing
-- sp5-framework/performance/vm-slow
+- vsphere/object-types/vm/troubleshooting/vm-slow
 related:
 - vsphere/technology/network/metrics/host/packets-dropped
 - sp5-framework/performance/performance-management

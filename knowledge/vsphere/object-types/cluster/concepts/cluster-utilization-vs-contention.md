@@ -57,7 +57,7 @@ internal_derive:
 - sp5-framework/capacity/demand
 related:
 - vsphere/object-types/cluster/cluster-performance
-- vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
+- vsphere/object-types/cluster/cluster-vm-contention
 images:
   - path: ../images/cluster-cpu-demand-low-timeline.png
     product: [vcf-operations]

@@ -30,7 +30,7 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | `harness/` | The agent (six stages: case, reading plan, compute, ask, answer, check) and its tools: retrieval, catalog, calculator, verifier, web; the planning calculator and the flow executor are built but not yet called by the agent. [README](harness/README.md), [AGENT.md](harness/AGENT.md) |
 
 ## Flows
-A flow is an expert's order of checks. Three kinds, named by `retriever_guide` (health-check, troubleshooting, decision-tree); the agent finds them by that metadata, wherever the file sits: the reading plan puts the best flow of the question's kind first (tier 1, [harness/AGENT.md](harness/AGENT.md), section 4.2), and the model follows its numbered steps. Code taking the branches is to build (Q166). What each kind is: [Health check](knowledge/sp5-framework/concepts/health-check.md). Lint checks that these tables list every flow.
+A flow is an expert's order of checks. Three kinds, named by `retriever_guide` (health-check, troubleshooting, decision-tree); the agent finds them by that metadata, wherever the file sits: the reading plan puts the best flow of the question's kind first (tier 1, [harness/AGENT.md](harness/AGENT.md), section 4.2), and the model follows its numbered steps. Code taking the branches is to build (Q166). What each kind is: [Health check](knowledge/sp5-framework/concepts/health-check.md); the word: [glossary](knowledge/glossary.md), entry Flow. Placement: a flow sits at its entry point, the object and layer where the symptom or question is stated, and hands off to another flow at an object or realm boundary ([placement.md](project/knowledge-rules/placement.md), Flows). Lint checks that these tables list every flow and that the map of hand-offs below is current.
 
 ### Health checks: is this object healthy?
 Started by a schedule or a request, never by a problem. Always on one object type, never on a technology or a pillar; every pillar in order: availability, performance, security, capacity. The parent includes its children, except across a realm (the Guest OS is not part of the VM or host check). A failed step opens a troubleshooting flow.
@@ -46,7 +46,7 @@ Started by a known problem: a complaint, an alert, or a failed health check step
 
 | Symptom | File |
 |---|---|
-| Users say the VM is slow | [`sp5-framework/performance/vm-slow`](knowledge/sp5-framework/performance/vm-slow.md) |
+| Users say the VM is slow | [`vsphere/object-types/vm/troubleshooting/vm-slow`](knowledge/vsphere/object-types/vm/troubleshooting/vm-slow.md) |
 | Windows is slow (step 1 of VM slow) | [`guest-os/system/troubleshooting/ms-windows-slow`](knowledge/guest-os/system/troubleshooting/ms-windows-slow.md) |
 | Linux is slow (step 1 of VM slow) | [`guest-os/system/troubleshooting/linux-os-slow`](knowledge/guest-os/system/troubleshooting/linux-os-slow.md) |
 | VM CPU Contention or Latency is high | [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md) |
@@ -56,8 +56,8 @@ Started by a known problem: a complaint, an alert, or a failed health check step
 | VM storage performance: what to check | [`vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`](knowledge/vsphere/technology/storage/troubleshooting/vm-storage-performance-checks.md) |
 | ESXi storage latency is high | [`vsphere/technology/storage/troubleshooting/host-storage-latency`](knowledge/vsphere/technology/storage/troubleshooting/host-storage-latency.md) |
 | vNIC receive drops | [`vsphere/technology/network/vnic-rx-drops`](knowledge/vsphere/technology/network/vnic-rx-drops.md) |
-| VMs in a cluster face contention | [`vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`](knowledge/vsphere/object-types/cluster/troubleshooting/cluster-vm-contention.md) |
-| VM starved of resources in a DRS cluster | [`vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster`](knowledge/vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster.md) |
+| VMs in a cluster face contention | [`vsphere/object-types/cluster/cluster-vm-contention`](knowledge/vsphere/object-types/cluster/cluster-vm-contention.md) |
+| VM starved of resources in a DRS cluster | [`vsphere/object-types/vm/troubleshooting/vm-insufficient-resources-in-drs-cluster`](knowledge/vsphere/object-types/vm/troubleshooting/vm-insufficient-resources-in-drs-cluster.md) |
 
 ### Decision trees: can it, should it, how much?
 Started by one operational question; ends in a choice to act, with its reason. Not a health check, even when a health check step reads its result.
@@ -68,6 +68,73 @@ Started by one operational question; ends in a choice to act, with its reason. N
 | Does this ESXi host have CPU headroom? | [`vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom`](knowledge/vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom.md) |
 | Should this large, idle VM be downsized? | [`vsphere/technology/cpu/decision-tree/oversized-vm-downsizing`](knowledge/vsphere/technology/cpu/decision-tree/oversized-vm-downsizing.md) |
 | Is memory overcommit affecting this VM? | [`vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm`](knowledge/vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm.md) |
+| Can this cluster take a host out? | [`vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out`](knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out.md) |
+| Is memory tiering slowing this host? | [`vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host`](knowledge/vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host.md) |
+| Will this datastore run out of space? | [`vsphere/technology/storage/datastore-space-headroom`](knowledge/vsphere/technology/storage/datastore-space-headroom.md) |
+
+### Map of hand-offs
+Generated by [`project/tools/flow_map_diagram.py`](project/tools/flow_map_diagram.py) from the steps of each flow; do not edit by hand. A box is a flow file. An arrow is a step that opens or hands off to another flow ([placement.md](project/knowledge-rules/placement.md), Flows).
+
+```mermaid
+flowchart LR
+  subgraph health_check["Health checks"]
+    F2["cluster-health-check"]
+    F6["esxi-health-check"]
+    F9["vm-health-check"]
+  end
+  subgraph troubleshooting["Troubleshooting"]
+    F0["linux-os-slow"]
+    F1["ms-windows-slow"]
+    F3["cluster-vm-contention"]
+    F7["vm-insufficient-resources-in-drs-cluster"]
+    F8["vm-slow"]
+    F12["run-vs-used-gap"]
+    F13["vm-cpu-contention-high"]
+    F14["vm-other-wait-high"]
+    F17["vm-memory-latency-high"]
+    F18["vnic-rx-drops"]
+    F20["host-storage-latency"]
+    F21["vm-storage-performance-checks"]
+  end
+  subgraph decision_tree["Decision trees"]
+    F4["can-cluster-take-a-host-out"]
+    F5["can-cluster-take-more-vms"]
+    F10["host-cpu-capacity-headroom"]
+    F11["oversized-vm-downsizing"]
+    F15["is-memory-tiering-slowing-host"]
+    F16["is-overcommit-affecting-vm"]
+    F19["datastore-space-headroom"]
+  end
+  F0 --> F8
+  F1 --> F8
+  F2 --> F3
+  F2 --> F5
+  F2 --> F7
+  F2 --> F11
+  F3 --> F8
+  F6 --> F2
+  F6 --> F10
+  F6 --> F13
+  F6 --> F17
+  F6 --> F20
+  F7 --> F13
+  F7 --> F17
+  F8 --> F0
+  F8 --> F1
+  F8 --> F3
+  F8 --> F13
+  F8 --> F17
+  F8 --> F18
+  F8 --> F21
+  F9 --> F11
+  F9 --> F13
+  F9 --> F17
+  F9 --> F18
+  F9 --> F21
+  F12 --> F13
+  F17 --> F15
+  F21 --> F20
+```
 
 ## Proof: not deployed
 | Folder | Holds |
@@ -91,4 +158,4 @@ Started by one operational question; ends in a choice to act, with its reason. N
 | [`project/sources/`](project/sources) | Source documents: book chapters, vendor PDFs, technical notes. The author adds them; Claude may edit them |
 | [`project/knowledge-rules/`](project/knowledge-rules) | Rules for knowledge files, one module each: placement, flows, metadata, thresholds, writing, terminology, vocabulary (words to avoid) |
 | [`project/templates/`](project/templates) | Templates for knowledge files: concept, metric, configuration, alerts (one object type), screen, and the three flow kinds (health check, troubleshooting, decision tree) |
-| [`project/tools/`](project/tools) | `rules_check.py` and `rules_check_values.yaml` (checks and allowed values), `link_rewriter.py` and `moved_ids.yaml` (old file ids → current ids), `markdown_tidy.py`, `kpi_csv_sync.py`, `author_replies.py`, `question_renumber.py`, `question_coverage.py` (what the question set covers: counts per tag value), `product_diagram.py` (the Product diagram of ARCHITECTURE.md), `model_view.py` (what the model gets from a knowledge file, for review) |
+| [`project/tools/`](project/tools) | `rules_check.py` and `rules_check_values.yaml` (checks and allowed values), `link_rewriter.py` and `moved_ids.yaml` (old file ids → current ids), `markdown_tidy.py`, `kpi_csv_sync.py`, `author_replies.py`, `question_renumber.py`, `question_coverage.py` (what the question set covers: counts per tag value), `product_diagram.py` (the Product diagram of ARCHITECTURE.md), `model_view.py` (what the model gets from a knowledge file, for review), `flow_map_diagram.py` (the map of hand-offs between flows, section Flows) |

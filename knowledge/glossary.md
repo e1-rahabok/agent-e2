@@ -212,6 +212,8 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
   - Not to confuse with Health check: a decision tree answers one question, usually on one pillar; a health check covers every pillar of one object and may read a decision tree's result as one step.
   - File: [`sp5-framework/concepts/health-check`](sp5-framework/concepts/health-check.md)
 - **Finding**: Result of troubleshooting or analysis from logs, events, metrics, tasks. Positive feeds insight; negative is an issue.
+- **Flow**: An expert's order of checks, with branches, for one object or question. Three kinds, told apart by what starts them: a health check (a schedule, no known problem), troubleshooting (a symptom: down or slow), a decision tree (one operational question). A flow starts where the symptom or question is stated and hands off to another flow at an object or realm boundary.
+  - File: [`sp5-framework/concepts/health-check`](sp5-framework/concepts/health-check.md)
 - **Framework**: How IT operations are managed: policy, pillars, process, people, platform. The SP5 framework; ITIL and COBIT are other frameworks.
   - File: [`sp5-framework/concepts/overview`](sp5-framework/concepts/overview.md)
 - **Future health**: Risk: no problem yet; security exposure, compliance, configuration, capacity.

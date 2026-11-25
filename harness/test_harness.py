@@ -288,7 +288,7 @@ class FlowTest(unittest.TestCase):
         d = DOCS['vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high']
         self.assertIn('](', open(d.path).read().split('## Metadata')[0])
         self.assertNotIn('.md)', d.body)
-        self.assertIn('`sp5-framework/performance/vm-slow`', d.body)
+        self.assertIn('`vsphere/object-types/vm/troubleshooting/vm-slow`', d.body)
 
     def test_lettered_steps(self):
         out = flow_executor.run(DOCS, 'vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm')

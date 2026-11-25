@@ -24,7 +24,7 @@ flowchart TD
 4. Per adapter and path (HostSystem) ([`vsphere/technology/storage/metrics/host/adapter-and-path`](../metrics/host/adapter-and-path.md)). Read and write latency separately. Use the 95th or 99th percentile, not the maximum. → step 5.
 5. Read vs write (HostSystem). Write-only latency is expected when reads hit cache. → step 6.
 6. NVMe memory-tier device (HostSystem). High latency at near-zero IO is a wake-up from a power-saving state: the cause, not a reason to discard the reading. The VMs that read then did wait; their NVMe Wait shows how much. → step 7.
-7. Known bug and log (HostSystem): driver and firmware versions against the compatibility guide and known issues; events in the window ([`sp5-framework/performance/vm-slow`](../../../../sp5-framework/performance/vm-slow.md), its known bug and log checks).
+7. Known bug and log (HostSystem): driver and firmware versions against the compatibility guide and known issues; events in the window ([`vsphere/object-types/vm/troubleshooting/vm-slow`](../../../object-types/vm/troubleshooting/vm-slow.md), its known bug and log checks).
 
 ## Order rationale
 - The split first: kernel and device latency have different owners, the ESXi host and the array.
@@ -60,7 +60,7 @@ internal_derive:
 - vsphere/technology/storage/concepts/esxi-storage-io-path
 - vsphere/technology/storage/metrics/host/adapter-and-path
 - vsphere/technology/storage/metrics/virtual-motherboard/iops
-- sp5-framework/performance/vm-slow
+- vsphere/object-types/vm/troubleshooting/vm-slow
 related:
 - vsphere/technology/storage/metrics/host/disk
 - vsphere/technology/storage/metrics/host/datastore
