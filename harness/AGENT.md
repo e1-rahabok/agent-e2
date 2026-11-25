@@ -42,19 +42,43 @@ Related reading: why Agent E2 can win is in [MISSION.md](../MISSION.md); the who
 - Dropped: the model choosing tools; the tool-call budget; the same-name and read reminders (the agent reads the files and their same-name links itself); the primed start; up-front blocks 1 (map) and 4 (flow index), which existed so the model could plan.
 
 ## 3. One question, six stages
-```mermaid
-flowchart TD
-  Q["Question and images"] --> U["1 Understand<br/>model reads into the case;<br/>agent resolves names"]
-  U --> P["2 Plan<br/>agent builds the reading set<br/>from the knowledge base's map"]
-  P --> C["3 Compute<br/>catalog, calculator, flow executor,<br/>planning calculator on the case"]
-  C --> A{"4 Ask?<br/>agent rule"}
-  A -->|"a missing fact changes the answer"| R["One clarifying round"]
-  R --> U
-  A -->|"no"| W["5 Answer<br/>model reads and writes<br/>(n samples)"]
-  W --> K["6 Check<br/>verifier, gap follow-up,<br/>consensus, coverage"]
-  K -->|"gap: a named metric not read"| P
-  K --> O["Answer with citations<br/>and computed facts"]
-```
+![Agent E2 in six stages: understand, plan, compute, ask, answer, check, with the clarifying round and the gap loop back to plan](../images/agent-six-stages.svg)
+
+<details>
+<summary>Text of the diagram, for readers that cannot see it</summary>
+
+**Agent E2: one question through six stages.** Code decides the route. The model reads in stages 1 and 5 and may run once more in stage 6.
+Colour key: blue = Agent code; orange = Model call; grey = Input or output.
+
+Boxes, nested as drawn:
+- n1 **Question and images** (Input or output): Input: the question text and its screenshots.
+- n2 **1 Understand** (Model call): Model (1 call): reads the question into a fixed schema. The agent resolves names.
+- n3 **2 Plan** (Agent code): Agent: builds the reading set from the knowledge base's map. No model call.
+- n4 **3 Compute** (Agent code): Agent: catalog, calculator, flow executor, planning calculator on the case.
+- n5 **One clarifying round** (Agent code): A missing fact changes the answer. One round, then back to stage 1.
+- n6 **4 Ask?** (Agent code): Agent rule: does a missing fact change the answer?
+- n7 **5 Answer** (Model call): Model (1 call, n with consensus): reads and writes the draft answer.
+- n8 **6 Check** (Agent code): Agent: verifier, consensus, coverage. A gap follow-up or repair may call the model.
+- n9 **Answer with citations** (Input or output): Computed facts and citations to the files.
+
+Arrows (from, to, label):
+- n1 Question and images --> n2 1 Understand
+- n2 1 Understand --> n3 2 Plan
+- n3 2 Plan --> n4 3 Compute
+- n4 3 Compute --> n6 4 Ask?
+- n6 4 Ask? --> n5 One clarifying round
+- n5 One clarifying round --> n2 1 Understand
+- n6 4 Ask? --> n7 5 Answer: no
+- n7 5 Answer --> n8 6 Check
+- n8 6 Check --> n9 Answer with citations
+- n8 6 Check --> n3 2 Plan
+
+Notes on the diagram:
+- gap: a named metric not read
+
+Arrows: `-->` solid, `..>` dashed.
+
+</details>
 
 | Stage | Who | Model calls | Output |
 |---|---|---|---|

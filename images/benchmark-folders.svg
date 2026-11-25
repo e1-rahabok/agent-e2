@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="890" viewBox="0 0 1100 890" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555555"/></marker></defs>
+<rect width="1100" height="890" fill="#ffffff"/>
+<text x="24" y="34" font-size="20" font-weight="bold" fill="#111" text-anchor="start">benchmark/: questions, runner, models, results</text>
+<text x="24" y="54" font-size="12.5" font-weight="normal" fill="#444" text-anchor="start">Each folder and its role in the proof.</text>
+<rect x="606.6" y="66" width="14" height="14" rx="3" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="626.6" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Benchmark code</text>
+<rect x="736.8" y="66" width="14" height="14" rx="3" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="756.8" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Question, result or proof</text>
+<rect x="936.3" y="66" width="14" height="14" rx="3" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="956.3" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Document for people</text>
+<rect x="20" y="100" width="1060" height="780" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
+<text x="32" y="122" font-size="14" font-weight="bold" fill="#222" text-anchor="start">Proof, not deployed</text>
+<text x="32" y="138" font-size="11" font-weight="normal" fill="#555" text-anchor="start">Only the product is deployed to the site.</text>
+<rect x="50" y="400" width="200" height="51" rx="6" fill="#ffffff" stroke="#888888" stroke-width="1.4"/>
+<text x="60" y="419" font-size="13" font-weight="bold" fill="#333333" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">benchmark/</text>
+<text x="60" y="438" font-size="11.5" font-weight="normal" fill="#333333" text-anchor="start">The proof of Agent E2.</text>
+<rect x="330" y="110" width="380" height="66" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="340" y="129" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">questions/</text>
+<text x="340" y="148" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">L&lt;level&gt;-&lt;nnn&gt;-&lt;slug&gt;.md: one question</text>
+<text x="340" y="163" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">per file, one flat folder.</text>
+<path d="M 250 435 L 328 143" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="330" y="190" width="380" height="66" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="340" y="209" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">questions/&lt;id&gt;/</text>
+<text x="340" y="228" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">The question's attachments: screenshots,</text>
+<text x="340" y="243" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">logs, diagrams (only when it has any).</text>
+<path d="M 250 435 L 328 223" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="330" y="270" width="380" height="141" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="340" y="289" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">runner/</text>
+<text x="340" y="308" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">Benchmark runner: run_executor.py,</text>
+<text x="340" y="323" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">round_executor.py, round_sample_check.py,</text>
+<text x="340" y="338" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">bad_answer_guard.py, round_alive_check.py,</text>
+<text x="340" y="353" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">run_folders_backup.py, inference_providers.py,</text>
+<text x="340" y="368" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">round_resume.py, round_summary.py,</text>
+<text x="340" y="383" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">score_report.py, adaptive_concurrency.py,</text>
+<text x="340" y="398" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">runner_config.yaml</text>
+<path d="M 250 435 L 328 340" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="330" y="425" width="380" height="51" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="340" y="444" font-size="13" font-weight="bold" fill="#222222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">models.md</text>
+<text x="340" y="463" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Candidate models and the frontier reference.</text>
+<path d="M 250 435 L 328 450" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="330" y="505" width="380" height="66" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="340" y="524" font-size="13" font-weight="bold" fill="#222222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">RUN.md</text>
+<text x="340" y="543" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">How to run a round: prompt, approvals,</text>
+<text x="340" y="558" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">time, cost.</text>
+<path d="M 250 435 L 328 538" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="330" y="585" width="380" height="66" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="340" y="604" font-size="13" font-weight="bold" fill="#222222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">live-test.md</text>
+<text x="340" y="623" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">The system on an offline model:</text>
+<text x="340" y="638" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">plan and pass criteria.</text>
+<path d="M 250 435 L 328 618" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="330" y="665" width="380" height="51" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="340" y="684" font-size="13" font-weight="bold" fill="#222222" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">_templates/question.md</text>
+<text x="340" y="703" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Template for a new question.</text>
+<path d="M 250 435 L 328 690" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="330" y="730" width="380" height="66" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="340" y="749" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">results/README.md</text>
+<text x="340" y="768" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">One analysis of all runs of a round,</text>
+<text x="340" y="783" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">written when the last run finishes.</text>
+<path d="M 250 435 L 328 763" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="760" y="730" width="300" height="66" rx="6" fill="#efe9f8" stroke="#5e35b1" stroke-width="1.4"/>
+<text x="770" y="749" font-size="13" font-weight="bold" fill="#2a1650" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">results/&lt;date&gt;-&lt;model&gt;/</text>
+<text x="770" y="768" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">Per run: answers.csv, report.md,</text>
+<text x="770" y="783" font-size="11.5" font-weight="normal" fill="#2a1650" text-anchor="start">config.json (traces.jsonl not in git)</text>
+<path d="M 710 763 L 758 763" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+</svg>
