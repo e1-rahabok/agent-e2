@@ -19,7 +19,7 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Cluster state (ClusterComputeResource). Yellow or red: capacity no longer covers all configured reservations; this VM may be one not getting its reservation → fix the cluster state first. See [`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../concepts/admission-control-and-cluster-state.md). Green → step 2.
+1. Cluster state (ClusterComputeResource). Yellow or red: capacity no longer covers all configured reservations; this VM may be one not getting its reservation → fix the cluster state first. See [`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../../cluster/concepts/admission-control-and-cluster-state.md). Green → step 2.
 2. Limits (VirtualMachine, then every parent ResourcePool up to the cluster). VM demand equal to or above a configured limit → the limit causes the contention; esxtop %MLMTD confirms a CPU limit. Raise or remove the limit. No limit reached → step 3.
 3. Cluster demand vs capacity (ClusterComputeResource). Compare two readings of the cluster statistics, CPU and memory demand against capacity; no threshold applies. Demand above capacity → the cluster is overloaded; shares decide who gets what, and this VM's shares give others more. Add capacity, or raise this VM's shares or reservation. Capacity sufficient → step 4.
 4. Host statistics (HostSystem where the VM runs). Compare the host's demand with its capacity, as in step 3. Host oversubscribed while the cluster has room → step 5. Host not oversubscribed → step 6.
@@ -33,7 +33,7 @@ flowchart TD
    - the migration threshold is conservative, so only mandatory moves happen;
    - the load is unstable or vMotion cost exceeds the expected gain.
    Remove the blocker, or move the migration threshold toward Aggressive and check again. If no blocker exists for this VM, look for the same blockers on the other VMs of the host.
-6. No cluster-level cause. Check the VM itself: vCPU or memory size, NUMA placement, in-guest load. See [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](../../../technology/cpu/troubleshooting/vm-cpu-contention-high.md) and [`vsphere/technology/memory/vm-memory-latency-high`](../../../technology/memory/vm-memory-latency-high.md).
+6. No cluster-level cause. Check the VM itself: vCPU or memory size, NUMA placement, in-guest load. CPU → [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](../../../technology/cpu/troubleshooting/vm-cpu-contention-high.md); memory → [`vsphere/technology/memory/vm-memory-latency-high`](../../../technology/memory/vm-memory-latency-high.md).
 
 ## Order rationale
 - Cluster state first: in yellow or red, reservations themselves are not met, so the rest of the analysis is built on wrong assumptions.
@@ -54,7 +54,7 @@ flowchart TD
 
 ## Metadata
 ```yaml
-id: vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
+id: vsphere/object-types/vm/troubleshooting/vm-insufficient-resources-in-drs-cluster
 retriever_guide: troubleshooting
 scope: vsphere
 technology:
@@ -79,7 +79,7 @@ related:
 - vsphere/object-types/cluster/concepts/drs-overview
 - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
 - vsphere/technology/memory/vm-memory-latency-high
-- vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
+- vsphere/object-types/cluster/cluster-vm-contention
 source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
   path: vSphere Resource Management > DRS Troubleshooting Information > Load Imbalance on Cluster, DRS Seldom or Never Performs vMotion Migrations, Virtual Machine Problems > Insufficient CPU or Memory Resources, DRS Does Not Move Any Virtual Machines from a Host (pp. 1950-1955); DRS Migration Threshold > DRS Score (p. 1896)

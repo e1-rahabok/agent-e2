@@ -10,7 +10,7 @@
 ## Cluster CPU contention
 - Detects: a share of the cluster's VMs did not get the CPU time they asked for: a burst (VM Peak vCPU Ready) and sustained contention (VM CPU Contention) together.
 - Measured on its VMs, which is closer to the application. Aggregating from the ESXi hosts is less accurate.
-- Remediation: [`vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`](troubleshooting/cluster-vm-contention.md).
+- Remediation: [`vsphere/object-types/cluster/cluster-vm-contention`](cluster-vm-contention.md).
 
 ## Cluster CPU consumption
 - Detects: a share of the cluster's ESXi hosts meet the ESXi CPU consumption condition ([`vsphere/object-types/esxi/esxi-alerts`](../esxi/esxi-alerts.md), section ESXi CPU consumption).
@@ -19,7 +19,7 @@
 ## Cluster memory contention
 - Detects: a share of the cluster's VMs waited for memory pages: the 20-second peak (VM Peak Memory Contention) and the 5-minute value (VM Memory Contention) together.
 - Measured on its VMs, closer to the application; aggregating from the ESXi hosts is less accurate.
-- Remediation: [`vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`](troubleshooting/cluster-vm-contention.md).
+- Remediation: [`vsphere/object-types/cluster/cluster-vm-contention`](cluster-vm-contention.md).
 
 ## Cluster memory consumption
 - Detects: a share of the cluster's ESXi hosts meet the ESXi memory consumption condition (ballooning with high Consumed).
@@ -57,7 +57,7 @@ internal_derive:
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/technology/cpu/metrics/virtual-motherboard/contention
 related:
-- vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
+- vsphere/object-types/cluster/cluster-vm-contention
 - vsphere/object-types/vm/vm-alerts
 - vsphere/object-types/resource-pool/resource-pool-alerts
 source:

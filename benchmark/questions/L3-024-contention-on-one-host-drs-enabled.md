@@ -39,9 +39,9 @@ input: [text]
 object: [cluster, esxi, vm]
 tool: [vcenter]
 knowledge:
-  - vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
+  - vsphere/object-types/vm/troubleshooting/vm-insufficient-resources-in-drs-cluster
   - vsphere/object-types/cluster/concepts/drs-overview
-knowledge_main: vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
+knowledge_main: vsphere/object-types/vm/troubleshooting/vm-insufficient-resources-in-drs-cluster
 attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-05"

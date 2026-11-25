@@ -2,7 +2,7 @@
 
 ## Symptom
 - VM memory Latency (VCF Operations: Memory Contention) is high, or the memory row of VM Performance (%) is yellow or worse.
-- Entered from [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md) (step 4), a health check performance step, or an alert.
+- Entered from [`vsphere/object-types/vm/troubleshooting/vm-slow`](../../object-types/vm/troubleshooting/vm-slow.md) (step 4), a health check performance step, or an alert.
 
 ## Flow
 ```mermaid
@@ -23,8 +23,8 @@ flowchart TD
 2. Swap-in rate and decompression rate (VirtualMachine): the source of the wait ([`vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate`](metrics/virtual-motherboard/swap-in-rate.md)). → step 3.
 3. Consumption against a limit (VirtualMachine, ResourcePool). Consumed flat near a limit on the VM or on its resource pool: the limit is the cause ([`vsphere/architecture/resource-controls`](../../architecture/resource-controls.md)). → step 4.
 4. Configuration (VirtualMachine). Shares and reservation compared with the other VMs; in a resource pool, whether the pool has enough for all its VMs. → step 5.
-5. Host memory pressure (HostSystem). Swap out, compressed and ballooned memory on the other VMs of the host ([`vsphere/technology/memory/concepts/swap-and-compression`](concepts/swap-and-compression.md)). Swap out without swap in: past pressure, no wait yet. On a host with memory tiering, also the VM's NVMe read bandwidth: a fetch from NVMe is a wait that Latency may not count ([`vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host`](decision-tree/is-memory-tiering-slowing-host.md)). → step 6.
-6. Known bug and log (VirtualMachine, HostSystem): [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), its known bug and log checks.
+5. Host memory pressure (HostSystem). Swap out, compressed and ballooned memory on the other VMs of the host ([`vsphere/technology/memory/concepts/swap-and-compression`](concepts/swap-and-compression.md)). Swap out without swap in: past pressure, no wait yet. On a host with memory tiering, also the VM's NVMe read bandwidth: a fetch from NVMe is a wait that Latency may not count → [`vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host`](decision-tree/is-memory-tiering-slowing-host.md). Otherwise → step 6.
+6. Known bug and log (VirtualMachine, HostSystem): [`vsphere/object-types/vm/troubleshooting/vm-slow`](../../object-types/vm/troubleshooting/vm-slow.md), its known bug and log checks.
 
 ## Order rationale
 - Latency first: it is the memory wait from reclamation; ballooned, swapped and compressed memory are past reclamation, not a wait. On a tiered host, NVMe wait is the other memory wait, and Latency does not see it.
@@ -68,7 +68,7 @@ internal_derive:
 - vsphere/technology/memory/concepts/swap-and-compression
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate
 - vsphere/architecture/resource-controls
-- sp5-framework/performance/vm-slow
+- vsphere/object-types/vm/troubleshooting/vm-slow
 related:
 - vsphere/technology/memory/metrics/virtual-motherboard/swapped
 - vsphere/technology/memory/metrics/virtual-motherboard/compressed

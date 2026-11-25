@@ -54,7 +54,7 @@ tool: [vcenter, vcf-operations]
 knowledge:
   - vsphere/object-types/cluster/cluster-health-check
   - vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention
-  - vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
+  - vsphere/object-types/cluster/cluster-vm-contention
   - vsphere/object-types/cluster/configuration/drs-migration-levels
 knowledge_main: vsphere/object-types/cluster/cluster-health-check
 attachments: []

@@ -2,7 +2,7 @@
 
 ## Symptom
 - VM CPU Contention (VCF Operations) or CPU Latency (vCenter, esxtop %LAT_C) is high, the CPU rows of VM Performance (%) are yellow or worse, or the VM CPU contention alert fired.
-- Entered from [`sp5-framework/performance/vm-slow`](../../../../sp5-framework/performance/vm-slow.md) (step 4), a health check performance step, or an alert.
+- Entered from [`vsphere/object-types/vm/troubleshooting/vm-slow`](../../../object-types/vm/troubleshooting/vm-slow.md) (step 4), a health check performance step, or an alert.
 - The two metrics count different waits. Contention, from Aria Operations 8.18: Ready (with the time held back by a limit), Co-stop, Overlap, and Other Wait when below 1%. CPU Latency also counts the effect of frequency scaling and Hyper-Threading, and leaves out the time held back by a limit ([`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](../metrics/virtual-motherboard/contention.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](../metrics/virtual-motherboard/latency.md)).
 
 ## Flow
@@ -28,7 +28,7 @@ flowchart TD
 4. VM size and snapshots (VirtualMachine). Co-stop rises with the vCPU count and with a VM wider than its NUMA node: a vCPU waits for its siblings ([`vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`](../metrics/virtual-motherboard/co-stop.md), [`sp5-framework/capacity/vm-size`](../../../../sp5-framework/capacity/vm-size.md), [`vsphere/technology/cpu/configuration/numa-settings`](../configuration/numa-settings.md)). A snapshot also raises Co-stop. → step 5.
 5. Placement (ClusterComputeResource). DRS automation level and migration threshold, and whether this host is busier than its peers ([`vsphere/object-types/cluster/concepts/drs-overview`](../../../object-types/cluster/concepts/drs-overview.md), [`vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`](../metrics/cluster/inter-host-imbalance.md)). A busy host in a cluster with idle hosts: placement, not capacity. → step 7.
 6. Power management and Hyper-Threading (HostSystem). The High Performance power policy rules out frequency scaling ([`vsphere/technology/cpu/concepts/power-states`](../concepts/power-states.md)). More vCPUs than physical cores: Hyper-Threading shares a core between two threads ([`vsphere/technology/cpu/concepts/hyper-threading`](../concepts/hyper-threading.md)). → step 7.
-7. Known bug and log (VirtualMachine, HostSystem): versions against known issues, and events in the window ([`sp5-framework/performance/vm-slow`](../../../../sp5-framework/performance/vm-slow.md), its known bug and log checks).
+7. Known bug and log (VirtualMachine, HostSystem): versions against known issues, and events in the window ([`vsphere/object-types/vm/troubleshooting/vm-slow`](../../../object-types/vm/troubleshooting/vm-slow.md), its known bug and log checks).
 
 ## Order rationale
 - The parts of Contention first: each names a different cause, so the part that is not green picks the branch. All green ends the flow, unless CPU Latency says the wait is frequency or Hyper-Threading.
@@ -81,7 +81,7 @@ internal_derive:
 - vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
 - vsphere/technology/cpu/concepts/power-states
 - vsphere/technology/cpu/concepts/hyper-threading
-- sp5-framework/performance/vm-slow
+- vsphere/object-types/vm/troubleshooting/vm-slow
 related:
 - sp5-framework/performance/performance-management
 - vsphere/object-types/vm/vm-alerts

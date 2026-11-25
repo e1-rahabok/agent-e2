@@ -95,7 +95,7 @@ related:
 - vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 - vsphere/object-types/resource-pool/resource-pool-design
-- vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
+- vsphere/object-types/vm/troubleshooting/vm-insufficient-resources-in-drs-cluster
 - vsphere/technology/memory/concepts/memory-overhead
 source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)

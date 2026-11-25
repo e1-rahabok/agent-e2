@@ -2,7 +2,8 @@
 
 Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../KNOWLEDGE-ENGINEERING.md). For writers and reviewers. Not indexed.
 
-- Location: [placement.md](placement.md), placement rules.
+- Location: [placement.md](placement.md), placement rules: a flow sits at its entry point, and hands off to another flow at an object or realm boundary.
+- Flow is the general word; health check, troubleshooting and decision tree are its three kinds ([glossary](../../knowledge/glossary.md), entry Flow).
 - Vocabulary:
   - Framework: how IT operations are managed (SP5). [`sp5-framework/concepts/overview`](../../knowledge/sp5-framework/concepts/overview.md).
   - Model: how one pillar of one object is quantified into a number and a decision (capacity model, availability model, security model). Files in `vsphere/object-types/<object>/models/` (or the object folder while there is one) and `sp5-framework/capacity/`.

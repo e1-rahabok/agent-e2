@@ -3,7 +3,7 @@
 ## Symptom
 - The application team says an application on Windows is slow. They see Windows counters (Task Manager, PerfMon), not vSphere or Kubernetes metrics, and they usually do not tell the Guest OS from the VM.
 - First quantify the slowness in counters they can see. The Guest OS is a separate realm: it cannot see the VM's waits, and the VM cannot see Windows' queues.
-- Started from [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 1. It ends with one of two verdicts: the wait is inside Windows, or it points below Windows to the VM.
+- Started from [`vsphere/object-types/vm/troubleshooting/vm-slow`](../../../vsphere/object-types/vm/troubleshooting/vm-slow.md), step 1. It ends with one of two verdicts: the wait is inside Windows, or it points below Windows to the VM.
 
 ## Flow
 ```mermaid
@@ -24,7 +24,7 @@ flowchart TD
 2. CPU queue (Guest OS). Processor Queue Length per processor ([`guest-os/cpu/metrics/run-queue`](../../cpu/metrics/run-queue.md); bands with that file). Windows excludes running threads, so any sustained queue means threads wait for a vCPU. High → step 3. Low → step 4.
 3. Why the queue (Guest OS). Read % Processor Time per vCPU, % Privileged Time, % DPC Time, % Interrupt Time ([`guest-os/cpu/metrics/processor-time`](../../cpu/metrics/processor-time.md)) and the context switch rate ([`guest-os/cpu/metrics/context-switch`](../../cpu/metrics/context-switch.md)).
    - Queue high, vCPUs not all busy, or one vCPU busy and the rest idle → locks, threads that cannot run in parallel, kernel or driver work: the application or the configuration, not the vCPU count.
-   - Queue high, every vCPU busy → the workload demands more runtime than Windows gets. Before adding vCPUs, check VM CPU contention in [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 4: a vCPU waiting for a physical thread is invisible to Windows ([`vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu`](../../../vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu.md)).
+   - Queue high, every vCPU busy → the workload demands more runtime than Windows gets. Before adding vCPUs, check VM CPU contention in [`vsphere/object-types/vm/troubleshooting/vm-slow`](../../../vsphere/object-types/vm/troubleshooting/vm-slow.md), step 4: a vCPU waiting for a physical thread is invisible to Windows ([`vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu`](../../../vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu.md)).
    - → step 4.
 4. Memory (Guest OS) ([`guest-os/memory/windows-memory`](../../memory/windows-memory.md)).
    - Page-in and page-out high together with a high disk queue → likely a memory performance problem.
@@ -38,7 +38,7 @@ flowchart TD
 6. Network (Guest OS). VM receive drops on the VMXNET3 vNIC (VM Network Packets Dropped, receive; at the host, vsish `rxSummary`, running out of buffers): the guest's receive ring is full, caused and fixed inside Windows (ring size, the CPU that drains the ring). No Windows counter is confirmed to carry the ring-full count ([`vsphere/technology/network/concepts/packet-drop-accounting`](../../../vsphere/technology/network/concepts/packet-drop-accounting.md); flow [`vsphere/technology/network/vnic-rx-drops`](../../../vsphere/technology/network/vnic-rx-drops.md)). → step 7.
 7. Verdict.
    - A wait found inside Windows (queue, paging, disk wait with low VM disk latency, ring full) → the cause is in the Guest OS or the application: Guest OS sizing ([`guest-os/system/guest-os-sizing`](../guest-os-sizing.md)) and configuration ([`guest-os/system/guest-os-configuration-review`](../guest-os-configuration-review.md)). Still confirm the VM has no contention in the window: a VM wait makes Windows queues worse.
-   - No wait inside Windows, or the signs point down (every vCPU busy, disk queue with high VM latency) → the VM: [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 2, with the window from step 1.
+   - No wait inside Windows, or the signs point down (every vCPU busy, disk queue with high VM latency) → the VM: [`vsphere/object-types/vm/troubleshooting/vm-slow`](../../../vsphere/object-types/vm/troubleshooting/vm-slow.md), step 2, with the window from step 1.
 
 ## Order rationale
 - Quantify first: the application team describes the symptom in Windows terms; the time window and the slow transaction steer every later check.
@@ -83,7 +83,7 @@ internal_derive:
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 - guest-os/cpu/metrics/run-queue
 - guest-os/cpu/metrics/context-switch
-- sp5-framework/performance/vm-slow
+- vsphere/object-types/vm/troubleshooting/vm-slow
 - guest-os/cpu/metrics/processor-time
 - guest-os/memory/windows-memory
 - guest-os/storage/disk-queue
