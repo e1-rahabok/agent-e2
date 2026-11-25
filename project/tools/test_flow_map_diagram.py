@@ -23,6 +23,11 @@ class FlowMapTest(unittest.TestCase):
         self.assertIn('guest-os/system/troubleshooting/ms-windows-slow', offs)
         self.assertIn('guest-os/system/troubleshooting/linux-os-slow', offs)
 
+    def test_every_box_has_a_click(self):
+        chart = flow_map_diagram.chart(DOCS)
+        self.assertEqual(chart.count('\n  click '), len(flow_map_diagram.hand_offs(DOCS)))
+        self.assertIn(f'"{flow_map_diagram.BLOB}knowledge/{VM_SLOW}.md"', chart)
+
     def test_update_is_stable(self):
         text = '# Map\n\n## Flows\nTables.\n\n## Next\nMore.\n'
         once = flow_map_diagram.updated(text, DOCS)
