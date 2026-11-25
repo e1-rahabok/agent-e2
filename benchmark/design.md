@@ -47,7 +47,7 @@ The product is a narrow expert for one reader: a VMware administrator. The admin
 | Explain a mechanism | Why does the counter behave this way? |
 | Judge a setting | What does this setting do to performance or capacity? |
 
-- Troubleshooting leads: the mission is monitoring and troubleshooting (`MISSION.md`, section 1). Real operator questions are mostly "why does this counter do that" and "what is wrong" (the author's samples, 2026-11-12).
+- Troubleshooting leads: the mission is monitoring and troubleshooting (`MISSION.md`, section 1). Real operator questions are mostly "why does this counter do that" and "what is wrong" (the author's samples).
 - Each task maps to a `retriever_guide` value of the knowledge base: troubleshooting, metric-meaning, health-check and decision-tree, how-it-works, what-to-set.
 
 ### 3.2 By level
@@ -142,7 +142,7 @@ An administrator rarely questions a counter in the abstract. The question comes 
 - Both questions carry `pair` with the other's id; lint checks that it exists and points back.
 - Reading the pair: wrong on both is a knowledge gap (fix the knowledge base); right on theory and wrong on practical is a reading failure (check the trace: the export or screen misread, the file missed, or the model ignored it); wrong on theory and right on practical is a guess.
 - Each question is sent alone, so one never gives away the other.
-- Pairs are written where the misreading shows in tool output, not for every counter. Each practical half has at least one option only its evidence decides. A practical half whose evidence does not exist yet waits with status `awaiting-input` and a `## Input to supply`; since 2026-11-15 the evidence is generated (section 13.1), so none waits. A fact gets two questions at most: every question weighs the same (section 3.6). The audit of 2026-11-15 counted facts by the correct and misconception options only ([project/question-bank-audit-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-bank-audit-2026-11-15.md)).
+- Pairs are written where the misreading shows in tool output, not for every counter. Each practical half has at least one option only its evidence decides. A practical half whose evidence does not exist yet waits with status `awaiting-input` and a `## Input to supply`; the evidence is generated (section 13.1), so none waits. A fact gets two questions at most: every question weighs the same (section 3.6). The question bank audit counted facts by the correct and misconception options only ([project/question-bank-audit-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-bank-audit-2026-11-15.md)).
 - The pairing of the whole set (audit, decisions, the pairs): [project/question-pairing-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-pairing-2026-11-14.md); the practical halves as exports: [project/practical-questions-as-exports-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/practical-questions-as-exports-2026-11-15.md).
 - Theory options, from the first pair: each option one fact about the mechanism, no option the negation of another, no vague "they differ"; the Level 300 misconception and its over-correction both present; a false option that draws the wrong action from the reading.
 - First pair: [ESXi CPU Demand and Usage: vCenter vs VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-057-esxi-cpu-demand-vcenter-vs-vcf-operations.md) and [ESXi CPU Demand differs between VCF Operations and vCenter](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-120-esxi-cpu-demand-differs-between-tools.md). The practical question is Level 400: it needs arithmetic across three screenshots.
@@ -218,7 +218,7 @@ The frontier model must be able to answer every question from public knowledge. 
 - The -1 changed the model's behaviour through the prompt: told that a wrong answer costs a point, models chose Unsure instead of guessing. That behaviour is kept with a plain rule in the prompt ("a wrong answer is worse than Unsure").
 - Unsure means the sources do not decide the question. This can be checked against the cited files.
 - Check after the next benchmark: if models guess more under the plain rule (confident-wrong rate rises, Unsure rate falls), put the scoring sentence back in the prompt only. Grading stays as above either way.
-- Read on the previous generation (round of 2026-11-13): the local models chose Unsure in 1-6% of multiple-choice answers and were confident wrong in 10-22% of them with the knowledge base. A rule in the prompt does not make a 30B model abstain. The harness now abstains for it: consensus of samples (`consensus_samples`, [harness/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/README.md), section 6a). Analysis (archived): [analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md).
+- Read on the previous generation: the local models chose Unsure in 1-6% of multiple-choice answers and were confident wrong in 10-22% of them with the knowledge base. A rule in the prompt does not make a 30B model abstain. The harness now abstains for it: consensus of samples (`consensus_samples`, [harness/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/README.md), section 6a). Analysis (archived): [analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md).
 
 ### 7.2 Five runs
 - One run is one draw of the answer, not the answer. Agent E2 makes two model calls (stage 1 and stage 5 of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)):
@@ -340,7 +340,7 @@ For the set:
 ## 12. Status
 - The run set is every question with status draft or reviewed. Its counts: `python3 project/tools/question_coverage.py`. Retired questions: [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
 - Every synthetic question was checked by an independent review agent, which tried to break each key against the knowledge files and the vendor documents; the defects found were fixed. Author questions from the review: all answered (Q182-Q191). Knowledge fixes found on the way: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M1.
-- Question bank audit, 2026-11-16 ([project/question-bank-audit-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-bank-audit-2026-11-15.md)): every option of every question decided again from the current knowledge base by independent reviewers, each finding challenged by a second agent, every changed key re-checked blind.
+- Question bank audit ([project/question-bank-audit-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-bank-audit-2026-11-15.md)): every option of every question decided again from the current knowledge base by independent reviewers, each finding challenged by a second agent, every changed key re-checked blind.
 - Status draft: each question counts after the author's review (section 6.2); the runner runs drafts too, so a score on drafts is a development score (Q256).
 - Status `awaiting-input`: a practical half whose screenshot the author has not captured yet (section 3.9). It does not run and is not in the counts of the run set; once the image is added and its condition checked, it becomes draft.
 
@@ -354,7 +354,7 @@ For the set:
 
 ### 13.1 Table questions
 - Purpose: administrators export data and ask about it: a vCenter chart export, a VCF Operations list or metric export, esxtop batch output.
-- 1.0 tables: at most 24,000 characters, about 6,000 tokens (`question_csv_max_chars` in [project/tools/rules_check_values.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/rules_check_values.yaml), checked by lint; 2026-11-15). Each period is cut to the event; multi-day cases use a VCF Operations list view with Max, Min, First and Last, or daily rows. The runner puts the CSV after the prompt as text (`Question.tables`); the context window is 64,000 tokens.
+- 1.0 tables: at most 24,000 characters, about 6,000 tokens (`question_csv_max_chars` in [project/tools/rules_check_values.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/rules_check_values.yaml), checked by lint). Each period is cut to the event; multi-day cases use a VCF Operations list view with Max, Min, First and Last, or daily rows. The runner puts the CSV after the prompt as text (`Question.tables`); the context window is 64,000 tokens.
 - Tool text (esxtop panels, `top`, `sar`, `iostat`, `mpstat`, `ip -s link`, `systeminfo`, PowerCLI output) goes inside the prompt in a fenced `text` block, as an operator pastes it; only CSV files and images are attachments.
 - Wide exports are intended. The misleading neighbour counter sits in the same file (Readiness next to Ready, Wait next to Idle, Total next to non-Total drops), so the model has to choose the counter.
 - Larger exports (hundreds of rows) need a table tool in the harness (filter, sort, aggregate, top-N). After 1.0.
@@ -365,16 +365,16 @@ For the set:
 - Not in the benchmark. The judge model that scored them 0-3 is archived with its rubric ([project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14/judge.py)); this section's earlier rules are in git history.
 - Free-text answers are measured in the field: the author judges real questions in the live test ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md), step 9) and operators rate every answer in the product ([MISSION.md](https://github.com/e1-rahabok/agent-e2/blob/main/MISSION.md), section 5, Feedback).
 
-## 15. Target history
+## 15. Target
 - Goal: the local model with the knowledge base answers better than the best frontier model without it.
 - Target: 99% final score on Agent E2. See section 7.4.
-- Minimum: the release gate, section 7.5 (Q130, ; set size and held-out rule revised, question set 1.0).
+- Minimum: the release gate, section 7.5 (Q130; set size and held-out rule revised for question set 1.0).
 - No candidate is dropped on a partial run or a small sample.
 - What 99% requires: at about 200 questions, 99% allows 2 wrong questions; proving 99% needs about 300 questions with none wrong (section 4). Answer keys must be correct: every wrong answer from the best model gets an author check.
-- Status: no round on Agent E2 yet (built 2026-11-14). The previous generation and the frontier reference both failed the gate (archived: [analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md)).
+- Status: Agent E2 failed the gate in the latest round ([benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md)).
 
 ## 16. Decision rules
-- Mode: one pipeline, Agent E2, the neuro-symbolic expert system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)), carries the release gate (decided 2026-11-14; replaces Q130, agentic as the shipped mode). No fallback mode: the model makes no tool calls.
+- Mode: one pipeline, Agent E2, the neuro-symbolic expert system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)), carries the release gate (replaces Q130, agentic as the shipped mode). No fallback mode: the model makes no tool calls.
 - Pick the model: highest final score on Agent E2; then lowest confident-wrong rate; ties go to the smaller model.
 - A model that breaks the answer format on more than 10% of answers is dropped. (An unreadable case does not count: the code-only case takes its place.)
 - Knowledge base lift: Agent E2 must beat Base in every area. An area with no lift is a knowledge or retrieval problem, not a model problem.
