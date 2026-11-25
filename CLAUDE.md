@@ -57,6 +57,7 @@ How Claude works in this repository. Read at the start of every session. The des
 - Product (deployed): `knowledge/` and `harness/`. Proof: `benchmark/`. Project: `project/` and [`project/tools/`](project/tools). Map: [`REPOSITORY-MAP.md`](REPOSITORY-MAP.md); how the parts fit: [`ARCHITECTURE.md`](ARCHITECTURE.md), section Repository.
 - `harness/` depends on no folder outside the product. [`project/tools/rules_check.py`](project/tools/rules_check.py) imports the file parser from [`harness/knowledge_loader.py`](harness/knowledge_loader.py), never the reverse.
 - Code file names: rule in [`project/terms.md`](project/terms.md), section Code file names.
+- Diagrams in the root documents are SVG. Read the `<details>` text under an image, not the SVG: it is generated from the SVG and holds every box and arrow. To change a diagram, edit its script ([`project/tools/product_diagram.py`](project/tools/product_diagram.py), [`knowledge_diagram.py`](project/tools/knowledge_diagram.py), [`document_diagrams.py`](project/tools/document_diagrams.py)), run it, then run `python3 project/tools/diagram_text.py`. Never edit an SVG or a text block by hand: lint fails on a block that differs from its image.
 - What is indexed and what is not: [`ARCHITECTURE.md`](ARCHITECTURE.md), section Local LLM use, Ingest.
 
 ## Validation
