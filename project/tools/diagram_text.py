@@ -15,9 +15,9 @@ import sys
 import xml.etree.ElementTree as ET
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DOCS = ['ARCHITECTURE.md', 'KNOWLEDGE-ENGINEERING.md']
+DOCS = ['ARCHITECTURE.md', 'KNOWLEDGE-ENGINEERING.md', 'benchmark/README.md', 'harness/AGENT.md']
 NS = '{http://www.w3.org/2000/svg}'
-IMAGE = re.compile(r'(!\[[^\]]*\]\((images/[^)]+\.svg)\)\n)(?:\n?<details>\n<summary>Text of the diagram.*?</details>\n)?', re.S)
+IMAGE = re.compile(r'(!\[[^\]]*\]\(((?:\.\./)*images/[^)]+\.svg)\)\n)(?:\n?<details>\n<summary>Text of the diagram.*?</details>\n)?', re.S)
 SUMMARY = 'Text of the diagram, for readers that cannot see it'
 
 
@@ -218,8 +218,8 @@ def svg_to_text(path):
     return '\n'.join(lines)
 
 
-def block(svg_rel):
-    return f'<details>\n<summary>{SUMMARY}</summary>\n\n{svg_to_text(os.path.join(ROOT, svg_rel))}\n\n</details>\n'
+def block(svg_path):
+    return f'<details>\n<summary>{SUMMARY}</summary>\n\n{svg_to_text(svg_path)}\n\n</details>\n'
 
 
 def sync(write):
@@ -229,7 +229,8 @@ def sync(write):
         s = open(p, encoding='utf-8').read()
 
         def repl(m):
-            return m.group(1) + '\n' + block(m.group(2))
+            # the image link is relative to the document: ../images/ from benchmark/ and harness/
+            return m.group(1) + '\n' + block(os.path.normpath(os.path.join(os.path.dirname(p), m.group(2))))
         new = IMAGE.sub(repl, s)
         if new != s:
             problems.append(f'{doc}: text of a diagram is missing or out of date (python3 project/tools/diagram_text.py)')

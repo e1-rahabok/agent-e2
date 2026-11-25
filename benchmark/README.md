@@ -5,29 +5,41 @@ Never index this folder: it contains answer keys.
 
 ## Layout
 
-```mermaid
-flowchart LR
-  benchmark["benchmark/"]
-  questions["questions/<br/>L&lt;level&gt;-&lt;nnn&gt;-&lt;slug&gt;.md: one question per file, one flat folder"]
-  attach["questions/&lt;id&gt;/<br/>the question's attachments: screenshots, logs, diagrams (only when it has any)"]
-  runner["runner/<br/>Benchmark runner: run_executor.py, round_executor.py, round_sample_check.py, bad_answer_guard.py, round_alive_check.py, run_folders_backup.py, inference_providers.py, round_resume.py, round_summary.py, score_report.py, adaptive_concurrency.py, runner_config.yaml"]
-  models["models.md<br/>candidate models, frontier reference"]
-  runmd["RUN.md<br/>how to run a benchmark round: the prompt, approvals, time, cost"]
-  live["live-test.md<br/>the system on an offline model: plan and pass criteria"]
-  results["results/README.md<br/>one analysis of all runs of a round (written when the last run finishes)"]
-  resultdirs["results/&lt;date&gt;-&lt;model&gt;/<br/>per run: answers.csv, report.md, config.json (traces.jsonl not in git)"]
-  tmpl["_templates/question.md"]
+![Benchmark folders: questions, attachments, runner, models, RUN and live-test documents, results and the question template, with their roles](../images/benchmark-folders.svg)
 
-  benchmark --> questions
-  benchmark --> attach
-  benchmark --> runner
-  benchmark --> models
-  benchmark --> runmd
-  benchmark --> live
-  benchmark --> results
-  results --> resultdirs
-  benchmark --> tmpl
-```
+<details>
+<summary>Text of the diagram, for readers that cannot see it</summary>
+
+**benchmark/: questions, runner, models, results.** Each folder and its role in the proof.
+Colour key: blue = Benchmark code; purple = Question, result or proof; grey = Document for people.
+
+Boxes, nested as drawn:
+- n1 **Proof, not deployed**: Only the product is deployed to the site.
+  - n2 **questions/** (Question, result or proof): L<level>-<nnn>-<slug>.md: one question per file, one flat folder.
+  - n3 **questions/<id>/** (Question, result or proof): The question's attachments: screenshots, logs, diagrams (only when it has any).
+  - n4 **runner/** (Benchmark code): Benchmark runner: run_executor.py, round_executor.py, round_sample_check.py, bad_answer_guard.py, round_alive_check.py, run_folders_backup.py, inference_providers.py, round_resume.py, round_summary.py, score_report.py, adaptive_concurrency.py, runner_config.yaml
+  - n5 **benchmark/**: The proof of Agent E2.
+  - n6 **models.md** (Document for people): Candidate models and the frontier reference.
+  - n7 **RUN.md** (Document for people): How to run a round: prompt, approvals, time, cost.
+  - n8 **live-test.md** (Document for people): The system on an offline model: plan and pass criteria.
+  - n9 **_templates/question.md** (Document for people): Template for a new question.
+  - n10 **results/README.md** (Question, result or proof): One analysis of all runs of a round, written when the last run finishes.
+  - n11 **results/<date>-<model>/** (Question, result or proof): Per run: answers.csv, report.md, config.json (traces.jsonl not in git)
+
+Arrows (from, to, label):
+- n5 benchmark/ --> n2 questions/
+- n5 benchmark/ --> n3 questions/<id>/
+- n5 benchmark/ --> n4 runner/
+- n5 benchmark/ --> n6 models.md
+- n5 benchmark/ --> n7 RUN.md
+- n5 benchmark/ --> n8 live-test.md
+- n5 benchmark/ --> n9 _templates/question.md
+- n5 benchmark/ --> n10 results/README.md
+- n10 results/README.md --> n11 results/<date>-<model>/
+
+Arrows: `-->` solid, `..>` dashed.
+
+</details>
 
 - One flat folder: a question often crosses products (vSphere, Windows, Linux, NSX, VCF Operations) and technologies, so folders cannot hold it. The slices are metadata (section Metadata tags):
   - `product`: every product the question touches (values from [project/tools/rules_check_values.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/rules_check_values.yaml));

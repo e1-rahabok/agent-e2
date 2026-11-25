@@ -235,6 +235,66 @@ def repository_groups():
     finish(out_path('repository-groups.svg'))
 
 
+# ------------------------------------------------------------------ 7. benchmark folders (benchmark/README.md)
+def benchmark_folders():
+    W, H = 1100, 890
+    start(W, H)
+    head(W, 'benchmark/: questions, runner, models, results',
+         'Each folder and its role in the proof.',
+         [('Benchmark code', 'method'), ('Question, result or proof', 'shared'), ('Document for people', 'data')])
+    frame(20, 100, 1060, 780, 'Proof, not deployed', 'Only the product is deployed to the site.')
+    box(50, 400, 200, 'benchmark/', ['The proof of Agent E2.'], 'white', mono=True)
+    kids = [  # (x, y, w, title, lines, kind, mono)
+        (330, 110, 380, 'questions/', ['L<level>-<nnn>-<slug>.md: one question', 'per file, one flat folder.'], 'shared', True),
+        (330, 190, 380, 'questions/<id>/', ["The question's attachments: screenshots,", 'logs, diagrams (only when it has any).'], 'shared', True),
+        (330, 270, 380, 'runner/', ['Benchmark runner: run_executor.py,', 'round_executor.py, round_sample_check.py,',
+                                    'bad_answer_guard.py, round_alive_check.py,', 'run_folders_backup.py, inference_providers.py,',
+                                    'round_resume.py, round_summary.py,', 'score_report.py, adaptive_concurrency.py,',
+                                    'runner_config.yaml'], 'method', True),
+        (330, 425, 380, 'models.md', ['Candidate models and the frontier reference.'], 'data', True),
+        (330, 505, 380, 'RUN.md', ['How to run a round: prompt, approvals,', 'time, cost.'], 'data', True),
+        (330, 585, 380, 'live-test.md', ['The system on an offline model:', 'plan and pass criteria.'], 'data', True),
+        (330, 665, 380, '_templates/question.md', ['Template for a new question.'], 'data', True),
+        (330, 730, 380, 'results/README.md', ['One analysis of all runs of a round,', 'written when the last run finishes.'], 'shared', True),
+    ]
+    for x, y, w, title, lines, kind, mono in kids:
+        _, _, _, h = box(x, y, w, title, lines, kind, mono=mono)
+        arrow([(250, 435), (x - 2, y + h // 2)])
+    box(760, 730, 300, 'results/<date>-<model>/', ['Per run: answers.csv, report.md,', 'config.json (traces.jsonl not in git)'], 'shared', mono=True)
+    arrow([(710, 763), (758, 763)])
+    finish(out_path('benchmark-folders.svg'))
+
+
+# ------------------------------------------------------------------ 8. six stages of the agent (harness/AGENT.md)
+def agent_six_stages():
+    W, H = 1000, 880
+    start(W, H)
+    head(W, 'Agent E2: one question through six stages',
+         'Code decides the route. The model reads in stages 1 and 5 and may run once more in stage 6.',
+         [('Agent code', 'method'), ('Model call', 'guest'), ('Input or output', 'data')])
+    box(260, 100, 460, 'Question and images', ['Input: the question text and its screenshots.'], 'data', h=52)
+    box(260, 190, 460, '1 Understand', ['Model (1 call): reads the question into a', 'fixed schema. The agent resolves names.'], 'guest', h=70)
+    box(260, 290, 460, '2 Plan', ['Agent: builds the reading set from the', "knowledge base's map. No model call."], 'method', h=70)
+    box(260, 390, 460, '3 Compute', ['Agent: catalog, calculator, flow executor,', 'planning calculator on the case.'], 'method', h=70)
+    box(260, 490, 460, '4 Ask?', ['Agent rule: does a missing fact', 'change the answer?'], 'method', h=70)
+    box(740, 475, 240, 'One clarifying round', ['A missing fact changes', 'the answer. One round,', 'then back to stage 1.'], 'method', h=86)
+    box(260, 590, 460, '5 Answer', ['Model (1 call, n with consensus): reads', 'and writes the draft answer.'], 'guest', h=70)
+    box(260, 690, 460, '6 Check', ['Agent: verifier, consensus, coverage.', 'A gap follow-up or repair may call the model.'], 'method', h=70)
+    box(260, 790, 460, 'Answer with citations', ['Computed facts and citations to the files.'], 'data', h=52)
+    arrow([(490, 152), (490, 188)])
+    arrow([(490, 260), (490, 288)])
+    arrow([(490, 360), (490, 388)])
+    arrow([(490, 460), (490, 488)])
+    arrow([(720, 525), (738, 525)])
+    arrow([(860, 475), (860, 225), (722, 225)])
+    arrow([(490, 560), (490, 588)], 'no', 506, 578)
+    arrow([(490, 660), (490, 688)])
+    arrow([(490, 760), (490, 788)])
+    arrow([(260, 725), (200, 725), (200, 325), (258, 325)], 'gap: a named metric not read', 118, 520)
+    finish(out_path('agent-six-stages.svg'))
+
+
 if __name__ == '__main__':
-    for fn in (knowledge_workflow, knowledge_paths, file_as_model_sees, source_to_reviewed, agent_e2_in_pcm, repository_groups):
+    for fn in (knowledge_workflow, knowledge_paths, file_as_model_sees, source_to_reviewed, agent_e2_in_pcm, repository_groups,
+               benchmark_folders, agent_six_stages):
         fn()
