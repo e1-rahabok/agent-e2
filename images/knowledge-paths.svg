@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="720" viewBox="0 0 1760 720" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555555"/></marker></defs>
+<rect width="1760" height="720" fill="#ffffff"/>
+<text x="24" y="34" font-size="20" font-weight="bold" fill="#111" text-anchor="start">How a fact reaches the model</text>
+<text x="24" y="54" font-size="12.5" font-weight="normal" fill="#444" text-anchor="start">Five paths. Each blocks a failure the others cannot. Each fact has one home.</text>
+<rect x="1262.4" y="66" width="14" height="14" rx="3" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="1282.4" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Knowledge</text>
+<rect x="1361.1000000000001" y="66" width="14" height="14" rx="3" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="1381.1000000000001" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Agent and harness code</text>
+<rect x="1541.7" y="66" width="14" height="14" rx="3" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
+<text x="1561.7" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Model</text>
+<rect x="1615.2" y="66" width="14" height="14" rx="3" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1635.2" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Route and result</text>
+<text x="30" y="112" font-size="13" font-weight="bold" fill="#222" text-anchor="start">Path and reason</text>
+<text x="400" y="112" font-size="13" font-weight="bold" fill="#222" text-anchor="start">Home</text>
+<text x="770" y="112" font-size="13" font-weight="bold" fill="#222" text-anchor="start">Route</text>
+<text x="1060" y="112" font-size="13" font-weight="bold" fill="#222" text-anchor="start">Reaches the model as</text>
+<rect x="30" y="126" width="340" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="40" y="145" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">1  Retrieved when a question needs it</text>
+<text x="40" y="164" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Too large to send with every question: about 327K</text>
+<text x="40" y="179" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">tokens.</text>
+<rect x="400" y="126" width="340" height="100" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="410" y="145" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">knowledge/**/*.md</text>
+<text x="410" y="164" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">Mechanisms, metrics, misconceptions, flows</text>
+<rect x="770" y="126" width="260" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="780" y="145" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Search and links</text>
+<text x="780" y="164" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">The agent plans the reading set</text>
+<rect x="1060" y="126" width="220" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1070" y="145" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Reading set</text>
+<path d="M 372 176 L 398 176" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 742 176 L 768 176" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 1032 176 L 1058 176" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 1282 176 L 1352 176" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="30" y="240" width="340" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="40" y="259" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">2  Looked up exactly</text>
+<text x="40" y="278" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">An exact value must not depend on ranking or on</text>
+<text x="40" y="293" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">the model's memory.</text>
+<rect x="400" y="240" width="340" height="100" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="410" y="259" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">knowledge/catalog/*.yaml</text>
+<text x="410" y="278" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">Units, rollups, thresholds, user terms</text>
+<rect x="770" y="240" width="260" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="780" y="259" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Lookup by key in SQLite</text>
+<text x="780" y="278" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Loaded at start-up, not chunked</text>
+<rect x="1060" y="240" width="220" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1070" y="259" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Exact values</text>
+<path d="M 372 290 L 398 290" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 742 290 L 768 290" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 1032 290 L 1058 290" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 1282 290 L 1352 290" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="30" y="354" width="340" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="40" y="373" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">3  Given up front, every question</text>
+<text x="40" y="392" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">A confident wrong belief is never looked up, so</text>
+<text x="40" y="407" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">the correction must be in place first.</text>
+<rect x="400" y="354" width="340" height="100" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="410" y="373" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">up_front lines and glossary.md</text>
+<text x="410" y="392" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">Widest misconceptions, confusable pairs</text>
+<rect x="770" y="354" width="260" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="780" y="373" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">upfront_knowledge.py</text>
+<text x="780" y="392" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Builds the up-front block</text>
+<rect x="1060" y="354" width="220" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1070" y="373" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Up-front block</text>
+<path d="M 372 404 L 398 404" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 742 404 L 768 404" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 1032 404 L 1058 404" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 1282 404 L 1352 404" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="30" y="468" width="340" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="40" y="487" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">4  Executed as code</text>
+<text x="40" y="506" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Small models slip on arithmetic and skip steps.</text>
+<text x="40" y="521" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Code does not.</text>
+<rect x="400" y="468" width="340" height="100" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="410" y="487" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">harness/*.py</text>
+<text x="410" y="506" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">arithmetic_calculator, answer_check,</text>
+<text x="410" y="521" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">user_terms</text>
+<rect x="770" y="468" width="260" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="780" y="487" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Code runs on the case</text>
+<text x="780" y="506" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Uses the case's values</text>
+<rect x="1060" y="468" width="220" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1070" y="487" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Exact values</text>
+<path d="M 372 518 L 398 518" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 742 518 L 768 518" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 1032 518 L 1058 518" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 1282 518 L 1352 518" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="30" y="582" width="340" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="40" y="601" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">5  Agent instructions</text>
+<text x="40" y="620" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Conduct for every answer, not a fact about one</text>
+<text x="40" y="635" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">metric.</text>
+<rect x="400" y="582" width="340" height="100" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="410" y="601" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">answer_modes.py, expert_agent.py</text>
+<text x="410" y="620" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">Knowledge base first, threshold only</text>
+<text x="410" y="635" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">with its source, Unsure</text>
+<rect x="770" y="582" width="260" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="780" y="601" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Prompt rules</text>
+<text x="780" y="620" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Added to every question</text>
+<rect x="1060" y="582" width="220" height="100" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1070" y="601" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Every answer</text>
+<path d="M 372 632 L 398 632" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 742 632 L 768 632" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 1032 632 L 1058 632" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 1282 632 L 1352 632" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="1354" y="126" width="180" height="556" rx="6" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
+<text x="1364" y="145" font-size="13" font-weight="bold" fill="#4a2400" text-anchor="start">Model</text>
+<text x="1364" y="164" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">Reads the reading set,</text>
+<text x="1364" y="179" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">the exact values, the</text>
+<text x="1364" y="194" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">up-front block and</text>
+<text x="1364" y="209" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">the rules.</text>
+<rect x="1570" y="354" width="170" height="100" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="1580" y="373" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">Answer</text>
+<text x="1580" y="392" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">With file citations.</text>
+<path d="M 1536 404 L 1568 404" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+</svg>

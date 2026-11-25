@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="540" viewBox="0 0 1640 540" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555555"/></marker></defs>
+<rect width="1640" height="540" fill="#ffffff"/>
+<text x="24" y="34" font-size="20" font-weight="bold" fill="#111" text-anchor="start">Agent E2 in PCM</text>
+<text x="24" y="54" font-size="12.5" font-weight="normal" fill="#444" text-anchor="start">Two repositories, two processes. PCM calls Agent E2 over HTTP; Agent E2 calls no PCM code, database or endpoint.</text>
+<rect x="1255.8" y="66" width="14" height="14" rx="3" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1275.8" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">PCM</text>
+<rect x="1316.7" y="66" width="14" height="14" rx="3" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="1336.7" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Agent and harness</text>
+<rect x="1465.8" y="66" width="14" height="14" rx="3" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="1485.8" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Knowledge</text>
+<rect x="1564.5" y="66" width="14" height="14" rx="3" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
+<text x="1584.5" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Model</text>
+<rect x="30" y="100" width="480" height="390" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
+<text x="42" y="122" font-size="14" font-weight="bold" fill="#222" text-anchor="start">PCM</text>
+<text x="42" y="138" font-size="11" font-weight="normal" fill="#555" text-anchor="start">Separate repository and process</text>
+<rect x="46" y="150" width="448" height="60" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="56" y="169" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Screens and the Agent E2 panel</text>
+<rect x="46" y="236" width="448" height="70" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="56" y="255" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Data</text>
+<text x="56" y="274" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">VCF Operations, synthetic ACME.</text>
+<rect x="46" y="332" width="448" height="80" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="56" y="351" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Identity, roles, conversation and topics</text>
+<text x="56" y="370" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">The caller keeps the conversation.</text>
+<rect x="760" y="100" width="480" height="390" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
+<text x="772" y="122" font-size="14" font-weight="bold" fill="#222" text-anchor="start">Agent E2</text>
+<text x="772" y="138" font-size="11" font-weight="normal" fill="#555" text-anchor="start">This repository</text>
+<rect x="776" y="150" width="448" height="80" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="786" y="169" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">harness/answer_service.py</text>
+<text x="786" y="188" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">POST /v1/answer, /v1/suggest, /v1/topic</text>
+<text x="786" y="203" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">GET /v1/health</text>
+<rect x="776" y="270" width="448" height="70" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="786" y="289" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">Agent and harness</text>
+<text x="786" y="308" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">Case, reading plan, tools, verifier.</text>
+<rect x="776" y="390" width="448" height="70" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="786" y="409" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">knowledge/</text>
+<text x="786" y="428" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start">Read by the agent through the harness.</text>
+<path d="M 1000 232 L 1000 268" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 1000 342 L 1000 388" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="1380" y="270" width="230" height="70" rx="6" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>
+<text x="1390" y="289" font-size="13" font-weight="bold" fill="#4a2400" text-anchor="start">Model server</text>
+<text x="1390" y="308" font-size="11.5" font-weight="normal" fill="#4a2400" text-anchor="start">Local GPU. Lab: gateway.</text>
+<path d="M 1226 305 L 1378 305" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="1234" y="285" width="136" height="15" fill="#ffffff" opacity="0.92"/>
+<text x="1302" y="296" font-size="10.5" font-weight="normal" fill="#555555" text-anchor="middle">OpenAI-compatible API</text>
+<text x="635" y="160" font-size="10.5" font-weight="normal" fill="#1f5fae" text-anchor="middle">question, facts (screen and</text>
+<text x="635" y="174" font-size="10.5" font-weight="normal" fill="#1f5fae" text-anchor="middle">KPI series), role, history,</text>
+<text x="635" y="188" font-size="10.5" font-weight="normal" fill="#1f5fae" text-anchor="middle">topic_choice</text>
+<path d="M 512 205 L 758 205" fill="none" stroke="#1f5fae" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="635" y="262" font-size="10.5" font-weight="normal" fill="#2e7d32" text-anchor="middle">lead, answer, files read,</text>
+<text x="635" y="276" font-size="10.5" font-weight="normal" fill="#2e7d32" text-anchor="middle">computed, topic, shape,</text>
+<text x="635" y="290" font-size="10.5" font-weight="normal" fill="#2e7d32" text-anchor="middle">knowledge commit</text>
+<path d="M 758 250 L 512 250" fill="none" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#ah)"/>
+</svg>

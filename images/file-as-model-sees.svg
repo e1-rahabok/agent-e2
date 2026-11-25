@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="580" viewBox="0 0 1500 580" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555555"/></marker></defs>
+<rect width="1500" height="580" fill="#ffffff"/>
+<text x="24" y="34" font-size="20" font-weight="bold" fill="#111" text-anchor="start">What the model sees of a file</text>
+<text x="24" y="54" font-size="12.5" font-weight="normal" fill="#444" text-anchor="start">A ## section is the unit of retrieval. Metadata is read by code and never embedded.</text>
+<rect x="1044.4" y="66" width="14" height="14" rx="3" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="1064.4" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Part of a knowledge file</text>
+<rect x="1237.6000000000001" y="66" width="14" height="14" rx="3" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="1257.6000000000001" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Harness</text>
+<rect x="1323.7" y="66" width="14" height="14" rx="3" fill="#f2f2f2" stroke="#666666" stroke-width="1.4"/>
+<text x="1343.7" y="78" font-size="11.5" font-weight="normal" fill="#333" text-anchor="start">Not used by the model</text>
+<rect x="30" y="100" width="340" height="440" rx="10" fill="#fafafa" stroke="#c9c9c9"/>
+<text x="42" y="122" font-size="14" font-weight="bold" fill="#222" text-anchor="start">One knowledge file</text>
+<rect x="42" y="134" width="316" height="44" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="52" y="153" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace"># Title</text>
+<rect x="42" y="188" width="316" height="44" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="52" y="207" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">## Sections</text>
+<rect x="42" y="242" width="316" height="44" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="52" y="261" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">## Misconceptions</text>
+<rect x="42" y="296" width="316" height="44" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="52" y="315" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">Mermaid chart</text>
+<rect x="42" y="354" width="316" height="174" rx="6" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1.4"/>
+<text x="52" y="373" font-size="13" font-weight="bold" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">## Metadata (yaml, last)</text>
+<text x="56" y="404" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">tags</text>
+<text x="56" y="432" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">links</text>
+<text x="56" y="460" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">up_front</text>
+<text x="56" y="488" font-size="11.5" font-weight="normal" fill="#173a16" text-anchor="start" font-family="ui-monospace,Menlo,Consolas,monospace">status, source, review_notes, corrections</text>
+<rect x="520" y="134" width="400" height="152" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="530" y="153" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">Chunks</text>
+<text x="530" y="172" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">One chunk per ## section. Each chunk starts</text>
+<text x="530" y="187" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">with Title (id) &gt; Heading.</text>
+<path d="M 360 156 L 518 156" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 360 210 L 518 210" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M 360 264 L 518 264" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="520" y="312" width="400" height="60" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4" stroke-dasharray="6 4"/>
+<text x="530" y="331" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Not indexed</text>
+<text x="530" y="350" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Removed: the numbered steps carry the flow.</text>
+<path d="M 360 328 L 518 328" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="1040" y="134" width="300" height="70" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="1050" y="153" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">Search</text>
+<text x="1050" y="172" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">Chunks, and filters from the tags.</text>
+<path d="M 920 170 L 1038 170" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="1040" y="262" width="300" height="60" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="1050" y="281" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">Reading plan</text>
+<text x="1050" y="300" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">Follows the links.</text>
+<rect x="1040" y="352" width="300" height="60" rx="6" fill="#e4edfa" stroke="#1f5fae" stroke-width="1.4"/>
+<text x="1050" y="371" font-size="13" font-weight="bold" fill="#0d2a4d" text-anchor="start">Up-front block</text>
+<text x="1050" y="390" font-size="11.5" font-weight="normal" fill="#0d2a4d" text-anchor="start">Sent with every question.</text>
+<rect x="1040" y="442" width="300" height="60" rx="6" fill="#f2f2f2" stroke="#666666" stroke-width="1.4" stroke-dasharray="6 4"/>
+<text x="1050" y="461" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">Review only</text>
+<text x="1050" y="480" font-size="11.5" font-weight="normal" fill="#222222" text-anchor="start">Never embedded.</text>
+<path d="M 360 404 L 940 404 L 940 190 L 1038 190" fill="none" stroke="#1f5fae" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="625" y="389" width="51" height="15" fill="#ffffff" opacity="0.92"/>
+<text x="650" y="400" font-size="10.5" font-weight="normal" fill="#1f5fae" text-anchor="middle">filters</text>
+<path d="M 360 432 L 980 432 L 980 292 L 1038 292" fill="none" stroke="#1f5fae" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="631" y="417" width="38" height="15" fill="#ffffff" opacity="0.92"/>
+<text x="650" y="428" font-size="10.5" font-weight="normal" fill="#1f5fae" text-anchor="middle">links</text>
+<path d="M 360 460 L 1020 460 L 1020 382 L 1038 382" fill="none" stroke="#1f5fae" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="582" y="445" width="136" height="15" fill="#ffffff" opacity="0.92"/>
+<text x="650" y="456" font-size="10.5" font-weight="normal" fill="#1f5fae" text-anchor="middle">marked misconceptions</text>
+<path d="M 360 488 L 1038 488" fill="none" stroke="#888888" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+<rect x="609" y="473" width="81" height="15" fill="#ffffff" opacity="0.92"/>
+<text x="650" y="484" font-size="10.5" font-weight="normal" fill="#888888" text-anchor="middle">audit fields</text>
+</svg>

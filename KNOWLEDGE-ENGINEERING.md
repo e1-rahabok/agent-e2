@@ -5,37 +5,7 @@ Related reading: why the system can win is in [MISSION.md](MISSION.md); how the 
 
 ## From expertise to knowledge the model reads
 
-```mermaid
-flowchart LR
-  subgraph Sources["1. Sources"]
-    B[Author's books, spreadsheets, diagrams]
-    D[Documentation: manuals, white papers, expert answers]
-    E[Environment: screenshots, API, GUI, lab tests]
-  end
-  SN["2. Source note per topic, claims tied to evidence (project/sources/)"]
-  subgraph Codify["3. Codify: one form per kind, one home per fact"]
-    P[Markdown: mechanisms, misconceptions, flows]
-    Y[Catalog YAML: counters, thresholds, object model]
-    L[Tags and links: the expert's map]
-  end
-  subgraph Check["4. Check"]
-    LI[Lint: every merge]
-    BM[Retrieval check and benchmark]
-    AQ[Author review: status reviewed, gate of release 1.0]
-  end
-  subgraph Use["5. Used by the AI"]
-    R[Agent and harness: five paths to the model]
-    A[Model: read, apply, answer with citations]
-  end
-  B --> SN
-  D --> SN
-  E --> SN
-  SN --> Codify
-  Codify --> Check
-  Check -->|lint passes, drafts carry their status| R
-  R --> A
-  A -->|wrong answers traced to knowledge, retrieval or model| SN
-```
+![Agent E2 knowledge workflow: sources, source note, codify, check and use by the AI, with a loop from wrong answers back to the source note](images/knowledge-workflow.svg)
 
 - Experts hold judgment, not definitions. Each kind of judgment gets its own form: prose for reasons, misconception lines for wrong readings, YAML for exact numbers, and numbered steps for the order of checks.
 - Tags and links carry the expert's mental map: which files must be read together.
@@ -89,33 +59,13 @@ flowchart LR
 - A VM is a virtual motherboard and the Guest OS is a separate layer, so the layer that produces a metric decides where it lives.
 - The folder tree holds one slice of a fact. Tags and links hold the others.
 - Source: [`project/tools/knowledge_diagram.py`](project/tools/knowledge_diagram.py) draws the SVG. The file counts in it are typed in: update them from [`project/tools/knowledge_stats.py`](project/tools/knowledge_stats.py) and run the script from the repository root.
+- The other diagrams of this document are SVG too, drawn by [`project/tools/document_diagrams.py`](project/tools/document_diagrams.py) with the shared helpers of [`project/tools/diagram_kit.py`](project/tools/diagram_kit.py). Every diagram has its facts in the text around it, because the model and a reader of the raw file get no picture.
 
 ### How a fact reaches the model
 
 - The home of a fact is decided by how it must reach the model, not by its subject. There are five paths, each for a failure the others cannot prevent:
 
-```mermaid
-flowchart LR
-  Q[Question and screenshots] --> AG[Agent: case and reading plan]
-  subgraph KB["knowledge/: one home per fact"]
-    MD[Markdown files]
-    CAT[Catalog YAML]
-    UPL[Misconception lines marked up_front]
-    GL[Glossary]
-  end
-  MD -->|1 retrieved: search and links| RS[Reading set]
-  CAT -->|2 looked up exactly: SQLite| EX[Exact values]
-  UPL -->|3 given up front: upfront_knowledge.py| UP[Up-front block]
-  GL -->|3| UP
-  CODE["Code: arithmetic_calculator.py, answer_check.py, user_terms.py"] -->|4 executed| EX
-  RULES["Instructions: answer_modes.py, expert_agent.py"] -->|5 every answer| M
-  AG --> RS
-  AG --> EX
-  RS --> M[Model]
-  EX --> M
-  UP --> M
-  M --> ANS[Answer with file citations]
-```
+![Agent E2 knowledge paths: five paths from the home of a fact to the model, each with the reason for the path](images/knowledge-paths.svg)
 
 | Path | Holds | Home | Why this path |
 |---|---|---|---|
@@ -161,25 +111,7 @@ flowchart LR
 
 ### What the model sees of a file
 
-```mermaid
-flowchart LR
-  subgraph F["One knowledge file"]
-    T["# Title"]
-    S["## Sections: Meaning, Formula, Reason ..."]
-    MC["## Misconceptions"]
-    MM[Mermaid chart]
-    MD["## Metadata (yaml, last)"]
-  end
-  T --> CH["Chunks: one per ## section, each prefixed with Title (id) > Heading"]
-  S --> CH
-  MC --> CH
-  CH --> SE[Search]
-  MM -.->|removed: the numbered steps carry it| X[Not indexed]
-  MD -->|tags: filters| SE
-  MD -->|links| PL[Reading plan]
-  MD -->|up_front| PR[Up-front block]
-  MD -.->|status, source, review_notes, corrections| RV[Review only, never embedded]
-```
+![What the model sees of a knowledge file: chunks and search, the reading plan, the up-front block, and the parts it never sees](images/file-as-model-sees.svg)
 
 - A `##` section is the unit of retrieval. A heading names its topic in words a question uses, because the title and heading go in front of every chunk ([`harness/knowledge_loader.py`](harness/knowledge_loader.py)).
 - A file link `` [`id`](path.md) `` reaches the model as the id alone; the path is for reviewers on GitHub.
@@ -281,23 +213,7 @@ This is the one definition of the levels, and the benchmark uses it ([`benchmark
 
 ## 6. Workflow: from source to reviewed file
 
-```mermaid
-flowchart LR
-  subgraph In["Sources"]
-    BK[Author's books, spreadsheets, diagrams]
-    DOC[Documentation]
-    ENV[Environment]
-  end
-  ENV --> EV["evidence/ files: screenshots, API output, lab results"]
-  BK --> SN
-  DOC --> SN
-  EV --> SN
-  SN["Source note: one topic, a few pages, vendor and measured claims tagged E1, E2"] --> DG["Digest: each fact gets one home file"]
-  DG --> HOME["Home file: the fact, source.path names the note"]
-  DG --> LINK[Other files: a link to the home, no copy]
-  HOME --> CK[Lint, retrieval check, author review]
-  LINK --> CK
-```
+![From source to reviewed file: source note, digest, home file and links, check](images/source-to-reviewed.svg)
 
 1. Gather. Most of the knowledge (over 80%) comes from the author's books, spreadsheets and diagrams. The rest comes from documentation (manuals, white papers, blogs, expert answers) and from the environment (screenshots, live instances through the API or GUI, lab tests). For a vendor document, use the current version and read its revision date.
 2. Write the source note. The author and Claude write one Markdown note per topic, a few pages long, in [`project/sources/`](project/sources). It carries its release and date and an `## Evidence` section. Each claim about vendor behaviour, and each measured number, is tagged with its evidence (`[E1]`). The author's own judgment needs no tag: it is the knowledge base's own source. Format: [project/sources/README.md](project/sources/README.md).
