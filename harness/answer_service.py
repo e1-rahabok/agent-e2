@@ -1,8 +1,8 @@
 """Agent E2 as a service: one HTTP endpoint that answers a question with the live facts a caller sends.
 
 The caller is PCM (Private Cloud Management): PCM owns the data, the actions, the user's identity and every screen;
-Agent E2 owns the knowledge base, the reading plan, the flow executor and the model call (project/plan.md, decision of
-2026-11-20). The answer is the shipped pipeline, `answer_modes.converse('agent-e2', ...)`, unchanged.
+Agent E2 owns the knowledge base, the reading plan, the flow executor and the model call (ARCHITECTURE.md,
+section Agent E2 in PCM). The answer is the shipped pipeline, `answer_modes.converse('agent-e2', ...)`, unchanged.
 
     POST /v1/answer
       {"question": "...", "facts": {...} (optional, JSON from the caller), "turns": [...] (optional, for the clarifying

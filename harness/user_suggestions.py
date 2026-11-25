@@ -10,6 +10,10 @@ situation from them with its calculator and catalog, so the caller holds no doma
 - movement. Performance: declining (last quarter against first quarter, at least the KPI change level, or a drop not
   recovered by Now) or dip (the worst point at least the change level from the median, and Now back within it). Capacity: rising Cluster Consumption, read only over
   7 days or more, since a 24-hour window shows the daily cycle, not growth.
+- dip is a movement of its own, apart from declining: a one-off drop needs other questions ("Why did performance drop at
+  {time}?") than a decline.
+- No underused-capacity situation: the grey (wastage) band in thresholds-capacity, section sizing, has no value yet,
+  and detecting it would invent a threshold (Q258).
 
 Shown: with a movement, 2 movement questions and 1 metric question (how the page's KPI works, from the knowledge base); good
 with no movement, 1 level and 2 metric questions; medium or bad, 2 level and 1 metric.

@@ -108,6 +108,6 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_check.py --embeddings 
 | Budget too small | File ranked inside the list but cut | Shorten the files ahead of it; test a larger `context_tokens` |
 | Ranking problem across many questions | Same pattern in many rows | A harness experiment: query expansion, hybrid search, re-ranker, routing |
 
-- Measure each fix with the check before keeping it. Keep a fix only when context recall or complete questions go up, or stay the same while the content becomes more correct (record that reason in the plan).
+- Measure each fix with the check before keeping it. Keep a fix only when context recall or complete questions go up, or stay the same while the content becomes more correct (give that reason in the pull request text).
 - Never fit the knowledge base to one question: a fix must be a general fact, term or link that helps every question on the topic. The held-out set guards against fitting ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10).
-- Record every run in [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (M3): date, change, mode, context recall, complete questions, and the questions that gained or lost.
+- After every run, update the M3 status row of [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) with the current numbers. The before and after, the mode and the questions that gained or lost go in the pull request text.

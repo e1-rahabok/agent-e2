@@ -169,7 +169,7 @@ Preferred, not required:
 | mistral/ministral-8b | | Weakest of the first 8 candidates. |
 
 ## 8. Not chosen
-- Rows rejected only for size (more than one GPU) are open again : two to four GPUs are allowed (criterion 3, tier C). Re-check them for vision, tool use and licence before the next round.
+- Rows rejected only for size (more than one GPU) are open again: two to four GPUs are allowed (criterion 3, tier C). Re-check them for vision, tool use and licence before the next round.
 
 | Model | Reason |
 |---|---|

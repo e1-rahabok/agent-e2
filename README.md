@@ -90,7 +90,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | [benchmark/design.md](benchmark/design.md)           | How the benchmark proves the claim; final score                                                             |
 | [benchmark/models.md](benchmark/models.md)           | Model design: which frozen model to ship, size and hardware; frontier reference                             |
 | [benchmark/live-test.md](benchmark/live-test.md)     | The system deployed on a local model: setup, steps, pass criteria                                        |
-| [project/plan.md](project/plan.md)                   | Milestones, decisions, open work                                                                            |
+| [project/plan.md](project/plan.md)                   | Milestones, open work                                                                            |
 | [project/consultations.md](project/consultations.md) | The consultations Agent E2 leads: capacity planning in 1.0, 14 more after 1.0                                |
 | [CONTRIBUTING.md](CONTRIBUTING.md)                   | How to add or change a file                                                                                 |
 

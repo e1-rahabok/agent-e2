@@ -1,7 +1,8 @@
 """Draw images/knowledge-structure.svg: what the knowledge is (KNOWLEDGE-ENGINEERING.md, section 2).
 
 Hand-laid SVG for human readers, in the style of product_diagram.py. The file counts are typed in below:
-update them when `python3 project/tools/knowledge_stats.py` and the folder counts move.
+update them when `python3 project/tools/knowledge_stats.py` and the folder counts move. A colour is added only with an entry
+in the colour key: a colour with no entry reads as random.
 Run from the repository root:
     python3 project/tools/knowledge_diagram.py
 """

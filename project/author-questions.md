@@ -24,6 +24,17 @@ No open question blocks release 1.0.
 
 ## Future release
 
+### Q263 · Diagrams · Scope of the SVG rule
+
+- Files: [writing.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/writing.md), section Format choices; [CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md), section Repository layout.
+- Search strings: "Root documents are not indexed and are for people"; "Diagrams in the root documents are SVG".
+- Now: both say diagrams in the root documents are hand-laid SVG. [benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md) and [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 3, are not root documents and follow the rule too.
+- Question: does the rule cover every document for people, or the root documents only?
+  - A. Every document for people (not indexed); knowledge files keep Mermaid.
+  - B. The root documents only.
+- Recommended: A. The other documents already follow it, and one rule for every document for people needs no list.
+- Answer:
+
 ### Q262 · Decision trees · Three trees with no branches
 
 - Files: [Does this ESXi host have CPU headroom?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom.md), [Downsizing a large, idle VM](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/decision-tree/oversized-vm-downsizing.md), [Is memory overcommit affecting this VM?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm.md); the Mermaid chart in each.

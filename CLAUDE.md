@@ -3,9 +3,9 @@
 How Claude works in this repository. Read at the start of every session. The design of the knowledge is in [`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), its rules in [`project/knowledge-rules/`](project/knowledge-rules); this file does not repeat them.
 
 ## Start of every session
-- Read [`project/plan.md`](project/plan.md) first: mission, milestones, decisions, what we are not doing, open work.
-- Check every change against the plan. Say so when a request conflicts with an earlier decision, or when a change adds to a duplicate instead of removing it.
-- Update [`project/plan.md`](project/plan.md) with every change set.
+- Read [`project/plan.md`](project/plan.md) first: mission, milestones, what we are not doing, open work.
+- Check every change against the plan and the documents that own the rules. Say so when a request conflicts with an earlier decision, or when a change adds to a duplicate instead of removing it.
+- Update [`project/plan.md`](project/plan.md) with every change set: status and open work only. A decision goes to the document that owns its rule, with its reason; the commit and the pull request record when it was made. No dates or decision log in the plan.
 - Before writing any text, read [`project/knowledge-rules/writing.md`](project/knowledge-rules/writing.md): knowledge, documents, diagram labels, commit messages, PR text. Before every commit, reread what you wrote against it and against `avoid_ai_speak`: no slogans, no "X, not Y", headings as noun phrases. Lint does not check style.
 
 ## Purpose
@@ -57,7 +57,7 @@ How Claude works in this repository. Read at the start of every session. The des
 - Product (deployed): `knowledge/` and `harness/`. Proof: `benchmark/`. Project: `project/` and [`project/tools/`](project/tools). Map: [`REPOSITORY-MAP.md`](REPOSITORY-MAP.md); how the parts fit: [`ARCHITECTURE.md`](ARCHITECTURE.md), section Repository.
 - `harness/` depends on no folder outside the product. [`project/tools/rules_check.py`](project/tools/rules_check.py) imports the file parser from [`harness/knowledge_loader.py`](harness/knowledge_loader.py), never the reverse.
 - Code file names: rule in [`project/terms.md`](project/terms.md), section Code file names.
-- Diagrams in the root documents are SVG. Read the `<details>` text under an image, not the SVG: it is generated from the SVG and holds every box and arrow. To change a diagram, edit its script ([`project/tools/product_diagram.py`](project/tools/product_diagram.py), [`knowledge_diagram.py`](project/tools/knowledge_diagram.py), [`document_diagrams.py`](project/tools/document_diagrams.py)), run it, then run `python3 project/tools/diagram_text.py`. Never edit an SVG or a text block by hand: lint fails on a block that differs from its image.
+- Diagrams in the root documents are SVG. Read the `<details>` text under an image, not the SVG: it is generated from the SVG and holds every box and arrow. To change a diagram, edit its script ([`project/tools/product_diagram.py`](project/tools/product_diagram.py), [`knowledge_diagram.py`](project/tools/knowledge_diagram.py), [`document_diagrams.py`](project/tools/document_diagrams.py)), run it, then run `python3 project/tools/diagram_text.py`. Never edit an SVG or a text block by hand: the next run of the script overwrites a hand-edited SVG, and lint fails on a block that differs from its image.
 - What is indexed and what is not: [`ARCHITECTURE.md`](ARCHITECTURE.md), section Local LLM use, Ingest.
 
 ## Validation

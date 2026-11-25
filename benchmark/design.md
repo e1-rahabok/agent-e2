@@ -143,6 +143,8 @@ An administrator rarely questions a counter in the abstract. The question comes 
 - Reading the pair: wrong on both is a knowledge gap (fix the knowledge base); right on theory and wrong on practical is a reading failure (check the trace: the export or screen misread, the file missed, or the model ignored it); wrong on theory and right on practical is a guess.
 - Each question is sent alone, so one never gives away the other.
 - Pairs are written where the misreading shows in tool output, not for every counter. Each practical half has at least one option only its evidence decides. A practical half whose evidence does not exist yet waits with status `awaiting-input` and a `## Input to supply`; the evidence is generated (section 13.1), so none waits. A fact gets two questions at most: every question weighs the same (section 3.6). The question bank audit counted facts by the correct and misconception options only ([project/question-bank-audit-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-bank-audit-2026-11-15.md)).
+- A practical half has its own situation. It does not copy its theory partner, and its prompt does not state the values its evidence shows. Reason: a practical half that copies its partner or states the values tests the theory again, and the evidence goes unread.
+- A false reading of the evidence is among the options of a practical half.
 - The pairing of the whole set (audit, decisions, the pairs): [project/question-pairing-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-pairing-2026-11-14.md); the practical halves as exports: [project/practical-questions-as-exports-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/practical-questions-as-exports-2026-11-15.md).
 - Theory options, from the first pair: each option one fact about the mechanism, no option the negation of another, no vague "they differ"; the Level 300 misconception and its over-correction both present; a false option that draws the wrong action from the reading.
 - First pair: [ESXi CPU Demand and Usage: vCenter vs VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-057-esxi-cpu-demand-vcenter-vs-vcf-operations.md) and [ESXi CPU Demand differs between VCF Operations and vCenter](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-120-esxi-cpu-demand-differs-between-tools.md). The practical question is Level 400: it needs arithmetic across three screenshots.
@@ -163,7 +165,8 @@ The set measures one thing, Level 400 operations knowledge on public mechanisms,
 - Coverage: every area, object, layer and misconception type is tested (section 3.7). No area can carry the score alone.
 - Balance of difficulty: Level 100-200 questions anchor the scale. If they fail, the problem is the model's basics or retrieval, and Level 400 failures are not interpreted (section 3.2).
 - Paired questions: the same concept on two objects. A model that answers both right understands the vantage point; one that answers one right was lucky or pattern-matched.
-- Independence: no question gives away another's answer. No two questions test the same single fact.
+- Independence: no question gives away another's answer.
+- A fact is tested by at most two questions, such as the two halves of a pair (section 3.9). A false option that is not the question's misconception does not count against the cap.
 - Every option is decidable from the knowledge base (or, for questions outside it, from the vendor documents). A question the knowledge base cannot settle is rewritten or removed, never kept as a coin flip.
 
 ## 6. Question writing
@@ -268,6 +271,7 @@ The frontier model must be able to answer every question from public knowledge. 
 - Runner: [benchmark/runner/score_report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/score_report.py), function `final`. Report table `Final score`.
 
 ### 7.5 Release gate
+- The release is the author's decision, made from the benchmark results (Q212). The gate numbers are the reference for that decision; the work aims at the quality of the knowledge and of Agent E2, and the gate is never its target.
 - Read on Agent E2 as shipped: the local model running the one pipeline of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), with the deployment profile (section 8). The retrieval levels (section 9) are read on its reading set.
 - All of these must hold. Easy questions can carry one number alone, and confident guesses can buy it.
 
@@ -332,10 +336,11 @@ For each question:
 6. Does it duplicate another question's fact?
 7. Does it test operations knowledge, not trivia (UI clicks, product history, prices, file names)?
 8. Does a CSV hold every value the key relies on, and nothing that contradicts it?
+9. Does the knowledge base state a value of the question's CSV or tool text? Lint compares image bytes only, so a value leak from an export is found in review.
 
 For the set:
-9. Does `question_coverage.py` show a tag value with no question (section 3.7)?
-10. Does a field question the set has nothing like call for a new question?
+10. Does `question_coverage.py` show a tag value with no question (section 3.7)?
+11. Does a field question the set has nothing like call for a new question?
 
 ## 12. Status
 - The run set is every question with status draft or reviewed. Its counts: `python3 project/tools/question_coverage.py`. Retired questions: [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).

@@ -82,6 +82,7 @@ These are the requirements for the shipped assistant. Findings from the author's
 
 - Clarifying questions: at most one round per question, then Agent E2 answers. A consultation (Ways to ask, 7) is the exception: the user asked to be guided, so the agent asks step by step until the plan has its inputs.
   - A question that makes sense is answered without asking why.
+  - An urgent incident (P1) gets the clarifying round too: Agent E2 does not jump to an answer when a missing fact changes it.
   - Ask when the question is odd or illogical. A wrong premise usually points to a gap in product knowledge, so name the premise and ask what problem the user saw. Example: "Should I add vCPUs because CPU Ready is high?"
   - Ask when the text and an attachment disagree (the text says CPU Usage, the screenshot shows CPU Utilization), or when one missing fact (object, layer, interval) changes the answer.
   - Ask when a term is used for different things: "Do you mean A, B or C?" Jargon is often used interchangeably although the meanings differ: "cluster risk" can mean Cluster Risk (%), capacity runway or availability risk. A frontier model silently picks one and answers the wrong question. Agent E2 knows the common misconceptions, so it asks.
@@ -112,7 +113,7 @@ These are the requirements for the shipped assistant. Findings from the author's
 ### Non-functional
 | Area | Requirement |
 |---|---|
-| Data stays on site | No customer data leaves the customer network, and Agent E2 answers without Internet access. A call out carries only requests for public knowledge (a URL the user gives, an update download), never customer data. Updates also arrive as an offline bundle. Lab exception: the author's own lab may send its live VCF Operations data to the gateway model; customer sites keep the rule and the local model. |
+| Data stays on site | No customer data leaves the customer network, and Agent E2 answers without Internet access. A call out carries only requests for public knowledge (a URL the user gives, an update download), never customer data. Updates also arrive as an offline bundle. Lab exception: the author's own lab may send its live VCF Operations data to the gateway model; customer sites keep the rule and the local model. The lab is the author's own system and no customer site, so its data is no customer data. |
 | One tested system | The app calls `harness/` for retrieval, tools, prompt and verifier. Prompt and settings are versioned in the repository, because an edited prompt is an untested prompt. |
 | Vision | A hard requirement. Administrators upload screenshots, often several per question, and every current foundation model family reads images. Agent E2 reads the pixels of every uploaded image; there is no text-only mode and no text-only model. |
 | Model | Open weights with a commercial licence, vision (above), and at least 128K context (a conversation is sent whole, every turn). Hardware: enterprise GPU on premises (one GPU is an ideal, not a constraint; up to four large GPUs are acceptable). The benchmark chooses the model. |

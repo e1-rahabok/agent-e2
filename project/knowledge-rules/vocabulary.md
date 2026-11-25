@@ -32,6 +32,7 @@ When the author corrects a wording mistake, add it here. A word users also say g
 | trap (for a wrong belief or wrong reading) | misconception | In IT infrastructure a trap is an event notification (SNMP trap, a log message an alert traps) or, in CPU virtualization, a hand-over to the hypervisor (trap-and-emulate). Agent E2 does not set traps for other models; it knows the mechanism. |
 | misreading (for the up-front list) | misconception | One concept, one word: the up-front lines are misconceptions promoted from their files. |
 | kind (as a field name) | retriever_guide | "kind" does not say what the field is for. |
+| Planning parameter (for a metric Agent E2 computes) | metric | A value Agent E2 computes is a metric like any other and needs no other name. Its name and its unit are separate parts ([`sp5-framework/observability/naming-patterns`](../../knowledge/sp5-framework/observability/naming-patterns.md), section Six parts of a metric). |
 | Utilization (ESXi CPU, when threads are meant) | Thread Utilization | Plain "Utilization" is easily confused with Core Utilization. Author correction, Q008. |
 | Peak CPU Queue (the VCF Operations metric) | Peak vCPU Queue: Guest\|Peak vCPU Queue within collection cycle | The value is per vCPU. CPU and vCPU differ by the whole vCPU count on a large VM. Author correction (Q232). |
 | architecture (for settings) | configuration | Architecture means the big picture, not individual settings. |

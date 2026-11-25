@@ -30,8 +30,8 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 | `layer` | Required in `metrics/virtual-motherboard/` and in every file under [`knowledge/guest-os/`](../../knowledge/guest-os). The stack layer that produces the metric: guest-os, virtual-motherboard, hypervisor, physical. |
 | `instance` | Metric files only, optional. The instance level when the formula differs by instance: aggregate, per-vcpu, per-vmnic, ... |
 | `metric_class` | Metric files only. contention, consumption, or context. Context metrics account for inventory or configuration and answer "it depends" questions. |
-| `internal_derive` | Ids of other knowledge-base files that this file is derived from. Internal links only. Not book chapters, not URLs. |
-| `same_name` | Metric files only. Ids of metrics with the same label but a different meaning. |
+| `internal_derive` | Ids of other knowledge-base files that this file is derived from. Internal links only. Not book chapters, not URLs. Required in every metric file: the reading plan reaches a mechanism file the question does not name only through these links ([harness/AGENT.md](../../harness/AGENT.md), section 6). Lint checks it. |
+| `same_name` | Metric files only. Ids of metrics with the same label but a different meaning. Symmetric: each listed file lists this one back, because the reading plan follows the link from either side. Lint checks it. |
 | `same_meaning` | Metric files only. Ids of metrics with a different label but the same meaning. |
 | `related` | Ids to retrieve together. |
 | `images` | One entry per image linked in the body. Fields: `path` (as linked), `product`, `object`, `metric` (list of metric names shown) and/or `topic` (concept shown), `image_type` (diagram, table, timeline, distribution, scatter, screenshot), `sample` (optional: fleet size and period). The image's own tags: they can differ from the file's, e.g. an ESXi chart inside a cluster concept. |

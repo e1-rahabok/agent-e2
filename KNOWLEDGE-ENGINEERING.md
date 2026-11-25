@@ -161,6 +161,7 @@ Arrows: `-->` solid, `..>` dashed.
 - Method: the SP5 Framework, an IT Operations Framework that explains how private cloud is managed. Product: the IT products involved, VMware Cloud Foundation, Windows and Linux. Every answer uses both. The glossary supports the method and the catalog supports the product.
 - A VM is a virtual motherboard and the Guest OS is a separate layer, so the layer that produces a metric decides where it lives.
 - The folder tree holds one slice of a fact. Tags and links hold the others.
+- One master: the knowledge base. Extraction from the author's books is complete, so new knowledge comes from source notes in [`project/sources/`](project/sources) (section 6). The books and isvara.io are products for people, written by hand or generated; they can drift from the knowledge base, and where they differ the knowledge base wins.
 - Source: [`project/tools/knowledge_diagram.py`](project/tools/knowledge_diagram.py) draws the SVG. The file counts in it are typed in: update them from [`project/tools/knowledge_stats.py`](project/tools/knowledge_stats.py) and run the script from the repository root.
 - The other diagrams of this document are SVG too, drawn by [`project/tools/document_diagrams.py`](project/tools/document_diagrams.py) with the shared helpers of [`project/tools/diagram_kit.py`](project/tools/diagram_kit.py). Under every SVG image sits a `<details>` block with the text of the diagram: its boxes, nested as drawn, and every arrow with its two ends and its label. [`project/tools/diagram_text.py`](project/tools/diagram_text.py) generates it from the SVG, so a reader of the raw file, Claude included, gets the whole diagram and the two cannot drift. Do not edit a block by hand; lint reports a block that differs from its image.
 
@@ -409,7 +410,8 @@ This is the one definition of the levels, and the benchmark uses it ([`benchmark
 | A `## Misconceptions` section in every metric file | A true observation read to the wrong conclusion. See section 4. |
 
 - Files are a topic, not a page count: the median is about 600 words, and a concept with many parts (memory tiering, overhead) runs to about 2,800. Size is held by the section, the unit of retrieval, not by the file.
-- Two kinds of file carry two object types, on purpose: `comparisons/` files, which set objects side by side, and [`cluster/metrics/availability`](knowledge/vsphere/object-types/cluster/metrics/availability.md), which keeps its ESXi part until the availability model after 1.0 ([project/plan.md](project/plan.md), M1).
+- Two kinds of file carry two object types, on purpose: `comparisons/` files, which set objects side by side, and [`cluster/metrics/availability`](knowledge/vsphere/object-types/cluster/metrics/availability.md), which keeps its ESXi part because the cluster score is built from the host scores, until the availability model after 1.0 ([project/plan.md](project/plan.md), M1).
+- A complete metric file stays its own file and is not merged into a `comparisons/` file. The reading plan reads a named file whole, so a merged file would load a large file for a question about one counter.
 - A file that is not tagged, linked and placed in the right folder is found only by its words, which is why lint checks tags and links. How the agent plans with this structure: [`harness/AGENT.md`](harness/AGENT.md), sections 4.2 and 6.
 
 ## 6. Workflow: from source to reviewed file

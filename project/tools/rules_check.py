@@ -316,7 +316,8 @@ def main():
     return 1 if problems else 0
 
 def check_repo_terms(allowed, bad):
-    """One word per concept in the repository (project/terms.md): flag the replaced words."""
+    """One word per concept in the repository (project/terms.md): flag the replaced words.
+    Not called: lint does not check writing style in Markdown; the review checks these words (project/knowledge-rules/writing.md)."""
     skip = ('project/terms.md', 'project/author-questions.md', 'project/author-questions-resolved.md', 'project/tools/rules_check_values.yaml')
     records = ('project/archive/', 'project/review-', 'benchmark/results/')
     for f in sorted(glob.glob('**/*.md', recursive=True)):

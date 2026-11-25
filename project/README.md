@@ -2,7 +2,7 @@
 
 How this repository is built and kept correct. Not indexed. The model reads `knowledge/`.
 
-- `plan.md`: mission, milestones, decisions, what we are not doing, open work. Read first.
+- `plan.md`: mission, milestones, what we are not doing, open work. Read first.
 - `author-questions.md`: every open question, in two sections: Release 1.0 and Future release.
 - `author-questions-resolved.md`: answered and done, kept as history.
 - `terms.md`: one English word per concept for the repository's own parts.
