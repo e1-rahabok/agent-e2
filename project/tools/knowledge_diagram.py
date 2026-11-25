@@ -8,7 +8,7 @@ Run from the repository root:
 import os
 from xml.sax.saxutils import escape
 
-W, H = 1800, 1532
+W, H = 1800, 1572
 LH = 15
 out = []
 
@@ -63,73 +63,67 @@ out.append('<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWi
            'orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555555"/></marker></defs>')
 out.append(f'<rect width="{W}" height="{H}" fill="#ffffff"/>')
 t(24, 34, 'Agent E2 knowledge structure', 20, 'bold', '#111')
-t(24, 54, 'Private Cloud Operations Management with VMware Cloud Foundation: 288 files, about 327K tokens. '
-          'Bands from top to bottom: bodies, layers, slices, file anatomy, paths to the model.', 12.5, 'normal', '#444')
+t(24, 54, 'Knowledge of private cloud operations management with VMware Cloud Foundation: 288 files, about 327K tokens. '
+          'Bands: method and product, layers, slices of one fact, anatomy of a file, paths to the model.', 12.5, 'normal', '#444')
 
-# ------------------------------------------------------------------ 1. two bodies
+# ------------------------------------------------------------------ 1. method and product
 y1 = 70
-band(y1, 345, 1, 'Method and product',
-     'Every answer uses both. The method covers how to operate VCF. The product covers what VCF is and does. Vocabulary and exact values serve both.')
+B1 = 384
+band(y1, B1, 1, 'Method | Product',
+     'Method explains how private cloud is managed. Product is the knowledge of the IT products involved. Each has its supporting files.')
 by = y1 + 68
+BH = 304
 # Method
-box(30, by, 520, 'Method: the SP5 Framework', [], 'method', h=262)
-t(40, by + 38, 'How to operate VCF, in VCF terms and examples.', 11.5, 'normal', '#0d2a4d')
+box(30, by, 540, 'Method: IT Operations Framework', [], 'method', h=BH)
+t(40, by + 38, 'The SP5 Framework: how private cloud is managed, with VCF terms and examples.', 11.5, 'normal', '#0d2a4d')
 t(40, by + 53, 'knowledge/sp5-framework/   57 files', 11.5, 'bold', '#0d2a4d', mono=True)
 subs = [('concepts/  14', 'the framework across pillars: health check,', 'SLAs, class of service, modelling'),
         ('observability/  13', 'how to read telemetry: input types, interval,', 'units, Triple See Method'),
         ('outputs/  13', 'how insight reaches people: alerts,', 'dashboards, reports, NOC screen'),
         ('capacity/  12', 'supply, demand, overcommit, forecasting,', 'planning, sizing, reclamation'),
         ('performance/  5', 'KPI design, KPI vs SLA, noisy neighbour', '')]
-for n, (a, b, c) in enumerate(subs):
+for n, (a_, b_, c_) in enumerate(subs):
     yy = by + 66 + n * 38
-    out.append(f'<rect x="42" y="{yy}" width="496" height="34" rx="4" fill="#ffffff" stroke="#1f5fae" stroke-width="1"/>')
-    t(50, yy + 14, a, 11.5, 'bold', '#0d2a4d', mono=True)
-    t(190, yy + 14, b, 11, 'normal', '#0d2a4d')
-    if c:
-        t(190, yy + 28, c, 11, 'normal', '#0d2a4d')
+    out.append(f'<rect x="42" y="{yy}" width="516" height="34" rx="4" fill="#ffffff" stroke="#1f5fae" stroke-width="1"/>')
+    t(50, yy + 14, a_, 11.5, 'bold', '#0d2a4d', mono=True)
+    t(190, yy + 14, b_, 11, 'normal', '#0d2a4d')
+    if c_:
+        t(190, yy + 28, c_, 11, 'normal', '#0d2a4d')
+yy = by + 66 + 5 * 38
+out.append(f'<rect x="42" y="{yy}" width="516" height="34" rx="4" fill="#f5f8fd" stroke="#1f5fae" stroke-width="1" stroke-dasharray="5 3"/>')
+t(50, yy + 14, 'glossary.md  1', 11.5, 'bold', '#0d2a4d', mono=True)
+t(190, yy + 14, 'supporting file: one English word per concept, other names', 11, 'normal', '#0d2a4d')
+t(190, yy + 28, 'users say, confusable pairs such as Usage vs Utilization', 11, 'normal', '#0d2a4d')
 # Product
-box(580, by, 760, 'Product: VCF 9.x', [], 'prod', h=262)
-t(590, by + 38, 'What each component is and does, with its counters.', 11.5, 'normal', '#173a16')
-# vsphere
-out.append(f'<rect x="592" y="{by + 50}" width="736" height="124" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>')
-t(602, by + 68, 'vsphere/   204 files', 12, 'bold', '#173a16', mono=True)
+box(590, by, 1180, 'Product: IT products', [], 'prod', h=BH)
+t(600, by + 38, 'VMware Cloud Foundation, Windows and Linux. Hardware appears as the physical layer under ESXi.', 11.5, 'normal', '#173a16')
+out.append(f'<rect x="602" y="{by + 50}" width="1156" height="124" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>')
+t(612, by + 68, 'vsphere/   204 files', 12, 'bold', '#173a16', mono=True)
 vs = [('architecture/  7', 'what every metric depends on:', 'provider/consumer, overhead'),
-      ('technology/  150', 'raw metrics by technology:', 'cpu gpu memory storage net'),
+      ('technology/  150', 'raw metrics by technology:', 'cpu gpu memory storage network'),
       ('object-types/  39', 'content by object type:', 'vm, esxi, cluster ...'),
       ('tools/  8', 'how tools show counters:', 'esxtop, vSphere Client')]
-for n, (a, b, c) in enumerate(vs):
-    xx = 602 + n * 181
-    out.append(f'<rect x="{xx}" y="{by + 78}" width="172" height="86" rx="4" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1"/>')
-    t(xx + 6, by + 96, a, 11, 'bold', '#173a16', mono=True)
-    t(xx + 6, by + 113, b, 10.5, 'normal', '#173a16')
-    t(xx + 6, by + 127, c, 10.5, 'normal', '#173a16')
-# vcf-operations
-out.append(f'<rect x="592" y="{by + 184}" width="360" height="68" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>')
-t(602, by + 202, 'vcf-operations/   10 files', 12, 'bold', '#173a16', mono=True)
-t(602, by + 219, 'The product VCF Operations: its role, alert definitions,', 10.5, 'normal', '#173a16')
-t(602, by + 233, 'report suite, dashboards and features as built.', 10.5, 'normal', '#173a16')
-# guest-os
-out.append(f'<rect x="968" y="{by + 184}" width="360" height="68" rx="4" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>')
-t(978, by + 202, 'guest-os/   16 files', 12, 'bold', '#4a2400', mono=True)
-t(978, by + 219, 'Windows and Linux: a separate layer, not Broadcom', 10.5, 'normal', '#4a2400')
-t(978, by + 233, 'products, not part of the VM. cpu, memory, storage, system.', 10.5, 'normal', '#4a2400')
-# shared
-box(1370, by, 400, 'Shared', [], 'shared', h=262)
-out.append(f'<rect x="1382" y="{by + 36}" width="376" height="100" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>')
-t(1392, by + 54, 'glossary.md   1 file', 12, 'bold', '#2a1650', mono=True)
-t(1392, by + 72, 'The agent\'s vocabulary: one English word per', 11, 'normal', '#2a1650')
-t(1392, by + 86, 'concept, other names users say, confusable', 11, 'normal', '#2a1650')
-t(1392, by + 100, 'pairs (Usage vs Utilization, KPI vs SLA).', 11, 'normal', '#2a1650')
-t(1392, by + 122, 'One English word per concept.', 11, 'bold', '#2a1650')
-out.append(f'<rect x="1382" y="{by + 146}" width="376" height="104" rx="4" fill="#ffffff" stroke="#5e35b1" stroke-width="1"/>')
-t(1392, by + 164, 'catalog/   9 YAML files', 12, 'bold', '#2a1650', mono=True)
-t(1392, by + 182, 'Exact values, loaded into SQLite, not chunked:', 11, 'normal', '#2a1650')
-t(1392, by + 196, 'vCenter counters, esxtop fields, thresholds,', 11, 'normal', '#2a1650')
-t(1392, by + 210, 'object model, user terms.', 11, 'normal', '#2a1650')
-t(1392, by + 232, 'A lookup by key returns the exact value.', 11, 'bold', '#2a1650')
+for n, (a_, b_, c_) in enumerate(vs):
+    xx = 612 + n * 287
+    out.append(f'<rect x="{xx}" y="{by + 78}" width="276" height="86" rx="4" fill="#e6f4e4" stroke="#2e7d32" stroke-width="1"/>')
+    t(xx + 6, by + 96, a_, 11, 'bold', '#173a16', mono=True)
+    t(xx + 6, by + 113, b_, 10.5, 'normal', '#173a16')
+    t(xx + 6, by + 127, c_, 10.5, 'normal', '#173a16')
+out.append(f'<rect x="602" y="{by + 184}" width="571" height="68" rx="4" fill="#ffffff" stroke="#2e7d32" stroke-width="1"/>')
+t(612, by + 202, 'vcf-operations/   10 files', 12, 'bold', '#173a16', mono=True)
+t(612, by + 219, 'The product VCF Operations: its role, alert definitions,', 10.5, 'normal', '#173a16')
+t(612, by + 233, 'report suite, dashboards and features as built.', 10.5, 'normal', '#173a16')
+out.append(f'<rect x="1187" y="{by + 184}" width="571" height="68" rx="4" fill="#fdebd3" stroke="#c25e00" stroke-width="1.4"/>')
+t(1197, by + 202, 'guest-os/   16 files', 12, 'bold', '#4a2400', mono=True)
+t(1197, by + 219, 'Windows and Linux above the VM: a separate layer, not VMware', 10.5, 'normal', '#4a2400')
+t(1197, by + 233, 'products. cpu, memory, storage, system.', 10.5, 'normal', '#4a2400')
+out.append(f'<rect x="602" y="{by + 262}" width="1156" height="34" rx="4" fill="#f6fbf5" stroke="#2e7d32" stroke-width="1" stroke-dasharray="5 3"/>')
+t(612, by + 276, 'catalog/   9 YAML files', 11.5, 'bold', '#173a16', mono=True)
+t(790, by + 276, 'supporting files: exact values loaded into SQLite and looked up by key: vCenter counters, esxtop fields,', 11, 'normal', '#173a16')
+t(790, by + 290, 'thresholds, object model, user terms.', 11, 'normal', '#173a16')
 
 # ------------------------------------------------------------------ 2. layers
-y2 = y1 + 345 + 15
+y2 = y1 + B1 + 15
 band(y2, 225, 2, 'Layers of the product',
      'Tag: layer. A VM is a virtual motherboard and the Guest OS above it is a separate layer, so the layer that produces a metric decides its home.')
 ly = y2 + 68
@@ -228,7 +222,7 @@ for n, (a, ls, d) in enumerate(groups):
 # ------------------------------------------------------------------ 5. five paths
 y5 = y4 + 340 + 15
 band(y5, 150, 5, 'Paths to the model',
-     'Five paths, each for a failure the others cannot prevent. Each fact has one home. The next diagram draws the paths in detail.')
+     'Five ways knowledge reaches the model: retrieved, looked up, given up front, run as code, set as agent instructions. Each fact has one home.')
 py = y5 + 68
 paths = [('Retrieved', 'Mechanisms, metrics, flows', 'knowledge/**/*.md'),
          ('Looked up exactly', 'Units, rollups, thresholds', 'knowledge/catalog/*.yaml'),
