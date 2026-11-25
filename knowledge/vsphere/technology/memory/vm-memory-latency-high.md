@@ -16,6 +16,8 @@ flowchart TD
   S4 --> S5[5. Host memory pressure]
   S5 --> S6[6. Known bug and log]
   S6 --> E6[Cause and action]
+  S5 -.->|tiered host| D5["Is memory tiering slowing this host?"]
+  click D5 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host.md" "Is memory tiering slowing this host?" _blank
 ```
 
 ## Checks, in order

@@ -14,6 +14,7 @@ flowchart TD
   S4 --> S5[5. vSAN CPU Ready, ESXi error packets]
   S5 --> S6[6. Known bug and log]
   S6 --> E6[Shared cause and action]
+  click E2 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/troubleshooting/vm-slow.md" "Users say the VM is slow" _blank
 ```
 
 ## Checks, in order

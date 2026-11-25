@@ -18,6 +18,14 @@ flowchart TD
   S4 --> S5[5. Cluster Consumption and Cluster Risk]
   S5 --> S6[6. Closed for new VMs?]
   S6 --> S7[7. Inventory and efficiency]
+  S2 -->|VMs short in a DRS cluster| T2b["VM starved of resources in a DRS cluster"]
+  T2b --> S3
+  S6 -.->|decision| D6["Can this cluster take more VMs?"]
+  S7 -.->|oversized VMs| D7["Downsizing a large, idle VM"]
+  click T2 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/cluster-vm-contention.md" "VMs in a cluster face contention" _blank
+  click T2b "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/troubleshooting/vm-insufficient-resources-in-drs-cluster.md" "VM starved of resources in a DRS cluster" _blank
+  click D6 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md" "Can this cluster take more VMs?" _blank
+  click D7 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/decision-tree/oversized-vm-downsizing.md" "Downsizing a large, idle VM" _blank
 ```
 
 ## Principle

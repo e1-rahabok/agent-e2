@@ -46,6 +46,19 @@ class FlowChartCheckTest(unittest.TestCase):
         steps = [('a', 'Ballooning → step b; swap → step c.'), ('b', 'x'), ('c', 'y')]
         self.assertEqual(rules_check.flow_chart_problems(chart, steps), [])
 
+    def test_hand_off_needs_a_click(self):
+        steps = [('1', 'Ready high → `a/other-flow`. → step 2.'), ('2', 'x.')]
+        chart = "```mermaid\nflowchart TD\n  S1[1. Ready] --> S2[2. x]\n  S1 --> O[Other]\n```"
+        msgs = rules_check.flow_chart_problems(chart, steps, {'a/other-flow'})
+        self.assertTrue(any('has no box with a click line' in m for m in msgs))
+        linked = chart.replace('\n```', '\n  click O "https://x/blob/main/knowledge/a/other-flow.md" "Other" _blank\n```')
+        self.assertEqual(rules_check.flow_chart_problems(linked, steps, {'a/other-flow'}), [])
+
+    def test_click_without_hand_off(self):
+        chart = '```mermaid\nflowchart TD\n  S1[1. x]\n  click S1 "https://x/blob/main/knowledge/a/b.md" "B" _blank\n```'
+        msgs = rules_check.flow_chart_problems(chart, [('1', 'x.')], {'a/b'})
+        self.assertTrue(any('no step hands off' in m for m in msgs))
+
 
 if __name__ == '__main__':
     unittest.main()

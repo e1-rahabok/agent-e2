@@ -13,6 +13,8 @@ flowchart TD
   S4 --> S5[5. Snapshots and host storage stack]
   S5 --> S6[6. Known bug and log]
   S6 --> E6[Layer and cause]
+  S5 -.->|many VMs of one host or datastore| T5["ESXi storage latency is high"]
+  click T5 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/troubleshooting/host-storage-latency.md" "ESXi storage latency is high" _blank
 ```
 
 ## Checks, in order

@@ -773,7 +773,7 @@ def check_flows(docs, bad):
     for i, msg in flow_executor.check(flow_docs):
         bad(f'knowledge/{i}.md', msg)
     for i in flow_executor.flow_ids(flow_docs):
-        for msg in flow_chart_problems(docs[i][1], flow_executor.steps_of(flow_docs[i])):
+        for msg in flow_chart_problems(docs[i][1], flow_executor.steps_of(flow_docs[i]), set(flow_executor.flow_ids(flow_docs))):
             bad(f'knowledge/{i}.md', msg)
 
 
@@ -828,7 +828,10 @@ def chart_edges(chart):
     return edges, set(key.values())
 
 
-def flow_chart_problems(text, steps):
+CHART_CLICK = re.compile(r'^\s*click\s+\w+\s+"[^"]*/knowledge/([^"]+)\.md"', re.M)
+
+
+def flow_chart_problems(text, steps, flows=None):
     """A flow needs one Mermaid flowchart that matches its steps: a box per step, and the same branches. A step's branches
     are its '→ step N'; a step with none ends the flow."""
     charts = [c for c in MERMAID_BLOCK.findall(text) if re.match(r'\s*(flowchart|graph)\b', c)]
@@ -849,6 +852,15 @@ def flow_chart_problems(text, steps):
         out.append(f'chart arrow {a} → {b} is not in the steps (step {a} needs "→ step {b}")')
     for a, b in sorted(text_edges - edges):
         out.append(f'step {a} goes to step {b}, but the chart has no arrow {a} → {b}')
+    if flows is not None:
+        # A hand-off ('→ <flow id>' in a step) is a box in the chart with a click line that opens that flow, and the reverse.
+        import flow_map_diagram
+        offs = {x for _, t in steps for x in flow_map_diagram.HAND_OFF.findall(t) if x in flows}
+        clicks = set(CHART_CLICK.findall(charts[0]))
+        for x in sorted(offs - clicks):
+            out.append(f'hand-off to {x} has no box with a click line in the chart')
+        for x in sorted(clicks - offs):
+            out.append(f'chart box opens {x}, but no step hands off to it (→ `{x}`)')
     return out
 
 

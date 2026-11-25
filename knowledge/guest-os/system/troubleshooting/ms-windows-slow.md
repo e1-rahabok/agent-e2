@@ -17,6 +17,7 @@ flowchart TD
   S6 --> S7{7. Wait inside Windows?}
   S7 -->|yes| E7a[Guest OS or application: sizing, configuration]
   S7 -->|no, or points down| E7b[VM: vm-slow, step 2]
+  click E7b "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/troubleshooting/vm-slow.md" "Users say the VM is slow" _blank
 ```
 
 ## Checks, in order

@@ -25,6 +25,13 @@ flowchart TD
   S6 --> S7[7. Known bug]
   S7 --> S8[8. Log: events in the window]
   S8 -->|nothing found| E8[Cause outside the VM: say so]
+  click G1 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/troubleshooting/ms-windows-slow.md" "Windows is slow" _blank
+  click G2 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/troubleshooting/linux-os-slow.md" "Linux is slow" _blank
+  click E3 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/cluster-vm-contention.md" "VMs in a cluster face contention" _blank
+  click E4a "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md" "VM CPU Contention or Latency is high" _blank
+  click E4b "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/vm-memory-latency-high.md" "VM memory latency (contention) is high" _blank
+  click E4c "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/troubleshooting/vm-storage-performance-checks.md" "VM disk latency is high" _blank
+  click E4d "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/vnic-rx-drops.md" "vNIC receive drops" _blank
 ```
 
 ## Checks, in order

@@ -13,12 +13,21 @@ flowchart TD
   S1[1. Availability: future] --> S2[2. ESXi Performance green?]
   S2 -->|no| S3[3. Which sub-metric: CPU, memory, storage, network]
   S2 -->|yes| S4[4. Consumption: CPU]
-  S3 --> T3[Troubleshooting flow of that resource]
-  T3 --> S4
+  S3 -->|CPU Ready or Co-stop| T3a["VM CPU Contention or Latency is high"]
+  S3 -->|memory latency| T3b["VM memory latency (contention) is high"]
+  S3 -->|disk latency| T3c["ESXi storage latency is high"]
+  T3a & T3b & T3c --> S4
   S4 --> S5[5. Consumption: memory]
   S5 --> S6[6. Consumption: storage, network, GPU]
   S6 --> S7[7. Configuration review]
   S7 --> S8[8. Capacity: memory state, hot host, then the cluster]
+  S8 -.->|CPU headroom| D8["Does this ESXi host have CPU headroom?"]
+  S8 -->|hand over| H8["vSphere cluster: health check"]
+  click T3a "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md" "VM CPU Contention or Latency is high" _blank
+  click T3b "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/vm-memory-latency-high.md" "VM memory latency (contention) is high" _blank
+  click T3c "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/troubleshooting/host-storage-latency.md" "ESXi storage latency is high" _blank
+  click D8 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom.md" "Does this ESXi host have CPU headroom?" _blank
+  click H8 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/cluster-health-check.md" "vSphere cluster: health check" _blank
 ```
 
 ## Principle
