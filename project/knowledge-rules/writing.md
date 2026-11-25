@@ -59,7 +59,7 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 | Exact data in YAML, prose in markdown | Lookups are exact; prose stays short | Data is reviewable as a table |
 | Mermaid plus text for diagrams | The model reads the steps; the chart is left out of its text | GitHub renders the chart |
 
-- The table is for knowledge files. Root documents are not indexed and are for people, so their diagrams are hand-laid SVG ([`project/tools/document_diagrams.py`](../tools/document_diagrams.py)), with the facts also in the text around them. Mermaid stays in knowledge files and flows, where lint checks the chart against the numbered steps.
+- The table is for knowledge files. Root documents are not indexed and are for people, so their diagrams are hand-laid SVG ([`project/tools/document_diagrams.py`](../tools/document_diagrams.py)), with the text of the diagram generated from the SVG under it ([`project/tools/diagram_text.py`](../tools/diagram_text.py); lint checks it). Mermaid stays in knowledge files and flows, where lint checks the chart against the numbered steps.
 
 ## Images
 - `knowledge/` is for Agent E2 only. An image earns its place only if it helps the agent; proof screenshots for human reviewers stay in the book.
