@@ -7,16 +7,16 @@ Read first, every session. One page: mission, milestones with exit criteria, wha
 - Reference numbers for the author's release decision (Q-E2-130; [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5), Agent E2 as shipped (one pipeline, the expert-led agent of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)) on the local model: final score at least 85%; Level 400 at least 80%; confident-wrong at most 3%; no up-front misconception (the `## Misconceptions` lines marked `up_front`) stated as true; held-out set at most 11 points below the development set. The gap to the frontier model is an outcome, reported with its paired test, not a gate. Target 99%. Confirmed on the shipped configuration by the live test.
 
 ## Milestones
-Release 1.0 and its milestones are set for all repositories in the workspace's [ROADMAP.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md). Agent E2's part is workspace milestone M4, Agent E2 for release 1.0, with requirements R-E2-001 to R-E2-020 ([agent-e2-service.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/requirements/agent-e2-service.md)). The milestones below are the steps toward it (Q-WS-58).
+Release 1.0 and its milestones are set for all repositories in the workspace's [ROADMAP.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md). Agent E2's main part is workspace milestone M3, Agent E2 serves PCM and isvara.io, with requirements R-E2-001 to R-E2-020 ([agent-e2-service.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/requirements/agent-e2-service.md)). The milestones below are the steps toward release 1.0 (Q-WS-58); the column Serves names the workspace milestone each one belongs to.
 
-| # | Milestone | Done when | Status |
-|---|---|---|---|
-| A1 | Repository cleaned for release 1.0 | Older benchmarks removed (Q-WS-59); text on the on-premises deployment marked; questions that bind several repositories go to the workspace (WD-019) | WD-019 applied in CLAUDE.md; older benchmarks deleted with project/archive (git history keeps them); on-premises text still to mark |
-| A2 | Answer set and grader | The free-text answer set and the automated grader built; first report on Gemma 4 31B | Not started |
-| A3 | Service for two callers | The Agent E2 API additions built (progress, attachments, sources, usage); the contract check C3 passes | C3 passes on today's endpoints; additions not started |
-| A4 | Live demo support | Agent E2 answers correctly on facts recorded from the lab | Not started |
-| A5 | isvara.io support | isvara.io's calls work; where the public Agent E2 runs is measured and chosen (Q-WS-4) | Not started |
-| A6 | Ready for release 1.0 | The answer set passes on the shipped settings; spending projected within US$50 a month | Not started |
+| # | Milestone | Serves | Done when | Status |
+|---|---|---|---|---|
+| A1 | Repository cleaned for release 1.0 | M2 | Older benchmarks removed (Q-WS-59); text on the on-premises deployment marked; questions that bind several repositories go to the workspace (WD-019) | WD-019 applied in CLAUDE.md; older benchmarks deleted with project/archive (git history keeps them); on-premises text still to mark |
+| A2 | Answer set and grader | M3 | The free-text answer set and the automated grader built; first report on Gemma 4 31B | Not started |
+| A3 | Service for two callers | M3 | The Agent E2 API additions built (progress, attachments, sources, usage); the contract check C3 passes | C3 passes on today's endpoints; additions not started |
+| A4 | Live demo support | M8 | Agent E2 answers correctly on facts recorded from the lab | Not started |
+| A5 | isvara.io support | M5 | isvara.io's calls work; where the public Agent E2 runs is measured and chosen (Q-WS-4) | Not started |
+| A6 | Ready for release 1.0 | M7, M8 | The answer set passes on the shipped settings; spending projected within US$50 a month | Not started |
 
 Work that continues beside the milestones, each with its open work below:
 
