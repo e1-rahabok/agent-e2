@@ -26,4 +26,4 @@ Source: [WD-035](https://github.com/e1-rahabok/private-cloud-workspace/blob/main
 - And the forms deferred by WD-035 (workload footprints, investigations over several steps, "At large scale" notes) are named as after release 1.0
 
 Test scenarios:
-- T-E2-028a (anywhere, automated by agent-e2's rules check, extended): KNOWLEDGE-ENGINEERING.md names each value of `retriever_guide` under one lens, and each path's tag; a form under no lens fails.
+- T-E2-028a (anywhere, automated by agent-e2's rules check, extended): KNOWLEDGE-ENGINEERING.md names each value of `retriever_guide` under one lens, as the knowledge model maps them (how-it-works; metric-meaning; what-to-set, health-check and decision-tree; troubleshooting), except `term-meaning`, the glossary, which serves search; a form under no lens fails.
