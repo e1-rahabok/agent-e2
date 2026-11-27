@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Lint knowledge-base files and benchmark questions. Run before every merge: python3 project/tools/rules_check.py
+"""Lint knowledge-base files, benchmark questions and the repository's links. Run before every merge: python3 project/tools/rules_check.py
 Exit code 0 = pass, 1 = problems found. Allowed values come from
 project/tools/rules_check_values.yaml."""
-import glob, hashlib, os, re, sys, yaml
+import glob, hashlib, os, posixpath, re, subprocess, sys, yaml
+from urllib.parse import unquote
 
 # Windows returns paths with '\'; every check here compares paths with '/' (the repository's form).
 _glob_native = glob.glob
@@ -305,6 +306,7 @@ def main():
     check_image_text(allowed, bad)
     check_diagram_text(bad)
     check_titles(bad)  # titles and headings are machine input: harness/knowledge_loader.py puts both in front of every chunk (Q-E2-181)
+    check_links(bad)
 
     # every image file must be linked from a knowledge file, so the AI gets its context
     for img in glob.glob('knowledge/**/images/*.png', recursive=True):
@@ -314,6 +316,64 @@ def main():
     for p in problems: print(p)
     print(f'{len(docs)} knowledge files checked, {len(problems)} problems')
     return 1 if problems else 0
+
+# Links to this repository's main branch. A permanent link (blob/<commit>/...) is left alone: it keeps a deleted file readable.
+REPO_MAIN_LINK = re.compile(r'https://github\.com/e1-rahabok/agent-e2/(?:blob|tree)/main/([^\s)\]<>{}"\'`#?]+)')
+MD_LINK = re.compile(r'\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)')
+CODE_SPAN = re.compile(r'(`+)(?:(?!\1).)+?\1')
+CODE_FENCE = re.compile(r'^\s*(```|~~~)')
+URL_SCHEME = re.compile(r'^[a-z][a-z0-9+.-]*:', re.I)
+LINK_TEMPLATES = ('project/templates/', 'benchmark/_templates/')  # a template's links are relative to the folder its copy goes to
+
+
+def link_problems(path, text, exists=os.path.exists, waiting=()):
+    """Links in one file that point to no path; path is the file's path from the repository root, with '/'.
+    Every file: links to this repository's main branch. Markdown files, outside code: relative links, except in templates.
+    waiting: relative links not checked (the attachments of a question that waits for them)."""
+    out, fence, md = [], False, path.endswith('.md')
+    for i, line in enumerate(text.split('\n'), 1):
+        for m in REPO_MAIN_LINK.finditer(line):
+            p = unquote(m.group(1)).rstrip('.,;:')
+            if not exists(p):
+                out.append(f'line {i}: link to {p} on main, which does not exist')
+        if not md:
+            continue
+        if CODE_FENCE.match(line):
+            fence = not fence
+            continue
+        if fence or path.startswith(LINK_TEMPLATES):
+            continue
+        for m in MD_LINK.finditer(CODE_SPAN.sub('', line)):
+            t = m.group(1)
+            if URL_SCHEME.match(t) or t.startswith('#'):
+                continue
+            p = unquote(t.split('#')[0].split('?')[0])
+            if not p or p in waiting:
+                continue
+            full = p.lstrip('/') if p.startswith('/') else posixpath.normpath(posixpath.join(posixpath.dirname(path), p))
+            if not exists(full):
+                out.append(f'line {i}: link "{t}" points to {full}, which does not exist')
+    return out
+
+
+def check_links(bad):
+    """No file links to a path that does not exist (R-REPO-004, test T-REPO-004b): tracked Markdown, YAML and Python files,
+    by link_problems. benchmark/results/ is left out: each round folder is the record of its round, as it was written."""
+    try:
+        files = subprocess.run(['git', 'ls-files', '-z'], capture_output=True, text=True, check=True).stdout.split('\0')
+    except (OSError, subprocess.CalledProcessError):
+        files = glob.glob('**/*', recursive=True)
+    for f in sorted(files):
+        if not f.endswith(('.md', '.yaml', '.yml', '.py')) or f.startswith('benchmark/results/') or not os.path.isfile(f):
+            continue
+        waiting = ()
+        if f.startswith('benchmark/questions/'):
+            fm, _ = split(f)
+            if (fm or {}).get('status') in ('awaiting-input', 'deferred'):  # the screenshot or table is not supplied yet
+                waiting = set(fm.get('attachments') or [])
+        for p in link_problems(f, open(f, encoding='utf-8', errors='replace').read(), waiting=waiting):
+            bad(f, p)
+
 
 def check_repo_terms(allowed, bad):
     """One word per concept in the repository (project/terms.md): flag the replaced words.

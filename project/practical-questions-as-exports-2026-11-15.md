@@ -4,7 +4,7 @@ Review of the 47 practical halves that wait for screenshots ([question-pairing-2
 
 ## 1. The question
 - A practical question does not need a screenshot. Practical means a case to apply the fact to, not an image. The readers are AI only. Humans need screenshots because they cannot take in much text, and a model can.
-- Example: [0368](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-131-task-manager-full-vcenter-ready-high.md) (Task Manager at 100%, vCenter Ready high) and its theory half [0266](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-087-linux-steal-time-and-windows-busy-time.md). The key of 0368 needs the values, not the pixels.
+- Example: [0368](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-122-task-manager-full-vcenter-ready-high.md) (Task Manager at 100%, vCenter Ready high) and its theory half [0266](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-081-linux-steal-time-and-windows-busy-time.md). The key of 0368 needs the values, not the pixels.
 - Customers also send long CSV files with dozens of columns, so that the expert does not have to ask again. A screenshot carries one screen, and customers rarely take extra ones. A CSV carries the misleading counters in the same file.
 
 ## 2. Design considerations
@@ -27,69 +27,69 @@ Format: CSV = generated export; TEXT = tool text (esxtop panel, `top`, `sar`, `i
 ### CPU
 | Practical | Theory | Format | Evidence | Notes |
 |---|---|---|---|---|
-| [0369](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-046-ready-ms-burst-on-two-charts.md) | 0105 | CSV | vCenter Real-time and Past day | Leave Readiness (%) out: it gives away the arithmetic of A and D. Past day row = sum of its 15 Real-time samples |
-| [0372](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-047-cpu-wait-on-a-quiet-vm-chart.md) | 0001 | CSV | vCenter Real-time | Almost all partner facts. Run + Ready + Co-stop + Wait = vCPUs × 20,000 ms; Wait = Idle + Swap wait + rest |
-| [0375](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-048-esxtop-co-stop-on-a-half-busy-host.md) | 0053 | TEXT | esxtop CPU panel, one VM expanded | Group row = sum of its worlds; %MLMTD ≤ %RDY |
-| [0376](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-049-esxtop-time-a-vcpu-could-not-run.md) | 0009 | TEXT | esxtop CPU panel | Add %VMWAIT: %WAIT = %VMWAIT + %IDLE (tested only here) |
-| [0368](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-131-task-manager-full-vcenter-ready-high.md) | 0266 | CSV | `typeperf` per processor; vCenter Real-time | Task Manager has no export: keep "Task Manager shows 100%" in the prompt. Not a duplicate: B, G, J test facts 0266 does not |
-| [0370](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-132-month-chart-vs-vcf-operations-batch.md) | 0357 | CSV | vCenter Last month; VCF Operations | Weakest practical half: partner facts plus reading |
-| [0371](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-133-usage-near-100-net-run-lower.md) | 0008 | CSV | VCF Operations | 7 days at 5 minutes is 2,016 rows: one afternoon plus a 7-row daily peak view |
-| [0373](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-134-wide-vm-ready-co-stop-few-cpus-busy.md) | 0107 | CSV + TEXT | VCF Operations hourly; guest `mpstat -P ALL` | Busy CPUs in mpstat ≈ Net Run × 16 |
-| [0374](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-135-host-usage-above-100-alert.md) | 0058 | CSV | vCenter Real-time; VCF Operations list | Usage ≥ Core Utilization ≥ Utilization; Usage > 100 only with Turbo |
-| [0377](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-136-esxtop-load-average-above-three.md) | 0331 | TEXT | esxtop CPU panel | Load average 3.2-4.0; per VM %RUN + %RDY + %CSTP + %WAIT ≈ 100 × vCPUs |
-| [0379](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-137-one-thread-saturated-host-under-15.md) | 0378 | CSV + TEXT | vCenter, all instances; host hardware text | 49 columns: cut to 30 rows |
-| [0381](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-138-linux-st-zero-vcenter-ready-high.md) | 0380 | CSV + TEXT | `sar -u`, `top`; vCenter | sar `%guest` is a strong distractor (nested guests, not the hypervisor) |
-| [0434](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-088-perfmon-queue-on-a-4-vcpu-vm.md) | 0010 | CSV | `typeperf` | 60 rows at 1 minute; distractor % Processor Utility (can pass 100) |
-| [0431](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-153-cluster-cpu-above-90-request-for-hosts.md) | 0019 | CSV | VCF Operations hourly; VM list | Top VM contention below 1% |
-| [0436](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-154-two-sockets-in-windows-one-numa-node.md) | 0267 | TEXT | `Get-CimInstance Win32_Processor` or Coreinfo; esxtop memory panel NUMA fields | Task Manager "Sockets" label carried as text |
-| [0438](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-155-cluster-at-70-one-host-near-100.md) | 0437 | CSV | VCF Operations hosts and cluster | Cluster = mean of identical hosts in every row |
-| [0440](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-156-five-minute-job-shows-as-two-half-points.md) | 0439 | CSV | vCenter Real-time; VCF Operations | Each half point = mean of its 15 samples; time stamps show the boundary |
-| [0433](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-087-drs-score-high-one-vm-low.md) | 0232 | CSV + TEXT | cluster score text; VM DRS Score grid; VM chart | A low-score VM with low Readiness (memory-bound) as distractor |
+| [0369](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-061-ready-ms-burst-on-two-charts.md) | 0105 | CSV | vCenter Real-time and Past day | Leave Readiness (%) out: it gives away the arithmetic of A and D. Past day row = sum of its 15 Real-time samples |
+| [0372](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-062-cpu-wait-on-a-quiet-vm-chart.md) | 0001 | CSV | vCenter Real-time | Almost all partner facts. Run + Ready + Co-stop + Wait = vCPUs × 20,000 ms; Wait = Idle + Swap wait + rest |
+| [0375](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-063-esxtop-co-stop-on-a-half-busy-host.md) | 0053 | TEXT | esxtop CPU panel, one VM expanded | Group row = sum of its worlds; %MLMTD ≤ %RDY |
+| [0376](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-064-esxtop-time-a-vcpu-could-not-run.md) | 0009 | TEXT | esxtop CPU panel | Add %VMWAIT: %WAIT = %VMWAIT + %IDLE (tested only here) |
+| [0368](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-122-task-manager-full-vcenter-ready-high.md) | 0266 | CSV | `typeperf` per processor; vCenter Real-time | Task Manager has no export: keep "Task Manager shows 100%" in the prompt. Not a duplicate: B, G, J test facts 0266 does not |
+| [0370](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-123-month-chart-vs-vcf-operations-batch.md) | 0357 | CSV | vCenter Last month; VCF Operations | Weakest practical half: partner facts plus reading |
+| [0371](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-124-usage-near-100-net-run-lower.md) | 0008 | CSV | VCF Operations | 7 days at 5 minutes is 2,016 rows: one afternoon plus a 7-row daily peak view |
+| [0373](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-125-wide-vm-ready-co-stop-few-cpus-busy.md) | 0107 | CSV + TEXT | VCF Operations hourly; guest `mpstat -P ALL` | Busy CPUs in mpstat ≈ Net Run × 16 |
+| [0374](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-126-host-usage-above-100-alert.md) | 0058 | CSV | vCenter Real-time; VCF Operations list | Usage ≥ Core Utilization ≥ Utilization; Usage > 100 only with Turbo |
+| [0377](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-127-esxtop-load-average-above-three.md) | 0331 | TEXT | esxtop CPU panel | Load average 3.2-4.0; per VM %RUN + %RDY + %CSTP + %WAIT ≈ 100 × vCPUs |
+| [0379](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-128-one-thread-saturated-host-under-15.md) | 0378 | CSV + TEXT | vCenter, all instances; host hardware text | 49 columns: cut to 30 rows |
+| [0381](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-129-linux-st-zero-vcenter-ready-high.md) | 0380 | CSV + TEXT | `sar -u`, `top`; vCenter | sar `%guest` is a strong distractor (nested guests, not the hypervisor) |
+| [0434](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-104-perfmon-queue-on-a-4-vcpu-vm.md) | 0010 | CSV | `typeperf` | 60 rows at 1 minute; distractor % Processor Utility (can pass 100) |
+| [0431](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-141-cluster-cpu-above-90-request-for-hosts.md) | 0019 | CSV | VCF Operations hourly; VM list | Top VM contention below 1% |
+| [0436](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-142-two-sockets-in-windows-one-numa-node.md) | 0267 | TEXT | `Get-CimInstance Win32_Processor` or Coreinfo; esxtop memory panel NUMA fields | Task Manager "Sockets" label carried as text |
+| [0438](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-143-cluster-at-70-one-host-near-100.md) | 0437 | CSV | VCF Operations hosts and cluster | Cluster = mean of identical hosts in every row |
+| [0440](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-144-five-minute-job-shows-as-two-half-points.md) | 0439 | CSV | vCenter Real-time; VCF Operations | Each half point = mean of its 15 samples; time stamps show the boundary |
+| [0433](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-103-drs-score-high-one-vm-low.md) | 0232 | CSV + TEXT | cluster score text; VM DRS Score grid; VM chart | A low-score VM with low Readiness (memory-bound) as distractor |
 
 ### Memory
 | Practical | Theory | Format | Evidence | Notes |
 |---|---|---|---|---|
-| [0385](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-054-host-memory-usage-high-without-balloon.md) | 0144 | CSV | vCenter Past week (daily rows); VCF Operations list | C tests the same fact as 0391 C and L4-058 K |
-| [0387](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-055-linux-guest-free-memory-low-all-week.md) | 0263 | CSV + TEXT | VCF Operations list; `uptime`, `/proc/vmstat`, `/proc/pressure/memory` | Needed + Free < Total |
-| [0388](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-056-vm-balloon-flat-for-days.md) | 0052 | CSV | vCenter Past week (daily rows) | Key risk: VM memory Latency is not kept at statistics level 1 (section 6) |
-| [0391](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-057-host-compressed-flat-with-balloon-at-zero.md) | 0025 | CSV | VCF Operations list with First, Last, Min, Max | Remove C (third question on one fact). Theory 0025 needs a rewrite (section 6) |
-| [0392](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-058-vm-memory-contention-follows-swap-in.md) | 0149 | CSV | VCF Operations, 15-minute rows | Contention > 0 only where Swap In > 0 |
-| [0393](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-059-windows-commit-limit-in-task-manager.md) | 0270 | CSV + TEXT | `typeperf`; `systeminfo`, `Win32_PageFileUsage` | Rewrite B (perfmon has no "In use") and C ("no paging file is configured"). `systeminfo` "Virtual Memory: In Use" means commit: a good misleading label |
-| [0399](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-063-esxtop-memory-overcommit-on-a-quiet-host.md) | 0398 | TEXT | esxtop memory header | Overcommit = requested / managed − 1; state matches free against minfree |
-| [0386](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-139-windows-in-use-falls-consumed-stays.md) | 0095 | CSV | `typeperf`; vCenter, about 6 hours | Rewrite A to perfmon counters. The Task Manager screenshot version is deferred (section 5) |
-| [0389](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-140-esxtop-which-vms-wait-on-swapped-memory.md) | 0068 | DROP | - | 0068 is already the esxtop text; 0068 loses its pair |
-| [0390](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-141-vsan-host-consumed-in-maintenance-mode.md) | 0056 | CSV + TEXT | vCenter Past month; reservation as text | Overhead to about 0 at the evacuation; Consumed > 10 GB and flat |
-| [0395](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-142-vm-memory-usage-differs-between-tools.md) | 0394 | CSV | vCenter, 12 hours; VCF Operations | vCenter Usage = Active / configured; VCF Operations Usage = Needed / Total |
-| [0397](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-143-vm-memory-usage-dips-for-half-an-hour.md) | 0396 | CSV | VCF Operations, 24 rows | The chart gap becomes blank cells |
-| [0401](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-144-guest-memory-four-weeks-across-a-downsize.md) | 0400 | CSV | VCF Operations, daily Max, 28 rows | Total Capacity halves at the downsize |
-| [0403](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-145-one-vm-waits-while-host-latency-stays-low.md) | 0402 | CSV | vCenter host and VM, 12 hours | At least 20 running VMs (a count column) |
+| [0385](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-069-host-memory-usage-high-without-balloon.md) | 0144 | CSV | vCenter Past week (daily rows); VCF Operations list | C tests the same fact as 0391 C and L4-058 K |
+| [0387](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-070-linux-guest-free-memory-low-all-week.md) | 0263 | CSV + TEXT | VCF Operations list; `uptime`, `/proc/vmstat`, `/proc/pressure/memory` | Needed + Free < Total |
+| [0388](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-131-vm-balloon-flat-for-days.md) | 0052 | CSV | vCenter Past week (daily rows) | Key risk: VM memory Latency is not kept at statistics level 1 (section 6) |
+| [0391](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-072-host-compressed-flat-with-balloon-at-zero.md) | 0025 | CSV | VCF Operations list with First, Last, Min, Max | Remove C (third question on one fact). Theory 0025 needs a rewrite (section 6) |
+| [0392](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-073-vm-memory-contention-follows-swap-in.md) | 0149 | CSV | VCF Operations, 15-minute rows | Contention > 0 only where Swap In > 0 |
+| [0393](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-074-windows-commit-limit-in-task-manager.md) | 0270 | CSV + TEXT | `typeperf`; `systeminfo`, `Win32_PageFileUsage` | Rewrite B (perfmon has no "In use") and C ("no paging file is configured"). `systeminfo` "Virtual Memory: In Use" means commit: a good misleading label |
+| [0399](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-078-esxtop-memory-overcommit-on-a-quiet-host.md) | 0398 | TEXT | esxtop memory header | Overcommit = requested / managed − 1; state matches free against minfree |
+| [0386](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-130-windows-in-use-falls-consumed-stays.md) | 0095 | CSV | `typeperf`; vCenter, about 6 hours | Rewrite A to perfmon counters. The Task Manager screenshot version is deferred (section 5) |
+| [0389](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-questions/L4-140-esxtop-which-vms-wait-on-swapped-memory.md) | 0068 | DROP | - | 0068 is already the esxtop text; 0068 loses its pair |
+| [0390](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-071-vsan-host-consumed-in-maintenance-mode.md) | 0056 | CSV + TEXT | vCenter Past month; reservation as text | Overhead to about 0 at the evacuation; Consumed > 10 GB and flat |
+| [0395](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-132-vm-memory-usage-differs-between-tools.md) | 0394 | CSV | vCenter, 12 hours; VCF Operations | vCenter Usage = Active / configured; VCF Operations Usage = Needed / Total |
+| [0397](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-133-vm-memory-usage-dips-for-half-an-hour.md) | 0396 | CSV | VCF Operations, 24 rows | The chart gap becomes blank cells |
+| [0401](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-134-guest-memory-four-weeks-across-a-downsize.md) | 0400 | CSV | VCF Operations, daily Max, 28 rows | Total Capacity halves at the downsize |
+| [0403](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-081-one-vm-waits-while-host-latency-stays-low.md) | 0402 | CSV | vCenter host and VM, 12 hours | At least 20 running VMs (a count column) |
 
 ### Storage
 | Practical | Theory | Format | Evidence | Notes |
 |---|---|---|---|---|
-| [0414](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-076-command-latency-hides-slow-writes.md) | 0044 | CSV | vCenter host disk | Command latency = read and write latency weighted by requests. Its stated capture condition could not be met; the generator can |
-| [0416](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-077-outstanding-reads-at-low-latency.md) | 0028 | CSV | vCenter virtual disk | Little's law: IOPS × latency ≈ outstanding |
-| [0417](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-078-datastore-iops-vs-one-host.md) | 0049 | CSV | VCF Operations list, one row per host | Host values sum to the datastore within 10% |
-| [0418](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-147-windows-disk-time-above-1000-percent.md) | 0311 | CSV | `typeperf` PhysicalDisk; vCenter | % Disk Time = queue × 100 (tested only here) |
-| [0419](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-148-linux-util-near-100-at-low-await.md) | 0360 | DROP | - | 0360 already gives the iostat columns as text; 0360 loses its pair |
-| [0423](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-150-one-slow-disk-behind-low-vm-latency.md) | 0422 | CSV | VCF Operations, 8 disks, 6 hours | Aggregate is IOPS-weighted; the slow disk under 10% of IOPS |
-| [0425](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-151-slow-scan-under-an-iops-limit.md) | 0424 | CSV + TEXT | vCenter; esxtop disk panel; limit as PowerCLI text | GAVG = DAVG + KAVG; QAVG ≤ KAVG |
-| [0427](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-152-vm-storage-charts-do-not-match.md) | 0426 | CSV | 4 vCenter exports | Rewrite H ("one line per disk" becomes the instance column) |
+| [0414](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-092-command-latency-hides-slow-writes.md) | 0044 | CSV | vCenter host disk | Command latency = read and write latency weighted by requests. Its stated capture condition could not be met; the generator can |
+| [0416](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-093-outstanding-reads-at-low-latency.md) | 0028 | CSV | vCenter virtual disk | Little's law: IOPS × latency ≈ outstanding |
+| [0417](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-094-datastore-iops-vs-one-host.md) | 0049 | CSV | VCF Operations list, one row per host | Host values sum to the datastore within 10% |
+| [0418](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-136-windows-disk-time-above-1000-percent.md) | 0311 | CSV | `typeperf` PhysicalDisk; vCenter | % Disk Time = queue × 100 (tested only here) |
+| [0419](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-questions/L4-148-linux-util-near-100-at-low-await.md) | 0360 | DROP | - | 0360 already gives the iostat columns as text; 0360 loses its pair |
+| [0423](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-138-one-slow-disk-behind-low-vm-latency.md) | 0422 | CSV | VCF Operations, 8 disks, 6 hours | Aggregate is IOPS-weighted; the slow disk under 10% of IOPS |
+| [0425](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-139-slow-scan-under-an-iops-limit.md) | 0424 | CSV + TEXT | vCenter; esxtop disk panel; limit as PowerCLI text | GAVG = DAVG + KAVG; QAVG ≤ KAVG |
+| [0427](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-140-vm-storage-charts-do-not-match.md) | 0426 | CSV | 4 vCenter exports | Rewrite H ("one line per disk" becomes the instance column) |
 
 ### Network
 | Practical | Theory | Format | Evidence | Notes |
 |---|---|---|---|---|
-| [0412](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-074-esxtop-and-vcenter-vm-transmit-rate.md) | 0029 | CSV + TEXT | esxtop network panel; vCenter Real-time | Rewrite D: the chart title "Network Rate (Mbps)" exists only on screen; the owner quotes it in the prompt |
-| [0413](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-075-vmnic-usage-above-link-speed.md) | 0040 | CSV + TEXT | vCenter vmnic; `esxcli network nic list` | G (units) becomes free: the header says KBps |
-| [0420](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-079-vm-receive-drops-linux-shows-none.md) | 0039 | CSV + TEXT | vCenter VM network; `ip -s link`, `ethtool -S` | Guest text is native: better than a picture |
-| [0415](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-146-small-packets-telemetry-vm.md) | 0211 | CSV | vCenter Real-time | Replace H (KBps is in the header). Bytes per packet 120-250 |
-| [0421](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-149-peak-transmit-drop-percent-one-cycle.md) | 0313 | CSV | VCF Operations, 12 hours | Total and non-Total drop metrics as distractors |
+| [0412](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-090-esxtop-and-vcenter-vm-transmit-rate.md) | 0029 | CSV + TEXT | esxtop network panel; vCenter Real-time | Rewrite D: the chart title "Network Rate (Mbps)" exists only on screen; the owner quotes it in the prompt |
+| [0413](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-091-vmnic-usage-above-link-speed.md) | 0040 | CSV + TEXT | vCenter vmnic; `esxcli network nic list` | G (units) becomes free: the header says KBps |
+| [0420](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-095-vm-receive-drops-linux-shows-none.md) | 0039 | CSV + TEXT | vCenter VM network; `ip -s link`, `ethtool -S` | Guest text is native: better than a picture |
+| [0415](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-135-small-packets-telemetry-vm.md) | 0211 | CSV | vCenter Real-time | Replace H (KBps is in the header). Bytes per packet 120-250 |
+| [0421](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-137-peak-transmit-drop-percent-one-cycle.md) | 0313 | CSV | VCF Operations, 12 hours | Total and non-Total drop metrics as distractors |
 
 ### System and VCF Operations
 | Practical | Theory | Format | Evidence | Notes |
 |---|---|---|---|---|
-| [0432](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-086-two-minute-burst-real-time-vs-past-day.md) | 0047 | CSV | vCenter Real-time and Past day | Past day point = mean of its 15 Real-time samples |
-| [0435](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-089-powered-on-vm-with-a-crashed-windows.md) | 0015 | DEFER | - | Availability is not in 1.0; 0015 deferred with it |
+| [0432](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-102-two-minute-burst-real-time-vs-past-day.md) | 0047 | CSV | vCenter Real-time and Past day | Past day point = mean of its 15 Real-time samples |
+| [0435](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-105-powered-on-vm-with-a-crashed-windows.md) | 0015 | DEFER | - | Availability is not in 1.0; 0015 deferred with it |
 
 ## 5. Impact
 ### Practical halves (47 questions, 90 images)

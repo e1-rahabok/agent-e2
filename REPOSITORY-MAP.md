@@ -165,7 +165,7 @@ flowchart LR
 | [`benchmark/runner/`](benchmark/runner) | Runner (one file per job, named by it: `run_executor.py`, `round_executor.py`, `round_alive_check.py`), retrieval check (`retrieval_check.py`), topic check (`topic_check.py`, `topic_check_pairs.yaml`), screen answer check (`screen_answer_check.py`, `screen_answer_check.yaml`, `screen_answer_check_pages.json`), config |
 | [`benchmark/results/`](benchmark/results) | One folder per run (`<date>-<model>`), [`README.md`](benchmark/results/README.md) (the analysis of all runs) and the retrieval check outputs (`retrieval-<date>/`) |
 | [`benchmark/RUN.md`](benchmark/RUN.md) | How to run a benchmark round: prompt, approvals, time, cost |
-| `benchmark/*.md` | [design](benchmark/design.md), [models](benchmark/models.md), [live test](benchmark/live-test.md), [retrieval check](benchmark/retrieval-check.md) |
+| `benchmark/*.md` | [design](benchmark/design.md), [models](benchmark/models.md), [live test](benchmark/live-test.md), [retrieval check](benchmark/retrieval-check.md), [free-text rubric](benchmark/free-text-rubric.md) (for the grader of the answer set, R-E2-005) |
 
 ## Project: not deployed
 | Folder | Holds |

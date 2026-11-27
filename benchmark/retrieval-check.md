@@ -53,7 +53,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_check.py --embeddings 
 - Current numbers: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Retrieval.
 
 ## What is a good number
-- Levels agreed by the author (Q-E2-130). Current numbers: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Retrieval. Earlier generations are archived and not compared.
+- Levels agreed by the author (Q-E2-130). Current numbers: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Retrieval. Earlier generations are not compared; git history keeps them.
 
 ### Why the retrieval number must be higher than the release score
 - Release gate ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5): final score at least 85% on Agent E2, Level 400 at least 80%, confident-wrong at most 3%.
