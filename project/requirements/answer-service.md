@@ -218,7 +218,7 @@ Test scenarios:
 Source: answer to Q-WS-I1; Q-WS-95 (the file limits); the model's context window of 128,000 tokens, `context_window` in [service_config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/harness/service_config.yaml).
 
 - Given a call with an attachment of another type, above the size limits, or that does not decode
-- Or a call whose CSV text, with the question, the history and the knowledge files read, would not fit the model's context window, counted in tokens before any model call
+- Or a call whose CSV text, question and history, counted in tokens before any model call, exceed the model's context window less a reserve for the knowledge files and the answer, a setting of 60,000 tokens in `service_config.yaml`
 - When the service receives it
 - Then it answers HTTP 400 with the attachment's name and the reason, and calls no model
 

@@ -60,7 +60,7 @@ How Claude works in this repository. Read at the start of every session. The des
 
 ## Evaluation
 - The benchmark is a proof, not a goal. It proves that Agent E2 works: the shipped configuration against the release gate and the frontier reference. No mode, run, metric or setting is kept for the benchmark's own sake. Development diagnostics come from free checks first: the retrieval check, traces, unit tests.
-- Never send `## Answers` or `## Explanation` to a candidate: they are the key, for reviewers only. `## Answers` (the correct letters) is the only key the runner reads; scoring is set arithmetic, no judge (archived, Q-E2-199). Every question is multiple choice.
+- Never send `## Answers` or `## Explanation` to a candidate: they are the key, for reviewers only. `## Answers` (the correct letters) is the only key the runner reads; the benchmark's scoring is set arithmetic, no judge (archived, Q-E2-199): every benchmark question is multiple choice. The free-text answer set of release 1.0 has its own grader ([R-E2-005](project/requirements/answer-service.md)).
 - Every candidate model must read screenshots (vision). Models: [`benchmark/models.md`](benchmark/models.md).
 - Baseline runs use no knowledge base. The model and its reasoning setting are in the run folder's `config.json` (`model_params`).
 - Run a benchmark round: [`benchmark/RUN.md`](benchmark/RUN.md) (one prompt, the approvals to give up front, time and cost).
