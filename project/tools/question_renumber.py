@@ -3,7 +3,8 @@
 Run after a question changes level (edit its `level:` first):
     python3 project/tools/question_renumber.py
 The id (4 digits, metadata only) never changes; attachments stay in benchmark/questions/<id>/.
-File names and every reference to them in the documents listed in DOCS are updated.
+File names and every reference to them in the documents listed in DOCS are updated; in every other tracked Markdown file
+outside benchmark/results/, the full file names.
 """
 import os
 import re
@@ -55,6 +56,17 @@ def main():
         u = re.sub(r'(?<![\w-])(?:' + pat.pattern + ')', lambda x: m.get(x.group(0), pre.get(x.group(0), x.group(0))), t)
         if u != t:
             open(d, 'w').write(u); print('updated', d)
+    # Every other tracked Markdown file (records included) links questions by file name: only full names change there,
+    # so no link breaks (rules_check.py, check_links). benchmark/results/ stays as its round wrote it.
+    full = re.compile(r'(?<![\w-])(?:' + '|'.join(sorted(map(re.escape, m), key=len, reverse=True)) + ')')
+    tracked = subprocess.run(['git', 'ls-files', '*.md'], capture_output=True, text=True, check=True).stdout.split('\n')
+    for d in tracked:
+        if not d or d in DOCS or d.startswith('benchmark/results/'):
+            continue
+        t = open(d, encoding='utf-8').read()
+        u = full.sub(lambda x: m[x.group(0)], t)
+        if u != t:
+            open(d, 'w', encoding='utf-8').write(u); print('updated', d)
     print(f'renamed {len(m)} files')
     return 0
 

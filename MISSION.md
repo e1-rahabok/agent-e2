@@ -66,7 +66,7 @@ Six mechanisms, in order of weight.
 - Size, speed and hardware are covered in [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section Model size and speed.
 
 ## 5. What the product must do
-These are the requirements for the shipped assistant. Findings from the author's demo app are archived in [project/archive/product-requirements.md](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/product-requirements.md).
+These are the requirements for the shipped assistant. Findings from the author's demo app are in git history: [project/archive/product-requirements.md at commit ebbc7dc](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/product-requirements.md).
 
 ### Ways to ask
 | # | Mode | Input | What the system does | Release |

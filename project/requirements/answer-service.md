@@ -10,7 +10,7 @@ Files involved:
 - The pipeline it runs: [harness/answer_modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/answer_modes.py) (`converse`) and [harness/expert_agent.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/expert_agent.py).
 - PCM's client: [build/pcm_proto/agent_e2.py](https://github.com/e1-rahabok/private-cloud-manager/blob/main/build/pcm_proto/agent_e2.py).
 - The contract check: [checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/checks/agent_e2_api.py).
-- The free-text grader that the answer set reuses, archived since 2026-11-14: [project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/legacy/judge-2026-11-14/judge.py).
+- The free-text rubric that the grader of the answer set uses, kept from the deleted judge: [benchmark/free-text-rubric.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/free-text-rubric.md).
 
 ## Model and knowledge
 
@@ -76,7 +76,7 @@ Source: answer to Q-WS-5 ("It was graded by Opus 5.5"); WD-013.
 
 - Given an answer to an answer-set question
 - When the grader reads it
-- Then Claude Opus 5.5 (`anthropic/claude-opus-5.5`, temperature 0) scores it 0 to 3 by the rubric of the archived judge: 0 wrong, or the likely wrong answer, or a contradicted key point; 1 the conclusion avoids the trap but the reason is missing or wrong; 2 right conclusion with the right reason; 3 as 2, and every key point or what to check next
+- Then Claude Opus 5.5 (`anthropic/claude-opus-5.5`, temperature 0) scores it 0 to 3 by the rubric in [benchmark/free-text-rubric.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/free-text-rubric.md): 0 wrong, or the likely wrong answer, or a contradicted key point; 1 the conclusion avoids the trap but the reason is missing or wrong; 2 right conclusion with the right reason; 3 as 2, and every key point or what to check next
 - And it also marks whether the answer states the likely wrong answer (misconception) and whether it says the question is not settled (unsure)
 - And it sees what Agent E2 saw: the question, the facts, the conversation, the CSV text and the screenshots
 - And an answer that asked a clarifying question is scored on its final answer after the scripted reply

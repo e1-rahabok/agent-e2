@@ -1,9 +1,9 @@
 # Agent
 
 Agent E2's agent is a neuro-symbolic expert system. Its code holds the expert's procedure and the knowledge base's map, and it makes the decisions; the model reads and writes. The agent reads the question into a case, plans what to read from the knowledge base's own map, runs the exact tools, decides whether to ask, calls the model, and checks the answer. Every question goes through this one pipeline. Not indexed.
-Related reading: why Agent E2 can win is in [MISSION.md](../MISSION.md); the whole system in [ARCHITECTURE.md](../ARCHITECTURE.md); the harness parts in [README.md](README.md); how the knowledge is shaped in [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md). The tool-loop agent this design replaces, with its measurements, is archived in [project/archive/agent-tool-loop-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/agent-tool-loop-2026-11-14.md).
+Related reading: why Agent E2 can win is in [MISSION.md](../MISSION.md); the whole system in [ARCHITECTURE.md](../ARCHITECTURE.md); the harness parts in [README.md](README.md); how the knowledge is shaped in [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md). The tool-loop agent this design replaced, with its measurements, is in git history: [agent-tool-loop-2026-11-14.md at commit ebbc7dc](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/agent-tool-loop-2026-11-14.md).
 
-- Status: built, and the only mode of Agent E2. [`harness/expert_agent.py`](expert_agent.py) runs stages 1 and 3-6 and [`harness/reading_plan.py`](reading_plan.py) runs stage 2; both are entered through [`harness/answer_modes.py`](answer_modes.py) as mode `agent-e2`. Classic and agentic mode are removed, and their code is archived in [project/archive/legacy/harness-tool-loop-2026-11-14/](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/legacy/harness-tool-loop-2026-11-14). Still to build: section 7.
+- Status: built, and the only mode of Agent E2. [`harness/expert_agent.py`](expert_agent.py) runs stages 1 and 3-6 and [`harness/reading_plan.py`](reading_plan.py) runs stage 2; both are entered through [`harness/answer_modes.py`](answer_modes.py) as mode `agent-e2`. Classic and agentic mode are removed; git history keeps their code ([project/archive/legacy/harness-tool-loop-2026-11-14 at commit ebbc7dc](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/legacy/harness-tool-loop-2026-11-14)). Still to build: section 7.
 - Name: a neuro-symbolic expert system, of the kind where symbolic control calls a neural model as a subroutine (Kautz: Symbolic[Neural]). The symbolic part is the knowledge base's map (links, file kinds, catalog, flows), the rules and the exact tools; the neural part reads language and images. The fixed order of the stages, with two bounded loops back (one clarifying round, one gap follow-up), is a small state machine. The flow executor with executable steps (Q-E2-166) will be the larger one. The name was settled in Q-E2-210.
 
 ## 1. Who decides what
@@ -21,16 +21,17 @@ Related reading: why Agent E2 can win is in [MISSION.md](../MISSION.md); the who
 - Planning a lookup needs a map of what the knowledge base holds. That map is the author's proprietary knowledge, and the Internet text the model learned from does not contain it. A model cannot plan a search through ground it has never seen, and its worst errors are beliefs it never looks up.
 - The agent can plan, because the knowledge base records its own map (file kinds, `same_name` and `internal_derive` links, the catalog, flows, the term map).
 
-| Finding (the previous generation, [archived](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md)) | Reading |
+| Finding (the tool-loop agent this design replaced; its measurements are in git history: [analysis-2026-11-13 at commit ebbc7dc](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md)) | Reading |
 |---|---|
-| Agentic and classic within the margin for every model (-6, -3, +1 points); agentic at 2-3.5 times the tokens and twice the latency | The model's own tool use adds nothing yet |
-| 4.8-7.4 tool calls per multiple-choice answer; Muse at the 8-call limit on 359 of 595 | The model searches in circles |
-| A needed file in the agent's search results but never opened (20-question sample): Gemma read 49% and saw 64%; Muse read 62% and saw 80% | The model cannot tell which hit matters |
-| Qwen agentic: the same letters in all 5 runs on 35% of the questions | Lookups chosen by the model change from run to run |
-| Primed start (same sample): given the classic context, no tool call on 32 of 40 (Gemma) and 38 of 40 (Muse) answers | The model does not ask for what is missing, so a gap must be found by code |
-| Every needed file read: Muse agentic loses 1.7 of its 22 lost points | The model reads and reasons well |
-| Classic: every needed file in context for 96% of questions with 1 needed file, and 5% with 5 or more; the most-missed files are mechanism files the question's words do not name (VM CPU Ready 9 times, resource-controls 7, Co-stop 5) | One search on the question's words does not reach the mechanism |
+| Agentic (the model chooses its lookups) and classic (one search by code) scored within the margin of each other for every model; agentic took more tokens and more time | The model's own tool use adds nothing yet |
+| Several tool calls per multiple-choice answer; one model often stopped at the call limit | The model searches in circles |
+| A needed file in the agent's search results was often never opened | The model cannot tell which hit matters |
+| Agentic: the same question often got different letters in different runs | Lookups chosen by the model change from run to run |
+| Primed start: given the classic context, the model seldom made a tool call | The model does not ask for what is missing, so a gap must be found by code |
+| With every needed file read, the model lost few of its points | The model reads and reasons well |
+| Classic: every needed file was in context for nearly every question with 1 needed file, and for few with 5 or more; the most-missed files are mechanism files the question's words do not name (VM CPU Ready, resource-controls, Co-stop) | One search on the question's words does not reach the mechanism |
 
+- The round of 2026-11-16 measured the split as built: Agent E2 scored 39 to 47 points above the model alone on each of the three local models ([benchmark/results/README.md](../benchmark/results/README.md), section Lift).
 - So the model keeps the jobs it does well (reading, reasoning over given text, writing) and gives up the job it does badly (deciding what to read). The agent takes that job, working from the knowledge base's map.
 
 ### Classic and agentic (removed): what the agent keeps
@@ -89,7 +90,7 @@ Arrows: `-->` solid, `..>` dashed.
 | 5 Answer | Model | 1 (n with consensus) | The draft answer |
 | 6 Check | Agent | 0-1 gap follow-up, 0-1 repair | The checked answer |
 
-- The common case takes 2 model calls (agentic averaged 5-8, classic 1). The understand call reads about 1-2K tokens and writes a few hundred; the answer call reads about 32K.
+- The common case takes 2 model calls. The understand call reads about 1-2K tokens and writes a few hundred; the answer call reads about 32K.
 - Consensus samples share one prompt, so on a local vLLM server they run as one batch on a cached prefix.
 
 ## 4. The stages
@@ -107,7 +108,7 @@ Arrows: `-->` solid, `..>` dashed.
 - The agent checks the case (`expert_agent.parse_case`): only the known fields stay, and each metric name resolves through the catalog and the metric file titles (`reading_plan.case_files`). A name that does not resolve stays as text and plans nothing; it is never guessed into a file.
 - The agent also reads the question on its own (term map, object words, counter keys, metric titles, values given in ms, the vCPU count, options and their parts: `reading_plan.anchors`, `reading_plan.claims`, `reading_plan.objects_in`, `expert_agent.COUNTER_MS`), and both readings feed the plan. A reply that is not JSON leaves the code-only case, so no fallback mode is needed.
 - The case is asked for at temperature 0 (`deterministic`), whatever the model card's sampling, so the same question is read the same way every time. The answer call keeps the card's sampling.
-- The output is JSON. On vLLM and llama.cpp, grammar-guided decoding can enforce the schema (plan, section On-premises deployment). Validity sample (Gemma, 9 questions, screenshots included): every case was valid JSON.
+- The output is JSON. On vLLM and llama.cpp, grammar-guided decoding can enforce the schema (plan, section On-premises deployment). In the first validity sample (Gemma, screenshots included) every case was valid JSON.
 - Not built: `layer` as a field; showing the case back to the user before the answer (a product screen).
 
 ### 4.2 Plan: the reading set
@@ -130,7 +131,7 @@ The agent plans in code, from what the knowledge base records about itself ([`ha
 - Related tier: up to 4 declared links and 4 back links per file (`plan_related_n`, `plan_related_back`), also from the files the claims found. Retrieval check, BM25, 291 questions: related from the claims alone gave 83% complete; with 4 and 4, 87% complete, recall 96%, main file missing on 0. Tried and not taken: 8 and 8 reached 88% complete but lost the main file of 0115.
 - Tried and not taken: reading as a whole file a decision tree that a selected file links to. Complete fell from 254 to 252 of 291 on the retrieval check.
 - The term map stays on (`term_map`). Retrieval check, BM25, 275 questions: with options it cost 2 complete questions; on the stem only, the field reading, it gained 8. The benchmark tests the shipped configuration, so no setting is switched off for the benchmark's sake.
-- Sections: the candidate list averages 21 files, against room for about 14 whole files. With whole files, 10 points of needed-file recall were planned and then cut by the budget (plan 78%, context 68%, BM25). A secondary file therefore gives its best sections (BM25 on the question). The retrieval check counts a file as read when its sections are.
+- Sections: the candidate list holds more files than the budget has room for as whole files. With whole files, needed files that the plan chose were cut by the budget. A secondary file therefore gives its best sections (BM25 on the question). The retrieval check counts a file as read when its sections are.
 - Deterministic: the same question gets the same reading set. Consensus samples then differ only in reasoning, so a disagreement marks doubt in the reasoning, not a different search.
 - Measured with the retrieval check (`python3 benchmark/runner/retrieval_check.py`, `--embeddings` for hybrid). Current numbers: [project/plan.md](../project/plan.md), section Retrieval.
 - Not tuned to the questions: there is one design, with the tiers as the knowledge base defines its links. Two settings were tried (section size 250 or 400 tokens, derive cap 3 or 8), and they came within 2 questions of each other.
@@ -183,7 +184,7 @@ The agent plans in code, from what the knowledge base records about itself ([`ha
 | One question, one path | Deterministic plan | Lookups chosen per run |
 | Budget | Reading set 32K; context window 128K (`context_window`; a prompt above it is flagged, `context_over`); at most 4 model calls (case, answer, gap, repair) plus consensus samples | 8 tool calls, 12K tokens of tool output |
 
-- The benchmark uses the deployment budgets, so the score predicts the product. Time per question on the target GPU is 2 model turns in the common case, to be measured in the live test on a local model. Validity sample (Gemma on the gateway, 9 questions): 2 model calls per answer, 11-23K prompt tokens per answer (both calls), 19-59 seconds.
+- The benchmark uses the deployment budgets, so the score predicts the product. Time per question on the target GPU is 2 model turns in the common case, to be measured in the live test on a local model. Round of 2026-11-16 on the gateway: 2.0 model calls per answer on every local model, 34,000-38,400 tokens per answer, mean latency 9-65 seconds ([benchmark/results/README.md](../benchmark/results/README.md), section Time and tokens).
 - No cap is set for hardware size. Each cap is set for answer quality or safety: the 32K reading budget, the first 3 named files read whole, `search_k`, the 250-word open answer (a ceiling against verbose answers), the timeouts and page sizes of the web lookup, and the benchmark's cost and time limits.
 
 ## 6. What the knowledge must give the agent
@@ -193,13 +194,13 @@ The plan is only as good as the map. These are the changes the knowledge needs, 
 3. Sections stand alone: the plan reads sections of secondary files, so each `##` section names its object and metric in its first line and does not lean on the section before it.
 4. Flow steps as data (Q-E2-166): metric, object, interval, the catalog test and the branch targets, in the flow file (one home). Format: [project/knowledge-rules/flows.md](../project/knowledge-rules/flows.md), Steps as data. The first flow is VM CPU Contention or Latency is high.
 5. Term-map rows mark words with several meanings (stage 4).
-6. Coverage by mechanism ([analysis-2026-11-13](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md), section 12): the field set shows which mechanisms are missing.
+6. Coverage by mechanism (section 12 of the analysis of 2026-11-13, in git history: [analysis-2026-11-13 at commit ebbc7dc](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md)): the field set shows which mechanisms are missing.
 
 ## 7. Build order
 Each step is proved by its own check.
 1. Done: the reading plan on the code-only case; the retrieval check (section 4.2).
 2. Done: the case by the model, the summation conversions, the ask rule, the answer prompt and shape, the gap follow-up, the coverage note, and consensus on one reading set; unit tests with the mock client; a live validity sample on one model (every answer readable, 2 model calls each).
-3. Done: the first round, with Agent E2 and Base on the candidates and the frontier reference ([benchmark/results/README.md](../benchmark/results/README.md)). The next round waits for the author's go ([project/plan.md](../project/plan.md), section Gateway benchmark).
+3. Done: the round of 2026-11-16, with Agent E2 and Base on the candidates and the frontier reference ([benchmark/results/README.md](../benchmark/results/README.md)). The next round waits for the author's go ([project/plan.md](../project/plan.md), section Gateway benchmark).
 4. To build, each with unit tests on worked examples, and with the retrieval check where it changes the reading set: the model's case in the retrieval check (`--case-model`); executable flow steps, starting with the VM CPU Contention or Latency flow (Q-E2-166); threshold bands in stage 3; the planning calculator in stage 3; the knowledge changes of section 6.
 
 ## 8. Walkthrough of one question
@@ -212,4 +213,4 @@ Question: "A 4-vCPU VM shows cpu.ready.summation = 8,000 ms in one real-time sam
 5. Answer (model call 2): the model reads and writes the letters, each reason citing its file.
 6. Check: the verifier runs; every metric the draft names is in the reading set; consensus.
 
-- Two model calls in all. The tool-loop agent took four model turns for the same question (trace, archived design, section 10), and chose each lookup itself.
+- Two model calls in all. The tool-loop agent took more model turns for the same question and chose each lookup itself (its design, section 10, in git history).

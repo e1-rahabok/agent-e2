@@ -75,7 +75,7 @@ python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
 - Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.4. Report table `Final score`; code `score_report.py`, function `final`.
 
 ### Free text
-- Not in the benchmark: every question is multiple choice, and `run_executor.py` refuses a question without options. The judge is archived in [project/archive/legacy/judge-2026-11-14](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/legacy/judge-2026-11-14).
+- Not in the benchmark: every question is multiple choice, and `run_executor.py` refuses a question without options. The judge is deleted; git history keeps it ([project/archive/legacy/judge-2026-11-14 at commit ebbc7dc](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/legacy/judge-2026-11-14)). Its rubric, for the grader of the release 1.0 answer set: [benchmark/free-text-rubric.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/free-text-rubric.md).
 
 ### Screenshots
 - Questions with image attachments are sent with all their images (track `vision`). There is no text-only track.

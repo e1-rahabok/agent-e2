@@ -22,7 +22,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 
 ### The risk: prior override
 - Public Internet text teaches Level 300 readings: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS".
-- A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base: misconception answer on 2% of multiple-choice answers and 3-4% of judged answers (benchmark, 196 questions, without and with web search).
+- A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base, in the round of 2026-11-16 (web mode): misconception answer on 2% of the answers to text questions (the report.md of its run, linked from [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md)).
 - Memory is not the problem in itself: the basics come from it. The problem is how firmly the model holds a rule of thumb against the context in front of it.
 - Model size moves both ways: a larger model knows the basics better and follows long instructions better, and may hold rules of thumb more firmly. Which effect wins on this task is not known from theory or published results. It is measured.
 
@@ -134,10 +134,10 @@ Preferred, not required:
 - Muse-Glimmer-30B: the gateway does not tag it `open-weights`; the weights and the Apache 2.0 licence are on Hugging Face (`meta-models/Muse-Glimmer-30B`, 29.8B parameters).
 - mistral-small (removed, section 7): the gateway description says the id serves Mistral Small 4 (2026-03, `mistralai/Mistral-Small-4-119B-2603`), the latest Mistral Small in the Mistral model list (https://docs.mistral.ai/models). The gateway's 2024-09 release date is older than the model the id now serves; the description is the authority. It is 119B MoE, not 24B dense as this file said before.
 - Licences checked on Hugging Face. The Gemma licence allows commercial use; read it before deployment.
-- Request settings (`model_params` in `runner_config.yaml`; [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md), section Request settings per model): qwen3.8-27b and muse-glimmer-30b are reasoning models. With the default settings they spend 2,000-4,300 tokens per answer thinking, are cut off at the 4,000-token cap, and take 3-8 times longer than gemma-4-31b-it. The final round sends reasoning off (`effort: none` for Qwen, `enabled: false` for Muse). That is a choice: it measures the model without thinking, and a deployment with thinking on needs its own run. The next entries of each list (effort low, with room for 8,000 tokens) are the fallback when the preflight or the health check finds cut-off answers.
+- Request settings (`model_params` in `runner_config.yaml`; [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md), section Request settings per model): qwen3.8-27b and muse-glimmer-30b are reasoning models. With the default settings they think before every answer, are often cut off at the 4,000-token cap, and take longer than gemma-4-31b-it. The first setting in each list is reasoning off (`effort: none` for Qwen, `enabled: false` for Muse). That is a choice: it measures the model without thinking, and a deployment with thinking on needs its own run. The next entries of each list (effort low, with room for 8,000 tokens) are the fallback when the preflight or the health check finds cut-off answers.
 
 ### Reasoning setting
-- The scored round ran Gemma at its default, Qwen with reasoning off and Muse at effort low. Gateway 503 bursts and cut-off answers stopped the first runs; the stopped runs are archived in [project/archive/benchmark-results-2026-11-16-stopped-runs](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-results-2026-11-16-stopped-runs). Scores: [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md).
+- The scored round ran Gemma at its default, Qwen with reasoning off and Muse at effort low. Gateway 503 bursts and cut-off answers stopped the first runs; the stopped runs are deleted from main and git history keeps them ([project/archive/benchmark-results-2026-11-16-stopped-runs at commit ebbc7dc](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-results-2026-11-16-stopped-runs)). Scores: [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md).
 - Effort low on Qwen: about 2.7 times the latency and 3.3 times the completion tokens of reasoning off. A 4,000-token cap does not fit it: 17% of answers reached the cap. At 8,000 tokens, 1.4% did.
 - Reasoning off still spends hidden thinking tokens: 4% of Qwen's answers reached the 4,000-token cap, though the visible answer is about 290 characters.
 - Paired comparison, Qwen, Base mode, the same 803 question and run pairs: exact-match 21.8% with reasoning off, 42.7% at effort low with 8,000 tokens (exact binomial p below 0.001), at about 4 times the cost and 3.5 times the latency. Not measured with the knowledge base (Agent E2), where the knowledge may supply what the thinking supplies.
@@ -148,18 +148,20 @@ Preferred, not required:
 - Run it with `--models anthropic/claude-opus-5.5`: its proven concurrency is 3 in `concurrency_by_model` (`runner_config.yaml`); the provider rate-limits above that in a short trial, and `adaptive_concurrency.py` probes upward from 3.
 - Effort: `model_params` in `runner_config.yaml` sends `reasoning: {effort: medium}` and `max_tokens: 8000` (room for the thinking).
 - Mode `web`: search available, Opus decides. The baseline prompt plus two tools, web search and page fetch, offered with `tool_choice: auto` and no instruction to search; at most 5 tool calls ([harness/answer_modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/answer_modes.py), `web_search_on`). Opus may answer from its own knowledge without a search, as in a chat product with search on. `tools_used` in `answers.csv` records each search and fetch it chose.
-- No run with the tools removed: a user cannot switch search off in a chat product by typing a prompt, so that run measures nothing a user meets. The result without tools (67%) stays in the archive as history.
+- No run with the tools removed: a user cannot switch search off in a chat product by typing a prompt, so that run measures nothing a user meets. The earlier result without tools is in git history.
 
-## 6. Judge (archived)
-- Archived: every benchmark question is multiple choice (Q-E2-199), so nothing is graded by a model. Code: [project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/legacy/judge-2026-11-14/judge.py). In the real world the VMware administrator is the judge: answers are rated in the product and in the live test.
+## 6. Judge
+- Deleted: every benchmark question is multiple choice (Q-E2-199), so nothing in the benchmark is graded by a model. Git history keeps the code ([judge.py at commit ebbc7dc](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/legacy/judge-2026-11-14/judge.py)).
+- Its rubric is kept in [benchmark/free-text-rubric.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/free-text-rubric.md) for the grader of the release 1.0 answer set, which is a model ([R-E2-005](https://github.com/e1-rahabok/agent-e2/blob/main/project/requirements/answer-service.md)).
+- In the real world the VMware administrator is the judge: answers are rated in the product and in the live test.
 
 ## 7. Removed
 | Model | Date | Reason |
 |---|---|---|
-| alibaba/qwen-3-32b | | No vision. Was the reference dense model of the class (48%). |
-| alibaba/qwen-3-14b | | No vision (42%). |
-| openai/gpt-oss-20b | | No vision (48%; often broke the answer format in agentic mode). |
-| nvidia/nemotron-3-nano-30b-a3b | | No vision (25%). |
+| alibaba/qwen-3-32b | | No vision. Was the reference dense model of the class. |
+| alibaba/qwen-3-14b | | No vision. |
+| openai/gpt-oss-20b | | No vision; often broke the answer format in agentic mode. |
+| nvidia/nemotron-3-nano-30b-a3b | | No vision. |
 | zai/glm-4.7-flash | | No vision. Added, never run. |
 | alibaba/qwen3.6-27b | | Previous generation of qwen3.8-27b: duplicate (rule 7). Added, never run. |
 | google/gemma-4-26b-a4b-it | | Smaller sibling of gemma-4-31b-it: duplicate (rule 7). Was the speed option (26B MoE, 4B active). |
@@ -182,6 +184,6 @@ Preferred, not required:
 | Kimi K2.x and K3 (Moonshot), Llama 4 Maverick, Mistral Large 3 and 4, Qwen3.8 Max | Hundreds of billions to trillions of parameters. |
 | Llama 4 Scout | 109B, fits tier B, but Meta's previous generation: Muse-Glimmer-30B is the latest (rule 7). |
 | Qwen3-VL-235B | 235B, and the previous Qwen generation. |
-| Ministral 3 14B | Fits tier A easily. Not chosen: 8-14B models scored lowest so far (qwen-3-14b 42%, ministral-8b 29-40%). Reserve if a smaller GPU is wanted. |
+| Ministral 3 14B | Fits tier A easily. Not chosen: 8-14B models (qwen-3-14b, ministral-8b) scored lowest in the earlier rounds. Reserve if a smaller GPU is wanted. |
 | Devstral Small, Qwen3 Coder 30B | Tuned for code, not for technical reading comprehension. |
 | InternVL2-26B | Released 2024-06: two generations old (InternVL2.5, then InternVL3.5 in 2025-08). Not on the gateway. Its latest sibling in the size range, InternVL3.5-30B-A3B, is not on the gateway either (rule 6). |
