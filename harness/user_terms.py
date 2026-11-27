@@ -22,7 +22,7 @@ PATH = os.path.join(ROOT, 'knowledge', 'catalog', 'user-terms.yaml')
 GLOSSARY = os.path.join(ROOT, 'knowledge', 'glossary.md')
 _ROWS = None
 
-# The teaching order of a product label, narrowed (Q208): only when a matched row names a label, and inside the
+# The teaching order of a product label, narrowed (Q-E2-208): only when a matched row names a label, and inside the
 # answer's length and shape, not added to them. Steps 1, 3 and 4 go in the conclusion; 2 and 5 fold into the
 # mechanism and what to check next.
 LABEL_ORDER = ('- A product label in "Terms in this question" (Computes, Invites, Better model): quote the label as the '

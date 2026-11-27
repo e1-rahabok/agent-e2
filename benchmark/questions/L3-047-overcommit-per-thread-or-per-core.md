@@ -30,7 +30,7 @@ A, B, D, E
 ## Notes
 - Synthetic, 2026-11-12.
 - Level 300 after the 2026-11-15 audit: the ratio's unit, Hyper-Threading not doubling and ratio vs contention are common rules applied to one host. The proposed Hyper-Threading Ready and 62.5% GHz options were not added: other questions already test those facts twice.
-- Hyper-Threading: ESXi charges the vCPUs on a core with both threads busy 1.25 times one thread alone (each vCPU 62.5%; ESXi CPU Used still gives each thread half the core, Q225); the real gain per application varies (knowledge base, hyper-threading).
+- Hyper-Threading: ESXi charges the vCPUs on a core with both threads busy 1.25 times one thread alone (each vCPU 62.5%; ESXi CPU Used still gives each thread half the core, Q-E2-225); the real gain per application varies (knowledge base, hyper-threading).
 
 ## Metadata
 ```yaml

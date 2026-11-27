@@ -2,7 +2,7 @@
 # benchmark/ (harness/README.md, section 2). Retrieval and agent settings match benchmark/runner/runner_config.yaml, so the
 # service runs the benchmarked pipeline; keep the two in step when a setting changes there.
 gateway: https://ai-gateway.vercel.sh/v1   # demo and lab: Vercel AI Gateway (key from env AI_GATEWAY_API_KEY). Customer site: the local model server's URL
-model: google/gemma-4-31b-it               # one of the local candidates (benchmark/models.md); the model chosen at M4 replaces it
+model: google/gemma-4-31b-it               # one of the local candidates (benchmark/models.md); the model the gateway benchmark chooses replaces it
 model_params:
   google/gemma-4-31b-it: {}
 sampling:

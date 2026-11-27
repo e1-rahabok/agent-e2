@@ -28,7 +28,7 @@ Product label entry (design: [KNOWLEDGE-ENGINEERING.md](../../KNOWLEDGE-ENGINEER
 - Better name:
   - Never reword the label itself. Quote it as the product shows it, then correct the model behind it. Wrong: "vSphere's GHz total". Right: "Total Capacity (GHz) is the capacity at base clock; space for vCPUs is threads" ([vocabulary.md](vocabulary.md), Words to avoid).
   - Reuse Agent E2's existing words where one fits (CPU Throughput, Active, Guest OS Needed Memory), so the names form one family: Usage (MHz) is CPU Throughput, and Total Capacity (GHz) is Total Base Capacity (GHz).
-  - A label that already names its model well stays as the better name (Q236): VM CPU Latency, ESXi Memory Usage (%), VM Memory Consumed.
+  - A label that already names its model well stays as the better name (Q-E2-236): VM CPU Latency, ESXi Memory Usage (%), VM Memory Consumed.
   - Throughput is activity, not capability, so no capacity figure is named a throughput.
   - The better name belongs to Agent E2's vocabulary. A benchmark prompt uses only the label (fairness F1). A key point grades the model, never the better name, which a frontier model cannot know.
 - Teaching order, the order the author uses in consulting: (1) name the label as the operator sees it; (2) say what it computes; (3) name the decision it invites and why that decision fails; (4) give the better model and its name; (5) say what to read instead.
@@ -44,7 +44,7 @@ A confusable pair passes all four tests:
 - Written once, under the term users misuse; the difference names both terms, so the line reads alone.
 
 Up-front misconception (metadata `up_front`, [metadata.md](metadata.md)):
-- One home: a line of the `## Misconceptions` section of the file that holds the mechanism, marked by `up_front` with its wrong belief; [`harness/upfront_knowledge.py`](../../harness/upfront_knowledge.py) collects the marked lines (Q211).
+- One home: a line of the `## Misconceptions` section of the file that holds the mechanism, marked by `up_front` with its wrong belief; [`harness/upfront_knowledge.py`](../../harness/upfront_knowledge.py) collects the marked lines (Q-E2-211).
 - Chosen by reach: a belief a frontier model applies without being asked, that changes the verdict on many questions: what is a problem, which metric decides, what to add or size by.
 - Level 300: a VMware administrator with hands-on vSphere knowledge still holds it. Not a definition, not a swap of two terms (those are glossary entries).
 - One line, in the misconception format: the wrong belief in quotes, →, the correct reading. The block adds `See` and the file id.

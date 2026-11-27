@@ -38,7 +38,7 @@ B
   - The two hosts have different specifications, so the two answers must be different.
   - ESXi capacity can also be expressed in CPU compute cycles: the amount of processing it can do per second. That is not the same as the count of cores.
 - Changed in the 2026-11-15 audit: the stem shows the Total Capacity label the operator reads; key points A and G no longer call a capacity figure throughput; misconception type label-read-as-model added.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). The quiz's two lists of one answer per host became one list of pairs, each pair one way of counting capacity; exactly one pair is right.
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14). The quiz's two lists of one answer per host became one list of pairs, each pair one way of counting capacity; exactly one pair is right.
 
 
 ![Quiz image: two ESXi hosts, their CPU specification and the capacity options](0006/two-esxi-hosts-specification-and-capacity-options.png)
@@ -65,5 +65,5 @@ answer_type: deterministic
 misconception: [A, C, F]
 level: 400                      # author 2026-11-05
 misconception_type: [frequency-and-hyper-threading, label-read-as-model]
-status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q199): review again
+status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q-E2-199): review again
 ```

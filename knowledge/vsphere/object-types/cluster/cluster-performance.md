@@ -122,7 +122,7 @@ source:
   path: Provider Objects > Performance > Cluster Performance (%)
 corrections: []
 review_notes:
-- 'To check: Section ''NVMe wait formula'': the VCF Operations key of the VM NVMe read bandwidth used by the pack (`mem:NVMe|bandwidth.read_latest`, MBps, from the VM counter mem.bandwidth.read, instance NVMe) and that the host key `mem:NVMe|latency.read_latest` is in µs; read both on a live tiered 9.1 host (VCF-vCommunity-Adapter, memory_wait.py).'
+- 'To check: Section ''NVMe wait formula'': the VCF Operations key of the VM NVMe read bandwidth used by the pack (`mem:NVMe|bandwidth.read_latest`, MBps, from the VM counter mem.bandwidth.read, instance NVMe) and that the host key `mem:NVMe|latency.read_latest` is in µs; read both on a live tiered 9.1 host (PCM-Adapter, memory_wait.py).'
 - 'To check: Section ''Limitations'': one 4 KB page per NVMe fetch, no prefetch or large page; compare a VM''s NVMe read bandwidth with its fault count on a tiered 9.1 host.'
 - 'To check: Section ''Limitations'': each NVMe fetch freezes the touching vCPU for the whole read latency; measure on a tiered 9.1 host.'
 - 'To check: Section ''Limitations'': whether vMotion precopy reads count in the migrating VM''s NVMe read bandwidth; vMotion an idle tiered VM with NVMe consumed above 0 and compare the VM and host NVMe read bandwidth at 20-second samples.'

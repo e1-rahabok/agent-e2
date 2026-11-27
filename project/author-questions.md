@@ -24,7 +24,7 @@ No open question blocks release 1.0.
 
 ## Future release
 
-### Q263 · Diagrams · Scope of the SVG rule
+### Q-E2-263 · Diagrams · Scope of the SVG rule
 
 - Files: [writing.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/writing.md), section Format choices; [CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md), section Repository layout.
 - Search strings: "Root documents are not indexed and are for people"; "Diagrams in the root documents are SVG".
@@ -35,7 +35,7 @@ No open question blocks release 1.0.
 - Recommended: A. The other documents already follow it, and one rule for every document for people needs no list.
 - Answer:
 
-### Q262 · Decision trees · Three trees with no branches
+### Q-E2-262 · Decision trees · Three trees with no branches
 
 - Files: [Does this ESXi host have CPU headroom?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom.md), [Downsizing a large, idle VM](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/decision-tree/oversized-vm-downsizing.md), [Is memory overcommit affecting this VM?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm.md); the Mermaid chart in each.
 - Now: each is a list of checks in order with no branch, so its new chart is a straight line (is-overcommit has one branch: no ballooning, not affected). The decisions sit in section Interpretation as prose (for example, Core Utilization below 100% or Thread Utilization below 50%: cores are free).
@@ -46,7 +46,7 @@ No open question blocks release 1.0.
 - Recommended: B. The branches are already written in Interpretation; turning them into arrows is drafting, and you review the result visually.
 - Answer:
 
-### Q261 · Health check · Is the log a performance check?
+### Q-E2-261 · Health check · Is the log a performance check?
 
 - Files: [Health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-check.md), sections Order of checks and the chart; [flows.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/flows.md), the Order line.
 - Now: flows.md and the file's text give performance as contention, consumption, configuration, known bug. The chart had a fifth step, Log, after known bug. The model never sees the chart, so the chart now follows the text (2026-11-24).
@@ -56,7 +56,7 @@ No open question blocks release 1.0.
 - Recommended: A. Plan, Not doing: log analysis (logs are mostly about availability and security, not performance); availability and security already read logs.
 - Answer:
 
-### Q258 · Capacity > Cluster Consumption · The grey band: when is a cluster underused?
+### Q-E2-258 · Capacity > Cluster Consumption · The grey band: when is a cluster underused?
 
 - Files: [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml), section sizing and its review note; [user_suggestions.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/user_suggestions.py).
 - Search strings: "grey (below green: wastage)"; "Grey is empty until a source gives it".
@@ -64,7 +64,7 @@ No open question blocks release 1.0.
 - Question: below which Cluster Consumption (%), 95th percentile of the last 24 hours, is a production cluster underused? Does it differ by class of service?
 - Answer:
 
-### Q257 · Memory tiering · NVMe consumed as saturation, and the signal that replaces compression and swap
+### Q-E2-257 · Memory tiering · NVMe consumed as saturation, and the signal that replaces compression and swap
 
 - Files: [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md), section Misconceptions; [Is memory tiering slowing the host?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host.md), section Misconceptions.
 - Search strings: "it replaces compression and swap as the saturation signal"; "NVMe holds cold pages: saturation, not contention".
@@ -77,7 +77,7 @@ No open question blocks release 1.0.
 - Recommended: B. The first half follows from the vendor text (pages on NVMe are cold until fetched, so holding them costs no wait) and from the SP5 split of contention and consumption. The second half overreaches: compression and swap still run on a tiered host (memory-tiering, section Interactions).
 - Answer:
 
-### Q246 · Storage > Adapter Highest latency · Plain or command-weighted mean of read and write
+### Q-E2-246 · Storage > Adapter Highest latency · Plain or command-weighted mean of read and write
 
 - Moved to Future release by the author, 2026-11-16. Impact: 0072 is deferred (status `deferred`), key unchanged; its theory half 0406 keeps running (A does not depend on the weighting). The three files keep their lines until this is answered.
 
@@ -92,7 +92,7 @@ No open question blocks release 1.0.
 - Recommended: C. Write one phrase in the three files (the vendor definition, then "blends read and write per adapter; the weights are not documented"). Rewrite 0072 A, C and E so that they hold under both readings (read and write command counts about equal in its CSV, or the options read the CSV numbers only); key unchanged. A lab check (90/10 and 50/50 read/write mix, compare with both formulas) settles it later: Future release.
 - Answer:
 
-### Q248 · Network > Port group drops · Option A of 0345 and the drop formula
+### Q-E2-248 · Network > Port group drops · Option A of 0345 and the drop formula
 
 - Moved to Future release by the author, 2026-11-16. Impact: 0345 is deferred (status `deferred`), key unchanged; packets-dropped.md is unchanged, with no denominator stated.
 
@@ -104,7 +104,7 @@ No open question blocks release 1.0.
 - Recommended: confirm A (it uses no vendor metric); add no formula. Add the vendor metric names to the file, say the denominator is not documented, and say a per-direction share is computed from the rate metrics (`dropped_tx_pkts` over `tx_pkts`), not a vendor metric. A lab check (compare `dropped_pkts_pct` with dropped / (rx + tx) and dropped / (rx + tx + dropped)) can come later.
 - Answer:
 
-### Q244 · Cluster > HA admission control · Three vendor facts for the percentage policy
+### Q-E2-244 · Cluster > HA admission control · Three vendor facts for the percentage policy
 
 - Moved to Future release by the author, 2026-11-16 (unsure of the 32 MHz default; minor). Impact: admission-control-and-cluster-state is unchanged, with no 32 MHz or 0 MB default; 0330 stays deferred (status `deferred`), key unchanged. The line "A VM with no reservation passes CPU and memory admission control" stays until this is answered.
 
@@ -118,7 +118,7 @@ No open question blocks release 1.0.
 - Recommended: A. Both facts are in the vendor text; the warning is not, so no file or key states it.
 - Answer:
 
-### Q245 · VCF Operations > Alerts · Alert-level wait and cancel cycles, criticality, Child and Descendant
+### Q-E2-245 · VCF Operations > Alerts · Alert-level wait and cancel cycles, criticality, Child and Descendant
 
 - Moved to Future release by the author, 2026-11-16. Impact: 0274, 0275 and 0340 are deferred (status `deferred`); their keys are unchanged and wait for the alert definitions content (plan.md, After 1.0).
 
@@ -129,7 +129,7 @@ No open question blocks release 1.0.
 - Recommended: yes; until then the three keys rest on vendor documents cited in their Notes.
 - Answer:
 
-### Q247 · Guest OS > Linux memory · A Linux memory file
+### Q-E2-247 · Guest OS > Linux memory · A Linux memory file
 
 - Moved to Future release by the author, 2026-11-16. Impact: no file is written. 0272 stays in the run set as an outside-the-knowledge-base question (design.md 3.5), 0387 stays (its Linux facts are in linux-os-slow), 0079 has no Linux option; keys unchanged.
 
@@ -139,7 +139,7 @@ No open question blocks release 1.0.
 - Recommended: a short file now; three running questions lean on it.
 - Answer:
 
-### Q252 · Guest OS sizing · "VM Active shows the limit" for applications that manage their own memory
+### Q-E2-252 · Guest OS sizing · "VM Active shows the limit" for applications that manage their own memory
 
 - Moved to Future release by the author, 2026-11-16. Impact: guest-os-sizing keeps its line for now. 0079 L stays keyed on active.md and sql-server-memory.md (VM Active shows what was touched); a model that reads only the guest-os-sizing line can answer L false. Fixing the line is a one-line change.
 
@@ -149,16 +149,16 @@ No open question blocks release 1.0.
 - Recommended: yes, to "Active shows what the application touched, not its configured limit".
 - Answer:
 
-### Q254 · Overhead · vSAN as overhead (after 1.0)
+### Q-E2-254 · Overhead · vSAN as overhead (after 1.0)
 
-- Moved to Future release by the author, 2026-11-16 (from Q250). Impact: 0017 no longer tests vSAN (E and K replaced).
+- Moved to Future release by the author, 2026-11-16 (from Q-E2-250). Impact: 0017 no longer tests vSAN (E and K replaced).
 - Files: [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) (vSAN processes, FTT policy, the Misconceptions line on FTT).
-- Now: the file counts vSAN processes as overhead and the FTT copy as not overhead. Other questions lean on vSAN too and still run: 0390 (vSAN host Consumed in maintenance mode), 0056 (host Consumed with no VMs), 0080 (datastores running out of space: four options on vSAN space), 0215, 0217, 0296, 0409, 0069. They are not changed: Q250 named 0017 only.
+- Now: the file counts vSAN processes as overhead and the FTT copy as not overhead. Other questions lean on vSAN too and still run: 0390 (vSAN host Consumed in maintenance mode), 0056 (host Consumed with no VMs), 0080 (datastores running out of space: four options on vSAN space), 0215, 0217, 0296, 0409, 0069. They are not changed: Q-E2-250 named 0017 only.
 - Question: when vSAN content is written, check the overhead lines against it, and decide for the questions above whether they move to after 1.0 too (0390 and 0080 are the most vSAN-keyed).
 - Recommended: move 0390 and 0080 to after 1.0 if vSAN is out of 1.0 as a whole; keep the others, where vSAN is the setting and not the fact tested.
 - Answer:
 
-### Q255 · Object model · Object relationships.json against objects.yaml (after 1.0)
+### Q-E2-255 · Object model · Object relationships.json against objects.yaml (after 1.0)
 
 - Files: [Object relationships.json](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/Object%20relationships.json); [objects.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/objects.yaml); [Object relationships](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/object-relationships.md). Search strings: `stack_layer`, `plane`, `CONSUMES_FROM`.
 - Now: the JSON has 28 object types and 54 relationships; objects.yaml has 12 types and 18 relations. 14 JSON types are new (VirtualDisk, HostBusAdapter, StorageDevice, StorageArray, VirtualNIC, StandardPortGroup, UplinkPortGroup, HostVirtualSwitch, VMkernelNIC, PhysicalNIC, TopOfRackSwitch, GuestOS, Container, VirtualMachineTemplate). It conflicts with the repository in four places: (1) layers: Orchestration, VirtualHardware, Hypervisor, Physical, Container, GuestOS against guest-os, virtual-motherboard, hypervisor, physical; Datastore sits in the hypervisor layer and HostSystem is not in the physical layer; (2) `plane` (ControlPlane, DataPlane) is not a repository term; (3) `Container` is Linux and container scope, After 1.0; (4) edge verbs CONSUMES_FROM, ATTACHED_TO, CONNECTED_TO against contains, resource-parent, runs-on, mounts, stores-files-on, connects-to; VM CONSUMES_FROM ResourcePool runs against resource-parent, and VM CONSUMES_FROM Datastore repeats VM, VirtualDisk, Datastore.
@@ -169,7 +169,7 @@ No open question blocks release 1.0.
 - Recommended: A. The layer rule (a VM is a virtual motherboard; the Guest OS is a separate layer) decides a metric's home, so the repository names stay. Do it in one change set after 1.0, with `kb`, `role`, `supplies` and `charts` for each new type and the new types in tags.yaml.
 - Answer:
 
-### Q241 · CPU > VM Demand · Demand under a limit (lab check)
+### Q-E2-241 · CPU > VM Demand · Demand under a limit (lab check)
 
 - Files: [VM CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/demand.md) (section Not unmet demand, two misconceptions).
 - Now: the file's lab test shows VM CPU Demand equal to Usage under a limit, so Demand is not unmet demand. The vSphere Web Services API 9.1 defines `cpu.demand` as the CPU a VM would use with no CPU contention or CPU limit, which says the opposite.
@@ -179,7 +179,7 @@ No open question blocks release 1.0.
 - Recommended: run the test; until then the text stays with a review note.
 - Answer:
 
-### Q242 · Storage > esxtop · QAVG above KAVG
+### Q-E2-242 · Storage > esxtop · QAVG above KAVG
 
 - Files: [ESXi storage latency stack](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md) (section Counters, one misconception).
 - Now: "QAVG can exceed KAVG: QAVG covers VM IO and kernel IO; KAVG covers VM IO only", and the misconception "QAVG cannot exceed KAVG" → QAVG includes kernel IO. The ESXi disk queue note in project/sources gives KAVG = QAVG + VMkernel processing, so QAVG would never exceed KAVG.
@@ -189,11 +189,11 @@ No open question blocks release 1.0.
 - Recommended: A only with field evidence, else B.
 - Answer:
 
-### Q222 · SP5 > Availability · Does a host in maintenance mode lower availability?
+### Q-E2-222 · SP5 > Availability · Does a host in maintenance mode lower availability?
 
 - Files: [IaaS SLAs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (Availability SLA); [Cluster availability](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/metrics/availability.md).
 - Now:
-  - sla-metrics: the maintenance window is always excluded (your Q098 answer). One host in maintenance: Operational Availability 100%.
+  - sla-metrics: the maintenance window is always excluded (your Q-E2-098 answer). One host in maintenance: Operational Availability 100%.
   - Cluster availability: the ESXi state score takes 25% off a host in maintenance mode.
 - Question: which availability is the cluster score?
   - A. Actual Availability. Maintenance counts.
@@ -202,7 +202,7 @@ No open question blocks release 1.0.
 - Recommended: C. The state score measures operations maturity (a host left in maintenance too long is a finding); the SLA measures the service. Two purposes, two names.
 - Answer:
 
-### Q226 · SP5 > Availability · Usable hosts during maintenance: 8 or 9 of 10?
+### Q-E2-226 · SP5 > Availability · Usable hosts during maintenance: 8 or 9 of 10?
 
 - Files: [IaaS SLAs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (the 10-host example); [Supply](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/supply.md) (Total vs usable after host loss).
 - Search: "Example on a 10-host cluster with 1 HA host (usable 9 hosts)".
@@ -217,7 +217,7 @@ No open question blocks release 1.0.
 - Recommended: A.
 - Answer:
 
-### Q235 · Sizing > VM CPU sizing note · Levels and units of the decision matrix
+### Q-E2-235 · Sizing > VM CPU sizing note · Levels and units of the decision matrix
 
 - Files: [VM CPU Sizing Best Practices](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/vm_cpu_sizing_best_practices.md) (Sizing Decision Matrix, Post-Resize Verification); [rightsizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (Before vs after).
 - Now: no number from the note is in the knowledge base. rightsizing has the verification step only.
@@ -226,10 +226,10 @@ No open question blocks release 1.0.
   2. Ready above 5% and Co-stop above 3% keep the VM at 10 vCPUs. A: use the KPI levels instead (yellow at 2% Ready, 1% Co-stop, 20-second peak). B: a separate sizing rule.
   3. N%L above 90% healthy, below 85% a red flag. Give a source, or drop it.
   4. 14 or 15 vCPUs on a 16-core node, to leave room for hypervisor interrupts. Field experience or a document?
-- Recommended: 1 per vCPU (VCF Operations shows the queue per vCPU, Q217). 2 A (one place per number). 3 drop. 4 yours.
+- Recommended: 1 per vCPU (VCF Operations shows the queue per vCPU, Q-E2-217). 2 A (one place per number). 3 drop. 4 yours.
 - Answer:
 
-### Q216 · CPU > NUMA > Virtual NUMA · Topology rebuild and `numa.autosize.once` (lab checks)
+### Q-E2-216 · CPU > NUMA > Virtual NUMA · Topology rebuild and `numa.autosize.once` (lab checks)
 
 - Files: [Virtual NUMA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/virtual-numa.md) (Topology initialization, Misconceptions); [NUMA sizing guide](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md) (section 4).
 - Now: the guide says ESXi rebuilds the vNUMA topology at every power cycle. vSphere 9.1 says it stays until the vCPU count changes, and lists `numa.autosize.once` (default TRUE). Both stay unverified in the file.
@@ -239,7 +239,7 @@ No open question blocks release 1.0.
   - (c) `numa.autosize.once`: is it in the vmx after the first power-on? Add it as FALSE, repeat (b).
 - Answer:
 
-### Q124 · Storage > Unmap · Unmap counters per datastore
+### Q-E2-124 · Storage > Unmap · Unmap counters per datastore
 
 - Files: [ESXi Datastore metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/datastore.md) (section Unmap); [esxtop storage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/storage.md).
 - Search: "but you can’t aggregate them per datastore".
@@ -252,7 +252,7 @@ No open question blocks release 1.0.
 - For you, in VCF Operations 9.1: does the Datastore object have an unmap metric? What are the Host System metric keys?
 - Answer:
 
-### Q129 · VCF Operations 9.1 · Real-time metrics API for scripts
+### Q-E2-129 · VCF Operations 9.1 · Real-time metrics API for scripts
 
 - Files: [Real-time metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/features/real-time-metrics.md).
 - Now: "data is queried with PromQL"; no API section.
@@ -263,7 +263,7 @@ No open question blocks release 1.0.
 - For you, one call in your lab: which host answers the API (VCF Operations or the real-time component)? Does the esxtop feature return 2-second data through it?
 - Answer:
 
-### Q149 · Term map · Wrong terms users write
+### Q-E2-149 · Term map · Wrong terms users write
 
 - Files: [user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml).
 - Now: rows written from the knowledge base; none from real tickets.
@@ -271,7 +271,7 @@ No open question blocks release 1.0.
 - Ready to add on your accept, from the knowledge base: "latency" with no layer; VM network latency; "ESXi Ready"; "Ready 5%" or "2000 ms"; "VM consumed memory high"; thin provisioning; DRS Score; esxtop load average; SIOC shares (ignored from VCF 9.0); "memory pressure".
 - Answer:
 
-### Q150 · URL questions · Public pages with known errors
+### Q-E2-150 · URL questions · Public pages with known errors
 
 - Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 3.4).
 - Now: no URL question in the run set.

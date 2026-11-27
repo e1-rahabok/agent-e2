@@ -77,7 +77,7 @@ class Chunk:
 
 # Knowledge given up front, not through search: indexing the one-line summaries would let search return them
 # in place of the files that hold the mechanism (KNOWLEDGE-ENGINEERING.md, section 2).
-NOT_INDEXED = ()   # every knowledge file is indexed; the up-front misconceptions live in their files (Q211)
+NOT_INDEXED = ()   # every knowledge file is indexed; the up-front misconceptions live in their files (Q-E2-211)
 
 
 def load(root=ROOT):
@@ -96,7 +96,7 @@ def load(root=ROOT):
 
 GLOSSARY_FIELDS = ('Also called', 'Not to confuse with', 'File', 'Product label', 'Invites', 'Better name')
 GLOSSARY_ENTRY = re.compile(r'^- \*\*(.+?)\*\*: (.*)$')
-LABEL_FIELDS = ('Product label', 'Invites', 'Better name')   # a product label entry has all three (KNOWLEDGE-ENGINEERING.md, Q208)
+LABEL_FIELDS = ('Product label', 'Invites', 'Better name')   # a product label entry has all three (KNOWLEDGE-ENGINEERING.md, Q-E2-208)
 
 
 def glossary(docs):

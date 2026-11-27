@@ -61,10 +61,10 @@ A, C, E, G, J, K, L, M
 - Misconception: B: "The remote memory means ESXi keeps moving the VM between nodes." - I: "Pin it to node 0 with CPU and memory affinity, and its memory becomes local."
 
 ## Notes
-- NMIG left out (author, Q191 e: its meaning is unsure; not in the benchmark before 1.0).
+- NMIG left out (author, Q-E2-191 e: its meaning is unsure; not in the benchmark before 1.0).
 - The split: `maxPerMachineNode` limits the vCPUs per NUMA node, so ESXi places the VM as two NUMA clients with local memory each, and vNUMA shows two nodes ([`vsphere/technology/cpu/configuration/numa-settings`](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md)). Sizing a VM larger than one node to split evenly across as few nodes as possible: Performance Best Practices for vSphere 9.1, vNUMA.
 - Revised 2026-11-12: the esxtop screenshot that was to be supplied is now an esxtop excerpt typed as text. The cause changed from vCPU count (tested by L4-22, wide VM placement) to memory size larger than a node.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). No option names a `numa.*` setting or the vNUMA rebuild at power cycle (open author question Q216).
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14). No option names a `numa.*` setting or the vNUMA rebuild at power cycle (open author question Q-E2-216).
 - Changed in the 2026-11-15 audit: K lost its hedge ("If the database needs ...") and stays an action; misconception_type cumulative-vs-current removed (no option reads a running total as current).
 - A, E, G, H and M rest on the numa line for a VM whose vCPUs fit one node but whose memory does not (vsphere/technology/cpu/concepts/numa, open review note: lab test on a 9.1 host); vsphere/tools/esxtop/memory (NRMEM) states the same reading as settled.
 - Changed 2026-11-16: the stem no longer tells the story of the raise from 320 GB to 512 GB (it restated the knowledge base's typical cause and pointed at E and M). M now asks whether the same VM at 320 GB would fit one node, true as before.

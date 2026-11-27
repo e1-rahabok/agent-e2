@@ -130,7 +130,7 @@ class PromptSplitTest(unittest.TestCase):
         self.assertEqual([o[1] for o in opts], ['one', 'two'])
 
     def test_many_options_render_and_parse(self):
-        # Q199 (2026-11-14): no fixed option count; 20 written options take A-T and Unsure takes U.
+        # Q-E2-199 (2026-11-14): no fixed option count; 20 written options take A-T and Unsure takes U.
         import random
         letters = question_files.LETTERS[:20]
         stem, opts, footer = question_files.Question._split_prompt('Stem\n\n' + '\n'.join(f'- {x}. option {x}' for x in letters))

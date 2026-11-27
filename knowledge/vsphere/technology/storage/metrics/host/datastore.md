@@ -74,6 +74,6 @@ source:
 corrections: []
 review_notes:
 - 'To check: Section ''Counters'': the gap between Datastore latency observed by VMs and datastore latency, layer by layer (QAVG and KAVG of the same host and period); see also vsphere/technology/storage/metrics/datastore/storage-io-control, section Includes / excludes.'
-- 'To check: Section ''Unmap'': the vCenter counter keys (likely datastore.unmapIOs and datastore.unmapSize, summation) and the datastore total as the sum of the hosts that mount it; open question Q124; vSphere 9.1 API reference, https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/.'
+- 'To check: Section ''Unmap'': the vCenter counter keys (likely datastore.unmapIOs and datastore.unmapSize, summation) and the datastore total as the sum of the hosts that mount it; open question Q-E2-124; vSphere 9.1 API reference, https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/.'
 status: draft
 ```

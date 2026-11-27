@@ -38,7 +38,7 @@ B, F
 ## Notes
 - Public source: Microsoft Learn, "Using Storage-related Parameters and Performance Counters" (Windows Server 2012 R2 archive page): the counters represent the requests active below the driver that takes the statistics, including requests in service; Avg. Disk Queue Length = Disk Transfers/sec x Disk sec/Transfer (Little's Law); physical disk statistics are tracked by the partition manager. Broadcom KB 343323 (legacy 2053145, no Updated On date): the Paravirtual SCSI default queue depth is 64 for a device and 254 for an adapter, and the Windows registry values. 
 - Debatable risk: that the vCenter virtual disk latency starts at the virtual disk and excludes the wait in Windows is read from the counter definitions and the knowledge file; the vSphere API reference was not read for this. The numbers are chosen so that the arithmetic is exact.
-- Prepared with author question Q194 (the reading of the guest disk queue).
+- Prepared with author question Q-E2-194 (the reading of the guest disk queue).
 - Changed in the 2026-11-15 audit: key points one per option; B shortened (length cue); D ("the counter holds only requests not yet sent", a third copy after 0311/0418, redundancy #46) replaced in place by the Linux-default transplant (254 per device); F (true fix) and G (false, adapter limit) added. The review's option on 5-minute averages hiding bursts was not added: that fact is over the two-question cap (redundancy #13).
 
 ## Metadata
@@ -62,7 +62,7 @@ knowledge:
 knowledge_main: guest-os/storage/windows-storage-io-path
 attachments: []
 origin: synthetic
-source_path: "Drafted 2026-11-13 for author question Q194 (project/plan.md)"
+source_path: "Drafted 2026-11-13 for author question Q-E2-194 (project/plan.md)"
 misconception: [C, D]
 misconception_type: [layer-confusion, threshold-transplanted]
 status: draft

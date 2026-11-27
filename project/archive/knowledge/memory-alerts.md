@@ -83,9 +83,9 @@ source:
   path: 'Proactive Operations > Alert > Memory Alerts (Contention Alerts: VM Contention, Infrastructure Contention; Consumption Alerts: Infrastructure Consumption)'
 corrections: []
 review_notes:
-- 'Section ''Memory consumption'': the design note says 10 minutes instead of 5; the red condition gives no duration. Written as a 10-minute wait. Q145.'
+- 'Section ''Memory consumption'': the design note says 10 minutes instead of 5; the red condition gives no duration. Written as a 10-minute wait. Q-E2-145.'
 - 'To check: Section ''Memory consumption'': the object of the red condition, written as ESXi (Infrastructure Consumption, 50% of host members for the cluster); the source does not name it.'
-- 'Section ''Why memory contention is hard to trace'': the example values (5 MB, 1 MB, 2 MB) cannot add up to 51%; read as an illustration of mixed causes. Q145.'
-- 'Section ''Infrastructure memory contention'': the source does not state the instance of Peak Memory Contention for ESXi and cluster (worst VM or average). Q145.'
+- 'Section ''Why memory contention is hard to trace'': the example values (5 MB, 1 MB, 2 MB) cannot add up to 51%; read as an illustration of mixed causes. Q-E2-145.'
+- 'Section ''Infrastructure memory contention'': the source does not state the instance of Peak Memory Contention for ESXi and cluster (worst VM or average). Q-E2-145.'
 status: draft
 ```

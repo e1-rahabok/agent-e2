@@ -41,8 +41,8 @@ A, B, D, J, K
 
 ## Notes
 - Changed in the 2026-11-15 audit: D (the wide VM's remote memory, tested in 0063 and 0114) replaced by the manual vNUMA Topology fact, with the hardware version added to the stem; K without its hedge; misconception type threshold-transplanted replaced by layer-confusion (guest view against ESXi placement).
-- Changed 2026-11-16 (re-review): the three-part question line reduced to "Which statements are correct?"; D says the manual layout fits the old hosts' nodes (truth unchanged). The plainest remedy, a power cycle on an old host, stays out of the options until author question Q216 is answered.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). Left out of the options: whether the next power cycle on an old host rebuilds the layout (and `VPXD_PersistVnuma`): open author question Q216 (the vSphere 9.1 TechDocs say the topology does not change unless the vCPU count changes).
+- Changed 2026-11-16 (re-review): the three-part question line reduced to "Which statements are correct?"; D says the manual layout fits the old hosts' nodes (truth unchanged). The plainest remedy, a power cycle on an old host, stays out of the options until author question Q-E2-216 is answered.
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14). Left out of the options: whether the next power cycle on an old host rebuilds the layout (and `VPXD_PersistVnuma`): open author question Q-E2-216 (the vSphere 9.1 TechDocs say the topology does not change unless the vCPU count changes).
 
 ## Metadata
 ```yaml
@@ -65,5 +65,5 @@ attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
 misconception_type: [layer-confusion]
-status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q199): review again
+status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q-E2-199): review again
 ```

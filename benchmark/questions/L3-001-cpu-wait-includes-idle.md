@@ -36,7 +36,7 @@ A, C, D, E
 ## Notes
 - Tests: Confusing name (distinction).
 - Prompt sharpened with Run, Ready and Co-stop values, so option C is decidable.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14).
 - 2026-11-16 re-review: E ("must show in ... disk latency, memory contention") was stronger than the knowledge base: a guest short of its own memory need not show VM memory contention. E now points to the Windows and Linux counters (idle, Sizing; wait, Mechanism). Truth kept; key unchanged.
 - 2026-11-15 audit: G and J reworded without absolutes or because clauses (truth kept). Not added: an option on the ESXi 8.0 Update 2 idle-accounting issue (Broadcom KB 338438), which needs a mixed-version estate in the stem.
 

@@ -90,7 +90,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - Precision: a provider may serve 16-bit or 8-bit weights; the site may run 4-bit on a 48 GB GPU. 4-bit costs some accuracy on multi-step reasoning.
 - Version: the provider serves what it chose to load under the id (mistral-small changed from 24B dense to Mistral Small 4 without a new id).
 - Speed: gateway latency measures the provider and the network, not the customer GPU.
-- Guard: before release, the chosen model is run once on the benchmark from local weights, at the deployed precision, on the target GPU. The release score is that run ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M5 and M6).
+- Guard: before release, the chosen model is run once on the benchmark from local weights, at the deployed precision, on the target GPU. The release score is that run ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section On-premises deployment).
 
 ## 3. Selection criteria
 One limit decides, on a fixed hardware rule:
@@ -144,14 +144,14 @@ Preferred, not required:
 - Real use differs between administrators (a user can switch thinking on or off, and a local server has no per-token price), so the deployed setting is still open ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), After 1.0).
 
 ## 5. Frontier reference
-- One frontier model, without the knowledge base: anthropic/claude-opus-5.5 only, because Agent E2 is built with Claude (Q164). Effort capped at medium, for cost.
+- One frontier model, without the knowledge base: anthropic/claude-opus-5.5 only, because Agent E2 is built with Claude (Q-E2-164). Effort capped at medium, for cost.
 - Run it with `--models anthropic/claude-opus-5.5`: its proven concurrency is 3 in `concurrency_by_model` (`runner_config.yaml`); the provider rate-limits above that in a short trial, and `adaptive_concurrency.py` probes upward from 3.
 - Effort: `model_params` in `runner_config.yaml` sends `reasoning: {effort: medium}` and `max_tokens: 8000` (room for the thinking).
 - Mode `web`: search available, Opus decides. The baseline prompt plus two tools, web search and page fetch, offered with `tool_choice: auto` and no instruction to search; at most 5 tool calls ([harness/answer_modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/answer_modes.py), `web_search_on`). Opus may answer from its own knowledge without a search, as in a chat product with search on. `tools_used` in `answers.csv` records each search and fetch it chose.
 - No run with the tools removed: a user cannot switch search off in a chat product by typing a prompt, so that run measures nothing a user meets. The result without tools (67%) stays in the archive as history.
 
 ## 6. Judge (archived)
-- Archived: every benchmark question is multiple choice (Q199), so nothing is graded by a model. Code: [project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14/judge.py). In the real world the VMware administrator is the judge: answers are rated in the product and in the live test.
+- Archived: every benchmark question is multiple choice (Q-E2-199), so nothing is graded by a model. Code: [project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14/judge.py). In the real world the VMware administrator is the judge: answers are rated in the product and in the live test.
 
 ## 7. Removed
 | Model | Date | Reason |

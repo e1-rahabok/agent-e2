@@ -45,7 +45,7 @@ Arrows: `-->` solid, `..>` dashed.
 
 - Experts hold judgment, not definitions. Each kind of judgment gets its own form: prose for reasons, misconception lines for wrong readings, YAML for exact numbers, and numbered steps for the order of checks.
 - Tags and links carry the expert's mental map: which files must be read together.
-- Every file passes lint before it is merged. Draft files are served before the author has reviewed them, with their status in the reading set; release 1.0 ships only reviewed files ([project/plan.md](project/plan.md), M6). Section 7 says how review progress is tracked.
+- Every file passes lint before it is merged. Draft files are served before the author has reviewed them, with their status in the reading set; the on-premises deployment ships only reviewed files ([project/plan.md](project/plan.md), section On-premises deployment). Section 7 says how review progress is tracked.
 - The loop closes: every wrong answer is traced back to a missing fact, a retrieval miss or a model error.
 
 | Read | For |
@@ -267,7 +267,7 @@ Arrows: `-->` solid, `..>` dashed.
 | Links | Same name, same meaning, derived from, related | `same_name`, `same_meaning`, `internal_derive`, `related` | The expert's mental map: which facts are read together |
 | Folder hierarchy | The method (SP5 Framework) and the product (VCF 9.x) kept apart; inside the product, metrics by technology and KPIs by object | `knowledge/` | One tree, in the order the author reviews; links and tags give the other views |
 | Catalog | Units, rollups, statistics levels, esxtop fields, thresholds, object model | `knowledge/catalog/*.yaml` → SQLite | Exact values must not depend on retrieval luck |
-| Flows | Order of checks: health check, troubleshooting, decision tree | Files with `retriever_guide` health-check, troubleshooting or decision-tree; the Mermaid chart is the master of the structure, the numbered steps follow it (lint checks both agree); placed at the entry point, handing off to another flow at an object or realm boundary | Small models skip steps. Today the reading plan puts the flow first and the model follows its steps; executable steps, where code takes the branch, are still to build (Q166) |
+| Flows | Order of checks: health check, troubleshooting, decision tree | Files with `retriever_guide` health-check, troubleshooting or decision-tree; the Mermaid chart is the master of the structure, the numbered steps follow it (lint checks both agree); placed at the entry point, handing off to another flow at an object or realm boundary | Small models skip steps. Today the reading plan puts the flow first and the model follows its steps; executable steps, where code takes the branch, are still to build (Q-E2-166) |
 | Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb) | [`harness/arithmetic_calculator.py`](harness/arithmetic_calculator.py), formulas in files | Arithmetic is where models slip |
 | Images with text twins | The author's diagrams and charts | `images/` folders | Search reads words, not pixels: the text twin lets the image be found, and it costs fewer tokens than the image |
 | Terminology | Vocabulary, confusable pairs | [`knowledge/glossary.md`](knowledge/glossary.md) | Wrong words produce wrong reasoning (Usage vs Utilization, KPI vs SLA) |
@@ -369,7 +369,7 @@ This is the one definition of the levels, and the benchmark uses it ([`benchmark
 | Tool confusion | vCenter and VCF Operations, or esxtop and vCenter, are treated as the same reading | "Same counter name, so the values match" |
 | Label read as model | The label names a different model than the one the product computes | "Total Capacity (GHz) is the host's CPU capacity" |
 
-### Product label and better model (Q208)
+### Product label and better model (Q-E2-208)
 - The product shows a label and computes it with a simple model. The label is reality: the operator reads it on the screen, types it into a question, and acts on what it seems to say. The product is not wrong; it is simpler, because its designer had to fit one number on a summary screen with no one there to explain it. Agent E2 is the one who explains, so it holds both the label and the better model, and never trades one for the other.
 
 | Layer | Example: Total Capacity (CPU) | Example: CPU Usage (MHz) |
@@ -409,7 +409,7 @@ This is the one definition of the levels, and the benchmark uses it ([`benchmark
 | A `## Misconceptions` section in every metric file | A true observation read to the wrong conclusion. See section 4. |
 
 - Files are a topic, not a page count: the median is about 600 words, and a concept with many parts (memory tiering, overhead) runs to about 2,800. Size is held by the section, the unit of retrieval, not by the file.
-- Two kinds of file carry two object types, on purpose: `comparisons/` files, which set objects side by side, and [`cluster/metrics/availability`](knowledge/vsphere/object-types/cluster/metrics/availability.md), which keeps its ESXi part because the cluster score is built from the host scores, until the availability model after 1.0 ([project/plan.md](project/plan.md), M1).
+- Two kinds of file carry two object types, on purpose: `comparisons/` files, which set objects side by side, and [`cluster/metrics/availability`](knowledge/vsphere/object-types/cluster/metrics/availability.md), which keeps its ESXi part because the cluster score is built from the host scores, until the availability model after 1.0 ([project/plan.md](project/plan.md), section Knowledge base).
 - A complete metric file stays its own file and is not merged into a `comparisons/` file. The reading plan reads a named file whole, so a merged file would load a large file for a question about one counter.
 - A file that is not tagged, linked and placed in the right folder is found only by its words, which is why lint checks tags and links. How the agent plans with this structure: [`harness/AGENT.md`](harness/AGENT.md), sections 4.2 and 6.
 
@@ -478,7 +478,7 @@ Arrows: `-->` solid, `..>` dashed.
 
 | Number | Why it matters |
 |---|---|
-| Reviewed files | Release 1.0 needs all of them (M6) |
+| Reviewed files | The on-premises deployment needs all of them (plan, section On-premises deployment) |
 | Open review notes | Each is a fact still to check |
 | Corrections to vendor documents | Each waits for a vendor fix |
 | Up-front lines | Each reaches every answer, so it is reviewed first |
@@ -486,4 +486,4 @@ Arrows: `-->` solid, `..>` dashed.
 | Files no other file links to | Found only by their words |
 | Source notes cited by no knowledge file | Evidence with no trace to the knowledge |
 
-- Contradictions are found by review, not by a script: the question bank audit and the knowledge review list them ([project/plan.md](project/plan.md), M1). The digest step (section 6, step 3) prevents new ones.
+- Contradictions are found by review, not by a script: the question bank audit and the knowledge review list them ([project/plan.md](project/plan.md), section Knowledge base). The digest step (section 6, step 3) prevents new ones.

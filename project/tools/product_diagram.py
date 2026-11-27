@@ -142,7 +142,7 @@ box(X2, yb2, W2 - 50, 'user_terms.py', ['match: rows ranked by hits', 'case_labe
     'tool', mono_title=True)
 box(X3 - 43, yb2, W3 + 8, 'arithmetic_calculator.py', ['safe arithmetic (ast)', 'summation_to_percent,', 'units, cpu_states',
                                   'result names its source'], 'tool', mono_title=True)
-box(X4, yb2, 170, 'flow_executor.py', ['steps of a flow file', 'executable steps: Q166'], 'notyet', h=64, mono_title=True, title_size=12)
+box(X4, yb2, 170, 'flow_executor.py', ['steps of a flow file', 'executable steps: Q-E2-166'], 'notyet', h=64, mono_title=True, title_size=12)
 box(X4, yb2 + 70, 170, 'capacity_calculator.py', ['planning calculator'], 'notyet', h=48, mono_title=True, title_size=12)
 box(X5, yb2, W5, 'public_web_lookup.py', ['URLs in the question: fetch', 'current-fact words: vendor search', 'system names dropped,',
                             'private IPs refused, trim 2K'], 'tool', mono_title=True)
@@ -295,7 +295,7 @@ notes = [
     'Stages 1-4 run once per question (expert_agent.prepare), so every consensus sample reads the same reading set: a disagreement is doubt in the reasoning, not a different search.',
     'The model never chooses a file or a tool. It reads the question into the case (call 1) and the reading set into the answer (call 2). Calls 3 and 4 fire only on a gap or a hard verifier issue.',
     'Tiers T1-T3 are read whole (named: the first 3), the rest as their best sections; the order is the priority when the 32K budget runs out. Settings: search_k, context_tokens, plan_* in the runner config.',
-    'Dashed grey: flow_executor.py (executable flow steps, Q166) and capacity_calculator.py (planning calculator) are built and unit-tested; wiring them into stage 3 is open work (harness/AGENT.md, section 7).',
+    'Dashed grey: flow_executor.py (executable flow steps, Q-E2-166) and capacity_calculator.py (planning calculator) are built and unit-tested; wiring them into stage 3 is open work (harness/AGENT.md, section 7).',
     'Same code for benchmark and site: only the endpoint in model_client.py differs. public_web_lookup.py sends only public requests; customer data stays on site.',
 ]
 for n, s in enumerate(notes):

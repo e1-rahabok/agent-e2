@@ -35,9 +35,9 @@ B, C, D, E
 
 ## Notes
 - Sources: the knowledge base (virtual NUMA, section corespersocket: from vSphere 6.5 corespersocket no longer changes the vNUMA topology); Performance Best Practices for VMware vSphere 9.1, virtual NUMA; vSphere 9.1 Resource Management, Virtual NUMA ("not influenced by the number of virtual sockets and number of cores per socket").
-- No option touches `numa.*` options in Advanced Parameters or when ESXi rebuilds the vNUMA layout: both are open (Q216).
+- No option touches `numa.*` options in Advanced Parameters or when ESXi rebuilds the vNUMA layout: both are open (Q-E2-216).
 - Changed in the 2026-11-15 audit: C and H reworded without "because" and "only"; E lengthened (it was the shortest option); key point B names the memory too.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14).
 - Rewritten 2026-11-15 as the theory half of 0436 (design.md 3.9; review of the practical halves): the old text was the same case as 0436 (the DBA quote and the esxtop NHN and N%L values). Now a different VM (12 vCPUs, 6 cores per socket, 24-core nodes), no screen values, and options on the mechanism: virtual sockets, virtual NUMA nodes, physical nodes. Key changed from B, D, E to B, C, D, E.
 
 ## Metadata
@@ -62,5 +62,5 @@ origin: synthetic
 source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [layer-confusion]
 pair: "0436"
-status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q199): review again
+status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q-E2-199): review again
 ```

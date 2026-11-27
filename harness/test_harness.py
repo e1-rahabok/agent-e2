@@ -122,7 +122,7 @@ class CatalogTest(unittest.TestCase):
         al = {a['id']: a for a in CAT.thresholds(name='VM CPU Ready', limit=20)['alerts']}
         red, orange = al['alert-vm-cpu-contention-red'], al['alert-vm-cpu-contention-orange']
         self.assertEqual(red['rule'], 'all of: VM Peak vCPU Ready (20s) > 32 %; VM CPU Ready > 8 %; VM CPU Usage > 1 GHz (gate)')
-        self.assertEqual(orange['rule'], 'all of: VM Peak vCPU Ready (20s) > 16 %; VM CPU Ready > 4 %; VM CPU Usage > 1 GHz (gate)')  # red is 2x orange (Q144)
+        self.assertEqual(orange['rule'], 'all of: VM Peak vCPU Ready (20s) > 16 %; VM CPU Ready > 4 %; VM CPU Usage > 1 GHz (gate)')  # red is 2x orange (Q-E2-144)
         self.assertNotIn('thresholds', [k for k, v in CAT.thresholds(name='VM CPU Ready').items() if any(r.get('use') == 'alert' for r in v)])
 
     def test_alert_on_children_and_any(self):
@@ -144,7 +144,7 @@ class CatalogTest(unittest.TestCase):
 
     def test_one_symptom_many_alerts(self):
         n = CAT._q("SELECT COUNT(*) AS n FROM alert_symptoms WHERE symptom = 'sym-vm-cpu-usage-above-1ghz'")[0]['n']
-        self.assertEqual(n, 11)  # disk queue 2, CPU contention 2, memory contention 2, disk latency 4, dropped packets 1 (Q147)
+        self.assertEqual(n, 11)  # disk queue 2, CPU contention 2, memory contention 2, disk latency 4, dropped packets 1 (Q-E2-147)
 
     def test_facts_label_the_use(self):
         f = CAT.facts_for(['vsphere/object-types/vm/vm-alerts'])
@@ -176,7 +176,7 @@ class CatalogTest(unittest.TestCase):
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
         self.assertEqual(uses, {'decision', 'rule', 'change', 'flow'})
-        self.assertEqual(CAT.stats()['thresholds'], 46)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q162); 2 flow tests (Q195); 6 score change (2026-11-22, Q258, Q259)
+        self.assertEqual(CAT.stats()['thresholds'], 46)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q-E2-162); 2 flow tests (Q-E2-195); 6 score change (2026-11-22, Q-E2-258, Q-E2-259)
         self.assertEqual(CAT.stats()['symptoms'], 40)
         self.assertEqual(CAT.stats()['alerts'], 33)  # one alert per object type: ESXi, resource pool, cluster contention split; ESXi drops virtual and physical (2026-11-12)
         self.assertEqual(CAT.stats()['sizing'], 1)  # Guest OS memory utilization for sizing: two-sided, with grey
@@ -276,7 +276,7 @@ class FlowTest(unittest.TestCase):
         out = flow_executor.run(DOCS, 'vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high', '2')
         self.assertEqual((out['of'], out['next'], out['refers_to']), (7, '3', ['3']))
         first = flow_executor.run(DOCS, 'vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high', '1')
-        self.assertEqual(first['refers_to'], ['6', '2', '4', '7'])  # branch by the part of Contention that is not green (Q144)
+        self.assertEqual(first['refers_to'], ['6', '2', '4', '7'])  # branch by the part of Contention that is not green (Q-E2-144)
 
     def test_mermaid_left_out_of_model_text(self):
         d = DOCS['vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high']
@@ -633,7 +633,7 @@ class TermMapTest(unittest.TestCase):
 
 
 class ProductLabelTest(unittest.TestCase):
-    """Product label and better model (KNOWLEDGE-ENGINEERING.md; Q208): glossary pair, term-map row, teaching order."""
+    """Product label and better model (KNOWLEDGE-ENGINEERING.md; Q-E2-208): glossary pair, term-map row, teaching order."""
     Q = 'The cluster shows Total Capacity of 200 GHz. How many more 4-vCPU VMs fit?'
 
     def test_glossary_entry_carries_the_pair(self):
@@ -686,7 +686,7 @@ class ProductLabelTest(unittest.TestCase):
         self.assertIn(user_terms.LABEL_ORDER, self._system(self.Q, 'open'))
         self.assertNotIn(user_terms.LABEL_ORDER, self._system('Why is VM CPU Ready high?', 'open'))
         self.assertNotIn(user_terms.LABEL_ORDER, self._system(self.Q + '\n\nA. 50\nB. 25\nC. Unsure', 'choice'))
-        self.assertIn('Inside the usual length', user_terms.LABEL_ORDER)   # narrowed (Q208): no extra answer section
+        self.assertIn('Inside the usual length', user_terms.LABEL_ORDER)   # narrowed (Q-E2-208): no extra answer section
 
 
 class ClarifyTest(unittest.TestCase):
@@ -1274,7 +1274,7 @@ class AnswerServiceTest(unittest.TestCase):
 
     def test_one_vm_score_has_the_larger_level(self):
         pts = [90 + i % 3 for i in range(60)]
-        pts[20] = 84  # 7 points below the median: inside one VM's normal movement (Q259)
+        pts[20] = 84  # 7 points below the median: inside one VM's normal movement (Q-E2-259)
         facts = {'asked_about_kpi': {'label': 'VM Performance', 'better': 'higher', 'points': [[i, v] for i, v in enumerate(pts)]}}
         lines = expert_agent.kpi_trends(answer_service.question_text({'question': 'Why?', 'facts': facts}), CAT)
         self.assertIn('Change level: 8 points. Verdict: steady', lines[0])
@@ -1344,7 +1344,7 @@ class AnswerServiceTest(unittest.TestCase):
         self.assertNotIn('pulled', line)
 
     def test_risk_sub_metrics_add_up_to_the_score(self):
-        # Cluster Risk: the same scoring, published as 100 minus the weighted average (VCF-vCommunity-Adapter publish_kpi).
+        # Cluster Risk: the same scoring, published as 100 minus the weighted average (VCF vCommunity Adapter publish_kpi).
         risk = [('Highest ESXi CPU thread utilization', 85.0), ('Worst ESXi CPU imbalance', 1.0), ('Worst ESXi memory ballooned', 0.0),
                 ('Worst ESXi swapped + zipped memory', 0.0), ('Highest ESXi CPU reservation', 5.0), ('Highest ESXi memory reservation', 5.0),
                 ('Highest ESXi CPU overcommit ratio', 2.2), ('Highest ESXi memory overcommit ratio', 0.9),

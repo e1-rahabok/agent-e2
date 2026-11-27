@@ -205,7 +205,7 @@ source:
   path: 'Capacity Management > Capacity Model (Workload Level; Workload Type; VM Price; 4 Dimensions of Capacity: Utilization, Performance, Reservation | Share, Allocation, Invisible Demand, Limitation, Overcommit)'
 corrections: []
 review_notes:
-- 'To check: Section ''Utilization'': the 80-100% zone has no numbers in the book; Cluster Consumption (%) uses different bands (CPU green 0-55) (Q116).'
+- 'To check: Section ''Utilization'': the 80-100% zone has no numbers in the book; Cluster Consumption (%) uses different bands (CPU green 0-55) (Q-E2-116).'
 - 'Section ''Reservation and share'': the book gives the reservation unit as Hertz and milliseconds; CPU reservation is set in MHz. Written as Hz.'
 - 'Section ''Reservation and share'': the resource-pool advice quotes Frank Denneman, frankdenneman.nl, vSphere 7 DRS Scalable Shares deep dive (2020-05-27). Paraphrased, not copied.'
 - 'To check: Section ''Demand'': "a sum of utilization and a sum of reservation taken separately gives a different number" explains why the book computes per VM first; the explanation is not in the book.'

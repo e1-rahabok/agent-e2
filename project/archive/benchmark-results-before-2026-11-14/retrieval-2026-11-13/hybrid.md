@@ -1,6 +1,6 @@
 # Retrieval check 2026-11-13, hybrid
 
-Baseline after reactivation (Q206). Command: `python3 benchmark/runner/retrieval_eval.py --embeddings`. Index: knowledge base at the merge of e1-rahabok/agent-e2#297. How to read: [benchmark/retrieval-check.md](../../retrieval-check.md).
+Baseline after reactivation (Q-E2-206). Command: `python3 benchmark/runner/retrieval_eval.py --embeddings`. Index: knowledge base at the merge of e1-rahabok/agent-e2#297. How to read: [benchmark/retrieval-check.md](../../retrieval-check.md).
 
 | Question | Needed | Search top 6 | Classic context | Missed in context |
 |---|---|---|---|---|

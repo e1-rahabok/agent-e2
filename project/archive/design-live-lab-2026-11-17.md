@@ -60,7 +60,7 @@ Same as section 5, with the VM health-check flow and the VM as the object. The V
 - The model input is limited to the case, the step results and the cited knowledge files.
 
 ## 8. Build dependencies (honest status)
-- The flow executor (take the branch in code, Q166) is not built. It is needed by both checks. It is the first dependency.
+- The flow executor (take the branch in code, Q-E2-166) is not built. It is needed by both checks. It is the first dependency.
 - Threshold verdicts in stage 3 are not built ([`project/plan.md`](plan.md), M3a).
 - Object lists and metric fetch need the connector (new).
 - Check two flows in the knowledge base exist (cluster and VM health check). The cluster flow has to be checked against its steps before the executor uses it.
@@ -68,7 +68,7 @@ Same as section 5, with the VM health-check flow and the VM as the object. The V
 ## 9. Build order
 1. Connector: login token and object lists, GET only, tested on recorded fixtures, then against the lab.
 2. Web server with login and sessions (no checks yet).
-3. Flow executor for one flow (VM CPU Contention or Latency is the first flow per Q166; cluster and VM health check next).
+3. Flow executor for one flow (VM CPU Contention or Latency is the first flow per Q-E2-166; cluster and VM health check next).
 4. Check engine and the two checks, with the stored results and the audit log.
 5. Explanation by the model (gateway).
 6. UI (later, after the architecture is accepted).

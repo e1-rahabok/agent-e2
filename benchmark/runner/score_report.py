@@ -138,12 +138,12 @@ def consensus(rows, k=3, modes=('agent-e2',)):
     return out
 
 
-# Release gate (benchmark/design.md, section 7.5; author, Q130, 2026-11-12). Read on Agent E2 (mode agent-e2, 2026-11-14).
+# Release gate (benchmark/design.md, section 7.5; author, Q-E2-130, 2026-11-12). Read on Agent E2 (mode agent-e2, 2026-11-14).
 # Not computed here: no up-front misconception (lines marked up_front) stated as true (author check of each answer),
 # and the held-out set at most 11 points below the development set (a separate run).
 GATE = {'final': 0.85, 'level:400': 0.80, 'confident_wrong': 0.03}
 ALPHA = 0.05  # paired test against the frontier model: reported as an outcome, not a gate (author, 2026-11-13)
-REFERENCE = ('anthropic/claude-opus-5.5', 'web')  # frontier model as a user meets it: web search available, its own choice to use it; no knowledge base (Q164, 2026-11-13)
+REFERENCE = ('anthropic/claude-opus-5.5', 'web')  # frontier model as a user meets it: web search available, its own choice to use it; no knowledge base (Q-E2-164, 2026-11-13)
 
 
 def mcnemar(rows, model, mode, ref=REFERENCE):

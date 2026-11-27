@@ -671,7 +671,7 @@ def kpi_part_lines(question, cat):
     score rebuilt, and the points the score moved split among them (arithmetic_calculator.kpi_parts), so the answer names
     the sub-metric that moved the score instead of guessing. One method for every score: a KPI (100 best) and a model whose
     score line says higher is worse (Cluster Risk, Cluster Consumption: 100 minus the weighted average, as the
-    VCF-vCommunity-Adapter publishes them). No breakdown when a sub-metric has no catalog line."""
+    VCF vCommunity Adapter publishes them). No breakdown when a sub-metric has no catalog line."""
     facts = facts_in(question)
     if not facts:
         return []
@@ -837,7 +837,7 @@ def prepare(client, model, question, images, cfg, trace, retriever, kind, prompt
         _step(trace, 'shape', '', shape)
     system += ANSWER_RULES + (OPEN_SHAPE if kind != 'choice' else '')
     if kind != 'choice' and cfg.get('term_map', True) and user_terms.label_hits(asked, case):
-        system += user_terms.LABEL_ORDER   # the teaching order of a product label, inside the answer shape (Q208)
+        system += user_terms.LABEL_ORDER   # the teaching order of a product label, inside the answer shape (Q-E2-208)
     up_front = upfront_knowledge.build(retriever.docs, cfg.get('primer') or {})
     if up_front:
         system += '\n\n' + up_front

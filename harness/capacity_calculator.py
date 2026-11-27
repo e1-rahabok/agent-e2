@@ -6,7 +6,7 @@ knowledge/sp5-framework/capacity/class-of-service-planning.md, section Planning 
 Per ESXi host, three models (allocation, reservation, utilization) for each of CPU and memory: six numbers.
 The host is full at the first of the six to reach 100%. Mixed classes are compared in the allocation model by
 dividing each class's demand by its overcommit ratio. HA hosts are added on top: capacity counts the hosts that
-carry load (hosts - ha_hosts). Memory is DRAM only: memory tiering is not part of the plan (Q177).
+carry load (hosts - ha_hosts). Memory is DRAM only: memory tiering is not part of the plan (Q-E2-177).
 
 Host specification: with no RAM given, the CPU side decides how many VMs of one class fit, and the RAM that
 matches them is returned (knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md).
@@ -85,7 +85,7 @@ def vms_per_host(vm_class, cores, ghz, ram_gb, ht=True, classes=None, **host):
 def host_spec(vm_class, cores, ghz, ht=True, classes=None, **host):
     """RAM that matches the CPU of one host for one class. The CPU side (allocation, reservation, utilization)
     decides how many VMs fit; each VM needs the largest of its three memory needs; RAM = VMs x need + hypervisor.
-    Memory tiering is not counted: the plan sizes DRAM (Q177)."""
+    Memory tiering is not counted: the plan sizes DRAM (Q-E2-177)."""
     root = host.pop('root', ROOT)
     d = defaults(root)
     cls = _classes(classes, d)[vm_class]

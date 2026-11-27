@@ -52,7 +52,7 @@ Six mechanisms, in order of weight.
 5. **Structure built for a small model.** One fact per bullet, one object per metric file, same-name traps linked, layers separated in folders and tags, metadata for filtering. Enterprise RAG usually fails on messy chunking; this corpus is written to be chunked.
 6. **Measured, not claimed.** Every change is scored on a fixed benchmark against the frontier model, with luck removed (Unsure option, confident-wrong rate, 5 runs must agree).
 
-- Honest status: not achieved yet. The gap is in specific questions (knowledge gaps, answer keys, the "ONLY the knowledge base" prompt rule, weak agentic tool use), each tracked in `project/author-questions.md` Q038-Q043 and `project/todo.md`.
+- Honest status: not achieved yet. The gap is in specific questions (knowledge gaps, answer keys, the "ONLY the knowledge base" prompt rule, weak agentic tool use), each tracked in `project/author-questions.md` Q-E2-038-Q-E2-043 and `project/todo.md`.
 
 ## 4. Why 32B, not 70B or 8B
 Decode speed and hardware are governed by memory: every generated token reads all active weights once.

@@ -41,7 +41,7 @@ A, C, F, G, J
 ## Notes
 - Changed in the 2026-11-15 audit: new host figures and window (the old ones were the knowledge base's own example); Demand and Usage given as separate numbers; base clock no longer called capacity; options that repeated facts homed elsewhere replaced in place: C (Usage above 100% is Turbo) by the Usage-over-Core-Utilization arithmetic, F (free cores) by the second-thread Usage fact, G (free threads) by the Demand-per-core fact; old J (keep placing while Ready is low) dropped, old K re-lettered J; key point E corrected to vCenter's Demand (no reservations); misconception type label-read-as-model added.
 - Revised 2026-11-12: ESXi 9.1 no longer caps host CPU Usage at 100% (the older example this question came from showed a flat 100%); task moved from troubleshoot to decide-capacity, since the question is whether to keep placing VMs.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). Knowledge added: host CPU Demand (Demand above Usage once cores are shared; not work the host refuses).
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14). Knowledge added: host CPU Demand (Demand above Usage once cores are shared; not work the host refuses).
 
 ## Metadata
 ```yaml

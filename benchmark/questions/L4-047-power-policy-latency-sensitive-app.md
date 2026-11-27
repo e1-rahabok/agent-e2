@@ -42,7 +42,7 @@ C, D, E, F, G, H, I
 ## Notes
 - Changed 2026-11-16 (re-review): B (the policy does not change how fast an idle core starts work) was the near-negation of C; B now tests what a C-state does (power-states, ESXi level and C-states table), still false. F is a Level 200 fact among Level 400 options (re-review note; not changed).
 - Changed in the 2026-11-15 audit: hedges removed from correct options C, E, I and absolutes from wrong options A, B, K (every correct effect carried a hedge, every wrong one an absolute); L added (Use P States off read as base clock); level 300 to 400 (E, J and L need the C-state and Turbo mechanism that the rule "High Performance is fastest" gets wrong).
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14).
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): D one fact; old G (Balanced costs most workloads little) negated A and is now the deep C-state fact (worded so that C1E, which the hardware controls, stays possible); J decidable after the power-states fix (Performance Best Practices for vSphere 9.1, p. 22; vSphere 9.1 Custom policy parameters); old L and M (Latency Sensitivity High) removed because they repeat 0112. Key changed from C, D, E, F, G, H, I, M to C, D, E, F, G, H, I.
 
 ## Metadata

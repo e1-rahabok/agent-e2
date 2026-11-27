@@ -69,5 +69,5 @@ attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
 misconception_type: [consumption-as-contention, layer-confusion]
-status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q199): review again
+status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q-E2-199): review again
 ```

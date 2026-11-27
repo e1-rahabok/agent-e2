@@ -16,7 +16,7 @@ BUDGET_TOKENS = 3000          # all blocks together; lint checks it
 
 def rules_block(docs):
     """The up-front misconceptions: the `## Misconceptions` line of each knowledge file whose metadata `up_front` names
-    its wrong belief. One home (author, Q211): the line lives in its file; this block only collects it."""
+    its wrong belief. One home (author, Q-E2-211): the line lives in its file; this block only collects it."""
     import knowledge_loader
     lines = []
     for i in sorted(docs):

@@ -29,7 +29,7 @@ A, F
 - Tests: same name, different behaviour (CPU and memory reservations differ in nature).
 - The host has free CPU and memory, so no contention is in play.
 - vSphere 9.1 Resource Management, Memory reservation: a VM that has not touched its whole reservation lets the unused part go to other VMs; once it has consumed its reservation, it keeps that memory (PDF pp. 1832-1833).
-- Changed in the 2026-11-15 audit: numbers differ from the knowledge-base example (16 GB VM, 10 GB, BIOS; F5). Redundancy #9 (a reservation does not raise Consumed: pair 0441/0442 holds it): old A replaced in place by the untouched-reserved-memory fact (true; Q201 settled), old B (Consumed jumps to the reservation) dropped, and old G (a throwaway: Active equals the reservation) dropped. Letters: old A -> A, C -> B, D -> C, E -> D, F -> E, H -> F. Answer A, H -> A, F; misconception B, C -> B, E. Needs a new key check.
+- Changed in the 2026-11-15 audit: numbers differ from the knowledge-base example (16 GB VM, 10 GB, BIOS; F5). Redundancy #9 (a reservation does not raise Consumed: pair 0441/0442 holds it): old A replaced in place by the untouched-reserved-memory fact (true; Q-E2-201 settled), old B (Consumed jumps to the reservation) dropped, and old G (a throwaway: Active equals the reservation) dropped. Letters: old A -> A, C -> B, D -> C, E -> D, F -> E, H -> F. Answer A, H -> A, F; misconception B, C -> B, E. Needs a new key check.
 
 ## Metadata
 ```yaml

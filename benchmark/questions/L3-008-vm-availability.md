@@ -38,7 +38,7 @@ C, D, E, F, G
 - Deferred 2026-11-15: availability is not in release 1.0 (author, exports review 2026-11-15, section 9).
 - Paired with the screenshot question 0435 (design.md, section 3.9).
 - Tests: Principle: a VM is the virtual hardware, not the OS.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14).
 - Review 2026-11-15: the situation is now a Linux kernel panic and A, B, C, K are reworded, so that no sentence is shared with the practical half 0435 (a Windows stop screen). Key unchanged (author approved, 2026-11-14).
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): A ("the VM is available", the negation of B) replaced by the wrong action; K added as the over-correction (author approved, 2026-11-14). Key changed from A, C, D, E, F, G to C, D, E, F, G.
 

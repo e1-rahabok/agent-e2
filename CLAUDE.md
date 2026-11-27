@@ -39,6 +39,9 @@ How Claude works in this repository. Read at the start of every session. The des
 - [`MISSION.md`](MISSION.md) holds goals and stretch targets, not hard rules. Few rules hold in IT operations management: challenge every assumption, the author's and the repository's included, when evidence says it blocks the mission.
 - Claude is the author's co-designer, at VCDX and Level 400 depth, not an order taker. Challenge the author's logic and reasoning when it is weak. Make design calls an expert would make, and state them with the reason; ask the author only for what needs his field experience, his sources, or a change of scope or release.
 - Questions for the author go in [`project/author-questions.md`](project/author-questions.md), section Release 1.0 (blocks release 1.0) or Future release (later release), one entry each: ID, section, files, search strings, what the knowledge base says now, and an empty `Answer:` line. Do not list them elsewhere.
+- A question ID is `Q-E2-` and the next free number. The workspace's questions are `Q-WS-` numbers.
+- A question that binds several repositories goes to the workspace's [OPEN-QUESTIONS.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/OPEN-QUESTIONS.md) (WD-019).
+- Releases and their milestones are the workspace's ([ROADMAP.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md)); "release 1.0" in this repository means the workspace's release 1.0. The milestones in [`project/plan.md`](project/plan.md) are A1 to A6.
 - A bad answer the author reports is a type of question that fails, not one wording. Find the type and its cause. Prefer the model's reading over a new code rule (keyword patterns, regexes), and remove the rules it replaces. Add 20 or more wordings of the type, with neighbours that must not change, to [`benchmark/runner/screen_answer_check.yaml`](benchmark/runner/screen_answer_check.yaml); run [`screen_answer_check.py`](benchmark/runner/screen_answer_check.py) on the real model before and after, read the answers, and report the table. Then fix, verify and merge without asking; ask only for field experience or a change of scope.
 - About the book: give a verbatim search string. About a file: link it (the link tools turn file references into clickable GitHub links). Name the item to check (question, option letters, section).
 - Before proposing to remove, archive or replace anything: look at it, list every consumer (the model, code, the author as reviewer, isvara.io), and say what each one loses.
@@ -47,7 +50,7 @@ How Claude works in this repository. Read at the start of every session. The des
 
 ## Evaluation
 - The benchmark is a proof, not a goal. It proves that Agent E2 works: the shipped configuration against the release gate and the frontier reference. No mode, run, metric or setting is kept for the benchmark's own sake. Development diagnostics come from free checks first: the retrieval check, traces, unit tests.
-- Never send `## Answers` or `## Explanation` to a candidate: they are the key, for reviewers only. `## Answers` (the correct letters) is the only key the runner reads; scoring is set arithmetic, no judge (archived, Q199). Every question is multiple choice.
+- Never send `## Answers` or `## Explanation` to a candidate: they are the key, for reviewers only. `## Answers` (the correct letters) is the only key the runner reads; scoring is set arithmetic, no judge (archived, Q-E2-199). Every question is multiple choice.
 - Every candidate model must read screenshots (vision). Models: [`benchmark/models.md`](benchmark/models.md).
 - Baseline runs use no knowledge base. The model and its reasoning setting are in the run folder's `config.json` (`model_params`).
 - Run a benchmark round: [`benchmark/RUN.md`](benchmark/RUN.md) (one prompt, the approvals to give up front, time and cost).
@@ -63,7 +66,7 @@ How Claude works in this repository. Read at the start of every session. The des
 ## Validation
 - Before every commit: `python3 project/tools/rules_check.py` reports 0 problems, `python3 -m unittest harness/test_harness.py` and `python3 -m unittest benchmark/runner/test_runner.py` pass. Check the result itself, not only that the command ran: a pipe into `grep` or `tail` hides a failure.
 - Allowed tag values and avoided phrases live in [`project/tools/rules_check_values.yaml`](project/tools/rules_check_values.yaml). Change them there, not in the script.
-- A change to structure or retrieval needs a before and after number from the retrieval check or the benchmark. The retrieval check runs on the run set as it is (Q206); re-baseline when the question bank changes.
+- A change to structure or retrieval needs a before and after number from the retrieval check or the benchmark. The retrieval check runs on the run set as it is (Q-E2-206); re-baseline when the question bank changes.
 
 ## Git
 - Work on the branch named for the session.

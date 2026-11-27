@@ -35,7 +35,7 @@ B, C, D, F, I
 - Misconception: A: "The snapshot is just a small change log; keep it a month as a safety net, it does no harm."
 
 ## Notes
-- 2026-11-16 (author, Q251): level 100 to 300, as the reviewers read it. A new Level 100 basics question for the guard is still to write.
+- 2026-11-16 (author, Q-E2-251): level 100 to 300, as the reviewers read it. A new Level 100 basics question for the guard is still to write.
 - The datastore size and disk size are placed for distraction. The key point is that a snapshot should not be kept for days.
 - Vendor sources: Broadcom KB 318825, Best practices for using VMware snapshots in the vSphere environment (was VMware KB 1025279), https://knowledge.broadcom.com/external/article/318825 (72 hours; not a backup); Broadcom KB 323397, Snapshot removal stops a virtual machine for long time, https://knowledge.broadcom.com/external/article/323397 (stun during consolidation).
 - Option I rests on Broadcom KB 318825 only (the 72-hour rule): no knowledge file states it. URL above.
@@ -49,7 +49,7 @@ title: "Keep a two-week-old snapshot?"
 product: [vsphere, vcf-operations]
 technology: [storage]
 task: decide-capacity
-level: 300                      # Q251, author 2026-11-16: relabelled as written (was 100)
+level: 300                      # Q-E2-251, author 2026-11-16: relabelled as written (was 100)
 answer_type: deterministic
 misconception: [A]
 input: [text]
@@ -66,5 +66,5 @@ attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
 misconception_type: [cumulative-vs-current]
-status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q199): review again
+status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q-E2-199): review again
 ```

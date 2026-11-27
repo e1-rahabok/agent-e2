@@ -39,7 +39,7 @@ A, C, E
 - Misconception: B (data stored on the VM object read as a VM metric) or D (Guest OS counters assumed to come from the hypervisor).
 
 ## Notes
-- Changed in the 2026-11-15 audit: the run queue row reads the VCF Operations value per vCPU (3, about 24 threads; the old 25 read as 200 threads, Q217); key points one bullet per option with an Answer line; C replaced (the Guest OS cannot see Ready is tested by the pair 0266/0368) by the per-vCPU queue reading (true); the stem's closing instruction dropped (the runner adds it). Needs the author's review.
+- Changed in the 2026-11-15 audit: the run queue row reads the VCF Operations value per vCPU (3, about 24 threads; the old 25 read as 200 threads, Q-E2-217); key points one bullet per option with an Answer line; C replaced (the Guest OS cannot see Ready is tested by the pair 0266/0368) by the per-vCPU queue reading (true); the stem's closing instruction dropped (the runner adds it). Needs the author's review.
 
 ## Metadata
 ```yaml

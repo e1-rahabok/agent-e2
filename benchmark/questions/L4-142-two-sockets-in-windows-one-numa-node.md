@@ -56,7 +56,7 @@ B, C, G
 ## Notes
 - Review 2026-11-15: the administrator's quote and every option reworded away from the theory half 0267; D added as a false reading of esxtop; G added (the home node can move). Key changed from B, C, F to B, C, G.
 - Practical half of 0267 (pair: design.md, section 3.9).
-- No option rests on `numa.*` advanced options or on when ESXi rebuilds the vNUMA layout (open question Q216), nor on NMIG (not in the vSphere 9.1 documentation's esxtop memory panel).
+- No option rests on `numa.*` advanced options or on when ESXi rebuilds the vNUMA layout (open question Q-E2-216), nor on NMIG (not in the vSphere 9.1 documentation's esxtop memory panel).
 - Drafted 2026-11-14 for the question pairing plan (project/question-pairing-2026-11-14.md, item C35). Counts only after author approval.
 - Changed in the 2026-11-15 audit: C, D and F reworded to similar lengths; truth unchanged.
 - Converted to exports 2026-11-15 (project/practical-questions-as-exports-2026-11-15.md): Task Manager has no export, so its Sockets label stays in the administrator's words; Coreinfo as literal text, esxtop memory panel as generated text. No option changed.

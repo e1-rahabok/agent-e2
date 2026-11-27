@@ -9,7 +9,7 @@ Audit and improvement of the benchmark question bank against the knowledge base 
 - 28 new questions for knowledge the bank did not test (ids 0443-0470).
 - Answer cues cut: the longest option is correct in 49.7% of questions (was 71.5%; chance 43.6%); strong length cues 16 (was 88).
 - Every changed or new question was keyed again blind by an independent agent after the edits: 296 questions, 295 agreed at once; the one that differed (0351, a time window) was fixed so its key holds, and a final blind check of the 121 questions touched after that agreed on all 121.
-- Ten author questions, Q244-Q253 ([project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md), Release 1.0).
+- Ten author questions, Q-E2-244-Q-E2-253 ([project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md), Release 1.0).
 
 ## 2. Method
 - Models: Opus for review, breaking, blind keys and rewriting; Sonnet for scripts and the generator. No gateway credit was spent; no benchmark round was run.
@@ -27,9 +27,9 @@ Audit and improvement of the benchmark question bank against the knowledge base 
 | Finding | Count | What was done |
 |---|---|---|
 | Key wrong | 0 | - |
-| Option not decidable from the knowledge base, or decidable only from a vendor document | about 25 questions | reworded so the cited files decide it, or replaced by an option of the same truth value; the rest cite the vendor page in Notes and go to the author (Q244, Q245, Q247) |
+| Option not decidable from the knowledge base, or decidable only from a vendor document | about 25 questions | reworded so the cited files decide it, or replaced by an option of the same truth value; the rest cite the vendor page in Notes and go to the author (Q-E2-244, Q-E2-245, Q-E2-247) |
 | Throwaway distractor (nobody at Level 300 picks it) | about 45 options | replaced by a misconception or over-correction a knowledge file names |
-| Stale key points or notes after the knowledge update (ballooning, Q201, Q205, Q214, Q217, Q236, the judge) | about 60 questions | rewritten from the current files |
+| Stale key points or notes after the knowledge update (ballooning, Q-E2-201, Q-E2-205, Q-E2-214, Q-E2-217, Q-E2-236, the judge) | about 60 questions | rewritten from the current files |
 | Impossible values in a stem (0291, 0350, 0022, 0456) | 4 | recomputed |
 | Stem copies a knowledge-base example or sentence (F5) | about 12 | rebuilt with own numbers |
 | Hints or give-aways in stems | about 20 | removed or turned into raw values |
@@ -39,7 +39,7 @@ Audit and improvement of the benchmark question bank against the knowledge base 
 
 - Length and word cues: most correct options carried the reason, the hedge and the extra clause. Rewriters evened lengths and spread hedges, absolutes and "because" over correct and wrong options. Remaining: 16 strong length cues (list in the scan); Level 400 still shows the longest option correct in 55.8% (chance 44.9%).
 - Imperative options: "Open a (support) case" was wrong in 9 of 9 options and "Add ..." in 18 of 19; no new option of either shape was added.
-- Practical halves: the second reviewers held that the pairing plan sets them at Level 400 (design.md 3.9); relabels of 0401, 0431, 0438, 0440 broke. 0390 and 0403 went to 300 on the merits: Q251.
+- Practical halves: the second reviewers held that the pairing plan sets them at Level 400 (design.md 3.9); relabels of 0401, 0431, 0438, 0440 broke. 0390 and 0403 went to 300 on the merits: Q-E2-251.
 
 ## 4. Redundancy (cap: two questions per fact)
 - 60 canonical facts were tested by three or more running questions (counting only correct and misconception options). Largest: a rolled-up point is a mean, so a burst is diluted (13 questions); whether VMs wait is read per VM, not from utilization (9); limit time is inside Ready (7); swapped and compressed pages are past reclamation (7); admission control counts reservations, not usage (8 or more).
@@ -84,7 +84,7 @@ Audit and improvement of the benchmark question bank against the knowledge base 
 | 0450 | Balloons that do not empty | balloon-target |
 | 0451 | Host Granted above physical memory | host granted, VM shared |
 | 0452 | Compressed memory and the Consumed drop | host compressed |
-| 0453 | PowerCLI memory report of a SQL Server VM | entitlement (as defined since Q230), QuickStats |
+| 0453 | PowerCLI memory report of a SQL Server VM | entitlement (as defined since Q-E2-230), QuickStats |
 | 0454 | Memory Demand far below Consumed | host utilization, memory-capacity |
 | 0455 | Batch VM pages under a memory limit | swap-and-compression, double paging |
 | 0456 | HA admission green on a tiered cluster | memory-tiering and HA before 9.1.1 |
@@ -128,8 +128,8 @@ Audit and improvement of the benchmark question bank against the knowledge base 
 - The retrieval check changed with the question text (options and stems), not with any knowledge or harness change: kept.
 
 ## 8. Left for the author
-- Author questions Q244-Q253: three vendor facts for HA percentage admission control (0330 deferred until then); alert cycles, criticality and Child/Descendant (0274, 0275, 0340); adapter Highest latency weighting (0072); a Linux memory file (0272, 0387, 0079); the 0345 reviewer disagreement; two contradictions in memory-tiering; overhead and VM logging (0017); the level labels to confirm; the guest-os-sizing "Active shows the limit" line (0079); the reversed esxtop units misconception line (0412).
-- Basics guard: eight Level 100-200 questions read as Level 300 to the reviewers (0187, 0039, 0041, 0043, 0045, 0049, 0271, 0273); labels kept as decided; Q251 asks how to keep them basic.
+- Author questions Q-E2-244-Q-E2-253: three vendor facts for HA percentage admission control (0330 deferred until then); alert cycles, criticality and Child/Descendant (0274, 0275, 0340); adapter Highest latency weighting (0072); a Linux memory file (0272, 0387, 0079); the 0345 reviewer disagreement; two contradictions in memory-tiering; overhead and VM logging (0017); the level labels to confirm; the guest-os-sizing "Active shows the limit" line (0079); the reversed esxtop units misconception line (0412).
+- Basics guard: eight Level 100-200 questions read as Level 300 to the reviewers (0187, 0039, 0041, 0043, 0045, 0049, 0271, 0273); labels kept as decided; Q-E2-251 asks how to keep them basic.
 - Review before they count: 293 questions are draft and 3 reviewed; 0018, 0042, 0050 and 0266 were reviewed and are draft again after changes in substance.
 - Knowledge-base issues found by the audit (no file under knowledge/ was edited): appendix B, 54 contradictions, 21 missing facts a key rests on, 15 open review notes under a key.
 - Remaining minor defects the last checks noted, not fixed: some option pairs close to negation (0453 A/B, 0456 B/H, 0188 A/B, 0414 A/B, 0298 A/K, 0027 C/D, 0111 A/H, 0114 G/H); 0406 D needs a statistics-level condition; 0046's export rows are round disk sizes (the author's own export); 0444-0470 levels are the writers' calls.
@@ -454,7 +454,7 @@ Verdict is HOLDS for every row (a second reviewer held it, or nobody broke it).
 | C2 | same file | State table: red only as Invalid | "A cluster also turns red when HA can no longer meet its failover capacity" | 0073 (stem must exclude the HA cause) | HOLDS (tidy-up) |
 | C3 | vsphere/object-types/cluster/configuration/drs-migration-levels vs vsphere/object-types/cluster/cluster-health-check | "Score above 80%: no performance impact" | "DRS Score 80%+ means no contention" | 0354 D, 0232 B | HOLDS |
 | C4 | vsphere/object-types/cluster/cluster-vm-contention | step 2: "A depth row not green with the breadth rows green: one VM deep" | several VMs on one host (14 of 200 on esx-04) belong in step 3 | 0354 | HOLDS |
-| C5 | vsphere/technology/cpu/concepts/virtual-numa vs vSphere 9.1 docs p. 1939 | "ESXi rebuilds the topology at every power cycle" | docs: topology fixed once initialised unless vCPU count changes (numa.autosize.once); Q216 open | 0113, 0267 (avoid it) | HOLDS |
+| C5 | vsphere/technology/cpu/concepts/virtual-numa vs vSphere 9.1 docs p. 1939 | "ESXi rebuilds the topology at every power cycle" | docs: topology fixed once initialised unless vCPU count changes (numa.autosize.once); Q-E2-216 open | 0113, 0267 (avoid it) | HOLDS |
 | C6 | vsphere/technology/cpu/metrics/host/demand | "Demand above Usage can be reservation alone" (unscoped) | same file scopes it: "in VCF Operations the gap can be reservation alone" | 0058 (key point E) | HOLDS |
 | C7 | vsphere/technology/cpu/concepts/cpu-frequency | "The gap between base and highest Turbo is about 2x" | same file: Single-Core Turbo 7%-77% above base | none named | HOLDS |
 | C8 | vsphere/technology/cpu/metrics/virtual-motherboard/run, net-run vs overlap | "Remove Overlap first: Net Run = Run - Overlap" | overlap, Effect on the Guest OS: "Include Overlap in Guest OS sizing"; overlap.md also says "removes it from Run" | 0008, 0110 E, 0371 D | HOLDS |
@@ -539,7 +539,7 @@ Verdict is HOLDS for every row (a second reviewer held it, or nobody broke it).
 | vsphere/object-types/cluster/configuration/drs-migration-levels | Whether VCF Operations 9.1 still offers the Predictive DRS data provider (also dpm, Power-on lag) | 0238 J |
 | vsphere/technology/cpu/metrics/virtual-motherboard/demand | VM CPU Demand under a limit: file says equals Usage; Web Services API 9.1 defines cpu.demand without limit | 0102 I, 0103 B, 0371 E (decided by Ready or Max Limited, keys hold) |
 | vsphere/technology/cpu/concepts/numa | Remote memory for a VM whose vCPUs fit one node but memory does not: "Needs a lab test on a 9.1 host" | 0067 A, E, G, H, M |
-| vsphere/technology/cpu/concepts/virtual-numa | Rebuild at every power cycle vs docs p. 1939 (Q216, Future release) | 0113, 0267 (avoid it) |
+| vsphere/technology/cpu/concepts/virtual-numa | Rebuild at every power cycle vs docs p. 1939 (Q-E2-216, Future release) | 0113, 0267 (avoid it) |
 | vsphere/tools/esxtop/storage | VAAI offload raises KAVG: KB 342563 says nothing on KAVG | 0043 G |
 | vcf-operations/features/real-time-metrics | Object type that carries ESX Top state: policy page says Virtual Machine, Workbench page says Host System and Virtual Machine | 0277 C |
 | vcf-operations/features/peak-20-second-metrics | Key of Peak Transmitted Packet Dropped (net\|droppedTxPct_max vs net\|droppedTx_summation) | 0313, 0421 |
@@ -553,31 +553,31 @@ Verdict is HOLDS for every row (a second reviewer held it, or nobody broke it).
 
 ### Stale cross-references in question files
 
-Q214 (a limit balloons first, e42d026), Q201 and Q205 (deda489), Q217 (26d511c) and Q202 are settled; these Notes still call them open or speak the old reading.
+Q-E2-214 (a limit balloons first, e42d026), Q-E2-201 and Q-E2-205 (deda489), Q-E2-217 (26d511c) and Q-E2-202 are settled; these Notes still call them open or speak the old reading.
 
 | Question | File (benchmark/questions) | Stale text |
 |---|---|---|
-| 0052 | L2-013-balloon-above-zero.md line 39 | "open author question Q214" |
-| 0014 | L3-007-reservation-cpu-vs-memory.md line 37 | "open author question Q201" |
-| 0140 | L4-055-memory-limit-swap-and-compress.md line 46 | "No option on ballooning under a limit (open author question Q214)" |
-| 0239 | L4-080-monday-web-slow-pool-limit.md line 56 | "whether a limit causes ballooning is open (Q214)" |
-| 0291 | L4-096-memory-limit-balloons-on-an-idle-host.md line 51 | Q214 open; Notes state the old reading "a limit causes Compressed and Swapped, not Balloon directly" |
-| 0350 | L4-118-vm-night-job-health-check-findings.md line 56 | "open question Q214" |
-| 0403 | L4-145-one-vm-waits-while-host-latency-stays-low.md line 48 | "open author questions Q205 and Q214" (Q205 settled) |
-| 0390 | L4-141-vsan-host-consumed-in-maintenance-mode.md line 39 | cites Q201 as a reason for wording; check against deda489 |
-| 0018 | L4-008-vm-vs-guest-os-metrics.md | still shows "Guest OS CPU Run Queue 25" on an 8-vCPU VM; Q217 made the VCF Operations value per vCPU |
+| 0052 | L2-013-balloon-above-zero.md line 39 | "open author question Q-E2-214" |
+| 0014 | L3-007-reservation-cpu-vs-memory.md line 37 | "open author question Q-E2-201" |
+| 0140 | L4-055-memory-limit-swap-and-compress.md line 46 | "No option on ballooning under a limit (open author question Q-E2-214)" |
+| 0239 | L4-080-monday-web-slow-pool-limit.md line 56 | "whether a limit causes ballooning is open (Q-E2-214)" |
+| 0291 | L4-096-memory-limit-balloons-on-an-idle-host.md line 51 | Q-E2-214 open; Notes state the old reading "a limit causes Compressed and Swapped, not Balloon directly" |
+| 0350 | L4-118-vm-night-job-health-check-findings.md line 56 | "open question Q-E2-214" |
+| 0403 | L4-145-one-vm-waits-while-host-latency-stays-low.md line 48 | "open author questions Q-E2-205 and Q-E2-214" (Q-E2-205 settled) |
+| 0390 | L4-141-vsan-host-consumed-in-maintenance-mode.md line 39 | cites Q-E2-201 as a reason for wording; check against deda489 |
+| 0018 | L4-008-vm-vs-guest-os-metrics.md | still shows "Guest OS CPU Run Queue 25" on an 8-vCPU VM; Q-E2-217 made the VCF Operations value per vCPU |
 | 0365 | L3-043-default-shares-follow-vcpu-count.md | Notes say a knowledge line on per-VM shares is being corrected; ready.md line 45 is corrected |
 | 0264 | L4-085-windows-free-low-standby-high.md line 34 | names its pair as 0263; metadata says 0382 |
 | 0360 | L4-128-linux-two-disks-same-queue-and-utilization.md line 88 | `pair: "0419"` while the export plan drops 0419 |
 | 0090 | L4-042-erp-slow-after-change-window.md | cites Broadcom KB 85393 (legacy number of KB 338438, fixed in 8.0 U3j) and says no file states the consolidation stun (vsphere/object-types/vm/vmotion now does) |
 | 0186 | L4-067-nfs-datastore-latency-in-esxtop.md | calls 0050 deferred; 0050 is reviewed |
-| 0343 | L4-113-datastore-space-alert-fired-what-next.md | still speaks to a judge (judge archived, Q199) |
+| 0343 | L4-113-datastore-space-alert-fired-what-next.md | still speaks to a judge (judge archived, Q-E2-199) |
 | 0187 | L1-008-keep-a-six-week-old-snapshot.md | "six-week-old" against prompt "two weeks ago" |
-| 0074, 0212, 0214 | Notes (not a Q214 item) | assume VM net.droppedRx/droppedTx history at the default statistics level; vcenter-statistics says VMs keep no network drops there; level not stated in the stems and the counters are absent from catalog/vcenter-api-counters.yaml |
+| 0074, 0212, 0214 | Notes (not a Q-E2-214 item) | assume VM net.droppedRx/droppedTx history at the default statistics level; vcenter-statistics says VMs keep no network drops there; level not stated in the stems and the counters are absent from catalog/vcenter-api-counters.yaml |
 
 ## Appendix C. Per-question items left for the author
 - 0003: the question was reviewed as free text and converted on 2026-11-14; with five options replaced it needs a full review.
-- 0006: key check note: Q236's "capacity at base clock" wording makes A arguable under "give the CPU capacity"; the key point avoids calling 20 GHz a capacity.
+- 0006: key check note: Q-E2-236's "capacity at base clock" wording makes A arguable under "give the CPU capacity"; the key point avoids calling 20 GHz a capacity.
 - 0007: the reviewer-only images in Notes show the original quiz numbers (6520P; 20 cores at 1 GHz vs 10 at 2 GHz). Replace them if the images should match the prompts.
 - 0008: the knowledge base contradicts itself on Overlap in Guest OS sizing (net-run, run: remove; overlap, guest-os-sizing: keep inside Run); the key holds either way.
 - 0008: Q0008 level 400: the reviewer reads it as generous; noted, not changed.
@@ -604,7 +604,7 @@ Q214 (a limit balloons first, e42d026), Q201 and Q205 (deda489), Q217 (26d511c) 
 - 0086: regenerating the CSV with real `esxtop -b` perfmon headers waits for the esxtop template's header/data field-count mismatch.
 - 0106: Q0106 level 400 rests on one rule of thumb (read Ready against Run), per the reviewer; not changed.
 - 0110: Overlap in Guest OS sizing (knowledge base contradiction, see Q0008).
-- 0113: the power-cycle remedy stays out of the options until Q216 (topology rebuild on power cycle) is answered.
+- 0113: the power-cycle remedy stays out of the options until Q-E2-216 (topology rebuild on power cycle) is answered.
 - 0114: misconception_type is empty at Level 300: no listed type fits B ("same vCPU total, same performance").
 - 0142: the Swap target base of comparison (Swapped alone, or Swapped + Compressed) is still two ways in the knowledge base; no option depends on it.
 - 0144: file name says 6 GB while the title says 11 GB (rename when the lead renumbers)
@@ -626,14 +626,14 @@ Q214 (a limit balloons first, e42d026), Q201 and Q205 (deda489), Q217 (26d511c) 
 - 0266: re-review (was reviewed).
 - 0272: the knowledge base has no Linux memory file (available vs free, page cache, cgroup v2 memory.max/high, OOM messages); 6 of 10 options rest on vendor documents (declared in Notes). A guest-os/memory/linux-memory file would let Agent E2 help here.
 - 0274: the alert-definitions body should state the alert-level Wait/Cancel Cycle and the cancel-cycle meaning; A, C, E are decided from vendor pages until then.
-- 0274: stay as they are (author question Q245: alert-level Wait/Cancel Cycles, Cancel Cycle meaning, Symptom Based criticality and Any/All between sets are not in the vcf-operations/alert-definitions body).
+- 0274: stay as they are (author question Q-E2-245: alert-level Wait/Cancel Cycles, Cancel Cycle meaning, Symptom Based criticality and Any/All between sets are not in the vcf-operations/alert-definitions body).
 - 0275: Symptom Based criticality is not in the KB body (C vs D decided from vendor pages).
 - 0277: real-time-metrics gives no retention for 2-second data (C assumes 10:15 is still there at 14:30).
 - 0277: "2-second data starts at activation (no back-fill)" is not stated in the knowledge base (Notes admit it). Not changed.
 - 0279: G rests on the unchecked line "one group rule matches VMs of several vCenter adapter instances" (business-applications review note).
 - 0279: Q0279 G and Q0235 G, I: rest on knowledge lines with open review notes (rule across vCenter adapter instances; risk-level mapping). Not changed.
 - 0291: knowledge_main moved to memory-limit; per CLAUDE.md a retrieval-scoring change needs a before and after number from the retrieval check, done for the whole set (section 7).
-- 0293: Q216 (a), the lab check of `numa.allowHotadd`, is still open; I stays false on hardware 19 whatever it finds. Knowledge-base issue 7: vm-configuration-review (knowledge_main) states the hot-add rule with no hardware-version qualifier.
+- 0293: Q-E2-216 (a), the lab check of `numa.allowHotadd`, is still open; I stays false on hardware 19 whatever it finds. Knowledge-base issue 7: vm-configuration-review (knowledge_main) states the hot-add rule with no hardware-version qualifier.
 - 0294: Level labels the re-review reads as generous (not changed): Q0294 (300), Q0111 F is Level 200.
 - 0295: misconception_type [layer-confusion] does not fit (per-adapter against host-wide is a scope, not a layer); the review proposed [] or same-name-other-object, neither fits clearly, so it is left as is.
 - 0296: misconception_type stays empty on a Level 400 question; no listed type fits a sizing-formula question.

@@ -139,7 +139,7 @@ def main():
             m = re.search(r'/metrics/(virtual-motherboard|host|cluster|datastore|distributed-switch)/', f)
             if m and len(fm.get('object') or []) != 1:
                 bad(f, f'a metric file in metrics/{m.group(1)}/ has exactly one object type')
-        # Writing style (audit markers, words to avoid, AI-speak) is the review's job, not lint's (2026-11-10). Titles and headings: check_titles (Q181).
+        # Writing style (audit markers, words to avoid, AI-speak) is the review's job, not lint's (2026-11-10). Titles and headings: check_titles (Q-E2-181).
 
     seen_ids, level_numbers, pairs = {}, {}, {}
     for f in sorted(glob.glob('benchmark/questions/**/*.md', recursive=True)):
@@ -225,7 +225,7 @@ def main():
             bad(f, f'knowledge_main "{km}" must also be listed in knowledge (benchmark/README.md)')
         at = (fm or {}).get('answer_type')
         if at != 'deterministic':
-            bad(f, f'answer_type "{at}" must be deterministic: every question is multiple choice (Q199; benchmark/design.md, section 3.3)')
+            bad(f, f'answer_type "{at}" must be deterministic: every question is multiple choice (Q-E2-199; benchmark/design.md, section 3.3)')
         if (fm or {}).get('level') not in (100, 200, 300, 400):
             bad(f, 'level must be 100, 200, 300 or 400 (benchmark/design.md, section 3.2)')
         atts = (fm or {}).get('attachments') or []
@@ -304,7 +304,7 @@ def main():
     check_source_document({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
     check_image_text(allowed, bad)
     check_diagram_text(bad)
-    check_titles(bad)  # titles and headings are machine input: harness/knowledge_loader.py puts both in front of every chunk (Q181)
+    check_titles(bad)  # titles and headings are machine input: harness/knowledge_loader.py puts both in front of every chunk (Q-E2-181)
 
     # every image file must be linked from a knowledge file, so the AI gets its context
     for img in glob.glob('knowledge/**/images/*.png', recursive=True):
@@ -372,7 +372,7 @@ def check_terminology(docs, bad):
             if e['label'] or e['invites'] or e['better']:  # a product label entry (KNOWLEDGE-ENGINEERING.md, Product label and better model)
                 if not (e['label'] and e['invites'] and e['better'] and all(e['better']) and e['file']):
                     bad(g, f'term "{t}": a product label entry has Product label, Invites, "Better name: Name: better model" and File')
-    import upfront_knowledge as _primer  # up-front misconceptions: one home, the marked line of a file (Q211)
+    import upfront_knowledge as _primer  # up-front misconceptions: one home, the marked line of a file (Q-E2-211)
     for i, d in docs.items():
         b = d.meta.get('up_front')
         if b and not _primer.up_front_line(d, b):
@@ -704,7 +704,7 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                     if r.get('kb') in bodies and r.get('quote') and r['quote'] not in bodies[r['kb']]:
                         bad(path, f'{w}: quote no longer in {r["kb"]}: update the row or the file')
         elif name == 'user-terms.yaml':
-            import user_terms as _terms  # product label rows take their note from the glossary (Q208)
+            import user_terms as _terms  # product label rows take their note from the glossary (Q-E2-208)
             labels, labelled = _terms.labels(), {}
             seen = set()
             for n, r in enumerate(rows):

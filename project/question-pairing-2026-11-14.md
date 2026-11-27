@@ -26,7 +26,7 @@ The theory and practical pairing of benchmark/design.md, section 3.9, applied to
 3. Leaks: each CSV whose values a knowledge file states (0081, 0085, 0102, 0103, 0142) or copies (0089, 0101, 0140, 0151) is regenerated with new numbers; the knowledge examples stay. 0104: its knowledge example (run-vs-used-gap) loses its number instead, since 0104's base is an open question (item 6).
 4. Facts over the two-question cap: as recommended (0002 with 0102; 0003 with 0104; 0059 keeps what Contention counts; 0066 with 0103; 0331 J dropped; 0356 with 0089; option-level copies removed from the weaker question).
 5. 0022: the author's view is that the balloon driver comes from the VMware Tools service, so "Tools not running" stops ballooning. The knowledge base (ballooning, Broadcom KB 313773) says the driver is a kernel driver (Linux `vmw_balloon` is in the kernel; open-vm-tools does not contain it). Option D is reworded to the case both agree on (VMware Tools not installed on a Windows VM); key A,B,D,E holds. Raised as an author question.
-6. 0104: a VCF Operations 5-minute ms value averages the 15 values of 20 seconds, so 100% is 20,000 ms per vCPU (Q224, settled 2026-11-15 from Broadcom KB 315941 and KB 444403). 0104's export was rescaled to that base; pair D1 is no longer held.
+6. 0104: a VCF Operations 5-minute ms value averages the 15 values of 20 seconds, so 100% is 20,000 ms per vCPU (Q-E2-224, settled 2026-11-15 from Broadcom KB 315941 and KB 444403). 0104's export was rescaled to that base; pair D1 is no longer held.
 7. 0004: the values come from the chart, not the typed approximations. 0016 and 0140: changed as proposed.
 8. Masking: every VM name is masked, in existing and new screenshots.
 9. Lint: the singular stems ("What is its", "By how much", "How is ... related", "What is the relationship") join `question_prompt_hints`.
@@ -57,7 +57,7 @@ Key: "no" or old → new letters. NT = not a theory question (setting or capacit
 | 0100 | L4-44 Used VM vs vCPU instance | T1 B; T2 A/E; T4; T5; T8 "(VM only)" | drop the hint; B "VM Used equals the sum of its vCPU instances" (F); H "The gap is Turbo counted again" (F); I "Add a vCPU" (F) | no |
 | 0266 | L4-87 steal time, Windows busy | passes | - | no |
 | 0267 | L4-88 two sockets, one NUMA node | T2 A/B, D/H; T4 | A "Two sockets in Task Manager mean two physical NUMA nodes" (F); D positive; add L "Cores per socket only affects licensing" (F) | no |
-| 0293 | L4-100 CPU hot add, NUMA (NT) | T1, T2, T8 (allowHotadd line touches Q216) | drop that line; single facts A, B, E, G true | B → A,B,E,G |
+| 0293 | L4-100 CPU hot add, NUMA (NT) | T1, T2, T8 (allowHotadd line touches Q-E2-216) | drop that line; single facts A, B, E, G true | B → A,B,E,G |
 | 0331 | L4-111 esxtop load average | T2 D/I; T4 | D positive; add L "Load 2.60: every VM waits 60%" (F) | no |
 | 0357 | L4-127 same VM, two tools | T1 B; T2 A/B, E/H; T4; T5; T8 ("no counter called Contention") | remove the clause; reword A, B, E; add O "VCF Operations CPU Usage has its own formula" (F); P "9.8% Contention: add a host" (F) | no |
 
@@ -149,7 +149,7 @@ Key: "no" or old → new letters. NT = not a theory question (setting or capacit
 | A11 | 0143 | 0142 | Swapped is a current amount; target vs result | 0142 CSV leak | m |
 | A12 | 0356 | 0089 | VCF Operations peak within collection cycle | 0089 near-copy: new numbers | m |
 | A13 | 0061 | 0082 | Packets Dropped (%) high at low traffic | - | m |
-| A14 | 0291 | 0140 | memory limit swaps on a host with free memory | 0140 A rests on Q205: drop it | m |
+| A14 | 0291 | 0140 | memory limit swaps on a host with free memory | 0140 A rests on Q-E2-205: drop it | m |
 | A15 | 0186 | 0050 | esxtop NFS: DAVG is beyond the NFS client | 0050 image has drawn marks on the answer row: recapture or mask the marks | m |
 | A16 | 0043 | 0086 | full device queue: wait in KAVG/QAVG, DAVG low | 0043 rewrite; 0086 stem reads the CSV for the candidate | m |
 
@@ -174,7 +174,7 @@ Key: "no" or old → new letters. NT = not a theory question (setting or capacit
 | B16 | 0109 | Swap Wait is a memory cause in a CPU state (L300, swap-wait) | l |
 | B17 | 0147 | a VM waits on the NVMe tier in proportion to its reads (L300, memory-tiering) | l |
 | B18 | 0216 | a broadcast reaches every VM in its VLAN (L300, distributed-switch packets) | l |
-| held | 0141 | Granted vs limit: rests on Q214 | - |
+| held | 0141 | Granted vs limit: rests on Q-E2-214 | - |
 - No pair: 0034, 0037, 0042, 0051 (Level 100-200 recognition: the screen matches expectation; remove the stale `## Input to supply`), 0046 (provisioned vs used; the fact sits in 0080 and 0343), 0083 (capacity decision).
 
 ### C. Theory exists: write the practical half (35, awaiting-input: the author's screenshots)
@@ -241,7 +241,7 @@ Medium
 | D12 | Linux `st` reports Ready only with the steal clock enabled | guest-os-vs-vm-cpu | st 0 means never frozen / Linux never reports steal / add vCPUs | T300, P400 | Linux VM, default advanced settings, host contention: `top` with 0.0 st; vCenter Readiness 10%+ same window. Needs a vSphere source (only KB 434983, written for Tanzu) | m |
 | D13 | host Memory Latency averages its VMs: one waiting VM hides | host/latency | host 0.3% so no VM waits / rises only when all wait / close the ticket | T300, P400 | host Latency (%) Past day 0.5% or less; one VM at 5%+ for 30 min (limit below its working set) | m |
 | D14 | a VM memory reservation moves no VM counter (Consumed, Granted, Entitlement, Overhead); it shows in the host reservation counters and in the VM's settings and task log | vm-memory-metrics, host-memory-metrics, host/reservation | Consumed should jump to the reservation / the change failed / reserve every VM at no cost | T300 (0441), P400 (0442) | vSphere Client VM chart export and task list (lab, 2026-11-15) | added 2026-11-15, both halves written and running |
-- Deferred: knowledge gap or open author question. vSphere Client "Guest memory" label (consumed.md vs the vSphere API); Reclaimable Idle vs Idleness Indicator (idle-vm review notes); VCF Operations "Total" packet metrics (labels); ESXi Memory Utilization (Q215, Q221); cluster Consumed vs the sum of hosts (review note); VM Used above the vCPU sum (system.md note); Other Wait on an idle VM (needs a field screenshot).
+- Deferred: knowledge gap or open author question. vSphere Client "Guest memory" label (consumed.md vs the vSphere API); Reclaimable Idle vs Idleness Indicator (idle-vm review notes); VCF Operations "Total" packet metrics (labels); ESXi Memory Utilization (Q-E2-215, Q-E2-221); cluster Consumed vs the sum of hosts (review note); VM Used above the vCPU sum (system.md note); Other Wait on an idle VM (needs a field screenshot).
 - Not proposed (cap reached): host Ready as a sum (0016 + 0115); Latency vs Contention (four questions); 20-second peaks (0089 + 0356).
 
 ## 5. Defects found on the way
@@ -251,7 +251,7 @@ Medium
 - Stale `## Input to supply` in 0034, 0037, 0042, 0050, 0051.
 - Stems or options copied from a knowledge file (recall, not reasoning): 0027, 0048, 0056, 0061, 0094, 0144.
 - Knowledge contradictions, fixed as general facts in Phase 2 after a vendor check:
-  - host/demand misconception line says VCF Operations "adds" the VMs' reservations; its table and your Q218 answer say "the higher of".
+  - host/demand misconception line says VCF Operations "adds" the VMs' reservations; its table and your Q-E2-218 answer say "the higher of".
   - collection-interval, Short problems: the 08:00 point covers 07:55-08:00 (idle); only 08:05 and 08:10 are half busy.
   - vcenter-statistics: "charts convert network usage to Mbps" and "labelled Kbps but measured in KBps" in the same section; 0029 and throughput say KBps.
   - supply.md usable-capacity table reads as the HA host covering maintenance; 0233's key says otherwise.
@@ -260,14 +260,14 @@ Medium
   - splitrx-mode lacks the restart rule (Performance Best Practices); network-configuration-review lacks the vmkping and 28-byte header facts (Broadcom KB).
   - disk.md: Requests (summation) and requests per second "basically the same".
 - Contradictions that may need you (raised only if vendor documents do not settle them):
-  - esxtop/cpu: "%RUN can be twice %USED" on Hyper-Threading vs used.md and hyper-threading (Used 62.5% at Run 100%). Close to Q220.
+  - esxtop/cpu: "%RUN can be twice %USED" on Hyper-Threading vs used.md and hyper-threading (Used 62.5% at Run 100%). Close to Q-E2-220.
   - noisy-neighbour: "shares are per VM, not per vCPU" vs ready.md and vcpu-states (default shares per vCPU). 0107 D and B12 depend on it.
   - Consumed called "the main capacity counter" (host/ballooned, host-memory-metrics) and "too conservative" (host/utilization).
 
 ## 6. Ranking by field frequency
 - High (26): A1-A6; B1-B3; C1-C13; D1-D4.
 - Medium (51): A7-A16; B4-B13; C14-C35; D5-D13.
-- Low (5): B14-B18. Held: 0141 (Q214).
+- Low (5): B14-B18. Held: 0141 (Q-E2-214).
 - Total: 82 pairs (16 ready, 66 to write). New questions: 79. The author's screenshots: 48 new, plus 1 recapture (0050).
 
 ## 7. Phase 2: writers
@@ -289,10 +289,10 @@ One change set. Each writer reads this whole plan, writes only its own files and
 - Run set 226: 196 kept (0276 and 0278 retired), 30 new theory questions. 47 practical halves wait for the author's screenshots (`awaiting-input`). 81 pairs: 34 with both halves running, 47 waiting for a capture.
 - Final ids of the new questions: 0364-0440 (the writers' ranges of section 7 were closed up before the commit). Item to id: B1-B18 and D theory halves are the draft questions 0364-0440 whose `source_path` names the item; each file's Notes name its pair.
 - 98 existing questions rewritten (69 synthetic, 29 the author's); 49 keys changed letters, some only relettered.
-- Changed from the plan: D1 held for Q224; 0184 unpaired from 0062 (0062 tests another fact); 0145 keeps no over-correction (a setting question; the candidate repeated 0146 G); 0140 stays paired with 0291 (0291's options hold whichever way Q214 is answered); 0104 keeps its base (Q224).
+- Changed from the plan: D1 held for Q-E2-224; 0184 unpaired from 0062 (0062 tests another fact); 0145 keeps no over-correction (a setting question; the candidate repeated 0146 G); 0140 stays paired with 0291 (0291's options hold whichever way Q-E2-214 is answered); 0104 keeps its base (Q-E2-224).
 - Independent review: seven agents decided every option from the knowledge files before reading the key; every key letter matched; the options that could not be decided and the give-aways between pair halves were fixed (project/plan.md, decision of 2026-11-15).
 - Added 2026-11-15: pair D14, 0441 (theory, Level 300) and 0442 (practical, Level 400: the author's VM chart export and the reconfigure task list). Run set 228. 82 pairs: 35 with both halves running.
-- Author questions raised: Q223-Q228 ([project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md)).
+- Author questions raised: Q-E2-223-Q-E2-228 ([project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md)).
 
 ### Screenshots to capture (47)
 - Superseded 2026-11-15: these practical halves become exports (CSV or tool text), not screenshots. Review and change list: [practical-questions-as-exports-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/practical-questions-as-exports-2026-11-15.md).

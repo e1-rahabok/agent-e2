@@ -6,7 +6,7 @@ The markdown file is the single source. Two step formats are read:
   - '## Step a: <title>' sections (one step per section).
 A step that names another step ('step 4', '→ step 2') gets that step number in 'refers_to'.
 Today read by lint (every flow parses) and the unit tests; the agent reads flow files whole (tier 1 of reading_plan.py) and
-will call this module when flow steps become executable (Q166, harness/AGENT.md, section 4.3).
+will call this module when flow steps become executable (Q-E2-166, harness/AGENT.md, section 4.3).
 """
 import re
 

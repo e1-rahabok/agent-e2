@@ -36,7 +36,7 @@ A, D, J
 - Misconception: B: "The counters don't agree, so one of them is broken."
 
 ## Notes
-- 2026-11-16 (author, Q251): level 200 to 300, as the reviewers read it. A new Level 200 basics question for the guard is still to write.
+- 2026-11-16 (author, Q-E2-251): level 200 to 300, as the reviewers read it. A new Level 200 basics question for the guard is still to write.
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Revised 2026-11-12 for question set 1.0: the only VM on the datastore, so another VM cannot explain it. Counts only after author approval.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): one fact per option; the mechanism (old E, false) stated positively as D; over-correction H and wrong action I added; old B (another VM) dropped, as the stem rules it out. Key changed from A, I to A, D.
 - Audit 2026-11-15: level 200 -> 300 (it reads two counters at two layers and applies the snapshot signature); J added (NFS without array snapshots keeps a redo-log chain, next to F on vSAN ESA). Key changed from A, D to A, D, J.
@@ -48,7 +48,7 @@ title: "Datastore read IOPS above virtual disk read IOPS"
 product: [vsphere]
 technology: [storage]
 task: troubleshoot
-level: 300                      # Q251, author 2026-11-16: relabelled as written (was 200)
+level: 300                      # Q-E2-251, author 2026-11-16: relabelled as written (was 200)
 answer_type: deterministic
 misconception: [B]
 input: [text]

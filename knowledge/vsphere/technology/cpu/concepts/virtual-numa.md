@@ -77,7 +77,7 @@ source:
   path: Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (p. 57); vSphere 9.1, vSphere Resource Management > Using NUMA Systems with ESX > Using Virtual NUMA (p. 1939), Virtual Topology in ESX (pp. 1939-1940), Virtual NUMA Controls (option numa.autosize.once, pp. 1940, 1945)
 corrections: []
 review_notes:
-- 'To check: Sections ''Topology initialization'' and ''Misconceptions'': the text says 9.1 rebuilds the topology at every power cycle; the vSphere 9.1 documentation, Using Virtual NUMA (p. 1939), says the topology does not change once initialized unless the vCPU count changes, and lists numa.autosize.once (pp. 1940, 1945). Lab checks in Q216 (project/author-questions.md).'
+- 'To check: Sections ''Topology initialization'' and ''Misconceptions'': the text says 9.1 rebuilds the topology at every power cycle; the vSphere 9.1 documentation, Using Virtual NUMA (p. 1939), says the topology does not change once initialized unless the vCPU count changes, and lists numa.autosize.once (pp. 1940, 1945). Lab checks in Q-E2-216 (project/author-questions.md).'
 - 'To check: Section ''Topology initialization'': the vCenter cluster advanced setting VPXD_PersistVnuma; not in the vSphere 9.1 documentation PDF; vSphere 9.1 Resource Management, Using Virtual NUMA (https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/using-numa-systems-with-esxi/using-virtual-numa.html).'
 status: draft
 ```

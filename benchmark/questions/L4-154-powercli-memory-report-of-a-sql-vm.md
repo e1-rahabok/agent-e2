@@ -50,7 +50,7 @@ A, C, F, H
 
 ## Notes
 - Sources: the knowledge base, VM Memory Consumed (Formula: the API quick statistics `guestMemoryUsage` and `hostMemoryUsage`; Consumed excludes overhead and cannot exceed configured memory), VM Memory Active (sampled ESXi estimate), VM Memory Entitlement (scheduler value; below configured memory is no fault without reclamation or Latency; does not follow a reservation; no formula).
-- Author decision Q230 (2026-11-15): Entitlement is tested here only as the knowledge base now defines it, a scheduler value with one troubleshooting use.
+- Author decision Q-E2-230 (2026-11-15): Entitlement is tested here only as the knowledge base now defines it, a scheduler value with one troubleshooting use.
 - Changed in the 2026-11-16 re-review: quick statistics are point-in-time values, so the script now samples them hourly and averages them; only the `Get-Stat` counters are Past day averages.
 - The overhead of 1,140 MB is about 3.5% of 32 GB, inside the range of documented per-VM overhead.
 

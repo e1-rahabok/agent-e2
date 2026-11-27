@@ -25,7 +25,7 @@ IMAGE_EXT = ('.png', '.jpg', '.jpeg', '.webp')
 # A prompt links each attachment by its path, e.g. [the attached chart](0004/chart.png), so a reviewer can open it on GitHub.
 # The model reads only the link text: the target is stripped, as knowledge_loader.FILE_LINK does for knowledge links (no token cost).
 ATTACH_LINK = re.compile(r'\[([^\]\n]+)\]\((\d{4}/[^)\s]+)\)')
-LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'  # 25 written options at most: Unsure takes the next letter (Q199, 2026-11-14: no fixed option count)
+LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'  # 25 written options at most: Unsure takes the next letter (Q-E2-199, 2026-11-14: no fixed option count)
 OPTION = re.compile(r'^(?:[-*]\s+)?([A-Y])\.\s+(.*)$')  # 'A. text' or '- A. text' (a bullet renders as a list on GitHub)
 
 
@@ -45,7 +45,7 @@ class Question:
         self.answer_type = self.meta.get('answer_type', 'judged')
         self.misconception = [str(a) for a in (self.meta.get('misconception') or [])]
         self.knowledge = list(self.meta.get('knowledge') or [])
-        self.knowledge_main = str(self.meta.get('knowledge_main') or '')  # the file that holds the answer or the misconception (Q130)
+        self.knowledge_main = str(self.meta.get('knowledge_main') or '')  # the file that holds the answer or the misconception (Q-E2-130)
         self.attachments = [os.path.join(ROOT, 'benchmark', 'questions', a) for a in (self.meta.get('attachments') or [])]
         m = re.search(r'## Prompt\n(.*?)(?=\n## )', body, re.S)
         self.prompt = ATTACH_LINK.sub(r'\1', m.group(1).strip()) if m else ''
@@ -124,7 +124,7 @@ class Question:
     def render(self, rng):
         """Shuffle options, append Unsure, return (text, map shown_letter -> original).
 
-        No "Not covered" option (author, Q038, 2026-11-05): the system answers from the knowledge base first
+        No "Not covered" option (author, Q-E2-038, 2026-11-05): the system answers from the knowledge base first
         and from the model's own knowledge where the knowledge base is silent."""
         opts = self.options[:]
         rng.shuffle(opts)
