@@ -1,77 +1,66 @@
 # CLAUDE.md
 
-How Claude works in this repository. Read at the start of every session. The design of the knowledge is in [`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), its rules in [`project/knowledge-rules/`](project/knowledge-rules); this file does not repeat them.
+Rules for Claude in spec-driven development, for any project. The project's own rules, tools and paths are in [CLAUDE-PROJECT.md](CLAUDE-PROJECT.md), loaded with this file:
 
-## Start of every session
-- Read [`project/plan.md`](project/plan.md) first: mission, milestones, what we are not doing, open work.
-- Check every change against the plan and the documents that own the rules. Say so when a request conflicts with an earlier decision, or when a change adds to a duplicate instead of removing it.
-- Update [`project/plan.md`](project/plan.md) with every change set: status and open work only. A decision goes to the document that owns its rule, with its reason; the commit and the pull request record when it was made. No dates or decision log in the plan.
-- Before writing any text, read [`project/knowledge-rules/writing.md`](project/knowledge-rules/writing.md): knowledge, documents, diagram labels, commit messages, PR text. Before every commit, reread what you wrote against it and against `avoid_ai_speak`: no slogans, no "X, not Y", headings as noun phrases. Lint does not check style.
+@CLAUDE-PROJECT.md
 
-## Purpose
-- Knowledge base and harness for an AI assistant on private cloud operations (vSphere and VCF metrics first), running locally on enterprise GPU (one GPU is an ideal, not a constraint; up to four large GPUs are acceptable); customer data stays on site. Why it can work: [`MISSION.md`](MISSION.md).
-- Primary reader of `knowledge/`: the AI. The author reviews it for QA in that machine form, as the model gets it ([`project/tools/model_view.py`](project/tools/model_view.py)); no second copy is written for people.
-- Write at Level 400: mechanisms, reasons, trade-offs, edge cases. No Level 200 definitions. Assume the reader knows vSphere basics: cluster, DRS, resource pools, shares, reservations, limits, vCPU, NUMA.
+## Order of work
 
-## Rules for knowledge files
-- Design (where knowledge lives, forms, Level 400 and misconceptions): [`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md). Rules, one module each in [`project/knowledge-rules/`](project/knowledge-rules): placement, flows, metadata (with the dimensions not to mix), thresholds, writing (including no AI-speak, images, versions and sources), terminology, vocabulary (words to avoid).
-- Architecture rule to keep in mind: a VM is a virtual motherboard; the Guest OS is a separate layer. Decide a metric's home by the layer that produces it, not by the object that stores it.
-- When a repository rule conflicts with the author's architecture, raise it in [`project/author-questions.md`](project/author-questions.md); do not resolve it silently.
+- Work only on the earliest milestone in ROADMAP.md that is not done. The project's hook prints it at every prompt.
+- When a request belongs to a later milestone: list it as parked, in one line, and act on nothing in it.
+- When the author makes a suggestion: reply with strengths, weaknesses, gaps and a recommendation. Write to a repository only after the author agrees, or says "do it" or "decide".
+- Write `: done` on a milestone's heading only after the author approves it, from its review page when it has one.
 
-## Versions
-- Current releases (update when Broadcom ships a new one):
-  - vSphere: 9.1. Performance Best Practices for vSphere 9.1, revision 20260624.
-  - VCF: 9.1.1 (GA Sep 2026). 9.1.2 is coming.
-- Before writing from any vendor document: search for its current version, fetch it, read the revision date on the copyright page, and use the newest. A search result, an older PDF or a TechDocs hub page is not proof of the current version.
-- Record the version and revision in `source.document`, e.g. "Performance Best Practices for VMware vSphere 9.1 (revision 20260624)".
+## Before acting
 
-## Facts and sources
-- The knowledge base is the author's knowledge. Claude brings knowledge from official documents and its own knowledge; the author chooses what goes in.
-- No who-said-it tags (author, book, Claude) anywhere: not in knowledge text, metadata, catalogs or project documents. Agent E2 uses only `source` (knowledge base, or a vendor document with its version: it can go stale, and the newer official document wins) and `status` (draft or reviewed).
-- `review_notes` hold only what is still to check: section, what, and the URL or document to check against. A settled item is deleted; git keeps the history.
-- Before asking the author, look up official sources: Broadcom TechDocs (techdocs.broadcom.com), VMware docs (docs.vmware.com, www.vmware.com/docs), Broadcom KB (knowledge.broadcom.com), Broadcom developer API reference (developer.broadcom.com). PDFs: fetch them, then read the saved file with page ranges. Put the source URL in `review_notes`.
-- Ask the author only when the source text is ambiguous, contradicts official docs or the knowledge base, or the answer needs field experience. Do not ask the author to confirm virtualization basics.
-- No invented thresholds. Keep every `corrections` entry until the vendor document it corrects is updated. A row in `knowledge/catalog/thresholds-*.yaml` that has a `quote` quotes its knowledge file: when that text changes, update the row.
-- [`project/sources/`](project/sources) holds the source documents. The author adds them; Claude may edit them.
-- One master: the knowledge base. isvara.io (to be generated from it, next project) and the author's books (written by hand, informal style) are products for people, not sources. Extraction from the books is complete. New knowledge comes from [`project/sources/`](project/sources), stated once in KNOWLEDGE-ENGINEERING.md section 2. The knowledge base is a superset of the books: never name the book or write "the source document" in knowledge files or their metadata; `source.document` is `Knowledge base` plus any vendor document. A file digested from a source note names the note in `source.path`; the note holds the evidence ([`project/sources/README.md`](project/sources/README.md)).
+- Read ROADMAP.md, the files the request touches, and the CLAUDE.md of each repository it touches.
+- Before asking the author: search DECISIONS.md, the glossary and the interview records, and quote what they say.
+- Decide what the code, the documents or knowledge of the field settle, and state the decision. Ask the author only about judgement, experience, scope and taste.
+- Verify a claim from an audit, a review or another session against the files. Report a contradiction with both sources.
 
-## Working with the author
-- [`MISSION.md`](MISSION.md) holds goals and stretch targets, not hard rules. Few rules hold in IT operations management: challenge every assumption, the author's and the repository's included, when evidence says it blocks the mission.
-- Claude is the author's co-designer, at VCDX and Level 400 depth, not an order taker. Challenge the author's logic and reasoning when it is weak. Make design calls an expert would make, and state them with the reason; ask the author only for what needs his field experience, his sources, or a change of scope or release.
-- Questions for the author go in [`project/author-questions.md`](project/author-questions.md), section Release 1.0 (blocks release 1.0) or Future release (later release), one entry each: ID, section, files, search strings, what the knowledge base says now, and an empty `Answer:` line. Do not list them elsewhere.
-- A question ID is `Q-E2-` and the next free number. The workspace's questions are `Q-WS-` numbers.
-- A question that binds several repositories goes to the workspace's [OPEN-QUESTIONS.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/OPEN-QUESTIONS.md) (WD-019).
-- Releases and their milestones are the workspace's ([ROADMAP.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md)); "release 1.0" in this repository means the workspace's release 1.0. The milestones in [`project/plan.md`](project/plan.md) are A1 to A6.
-- A bad answer the author reports is a type of question that fails, not one wording. Find the type and its cause. Prefer the model's reading over a new code rule (keyword patterns, regexes), and remove the rules it replaces. Add 20 or more wordings of the type, with neighbours that must not change, to [`benchmark/runner/screen_answer_check.yaml`](benchmark/runner/screen_answer_check.yaml); run [`screen_answer_check.py`](benchmark/runner/screen_answer_check.py) on the real model before and after, read the answers, and report the table. Then fix, verify and merge without asking; ask only for field experience or a change of scope.
-- About the book: give a verbatim search string. About a file: link it (the link tools turn file references into clickable GitHub links). Name the item to check (question, option letters, section).
-- Before proposing to remove, archive or replace anything: look at it, list every consumer (the model, code, the author as reviewer, isvara.io), and say what each one loses.
-- When the author corrects a wording mistake, add it to the Words to avoid table in [`project/knowledge-rules/vocabulary.md`](project/knowledge-rules/vocabulary.md); if users also say the word, add it to the Also called line of its entry in [`knowledge/glossary.md`](knowledge/glossary.md).
-- One English word per concept: the agent's vocabulary in [`knowledge/glossary.md`](knowledge/glossary.md), words to avoid in [`project/knowledge-rules/vocabulary.md`](project/knowledge-rules/vocabulary.md), repository terms in [`project/terms.md`](project/terms.md). A new term is added there as a proposal and flagged for the author before use.
+## Replies to the author
 
-## Evaluation
-- The benchmark is a proof, not a goal. It proves that Agent E2 works: the shipped configuration against the release gate and the frontier reference. No mode, run, metric or setting is kept for the benchmark's own sake. Development diagnostics come from free checks first: the retrieval check, traces, unit tests.
-- Never send `## Answers` or `## Explanation` to a candidate: they are the key, for reviewers only. `## Answers` (the correct letters) is the only key the runner reads; scoring is set arithmetic, no judge (archived, Q-E2-199). Every question is multiple choice.
-- Every candidate model must read screenshots (vision). Models: [`benchmark/models.md`](benchmark/models.md).
-- Baseline runs use no knowledge base. The model and its reasoning setting are in the run folder's `config.json` (`model_params`).
-- Run a benchmark round: [`benchmark/RUN.md`](benchmark/RUN.md) (one prompt, the approvals to give up front, time and cost).
-- While a benchmark runs, send the author a short progress report every 15 minutes: answers done, errors, time left.
+- Bullet points and short sentences. Each name in full on first use.
+- Separate what you know, what you believe and what you have not checked. Disagree when there is a reason.
+- Describe how two parts relate by mechanism: code, network, data, dependency or contract.
 
-## Repository layout
-- Product (deployed): `knowledge/` and `harness/`. Proof: `benchmark/`. Project: `project/` and [`project/tools/`](project/tools). Map: [`REPOSITORY-MAP.md`](REPOSITORY-MAP.md); how the parts fit: [`ARCHITECTURE.md`](ARCHITECTURE.md), section Repository.
-- `harness/` depends on no folder outside the product. [`project/tools/rules_check.py`](project/tools/rules_check.py) imports the file parser from [`harness/knowledge_loader.py`](harness/knowledge_loader.py), never the reverse.
-- Code file names: rule in [`project/terms.md`](project/terms.md), section Code file names.
-- Diagrams in the root documents are SVG. Read the `<details>` text under an image, not the SVG: it is generated from the SVG and holds every box and arrow. To change a diagram, edit its script ([`project/tools/product_diagram.py`](project/tools/product_diagram.py), [`knowledge_diagram.py`](project/tools/knowledge_diagram.py), [`document_diagrams.py`](project/tools/document_diagrams.py)), run it, then run `python3 project/tools/diagram_text.py`. Never edit an SVG or a text block by hand: the next run of the script overwrites a hand-edited SVG, and lint fails on a block that differs from its image.
-- What is indexed and what is not: [`ARCHITECTURE.md`](ARCHITECTURE.md), section Local LLM use, Ingest.
+## Stop and ask
 
-## Validation
-- Before every commit: `python3 project/tools/rules_check.py` reports 0 problems, `python3 -m unittest harness/test_harness.py` and `python3 -m unittest benchmark/runner/test_runner.py` pass. Check the result itself, not only that the command ran: a pipe into `grep` or `tail` hides a failure.
-- Allowed tag values and avoided phrases live in [`project/tools/rules_check_values.yaml`](project/tools/rules_check_values.yaml). Change them there, not in the script.
-- A change to structure or retrieval needs a before and after number from the retrieval check or the benchmark. The retrieval check runs on the run set as it is (Q-E2-206); re-baseline when the question bank changes.
+Stop the line of work, add a question with a recommendation and an empty `Answer:` line to OPEN-QUESTIONS.md, and tell the author, when:
 
-## Git
-- Work on the branch named for the session.
-- Merge the session branch to `main` through a pull request after each change set, with a merge commit so each change stays visible.
-- Always land the work on `main`: merge the pull request yourself in the same session, with no open pull request or side branch left behind. Before ending, check that `main` holds the change.
-- Delete the branch on GitHub right after its pull request is merged; the repository setting "Automatically delete head branches" does it. A cloud session cannot delete a branch by `git push --delete` (HTTP 403): if a merged branch remains, list it for the author. The author reads only `main`.
-- Commit messages and PR text describe the change, in plain words. No model names.
-- Do not delete files unless the author asks. Git history keeps every deleted file.
+- the specification does not decide something, or two documents disagree;
+- a requirement cannot be tested as written;
+- a fix would change a contract's shape or reverse a decision;
+- a test needs a system that cannot be reached. Report the test as not run.
+
+## Requirements
+
+- Every requirement cites the question or decision it comes from.
+- Every requirement has at least one test scenario, and every test scenario names its requirement.
+- Before writing a requirement on existing behaviour: read the code that implements it.
+
+## Tests and checks
+
+- Never weaken, skip, delete or loosen a test or a check. A failure is a bug to fix or a question for the author.
+- Change a contract between two parts in three steps: add the new shape, move each consumer, remove the old shape.
+- Give every new contract a check, or a ROADMAP line that adds one. Add a gap to a check's baseline only with a question in OPEN-QUESTIONS.md.
+- Before each commit: run and pass the checks listed in CLAUDE-PROJECT.md.
+
+## Writing
+
+- Machine documents: CLAUDE.md, CLAUDE-PROJECT.md and the requirement files. One rule or fact per bullet, trigger before action, exact names, no history.
+- All other documents, commit messages and pull request text are for people. Follow the writing rules named in CLAUDE-PROJECT.md. Reread each changed line for slogans and "X, not Y".
+- Every file reference a link. Every ID with its meaning or a glossary link on first use. Each paragraph on one source line.
+- A new ID prefix, term or heading must be guessable from itself and overlap no existing one. When a name stops being true: rename it in every file.
+
+## Decisions, questions and Git
+
+- Record each decision in DECISIONS.md, one block per decision, with its date and reason.
+- One branch and one pull request per change. Mark finished ROADMAP lines with their pull request. Never push to a default branch.
+- Never merge while checks are pending or failing.
+- Put a warning at the top of the pull request and the report when a contract's shape changes, a decision changes, or files are deleted.
+- Wait for the author before deleting data. Never print, log or commit a credential.
+
+## Session end
+
+- When work remains: give the author a prompt for the next session: files to read, settled scope, tasks, how to report.
