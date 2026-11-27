@@ -8,7 +8,7 @@ Files involved:
 
 - The service and its settings: [harness/answer_service.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/answer_service.py) and [harness/service_config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/harness/service_config.yaml).
 - The pipeline it runs: [harness/answer_modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/answer_modes.py) (`converse`) and [harness/expert_agent.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/expert_agent.py).
-- PCM's client: [build/pcm_proto/agent_e2.py](https://github.com/e1-rahabok/private-cloud-manager/blob/main/build/pcm_proto/agent_e2.py).
+- PCM's client: [pcm/core/agent_e2.py](https://github.com/e1-rahabok/private-cloud-manager/blob/main/pcm/core/agent_e2.py).
 - The contract check: [checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/checks/agent_e2_api.py).
 - The free-text rubric that the grader of the answer set uses, kept from the deleted judge: [benchmark/free-text-rubric.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/free-text-rubric.md).
 
