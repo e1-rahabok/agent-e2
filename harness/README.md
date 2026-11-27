@@ -78,7 +78,7 @@ The agent's code calls them; the model calls none (`AGENT.md`, section 1).
 ## 6a. Consensus
 - Setting `consensus_samples` (n). Multiple-choice questions of Agent E2: the harness asks up to n answer samples on one reading set (stages 1-4 run once). The letters stand only when every sample gives the same set. A disagreement, an Unsure or an unreadable reply makes the answer Unsure, with the reason "not settled". It stops at the first disagreement, so a split costs 2 samples, not n.
 - Code: `answer` and `_consensus` in [`answer_modes.py`](answer_modes.py). Baseline and web stay one sample: they measure the model alone. Open answers stay one sample: free text has no letters to compare.
-- Why (previous generation, [archived analysis](../project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md)):
+- Why (previous generation, [archived analysis](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md)):
   - The confident-wrong rate was 19-30% in the knowledge base modes against a gate of 3%.
   - Unsure was chosen in only 1-6% of multiple-choice answers. The prompt rule "a wrong answer is worse than Unsure" does not make a 30B model abstain: it does not know what it does not know.
   - 55-75% of the confident-wrong multiple-choice answers were partly right, and the same question got different letters in different runs (luck 48-63%). Disagreement between samples is the signal the model cannot give about itself.

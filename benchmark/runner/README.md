@@ -75,7 +75,7 @@ python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
 - Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.4. Report table `Final score`; code `score_report.py`, function `final`.
 
 ### Free text
-- Not in the benchmark: every question is multiple choice, and `run_executor.py` refuses a question without options. The judge is archived in [project/archive/legacy/judge-2026-11-14](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14).
+- Not in the benchmark: every question is multiple choice, and `run_executor.py` refuses a question without options. The judge is archived in [project/archive/legacy/judge-2026-11-14](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/legacy/judge-2026-11-14).
 
 ### Screenshots
 - Questions with image attachments are sent with all their images (track `vision`). There is no text-only track.
@@ -182,7 +182,7 @@ python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
 - Starting runs: start each run with one background command, with no wrapper shell, `nohup` or `&`: the system then reports the run's own end (a wrapper reports its own end after seconds).
 - [round_alive_check.py](round_alive_check.py): per run, whether a process works on the folder, good answers against the total, the time of the last written answer and the cost. Verdicts: DONE, ALIVE, STALLED (no answer for `--stall-minutes`), DEAD, MACHINE RESTARTED; LOW BUDGET at 80% of `--budget`. A progress report says "running" only when it says ALIVE and the counts moved. Exit 0 when every run is DONE or ALIVE, 2 otherwise.
 - [round_resume.py](round_resume.py), called by the SessionStart hook [.claude/hooks/resume_unfinished_benchmark_round.sh](https://github.com/e1-rahabok/agent-e2/blob/main/.claude/hooks/resume_unfinished_benchmark_round.sh): when a round is in progress, a run is unfinished and no process works on it, it starts `round_executor.py --resume` detached. It does nothing otherwise. Not tested live: whether a machine restart starts a session (and so the hook) without a message is not known.
-- When every run is complete it writes [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md) with [round_summary.py](round_summary.py) (one analysis of all runs, every number from the run folders) and moves earlier run folders to `project/archive/benchmark-results-before-<date>/`. It does not commit or merge.
+- When every run is complete it writes [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md) with [round_summary.py](round_summary.py) (one analysis of all runs, every number from the run folders) and deletes earlier run folders (git history keeps them). It does not commit or merge.
 - Exit codes ([exit_codes.py](exit_codes.py)): 0 done; 1 crashed; 3 stopped at `--max-minutes`, relaunch with `--resume`; 4 preflight failed; 5 invalid answers; 6 credits, key or team budget refused; 7 some runs done, others failed; 8 the gateway or a provider kept failing (wait, then resume the same folder).
 
 ### Temperature

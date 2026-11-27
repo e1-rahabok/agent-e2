@@ -51,7 +51,7 @@ The projection comes from the validity sample (Gemma, 9 questions: US$ 0.0026 an
 2. Four `run_executor.py` in parallel, one folder per model: `benchmark/results/<date>-<model>/`.
 3. Health check inside each run: stops it when 25% of the last 40 answers are cut off, unreadable or failed.
 4. Recovery (table below).
-5. When all four runs are complete, `round_summary.py` writes [`benchmark/results/README.md`](results/README.md), one analysis of all runs. The run folders of earlier rounds move to `project/archive/benchmark-results-before-<date>/`. The retrieval check outputs (`retrieval-<date>/`) stay.
+5. When all four runs are complete, `round_summary.py` writes [`benchmark/results/README.md`](results/README.md), one analysis of all runs. The run folders of earlier rounds are deleted; git history keeps them. The retrieval check outputs (`retrieval-<date>/`) stay.
 
 ## Steps for the LLM
 
@@ -98,7 +98,7 @@ Give these before the round, so that nothing waits for a click.
   - `python3 project/tools/rules_check.py`, `python3 -m unittest harness/test_harness.py`, `python3 -m unittest benchmark/runner/test_runner.py`;
   - reading: `cat`, `ls`, `tail`, `head`, `test -n "$AI_GATEWAY_API_KEY"`, `git status`, `git diff`, `git log`;
   - `git add`, `git commit`, `git push -u origin <session branch>`, `git fetch`, `git merge origin/main` (only if `main` moved).
-- Edit and write: [`project/plan.md`](../project/plan.md), [`benchmark/models.md`](models.md), `benchmark/results/**`, `project/archive/**`.
+- Edit and write: [`project/plan.md`](../project/plan.md), [`benchmark/models.md`](models.md), `benchmark/results/**`.
 - GitHub pull request tools: create, list, read and merge (`mcp__github__create_pull_request`, `mcp__github__list_pull_requests`, `mcp__github__pull_request_read`, `mcp__github__merge_pull_request`, `mcp__github__update_pull_request`).
 - Scheduling: `send_later` (`mcp__claude-code-remote__send_later`) or `ScheduleWakeup`, for the 15-minute check.
 - Network from the session: `ai-gateway.vercel.sh` (models, embeddings, search) and public web pages (in the Opus `web` mode the model chooses which pages to fetch).

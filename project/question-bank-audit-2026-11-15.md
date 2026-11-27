@@ -3,7 +3,7 @@
 Audit and improvement of the benchmark question bank against the knowledge base as updated by the author on 2026-11-15. For the author's review. Not indexed. Design rules: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 3, 5, 6, 13.1). Plan entry: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), decision of 2026-11-16.
 
 ## 1. Result in brief
-- 275 question files at the start (228 running, 47 awaiting screenshots); 299 at the end: 296 running, 3 deferred; 4 retired to [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
+- 275 question files at the start (228 running, 47 awaiting screenshots); 299 at the end: 296 running, 3 deferred; 4 retired to [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-questions).
 - No answer key was wrong against the current knowledge base. Every key a reviewer doubted (44 questions) was re-derived by an independent checker that had not seen the doubt: all 44 matched the file key.
 - 44 practical halves now run as exports (CSV or tool text) from a seeded generator, [project/tools/export_generator](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/export_generator/README.md); no question waits for a screenshot.
 - 28 new questions for knowledge the bank did not test (ids 0443-0470).

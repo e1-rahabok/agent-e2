@@ -11,7 +11,7 @@ Steps (benchmark/RUN.md has the full playbook):
   2. One run_executor.py per entry of config `release.runs`, all at once, each in its own folder `<date>-<model>`.
   3. Recovery: a crashed run is relaunched with --resume (config `release.retries` times); answers that failed are retried the same way;
      a run stopped by the time limit is relaunched by you with --resume. A run whose answers are invalid, or a refused key, is not retried.
-  4. When every run is complete: round_summary.py writes benchmark/results/README.md, earlier run folders move to project/archive/.
+  4. When every run is complete: round_summary.py writes benchmark/results/README.md, earlier run folders are deleted (git history keeps them).
 Exit codes: exit_codes.py. 0 = the round is complete; 3 = relaunch with --resume; 6 = top up credits or key budget, then --resume;
 4, 5, 7 = a run failed: read the printed list.
 """
@@ -107,17 +107,16 @@ def child_cmd(entry, out_dir, minutes_left, resume, extra=''):
     return cmd
 
 
-def archive_old(results_dir, keep, archive_dir):
-    """Move run folders that are not part of this round into archive_dir. Return their names."""
-    moved = []
+def remove_old(results_dir, keep):
+    """Delete run folders that are not part of this round; git history keeps them. Return their names."""
+    removed = []
     for name in sorted(os.listdir(results_dir)):
         p = os.path.join(results_dir, name)
         if name in keep or not os.path.isdir(p) or not os.path.exists(os.path.join(p, 'config.json')):
             continue
-        os.makedirs(archive_dir, exist_ok=True)
-        shutil.move(p, os.path.join(archive_dir, name))
-        moved.append(name)
-    return moved
+        shutil.rmtree(p)
+        removed.append(name)
+    return removed
 
 
 # ---------- state ----------
@@ -145,7 +144,6 @@ def main():
     ap.add_argument('--only', help='comma-separated models: run only these entries of release.runs')
     ap.add_argument('--dry-run', action='store_true', help='print the plan and stop')
     ap.add_argument('--child-args', default='', help='test only: extra flags for every run_executor.py, e.g. "--mock --runs 1 --questions L4-0"')
-    ap.add_argument('--archive-dir', help='test only: where earlier run folders go (default project/archive/benchmark-results-before-<date>)')
     a = ap.parse_args()
     cfg = yaml.safe_load(open(a.config))
     rel = cfg['release']
@@ -360,15 +358,13 @@ def main():
     for f in folders:
         score_report.write(f)                     # a retried run needs its report again
     open(os.path.join(a.out, 'README.md'), 'w').write(round_summary.build(folders))
-    day = state['started'][:10]
-    arch = a.archive_dir or os.path.join(ROOT, 'project', 'archive', f'benchmark-results-before-{day}')
-    moved = archive_old(a.out, {e['folder'] for e in state['runs']}, arch)
+    removed = remove_old(a.out, {e['folder'] for e in state['runs']})
     for name in (STATE, PROGRESS, PREFLIGHT):
         if os.path.exists(os.path.join(a.out, name)):
             os.remove(os.path.join(a.out, name))
     print(f'ROUND COMPLETE. {len(folders)} runs. Wrote {os.path.join(a.out, "README.md")}.')
-    if moved:
-        print(f'Earlier run folders moved to {os.path.relpath(arch, ROOT)}/: {", ".join(moved)}')
+    if removed:
+        print(f'Earlier run folders deleted (git history keeps them): {", ".join(removed)}')
     print('Next: lint and tests, update project/plan.md, commit, push, pull request, merge (benchmark/RUN.md, section After the round).')
     sys.exit(exit_codes.OK)
 

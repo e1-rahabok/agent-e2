@@ -535,16 +535,16 @@ class RoundHelpersTest(unittest.TestCase):
                 'm,agent-e2,Q2,text,1,HTTP 500\n')     # still failing
             self.assertEqual(round_executor.unresolved(d), {('m', 'agent-e2', 'Q2', 'text', '1')})
 
-    def test_earlier_run_folders_move_to_the_archive_and_the_round_stays(self):
+    def test_earlier_run_folders_are_deleted_and_the_round_stays(self):
         import tempfile
         with tempfile.TemporaryDirectory() as d:
             for n in ('old-a', 'new-a'):
                 os.makedirs(os.path.join(d, 'results', n))
                 open(os.path.join(d, 'results', n, 'config.json'), 'w').write('{}')
             open(os.path.join(d, 'results', 'README.md'), 'w').write('x')
-            moved = round_executor.archive_old(os.path.join(d, 'results'), {'new-a'}, os.path.join(d, 'arch'))
-            self.assertEqual(moved, ['old-a'])
-            self.assertTrue(os.path.isdir(os.path.join(d, 'arch', 'old-a')))
+            removed = round_executor.remove_old(os.path.join(d, 'results'), {'new-a'})
+            self.assertEqual(removed, ['old-a'])
+            self.assertFalse(os.path.exists(os.path.join(d, 'results', 'old-a')))
             self.assertTrue(os.path.isdir(os.path.join(d, 'results', 'new-a')))
             self.assertTrue(os.path.exists(os.path.join(d, 'results', 'README.md')))
 
@@ -880,16 +880,16 @@ class ReconcileWithFoldersTest(unittest.TestCase):
 
 
 class RoundMockTest(unittest.TestCase):
-    """The whole round offline: runs in parallel, one folder per model, README, earlier folders archived."""
+    """The whole round offline: runs in parallel, one folder per model, README, earlier folders deleted."""
 
     def test_round_end_to_end(self):
         import subprocess
         import tempfile
         with tempfile.TemporaryDirectory() as d:
-            out, arch = os.path.join(d, 'out'), os.path.join(d, 'arch')
+            out = os.path.join(d, 'out')
             os.makedirs(os.path.join(out, '20261101-old'))
             open(os.path.join(out, '20261101-old', 'config.json'), 'w').write('{}')
-            p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'round_executor.py'), '--out', out, '--archive-dir', arch,
+            p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'round_executor.py'), '--out', out,
                                 '--skip-preflight', '--child-args', '--mock --runs 1 --questions L1-001,L1-002'],
                                capture_output=True, text=True, env=dict(os.environ, AI_GATEWAY_API_KEY='x'), timeout=300)
             self.assertEqual(p.returncode, exit_codes.OK, p.stdout + p.stderr)
@@ -898,7 +898,7 @@ class RoundMockTest(unittest.TestCase):
                              ['claude-opus-5.5', 'gemma-4-31b-it', 'muse-glimmer-30b', 'qwen3.8-27b'])
             self.assertIn('README.md', names)
             self.assertNotIn('.round.json', os.listdir(out))               # a finished round leaves no state
-            self.assertTrue(os.path.isdir(os.path.join(arch, '20261101-old')))
+            self.assertNotIn('20261101-old', os.listdir(out))               # earlier round deleted
             text = open(os.path.join(out, 'README.md')).read()
             for m in ('gemma-4-31b-it', 'qwen3.8-27b', 'muse-glimmer-30b', 'claude-opus-5.5'):
                 self.assertIn(m, text)

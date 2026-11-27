@@ -122,7 +122,7 @@ def main():
     unknown = [m for m in modes_ if m not in answer_modes.MODES]
     if unknown:
         sys.exit(f'Unknown modes {unknown}: {", ".join(answer_modes.MODES)}. Classic and agentic were removed on 2026-11-14 (harness/AGENT.md).')
-    # Every question is multiple choice (author, Q-E2-199, 2026-11-14); the judge is archived (project/archive/legacy/judge-2026-11-14).
+    # Every question is multiple choice (author, Q-E2-199, 2026-11-14); the judge is in git history (project/archive/legacy/judge-2026-11-14 at commit ebbc7dc).
     open_qs = [c.id for c in questions_ if not c.choice]
     if open_qs:
         sys.exit(f'Questions without options cannot be scored: {", ".join(open_qs)}. Every question is multiple choice (Q-E2-199).')

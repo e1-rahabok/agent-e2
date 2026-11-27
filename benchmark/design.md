@@ -221,7 +221,7 @@ The frontier model must be able to answer every question from public knowledge. 
 - The -1 changed the model's behaviour through the prompt: told that a wrong answer costs a point, models chose Unsure instead of guessing. That behaviour is kept with a plain rule in the prompt ("a wrong answer is worse than Unsure").
 - Unsure means the sources do not decide the question. This can be checked against the cited files.
 - Check after the next benchmark: if models guess more under the plain rule (confident-wrong rate rises, Unsure rate falls), put the scoring sentence back in the prompt only. Grading stays as above either way.
-- Read on the previous generation: the local models chose Unsure in 1-6% of multiple-choice answers and were confident wrong in 10-22% of them with the knowledge base. A rule in the prompt does not make a 30B model abstain. The harness now abstains for it: consensus of samples (`consensus_samples`, [harness/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/README.md), section 6a). Analysis (archived): [analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md).
+- Read on the previous generation: the local models chose Unsure in 1-6% of multiple-choice answers and were confident wrong in 10-22% of them with the knowledge base. A rule in the prompt does not make a 30B model abstain. The harness now abstains for it: consensus of samples (`consensus_samples`, [harness/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/README.md), section 6a). Analysis (archived): [analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md).
 
 ### 7.2 Five runs
 - One run is one draw of the answer, not the answer. Agent E2 makes two model calls (stage 1 and stage 5 of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)):
@@ -343,7 +343,7 @@ For the set:
 11. Does a field question the set has nothing like call for a new question?
 
 ## 12. Status
-- The run set is every question with status draft or reviewed. Its counts: `python3 project/tools/question_coverage.py`. Retired questions: [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
+- The run set is every question with status draft or reviewed. Its counts: `python3 project/tools/question_coverage.py`. Retired questions: [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-questions).
 - Every synthetic question was checked by an independent review agent, which tried to break each key against the knowledge files and the vendor documents; the defects found were fixed. Author questions from the review: all answered (Q-E2-182-Q-E2-191). Knowledge fixes found on the way: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Knowledge base.
 - Question bank audit ([project/question-bank-audit-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/question-bank-audit-2026-11-15.md)): every option of every question decided again from the current knowledge base by independent reviewers, each finding challenged by a second agent, every changed key re-checked blind.
 - Status draft: each question counts after the author's review (section 6.2); the runner runs drafts too, so a score on drafts is a development score (Q-E2-256).
@@ -367,7 +367,7 @@ For the set:
 - Every CSV and every generated tool-text block comes from a seeded case in [project/tools/export_generator/](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/export_generator/README.md) (one module per question): the case writes the files in the real export format (templates in project/sources/export-templates/) and `check` re-reads them and asserts every condition the key rests on. `python3 -m project.tools.export_generator check all` and `python3 -m unittest project/tools/test_export_generator.py` must pass. Time stamps, object names and noise are realistic; names are invented, never a customer's or the lab's; no lab values.
 
 ## 14. Free-text answers
-- Not in the benchmark. The judge model that scored them 0-3 is archived with its rubric ([project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14/judge.py)); this section's earlier rules are in git history.
+- Not in the benchmark. The judge model that scored them 0-3 is archived with its rubric ([project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/legacy/judge-2026-11-14/judge.py)); this section's earlier rules are in git history.
 - Free-text answers are measured in the field: the author judges real questions in the live test ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md), step 9) and operators rate every answer in the product ([MISSION.md](https://github.com/e1-rahabok/agent-e2/blob/main/MISSION.md), section 5, Feedback).
 
 ## 15. Target

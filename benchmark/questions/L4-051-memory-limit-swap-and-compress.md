@@ -43,7 +43,7 @@ A, C, E, I
 - Misconception: B: "The host is running out of memory and swaps the VM." - G: "Move the VM to a host with more free memory." - H: "Give the VM more memory." - L: "No balloon, so no limit: a limit balloons first."
 
 ## Notes
-- Practical half of 0291 (project/question-pairing-2026-11-14.md, pair A14). CSV from a seeded script (seed 14020261114, 3 days, 30-minute samples); the old 64 GB scenario, a near-copy of the knowledge example in swap-and-compression, is in project/archive/benchmark-questions/attachments.
+- Practical half of 0291 (project/question-pairing-2026-11-14.md, pair A14). CSV from a seeded script (seed 14020261114, 3 days, 30-minute samples); the old 64 GB scenario, a near-copy of the knowledge example in swap-and-compression, is in project/archive/benchmark-questions/attachments. (git history, commit ebbc7dc)
 - A VM limit caps Consumed, and Memory|Effective limit is the configured limit plus the VM overhead (memory-limit, Signs in the counters). The CSV fits it: Consumed stays under 16 GB while the effective limit reads 16.19 GB.
 - Under a limit the balloon goes first when the driver runs (memory-limit, Enforcement order). The CSV has Granted + Swapped + Compressed near 24 GB and no balloon, so the stem gives the driver switched off (`sched.mem.maxmemctl = 0`) and Memory|Balloon 0.
 - From the author's samples (docx, 2026-11-12): a 64 GB VM, heavy swap and compression over 7 days, Consumed flat under the effective limit; the knowledge base keeps that example.

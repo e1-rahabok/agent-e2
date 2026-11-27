@@ -1,9 +1,9 @@
 # Agent
 
 Agent E2's agent is a neuro-symbolic expert system. Its code holds the expert's procedure and the knowledge base's map, and it makes the decisions; the model reads and writes. The agent reads the question into a case, plans what to read from the knowledge base's own map, runs the exact tools, decides whether to ask, calls the model, and checks the answer. Every question goes through this one pipeline. Not indexed.
-Related reading: why Agent E2 can win is in [MISSION.md](../MISSION.md); the whole system in [ARCHITECTURE.md](../ARCHITECTURE.md); the harness parts in [README.md](README.md); how the knowledge is shaped in [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md). The tool-loop agent this design replaces, with its measurements, is archived in [project/archive/agent-tool-loop-2026-11-14.md](../project/archive/agent-tool-loop-2026-11-14.md).
+Related reading: why Agent E2 can win is in [MISSION.md](../MISSION.md); the whole system in [ARCHITECTURE.md](../ARCHITECTURE.md); the harness parts in [README.md](README.md); how the knowledge is shaped in [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md). The tool-loop agent this design replaces, with its measurements, is archived in [project/archive/agent-tool-loop-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/agent-tool-loop-2026-11-14.md).
 
-- Status: built, and the only mode of Agent E2. [`harness/expert_agent.py`](expert_agent.py) runs stages 1 and 3-6 and [`harness/reading_plan.py`](reading_plan.py) runs stage 2; both are entered through [`harness/answer_modes.py`](answer_modes.py) as mode `agent-e2`. Classic and agentic mode are removed, and their code is archived in [project/archive/legacy/harness-tool-loop-2026-11-14/](../project/archive/legacy/harness-tool-loop-2026-11-14). Still to build: section 7.
+- Status: built, and the only mode of Agent E2. [`harness/expert_agent.py`](expert_agent.py) runs stages 1 and 3-6 and [`harness/reading_plan.py`](reading_plan.py) runs stage 2; both are entered through [`harness/answer_modes.py`](answer_modes.py) as mode `agent-e2`. Classic and agentic mode are removed, and their code is archived in [project/archive/legacy/harness-tool-loop-2026-11-14/](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/legacy/harness-tool-loop-2026-11-14). Still to build: section 7.
 - Name: a neuro-symbolic expert system, of the kind where symbolic control calls a neural model as a subroutine (Kautz: Symbolic[Neural]). The symbolic part is the knowledge base's map (links, file kinds, catalog, flows), the rules and the exact tools; the neural part reads language and images. The fixed order of the stages, with two bounded loops back (one clarifying round, one gap follow-up), is a small state machine. The flow executor with executable steps (Q-E2-166) will be the larger one. The name was settled in Q-E2-210.
 
 ## 1. Who decides what
@@ -21,7 +21,7 @@ Related reading: why Agent E2 can win is in [MISSION.md](../MISSION.md); the who
 - Planning a lookup needs a map of what the knowledge base holds. That map is the author's proprietary knowledge, and the Internet text the model learned from does not contain it. A model cannot plan a search through ground it has never seen, and its worst errors are beliefs it never looks up.
 - The agent can plan, because the knowledge base records its own map (file kinds, `same_name` and `internal_derive` links, the catalog, flows, the term map).
 
-| Finding (the previous generation, [archived](../project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md)) | Reading |
+| Finding (the previous generation, [archived](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md)) | Reading |
 |---|---|
 | Agentic and classic within the margin for every model (-6, -3, +1 points); agentic at 2-3.5 times the tokens and twice the latency | The model's own tool use adds nothing yet |
 | 4.8-7.4 tool calls per multiple-choice answer; Muse at the 8-call limit on 359 of 595 | The model searches in circles |
@@ -193,7 +193,7 @@ The plan is only as good as the map. These are the changes the knowledge needs, 
 3. Sections stand alone: the plan reads sections of secondary files, so each `##` section names its object and metric in its first line and does not lean on the section before it.
 4. Flow steps as data (Q-E2-166): metric, object, interval, the catalog test and the branch targets, in the flow file (one home). Format: [project/knowledge-rules/flows.md](../project/knowledge-rules/flows.md), Steps as data. The first flow is VM CPU Contention or Latency is high.
 5. Term-map rows mark words with several meanings (stage 4).
-6. Coverage by mechanism ([analysis-2026-11-13](../project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md), section 12): the field set shows which mechanisms are missing.
+6. Coverage by mechanism ([analysis-2026-11-13](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md), section 12): the field set shows which mechanisms are missing.
 
 ## 7. Build order
 Each step is proved by its own check.

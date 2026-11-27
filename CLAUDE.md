@@ -74,4 +74,4 @@ How Claude works in this repository. Read at the start of every session. The des
 - Always land the work on `main`: merge the pull request yourself in the same session, with no open pull request or side branch left behind. Before ending, check that `main` holds the change.
 - Delete the branch on GitHub right after its pull request is merged; the repository setting "Automatically delete head branches" does it. A cloud session cannot delete a branch by `git push --delete` (HTTP 403): if a merged branch remains, list it for the author. The author reads only `main`.
 - Commit messages and PR text describe the change, in plain words. No model names.
-- Do not delete files unless the author asks. Archive them in [`project/archive/`](project/archive); git history keeps the rest.
+- Do not delete files unless the author asks. Git history keeps every deleted file.
