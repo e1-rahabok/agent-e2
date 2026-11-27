@@ -323,7 +323,7 @@ Test scenarios:
 
 ## Not in this file
 
-- The injection guard and the limits on public use belong to isvara.io, before it calls Agent E2 (answer to Q-WS-47; WD-017). They go in `isvara-agent.md`.
+- The injection guard and the limits on public use belong to isvara.io, before it calls Agent E2 (answer to Q-WS-47; WD-017). They are in isvara's [ask.md](https://github.com/e1-rahabok/isvara/blob/main/spec/requirements/ask.md) and [protection.md](https://github.com/e1-rahabok/isvara/blob/main/spec/requirements/protection.md).
 - Where the public Agent E2 runs is decided after measuring start-up time and cost per question (answer to Q-WS-4).
 - Keeping gateway spending within US$50 a month after isvara.io goes live is a task for after go-live (WD-014). `usage` in R-E2-010 gives the numbers it needs.
 
