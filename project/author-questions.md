@@ -20,7 +20,15 @@ Each entry:
 
 ## Release 1.0
 
-No open question blocks release 1.0.
+### Q-E2-264 · Terms · Grader or judge for the model that scores free-text answers
+
+- Files: [project/terms.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/terms.md), the row "judge"; [answer-service.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/requirements/answer-service.md), R-E2-005; [benchmark/free-text-rubric.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/free-text-rubric.md).
+- Now: terms.md names the model that scored free-text answers 0-3 the "judge" and lists "grader" as the word to avoid. R-E2-005, the workspace's ROADMAP (milestone M3) and the new rubric file call the tool that scores the answer set of release 1.0 the "grader". Both name one concept: a model that scores a free-text answer by the rubric.
+- Question: which word do the repositories use?
+  - A. "grader": terms.md changes its row; "judge" stays only in the history of the deleted benchmark tool.
+  - B. "judge": R-E2-005, the ROADMAP and the rubric file change before M3 builds the tool.
+- Recommended: A. M3 builds the tool under this name, the requirements already use it, and the old judge is deleted from main.
+- Answer:
 
 ## Future release
 
