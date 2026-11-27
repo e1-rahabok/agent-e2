@@ -716,7 +716,7 @@
      "worst_time": "2026-10-19T08:00:00+08:00"
     },
     {
-     "name": "Worst memory wait among all VMs",
+     "name": "Worst peak memory wait among all VMs",
      "unit": "%",
      "better": "lower",
      "value": 2.7,
@@ -752,7 +752,7 @@
      "worst_time": "2026-10-19T09:25:00+08:00"
     },
     {
-     "name": "90th percentile memory wait among VMs",
+     "name": "90th percentile peak memory wait among VMs",
      "unit": "%",
      "better": "lower",
      "value": 0.3,
@@ -2253,7 +2253,7 @@
      "worst_time": "2026-10-19T08:00:00+08:00"
     },
     {
-     "name": "Worst memory wait among VMs on the host",
+     "name": "Worst peak memory wait among VMs on the host",
      "unit": "%",
      "better": "lower",
      "value": 3.1,
@@ -2289,7 +2289,7 @@
      "worst_time": "2026-10-19T08:00:00+08:00"
     },
     {
-     "name": "90th percentile memory wait among VMs on the host",
+     "name": "90th percentile peak memory wait among VMs on the host",
      "unit": "%",
      "better": "lower",
      "value": 1.0,
@@ -2368,7 +2368,7 @@
     "status": "green",
     "metrics": [
      {
-      "name": "Peak vCPU run queue length",
+      "name": "Peak run queue length per vCPU",
       "unit": "per vCPU",
       "better": "lower",
       "now": 0.52,

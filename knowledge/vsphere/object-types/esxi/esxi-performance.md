@@ -22,7 +22,7 @@
 |---|---|---|
 | Ready (worst, 90th percentile) | VM `cpu\|20_sec_peak_readyPct` | Worst peak vCPU Ready among VMs on the host (%); 90th percentile peak vCPU Ready among VMs on the host (%) |
 | Co-stop (worst, 90th percentile) | VM `cpu\|20_sec_peak_costopPct` | Worst peak vCPU Co-stop among VMs on the host (%); 90th percentile peak vCPU Co-stop among VMs on the host (%) |
-| Memory wait (worst, 90th percentile) | Memory Wait of each VM on the host: VM `mem\|20_sec_peak_host_contentionPct` plus NVMe wait, with the NVMe read latency of this host ([`vsphere/object-types/vm/vm-performance`](../vm/vm-performance.md), section Memory Wait) | Worst memory wait among VMs on the host (%); 90th percentile memory wait among VMs on the host (%) |
+| Memory wait (worst, 90th percentile) | Memory Wait of each VM on the host: VM `mem\|20_sec_peak_host_contentionPct` plus NVMe wait, with the NVMe read latency of this host ([`vsphere/object-types/vm/vm-performance`](../vm/vm-performance.md), section Memory Wait) | Worst peak memory wait among VMs on the host (%); 90th percentile peak memory wait among VMs on the host (%) |
 | Disk latency (worst, 90th percentile) | VM `virtualDisk\|20_sec_peak_totalLatency_average` | Worst peak disk latency among virtual disks of VMs on the host (ms); 90th percentile peak disk latency among virtual disks of VMs on the host (ms) |
 | Bad network packets | Host: (errorsRx + errorsTx + droppedRx + droppedTx) / (packetsRx + packetsTx) × 100 in the last 5-minute cycle | ESXi (error + dropped) network packets (%) |
 

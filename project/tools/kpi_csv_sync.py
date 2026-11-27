@@ -3,7 +3,7 @@
   python3 project/tools/kpi_csv_sync.py export [file.csv]   # default project/kpi.csv
   python3 project/tools/kpi_csv_sync.py import [file.csv]   # writes the limits back, then run lint
 
-Lines: thresholds-performance.yaml section kpi; thresholds-capacity.yaml and thresholds-risk.yaml sections model and score.
+Lines: thresholds-performance.yaml sections kpi and score; thresholds-capacity.yaml and thresholds-risk.yaml sections model and score.
 One format for all (thresholds-performance.yaml, meta, limits_fields).
 
 Columns: file, section, object, metric, direction, then best, green, yellow, orange, zero-at for each of 5m, 20s, 2s:
@@ -21,7 +21,7 @@ import yaml
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CATALOG = os.path.join(ROOT, 'knowledge', 'catalog')
-SECTIONS = (('thresholds-performance.yaml', 'kpi'), ('thresholds-capacity.yaml', 'model'), ('thresholds-capacity.yaml', 'score'),
+SECTIONS = (('thresholds-performance.yaml', 'kpi'), ('thresholds-performance.yaml', 'score'), ('thresholds-capacity.yaml', 'model'), ('thresholds-capacity.yaml', 'score'),
             ('thresholds-risk.yaml', 'model'), ('thresholds-risk.yaml', 'score'))
 IVS, LIMITS = ('5m', '20s', '2s'), ('best', 'green', 'yellow', 'orange', 'zero-at')
 HEAD = ['file', 'section', 'object', 'metric', 'direction'] + [f'{i} {l}' for i in IVS for l in LIMITS]

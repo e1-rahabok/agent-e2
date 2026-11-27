@@ -474,7 +474,7 @@ CATALOG = 'knowledge/catalog'
 THRESHOLD_SOURCES = ['knowledge-base', 'vsphere-9.1-docs', 'performance-best-practices-9.1', 'microsoft']
 # Threshold files and their sections, named by use. A section name is the use the Harness shows with each value.
 THRESHOLD_SECTIONS = {
-    'thresholds-performance.yaml': ('kpi', 'change', 'flow'),
+    'thresholds-performance.yaml': ('kpi', 'score', 'change', 'flow'),
     'thresholds-capacity.yaml': ('model', 'score', 'sizing', 'decisions', 'rules'),
     'thresholds-risk.yaml': ('model', 'score'),
     'thresholds-alerts.yaml': ('symptoms', 'alerts'),

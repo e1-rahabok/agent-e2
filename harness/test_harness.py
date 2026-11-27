@@ -1291,9 +1291,9 @@ class AnswerServiceTest(unittest.TestCase):
 
     # The parts of Cluster Performance at the KPI's worst point, as PCM sends them (parts_at_worst).
     CLUSTER_PARTS = [('Worst peak vCPU Ready among all VMs', 12.0, 1.1), ('Worst peak vCPU Co-stop among all VMs', 0.5, 0.4),
-                     ('Worst memory wait among all VMs', 0.2, 0.1), ('Worst peak disk latency among all VM virtual disks', 18.0, 15.0),
+                     ('Worst peak memory wait among all VMs', 0.2, 0.1), ('Worst peak disk latency among all VM virtual disks', 18.0, 15.0),
                      ('90th percentile peak vCPU Ready among VMs', 3.0, 0.3), ('90th percentile peak vCPU Co-stop among VMs', 0.1, 0.1),
-                     ('90th percentile memory wait among VMs', 0.0, 0.0), ('90th percentile peak disk latency among VM virtual disks', 6.0, 5.0),
+                     ('90th percentile peak memory wait among VMs', 0.0, 0.0), ('90th percentile peak disk latency among VM virtual disks', 6.0, 5.0),
                      ('Highest ESXi (error + dropped) network packets', 0.0, 0.0)]
 
     def parts_facts(self, parts, kpi_value):
@@ -1696,7 +1696,7 @@ class ProblemValueTest(unittest.TestCase):
 
     PARTS = [('Worst peak vCPU Ready among all VMs', '%', 14.7), ('90th percentile peak vCPU Ready among VMs', '%', 0.8),
              ('Worst peak vCPU Co-stop among all VMs', '%', 6.1), ('90th percentile peak vCPU Co-stop among VMs', '%', 1.2),
-             ('Worst memory wait among all VMs', '%', 0.0), ('90th percentile memory wait among VMs', '%', 0.0),
+             ('Worst peak memory wait among all VMs', '%', 0.0), ('90th percentile peak memory wait among VMs', '%', 0.0),
              ('Highest ESXi (error + dropped) network packets', '%', 0.43)]
 
     def card(self):
@@ -1727,7 +1727,7 @@ class ProblemValueTest(unittest.TestCase):
         self.assertIn('peak vCPU Ready: worst VM 14.7% (orange), 90th percentile 0.8% (green): not cluster-wide: fewer than 10% of the VMs', line)
         self.assertIn('peak vCPU Co-stop: worst VM 6.1% (orange), 90th percentile 1.2% (orange): broad', line)
         self.assertIn('Highest ESXi (error + dropped) network packets 0.43% (red): the highest host only; no breadth row', line)
-        self.assertIn('Green at both: memory wait', line)
+        self.assertIn('Green at both: peak memory wait', line)
         self.assertIn('In short: broad on peak vCPU Co-stop; not cluster-wide on peak vCPU Ready', line)
         self.assertIn('the cause says whose', line)
 

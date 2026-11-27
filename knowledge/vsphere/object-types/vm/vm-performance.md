@@ -13,7 +13,7 @@
 | VM contention | CPU Co-stop | `cpu\|20_sec_peak_costopPct` | Peak CPU Co-stop among any vCPU (%) |
 | VM contention | CPU Ready | `cpu\|20_sec_peak_readyPct` | Peak CPU Ready among any vCPU (%) |
 | VM contention | CPU Overlap | `cpu\|20_sec_peak_overlap` | Peak CPU Overlap (%) |
-| VM contention | Memory Wait | `mem\|20_sec_peak_host_contentionPct` plus NVMe wait (tiered hosts) | Memory wait (%) |
+| VM contention | Memory Wait | `mem\|20_sec_peak_host_contentionPct` plus NVMe wait (tiered hosts) | Peak memory wait (%) |
 | VM contention | Disk Latency | `virtualDisk\|20_sec_peak_totalLatency_average` | Peak read/write latency among vDisks (ms) |
 | VM contention | Network Dropped Tx | `net\|droppedTxPct_max` | Peak network TX dropped packets (%) |
 | VM utilization | CPU Run | `cpu\|net_run` | CPU Net Run (%) |

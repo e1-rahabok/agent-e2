@@ -248,7 +248,7 @@ class Catalog:
 
     def kpi_limits(self, name):
         """The five limits of a sub-metric of a KPI or model (a kpi or model line), matched on its name without unit and gloss:
-        'Worst memory wait among all VMs' finds 'Worst memory wait among all VMs (%)'.
+        'Worst peak memory wait among all VMs' finds 'Worst peak memory wait among all VMs (%)'.
         A part a person reads at 5 minutes holds the highest 20-second value inside it, so the 20-second limits come first,
         then 5-minute, then 2-second. Returns {'metric', 'object', 'limits', 'interval', 'excluded_when_green', 'kb'} or None."""
         key = _part_key(name)
