@@ -14,8 +14,6 @@
 <p align="center">
   <img src="https://img.shields.io/badge/model-open%20weights%2C%20local-6e7781?labelColor=3d444d" alt="Model: open weights, local">
   <img src="https://img.shields.io/badge/runs-locally%20%28data%20stays%20on%20site%29-6e7781?labelColor=3d444d" alt="Runs locally">
-  <img src="https://img.shields.io/badge/knowledge%20files-286-6e7781?labelColor=3d444d" alt="Knowledge files: 286">
-  <img src="https://img.shields.io/badge/benchmark%20questions-291-6e7781?labelColor=3d444d" alt="Benchmark questions: 291">
   <img src="https://img.shields.io/badge/target-99%25%20final%20score-6e7781?labelColor=3d444d" alt="Target: 99% final score">
 </p>
 
@@ -27,21 +25,23 @@
   - A VMware consultant, not an LLM aid. It answers Level 400 questions, and it leads a consultation: asked "Can you guide me over capacity planning for a vSphere cluster? You're my expert consultant", it interviews you for what the plan needs, names every default it assumes, computes the answer with code, and explains which number limits your hosts and why.
   - Under the hood, an expert system on a local LLM. The agent and the harness lead: code follows the expert's procedure, decides what to read from the knowledge base's map, asks for missing inputs and computes the exact values; the model reads and writes ([harness/AGENT.md](harness/AGENT.md)).
   - Consultations: capacity planning in release 1.0; 14 more planned after 1.0 ([project/consultations.md](project/consultations.md)).
-- Scope for Phase 1:
+- Scope in release 1.0, which the [workspace roadmap](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md) sets for all repositories:
   - vSphere metrics. Performance & Capacity management. Monitoring and Troubleshooting.
 - Name:
   - Agent E2 is built by Iwan 'E1' Rahabok to make his expertise and experience available 24/7.
   - Designed to replace AskIO on isvara.io.
 
-**Three parts, one body of knowledge:**
+**One body of knowledge, four repositories:**
 
-| Part | Role |
+| Repository | Role |
 |---|---|
 | Agent E2 (this repository) | The knowledge and the agent. Downloadable for private deployment: runs locally, customer data stays on site. |
-| [Isvara.io](https://isvara.io) | Where Agent E2 lives on the Internet. Try it there without installing anything. |
-| [vCommunity management pack](https://github.com/e1-rahabok/VCF-vCommunity-Adapter) | Implements the knowledge of Agent E2 as a VCF Operations adapter: the KPIs and models (Cluster Performance, Cluster Consumption, Cluster Risk, Close for Business) computed in the customer's VCF Operations. |
+| [isvara](https://github.com/e1-rahabok/isvara) | [isvara.io](https://isvara.io), the public website. Agent E2 is to replace AskIO there, so people can try it without installing anything. |
+| [private-cloud-manager](https://github.com/e1-rahabok/private-cloud-manager) | PCM, Private Cloud Manager: a web app for operations roles. Its Agent E2 panel calls this repository's API. |
+| [PCM-Adapter](https://github.com/e1-rahabok/PCM-Adapter) | The VCF vCommunity Adapter, a VCF Operations management pack. It computes Agent E2's KPIs and models in the customer's VCF Operations. |
 
-- They reinforce each other: Agent E2 explains the scores the pack computes, and reads them; Isvara.io lets readers try Agent E2 before deploying it; the pack puts the same thresholds and models on the customer's screens.
+- They reinforce each other: Agent E2 explains the scores the adapter computes, and reads them; isvara.io lets readers try Agent E2 before deploying it; the adapter puts the same thresholds and models on the customer's screens.
+- How the four fit, their contracts, decisions and roadmap: [private-cloud-workspace](https://github.com/e1-rahabok/private-cloud-workspace).
 
 **Business problem:**
 
@@ -98,21 +98,8 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 
 - Goal not achieved yet. Latest round ([`benchmark/results/README.md`](benchmark/results/README.md)): Agent E2 on Muse-Glimmer-30B scored 84% final, the frontier reference 79%. It fails the release gate on the final score (limit 85%) and on confident-wrong (15%, limit 3%). The knowledge base and the harness have changed since that round.
 - A round runs two runs per candidate model, Base (the model alone) and Agent E2, and the frontier reference ([`benchmark/RUN.md`](benchmark/RUN.md)).
-- Benchmark questions: 291 run, 8 deferred (not run). 8 of the run set are screenshot questions. The run set by area and level:
-
-| Area | Level 100 | Level 200 | Level 300 | Level 400 | Total |
-|---|---|---|---|---|---|
-| CPU | 1 | 2 | 38 | 77 | 118 |
-| Memory | 1 | 3 | 36 | 59 | 99 |
-| Storage | 2 | 2 | 25 | 40 | 69 |
-| Network | 1 | 2 | 21 | 21 | 45 |
-| System (cluster, resource pools, capacity, statistics) | 3 | 3 | 27 | 38 | 71 |
-| Guest OS layer (Windows, Linux) | 1 | 3 | 28 | 44 | 76 |
-| GPU | 0 | 1 | 0 | 0 | 1 |
-| Questions | 7 | 11 | 111 | 162 | 291 |
-
-- A question counts in every area it touches, so the area rows add up to more than 291. Current counts: `python3 project/tools/question_coverage.py`.
-- Retrieval check: current numbers in [`project/plan.md`](project/plan.md), milestone M3.
+- The question set by area and level: `python3 project/tools/question_coverage.py`.
+- Retrieval check: current numbers in [`project/plan.md`](project/plan.md), section Retrieval.
 - Earlier generations (classic and agentic modes) and their results are archived in [`project/archive/`](project/archive) and not compared.
 - Plan and milestones: [`project/plan.md`](project/plan.md).
 

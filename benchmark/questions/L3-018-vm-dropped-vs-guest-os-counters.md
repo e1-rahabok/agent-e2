@@ -25,7 +25,7 @@ A, B, E
 - Misconception: D: "The counts should match, so one of them is broken." Or C: "the VM and the guest never see the same drop."
 
 ## Notes
-- 2026-11-16 (author, Q251): level 200 to 300, as the reviewers read it. A new Level 200 basics question for the guard is still to write.
+- 2026-11-16 (author, Q-E2-251): level 200 to 300, as the reviewers read it. A new Level 200 basics question for the guard is still to write.
 - Revised 2026-11-12, then after the independent review: Linux guest with a decidable counter. `ip -s link` RX dropped does not include the device's out-of-buffer count; `ethtool -S` shows it as `pkts rx OOB` per queue (upstream Linux vmxnet3 driver, vmxnet3_ethtool.c).
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the compound option C split; the two options not in the knowledge base (Tools resets counters, bytes against packets) replaced by a misconception and a wrong action.
 - Review 2026-11-15: made generic. The stem had become the capture condition of its practical half 0420 in words (vCenter drops above 0, `ip -s link` 0, pkts rx OOB 0), and four options matched 0420's. New options: security-policy drops, host drops after the guest, the over-correction C (ring-drop visibility, also tested in 0420), the fleet profile E and the wrong action F. Key changed from A, B to A, B, E.
@@ -40,7 +40,7 @@ technology: [network]
 object: [vm, guest-os]
 tool: [vcenter, guest-os-tools]
 task: explain-mechanism
-level: 300                      # Q251, author 2026-11-16: relabelled as written (was 200)
+level: 300                      # Q-E2-251, author 2026-11-16: relabelled as written (was 200)
 answer_type: deterministic
 input: [text]
 knowledge:

@@ -35,7 +35,7 @@ B, C, E, F, H
 ## Notes
 - Paired with the screenshot question 0363 (theory and practical; author, 2026-11-14). Reading the pair: design.md, section 3.9.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): C one fact (its clause on vCenter negated D); old G (a reading) is now the wrong action; old I (Usage leaves out kernel work) negated H and is now the over-correction (Usage also counts reservations). Key unchanged.
-- The author's answer to Q218 (2026-11-14): vCenter Demand excludes the hypervisor reservation; VCF Operations Demand includes it and, per VM, takes the higher of demand and reservation. The split goes back to vRealize Operations.
+- The author's answer to Q-E2-218 (2026-11-14): vCenter Demand excludes the hypervisor reservation; VCF Operations Demand includes it and, per VM, takes the higher of demand and reservation. The split goes back to vRealize Operations.
 - Changed in the 2026-11-15 audit: B (the 5-minute average of Usage, a fact tested in many questions) replaced by vCenter Demand below Usage on a quiet host; E (higher of demand and reservation) replaced by the VM Demand fact, since E and J were the two sides of one rule; J stays as the unit-trap. Level stays 300 (author-set).
 - Synthetic, 2026-11-14, from the author's sample. Counts only after author approval.
 
@@ -57,7 +57,7 @@ knowledge:
 knowledge_main: vsphere/technology/cpu/metrics/host/demand
 attachments: []
 origin: synthetic
-source_path: "Author's sample, 2026-11-14 (Q218)"
+source_path: "Author's sample, 2026-11-14 (Q-E2-218)"
 misconception: [A, G, I]
 misconception_type: [tool-confusion, consumption-as-contention]
 pair: "0363"

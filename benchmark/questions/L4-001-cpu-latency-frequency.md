@@ -36,7 +36,7 @@ A, C, D, J
 
 ## Notes
 - Tests: Same name, different meaning (CPU Latency vs Disk / Memory Latency).
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14).
 - Sharpened stem: no resource setting changed on the VM (rules out a limit for option G). The %A/MPERF line (actual against nominal frequency, named in the latency knowledge file) gives the frequency drop that options C and H need as evidence, not as an inference.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): C and D no longer negate B; I (the wrong action) added. Key unchanged, A, C, D (author approved, 2026-11-14).
 - Paired with 0102 (theory and practical, design.md 3.9).

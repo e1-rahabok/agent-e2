@@ -39,4 +39,4 @@ A source note carries its evidence, so the knowledge files that are digested fro
 - Which knowledge files each note feeds: `python3 project/tools/source_trace.py`. When a note changes, recheck those files.
 
 ## future/
-Sources for future releases. Not digested: nothing in them is in `knowledge/`, and each file says so in its first line. Move a file up to `project/sources/` when a release takes it in (author, 2026-11-15, Q229).
+Sources for future releases. Not digested: nothing in them is in `knowledge/`, and each file says so in its first line. Move a file up to `project/sources/` when a release takes it in (author, 2026-11-15, Q-E2-229).

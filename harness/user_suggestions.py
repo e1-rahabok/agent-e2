@@ -13,7 +13,7 @@ situation from them with its calculator and catalog, so the caller holds no doma
 - dip is a movement of its own, apart from declining: a one-off drop needs other questions ("Why did performance drop at
   {time}?") than a decline.
 - No underused-capacity situation: the grey (wastage) band in thresholds-capacity, section sizing, has no value yet,
-  and detecting it would invent a threshold (Q258).
+  and detecting it would invent a threshold (Q-E2-258).
 
 Shown: with a movement, 2 movement questions and 1 metric question (how the page's KPI works, from the knowledge base); good
 with no movement, 1 level and 2 metric questions; medium or bad, 2 level and 1 metric.

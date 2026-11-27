@@ -27,7 +27,7 @@ A, C
 - Misconception: B: reclamation by compression and swap read from "below minFree". Or E: "once free memory is back above the Soft line, the host is out of Soft."
 
 ## Notes
-- States as fractions of minFree (clear 300%, soft 64%, hard 32%, low 16%, with hysteresis on the way back up: Soft left above 100%, Hard above 48%): the knowledge base, ESXi memory states; Frank Denneman, frankdenneman.nl/2011/07/26/mem-minfreepct-sliding-scale-function (minFree: a sliding scale, about 899 MB for the first 28 GB plus 1% of the rest, so about 21.1 GB on a 2 TB host: 0.9 + 20.2). Author answer Q188 (ESXi 9.1 memory reclamation manual, project/sources).
+- States as fractions of minFree (clear 300%, soft 64%, hard 32%, low 16%, with hysteresis on the way back up: Soft left above 100%, Hard above 48%): the knowledge base, ESXi memory states; Frank Denneman, frankdenneman.nl/2011/07/26/mem-minfreepct-sliding-scale-function (minFree: a sliding scale, about 899 MB for the first 28 GB plus 1% of the rest, so about 21.1 GB on a 2 TB host: 0.9 + 20.2). Author answer Q-E2-188 (ESXi 9.1 memory reclamation manual, project/sources).
 - A VM with a memory limit is compressed and swapped at any host state; C is about the host-wide start.
 - Changed in the 2026-11-15 audit: E (Soft read as the VMs waiting; redundancy #40, homed in 0149/0392) replaced by the hysteresis misconception; F's key point now carries the reclamation-is-not-a-wait reason; C's clause removed (near-negation of B). The file name still says 6 GB; the title says 11 GB.
 

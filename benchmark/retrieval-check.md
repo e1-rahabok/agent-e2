@@ -10,7 +10,7 @@ Script: [benchmark/runner/retrieval_check.py](https://github.com/e1-rahabok/agen
 - It catches regressions. Every new knowledge file changes word statistics and ranking. A file added for one chapter can push another question's file out of the top results. Without this check, the drop would surface only in the next benchmark, mixed with model noise.
 - It keeps changes honest. Rule (`CLAUDE.md`, Validation): a change to structure or retrieval needs a before and after number. This check gives that number for every change set.
 - The reading plan follows `related` links both ways (`plan_related_back`), from the top search hits, the named files and the files the claims found.
-- Runs on the run set as it is (Q206), re-baselined when the question set changes.
+- Runs on the run set as it is (Q-E2-206), re-baselined when the question set changes.
 
 ## What it does
 - Input: every benchmark question that lists `knowledge` ids, the files a correct answer depends on ([benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md)).
@@ -50,10 +50,10 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_check.py --embeddings 
   - the model's case (stage 1) can add files the code-only reading does not; it is not in this check yet (`--case-model`, planned). A screenshot-only stem, such as 0037, has no words to search: the check reports its main file as missing, and the case model's reading of the image is what brings it in a run;
   - questions with status `deferred`, `retired` or `awaiting-input` are skipped, as in the run;
   - BM25 and hybrid give different numbers. Compare like with like, and record the mode.
-- Current numbers: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3.
+- Current numbers: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Retrieval.
 
 ## What is a good number
-- Levels agreed by the author (Q130). Current numbers: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3. Earlier generations are archived and not compared.
+- Levels agreed by the author (Q-E2-130). Current numbers: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Retrieval. Earlier generations are archived and not compared.
 
 ### Why the retrieval number must be higher than the release score
 - Release gate ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5): final score at least 85% on Agent E2, Level 400 at least 80%, confident-wrong at most 3%.
@@ -110,4 +110,4 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_check.py --embeddings 
 
 - Measure each fix with the check before keeping it. Keep a fix only when context recall or complete questions go up, or stay the same while the content becomes more correct (give that reason in the pull request text).
 - Never fit the knowledge base to one question: a fix must be a general fact, term or link that helps every question on the topic. The held-out set guards against fitting ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10).
-- After every run, update the M3 status row of [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) with the current numbers. The before and after, the mode and the questions that gained or lost go in the pull request text.
+- After every run, update the Retrieval row of [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) with the current numbers. The before and after, the mode and the questions that gained or lost go in the pull request text.

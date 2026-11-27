@@ -29,7 +29,7 @@ A
 - Changed in the 2026-11-15 audit: throwaway C (the Guest OS) replaced by the low-IOPS over-correction; E added (a device queue NFS does not have); A reworded away from "outside the host" (the host's network stack sits beyond the NFS client); B made a full sentence; key points per option. Key unchanged: A. Needs the author's review.
 - Re-review 2026-11-16: stem no longer asks where "most of the latency" comes from (it read as one answer); options reworded as separate statements about the row. Key unchanged.
 - Review 2026-11-15: A reworded so it does not restate option A of the paired theory question 0186. Key unchanged.
-- 2026-11-14 (project/question-pairing-2026-11-14.md, A15): the hand-drawn marks beside DAVG and GAVG on the answer row masked; the stale `## Input to supply` removed (screenshot supplied by the author 2026-11-05, esxtop on one ESXi 9.1 host); closing line made plural (Q199).
+- 2026-11-14 (project/question-pairing-2026-11-14.md, A15): the hand-drawn marks beside DAVG and GAVG on the answer row masked; the stale `## Input to supply` removed (screenshot supplied by the author 2026-11-05, esxtop on one ESXi 9.1 host); closing line made plural (Q-E2-199).
 - Author 2026-11-05: Level 300; the misconception is thinking an NFS datastore is not in the device panel and has no DAVG.
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Counts only after author approval.
 ## Metadata

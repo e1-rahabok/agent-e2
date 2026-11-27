@@ -41,7 +41,7 @@ A, B, C, D, E, F
 ## Notes
 - 2026-11-16 re-review: A no longer says the web VMs "lose the most", which excluded H (batch-01 loses the most); A now states their wait against run. Key unchanged.
 - Mechanism: 2% Ready on 10% Run delays about 20% of the work; the application may not notice 2% on 98% Run (knowledge base, VM CPU Ready, sections Read against Run and Guest OS sizing).
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14).
 - 2026-11-15 audit: the list is now a vCenter Real-time export (Readiness and Run of the same 20-second sample, read within the hour vCenter keeps them). The earlier VCF Operations list could not exist: VCF Operations keeps only the peak vCPU Ready of each 5-minute cycle, Net Run has no peak, and peaks of different metrics can come from different 20-second blocks (peak-20-second-metrics). CSV header changed to match; values unchanged. C, I, L reworded so hedges sit in wrong options too (truth kept).
 
 ## Metadata

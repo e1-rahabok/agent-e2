@@ -35,7 +35,7 @@ Each entry has a status, the user's prompt, why a consultant beats a plain LLM, 
 - Code computes: the decision tree step by step: each score against its band; the new VMs added to allocation, reservation and the expected peak; the HA admission result.
 - The model explains: the answer (yes, yes with a condition, no) and the score that decides it; what to fix first when it is no.
 - Knowledge: [can-cluster-take-more-vms](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md), [cluster-consumption](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [cluster-risk](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md), [cluster-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/cluster-performance.md), [admission-control-and-cluster-state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md)
-- Gaps and blockers: the decision tree runs as code only once flows are executable (Q166). Step 6 (one orange and one green) is open in the tree.
+- Gaps and blockers: the decision tree runs as code only once flows are executable (Q-E2-166). Step 6 (one orange and one green) is open in the tree.
 - Author notes:
 
 ### C02 · Can I take a host out?
@@ -46,7 +46,7 @@ Each entry has a status, the user's prompt, why a consultant beats a plain LLM, 
 - Code computes: the cluster with N-1 or N-2 hosts: utilization at the peak, reservations against the unreserved memory of each remaining host, HA failover capacity left.
 - The model explains: whether it is safe, and if not, which VMs or settings block it.
 - Knowledge: [can-cluster-take-a-host-out](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out.md), [admission-control-and-cluster-state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md), [drs-overview](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/drs-overview.md), [resource-controls](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md)
-- Gaps and blockers: Q166 (executable steps). Q222 (does a host in maintenance mode lower availability).
+- Gaps and blockers: Q-E2-166 (executable steps). Q-E2-222 (does a host in maintenance mode lower availability).
 - Author notes:
 
 ### C03 · Rightsize a VM, or reclaim capacity across many VMs
@@ -57,7 +57,7 @@ Each entry has a status, the user's prompt, why a consultant beats a plain LLM, 
 - Code computes: per VM the Guest OS footprint and the proposed size; the idle, powered-off and orphaned VMs; the total reclaimed.
 - The model explains: which VMs to change first and why; what to watch after the change; where an application needs its own method.
 - Knowledge: [guest-os-sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-sizing.md), [rightsizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md), [oversized-vm-downsizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/decision-tree/oversized-vm-downsizing.md), [reclamation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/reclamation.md), [unused-vm](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/unused-vm.md), [vm-footprint-sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-footprint-sizing.md)
-- Gaps and blockers: Q193 (SQL Server max server memory steps). A table tool for exports of many VMs (After 1.0 list).
+- Gaps and blockers: Q-E2-193 (SQL Server max server memory steps). A table tool for exports of many VMs (After 1.0 list).
 - Author notes:
 
 ### C04 · Design classes of service (Gold, Silver, Bronze)
@@ -79,7 +79,7 @@ Each entry has a status, the user's prompt, why a consultant beats a plain LLM, 
 - Code computes: each value against its KPI band and threshold row; the branch to the next step.
 - The model explains: what is healthy, what is not and why, and which flow opens next.
 - Knowledge: [cluster-health-check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/cluster-health-check.md), [esxi-health-check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/esxi-health-check.md), [vm-health-check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/vm-health-check.md)
-- Gaps and blockers: Q166 (executable steps; thresholds for flow tests, point 4). Availability is after 1.0 in the checks themselves.
+- Gaps and blockers: Q-E2-166 (executable steps; thresholds for flow tests, point 4). Availability is after 1.0 in the checks themselves.
 - Author notes:
 
 ### C06 · Configuration review
@@ -101,7 +101,7 @@ Each entry has a status, the user's prompt, why a consultant beats a plain LLM, 
 - Code computes: the largest VM that fits one node; the vNUMA layout; whether the VM spans nodes.
 - The model explains: the layout and its cost; when to split the VM.
 - Knowledge: [virtual-numa](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/virtual-numa.md), [numa-settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md), [cpu-topology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-topology.md), [latency-sensitivity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/latency-sensitivity.md), [vm-size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md)
-- Gaps and blockers: Q198 (NPS-1 or the setting that matches the silicon); Q216 (`numa.*` options in 9.1). The VM size calculator (After 1.0 list).
+- Gaps and blockers: Q-E2-198 (NPS-1 or the setting that matches the silicon); Q-E2-216 (`numa.*` options in 9.1). The VM size calculator (After 1.0 list).
 - Author notes:
 
 ### C08 · Memory tiering: adopt it, and on which hosts?
@@ -112,7 +112,7 @@ Each entry has a status, the user's prompt, why a consultant beats a plain LLM, 
 - Code computes: active memory as a share of DRAM; the density gain at the chosen ratio; which hosts qualify.
 - The model explains: where tiering helps, where it hurts, and what to watch after (NVMe read bandwidth and latency per VM).
 - Knowledge: [memory-tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md), [is-memory-tiering-slowing-host](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host.md), [cluster-risk](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md)
-- Gaps and blockers: the vendor thresholds have no catalog row for a flow test (Q166, point 4).
+- Gaps and blockers: the vendor thresholds have no catalog row for a flow test (Q-E2-166, point 4).
 - Author notes:
 
 ### C09 · Resource pool and reservation design
@@ -123,7 +123,7 @@ Each entry has a status, the user's prompt, why a consultant beats a plain LLM, 
 - Code computes: the share each VM gets under contention; reservations against the cluster after a host failure; pools whose reservations block power-on.
 - The model explains: the design, the traps it avoids, and the simplest setup that meets the goal.
 - Knowledge: [resource-pool-design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/resource-pool-design.md), [resource-settings-guidance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md), [resource-controls](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md), [admission-control-and-cluster-state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md)
-- Gaps and blockers: share and reservation arithmetic is not in the calculator yet. Q218 (is a CPU reservation inside Demand).
+- Gaps and blockers: share and reservation arithmetic is not in the calculator yet. Q-E2-218 (is a CPU reservation inside Demand).
 - Author notes:
 
 ### C10 · Design monitoring: KPIs, alerts, dashboards and reports
@@ -145,7 +145,7 @@ Each entry has a status, the user's prompt, why a consultant beats a plain LLM, 
 - Code computes: availability minutes per period for the target; the KPI levels per class.
 - The model explains: the SLA text, the KPIs behind it, and the daily and weekly routine.
 - Knowledge: [sla-metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md), [kpi-vs-sla](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/kpi-vs-sla.md), [iaas-business](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/iaas-business.md), [proactive-operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/proactive-operations.md), [health-risk-efficiency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-risk-efficiency.md)
-- Gaps and blockers: Q222 (does a host in maintenance mode lower Operational Availability).
+- Gaps and blockers: Q-E2-222 (does a host in maintenance mode lower Operational Availability).
 - Author notes:
 
 ### C12 · Hardware refresh and host specification
@@ -178,5 +178,5 @@ Each entry has a status, the user's prompt, why a consultant beats a plain LLM, 
 - Code computes: the thin overcommit ratio and the runway; the outstanding IO each queue allows.
 - The model explains: the design and its risks.
 - Knowledge: [storage-configuration-review](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/storage-configuration-review.md), [esxi-storage-io-path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-io-path.md)
-- Gaps and blockers: thin: Q195 (Paravirtual SCSI queue limit, KAVG and DAVG values); no datastore sizing guidance.
+- Gaps and blockers: thin: Q-E2-195 (Paravirtual SCSI queue limit, KAVG and DAVG values); no datastore sizing guidance.
 - Author notes:

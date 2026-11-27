@@ -64,5 +64,5 @@ tool: [vcenter]
 knowledge_main: vsphere/architecture/provider-consumer
 misconception_type: [provider-vs-consumer]
 pair: "0115"
-status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q199): review again
+status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q-E2-199): review again
 ```

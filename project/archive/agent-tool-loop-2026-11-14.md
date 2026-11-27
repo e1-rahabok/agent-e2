@@ -175,7 +175,7 @@ Each is small (all five: 3,000 tokens, exactly the budget checked by lint), need
 ## 9. Why classic mode stays
 - Classic mode costs a third of the benchmark. Reasons to keep it:
   1. It isolates tool skill. Classic = what the knowledge base adds with no tool skill from the model. Agentic minus classic = what the model's own tool use adds or loses. Without classic, a low agentic score cannot be pinned on the model or on the knowledge base.
-  2. It is as good as agentic today. Benchmark 2026-11-13: classic and agentic within the margin for every model (gemma 78% against 76%, muse 77% against 78%, qwen 69% against 63%), at a third to half of the tokens. Q200 asks whether the next round decides the shipped mode. The mode is chosen per model by the decision rule in [`benchmark/design.md`](../../benchmark/design.md).
+  2. It is as good as agentic today. Benchmark 2026-11-13: classic and agentic within the margin for every model (gemma 78% against 76%, muse 77% against 78%, qwen 69% against 63%), at a third to half of the tokens. Q-E2-200 asks whether the next round decides the shipped mode. The mode is chosen per model by the decision rule in [`benchmark/design.md`](../../benchmark/design.md).
   3. It is the fallback. When a model breaks the tool-call format twice, the harness answers in classic mode instead of failing.
   4. It is fast: one model call instead of up to nine.
 - After the full run of the 196 questions picks the model and mode, routine runs use the chosen mode plus baseline only. Classic stays in the code as the fallback.

@@ -56,7 +56,7 @@ A, C, D, E, H, K, N
 ## Notes
 - Public source: Linux kernel documentation, I/O statistics fields: field 9 counts requests in progress, field 10 the time with at least one request in progress, field 11 the weighted time. sysstat iostat(1) manual page: aqu-sz is the average queue length of the requests issued to the device; await includes the time in the queue and the time in service; %util for devices serving requests in parallel, such as RAID arrays and modern SSDs, does not reflect their performance limits. aqu-sz = I/O rate x await is Little's Law.
 - Debatable risk: that the vCenter virtual disk latency starts at the virtual disk and excludes the wait in Linux is read from the counter definitions and the knowledge file; the vSphere API reference was not read for this. The numbers are chosen so that the arithmetic is exact.
-- Prepared with author question Q194 (the reading of the guest disk queue).
+- Prepared with author question Q-E2-194 (the reading of the guest disk queue).
 - The prompt states that vmw_pvscsi runs with its default queue depths, so option L is decidable. The Linux vmw_pvscsi default cmd_per_lun is 254 (PVSCSI_DEFAULT_QUEUE_DEPTH in drivers/scsi/vmw_pvscsi.c, kernel 5.0 and later); the 64 per device of Broadcom KB 343323 is the Windows driver default. L stays false under either value, because about 31 requests are at the virtual disk.
 - Changed in the 2026-11-15 audit: the iostat and vCenter numbers changed so they are no longer the knowledge-base example (aqu-sz 32 kept for L); the requests at the virtual disk are given in the stem as vCenter outstanding IO (redundancy #45: the Little's Law fact stays with 0028/0416), and old E (time at or below the virtual disk) and H (1.6 requests wait in Linux) were replaced in place by two true facts no question tests: %util near 100% does show saturation on a serial device (from the retired 0419), and where the vmw_pvscsi parameters in use are read.
 - Changed on 2026-11-16 (re-review): G used "about 40 ms", a number no value in the stem gives; it now claims the whole 50 ms await for the array (still false). Key unchanged.
@@ -83,7 +83,7 @@ knowledge:
 knowledge_main: guest-os/storage/linux-storage-io-path
 attachments: []
 origin: synthetic
-source_path: "Drafted 2026-11-13 for author question Q194 (project/plan.md)"
+source_path: "Drafted 2026-11-13 for author question Q-E2-194 (project/plan.md)"
 misconception_type: [layer-confusion, tool-confusion]
 status: draft
 ```

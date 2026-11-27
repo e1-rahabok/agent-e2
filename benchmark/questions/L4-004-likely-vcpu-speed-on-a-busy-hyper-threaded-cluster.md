@@ -33,12 +33,12 @@ C
 - Misconception: B (2.2 GHz, the speed on the label) or D (3.3 GHz, the All Cores Turbo with the Hyper-Threading charge on VM Usage left out).
 
 ## Notes
-- Author confirmed the key (Q034, 2026-11-03). Knowledge: [`vsphere/technology/cpu/concepts/cpu-frequency`](../../knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md), section Likely vCPU speed on a busy cluster.
+- Author confirmed the key (Q-E2-034, 2026-11-03). Knowledge: [`vsphere/technology/cpu/concepts/cpu-frequency`](../../knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md), section Likely vCPU speed on a busy cluster.
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "so frequency fluctuates" (after the power policy line).
 - The 0.8 is a field figure for this scenario (cpu-frequency, section Likely vCPU speed on a busy cluster). Do not add an option at 0.625 × a clock (about 2.06 GHz, 2.8 GHz): the overcommit file states 0.625 to tenants, so two knowledge files would give two answers.
 - Changed in the 2026-11-15 audit: reasons stripped from the options (C carried the only mechanism and was the longest), qualifier "most of the time" moved into every option, the interpreting stem lines removed, F (3.75 GHz) added.
 - Clocks changed 2026-11-16 (re-review): the stem carried the knowledge-base example of cpu-frequency (2.0 / 3.0 / 4.0 GHz, about 2.4 GHz); now 2.2 / 3.3 / 4.5 GHz, every option recomputed, truth values unchanged.
-- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which number is most realistic for one vCPU".
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q-E2-199: the count is never disclosed). Was: "Which number is most realistic for one vCPU".
 
 ## Metadata
 ```yaml

@@ -1,4 +1,4 @@
-# Archived 2026-11-11 (Q116): the author withdrew the fixed utilization zones; they depend on the object type and on what is sized.
+# Archived 2026-11-11 (Q-E2-116): the author withdrew the fixed utilization zones; they depend on the object type and on what is sized.
 - id: cluster-utilization-usable-wastage
   metric: Cluster utilization against usable capacity
   object: ClusterComputeResource

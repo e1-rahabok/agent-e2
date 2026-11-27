@@ -39,7 +39,7 @@ B, D, F, I, J
 - Pair with 0441 (theory). Wrong on both: a knowledge gap. Right on theory and wrong on practical: a reading failure (the time zone, the unit, or taking a flat chart for a failed change).
 - Attachments: the author's lab capture of 2026-11-15 (one VM, vCenter 9.1). The export is the real-time chart of the VM downsampled to one row per minute (60 rows, 03:28 to 04:27 UTC); the task screenshot is cropped to the task list. Lab VM and host names stay (design.md, section 13).
 - The condition the key depends on holds in the export: Consumed 5,758,392 to 5,830,972 KB, Granted 6,356,764 KB and Overhead consumed 58,460 KB in every row, Ballooned memory 0.
-- No option rests on whether the host's Reservation consumed counts the reservation as set (Q231, answered 2026-11-15: counted as set). No option uses Entitlement, a kernel value (Q230, answered 2026-11-15). I states only that the host counters take the reservation.
+- No option rests on whether the host's Reservation consumed counts the reservation as set (Q-E2-231, answered 2026-11-15: counted as set). No option uses Entitlement, a kernel value (Q-E2-230, answered 2026-11-15). I states only that the host counters take the reservation.
 - Leak guard: the knowledge base does not state this capture's values (checked 2026-11-15; the VM-level lab lines in vm-memory-metrics, entitlement and resource-controls carry no numbers).
 - Written 2026-11-15 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 

@@ -23,7 +23,7 @@ E
 - Misconception: C: Demand read as the CPU the guest asks for, unmet demand included. Or A: Usage read as the work the guest needs.
 
 ## Notes
-- Author (Q186, 2026-11-12): "VM sizing" in an administrator's words almost always means Guest OS sizing. Agent E2 names that reading (term map row vm-sizing).
+- Author (Q-E2-186, 2026-11-12): "VM sizing" in an administrator's words almost always means Guest OS sizing. Agent E2 names that reading (term map row vm-sizing).
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "A correctly sized VM balances performance, capacity and cost."
 - Changed in the 2026-11-15 audit: the stem names the job (the owner asks for more vCPUs: Guest OS sizing, not VM footprint, where Usage or Demand can be right) and asks for a comparison with the others listed (no singular superlative, no absolute "suit": Net Run leaves out Ready and Co-stop). B (VM CPU Usage (%), the same truth as A) replaced by VM CPU Used (ms) (guest-os-sizing, CPU: exclude, Hypervisor overhead); E no longer carries an explanation sentence. Kept as text: the evidence form is the practical partner 0371.
 - 2026-11-16 re-review: D (VM CPU Demand (%), the same counter as C in another unit, so the same truth value) replaced by VM CPU System (ms) (guest-os-sizing, CPU: exclude, Hypervisor overhead; system, Meaning). Key unchanged. Left noted: the reviewer reads the level as generous (a strong Level 300 reader answers from "size from Run").

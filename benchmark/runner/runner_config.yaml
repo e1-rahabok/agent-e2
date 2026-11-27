@@ -6,7 +6,7 @@ models:                       # candidates; all must read screenshots (vision). 
   - alibaba/qwen3.8-27b
   - meta/muse-glimmer-30b       # added 2026-11-05: 29.8B, vision, Apache 2.0 (Hugging Face meta-models/Muse-Glimmer-30B)
 
-# No judge: every question is multiple choice (Q199, 2026-11-14); judge.py is archived in project/archive/legacy/judge-2026-11-14.
+# No judge: every question is multiple choice (Q-E2-199, 2026-11-14); judge.py is archived in project/archive/legacy/judge-2026-11-14.
 # Release gate limits and the reference: benchmark/runner/score_report.py, GATE and REFERENCE (benchmark/design.md, section 7.5).
 
 modes: [baseline, agent-e2]     # the model alone, and Agent E2 (harness/AGENT.md). The frontier reference runs mode web (release.runs)
@@ -35,7 +35,7 @@ model_params:                 # per model, a list of request settings in order o
     - {reasoning: {effort: low}, max_tokens: 8000}
   google/gemma-4-31b-it:      # 160-380 tokens per answer with the default
     - {}
-  anthropic/claude-opus-5.5:  # frontier reference: effort capped at medium (Q164, benchmark/models.md section 5)
+  anthropic/claude-opus-5.5:  # frontier reference: effort capped at medium (Q-E2-164, benchmark/models.md section 5)
     - {reasoning: {effort: medium}, max_tokens: 8000}
     - {max_tokens: 8000}
 max_minutes: null              # stop cleanly after this many minutes (exit code 3, then --resume). A Claude Code cloud background command stops after 120: use --max-minutes 110 there

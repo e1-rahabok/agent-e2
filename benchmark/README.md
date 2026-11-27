@@ -53,7 +53,7 @@ Arrows: `-->` solid, `..>` dashed.
 - Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it, on vSphere 9.1 and the Guest OS layer. Cost and price questions are out of scope.
 - One file per question: scales to hundreds of questions, one diff per question, attachments per question.
 - Ids never change and are never reused. A retired question gets `status: retired`, a note with the reason, and moves to [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions). A question is deleted only when the author asks.
-- Deleted on author request: `vendor-neutral-general-001` (hyperscaler VM cost; out of scope, Q039).
+- Deleted on author request: `vendor-neutral-general-001` (hyperscaler VM cost; out of scope, Q-E2-039).
 
 ## Question fields
 - Each question file: `# Title`, then `## Prompt`, `## Attachments` (when the question has any), `## Answers`, `## Explanation`, and a `## Metadata` section at the end with one yaml block. No front matter at the top.
@@ -63,7 +63,7 @@ Arrows: `-->` solid, `..>` dashed.
 - No leak through the knowledge base: an attachment is never a knowledge-base image (lint compares the bytes), and the knowledge base never states the values of an attachment. The question sends the screenshot; the knowledge base holds the mechanism, with its own examples.
 - `## Attachments` (optional) shows an image inline with alt text, for the reviewer. It is never sent to the model: the runner sends the files listed in `attachments`, images as images and CSV files as text after the prompt.
 - Only `## Prompt` (plus attachments) is ever sent to the AI.
-- Fairness: the title, prompt, answers and explanation use public vocabulary only: no Agent E2 terms, no vCommunity management pack metrics ([design.md](design.md), section 6.1; lint list `question_fairness`).
+- Fairness: the title, prompt, answers and explanation use public vocabulary only: no Agent E2 terms, no VCF vCommunity Adapter metrics ([design.md](design.md), section 6.1; lint list `question_fairness`).
 
 ### Metadata tags
 The tags in each question's `## Metadata` block, grouped by what they describe. Values are the complete set; lint rejects any other.
@@ -87,14 +87,14 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 | `object` | Every object type the question reads. A list. Counted by `question_coverage.py` ([design.md](design.md), section 3.7) | `vm`, `esxi`, `cluster`, `resource-pool`, `datastore`, `network`, `guest-os` |
 | `tool` | Every tool whose output the question shows or asks about. A list | `vcenter`, `vcf-operations`, `esxtop`, `guest-os-tools` (Windows or Linux counters), `none` |
 | `pair` | Optional. The id of the question it is paired with: the same fact asked as theory (text) and as a screen to explain (screenshot or table). Both point to each other; lint checks it ([design.md](design.md), section 3.9) | `"0363"` |
-| `knowledge_main` | The one file that holds the answer or the misconception. Also listed in `knowledge` (lint checks it). Not the list order. The retrieval check reports a missing main file as a defect ([retrieval-check.md](retrieval-check.md)). Set by the author in the question review (Q130) | One knowledge id |
+| `knowledge_main` | The one file that holds the answer or the misconception. Also listed in `knowledge` (lint checks it). Not the list order. The retrieval check reports a missing main file as a defect ([retrieval-check.md](retrieval-check.md)). Set by the author in the question review (Q-E2-130) | One knowledge id |
 
 **How hard it is and how it is scored**
 
 | Tag | Meaning | Values |
 |---|---|---|
 | `level` | Expertise level ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.2) | `100`, `200`, `300`, `400` |
-| `answer_type` | How the answer is scored (section 3.3). Every question of the run set is `deterministic` (Q199) | `deterministic` (option letters, compared by the runner), `judged` (free text, scored 0-3 by the judge) |
+| `answer_type` | How the answer is scored (section 3.3). Every question of the run set is `deterministic` (Q-E2-199) | `deterministic` (option letters, compared by the runner), `judged` (free text, scored 0-3 by the judge) |
 | `misconception` | The letters a Level 300 reader would pick. Deterministic only. Never sent to the candidate | Letters `A`-`Y` |
 | `misconception_type` | The misconception types the question tests, from `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400. A list; may be empty at Level 100-200 | Values in [project/tools/rules_check_values.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/rules_check_values.yaml), `misconception_type` |
 

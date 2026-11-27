@@ -35,7 +35,7 @@ A: activating ESX Top in the policy is read as switching the whole Real Time Ana
 - Why one answer: each wrong option contradicts one sentence of the Workbench page: Top N (A), 6-hour limit (C), two lines in Custom Query (D), cluster intervals (E). 09:00 to 15:30 is 6.5 hours, so C fails by arithmetic.
 - Debatable risk: the Workbench page's introduction says both Overview and Top N offer 2-second data, but its Top N section says Top N is always 20-second, even when ESX Top is enabled; the question follows the explicit sentence. The policy page names the ESX Top view for Virtual Machine types and the Workbench page names Host System and VM; B says "host or VM", which the Workbench page supports. The metric name cpu.ready.HOST is documented for hosts only, so B does not name a VM metric.
 - Rewritten 2026-11-13 to raise difficulty: the Top N fact now sits in a cluster scenario with an activation time, an incident time and a 6.5-hour range, so four documented limits (Top N, 6 hours, two lines, cluster intervals) each carry one wrong option.
-- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which statement is correct?"
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q-E2-199: the count is never disclosed). Was: "Which statement is correct?"
 
 ## Metadata
 ```yaml

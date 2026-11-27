@@ -23,11 +23,11 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
   - The numbered steps are what the LLM follows. The harness leaves the chart out of the model's text ([`ARCHITECTURE.md`](../../ARCHITECTURE.md), section Ingest), so a fact only in the chart never reaches the model. The steps add what a box cannot hold: exact metric names, thresholds with their source, reasons.
   - Lint (`rules_check.py`) fails when chart and steps differ: a step without a box, a box without a step, an arrow from step A to step B (directly, or through boxes that are not steps, such as another flow) without `→ step B` in step A, or the reverse. A step with no `→ step N` ends the flow.
   - A hand-off to another flow (`→ <flow id>` in a step) is a box in the chart with a Mermaid click line that opens that flow on GitHub: `click T3 "https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/<id>.md" "<title>" _blank`. Box text: the flow's title. A dotted arrow (`-.->`) marks a flow that is read or opened but does not return to this one. Lint fails on a hand-off without its click line, and on a click line no step hands off to. GitHub opens the link.
-  - Steps as data (Q166) follow the chart the same way: the `then` targets equal its arrows.
+  - Steps as data (Q-E2-166) follow the chart the same way: the `then` targets equal its arrows.
 - Each step states: the metric (exact name, matching the metric file title), the object, the threshold with its source, and the next step for each outcome.
   - Example: 1. Check VM CPU Ready (VirtualMachine). Above <threshold> (<source>) → step 2. Otherwise → step 4.
 - Every metric or flow named in a step is linked in `internal_derive`, so retrieval brings in the files with the flow.
-- Steps as data (Q166; to build). The numbered step stays the text the model reads. A `steps` list in the flow's `## Metadata` holds what code needs, one entry per step that code can compare:
+- Steps as data (Q-E2-166; to build). The numbered step stays the text the model reads. A `steps` list in the flow's `## Metadata` holds what code needs, one entry per step that code can compare:
   - `step`: the step number.
   - `object`: the object type.
   - `metric`: a metric file title, so it resolves through the catalog.

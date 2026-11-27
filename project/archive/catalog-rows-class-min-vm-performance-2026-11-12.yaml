@@ -1,4 +1,4 @@
-# Archived 2026-11-12 (Q162): class minimum VM Performance (%) rows removed from knowledge/catalog/thresholds-capacity.yaml.
+# Archived 2026-11-12 (Q-E2-162): class minimum VM Performance (%) rows removed from knowledge/catalog/thresholds-capacity.yaml.
 # The KPI has no class of service; the class promise is relative contention (1x, 2x, 3x). The numbers were on the older Performance (%) scale.
 
 - id: class-gold-min-vm-performance

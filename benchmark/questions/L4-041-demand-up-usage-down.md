@@ -40,7 +40,7 @@ A, B, C, D, E, K
 ## Notes
 - From the author's samples: Demand jumped while Usage dropped, and the contention line jumped more than Demand minus Usage, because it accounts for both frequency and Hyper-Threading. Since Aria Operations 8.18 the VCF Operations CPU Contention metric no longer counts frequency and Hyper-Threading, so the question uses the vSphere CPU Latency counter, which does.
 - Not used from that sample: Usage above Demand at some points (Demand is smoothed over a longer window).
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14).
 - Export regenerated 2026-11-14 with new numbers and a new VM (seeded script; project/question-pairing-2026-11-14.md, decision 3): the old export equalled the Demand, Usage and Latency example of the VM CPU Demand knowledge file. The stem question no longer reads the export for the candidate (it named Demand up, Usage down and Latency above the gap). Options A and B now state the reading only and D one fact: their old clauses (the extra demand was not met; the vCPUs were not waiting; the gap holds only the Hyper-Threading charge) negated F and H. Key unchanged (author approved, 2026-11-14).
 - Paired with 0002 (theory and practical, design.md 3.9).
 - 2026-11-16 re-review: G ("the host cannot be what slows the VM") was near the negation of C and K; it now tests its own false fact (a busy sibling thread counted in Readiness; ready, Mechanism: Ready does not register Hyper-Threading contention). Key unchanged.

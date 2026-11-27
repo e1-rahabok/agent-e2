@@ -25,7 +25,7 @@ B
 
 ## Notes
 - Revised 2026-11-12: the 400-VM workbook became a 40-VM CSV; the management pack score removed (fairness). The question now tests which statistic ranks VMs for drops; the spike formula is in 0061, transmit drops hidden by TCP in 0074. The CSV is synthetic, generated with a fixed seed.
-- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which VM should be investigated first?"
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q-E2-199: the count is never disclosed). Was: "Which VM should be investigated first?"
 - 2026-11-14: the stem line "You can open one ticket today" removed: it told the candidate that one option is correct (design.md 6.2). Practical half of 0061 (project/question-pairing-2026-11-14.md, A13). Key unchanged.
 - Review 2026-11-15: the key point for D added. Key unchanged.
 - Audit 2026-11-15: B names only the drop count (redundancy #52: "rank by a percentile" is tested by 0081/0405; A here stays, as it tests the unstable ratio with 0061).

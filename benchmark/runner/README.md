@@ -222,7 +222,7 @@ python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
 ## Question fields used
 | Field | Meaning |
 |---|---|
-| `answer_type` | `deterministic` (letters); the only type (Q199) |
+| `answer_type` | `deterministic` (letters); the only type (Q-E2-199) |
 | `level` | `100`, `200`, `300`, `400` |
 | `input` | `text`, `table`, `screenshot`; checked against the attachments by lint |
 | `misconception` | Option letters that are the known wrong answer |

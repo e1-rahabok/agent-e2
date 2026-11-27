@@ -44,7 +44,7 @@ A, B, C, I, J, L
 - Misconception: D: "Other Wait is IO wait: storage is slow, and both VMs have the same problem." - F: "jump-01 has the highest Other Wait, so it is the worst VM."
 
 ## Notes
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). Dropped from the old key: "consolidation briefly stuns the VM" (no knowledge file states it).
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14). Dropped from the old key: "consolidation briefly stuns the VM" (no knowledge file states it).
 - 2026-11-15 audit: the knowledge base now names the builds of the accounting issue (other-wait, idle, vm-other-wait-high: ESXi 7.0 Update 2 and later, fixed in 8.0 Update 3j). The stem splits the hosts (fs-02 on 8.0 Update 3j, jump-01 on 8.0 Update 2; ESXi 7.0 U3 is past general support), so A is decided and B stays true. L (the update fixes jump-01's accounting) and M (Contention adds Other Wait only below 1%) added; G and K reworded so hedges sit in wrong options too (truth kept).
 
 ## Metadata

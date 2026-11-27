@@ -63,6 +63,6 @@ source:
   path: Provider Objects > Performance > Service Level Metrics
 corrections: []
 review_notes:
-- 'To check: Section ''Cluster SLI'': ''A VM must pass all four'' vs the book''s VM SLI as the average of four pass/fail values (0-100% in steps of 25%), and the normalized formula below, which counts breaches. (Q095).'
+- 'To check: Section ''Cluster SLI'': ''A VM must pass all four'' vs the book''s VM SLI as the average of four pass/fail values (0-100% in steps of 25%), and the normalized formula below, which counts breaches. (Q-E2-095).'
 status: draft
 ```

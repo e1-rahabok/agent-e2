@@ -44,7 +44,7 @@ A, C, D, H, J
 
 ## Notes
 - Synthetic, 2026-11-05, from the knowledge files listed in `knowledge`. Revised 2026-11-12 for question set 1.0: the screenshot replaced by an esxtop excerpt in text. Counts only after author approval.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). Review 2026-11-14: options F and I turned into near-miss false options that test the same facts (no per-adapter error counters in the vSphere Client; the command ratio follows the path count), so fewer options are true.
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14). Review 2026-11-14: options F and I turned into near-miss false options that test the same facts (no per-adapter error counters in the vSphere Client; the command ratio follows the path count), so fewer options are true.
 - Changed in the 2026-11-15 audit: K added (lost paths read as standby paths); misconception_type average-hides-worst replaced by tool-confusion (F reads the vSphere Client as if it showed per-adapter errors).
 - Changed 2026-11-16: D narrowed to failed commands, so D (FCMDS/s) and E (ABRTS/s) no longer negate each other. K replaced: the old K (lost paths read as standby paths) negated A; the new K tests the esxtop panels (no path panel), false as before.
 

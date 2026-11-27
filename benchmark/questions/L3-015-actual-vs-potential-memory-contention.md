@@ -32,7 +32,7 @@ A, B, C
 - Misconception: D: the swapped amount read as the VM being slow. Or F, the over-correction: with no host pressure, swap-in is harmless.
 
 ## Notes
-- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Do not select counters that indicate risk but not actual slowness." Stem made plural (Q199); was "Which metric best indicates".
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Do not select counters that indicate risk but not actual slowness." Stem made plural (Q-E2-199); was "Which metric best indicates".
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Hint: separate actual from potential, risk from reality."
 - Rewritten 2026-11-14 to the theory option rules (design.md 3.9 and 6.1 F5; project/question-pairing-2026-11-14.md): the definition prompt ("Which metrics best indicate that a VM has an actual memory performance problem?", options Ballooned, Swapped + Zipped, Latency, "Ballooned = Configured") became a situation with values and single-fact options. The author's fact stays: the wait (swap-in, decompression, Latency) is actual; swapped and compressed amounts are potential (author approved, 2026-11-14).
 - Changed in the 2026-11-15 audit: level 400 to 300 (each option is one public rule read on two rows); B replaced (swapped and compressed amounts are past reclamation is tested by the pair 0025/0391; the fact now is that compressed pages sit outside Granted); key point G adds the limit check.

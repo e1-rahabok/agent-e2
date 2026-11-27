@@ -37,10 +37,10 @@ B, D, E, F, H
 
 ## Notes
 - Tests: Same name, different meaning (consumer vs provider vantage point).
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
-- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): B one fact; H states the charge without negating G; K (the over-correction) is new. Old K (each thread's Utilization about 100%) removed: it rested on open author question Q220 (Thread Utilization with both threads busy). Q220 settled 2026-11-15: each thread reads 100%; no counter adds the two threads of a core. Key changed from B, D, E, F, H, K to B, D, E, F, H (author approved, 2026-11-14).
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14).
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): B one fact; H states the charge without negating G; K (the over-correction) is new. Old K (each thread's Utilization about 100%) removed: it rested on open author question Q-E2-220 (Thread Utilization with both threads busy). Q-E2-220 settled 2026-11-15: each thread reads 100%; no counter adds the two threads of a core. Key changed from B, D, E, F, H, K to B, D, E, F, H (author approved, 2026-11-14).
 - Paired with 0104 (theory and practical, design.md 3.9).
-- Q225 settled 2026-11-15: VM CPU Used (62.5% per vCPU with both threads busy) and ESXi CPU Used (half the core per thread) are two rules; the reason for C changed from core Usage carrying the 1.25x to core Usage at the clock speed. Key unchanged.
+- Q-E2-225 settled 2026-11-15: VM CPU Used (62.5% per vCPU with both threads busy) and ESXi CPU Used (half the core per thread) are two rules; the reason for C changed from core Usage carrying the 1.25x to core Usage at the clock speed. Key unchanged.
 - 2026-11-15 audit: five options replaced in place with facts of the same truth value, because their facts are tested twice elsewhere (redundancy #21-#23): B (Core Utilization cannot tell one busy thread from two) and D (Core Utilization 100%), home 0004/0012; F (Latency counts the 37.5%), home 0002/0102; G and I (Ready does not register Hyper-Threading), home 0002/0102. New: B ESXi CPU Used splits the core (true), D an idle sibling means a full-core charge (true), F Latency Sensitivity High keeps the sibling idle (true), G the VMs cannot be charged more than ESXi CPU Used (false, hyper-threading Misconceptions), I esxtop shows 200% for the core (false, hyper-threading Misconceptions). H shortened and reworded so it no longer reads as a host counter carrying the 1.25x. Stem: "not 100%" removed. Key letters unchanged.
 
 ## Metadata
@@ -69,5 +69,5 @@ misconception: [G, J, A]
 level: 400                      # author 2026-11-05
 misconception_type: [same-name-other-object, frequency-and-hyper-threading]
 pair: "0104"
-status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q199): review again
+status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q-E2-199): review again
 ```

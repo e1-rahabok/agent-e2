@@ -3,7 +3,7 @@
 retriever_guide: [how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting, decision-tree]
 scope: [sp5-framework, vsphere, vcf-operations, guest-os]
 technology: [cpu, gpu, memory, storage, network, system]
-pillar: [availability, performance, security, capacity, value]   # the five pillars of operations (author, Q197, 2026-11-13)
+pillar: [availability, performance, security, capacity, value]   # the five pillars of operations (author, Q-E2-197, 2026-11-13)
 product: [vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes]
 object: [VirtualMachine, HostSystem, ClusterComputeResource, ResourcePool, Datastore, StoragePod, Datacenter, Folder, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup, vSphereWorld, VCenterServer]
 instance: [aggregate, per-vcpu, per-vmnic, per-vmhba, per-virtual-disk]
@@ -23,7 +23,7 @@ misconception_type: [same-name-other-object, layer-confusion, consumption-as-con
 # Question tags for the coverage count (benchmark/design.md, section 3.7). A list each.
 question_object: [vm, esxi, cluster, resource-pool, datastore, network, guest-os]
 question_tool: [vcenter, vcf-operations, esxtop, guest-os-tools, none]
-# Fairness (benchmark/design.md, section 6.1): Agent E2 terms and vCommunity management pack metrics that a frontier model cannot know.
+# Fairness (benchmark/design.md, section 6.1): Agent E2 terms and VCF vCommunity Adapter metrics that a frontier model cannot know.
 # Rejected in the title, prompt, likely wrong answer and expected key points of every question that runs (not retired, deferred or awaiting input).
 question_fairness:
   '(?i)\bSP5\b': 'Agent E2 framework name'
@@ -38,7 +38,7 @@ question_fairness:
   '(?i)IaaS high utili[sz]ation': 'Agent E2 grouping'
   '(?i)\brealms?\b': 'Agent E2 term; say layer'
 # Prompt lines that help the frontier model and not the local model (author, 2026-11-14): a hint goes in ## Notes,
-# and the stem never tells how many options are correct (Q199). Checked in ## Prompt of every question that runs.
+# and the stem never tells how many options are correct (Q-E2-199). Checked in ## Prompt of every question that runs.
 question_prompt_hints:
   '(?im)^\s*hint\b': 'is a hint: move it to ## Notes'
   '(?i)\bbe aware (of|that)\b': 'is a hint: move it to ## Notes'

@@ -66,7 +66,7 @@ attachments:
   - 0363/vcenter-esxi-cpu-demand-usage.png
   - 0363/vcenter-system-resource-reservation.png
 origin: synthetic
-source_path: "Author's sample, 2026-11-14 (Q218)"
+source_path: "Author's sample, 2026-11-14 (Q-E2-218)"
 misconception: [C, G]
 misconception_type: [tool-confusion, rollup-and-interval, consumption-as-contention]
 pair: "0362"

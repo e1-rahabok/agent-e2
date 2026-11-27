@@ -41,7 +41,7 @@ A, B, D, E, F, G, H
 
 ## Notes
 - Follows the Windows slow flow (knowledge_main). The key does not require the flow's order of Windows counters: that order is a design choice of the flow.
-- No option uses a queue band. Guest Peak vCPU Queue in VCF Operations is per vCPU (Q217, settled 2026-11-15).
+- No option uses a queue band. Guest Peak vCPU Queue in VCF Operations is per vCPU (Q-E2-217, settled 2026-11-15).
 - Changed in the 2026-11-15 audit: D names the network sign as the flow's step 6 has it (receive drops on the vNIC, read in vSphere). E (a guest wait the VM does not share, redundancy #44), G (Windows cannot see Ready, #27) and H (ESXi cannot see Windows queues, #44) were third copies; each was replaced in place by a true fact of the cited files: the verdict still checks VM contention (ms-windows-slow step 7), the queue is explained by per-vCPU and privileged time (step 3; processor-time), and hypervisor work is invisible to the guest (vm-vs-guest-os, area C). Level stays 400 (the breaker held it: a two-layer flow with misleading readings).
 - Changed on 2026-11-16 (re-review): key point I gives I's own reason (quantify before any change) instead of J's. Key unchanged. The re-review found the level partly 300 (A, B, C, I, K, L follow from common troubleshooting sense; E, G, H carry the 400 content); not changed.
 
@@ -70,5 +70,5 @@ attachments: []
 origin: synthetic
 source_path: "Synthetic, 2026-11-12"
 misconception_type: [rollup-and-interval, layer-confusion]
-status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q199): review again
+status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q-E2-199): review again
 ```

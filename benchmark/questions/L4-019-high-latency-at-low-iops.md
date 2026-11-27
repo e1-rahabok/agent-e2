@@ -47,7 +47,7 @@ A, C, E, F, H, I, K
 
 ## Notes
 - Synthetic, 2026-11-05. Revised 2026-11-12 for question set 1.0: per-disk values and the array's own reading added. Counts only after author approval.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). The old key's KAVG level (0-1 ms in the vSphere documentation) is left out of the options; the knowledge files give 0.5 ms.
+- Converted from judged to multiple choice (Q-E2-199 F, 2026-11-14). The old key's KAVG level (0-1 ms in the vSphere documentation) is left out of the options; the knowledge files give 0.5 ms.
 - Audit 2026-11-15 (redundancy): D (command-weighted total latency; kept by the pair 0044/0414) replaced by "kernel latency follows device latency" (false); H (redo-log snapshot slows reads; kept by 0187 and 0045) replaced by "on a healthy host GAVG is mostly DAVG" (true); L (percentile, not the maximum; kept by the pair 0081/0405) replaced by the 10 ms rule of Broadcom KB 344099 (false, threshold transplanted). E and F shortened (truth unchanged). J key point names the VMkernel limits behind a high QAVG; esxi-storage-io-path added to `knowledge`. Key unchanged: A, C, E, F, H, I, K.
 - Re-review 2026-11-16: D and H were paired "On a healthy host" statements, so H decided D; D now reads a KAVG line that ignores DAVG as a host fault (false: esxi-storage-latency-stack, Example). The note on snapshot-impact removed: the snapshot option left in the 2026-11-15 audit and `knowledge` no longer lists it. Key unchanged: A, C, E, F, H, I, K.
 

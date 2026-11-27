@@ -35,7 +35,7 @@ A or E: the tier is assumed to behave like a folder, a tag filter or a dynamic g
 - Why one answer: the vendor page states the static rule for manual tiers; the group page states that dynamic groups are updated from the search results. B is the only option that applies both. The prompt says the re-evaluation has happened, so no timing has to be guessed.
 - Debatable risk: no page states in one sentence that a dynamic group placed in a manually created application keeps following its rules; this follows from the group being updated and the application holding the group, not a copy of its members. The refresh interval of a dynamic group is not documented and is not asked.
 - Rewritten 2026-11-13 to raise difficulty: two mechanisms in one application (static tier and dynamic group), a leaving member (rename), and folder and tag that match the tier VMs to tempt the reader.
-- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which statement describes ...".
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q-E2-199: the count is never disclosed). Was: "Which statement describes ...".
 
 ## Metadata
 ```yaml

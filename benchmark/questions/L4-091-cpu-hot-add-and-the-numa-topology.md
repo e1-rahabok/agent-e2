@@ -38,7 +38,7 @@ A, E, F, G, J
 ## Notes
 - Public source: vSphere 9.1 documentation (VMware vSphere 9.1 PDF, build of 2026-11-02), vSphere Resource Management, "Using Virtual NUMA" ("Enabling CPU HotAdd deactivates virtual NUMA", virtual NUMA is active by default above eight vCPUs, topology not influenced by cores per socket), and vSphere Virtual Machine Administration, "CPU Hot Plug" and "Virtual Topology in ESX". Broadcom KB 321931 (ESXi 7.x and 8.x; "Updated On" field empty).
 - The stem keeps virtual hardware version 19, where CPU Hot Plug gives the guest one node on every reading (numa, virtual-numa).
-- Changed in the 2026-11-15 audit: stem asks one question; tool `none` (no tool output is shown); I (false) and J (true) added on the hardware-version rule (virtual-numa, CPU Hot Add; numa, line on hot plug at hardware 20). Q216 (a), the lab check of `numa.allowHotadd`, is still open: I stays false on hardware 19 whatever it finds, and J rests on the default without the parameter.
+- Changed in the 2026-11-15 audit: stem asks one question; tool `none` (no tool output is shown); I (false) and J (true) added on the hardware-version rule (virtual-numa, CPU Hot Add; numa, line on hot plug at hardware 20). Q-E2-216 (a), the lab check of `numa.allowHotadd`, is still open: I stays false on hardware 19 whatever it finds, and J rests on the default without the parameter.
 
 ## Metadata
 ```yaml

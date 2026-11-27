@@ -34,7 +34,7 @@ B, C, G
 
 ## Notes
 - Theory half of 0391 (VCF Operations list of the same pattern). Facts shared with 0391 (past reclamation, the over-correction, the wrong action) are two questions each; E with L3-025 C is two.
-- Level 400 is the author's (Q056, 2026-11-05).
+- Level 400 is the author's (Q-E2-056, 2026-11-05).
 - Changed in the 2026-11-15 audit: the stem gives vCenter values instead of "Consumed is not high. There is clearly capacity to deploy another VM" (an interpretation); old D ("because of memory tiering", undecidable) replaced by the over-correction; E (cumulative totals), F (amount vs rate), G (no measurable wait, true) and H (wrong action) added; A and B reworded without the absolutes and the length cue. Key B, C kept; G added.
 - Changed in the 2026-11-16 re-review: A lost its last absolute and reason clause ("since ballooning always comes first"); same fact, still the misconception.
 

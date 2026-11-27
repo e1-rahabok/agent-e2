@@ -10,7 +10,7 @@
 - Why the system can win, and what it must do, is in [MISSION.md](MISSION.md).
 
 ## Agent E2 in PCM
-Agent E2 is the knowledge service of [PCM](https://github.com/e1-rahabok/private-cloud-management) (Private Cloud Management). It stays a logically independent application: its own repository, release, tests, benchmark and process. PCM is its main caller and holds none of its logic ([PCM D-078](https://github.com/e1-rahabok/private-cloud-management/blob/main/decisions.md)).
+Agent E2 is the knowledge service of [PCM](https://github.com/e1-rahabok/private-cloud-manager) (Private Cloud Manager). It stays a logically independent application: its own repository, tests, benchmark and process. Its releases are the workspace's ([ROADMAP.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md)). PCM is its main caller and holds none of its logic ([PCM D-078](https://github.com/e1-rahabok/private-cloud-manager/blob/main/decisions.md)).
 
 ![Agent E2 in PCM: PCM and Agent E2 as two processes, the HTTP calls between them, and the model server](images/agent-e2-in-pcm.svg)
 
@@ -139,7 +139,7 @@ Boxes, nested as drawn:
   - n22 **answer_shape.py**: explain, advise, diagnose, general; code reads the user's words, else the case next steps: diagnose only
   - n23 **user_terms.py**: match: rows ranked by hits case_labels: from screenshots query words, files, notes
   - n24 **arithmetic_calculator.py**: safe arithmetic (ast) summation_to_percent, units, cpu_states result names its source
-  - n25 **flow_executor.py**: steps of a flow file executable steps: Q166
+  - n25 **flow_executor.py**: steps of a flow file executable steps: Q-E2-166
   - n26 **public_web_lookup.py**: URLs in the question: fetch current-fact words: vendor search system names dropped, private IPs refused, trim 2K
   - n27 **topic_decision.py**: continues the topic, or new: user choice, then code, then one model call continuing: earlier turns sent
   - n28 **capacity_calculator.py**: planning calculator
@@ -208,7 +208,7 @@ Notes on the diagram:
 - Stages 1-4 run once per question (expert_agent.prepare), so every consensus sample reads the same reading set: a disagreement is doubt in the reasoning, not a different search.
 - The model never chooses a file or a tool. It reads the question into the case (call 1) and the reading set into the answer (call 2). Calls 3 and 4 fire only on a gap or a hard verifier issue.
 - Tiers T1-T3 are read whole (named: the first 3), the rest as their best sections; the order is the priority when the 32K budget runs out. Settings: search_k, context_tokens, plan_* in the runner config.
-- Dashed grey: flow_executor.py (executable flow steps, Q166) and capacity_calculator.py (planning calculator) are built and unit-tested; wiring them into stage 3 is open work (harness/AGENT.md, section 7).
+- Dashed grey: flow_executor.py (executable flow steps, Q-E2-166) and capacity_calculator.py (planning calculator) are built and unit-tested; wiring them into stage 3 is open work (harness/AGENT.md, section 7).
 - Same code for benchmark and site: only the endpoint in model_client.py differs. public_web_lookup.py sends only public requests; customer data stays on site.
 
 Arrows: `-->` solid, `..>` dashed.
@@ -218,7 +218,7 @@ Arrows: `-->` solid, `..>` dashed.
 - Read it left to right through the agent band: 1 Understand, 2 Plan, 3 Compute, 4 Ask, Prompt, 5 Answer, 6 Check, Consensus. The stage view, with its evidence, is in [`harness/AGENT.md`](harness/AGENT.md), section 3.
 - Orange lines are the model calls: 1 is the case (temperature 0) and 2 the draft. Calls 3 (the gap follow-up) and 4 (the repair) fire only when the agent finds a gap or a hard verifier issue. Consensus repeats 5 and 6 on the same reading set.
 - Purple dashed lines show agent code calling a tool. The model calls no tool and never chooses a file.
-- Grey dashed lines are built but not yet called: the `flow_executor.py` executable steps (Q166) and the `capacity_calculator.py` planning calculator.
+- Grey dashed lines are built but not yet called: the `flow_executor.py` executable steps (Q-E2-166) and the `capacity_calculator.py` planning calculator.
 - Source: [`project/tools/product_diagram.py`](project/tools/product_diagram.py) draws the SVG. Change it along with any change to `harness/` that the diagram shows, and run it from the repository root. The diagram is laid out by hand, not with Mermaid, because Mermaid's automatic layout pulled the stages out of order at this size. The Agent E2 in PCM and Repository diagrams are drawn by [`project/tools/document_diagrams.py`](project/tools/document_diagrams.py) in the same way.
 
 ## 1. Parts
@@ -263,7 +263,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 | Calls a Guest OS metric a VM metric | A separate `guest-os/` layer; the `layer` tag; a lint rule | Knowledge |
 | Gets a unit, rollup, statistics level or arithmetic wrong | Catalog lookup and calculator | Harness |
 | Loses track in a multi-step capacity plan (six numbers, three classes, HA) | Planning calculator (`capacity_calculator.py`): the agent computes from the case's inputs and the model explains. Built; still to wire into stage 3 | Harness |
-| Skips steps or jumps to a conclusion | The flow comes first in the reading set (tier 1) and the model follows its numbered steps. Still to build: the flow executor, where the agent compares the case's values with each step's test and takes the branch (Q166) | Knowledge + agent |
+| Skips steps or jumps to a conclusion | The flow comes first in the reading set (tier 1) and the model follows its numbered steps. Still to build: the flow executor, where the agent compares the case's values with each step's test and takes the branch (Q-E2-166) | Knowledge + agent |
 | Does not know which file it needs | Reading plan: named files, their mechanism links, one search per claim | Knowledge + agent |
 | Invents a threshold | Rule: quote a threshold only with its source; the thresholds catalog; the verifier flags numbers not in the text | Knowledge + harness |
 | Guesses when unsure | Unsure option; consensus of samples on one reading set; claims with no file marked as not settled | Agent |
@@ -307,11 +307,11 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 | Retrieval check | For every question, are the files it needs found and put in the context? | No | `python3 benchmark/runner/retrieval_check.py` (add `--embeddings` for hybrid) |
 | Whole system | Model + harness + knowledge on the question set; recall per answer shows whether the files were found or read | Yes | `python3 benchmark/runner/run_executor.py` |
 
-- The current retrieval result is in [`project/plan.md`](project/plan.md), M3.
+- The current retrieval result is in [`project/plan.md`](project/plan.md), section Retrieval.
 - Reading a wrong answer: if the needed file is not in context, it is a retrieval or knowledge problem; if the file is in context but the answer is wrong, it is a model or prompt problem; if the file is missing from the knowledge base, it is a knowledge gap.
 
 ## 7. Status
-- Milestones and what is built are in [`project/plan.md`](project/plan.md). Not built yet: the rest of the agent's build order ([`harness/AGENT.md`](harness/AGENT.md), section 7), query rewriting with glossary synonyms, and the offline bundle. Screenshots are read in 1.0, and the screen library comes in 1.1. Data files come in 1.2. Live VCF Operations data reaches Agent E2 only through its caller: PCM owns the connector, and Agent E2 has none of its own (section Agent E2 in PCM). Release 1.0 needs PCM to call Agent E2 through the service ([`project/plan.md`](project/plan.md), M6).
+- Milestones and what is built are in [`project/plan.md`](project/plan.md). Not built yet: the rest of the agent's build order ([`harness/AGENT.md`](harness/AGENT.md), section 7), query rewriting with glossary synonyms, and the offline bundle. Screenshots are read in 1.0, and the screen library comes in 1.1. Data files come in 1.2. Live VCF Operations data reaches Agent E2 only through its caller: PCM owns the connector, and Agent E2 has none of its own (section Agent E2 in PCM). Release 1.0 needs PCM to call Agent E2 through the service ([`project/plan.md`](project/plan.md), section On-premises deployment).
 
 ## 8. Local LLM use
 - The design target is a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.
@@ -354,7 +354,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 - Cite each file `id` used; the benchmark checks the cited ids. The service turns a citation into the file's title, or removes it, before a person reads the answer (`answer_service.no_file_refs`).
 - The shape follows the question ([`harness/answer_shape.py`](harness/answer_shape.py)): explain (the mechanism, no page figures, no next steps), advise (the value, then the reason and the trade-off), diagnose (conclusion, evidence, mechanism, then what to check next), or general. The model reads the user's bare question in one call at temperature 0 and also decides whether it needs the page's values (page_values) or is about how a score works in general (no opening, no figures); keyword patterns did this before and missed new wordings. Unreadable reply: the page is kept and the case's kind decides the shape. Measured on [`benchmark/runner/screen_answer_check.py`](benchmark/runner/screen_answer_check.py).
 - On a screen, code writes the opening (`lead`) in plain words from the calculator's numbers, and the model continues from it without repeating its figures: one voice, exact numbers (PCM D-119).
-- Each file in the reading set shows its `status`. The answer prompt has no draft rule, and answers never mention review status (MISSION.md, D1). Release content is reviewed (284 of 285 knowledge files are draft ; project/plan.md, M6).
+- Each file in the reading set shows its `status`. The answer prompt has no draft rule, and answers never mention review status (MISSION.md, D1). Content shipped in the on-premises deployment is reviewed (`knowledge_stats.py` prints the review status; project/plan.md, section On-premises deployment).
 - Use the terms of [`knowledge/glossary.md`](knowledge/glossary.md): preferred names, other names, confusable terms.
 - Quote a threshold only when a file states it with its source.
 - Topics ([`harness/topic_decision.py`](harness/topic_decision.py)): a conversation holds topics, a topic holds turns. The agent decides whether a question continues the current topic (the user's choice, then code, then one model call); a continuing question gets every earlier turn of the topic as chat messages and is searched with the earlier questions; a new topic is read alone. The caller (PCM) keeps the conversation and shows the decision with a one-click undo (PCM D-129).
@@ -363,7 +363,7 @@ Each mechanism blocks one failure of a small model, and none of them needs the I
 ### Flow questions (`health-check`, `troubleshooting`, `decision-tree`)
 - Retrieve the matching flow file first: the object's health check, the troubleshooting flow for the symptom, or the decision tree for the question. Retrieve its `internal_derive` metric files with it.
 - Follow the numbered steps in `## Checks, in order`, starting at step 1. Do not skip to a later step.
-- At each step, name the metric and object, compare the value with the stated threshold, and take the branch the step gives. Still to build: the comparison and the branch as code (executable steps, Q166), with the model then explaining the path.
+- At each step, name the metric and object, compare the value with the stated threshold, and take the branch the step gives. Still to build: the comparison and the branch as code (executable steps, Q-E2-166), with the model then explaining the path.
 - The Mermaid chart is not in the model's text (Ingest, step 3); the numbered steps are the flow. A reviewer checks that the chart and the steps agree.
 - When the user has given a value, apply it to the step. When not, ask for that metric's value, or state both branches.
 - Stop at the step that gives a conclusion, and state the path taken: step numbers, values, thresholds and their sources.

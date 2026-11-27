@@ -23,7 +23,7 @@ B, C
 
 ## Notes
 - Synthetic, 2026-11-05. Counts only after author approval.
-- CSV supplied by the author 2026-11-05 (VM names masked): Provisioned 14,100 GB, Virtual Machine Used 6,177.23 GB, snapshots 128.99 GB. 2026-11-12 (author, Q183): every disk thin (4 rows were marked thick with used below provisioned, which a thick disk cannot show); header typo and empty last column fixed.
+- CSV supplied by the author 2026-11-05 (VM names masked): Provisioned 14,100 GB, Virtual Machine Used 6,177.23 GB, snapshots 128.99 GB. 2026-11-12 (author, Q-E2-183): every disk thin (4 rows were marked thick with used below provisioned, which a thick disk cannot show); header typo and empty last column fixed.
 - Audit 2026-11-15: datastore Used Space (6.3 TB) added to the stem, so B is read from the datastore and not only from the VM rows; A and B no longer open with "Yes:" and "No:"; D reworded to the free-space formula (it was ambiguous: provisioned against capacity is the overcommit ratio); `datastore-space-headroom` added to `knowledge`. Key unchanged: B, C.
 - Open (knowledge base): Provisioned Space for VM counts non-disk files at actual size, but the CSV rows show round disk sizes (row 009: 1,000 GB with an 88.92 GB snapshot). Check against a VCF Operations 9.1 export.
 

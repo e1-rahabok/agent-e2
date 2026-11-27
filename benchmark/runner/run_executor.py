@@ -122,10 +122,10 @@ def main():
     unknown = [m for m in modes_ if m not in answer_modes.MODES]
     if unknown:
         sys.exit(f'Unknown modes {unknown}: {", ".join(answer_modes.MODES)}. Classic and agentic were removed on 2026-11-14 (harness/AGENT.md).')
-    # Every question is multiple choice (author, Q199, 2026-11-14); the judge is archived (project/archive/legacy/judge-2026-11-14).
+    # Every question is multiple choice (author, Q-E2-199, 2026-11-14); the judge is archived (project/archive/legacy/judge-2026-11-14).
     open_qs = [c.id for c in questions_ if not c.choice]
     if open_qs:
-        sys.exit(f'Questions without options cannot be scored: {", ".join(open_qs)}. Every question is multiple choice (Q199).')
+        sys.exit(f'Questions without options cannot be scored: {", ".join(open_qs)}. Every question is multiple choice (Q-E2-199).')
     meta = _model_meta(client, models_, a.mock)
     # Reading screenshots is a basic requirement (benchmark/models.md): a model without vision is not a candidate.
     blind = [m for m in models_ if 'vision' not in meta.get(m, {}).get('tags', [])]

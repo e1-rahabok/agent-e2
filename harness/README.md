@@ -13,7 +13,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | Gets a unit, rollup, statistics level or threshold wrong | Catalog (`catalog_database.py`) | Returns the exact value from the vSphere 9.1 tables, with its source |
 | Slips on arithmetic | Calculator (`arithmetic_calculator.py`) | Computes the conversion and names the rule's source file |
 | Slips on a multi-step capacity plan | Planning calculator (`capacity_calculator.py`) | Six numbers per host (3 models × CPU and memory), the binding one, HA hosts on top; class defaults from the catalog |
-| Skips troubleshooting steps | Flow file read whole (tier 1 of the plan); flow executor (`flow_executor.py`) | Serves the steps in order; executable steps (Q166) to build |
+| Skips troubleshooting steps | Flow file read whole (tier 1 of the plan); flow executor (`flow_executor.py`) | Serves the steps in order; executable steps (Q-E2-166) to build |
 | Answers in a broken format or guesses | Verifier (`answer_check.py`) | Rejects letters that are not options, Unsure mixed with others; one repair turn |
 | Answers from memory | The agent (`expert_agent.py`, `AGENT.md`) | The model answers only with the reading set and the computed facts in front of it; the knowledge base wins |
 
@@ -40,7 +40,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | `arithmetic_calculator.py` | Safe arithmetic plus domain functions (summation ms ↔ %, units with vCenter KB/kb rules, CPU capacity, esxtop state sums). Each result names its source. |
 | `capacity_calculator.py` | Planning calculator (`capacity_calculator.plan`; not yet wired into the agent, `AGENT.md` section 7): how many VMs of a class fit per host, or how full a host or cluster is for a VM mix. Allocation, reservation and utilization × CPU and memory; defaults are catalog rows `planning-*`. Method: [`sp5-framework/capacity/class-of-service-planning`](../knowledge/sp5-framework/capacity/class-of-service-planning.md), section Planning calculator. |
 | `public_web_lookup.py` | Public web knowledge: URLs in the question read before the model starts; search only for current facts (a pattern list); system names dropped from queries; private addresses refused; pages trimmed and labelled untrusted. Config key `web`. |
-| `flow_executor.py` | Flow executor: a health check, troubleshooting or decision-tree file as ordered steps, one at a time, with the next step and the steps it refers to. Today read by lint (every flow parses) and the unit tests; not called by the agent until executable steps (Q166). |
+| `flow_executor.py` | Flow executor: a health check, troubleshooting or decision-tree file as ordered steps, one at a time, with the next step and the steps it refers to. Today read by lint (every flow parses) and the unit tests; not called by the agent until executable steps (Q-E2-166). |
 | `answer_check.py` | Hard issues (no ANSWER line, letters that are not options, Unsure mixed with others) get one repair turn. Soft issues (no REASON, unknown file id, an ungrounded number) are recorded only. |
 | `reading_plan.py` | Stage 2, the reading plan (`AGENT.md`, section 4.2): named files, search, mechanism links, one search per claim, packed by tier with best sections. Also read by the retrieval check. |
 | `expert_agent.py` | The agent: stages 1 and 3-6 (case, compute, ask, answer, check). Design: `AGENT.md`. |
@@ -66,7 +66,7 @@ The agent's code calls them; the model calls none (`AGENT.md`, section 1).
 | `arithmetic_calculator.trend`, `arithmetic_calculator.kpi_parts` (with `catalog_database.kpi_limits`) | A KPI series against its change level; a KPI's parts at one point scored with their catalog limits, the KPI rebuilt and the points it lost split among the parts | Stage 3, from a caller's facts (`expert_agent.kpi_trends`, `expert_agent.kpi_part_lines`) |
 | `arithmetic_calculator.score_time`, `arithmetic_calculator.part_score` | How long a score spent past each band limit and its longest stretch; each depth row (worst VM) against its breadth row (90th percentile): the worst VMs only, or broad | Stage 3, from a caller's facts (`expert_agent.kpi_time_lines`, `expert_agent.depth_breadth_lines`): how long and how broad, the reason a value is a problem, not its colour |
 | `capacity_calculator.plan` | VMs per host, or how full a host or cluster is for a planned VM mix | To wire into stage 3 |
-| `flow_executor.run` | Steps of a flow file, or one step with next and references | To wire into stage 3 with executable steps (Q166) |
+| `flow_executor.run` | Steps of a flow file, or one step with next and references | To wire into stage 3 with executable steps (Q-E2-166) |
 | `public_web_lookup.gather`, `public_web_lookup.block` | Pages the question links, and vendor search results for current facts, trimmed and labelled untrusted | Stage 5, after the knowledge base text |
 
 ## 6. Settings and checks
@@ -83,7 +83,7 @@ The agent's code calls them; the model calls none (`AGENT.md`, section 1).
   - Unsure was chosen in only 1-6% of multiple-choice answers. The prompt rule "a wrong answer is worse than Unsure" does not make a 30B model abstain: it does not know what it does not know.
   - 55-75% of the confident-wrong multiple-choice answers were partly right, and the same question got different letters in different runs (luck 48-63%). Disagreement between samples is the signal the model cannot give about itself.
 - Projected on the previous generation (n = 3, from its 5 recorded runs; archived analysis above): multiple-choice confident-wrong 10-22% fell to 0-4%, at about 5 points of final score; the most unstable model paid 14. The gate puts confident-wrong first ([`benchmark/design.md`](../benchmark/design.md), section 7.5). With one reading set shared by the samples, a disagreement now comes from the reasoning alone.
-- What it did not fix: judged (open) answers, whose confident-wrong rate stayed 31-41%. Every benchmark question is multiple choice (Q199, resolved), so consensus covers the whole set; open answers are measured in the live test. History: Q199 in [`project/author-questions-resolved.md`](../project/author-questions-resolved.md) and the analysis file above.
+- What it did not fix: judged (open) answers, whose confident-wrong rate stayed 31-41%. Every benchmark question is multiple choice (Q-E2-199, resolved), so consensus covers the whole set; open answers are measured in the live test. History: Q-E2-199 in [`project/author-questions-resolved.md`](../project/author-questions-resolved.md) and the analysis file above.
 - Cost: up to n model passes per answer. On a local vLLM server the samples share the prompt cache and run as one batch, so latency rises little.
 - Benchmark: keeps `consensus_samples: 1` and reads the projection in `report.md` (section Consensus of 3, projected). The projection is the exact mean over all draws of 3 of the 5 runs, so it costs no model call. The deployed profile sets 3.
 

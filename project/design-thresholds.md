@@ -1,6 +1,6 @@
 # Thresholds in Agent E2: design and implementation
 
-Status: design, with Q152-Q158 answered. Built: one copy of the KPI levels; sections named by use; alerts in their own file (section 3). Section 3 describes what is built; sections 4-14 the target; section 15 the work. Not indexed.
+Status: design, with Q-E2-152-Q-E2-158 answered. Built: one copy of the KPI levels; sections named by use; alerts in their own file (section 3). Section 3 describes what is built; sections 4-14 the target; section 15 the work. Not indexed.
 
 The performance SLA and the SLI are removed from operations (the SLA is a business contract, and the KPI is enough). The `sla` and `sli` sections of `thresholds-performance.yaml` and their 7 rows are gone; the Harness, lint and tests no longer know the uses. Rows and sections below that still show `sla` or `sli` for performance are the earlier design, kept for the record; the availability and security SLA (contract) rows of the future files stay.
 
@@ -25,7 +25,7 @@ The performance SLA and the SLI are removed from operations (the SLA is a busine
 ### 3.1 Files
 | File | Content |
 |---|---|
-| [`knowledge/catalog/thresholds-performance.yaml`](../knowledge/catalog/thresholds-performance.yaml) | `kpi`: 31 lines, green, yellow, orange, red, zero for 5m, 20s and 2s, entered by hand, with `group`, `kb`, `excluded_when_green`; `flow`: 2 flow tests (KAVG, DAVG; host-storage-latency step 1; Q195) |
+| [`knowledge/catalog/thresholds-performance.yaml`](../knowledge/catalog/thresholds-performance.yaml) | `kpi`: 31 lines, green, yellow, orange, red, zero for 5m, 20s and 2s, entered by hand, with `group`, `kb`, `excluded_when_green`; `flow`: 2 flow tests (KAVG, DAVG; host-storage-latency step 1; Q-E2-195) |
 | [`knowledge/catalog/thresholds-capacity.yaml`](../knowledge/catalog/thresholds-capacity.yaml) | `model`: 6 sub-metrics of Cluster Consumption and `score`: the Cluster Consumption score, in the `kpi` line format (five limits; were `models` rows with colour-band ranges). `sizing`: 1 two-sided range with a grey (wastage) band, not scored. `decisions`: 6 close-for-business rows. `rules`: planning and sizing rows. |
 | [`knowledge/catalog/thresholds-risk.yaml`](../knowledge/catalog/thresholds-risk.yaml) | `model`: 12 sub-metrics of Cluster Risk and `score`: the Cluster Risk score, in the `kpi` line format. Its own file: Cluster Risk links performance and capacity. |
 | [`knowledge/catalog/thresholds-alerts.yaml`](../knowledge/catalog/thresholds-alerts.yaml) | `symptoms`: 40, one test each; `alerts`: 33 definitions, one object type each (were 24 with object lists, and before that 20 rows with a free-text `condition`), each with `criticality`, `pillar`, `match`, symptom `sets` (self or children with a population) and `wait_cycles` |
@@ -229,7 +229,7 @@ models:
     reading: cluster.cpu.thread-utilization.total
     direction: above
     edges: [0, 55, 70, 85, 100]
-    grey: null                       # wastage; Q110
+    grey: null                       # wastage; Q-E2-110
     excluded_when_green: false
 - id: cluster-risk
   use: model
@@ -262,7 +262,7 @@ Built. As built, it differs from the proposal below in three points:
 - No `type`, `reading`, `class`, `persona` or cancel cycles yet: no row needs them, and section 9 is not approved.
 - Fixes found during the migration: VM disk latency is four alerts (read and write separate, as storage-alerts says), not two; infrastructure contention alerts are on ESXi, resource pool and cluster, not on the cluster only; the 3 capacity alerts carry their population.
 - Lint: every symptom used, every reference exists, a symptom is defined on the alert's object, no two symptoms with the same test, no `condition` anywhere.
-- Restructured (an alert fires on one object type, not on a technology): one alert definition per object type (the infrastructure contention rows split into ESXi, resource pool and cluster; ESXi dropped packets into virtual and physical network, as the source counts 2). Alert `kb` is the object type's alert file (`vsphere/object-types/<object>/<object>-alerts`, [`guest-os/guest-os-alerts`](../knowledge/guest-os/guest-os-alerts.md); one file per VCF Operations object type, no `alerts/` folder), which explains each alert under a `##` heading carrying its `name`; a symptom's `kb` is the file of the metric it tests. No `quote`: the alert files hold no values, and lint rejects a value in an alert's section or a misconception's correction. The harness shows an alert with its own file only (not with every metric file it tests). CPU contention on ESXi, resource pool and cluster now reads a share of the member VMs (child VirtualMachine, > 25%), as the source states; memory contention the same since Q145 (c). VM CPU contention without the Contention symptom and orange halved (Q144); VM dropped packets gated by VM CPU Usage (Q147).
+- Restructured (an alert fires on one object type, not on a technology): one alert definition per object type (the infrastructure contention rows split into ESXi, resource pool and cluster; ESXi dropped packets into virtual and physical network, as the source counts 2). Alert `kb` is the object type's alert file (`vsphere/object-types/<object>/<object>-alerts`, [`guest-os/guest-os-alerts`](../knowledge/guest-os/guest-os-alerts.md); one file per VCF Operations object type, no `alerts/` folder), which explains each alert under a `##` heading carrying its `name`; a symptom's `kb` is the file of the metric it tests. No `quote`: the alert files hold no values, and lint rejects a value in an alert's section or a misconception's correction. The harness shows an alert with its own file only (not with every metric file it tests). CPU contention on ESXi, resource pool and cluster now reads a share of the member VMs (child VirtualMachine, > 25%), as the source states; memory contention the same since Q-E2-145 (c). VM CPU contention without the Contention symptom and orange halved (Q-E2-144); VM dropped packets gated by VM CPU Usage (Q-E2-147).
 
 Proposal:
 ```yaml
@@ -329,7 +329,7 @@ Proposal. Values are design values for the recommended alert set, to tune from e
 - While an alert is open, VCF Operations does not raise it again for the same object. A long cancel cycle therefore hides a new episode behind an old alert: the suppression trap. That sets the upper limit.
 
 ### 9.3 Rules
-- R1. Cancel cycles live on symptoms or conditions (a condition has its own waitCycles, cancelCycles and severity: VCF Operations API 9.1.1, alert-condition); alert-level wait and cancel cycles stay at 1 (Broadcom advice). Build an alert's tests as conditions (Q143).
+- R1. Cancel cycles live on symptoms or conditions (a condition has its own waitCycles, cancelCycles and severity: VCF Operations API 9.1.1, alert-condition); alert-level wait and cancel cycles stay at 1 (Broadcom advice). Build an alert's tests as conditions (Q-E2-143).
 - R2. By symptom type:
 
 | Symptom type | Behaviour | Cancel cycles | Time to clear |
@@ -462,7 +462,7 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 ## 15. Work list
 
 ### 15.1 1.0, in order
-1. Done: answers to Q152-Q158; `levels` as the one copy of the KPI levels; lookups and reading-set facts return them.
+1. Done: answers to Q-E2-152-Q-E2-158; `levels` as the one copy of the KPI levels; lookups and reading-set facts return them.
 2. `readings.yaml` for every reading that has a threshold today.
 3. Migration to the performance, capacity and alerts files. Done: sections by use (`sla`, `sli`, `kpi`; `models`, `decisions`, `rules`; `alerts`), `class` and `criticality` as fields, use labels in every result. Alert rows into symptoms and alert definitions: done (section 8.4). Still to do: cancel cycles (step 10); reading keys (step 2).
 4. Catalog tables, lookup with verdicts, the case's metric names, reading-set facts, unit tests.
