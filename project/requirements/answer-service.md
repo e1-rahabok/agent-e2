@@ -206,7 +206,7 @@ Source: answer to Q-WS-I1; Q-WS-95 (CSV files up to 2 MB, as for contributions).
 
 - Given a call to `/v1/answer` with `attachments` holding up to 3 CSV files, each at most 2 MB of text
 - When Agent E2 answers
-- Then each file reaches the model as text under its file name, as the benchmark runner sends CSV attachments today ([question_files.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/question_files.py#L108))
+- Then each file that fits the budget of R-E2-014 reaches the model as text under its file name, as the benchmark runner sends CSV attachments today; a file within these size limits that does not fit is refused by R-E2-014 ([question_files.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/question_files.py#L108))
 - And the answer's figures from the file are the file's own values
 
 Test scenarios:
