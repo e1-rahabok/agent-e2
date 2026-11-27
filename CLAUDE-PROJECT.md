@@ -6,6 +6,7 @@ Rules, tools and paths of agent-e2, the repository of Agent E2. Loaded with [CLA
 
 - Roadmap, open questions and decisions that bind several repositories: the workspace's [ROADMAP.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md), [OPEN-QUESTIONS.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/OPEN-QUESTIONS.md) and [DECISIONS.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/DECISIONS.md).
 - No milestone hook runs here. Before acting, read the open milestone in the workspace's ROADMAP.md: the first heading that does not end with ": done".
+- Requirements of this repository: [`project/requirements/`](project/requirements) (WD-036). The Agent E2 API's contract requirements are in the workspace's [agent-e2-api.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/requirements/agent-e2-api.md). Each requirement belongs to the workspace milestone that ROADMAP.md names.
 
 ## This repository
 
