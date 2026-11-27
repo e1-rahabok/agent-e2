@@ -6,7 +6,7 @@ models:                       # candidates; all must read screenshots (vision). 
   - alibaba/qwen3.8-27b
   - meta/muse-glimmer-30b       # added 2026-11-05: 29.8B, vision, Apache 2.0 (Hugging Face meta-models/Muse-Glimmer-30B)
 
-# No judge: every question is multiple choice (Q-E2-199, 2026-11-14); judge.py is archived in project/archive/legacy/judge-2026-11-14.
+# No judge: every question is multiple choice (Q-E2-199, 2026-11-14); judge.py is in git history (project/archive/legacy/judge-2026-11-14 at commit ebbc7dc).
 # Release gate limits and the reference: benchmark/runner/score_report.py, GATE and REFERENCE (benchmark/design.md, section 7.5).
 
 modes: [baseline, agent-e2]     # the model alone, and Agent E2 (harness/AGENT.md). The frontier reference runs mode web (release.runs)

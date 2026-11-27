@@ -1,6 +1,6 @@
 # Gate: CPU Demand Demo
 
-Run 2026-11-19, Muse Glimmer 30B (reasoning effort low), 3 runs of `steps/step-1.txt` with its two screenshots (VCF Operations and vCenter, the same host and hour; from the author's lab, also the attachments of benchmark question L4-120). The answer points and the claims to avoid are in `demo.yaml` (key), written before the runs. Run 1 is shown on the page. The first, text-only version and its runs are in project/archive/demo-quick-2-text-version-2026-11-19/.
+Run 2026-11-19, Muse Glimmer 30B (reasoning effort low), 3 runs of `steps/step-1.txt` with its two screenshots (VCF Operations and vCenter, the same host and hour; from the author's lab, also the attachments of benchmark question L4-120). The answer points and the claims to avoid are in `demo.yaml` (key), written before the runs. Run 1 is shown on the page. The first, text-only version and its runs are in project/archive/demo-quick-2-text-version-2026-11-19/. (git history, commit ebbc7dc)
 
 | Answer point | Run 1 | Run 2 | Run 3 |
 |---|---|---|---|

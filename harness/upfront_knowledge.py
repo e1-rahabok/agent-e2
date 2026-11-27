@@ -5,8 +5,8 @@ Each block is generated from the knowledge base at start, so it cannot drift fro
   terms      confusable pairs (knowledge/glossary.md, column Not to confuse with)
 A confident wrong belief is never looked up, so its correction is in place before the model reasons. Each block has a
 switch in benchmark/runner/runner_config.yaml, key primer. The map, flow index and procedure blocks of the tool loop are gone
-(2026-11-14): they told the model how to plan its lookups, and the agent's code plans now (archived in
-project/archive/legacy/harness-tool-loop-2026-11-14/upfront_knowledge.py).
+(2026-11-14): they told the model how to plan its lookups, and the agent's code plans now (in git history:
+project/archive/legacy/harness-tool-loop-2026-11-14/upfront_knowledge.py at commit ebbc7dc).
 """
 import os
 import re

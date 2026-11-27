@@ -5,7 +5,7 @@ One English word per concept in this repository. Not indexed.
 - This file: words for the repository's own parts.
 - When two words name the same thing, pick one, add it here, and replace the other. When one word names two things, split it here.
 - [`project/tools/rules_check.py`](tools/rules_check.py) flags the replaced words listed in [`project/tools/rules_check_values.yaml`](tools/rules_check_values.yaml), `avoid_repo_terms`.
-- Exempt: [`project/author-questions.md`](author-questions.md) (the author's own words) and records: [`project/archive/`](archive), `project/review-*.md`, [`benchmark/results/`](../benchmark/results).
+- Exempt: [`project/author-questions.md`](author-questions.md) (the author's own words) and records: `project/review-*.md`, [`benchmark/results/`](../benchmark/results).
 
 ## Two contexts for one English word
 An English word has a general meaning and a VMware operations meaning. Each word here is chosen so that both readers take it the same way.

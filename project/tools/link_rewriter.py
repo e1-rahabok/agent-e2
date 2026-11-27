@@ -72,7 +72,7 @@ def rewrite(text):
 
 # Every other Markdown file: a backticked knowledge id becomes [`id`](relative/path.md), the form knowledge files use
 # (project/knowledge-rules/writing.md). The harness keeps only `id` (kb.FILE_LINK), so the model reads no path.
-SKIP = ('project/sources/', 'project/archive/')
+SKIP = ('project/sources/',)
 BARE_ID = re.compile(r'(?<!\[)`([\w./-]+)`(?!\]\()')
 
 

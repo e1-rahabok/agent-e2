@@ -7,7 +7,7 @@ What is here:
 - Vendor documents (PDFs) and the author's files: Word documents, spreadsheets, draw.io diagrams, decks, JSON exports.
 - `evidence/`: screenshots, API output and lab results that source notes cite.
 - `export-templates/`: the column layouts of tool exports, for benchmark CSVs.
-- `future/`: sources for later releases (below).
+- `future/`: sources for after release 1.0, not part of the current knowledge (below).
 
 The files cut across VCF components (vSphere, vSAN, NSX, the Guest OS), so they sit in one folder, not under a component.
 
@@ -39,4 +39,4 @@ A source note carries its evidence, so the knowledge files that are digested fro
 - Which knowledge files each note feeds: `python3 project/tools/source_trace.py`. When a note changes, recheck those files.
 
 ## future/
-Sources for future releases. Not digested: nothing in them is in `knowledge/`, and each file says so in its first line. Move a file up to `project/sources/` when a release takes it in (author, 2026-11-15, Q-E2-229).
+Sources for after release 1.0, the workspace's release. Not digested: nothing in them is in `knowledge/`, and each file says so in its first line. Move a file up to `project/sources/` when a release takes it in (author, 2026-11-15, Q-E2-229).

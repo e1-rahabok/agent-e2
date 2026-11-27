@@ -46,13 +46,13 @@ Arrows: `-->` solid, `..>` dashed.
   - `technology`: every area it touches (cpu, memory, storage, network, system): [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.5.
 - Counts of every tag over the run set: `python3 project/tools/question_coverage.py`. The set has no target size: it changes as questions are added, rewritten and retired ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3).
 - File name: `L<level>-<nnn>-<slug>.md`, three digits, numbered from 001 within each level, in id order. Three digits keep the files in level order in a folder listing once a level passes 99 questions. The last number of a level is its count.
-- The id is a 4-digit running number in the metadata only (`id: "0007"`). It never changes and is never reused. The runner and the results use it; people do not need it. A new question takes the next free id, counting the archived questions too.
+- The id is a 4-digit running number in the metadata only (`id: "0007"`). It never changes and is never reused. The runner and the results use it; people do not need it. A new question takes the next id after the highest one ever used, retired questions included (git history keeps them).
 - A question that changes level: edit `level:`, then run `python3 project/tools/question_renumber.py`. It renumbers the files so each level runs from 001 without gaps, and updates the question links in the documents listed in `DOCS` of [project/tools/link_rewriter.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/link_rewriter.py). The id, the results and the attachments stay.
 - Attachments live in a folder named by the id: [benchmark/questions/0007](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/0007).
 - In documents, link a question by its title: `[title](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/<file>)`.
 - Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it, on vSphere 9.1 and the Guest OS layer. Cost and price questions are out of scope.
 - One file per question: scales to hundreds of questions, one diff per question, attachments per question.
-- Ids never change and are never reused. A retired question gets `status: retired`, a note with the reason, and moves to [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions). A question is deleted only when the author asks.
+- Ids never change and are never reused. A retired question is deleted, with the reason in the commit message. A question is deleted only when the author asks.
 - Deleted on author request: `vendor-neutral-general-001` (hyperscaler VM cost; out of scope, Q-E2-039).
 
 ## Question fields

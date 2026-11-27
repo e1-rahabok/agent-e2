@@ -87,7 +87,7 @@ avoid_ai_speak:
   '(?i)\bkey takeaways?\b': 'drop it'
   '(?i)\b(rest assured|I hope this helps|great question)\b': 'drop it'
 # Repository terms: one word per concept (project/terms.md). Checked in every markdown file except
-# project/terms.md, project/author-questions.md (the author's own words), project/archive/ and benchmark/results/.
+# project/terms.md, project/author-questions.md (the author's own words), and benchmark/results/.
 avoid_repo_terms:
   '(?i)\bgolden (cases?|set|questions?)': 'question, or question set'
   '\bAuto Test\b': 'benchmark'

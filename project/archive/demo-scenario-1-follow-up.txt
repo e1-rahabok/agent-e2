@@ -1,4 +1,0 @@
-The change calendar is open now. Last week, in this cluster:
-- CHG-1, Tuesday 22:00-23:30, DBA team, blueprint "SQL Gold v3": the payments databases sql-pay-01 to sql-pay-06 (16 vCPU, 256 GB each): power off, sched.mem.enableTiering = FALSE, Reserve all guest memory, power on. Status: successful.
-- CHG-2, Thursday 21:00-23:40, application team, payments migration wave 3: the payments application tier, 40 VMs (8 vCPU, 32 GB each, pay-api and pay-web), moved in from the old cluster by cross-vCenter vMotion, to sit next to its databases. Approved on Memory Capacity Remaining 38%. Status: successful.
-No other change. Which change caused it? Should we roll back CHG-2?

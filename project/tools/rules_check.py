@@ -319,7 +319,7 @@ def check_repo_terms(allowed, bad):
     """One word per concept in the repository (project/terms.md): flag the replaced words.
     Not called: lint does not check writing style in Markdown; the review checks these words (project/knowledge-rules/writing.md)."""
     skip = ('project/terms.md', 'project/author-questions.md', 'project/author-questions-resolved.md', 'project/tools/rules_check_values.yaml')
-    records = ('project/archive/', 'project/review-', 'benchmark/results/')
+    records = ('project/review-', 'benchmark/results/')
     for f in sorted(glob.glob('**/*.md', recursive=True)):
         if f in skip or f.startswith(records):
             continue
@@ -395,7 +395,7 @@ def check_moved(ids, bad):
         return
     old_ids = '|'.join(re.escape(o) for o in sorted(MOVED, key=len, reverse=True))
     pat = re.compile(r'(?:`(' + old_ids + r')`|blob/main/knowledge/(' + old_ids + r')\.md)')
-    records = ('project/archive/', 'project/review-', 'benchmark/results/')
+    records = ('project/review-', 'benchmark/results/')
     for f in sorted(glob.glob('**/*.md', recursive=True)):
         if f.startswith(records):
             continue
@@ -448,7 +448,7 @@ def check_titles(bad):
 def check_tables(bad):
     """Tables need a blank line before (else they render as text) and after (else the next line becomes a table row)."""
     for f in sorted(glob.glob('**/*.md', recursive=True)):
-        if f.startswith('benchmark/results/') or f.startswith('project/archive/'):
+        if f.startswith('benchmark/results/'):
             continue
         lines, fence = open(f, encoding='utf-8').read().split('\n'), False
         for i, line in enumerate(lines):

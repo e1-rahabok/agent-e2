@@ -28,7 +28,7 @@
 - Scope in release 1.0, which the [workspace roadmap](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md) sets for all repositories:
   - vSphere metrics. Performance & Capacity management. Monitoring and Troubleshooting.
 - Name:
-  - Agent E2 is built by Iwan 'E1' Rahabok to make his expertise and experience available 24/7.
+  - E1 is Iwan Rahabok, the author, who builds Agent E2. E2 is version 2.0 of him: a silicon-based expert with his knowledge, available 24/7.
   - Designed to replace AskIO on isvara.io.
 
 **One body of knowledge, four repositories:**
@@ -100,7 +100,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 - A round runs two runs per candidate model, Base (the model alone) and Agent E2, and the frontier reference ([`benchmark/RUN.md`](benchmark/RUN.md)).
 - The question set by area and level: `python3 project/tools/question_coverage.py`.
 - Retrieval check: current numbers in [`project/plan.md`](project/plan.md), section Retrieval.
-- Earlier generations (classic and agentic modes) and their results are archived in [`project/archive/`](project/archive) and not compared.
+- Earlier generations (classic and agentic modes) are not compared; their results are in git history.
 - Plan and milestones: [`project/plan.md`](project/plan.md).
 
 ## Checks

@@ -1,6 +1,6 @@
 # Plan
 
-Read first, every session. One page: mission, milestones with exit criteria, what we are not doing, and the open work under each milestone. Update it with every change set: open work changes here, and a rule or its reason goes to the document that owns it, not to this plan. Not indexed. Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-15.md) (knowledge base); [project/review-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-14.md) (repository). Questions waiting for the author: [project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md). Earlier plans with their decision logs: [project/archive/plan-2026-11-14-to-2026-11-25.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/plan-2026-11-14-to-2026-11-25.md) and [project/archive/plan-decisions-before-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/plan-decisions-before-2026-11-14.md).
+Read first, every session. One page: mission, milestones with exit criteria, what we are not doing, and the open work under each milestone. Update it with every change set: open work changes here, and a rule or its reason goes to the document that owns it, not to this plan. Not indexed. Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-15.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-15.md) (knowledge base); [project/review-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-14.md) (repository). Questions waiting for the author: [project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md). Earlier plans with their decision logs: [project/archive/plan-2026-11-14-to-2026-11-25.md](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/plan-2026-11-14-to-2026-11-25.md) and [project/archive/plan-decisions-before-2026-11-14.md](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/plan-decisions-before-2026-11-14.md).
 
 ## Mission
 - Agent E2, an expert system of agent, harness, knowledge base and an open-weight model, running locally (customer data stays on site) on enterprise GPU on premises (one GPU is an ideal, not a constraint; up to four large GPUs are acceptable). The benchmark is the proof that it works (MISSION.md).
@@ -11,7 +11,7 @@ Release 1.0 and its milestones are set for all repositories in the workspace's [
 
 | # | Milestone | Done when | Status |
 |---|---|---|---|
-| A1 | Repository cleaned for release 1.0 | Older benchmarks removed (Q-WS-59); text on the on-premises deployment marked; questions that bind several repositories go to the workspace (WD-019) | WD-019 applied in CLAUDE.md; the rest not started |
+| A1 | Repository cleaned for release 1.0 | Older benchmarks removed (Q-WS-59); text on the on-premises deployment marked; questions that bind several repositories go to the workspace (WD-019) | WD-019 applied in CLAUDE.md; older benchmarks deleted with project/archive (git history keeps them); on-premises text still to mark |
 | A2 | Answer set and grader | The free-text answer set and the automated grader built; first report on Gemma 4 31B | Not started |
 | A3 | Service for two callers | The Agent E2 API additions built (progress, attachments, sources, usage); the contract check C3 passes | C3 passes on today's endpoints; additions not started |
 | A4 | Live demo support | Agent E2 answers correctly on facts recorded from the lab | Not started |
@@ -70,7 +70,7 @@ Features and content pushed out of release 1.0, for the author to work on (Q-E2-
 | Book corrections for a next edition | The knowledge matters, not the book edition |
 | Writing scripts (PowerCLI and the like) | Tools such as Claude Code do it and need no performance knowledge; a different category |
 | Log analysis | Logs are largely undocumented and mostly about availability and security, not performance |
-| The test website | Not started; design archived ([project/archive/design-kb-test-site.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/design-kb-test-site.md)) |
+| The test website | Not started; design archived ([project/archive/design-kb-test-site.md](https://github.com/e1-rahabok/agent-e2/blob/ebbc7dc0be3268abc0f4939fe1ea40e400ac9bbb/project/archive/design-kb-test-site.md)) |
 
 ## Open work
 ### Knowledge base
