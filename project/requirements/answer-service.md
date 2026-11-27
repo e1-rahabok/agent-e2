@@ -61,7 +61,8 @@ Source: WD-013; answers to Q-WS-5 ("The grader should be automated") and Q-WS-I1
 
 - Given the questions PCM users and isvara.io readers ask
 - When the answer set is read
-- Then it holds at least 15 free-text questions: at least 3 on PCM's synthetic ACME screens with their facts, 2 on the live demo with facts recorded from the lab, 5 for isvara.io readers with no facts, 2 with a CSV file, 2 with a screenshot, and 1 that continues a conversation of two or more turns
+- Then it holds at least 14 free-text questions: at least 3 on PCM's synthetic ACME screens with their facts, 5 for isvara.io readers with no facts, 2 with a CSV file, 2 with a screenshot, 1 that continues a conversation of two or more turns, and 1 on design, installation or upgrades (R-E2-021)
+- And the 2 live-demo questions, on facts recorded from the lab, are added in M8 by R-E2-026, so the set holds about 15 questions at release 1.0
 - And each question has its expected key points, its likely wrong answer, and the knowledge files that hold the answer
 - And no question copies the wording of a multiple-choice benchmark question
 
@@ -94,12 +95,38 @@ Source: WD-013; answers to Q-WS-5 and Q-WS-I3 ("Accuracy matters more"); WD-012.
 - Then the mean credit (score divided by 3) is at least 0.75
 - And at most 5% of the answers are confidently wrong (score 0 and not marked unsure)
 - And no answer is marked as stating a misconception
-- And each live-demo question has a mean credit of at least 0.67
 - And the report records, per answer: the score, the model, the knowledge commit, the time taken and the tokens used
 
 Test scenarios:
 - T-E2-006a (anywhere with the gateway key, automated by `benchmark/runner/answer_grader.py`, to build): run the set; write `benchmark/results/answer-set-<date>/report.md`; exit 1 when any limit is missed. The run stays within the US$100 benchmark budget of WD-014 (gateway spending).
 - T-E2-006b (anywhere, manual): rerun after every change of model, of a prompt in [`harness/`](https://github.com/e1-rahabok/agent-e2/tree/main/harness), or of `service_config.yaml`, and before each roadmap milestone that ships Agent E2 is closed.
+
+### R-E2-021 A Day 0 or Day 1 question gets a pointer, never steps
+
+Source: [WD-026](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/DECISIONS.md) (release 1.0 covers Day 2: running, monitoring, troubleshooting and planning; Agent E2 says so when asked).
+
+- Given a question about design, installation, building, configuration or an upgrade, with no Day 2 question in it
+- When Agent E2 answers
+- Then the answer says, in at most three sentences, that Agent E2 covers running, monitoring, troubleshooting and planning, and points to Broadcom's documentation at techdocs.broadcom.com
+- And it gives no installation, configuration or upgrade steps
+- And a question about a setting that changes performance, capacity or availability is answered as usual, from the knowledge base's `what-to-set` files
+
+Test scenarios:
+- T-E2-021a (anywhere with the gateway key, automated by the answer-set grader of R-E2-005): the answer set's question on design, installation or upgrades scores 2 or more; its key points are the pointer and the absence of steps.
+- T-E2-021b (anywhere with the gateway key, automated by the same grader): one of the 5 reader questions asks what to set for a performance reason; it scores 2 or more and is not declined.
+
+### R-E2-025 A value in a question or a screenshot gets its band from the catalog
+
+Source: Q-WS-62 (the band lookup by code in release 1.0, also for values typed in a question or read from a screenshot); [WD-001](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/DECISIONS.md).
+
+- Given a question that states a metric's value, or a screenshot from which Agent E2 reads one ([R-E2-012](#r-e2-012-agent-e2-reads-screenshots-a-caller-sends)), for a metric with five limits in the catalog
+- When Agent E2 answers
+- Then code computes the value's band from the catalog's limits, as [expert_agent.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/expert_agent.py) `metric_band_lines` does for the figures PCM sends
+- And the answer states that band and no other
+
+Test scenarios:
+- T-E2-025a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): with a mock client whose understand stage reads "Co-stop 7.7%" from the question, the answer request holds a band line that says red, from the catalog limits 0, 1, 2, 4 and 8.
+- T-E2-025b (anywhere, the same test): the same value read from a screenshot's `attachments_read` gets the same band line.
 
 ## Time and progress
 
@@ -170,20 +197,20 @@ Source: answer to Q-WS-I1 ("Agent E2 is capable of accepting CSV file and VMware
 
 Test scenarios:
 - T-E2-012a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): a mock client records its messages; a call with one PNG shows an `image_url` part in both the understand and the answer request. Today the service passes no images ([answer_service.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/answer_service.py#L470)).
-- T-E2-012b (anywhere with the gateway key, automated by the answer-set grader): the 4 screenshot questions of the answer set pass.
+- T-E2-012b (anywhere with the gateway key, automated by the answer-set grader): the 2 screenshot questions of the answer set pass.
 
 ### R-E2-013 Agent E2 reads CSV files a caller sends
 
-Source: answer to Q-WS-I1.
+Source: answer to Q-WS-I1; Q-WS-95 (CSV files up to 2 MB, as for contributions).
 
-- Given a call to `/v1/answer` with `attachments` holding up to 3 CSV files, at most 200 KB of text in all
+- Given a call to `/v1/answer` with `attachments` holding up to 3 CSV files, each at most 2 MB of text
 - When Agent E2 answers
 - Then each file reaches the model as text under its file name, as the benchmark runner sends CSV attachments today ([question_files.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/question_files.py#L108))
 - And the answer's figures from the file are the file's own values
 
 Test scenarios:
 - T-E2-013a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): a mock client records its messages; a call with `vm-cpu.csv` shows the file name and its rows in the answer request.
-- T-E2-013b (anywhere with the gateway key, automated by the answer-set grader): the 4 CSV questions of the answer set pass.
+- T-E2-013b (anywhere with the gateway key, automated by the answer-set grader): the 2 CSV questions of the answer set pass.
 
 ### R-E2-014 An attachment that cannot be read is refused, never dropped
 
@@ -195,6 +222,20 @@ Source: answer to Q-WS-I1.
 
 Test scenarios:
 - T-E2-014a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): one call each with a PDF, a 6 MB PNG, 4 CSV files and broken base64; expect 400 and no model call in the mock's log.
+
+### R-E2-023 Every answer can be traced for 30 days
+
+Source: Q-WS-61 (Agent E2 returns a trace ID and keeps traces 30 days; PCM and isvara.io keep the question, the answer, the trace ID and the rating).
+
+- Given any answer or clarifying reply
+- When it is returned
+- Then it holds `trace_id`
+- And `GET /v1/traces/<trace_id>` returns, for 30 days, what Agent E2 read, computed and checked, with the model and the knowledge commit
+- And the trace survives a restart of the service, and is deleted after 30 days
+
+Test scenarios:
+- T-E2-023a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): with a mock client, answer one question; read its trace; expect the files read and the knowledge commit. Restart the service on the same trace folder; the trace is still read.
+- T-E2-023b (anywhere, the same test): with the service's clock set 31 days later, the trace returns 404.
 
 ## The two callers
 
@@ -224,6 +265,33 @@ Test scenarios:
 - T-E2-016a (anywhere, automated by [checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/checks/agent_e2_api.py), to extend): every `sources` id resolves to `knowledge/<id>.md` in the agent-e2 clone; every title equals that file's first heading.
 - T-E2-016b (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py)): the existing `no_file_refs` tests pass.
 
+### R-E2-022 isvara.io names the article the reader has open
+
+Source: Q-WS-97 (an optional `page` field and a `reader` role); Q-WS-45 (the reader can open the source the answer used).
+
+- Given a call with `role` set to `reader` and `page` set to the ID of a knowledge file, as in `sources` ([R-E2-016](#r-e2-016-every-answer-lists-the-knowledge-files-it-used-by-id-and-title))
+- When Agent E2 answers
+- Then the reading plan puts that file first
+- And the person asking is described to the model as a reader of isvara.io
+- And a `page` that names no knowledge file is refused with HTTP 400 that names the field, and no model is called
+
+Test scenarios:
+- T-E2-022a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): a mock client records its messages; a call with `page` set to an existing file ID shows that file first in the trace's reading plan, and the reader role in the question.
+- T-E2-022b (anywhere, the same test): `page` set to `vsphere/no-such-file` returns 400 naming `page`; the mock records no call.
+
+### R-E2-024 The public service answers only isvara.io
+
+Source: Q-WS-98 (a secret shared by isvara.io and Agent E2); Q-WS-4 (isvara.io is the only public entry, with its injection guard and limits).
+
+- Given the service started with a caller secret in the environment variable `AGENT_E2_SECRET`
+- When a call to any endpoint other than `GET /v1/health` lacks the header `Authorization: Bearer <secret>`, or carries another value
+- Then the service answers HTTP 401 and calls no model
+- And without the variable, as on the lab VM where the service listens on the loopback only, every call is accepted
+
+Test scenarios:
+- T-E2-024a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): with the variable set, a call without the header and a call with a wrong one both return 401 and the mock records no call; a call with the right header returns 200.
+- T-E2-024b (anywhere, the same test): without the variable, a call without the header returns 200.
+
 ## Facts PCM sends
 
 ### R-E2-018 A missing fact is said, never guessed
@@ -236,8 +304,22 @@ Source: answer to Q-WS-36; WD-015 (PCM's live demo shows what the VCF vCommunity
 - And the answer says in one sentence what the page did not supply, and gives no value for it
 
 Test scenarios:
-- T-E2-018a (anywhere, automated by [checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/checks/agent_e2_api.py), to extend): a live-shaped fixture, recorded from the lab and stripped of `parts_hourly`, returns `missing_facts` holding `parts_hourly`.
-- T-E2-018b (lab, automated by the answer-set grader): the 5 live-demo questions run on facts recorded from the lab VCF Operations; their key points include what the page did not supply.
+- T-E2-018a (anywhere, automated by [checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/checks/agent_e2_api.py), to extend): a fixture in the shape of PCM's live facts ([R-LIVE-028](https://github.com/e1-rahabok/private-cloud-manager/blob/main/spec/requirements/live-demo.md)), without `parts_hourly`, returns `missing_facts` holding `parts_hourly`. The same check on facts recorded from the lab is [R-E2-026](#r-e2-026-agent-e2-answers-correctly-on-facts-recorded-from-the-lab).
+
+### R-E2-026 Agent E2 answers correctly on facts recorded from the lab
+
+Source: [WD-012](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/DECISIONS.md) (release 1.0 succeeds when Agent E2 explains a real lab KPI correctly in the live demo); Q-WS-90 (the pass bar); [WD-042](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/DECISIONS.md) (lab work in M8).
+
+Milestone: M8.
+
+- Given the 2 live-demo questions of the answer set ([R-E2-004](#r-e2-004-an-answer-set-of-free-text-questions-for-release-10-exists)), with facts recorded from the lab VCF Operations through PCM's live demo
+- When each is answered 3 times and graded
+- Then each has a mean credit of at least 0.67
+- And where the recorded facts lack a part, the answer's key points include what the page did not supply ([R-E2-018](#r-e2-018-a-missing-fact-is-said-never-guessed))
+
+Test scenarios:
+- T-E2-026a (lab, automated by PCM's lab tool of [R-LIVE-031](https://github.com/e1-rahabok/private-cloud-manager/blob/main/spec/requirements/live-demo.md), to write): record the facts PCM sends for one lab cluster's Performance and Capacity tabs into `benchmark/answer-set/`, with the date and the adapter version.
+- T-E2-026b (anywhere with the gateway key, automated by the answer-set grader of R-E2-005): run the 2 questions on the recorded facts; expect a mean credit of at least 0.67 each.
 
 ## Not in this file
 
