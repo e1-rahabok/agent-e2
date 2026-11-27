@@ -14,7 +14,7 @@ Source: Q-WS-6 (round 1: "Update Agent E2's plan. It's outdated."); Q-WS-58 (rou
 - When a session reads it at the start of work
 - Then its milestones are A1 to A6 as decided in Q-WS-58, with the items of the on-premises deployment (local model, offline bundle, live test with blocked network) listed as parked
 - And its fine-tuning row points to the workspace's [design note](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/fine-tuning.md)
-- And agent-e2's CLAUDE.md sends questions that bind several repositories to this workspace (WD-019)
+- And agent-e2's CLAUDE-PROJECT.md sends questions that bind several repositories to this workspace (WD-019)
 
 Test scenarios:
 - T-REPO-003a (anywhere, manual review): the plan's milestone table has A1 to A6 and a parked row for the on-premises deployment; agent-e2's rules check passes.

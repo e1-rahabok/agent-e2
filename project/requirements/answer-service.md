@@ -57,7 +57,7 @@ Test scenarios:
 
 ### R-E2-004 An answer set of free-text questions for release 1.0 exists
 
-Source: WD-013; answers to Q-WS-5 ("The grader should be automated") and Q-WS-I1 (conversations, CSV files and screenshots); WD-012 (release 1.0 success: Agent E2 explains a real lab KPI correctly); the author, 2026-11-27 (about 15 questions in release 1.0, since the grader has lower priority; more questions after 1.0).
+Source: WD-013; answers to Q-WS-5 ("The grader should be automated") and Q-WS-I1 (conversations, CSV files and screenshots); WD-012 (release 1.0 success: Agent E2 explains a real lab KPI correctly); [WD-043](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/DECISIONS.md) (the author, 2026-11-27: about 15 questions in release 1.0, since the grader has lower priority; more after release 1.0).
 
 - Given the questions PCM users and isvara.io readers ask
 - When the answer set is read
@@ -88,7 +88,7 @@ Test scenarios:
 
 ### R-E2-006 The answer set passes on the shipped configuration
 
-Source: WD-013; answers to Q-WS-5 and Q-WS-I3 ("Accuracy matters more"); WD-012.
+Source: WD-013; answers to Q-WS-5 and Q-WS-I3 ("Accuracy matters more"); WD-012; Q-WS-90 (the target as written; the gate is set from the first run if that run is far below).
 
 - Given the service with its shipped `service_config.yaml`
 - When every answer-set question is answered 3 times and graded
@@ -96,6 +96,7 @@ Source: WD-013; answers to Q-WS-5 and Q-WS-I3 ("Accuracy matters more"); WD-012.
 - And at most 5% of the answers are confidently wrong (score 0 and not marked unsure)
 - And no answer is marked as stating a misconception
 - And the report records, per answer: the score, the model, the knowledge commit, the time taken and the tokens used
+- And when the first run's mean credit is below 0.5, the limits above become the first run's own values, recorded in that report and in this requirement, and no later run may fall below them
 
 Test scenarios:
 - T-E2-006a (anywhere with the gateway key, automated by `benchmark/runner/answer_grader.py`, to build): run the set; write `benchmark/results/answer-set-<date>/report.md`; exit 1 when any limit is missed. The run stays within the US$100 benchmark budget of WD-014 (gateway spending).
@@ -214,14 +215,16 @@ Test scenarios:
 
 ### R-E2-014 An attachment that cannot be read is refused, never dropped
 
-Source: answer to Q-WS-I1.
+Source: answer to Q-WS-I1; Q-WS-95 (the file limits); the model's context window of 128,000 tokens, `context_window` in [service_config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/harness/service_config.yaml).
 
 - Given a call with an attachment of another type, above the size limits, or that does not decode
+- Or a call whose CSV text, with the question, the history and the knowledge files read, would not fit the model's context window, counted in tokens before any model call
 - When the service receives it
 - Then it answers HTTP 400 with the attachment's name and the reason, and calls no model
 
 Test scenarios:
 - T-E2-014a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): one call each with a PDF, a 6 MB PNG, 4 CSV files and broken base64; expect 400 and no model call in the mock's log.
+- T-E2-014b (anywhere, the same test): one CSV file of 2 MB (the file limit); expect 400 naming the file and "too large for the model's context", and no model call; one CSV file of 50 KB is accepted.
 
 ### R-E2-023 Every answer can be traced for 30 days
 
@@ -232,9 +235,10 @@ Source: Q-WS-61 (Agent E2 returns a trace ID and keeps traces 30 days; PCM and i
 - Then it holds `trace_id`
 - And `GET /v1/traces/<trace_id>` returns, for 30 days, what Agent E2 read, computed and checked, with the model and the knowledge commit
 - And the trace survives a restart of the service, and is deleted after 30 days
+- And it keeps each attachment's name, type and size, never its content
 
 Test scenarios:
-- T-E2-023a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): with a mock client, answer one question; read its trace; expect the files read and the knowledge commit. Restart the service on the same trace folder; the trace is still read.
+- T-E2-023a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): with a mock client, answer one question; read its trace; expect the files read and the knowledge commit. Restart the service on the same trace folder; the trace is still read. With a CSV attached, the trace names the file and holds none of its rows.
 - T-E2-023b (anywhere, the same test): with the service's clock set 31 days later, the trace returns 404.
 
 ## The two callers
@@ -329,4 +333,4 @@ Test scenarios:
 
 ## Questions for round two
 
-The questions on this file, with their decisions, are in the [interview, round 2](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/interview-round-2.md): Q-WS-90 to Q-WS-99 (and Q-WS-57, Q-WS-61, Q-WS-62). The few still open are in [OPEN-QUESTIONS.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/OPEN-QUESTIONS.md).
+The questions on this file, with their decisions, are in the [interview, round 2](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/interview-round-2.md): Q-WS-90 to Q-WS-99 (and Q-WS-57, Q-WS-61, Q-WS-62). None is open.
