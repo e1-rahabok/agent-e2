@@ -20,6 +20,26 @@ Each entry:
 
 ## Release 1.0
 
+### Q-E2-273 · Folders · The name of knowledge/sp5-framework
+
+- Files: [`knowledge/sp5-framework/`](https://github.com/e1-rahabok/agent-e2/tree/main/knowledge/sp5-framework); every file id under it starts with `sp5-framework/`; private-cloud-manager's `author-papers/sp5-framework-media/` uses the same word.
+- Now: a fresh session guessed each folder from its name alone (T-WS-007b in the workspace's [workspace.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/requirements/workspace.md)). It read `sp5-framework` as "some framework called SP5"; the folder holds the operations-management framework: concepts, observability, performance, capacity, dashboard and alert design. By R-WS-007 a wrong guess becomes a rename in M2.
+- Question: does the folder keep the framework's name?
+  - A. Keep `sp5-framework`: SP5 is your framework's name, which users and your books use; the glossary entry explains it.
+  - B. Rename it `operations-framework`: every file id under it changes, with the links and the catalog's `kb` paths, and PCM's media folder follows.
+- Recommended: A. The name is a term of your own, as a product name is, and a rename changes 57 file ids and touches 229 files, then needs a retrieval check, for a gain only to a first-time reader.
+- Answer:
+
+### Q-E2-272 · Style · The style baseline of 332 problems
+
+- Files: [style-baseline.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/style-baseline.yaml); the workspace's [writing rules](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/writing/README.md) and [tools/style.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/tools/style.py).
+- Now: the workspace's style check (R-WS-006) found 332 problems in 24 documents for people on its first run: 300 or so are wide tables or long table cells (benchmark/design.md, harness/README.md, project/design-thresholds.md, MISSION.md), the rest long or sentence headings. Knowledge files are checked only for the flagged phrases, and have none. The dated records are not checked. The problems are listed in the baseline, which may only shrink.
+- Question: when are they fixed?
+  - A. Keep the baseline; a file is fixed when it is next edited, and its count drops in that pull request.
+  - B. Fix them all in M2.
+- Recommended: A. The tables carry benchmark and threshold data that a rewrite could damage, and every edit now has to lower the count.
+- Answer:
+
 ### Q-E2-266 · Capacity > Supply · Hosts out of service in total capacity
 
 - Files: [Supply: total and usable capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/supply.md), section Total vs usable after host loss; [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), section Usable capacity and its review note on maintenance mode.

@@ -24,13 +24,25 @@ LIST_FIELDS = ['technology', 'pillar', 'product', 'object', 'instance', 'layer']
 LINK_FIELDS = ['related', 'internal_derive', 'same_name', 'same_meaning']
 OLD_FIELDS = ['type', 'resources', 'objects', 'derived_from', 'same_name_as', 'kind']
 
+# The flagged phrases of generated text are held once, in the workspace (R-WS-006); a copy here fails.
+PHRASES = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'private-cloud-workspace', 'writing', 'flagged-phrases.yaml')
+
 def load_allowed():
-    return yaml.safe_load(open(TERMS, encoding='utf-8'))
+    allowed = yaml.safe_load(open(TERMS, encoding='utf-8'))
+    if 'avoid_ai_speak' in allowed:
+        allowed['_phrase_copy'] = True
+    allowed['avoid_ai_speak'] = (yaml.safe_load(open(PHRASES, encoding='utf-8')) or {}).get('flagged_phrases') if os.path.exists(PHRASES) else None
+    return allowed
 
 def main():
     allowed = load_allowed()
     problems = []
     def bad(path, msg): problems.append(f'{path}: {msg}')
+    if allowed.pop('_phrase_copy', False):
+        bad(TERMS, 'avoid_ai_speak: the flagged phrases are held once, in the workspace\'s writing/flagged-phrases.yaml (R-WS-006); remove the copy')
+    if allowed.get('avoid_ai_speak') is None:
+        bad(PHRASES, 'not found: the flagged phrases come from the private-cloud-workspace clone next to this one (R-WS-006)')
+        allowed['avoid_ai_speak'] = {}
     linked_images = set()
 
     files = [f for f in sorted(glob.glob('knowledge/**/*.md', recursive=True)) if f not in NOT_INDEXED]  # up-front text: checked in check_terms

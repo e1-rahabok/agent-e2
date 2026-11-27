@@ -1,0 +1,26 @@
+# Known style debt: file -> number of problems found by the workspace's tools/style.py (R-WS-006).
+# May only shrink: lower a number, or remove a clean file, in the pull request that fixes it. Q-E2-272 in project/author-questions.md.
+ARCHITECTURE.md: 16
+KNOWLEDGE-ENGINEERING.md: 18
+MISSION.md: 27
+README.md: 6
+REPOSITORY-MAP.md: 19
+SECURITY.md: 13
+benchmark/README.md: 8
+benchmark/RUN.md: 7
+benchmark/design.md: 18
+benchmark/live-test.md: 9
+benchmark/models.md: 22
+benchmark/retrieval-check.md: 14
+benchmark/runner/README.md: 6
+harness/AGENT.md: 16
+harness/README.md: 22
+project/consultations.md: 6
+project/demo-site/quick-2-esxi-cpu-demand/gate.md: 1
+project/demo-site/quick-5-drs-score/gate.md: 1
+project/design-thresholds.md: 37
+project/knowledge-rules/metadata.md: 16
+project/knowledge-rules/terminology.md: 1
+project/knowledge-rules/vocabulary.md: 14
+project/plan.md: 17
+project/terms.md: 18
