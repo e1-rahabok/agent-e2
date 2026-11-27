@@ -20,6 +20,36 @@ Each entry:
 
 ## Release 1.0
 
+### Q-E2-266 · Capacity > Supply · Hosts out of service in total capacity
+
+- Files: [Supply: total and usable capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/supply.md), section Total vs usable after host loss; [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), section Usable capacity and its review note on maintenance mode.
+- Adapter text: VCF vCommunity Adapter, [docs/reference/metrics/cluster-consumption.md, lines 30-31](https://github.com/e1-rahabok/PCM-Adapter/blob/de3d6b728a9ac24a2a2f265345285484c90af56d/docs/reference/metrics/cluster-consumption.md#L30-L31), PCM-Adapter commit de3d6b7: "Total Capacity and Usable Capacity count hosts differently. Total Capacity covers every host in the cluster, whatever its state, and changes only when a host is added or removed. Usable Capacity counts only the hosts that can run VMs. A host in maintenance mode, disconnected, powered off or in standby stays in Total Capacity but adds nothing to Usable Capacity." and "Open question: does VCF Operations keep a host that is down in its Total Capacity? [...] This has not been checked on a live system."
+- Now:
+  - supply: "DPM takes hosts out of total capacity; maintenance mode keeps them in total and takes them out of usable capacity." and "Total Capacity counts only hosts connected to vCenter. A disconnected host's value goes blank."
+  - cluster-consumption: "A left-out host stays in total capacity but adds nothing to usable capacity." The left-out hosts include hosts in standby (DPM) and disconnected hosts.
+  - The adapter page agrees with cluster-consumption. supply contradicts both for a host in standby and for a disconnected host. Agent E2 answers capacity questions on the live demo from both files.
+- Question: which hosts does VCF Operations keep in the Total Capacity of a cluster (`cpu|capacity_provisioned`, `mem|host_provisioned`)?
+  - A. supply is right: a host in standby or disconnected leaves Total Capacity; a host in maintenance mode stays. cluster-consumption changes, and the adapter page with it.
+  - B. The adapter page is right: every host stays until it is removed from the cluster. supply changes.
+  - C. Not known yet: the lab session of milestone M8 reads both stats with one host in maintenance mode, one in standby and one disconnected. Until then, supply and cluster-consumption each carry a review note.
+- Recommended: C, unless you know it from the field. The two files disagree, and the adapter marks the point as unchecked.
+- Answer:
+
+### Q-E2-265 · Capacity > Close for Business · The Cluster Risk level that new VMs can reopen
+
+- Files: [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md), section Sub-metric weight in Cluster Risk; [Modelling a pillar into one number](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/modelling.md), section Three ways to combine the colours; [Close for Business](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/close-for-business.md), section The rule and its review note.
+- Adapter text: VCF vCommunity Adapter, [docs/concepts/kpi-scoring-models.md, line 30](https://github.com/e1-rahabok/PCM-Adapter/blob/de3d6b728a9ac24a2a2f265345285484c90af56d/docs/concepts/kpi-scoring-models.md#L30), PCM-Adapter commit de3d6b7: "This matters for decisions: the Close for Business rule checks Risk at its orange closure level, above 60, so a cluster just above 60 can drop below it after more VMs are deployed, and open again." The same in [docs/reference/metrics/cluster-risk.md, line 201](https://github.com/e1-rahabok/PCM-Adapter/blob/de3d6b728a9ac24a2a2f265345285484c90af56d/docs/reference/metrics/cluster-risk.md#L201).
+- Now:
+  - cluster-risk: "A cluster just above orange (50) can drop to yellow after VMs are deployed."
+  - modelling: "Close for Business reads Risk at orange, so a cluster just inside orange can drop to yellow after VMs are deployed and open again."
+  - close-for-business: Risk closes a cluster at its orange closure level, above 60; the display band turns orange above 50. A cluster with Cluster Risk between 50 and 60 is open already, so a drop to yellow opens nothing. The adapter's sentence agrees with close-for-business.
+  - The review note of close-for-business says the pack "closes at the display band edges (25, 50, 75)". The pack now closes at 20, 40, 60 and 80 (`CLOSE_RED_BELOW = 20.0` in PCM-Adapter's periodic_cluster_check.py). It still applies the production Risk setting to every cluster.
+- Question: which level do cluster-risk and modelling name?
+  - A. The closure level: a cluster just above 60, the orange closure level of Close for Business, can drop below it after VMs are deployed, and open again. The review note keeps only the one Risk setting for every cluster.
+  - B. Keep both files as they are.
+- Recommended: A. Agent E2 and isvara.io's articles would otherwise explain a reopening at a level where nothing closes.
+- Answer:
+
 ### Q-E2-264 · Terms · Grader or judge for the model that scores free-text answers
 
 - Files: [project/terms.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/terms.md), the row "judge"; [answer-service.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/requirements/answer-service.md), R-E2-005; [benchmark/free-text-rubric.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/free-text-rubric.md).
@@ -31,6 +61,84 @@ Each entry:
 - Answer:
 
 ## Future release
+
+### Q-E2-271 · Performance and capacity > Metric pages · An empty host's score, and the estate summary of the clusters
+
+- Files: [ESXi Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/esxi-performance.md), section Misconceptions; [Cluster Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/cluster-performance.md); [Cluster and ESXi availability metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/metrics/availability.md), section Roll-up; [Performance dashboards](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/performance-dashboards.md), section Misconceptions.
+- Adapter pages: VCF vCommunity Adapter, PCM-Adapter commit de3d6b7. The other claims of the metric pages are in a knowledge file, in Q-E2-131 (Cluster Risk and Cluster Consumption are models) or in Q-E2-265, Q-E2-266, Q-E2-269 and Q-E2-270; the table of every claim is in the PCM-Adapter pull request for R-REPO-002.
+- Now:
+  1. [esxi-performance.md, line 54](https://github.com/e1-rahabok/PCM-Adapter/blob/de3d6b728a9ac24a2a2f265345285484c90af56d/docs/reference/metrics/esxi-performance.md#L54): "A host with no powered-on VMs. No VM sub-metric has data, and bad packets are 0 and left out. Nothing is wrong, so the KPI is 100." esxi-performance: "Host with no VMs scores 100, so the host is fine → the KPI has nothing to score; availability and configuration are separate health check steps." The score of 100 is in both; "Nothing is wrong" contradicts the misconception.
+  2. [vsphere-world-metrics.md, line 3](https://github.com/e1-rahabok/PCM-Adapter/blob/de3d6b728a9ac24a2a2f265345285484c90af56d/docs/reference/metrics/vsphere-world-metrics.md#L3): "Six metrics on the vSphere World object summarize the Cluster Performance, Cluster Risk and Cluster Consumption scores of every cluster across all vCenters, so you can watch the whole estate in one place." Each takes the worst cluster and the edge of the worst 10% of the clusters. No knowledge file holds a roll-up of these three scores. availability holds one for availability (average, worst cluster, count below 100%). performance-dashboards: "Group the whole estate in one view → group by class of service and by Datacenter."
+- Question:
+  1. A: drop "Nothing is wrong" with the page (the knowledge base stays); B: change the misconception.
+  2. A: no roll-up in the knowledge base; B: add a section Roll-up to cluster-performance, as availability has: the worst cluster and the 10th percentile of the clusters (90th for Cluster Risk and Cluster Consumption, in their files), read per class of service or Datacenter in a large estate.
+- Recommended: 1 A. 2 B. The pack publishes these six values on vSphere World, so users will ask what they mean; grouping first keeps the misconception of performance-dashboards true.
+- Answer:
+
+### Q-E2-270 · Performance > Business application KPI · The member KPI, the namespaces and the enterprise
+
+- Files: [Business application KPI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/business-application-kpi.md), section KPI structure; [KPI design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/performance-kpi-design.md), section One KPI per realm; [IT leaders dashboards](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/it-leaders-dashboards.md).
+- Adapter text: VCF vCommunity Adapter, [docs/reference/metrics/business-application-performance.md, lines 15-17](https://github.com/e1-rahabok/PCM-Adapter/blob/de3d6b728a9ac24a2a2f265345285484c90af56d/docs/reference/metrics/business-application-performance.md#L15-L17), PCM-Adapter commit de3d6b7. The pack computes these values; its code (`application_performance`, the higher value) follows the super metric it replaced.
+- Now:
+  1. Tier Performance: "The average VM Guest OS KPI of the Tier's VMs." business-application-kpi: "Member: its own KPI, VM Performance (%) for a VM". performance-kpi-design: "For the application team the two are one entity: report the VM GOS KPI, the average of VM Performance (%) and Guest OS Performance (%)."
+  2. Business Application Performance: "The highest of these values: the Performance of each of its K8S Namespaces, and the lowest Tier Performance of its Tiers." business-application-kpi: "Application: the worst of its tiers. Tiers work in sequence, like a convoy". The pack takes the highest value once an application has a namespace.
+  3. Business Applications Performance, on the Enterprise: "The average of the Business Applications of the Enterprise." No knowledge file holds it.
+- Question:
+  1. The member KPI. A: VM Performance (%), as business-application-kpi says. B: the VM Guest OS KPI, as the pack and performance-kpi-design.
+  2. A namespace. A: a namespace is a tier, so the application is the worst of its tiers and namespaces, and the pack changes after 1.0. B: the highest, as the pack.
+  3. The enterprise. A: add the average to business-application-kpi. B: leave it out.
+- Recommended: 1 B: the application runs in the Guest OS, and the application team reads one number per VM. 2 A: microservices also serve a request in sequence, and the highest value hides the slowest part. 3 B: business leaders read IT per application (it-leaders-dashboards), and an average of the crown jewels hides the one that suffers.
+- Answer:
+
+### Q-E2-269 · Availability > Cluster · Operational availability with N+k
+
+- Files: [Cluster and ESXi availability metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/metrics/availability.md), section Cluster availability. Related: Q-E2-222, Q-E2-226.
+- Adapter text: VCF vCommunity Adapter, [docs/reference/metrics/operational-availability.md](https://github.com/e1-rahabok/PCM-Adapter/blob/de3d6b728a9ac24a2a2f265345285484c90af56d/docs/reference/metrics/operational-availability.md), PCM-Adapter commit de3d6b7. The plan names this page as the source of the availability model after 1.0; the pack computes these rules.
+- Now:
+  1. Line 45: "k is the number of host failures vSphere HA tolerates, `configuration|dasConfig|hostFailoverLevel` (N+k). The k spare hosts are assumed to be the k worst hosts, so any other degraded host counts against the cluster." Lines 80-81 name the fault the pack fixed in the super metric: "One host was always set aside: a healthy N+0 cluster of 4 hosts showed 75 %, and a healthy single host 0 %." and "Only one host was set aside, whatever the failover level (N+2 or more)." availability holds N+1 only: "Considers HA: N+1 reports 100% with 1 host unavailable (ignore the worst host, average the rest)."
+  2. Line 17: "No HA host failover level counts as N+0. This applies when vSphere HA is off, when admission control uses a percentage of resources or a dedicated failover host, or when the value was not collected." No knowledge file holds it.
+  3. Line 18: "A cluster where HA tolerates the failure of every host has no value. For example, a 2-host cluster with a failover level of 2: N − k is 0." No knowledge file holds it.
+- Question: does availability take the rule for N+k (items 1 to 3)?
+  - A. Yes: set the k worst hosts aside for N+k; a cluster without a host failover level is N+0; N − k = 0 has no value.
+  - B. Keep N+1 only until the availability model after 1.0.
+- Recommended: A. It is the N+1 line of the file for any k, and the pack already publishes it.
+- Answer:
+
+### Q-E2-268 · SP5 > Modelling · Claims of the adapter's KPI scoring page
+
+- Files: [Modelling a pillar into one number](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/modelling.md), section Three ways to combine the colours; [KPI design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/performance-kpi-design.md).
+- Adapter page: VCF vCommunity Adapter, [docs/concepts/kpi-scoring-models.md](https://github.com/e1-rahabok/PCM-Adapter/blob/de3d6b728a9ac24a2a2f265345285484c90af56d/docs/concepts/kpi-scoring-models.md), PCM-Adapter commit de3d6b7. The other claims of the page are in modelling, in performance-kpi-design, in Q-E2-131 or in Q-E2-265; the table of every claim is in the PCM-Adapter pull request for R-REPO-002.
+- Now (line of the page; what modelling holds):
+  1. Line 15: "Several red sub-metrics | Each one counts. | Each one counts. Two reds can already reach the end of the scale. | Each one pushes the KPI further into red." Line 38: "Once two sub-metrics are red the KPI is at the end of the scale, so a cluster with two red leading indicators looks the same as one with six." modelling has no row for several reds; its Rule row holds "same-colour metrics push deeper", and its Ranking row holds "bad clusters all show the end of the scale".
+  2. Line 38: "A sum also needs a fixed scale: someone has to decide how many reds make 100, and the source tables don't say." Not in modelling.
+  3. Line 22: "It is the standard fix for an average that moves the wrong way, because a sub-metric's weight can't jump when its value changes." Not in modelling.
+  4. Line 24: "A second red sub-metric counts half as much as the first only because it comes second, and a fifth red one barely counts." modelling: "a fifth counts nothing". With the weights 8, 4, 2 and 1 a fifth has no weight; if the halving goes on, it has 0.5.
+  5. Line 24: "The result is mathematically sound, but an operator can't relate it to the colors of the sub-metrics on the screen." modelling gives the reason as "Ranking throws away the vSphere meaning of each colour".
+  6. Line 48: "losing all disks is worse than losing one disk, one NIC, one HBA, one fan and one PSU together." modelling holds the two tables of availability without an example.
+  7. Line 40: "A yes-or-no decision that must never move the wrong way, such as closing a cluster, where the difference between bad and very bad doesn't change the answer." modelling holds the best fit without the example.
+  8. Line 63: "for these three KPIs the direction of the KPI matters as much as its color." Not in modelling.
+- Question: for each item, A: the knowledge base stays as it is, and the claim goes with the page; B: add it to modelling, section Three ways to combine the colours. Item 4: does a fifth red count nothing (A) or barely (B)?
+- Recommended: 1 B: it puts a number on the weakness of the sum. 2 B. 3 B: it says why rank weights were the candidate. 4 A: modelling lists four weights. 5 A: modelling's reason covers it. 6 B: an example of a failure that overrides the others. 7 A: Close for Business reads weighted-average scores, and the example suggests a sum. 8 A: no mechanism behind it.
+- Answer:
+
+### Q-E2-267 · Capacity > Capacity model · Claims of the adapter's capacity model page
+
+- Files: [Supply: total and usable capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/supply.md); [Capacity demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md); [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md); [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md); [KPI vs SLA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/kpi-vs-sla.md); [ESXi CPU Imbalance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/imbalance.md); [Overcommit ratio](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/overcommit.md); [vSphere cluster: operations complexity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/cluster-operations.md); [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md).
+- Adapter page: VCF vCommunity Adapter, [docs/concepts/capacity-management.md](https://github.com/e1-rahabok/PCM-Adapter/blob/de3d6b728a9ac24a2a2f265345285484c90af56d/docs/concepts/capacity-management.md), PCM-Adapter commit de3d6b7. Its diagram is the one in demand, with the closure logic of can-cluster-take-more-vms under it. The other claims of the page are in a knowledge file or in Q-E2-131; the table of every claim is in the PCM-Adapter pull request for R-REPO-002.
+- Now (line of the page; what the knowledge base holds):
+  1. Lines 29, 30, 41 and 54: "Buffer: capacity kept free for HA and DR.", "the usable capacity, which is the total capacity minus the buffer", "Capacity kept free for HA and DR. It sets how high Utilization can go." and "Buffer (%) | Is the HA and DR capacity still free?" supply contradicts them: Usable Capacity = Total Capacity − Availability protection − Overhead − Buffer, the buffer is applied after HA, and its misconception reads "Buffer = HA → buffer applies after HA". The diagram has one box, Buffer, for all three.
+  2. Line 63: "A smaller buffer raises the risk. With less headroom, Consumption turns red sooner." Not in the knowledge base. A smaller buffer gives a larger usable capacity, so the same load reads a lower Cluster Consumption, which turns red later, with less physical room left.
+  3. Line 77: "A host has no usable capacity of its own, so its numbers are measured against what the host physically has." supply contradicts it: "ESXi Usable Capacity = Total Capacity - Hypervisor".
+  4. Lines 56 and 64: "Contention (%) | Are the VMs waiting for resources? This is the performance SLA." and "Contention is measured at the VM, because the VM's experience is what the SLA covers." kpi-vs-sla contradicts them: "Performance monitoring and troubleshooting use the KPI only. No performance SLA, no SLI, no SLO." The diagram says "Performance SLA to avoid complaint-based operations"; overcommit says it with a KPI.
+  5. Line 55: "Consumption (%) | How much of the usable capacity is consumed? The average over the cluster." cluster-consumption contradicts it: "Cluster Consumption is the average of the hosts → it adds up the hosts: a big host counts more." The diagram says "Average. Against Usable".
+  6. Line 67: "Imbalance: both hyper-threads of a core are busy. Each thread then gets much less than a full core, so thread utilization overstates the headroom." imbalance: two threads share a core while other cores idle, and "Score 2.0 is always bad → bad only while cores are idle". No file says that thread utilization overstates the headroom.
+  7. Line 66: "Monster VM: a VM that is large compared to its host. It is hard to place, especially after a host failure, and it competes with everything else on the host." cluster-operations holds the competition; no file says a monster VM is hard to place after a host failure.
+  8. Line 77: "DRS can't always fix this: a monster VM, affinity rules or reservations can pin load to one host." Not in the knowledge base; supply names affinity rules and pinning as pockets of resource.
+  9. Line 43: "When VMs are charged to a tenant, it is derived from Utilization and justifies the price. When VMs are free, Utilization drives the plan on its own." overcommit holds the price. The two paths from Utilization are drawn in the diagram (VM Price to Allocation; VM is free to Consumption) and written in no file.
+  10. Line 18: "Who does it | The architect, once per cluster design". Not in the knowledge base.
+- Question: for each item, A: the knowledge base stays as it is, and the claim goes with the page; B: add the claim to the file named in the recommendation.
+- Recommended: 1 A: supply names HA, DR and buffer apart; the diagram's Buffer box holds all three. 2 A: the reasoning runs the other way. 3 A, and add to cluster-risk, section Purpose, the reason the page means: host rows read the host's physical capacity, because HA and the buffer are reserved across the cluster and not on one host (cluster-consumption says this for the cluster). 4 A: operations use the KPI. 5 A: the cluster-wide value is the sum of the hosts against usable capacity, which the misconception guards. 6 A: imbalance holds the mechanism. 7 B, to cluster-risk, section Monster VM: HA restarts the whole VM on one surviving host. 8 B, to cluster-risk, section Purpose, beside the reason for the worst host. 9 B, to demand, section Allocation, as the diagram draws it. 10 A.
+- Answer:
 
 ### Q-E2-263 · Diagrams · Scope of the SVG rule
 
