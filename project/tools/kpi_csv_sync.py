@@ -9,7 +9,7 @@ One format for all (thresholds-performance.yaml, meta, limits_fields).
 Columns: file, section, object, metric, direction, then best, green, yellow, orange, zero-at for each of 5m, 20s, 2s:
 the values where the score is 100, 75, 50, 25 and 0 (a limit is where a colour band ends). An empty cell means no value
 entered yet; an interval is kept only when all five cells are filled. Import changes only the limits and the direction:
-every other field of a line (description, group, excluded_when_green, kb) and every other section stay as they are.
+every other field of a line (key, description, group, excluded_when_green, kb) and every other section stay as they are.
 """
 import csv
 import json
@@ -70,7 +70,8 @@ def _flow(v):
 def _text(o, l):
     desc = f", description: {json.dumps(o['description'], ensure_ascii=False)}" if o.get('description') else ''
     ex = ', excluded_when_green: true' if o.get('excluded_when_green') else ''
-    return (f"- {{object: {l['object']}, metric: {json.dumps(l['metric'], ensure_ascii=False)}{desc}, group: {json.dumps(o.get('group') or '')}, "
+    key = f", key: {json.dumps(o['key'], ensure_ascii=False)}" if o.get('key') else ''
+    return (f"- {{object: {l['object']}, metric: {json.dumps(l['metric'], ensure_ascii=False)}{key}{desc}, group: {json.dumps(o.get('group') or '')}, "
             f"direction: {l['direction']}, 5m: {_flow(l['5m'])}, 20s: {_flow(l['20s'])}, 2s: {_flow(l['2s'])}{ex}, kb: {o.get('kb') or ''}}}")
 
 

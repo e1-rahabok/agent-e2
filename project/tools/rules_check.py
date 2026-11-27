@@ -515,11 +515,18 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
     """knowledge/catalog/*.yaml: parses, required fields, valid tags, existing knowledge ids; a quote, where a row still has one, is still in its file."""
     objects = set(allowed['object'])
     seen_thresholds, kpi_all, seen_kpi = set(), [], set()
-    def check_kpi_line(path, w, lv):
+    seen_keys = set()
+    def check_kpi_line(path, w, lv, section):
         """One line of a kpi, model or score section: five limits [best, green, yellow, orange, zero-at] per interval, worsening
-        in its direction; one line per metric (catalog/thresholds-performance, meta, limits_fields)."""
+        in its direction; one line per metric (catalog/thresholds-performance, meta, limits_fields). A kpi or model line has the
+        adapter's key, unique within its KPI (its kb)."""
         for k in ('object', 'metric', 'group', 'direction', 'kb'):
             if not lv.get(k): bad(path, f'{w}: {k} missing')
+        if section in ('kpi', 'model'):
+            if not lv.get('key'): bad(path, f'{w}: key missing (the VCF vCommunity Adapter\'s name for the sub-metric)')
+            elif (lv.get('kb'), lv['key']) in seen_keys: bad(path, f'{w}: key "{lv["key"]}" used twice in {lv.get("kb")}')
+            seen_keys.add((lv.get('kb'), lv.get('key')))
+        elif 'key' in lv: bad(path, f'{w}: a score line has no key')
         if lv.get('direction') not in ('above', 'below'): bad(path, f'{w}: direction must be above or below')
         if lv.get('metric') in seen_kpi: bad(path, f'{w}: duplicate metric')
         seen_kpi.add(lv.get('metric'))
@@ -674,7 +681,7 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                 for n, r in enumerate(data.get(section) or []):
                     w = f'{section} row {n + 1} ({r.get("id") or r.get("metric")})'
                     if section in ('kpi', 'model', 'score'):
-                        check_kpi_line(path, w, r)
+                        check_kpi_line(path, w, r, section)
                         kpi_all.append((path, r))
                         if 'id' in r or 'bands' in r: bad(path, f'{w}: a {section} line has no id or bands: five limits per interval')
                         continue
