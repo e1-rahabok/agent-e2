@@ -1,7 +1,6 @@
 # Question pairing: audit and plan (2026-11-14)
 
-The theory and practical pairing of benchmark/design.md, section 3.9, applied to every question. Phase 1 (audit, read-only): 8 independent read-only agents; the leaks, the 0022 key and the 0104 base re-checked by hand. Phase 2: the changes, after the author's decisions in section 1. Not indexed. Status of each item: project/plan.md, M2.
-Rules: T1 one fact per option; T2 no A / not-A (also a clause that negates another option); T3 no vague option; T4 Level 300 misconception and its over-correction; T5 a wrong-action option; T6 count of correct options (reported); T7 decidable from the knowledge files; T8 no hint, plural stem; T9 public vocabulary.
+The theory and practical pairing of benchmark/design.md, section 3.9, applied to every question. Phase 1 (audit, read-only): 8 independent read-only agents; the leaks, the 0022 key and the 0104 base re-checked by hand. Phase 2: the changes, after the author's decisions in section 1. Not indexed. Status of each item: project/plan.md, M2. Rules: T1 one fact per option; T2 no A / not-A (also a clause that negates another option); T3 no vague option; T4 Level 300 misconception and its over-correction; T5 a wrong-action option; T6 count of correct options (reported); T7 decidable from the knowledge files; T8 no hint, plural stem; T9 public vocabulary.
 
 ## 0. Numbers
 - Theory audit: 77 text questions (Level 200-300, plus Level 400 explain-mechanism or read-metric).

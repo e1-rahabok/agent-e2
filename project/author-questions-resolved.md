@@ -91,7 +91,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
   - A. Keep 0.8 as the field figure for a busy cluster, and state the assumption (sibling busy about half the time).
   - B. A range, 0.625 to 1.0 × All-Core Turbo, by how busy the sibling threads are.
 - Recommended: B, unless your field data supports 0.8.
-- Answer (author, 2026-11-15): A. You're confusing Turbo with HyperThreading. 
+- Answer (author, 2026-11-15): A. You're confusing Turbo with HyperThreading.
 - Applied: [cpu-frequency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md): 0.8 stands as the field figure for the busy-cluster scenario; the line that derived it from the sibling thread's share is gone, and the review note with it.
 
 ### Q238 · Capacity > Overhead · Static memory for ESXi, vSAN and NSX
@@ -2113,11 +2113,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
   - (a) The text excludes infrastructure software from workload; the diagram lists IT appliances under Workloads. Are VCF appliances (vCenter, NSX Edge) workloads?
   - (b) Pillars differ across the book: this diagram has seven (availability, performance, security, compliance, capacity, configuration, inventory); Key Metrics has availability, performance, capacity, compliance; the `pillar` tag has availability, performance, security, capacity, value. Options: (A) keep the tag list; (B) add compliance, configuration and inventory to the tag; (C) another list.
 - Written as now: workload = customer VMs, appliances also run as VMs; pillar tag unchanged.
-- Answer: (a) Yes and No. They are technically workload, as they are VM that runs on vSphere Cluster. Operationally they are not owned by the business users. They are yours, so they are internal and hence have 0 SLA. They only have KPI. SLA is always between 2 parties.
-  (b) Pillars follow the SP5 Framework diagram in Part 1 of the book.
-  Applied 2026-11-08: purpose-driven-architecture (Two sides of VCF); pillar tag now availability, performance, compliance, capacity, cost (tags.yaml, 44 files); pillars-of-operations renamed sp5-framework. (a) Yes and No. They are technically workload, as they are VM that runs on vSphere Cluster. Operationally they are not owned by the business users. They are yours, so they are internal and hence have 0 SLA. They only have KPI. SLA is always between 2 parties.
-  (b) Pillars follow the SP5 Framework diagram in Part 1 of the book.
-  Applied 2026-11-08: purpose-driven-architecture (Two sides of VCF); pillar tag now availability, performance, compliance, capacity, cost (tags.yaml, 44 files); pillars-of-operations renamed sp5-framework.
+- Answer: (a) Yes and No. They are technically workload, as they are VM that runs on vSphere Cluster. Operationally they are not owned by the business users. They are yours, so they are internal and hence have 0 SLA. They only have KPI. SLA is always between 2 parties. (b) Pillars follow the SP5 Framework diagram in Part 1 of the book. Applied 2026-11-08: purpose-driven-architecture (Two sides of VCF); pillar tag now availability, performance, compliance, capacity, cost (tags.yaml, 44 files); pillars-of-operations renamed sp5-framework. (a) Yes and No. They are technically workload, as they are VM that runs on vSphere Cluster. Operationally they are not owned by the business users. They are yours, so they are internal and hence have 0 SLA. They only have KPI. SLA is always between 2 parties. (b) Pillars follow the SP5 Framework diagram in Part 1 of the book. Applied 2026-11-08: purpose-driven-architecture (Two sides of VCF); pillar tag now availability, performance, compliance, capacity, cost (tags.yaml, 44 files); pillars-of-operations renamed sp5-framework.
 
 ### Q089 · Part 1 > Observability > Alert · Importance of alerts and the colours
 
@@ -2130,13 +2126,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
   - (b) Red: attend within 1-2 hours (table) vs review it today, the sooner the better (legend image). Keep 1-2 hours?
   - (c) Do the KPI colour bands (green, yellow, orange, red in the VCF Operations KPIs) carry the same response times: yellow next business day, orange today, red within 1-2 hours?
 - Written as now: alerts urgent; red urgent and important, 1-2 hours; yellow possibly important or a false positive; (c) not stated.
-- Answer: (a) Alerts should be minimized to issues that you cannot avoid, as each alert is reactive. When you react, you lose as time has started. So you hope that the alerts are not important. It's common for Enterprise IT to experience alerts storm and alerts fatigue. The root cause is the alerts are never defined properly. Red = urgent + important. Orange = urgent + not important. Yellow = not urgent, hence removed from the alerts definition and dealt as insights as part of proactive Health Check. Do this at the start of the day, or the start of your shift.
-  (b) Red = ASAP, max within 1-2 hours. Orange = by end of day, do not differ until tomorrow. Any issue that can be deferred until tomorrow is not urgent. They are best dealt as a group as insight, so you can see the big picture.
-  (c) No. The color in alert has a timeline as alert is reactive by nature. Time has started. The color in KPI is for proactive. They are not related.
-  Applied 2026-11-08: alerts-and-insights (Alert vs insight, Criticality, Traps). (a) Alerts should be minimized to issues that you cannot avoid, as each alert is reactive. When you react, you lose as time has started. So you hope that the alerts are not important. It's common for Enterprise IT to experience alerts storm and alerts fatigue. The root cause is the alerts are never defined properly. Red = urgent + important. Orange = urgent + not important. Yellow = not urgent, hence removed from the alerts definition and dealt as insights as part of proactive Health Check. Do this at the start of the day, or the start of your shift.
-  (b) Red = ASAP, max within 1-2 hours. Orange = by end of day, do not differ until tomorrow. Any issue that can be deferred until tomorrow is not urgent. They are best dealt as a group as insight, so you can see the big picture.
-  (c) No. The color in alert has a timeline as alert is reactive by nature. Time has started. The color in KPI is for proactive. They are not related.
-  Applied 2026-11-08: alerts-and-insights (Alert vs insight, Criticality, Traps).
+- Answer: (a) Alerts should be minimized to issues that you cannot avoid, as each alert is reactive. When you react, you lose as time has started. So you hope that the alerts are not important. It's common for Enterprise IT to experience alerts storm and alerts fatigue. The root cause is the alerts are never defined properly. Red = urgent + important. Orange = urgent + not important. Yellow = not urgent, hence removed from the alerts definition and dealt as insights as part of proactive Health Check. Do this at the start of the day, or the start of your shift. (b) Red = ASAP, max within 1-2 hours. Orange = by end of day, do not differ until tomorrow. Any issue that can be deferred until tomorrow is not urgent. They are best dealt as a group as insight, so you can see the big picture. (c) No. The color in alert has a timeline as alert is reactive by nature. Time has started. The color in KPI is for proactive. They are not related. Applied 2026-11-08: alerts-and-insights (Alert vs insight, Criticality, Traps). (a) Alerts should be minimized to issues that you cannot avoid, as each alert is reactive. When you react, you lose as time has started. So you hope that the alerts are not important. It's common for Enterprise IT to experience alerts storm and alerts fatigue. The root cause is the alerts are never defined properly. Red = urgent + important. Orange = urgent + not important. Yellow = not urgent, hence removed from the alerts definition and dealt as insights as part of proactive Health Check. Do this at the start of the day, or the start of your shift. (b) Red = ASAP, max within 1-2 hours. Orange = by end of day, do not differ until tomorrow. Any issue that can be deferred until tomorrow is not urgent. They are best dealt as a group as insight, so you can see the big picture. (c) No. The color in alert has a timeline as alert is reactive by nature. Time has started. The color in KPI is for proactive. They are not related. Applied 2026-11-08: alerts-and-insights (Alert vs insight, Criticality, Traps).
 
 ### Q112 · Part 1 > Configuration Management > Review List · Facts to update for VCF 9.1
 
@@ -2198,8 +2188,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 - Search: image text only (not searchable): "4 possible areas. Check in this order: Contention, Configuration, Availability, Utilization"; reactive track "Configuration Issue? Availability Issue? Known Bugs? Consumption Issue?".
 - Question: the Not Healthy diagram starts with contention; the reactive track starts with configuration and adds known bugs; the VM slow triage flow (draft) has no configuration or known-bug step. (a) Is the reactive track the order after a complaint, and Not Healthy the order after a health check? (b) Should vm-slow-triage add configuration (version incompatibility) and known bugs after contention?
 - Written as now: each order in its file; vm-slow-triage unchanged.
-- Answer: There is an overall daily health check runs each morning so VMware Admin can review. It should start with Availability then performance then security. Configuration issue can cause these 3 so they are checked as a drill down. Known bugs are typically caused by configuration issue, such as older version or incompatible settings. Contention is part of performance as it's the primary metric type for performance management. Performance flow such as VM slow triage should always check configuration.
-  Reactive is after an alert, an incident (outage, breached), or human complain. Proactive focuses on insight, as system has not detected a known problem. Typically it's anomaly detection. While a monitoring system can detect anomaly mathematically it results in false positives as it lacks real world business context. What is abnormal can mean normal and vice versa.
+- Answer: There is an overall daily health check runs each morning so VMware Admin can review. It should start with Availability then performance then security. Configuration issue can cause these 3 so they are checked as a drill down. Known bugs are typically caused by configuration issue, such as older version or incompatible settings. Contention is part of performance as it's the primary metric type for performance management. Performance flow such as VM slow triage should always check configuration. Reactive is after an alert, an incident (outage, breached), or human complain. Proactive focuses on insight, as system has not detected a known problem. Typically it's anomaly detection. While a monitoring system can detect anomaly mathematically it results in false positives as it lacks real world business context. What is abnormal can mean normal and vice versa.
 - Applied 2026-11-08: monitoring-vs-troubleshooting (section Troubleshooting), proactive-operations (Dual track, Day-to-day order), vm-slow-triage (new step 5, Configuration), the three health checks (configuration step as drill-down), KNOWLEDGE-ENGINEERING.md section 10, both flow templates.
 
 ### Q083 · Part 1 > Noisy Neighbour > Network · Author's network limit and reservation
@@ -2244,12 +2233,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 - Search 2: the table row Gold, overcommit "1 : 1", under "the following shows the SLA for memory"
 - Question: vSphere 9 memory tiering adds NVMe memory beyond DRAM. For Gold 1:1: (a) is the ratio against DRAM only, so a Gold host has no tier, or against DRAM plus tier? (b) Does VM memory contention count time on pages in the NVMe tier? If not, Gold can read 0% while pages are in NVMe.
 - Written as now: the book's table; no tiering note.
-- Answer: (a) overcommit ratio for memory is only against DRAM portion only, because the whole point of adding an NVMe disk is to avoid overcommit. (b) I'm unsure if the memory latency or memory contention metric is modified to ignore it. I hope it should as NVMe is around 1000x slower, but logically the code that increments LAT_M may not be aware. I cannot confirm if the LAT_M polling logic was explicitly rewritten to inject tiering page faults into the latency aggregate. As a comparison, Linux and KVM do not explicitly report when a VM reads a page from NVMe instead of DIMM. No new KVM-specific counter was added, and existing KVM counters were not modified. vSphere introduces new counters in the vCenter UI for the NVMe tier:
-  •	Memory type read bandwidth
-  •	Memory type read latency
-  •	Memory type write bandwidth
-  •	Memory type write latency
-  The consumed metric reflects the combined usage of both the DRAM and NVMe tiers. Because the VMkernel tiering algorithm explicitly tracks physical DRAM (Tier 0) and initiates migration to Tier 1 when Tier 0 consumption crosses the 80% threshold, total consumed memory can exceed the physical DRAM capacity once cold pages are migrated.
+- Answer: (a) overcommit ratio for memory is only against DRAM portion only, because the whole point of adding an NVMe disk is to avoid overcommit. (b) I'm unsure if the memory latency or memory contention metric is modified to ignore it. I hope it should as NVMe is around 1000x slower, but logically the code that increments LAT_M may not be aware. I cannot confirm if the LAT_M polling logic was explicitly rewritten to inject tiering page faults into the latency aggregate. As a comparison, Linux and KVM do not explicitly report when a VM reads a page from NVMe instead of DIMM. No new KVM-specific counter was added, and existing KVM counters were not modified. vSphere introduces new counters in the vCenter UI for the NVMe tier: •	Memory type read bandwidth •	Memory type read latency •	Memory type write bandwidth •	Memory type write latency The consumed metric reflects the combined usage of both the DRAM and NVMe tiers. Because the VMkernel tiering algorithm explicitly tracks physical DRAM (Tier 0) and initiates migration to Tier 1 when Tier 0 consumption crosses the 80% threshold, total consumed memory can exceed the physical DRAM capacity once cold pages are migrated.
 
 ### Q065 · Part 1 > Performance Management > Utilization vs Demand · Absolute or relative performance
 
@@ -2258,9 +2242,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 - Search 2: "It tends to be absolute, as it’s reporting raw metrics"
 - Question: the book says performance is absolute. In chat you said relative cluster performance is more meaningful than absolute, because no perfect formula exists. Relative to what: (a) other clusters and the same cluster last week, (b) the class-of-service threshold (a score in %), (c) the share of VMs served well (a count, not milliseconds)? Which sentence should the knowledge base hold?
 - Written as now: performance absolute, against total capacity; capacity relative, against usable capacity. The paradigm in your chat message is not written yet.
-- Answer:
-  (a). Performance is relative to other clusters, and relative to itself over time. Think of your stock market index like Nasdaq. The actual amount is basically irrelevant as it's just a combination of number. What you care is the relative movement.
-  (b) Gold Class Cluster should relatively high higher performance (%) score , lower consumption (%) score, and lower risk (%) score versus Bronze Class Cluster.
+- Answer: (a). Performance is relative to other clusters, and relative to itself over time. Think of your stock market index like Nasdaq. The actual amount is basically irrelevant as it's just a combination of number. What you care is the relative movement. (b) Gold Class Cluster should relatively high higher performance (%) score , lower consumption (%) score, and lower risk (%) score versus Bronze Class Cluster.
 
 Capacity is relative because it's relative to Usable Capacity, not Total Capacity. The real, actual, cluster utilization is lower in reality. But since it's divided over Usable Capacity instead of Total Capacity, the score becomes artificially higher.
 
@@ -2271,9 +2253,7 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - Search 2: "High utilization does not compromise performance, so long as there is no queue or contention"
 - Question: (a) Point A: utilization cannot pass 100% of physical capacity; demand can. Write A as "demand above physical capacity", and add "utilization above physical capacity" to the Words to avoid table? (b) Point B: demand arrives in bursts. At 20-second resolution, a host at 100% CPU Usage almost always shows some VM Ready. Is 100% with 0 contention the best point for throughput (provider view), and acceptable for the VMs only while measured contention stays in the KPI? Or do you hold it as a target?
 - Written as now: A worded as demand above physical capacity; B as the most work done.
-- Answer:
-  (a) Point A is above the physical capacity. Utilization cannot pass 100% of physical capacity as utilization measures reality; demand can exceed, as demand includes unmet demand. So there is no such thing as utilization above physical capacity as that's not possible.
-  (b) The English word "target" implies something you have yet to achieve. You aim at a target before you hit it. Once the arrow hits the mark, you have achieved or hit the target. KPI is closer to Baseline / Standard Expectation: What you currently or consistently maintain as standard performance, albeit with great effort. In the ideal world, which is not realistic, your ESXi reaches 100% utilization while non VM experience contention. Provider and Consumer have their own KPI metrics.
+- Answer: (a) Point A is above the physical capacity. Utilization cannot pass 100% of physical capacity as utilization measures reality; demand can exceed, as demand includes unmet demand. So there is no such thing as utilization above physical capacity as that's not possible. (b) The English word "target" implies something you have yet to achieve. You aim at a target before you hit it. Once the arrow hits the mark, you have achieved or hit the target. KPI is closer to Baseline / Standard Expectation: What you currently or consistently maintain as standard performance, albeit with great effort. In the ideal world, which is not realistic, your ESXi reaches 100% utilization while non VM experience contention. Provider and Consumer have their own KPI metrics.
 
 ### Q074 · Part 1 > KPIs in IaaS · How many SLAs per service; is there a Guest OS SLA
 
@@ -2412,8 +2392,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 - Search: "This is why Swapped is not Swapped In – Swapped Out"
 - Question: the vSphere 9.1 documentation (Virtual Machines > Memory (MB), p. 2103) defines VM Swapped = swapout – swapin, and adds that vMotion can make Swapped larger than swapout – swapin. Is the documentation wrong, or does its formula hold for cumulative counters (total swapped out minus total swapped in) while the book means the rates?
 - Written as now: Swapped is not Swap in - Swap out: both run in parallel on different pages. Related to [Q019](#q019--chapter-3-memory--esxi--swap-consumed-formula) (host Swap Consumed).
-- Answer: The vSphere 9.1 documentation is wrong. My book is correct. However, add  that vMotion can make Swapped larger than swapout – swapin if the VM comes with its memory already swapped.
-  BTW, the page is 2105, not 2103.
+- Answer: The vSphere 9.1 documentation is wrong. My book is correct. However, add  that vMotion can make Swapped larger than swapout – swapin if the VM comes with its memory already swapped. BTW, the page is 2105, not 2103.
 - Done 2026-11-06: VM Memory Swapped: vMotion line added; documentation formula recorded as wrong.
 
 ### Q046 · Provider Objects > esxtop · HTQ and DTYP still in the 9.1 documentation
@@ -2441,19 +2420,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 - Search: not from the book. Follows the rule added to [Thresholds and interpretation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/thresholds.md) (Interval rule, Instance rule).
 - Question: for each band row, which sample interval was it set on (20-second peak, 5-minute, 1-day), and which reading (worst instance, object aggregate, percentile of objects)? Most rows say "peak" or "worst" but not the interval; utilization rows say neither.
 - Written as now: interval and instance stated only where the row name says it (for example "Peak CPU Ready among any vCPU"); Compressed + Swapped at 5 minutes and Memory Contention at 20 seconds ([Q026](#q026--consumer-objects--performance--compressed--swapped-threshold)).
-- Answer: In VCF Operations, when the metric name has the word peak, that means it's reporting the highest 20-second-average within the 300-second reporting period. There are 15 data points within each 5 minute, each is a 20-second average. It's taking the highest among these 15 instance. The metrics at VM level are:
-  Peak CPU Queue within collection cycle
-  Peak CPU Context Switch within collection cycle
-  Peak Guest OS Page-out Rate within collection cycle
-  Peak Disk Queue within collection cycle
-  Peak vCPU Ready within collection cycle
-  Peak vCPU Co-Stop within collection cycle
-  Peak Memory Contention within collection cycle
-  Peak Latency within collection cycle
-  Peak Usage Rate within collection cycle
-  Peak Network Packets/sec within collection cycle
-  Peak Transmitted Packet Dropped within collection cycle
-  All the KPI and SLI are always by 5 minute. SLA is a lagging indicator, reported at the end of the month for the whole month. KPI, SLA, SLI are covered in Part 1 of my book. These are not vSphere metrics. They are VCF Operations metrics.
+- Answer: In VCF Operations, when the metric name has the word peak, that means it's reporting the highest 20-second-average within the 300-second reporting period. There are 15 data points within each 5 minute, each is a 20-second average. It's taking the highest among these 15 instance. The metrics at VM level are: Peak CPU Queue within collection cycle Peak CPU Context Switch within collection cycle Peak Guest OS Page-out Rate within collection cycle Peak Disk Queue within collection cycle Peak vCPU Ready within collection cycle Peak vCPU Co-Stop within collection cycle Peak Memory Contention within collection cycle Peak Latency within collection cycle Peak Usage Rate within collection cycle Peak Network Packets/sec within collection cycle Peak Transmitted Packet Dropped within collection cycle All the KPI and SLI are always by 5 minute. SLA is a lagging indicator, reported at the end of the month for the whole month. KPI, SLA, SLI are covered in Part 1 of my book. These are not vSphere metrics. They are VCF Operations metrics.
 - Done 2026-11-06: intervals set in both threshold files (peak metrics 20s, other KPI and SLI rows 5m); peak and reporting periods added to the 20-second peak metrics file.
 
 ### Q049 · vCenter API counters · clusterServices.cpufairness and memfairness (low priority)
@@ -2666,8 +2633,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 - Search: "VM CPU Needed = (Used + Overlap + Co-stop + Ready + Other Wait) + System"
 - Question: is the whole sum divided by 20,000, or only System? VM-level Used already includes System (Chapter 2 VM, Used formula). Is System counted twice?
 - Written as now: formula copied as is, flagged.
-- Answer: VM CPU Needed = (Sum of all vCPU (Used + Overlap + Co-stop + Ready + Other Wait) + System ) / 20000 * vCPU
-  Emphasize that this is a narrow use case, as it's about the footprint of the VM on the underlying ESXi. This is only useful in VM migration to a different ESXi. What's more relevant in the Guest OS (Windows or Linux) capacity sizing.
+- Answer: VM CPU Needed = (Sum of all vCPU (Used + Overlap + Co-stop + Ready + Other Wait) + System ) / 20000 * vCPU Emphasize that this is a narrow use case, as it's about the footprint of the VM on the underlying ESXi. This is only useful in VM migration to a different ESXi. What's more relevant in the Guest OS (Windows or Linux) capacity sizing.
 - Done 2026-11-05: [VM footprint sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-footprint-sizing.md) (formula grouping, narrow use case, pointer to Guest OS sizing). Follow-up on the unit of the result: [Q055](#q055--follow-ups-to-q027-and-q029).
 
 ### Q028 · Consumer Objects > Capacity · Balloon in Guest OS memory sizing
@@ -2676,10 +2642,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 - Search: "Exclude balloon"
 - Question: the text excludes balloon, but the sizing table marks Ballooned in blue (include) with "The memory was taken by Tools". Include or exclude?
 - Written as now: exclude, flagged.
-- Answer: include. It is hard to know if the page used by balloon was a free page or not.
-  If it’s from free page, then exclude.
-  If it’s from non-free page, then include.
-  To be conservative, I recommend include.
+- Answer: include. It is hard to know if the page used by balloon was a free page or not. If it’s from free page, then exclude. If it’s from non-free page, then include. To be conservative, I recommend include.
 - Done 2026-11-05: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-sizing.md), rule changed to Include balloon, with the reason.
 
 ### Q029 · Consumer Objects > Capacity · Memory utilization ranges
@@ -2709,8 +2672,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 - Search 3: "I did not set green = 0"
 - Question: the table includes disk latency rows, has no balloon or swapped rows, and sets packet green to 0%. Is the table or the text current?
 - Written as now: the table, with text reasons listed and the conflict flagged.
-- Answer: both are outdated. The updated information is here https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-performance.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-performance.md Update the knowledge accordingly.
-  Also, update Cluster Risk in the knowledge base from https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-risk.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md
+- Answer: both are outdated. The updated information is here https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-performance.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-performance.md Update the knowledge accordingly. Also, update Cluster Risk in the knowledge base from https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-risk.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md
 - Done 2026-11-05: [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/cluster-performance.md) and [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md) rewritten from the adapter documentation (thresholds, calculation, DRAM-only memory, scoring, Excluded rows, known limitation, missing data); both threshold images replaced with the current tables; shared scoring rule updated in [Performance KPI design: VM Performance (%) and Guest OS Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/performance-kpi-design.md).
 
 ### Q032 · Provider Objects > Other Metrics · Monster VM threshold
@@ -2731,23 +2693,11 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 - Search: "That’s why a VM does not have ingress traffic"
 - Question: if moving further inside is ingress, traffic arriving at a VM looks like ingress. What does "a VM does not have ingress traffic" mean? That VM metrics use receive/transmit instead?
 - Written as now: definitions only; the VM statement is flagged.
-- Answer: Diagram is wrong. Correct answer is RX / TX (Receive / Transmit): L1/L2 hardware and driver domain. Used by physical interface cards (NICs), hypervisor VMkernel drivers, and DMA ring buffers. RX measures frame processing at the lowest stack layer regardless of protocol payload.
-  Ingress / Egress: L3–L7 policy and control plane domain. Used by routing engines, distributed firewalls, and microsegmentation policies. Ingress evaluates stateful rule processing upon crossing a defined logical security or administrative boundary.
-  Incoming / Outgoing: Operational telemetry domain. Used in application dashboards, capacity planning, and generalized monitoring to describe directional bandwidth utilization without mapping to a specific hardware driver or firewall rule.
-  Here is a simple mermaid diagram. If you can add to the diagram, that's good.
-  flowchart LR
-  Traffic["Network → VM Interface<br/><b>(100 Packets / 150 KB)</b>"]
+- Answer: Diagram is wrong. Correct answer is RX / TX (Receive / Transmit): L1/L2 hardware and driver domain. Used by physical interface cards (NICs), hypervisor VMkernel drivers, and DMA ring buffers. RX measures frame processing at the lowest stack layer regardless of protocol payload. Ingress / Egress: L3–L7 policy and control plane domain. Used by routing engines, distributed firewalls, and microsegmentation policies. Ingress evaluates stateful rule processing upon crossing a defined logical security or administrative boundary. Incoming / Outgoing: Operational telemetry domain. Used in application dashboards, capacity planning, and generalized monitoring to describe directional bandwidth utilization without mapping to a specific hardware driver or firewall rule. Here is a simple mermaid diagram. If you can add to the diagram, that's good. flowchart LR Traffic["Network → VM Interface<br/><b>(100 Packets / 150 KB)</b>"]
 
-  subgraph AbstractionLayers ["Operational Abstraction Layers"]
-  direction TB
-  L1["<b>L1/L2 Driver Layer</b><br/>RX Count: 100<br/><i>(DMA Ring Buffer)</i>"]
-  L2["<b>L3/L7 Policy Layer</b><br/>Ingress Count: 100<br/><i>(Stateful Firewall Rule)</i>"]
-  L3["<b>Telemetry Layer</b><br/>Incoming Count: 100<br/><i>(Monitoring Dashboard)</i>"]
-  end
+  subgraph AbstractionLayers ["Operational Abstraction Layers"] direction TB L1["<b>L1/L2 Driver Layer</b><br/>RX Count: 100<br/><i>(DMA Ring Buffer)</i>"] L2["<b>L3/L7 Policy Layer</b><br/>Ingress Count: 100<br/><i>(Stateful Firewall Rule)</i>"] L3["<b>Telemetry Layer</b><br/>Incoming Count: 100<br/><i>(Monitoring Dashboard)</i>"] end
 
-  Traffic --> L1
-  L1 --> L2
-  L2 --> L3
+  Traffic --> L1 L1 --> L2 L2 --> L3
 
 ### Q025 · Chapter 5 Network > VM · Dropped packet volume
 
@@ -2876,9 +2826,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 - Search 2: "The value you see at ESXi is the summation of all the VMs"
 - Question: your correction (2026-11-02) says ESXi Demand is a provider metric. Which holds?
 - Written as now: both, flagged.
-- Answer: The providers have 2 types of counters:
-  •	Provider metric. This metric does not exist at consumer. For example, the physical network in ESXi.
-  •	Sum of Consumer metric. This metric aggregates the metric of consumers. For example, the sum of VM network in the ESXi.
+- Answer: The providers have 2 types of counters: •	Provider metric. This metric does not exist at consumer. For example, the physical network in ESXi. •	Sum of Consumer metric. This metric aggregates the metric of consumers. For example, the sum of VM network in the ESXi.
 
 ### Q010 · Chapter 2 CPU > ESXi · Usage cap
 

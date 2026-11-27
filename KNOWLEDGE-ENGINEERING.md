@@ -1,7 +1,6 @@
 # Knowledge engineering
 
-This document describes the framework to get VMware knowledge codified. How human expertise and experience becomes purpose-built for machine (code + LLM). The output files is not designed for human.
-It is the design overview for reviewers; the detailed rules for writers are modules in [project/knowledge-rules/](project/knowledge-rules/). 
+This document describes the framework to get VMware knowledge codified. How human expertise and experience becomes purpose-built for machine (code + LLM). The output files is not designed for human. It is the design overview for reviewers; the detailed rules for writers are modules in [project/knowledge-rules/](project/knowledge-rules/).
 
 ## From expertise to knowledge the model reads
 

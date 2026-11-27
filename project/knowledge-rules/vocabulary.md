@@ -3,7 +3,7 @@
 Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../KNOWLEDGE-ENGINEERING.md). The words to avoid when writing, each with its replacement and reason. For writers and reviewers; not indexed. The dimensions behind the tags (object type, layer, technology, pillar): [metadata.md](metadata.md). Writing rules: [writing.md](writing.md). The agent's vocabulary (one entry per term: meaning, other names, the term it is confused with) is [`knowledge/glossary.md`](../../knowledge/glossary.md). Repository terms: [`project/terms.md`](../terms.md).
 
 ## Table
-When the author corrects a wording mistake, add it here. A word users also say goes into the Also called line of its entry in [`knowledge/glossary.md`](../../knowledge/glossary.md) too, so search maps it.
+- When the author corrects a wording mistake, add it here. A word users also say goes into the Also called line of its entry in [`knowledge/glossary.md`](../../knowledge/glossary.md) too, so search maps it.
 
 | Avoid | Use instead | Why |
 |---|---|---|

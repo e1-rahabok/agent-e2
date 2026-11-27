@@ -4,6 +4,7 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
 
 ## Rules
 - One fact per bullet or table row. A mistake should sit on one line.
+- One paragraph is one source line. GitHub joins wrapped lines into one sentence.
 - One English word per concept. The agent's vocabulary: [`knowledge/glossary.md`](../../knowledge/glossary.md). Words to avoid: [vocabulary.md](vocabulary.md). Repository terms: [`project/terms.md`](../terms.md).
 - State mechanism and reason, not only the definition.
 - Facts may come from the source, official docs, or Claude's own knowledge; the author chooses what goes in. A fact still to check gets a `review_notes` line with its section and the URL to check against. No generic filler.

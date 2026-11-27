@@ -11,5 +11,4 @@ Run 2026-11-19, Muse Glimmer 30B (reasoning effort low), 3 runs of `steps/step-1
 | No VMs need to move | yes | yes | yes |
 | A claim to avoid stated as true | none | none | none |
 
-Result: passed, 3 of 3.
-Flaws kept in run 1: it says the host is well above the Soft threshold without naming Soft as where ballooning starts (run 2 does); it does not say that the balloon deflates once its target falls.
+Result: passed, 3 of 3. Flaws kept in run 1: it says the host is well above the Soft threshold without naming Soft as where ballooning starts (run 2 does); it does not say that the balloon deflates once its target falls.
