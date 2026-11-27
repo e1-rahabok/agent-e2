@@ -13,7 +13,7 @@
 ## Sub-metrics
 | Group | Sub-metric | Source | Unit | Scores 100 at | Catalog row (KPI) |
 |---|---|---|---|---|---|
-| Guest OS contention | CPU run queue per vCPU | `guest\|20_sec_peak_cpu_queue` | threads | 0 | Peak vCPU run queue length (count) |
+| Guest OS contention | CPU run queue per vCPU | `guest\|20_sec_peak_cpu_queue` | threads | 0 | Peak run queue length per vCPU (count) |
 | Guest OS contention | Disk queue | `guest\|20_sec_peak_disk_queue` | IOs | 0 | Peak disk queue length (count) |
 | Guest OS utilization | Free memory | `guest\|mem.free_latest` ÷ 1024 (KB to MB) | MB | 1,024 or more | Free memory (MB) |
 | Guest OS utilization | Page-out rate | `guest\|page.outRate_latest` | pages/s | 0 | Memory page-out rate (pages/s) |

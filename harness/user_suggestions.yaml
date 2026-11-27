@@ -111,7 +111,7 @@ cards:
   - {pillar: performance, card: Guest OS Performance, when: layers_diverged, q: "Why are there 2 charts? Why did Guest OS Performance go down while VM Performance did not?"}
   - {pillar: performance, card: Guest OS Performance, q: "Why are the Guest OS and the VM two separate charts?"}
   - {pillar: performance, card: Peak CPU Ready among any vCPU, q: "Is CPU Ready above 5% always bad?"}
-  - {pillar: performance, card: Peak vCPU run queue length, q: "Does this VM need more vCPUs?"}
+  - {pillar: performance, card: Peak run queue length per vCPU, q: "Does this VM need more vCPUs?"}
   - {pillar: performance, card: Free memory, q: "Is low free memory a sign the Guest OS is short of RAM?"}
   - {pillar: capacity, card: Cluster Consumption, when: memory_consumed_high, q: "Memory Consumed is high. Does this cluster need more RAM?"}
   - {pillar: capacity, card: Cluster Consumption, q: "What does Cluster Consumption (%) measure, and how is it computed?"}

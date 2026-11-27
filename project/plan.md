@@ -11,7 +11,7 @@ Release 1.0 and its milestones are set for all repositories in the workspace's [
 
 | # | Milestone | Serves | Done when | Status |
 |---|---|---|---|---|
-| A1 | Repository cleaned for release 1.0 | M2 | Older benchmarks removed (Q-WS-59); text on the on-premises deployment marked; questions that bind several repositories go to the workspace (WD-019) | WD-019 applied in CLAUDE.md; older benchmarks deleted with project/archive (git history keeps them); on-premises text still to mark; every catalog sub-metric line carries the adapter's key (contract C1) |
+| A1 | Repository cleaned for release 1.0 | M2 | Older benchmarks removed (Q-WS-59); text on the on-premises deployment marked; questions that bind several repositories go to the workspace (WD-019) | WD-019 applied in CLAUDE.md; older benchmarks deleted with project/archive (git history keeps them); on-premises text still to mark; every catalog sub-metric line carries the adapter's key (contract C1); the memory wait and run queue lines renamed, and Cluster Performance has a score line |
 | A2 | Answer set and grader | M3 | The free-text answer set and the automated grader built; first report on Gemma 4 31B | Not started |
 | A3 | Service for two callers | M3 | The Agent E2 API additions built (progress, attachments, sources, usage); the contract check C3 passes | C3 passes on today's endpoints; additions not started |
 | A4 | Live demo support | M8 | Agent E2 answers correctly on facts recorded from the lab | Not started |
