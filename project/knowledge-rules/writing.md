@@ -2,19 +2,15 @@
 
 Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../KNOWLEDGE-ENGINEERING.md). For writers and reviewers. Not indexed.
 
+The general writing rules of every repository, for documents, commit messages and pull request text, are held once in the workspace: [writing rules](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/writing/README.md) and the [flagged phrases](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/writing/flagged-phrases.yaml) of generated text, each with its plain replacement (R-WS-006). This file holds the rules particular to knowledge files, and why a general rule matters more for them.
+
 ## Rules
 - One fact per bullet or table row. A mistake should sit on one line.
-- One paragraph is one source line. GitHub joins wrapped lines into one sentence.
 - One English word per concept. The agent's vocabulary: [`knowledge/glossary.md`](../../knowledge/glossary.md). Words to avoid: [vocabulary.md](vocabulary.md). Repository terms: [`project/terms.md`](../terms.md).
 - State mechanism and reason, not only the definition.
 - Facts may come from the source, official docs, or Claude's own knowledge; the author chooses what goes in. A fact still to check gets a `review_notes` line with its section and the URL to check against. No generic filler.
 - No text aimed at human motivation.
-- No AI-speak. Plain words, short sentences, the fact itself:
-  - no filler words or stock phrases of generated text;
-  - no praise, hedging or summary lines;
-  - no adjective where a number or a mechanism can stand; name the thing.
-  - say what a thing is before what it does: a label or opening line names the thing in concrete nouns. Verbs such as covers, serves and uses with nothing named read as generated text.
-  - The list of flagged phrases, each with its plain replacement: [`project/tools/rules_check_values.yaml`](../tools/rules_check_values.yaml), `avoid_ai_speak`. The review checks them; lint does not check writing style. The same rule applies to documents, commit messages and pull request text.
+- No AI-speak: the workspace's [writing rules](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/writing/README.md) and [flagged phrases](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/writing/flagged-phrases.yaml). Lint checks the flagged phrases in diagram labels; the review checks them in the text.
 - Titles and headings are noun phrases that name the topic, as in a reference book: "Sub-metric formulas", not "How each sub-metric is calculated".
   - No questions, no openers How, Why, What, When, Where, Which, Who; no commands ("Design the alerts as a set"); no claims ("CPU Ready does not apply to ESXi"); no slogans ("Begin with the end in mind"). A claim is a fact: it goes in a bullet under the heading. Sentence headings are a habit of generated text, so they count as AI-speak.
   - Reason: [`harness/knowledge_loader.py`](../../harness/knowledge_loader.py) puts the file title and the heading in front of every chunk. Words such as how, why, is and does name no topic, so they add nothing to search; a claim in a heading sits outside the one-fact-per-bullet rule, where a review misses it.
@@ -23,8 +19,6 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
   - Exceptions, because these titles are the words users type: a metric file title is the metric name; a troubleshooting title is the symptom ("VM disk latency is high"); a decision tree title is the question as users ask it ("Can this cluster take more VMs?").
   - Fixed section names, from the templates in [`project/templates/`](../templates): metric `Meaning`, `Formula`, `Includes / excludes`, `Reason`; concept `Definition`, `Mechanism`, `Formula`; configuration `Setting`, `Reason`, `Exceptions`; flows `Purpose`, `Symptom` or `Question`, `Flow`, `Checks, in order` (read by [`harness/flow_executor.py`](../../harness/flow_executor.py)), `Order rationale`, `Interpretation`; alerts `Coverage and receivers`, `Not alerted, and why`; every file `Misconceptions`.
   - Lint checks the word limits, a list after a colon in a title, and the openers How, Why, What, When, Where, Which, Who (decision tree titles exempt). The review checks commands, claims and slogans: no pattern finds them.
-- Write full sentences. No slogans ("Three sides, three metrics."), no aphorisms in place of the mechanism, no "X, not Y" where a plain statement says it.
-- Judge a line for a slogan or an "X, not Y" with the lines around it. Read alone, a plain line can look like a slogan.
 - One vSphere object type per metric file (exceptions: KNOWLEDGE-ENGINEERING.md, section 5).
 - Refer to another knowledge file as a link with its id: ``[`id`](relative/path.md)``. GitHub makes it clickable for review; the harness keeps only `id` for the model ([`ARCHITECTURE.md`](../../ARCHITECTURE.md), section Ingest). The same in every Markdown file of the repository, [`knowledge/glossary.md`](../../knowledge/glossary.md) included: its parser keeps only `id` as well. [`project/tools/link_rewriter.py`](../tools/link_rewriter.py) adds missing links; lint fails on a bare id.
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation. The model never gets the chart, so every fact a chart shows is also in the text; never write "the diagram shows" (check with [`project/tools/model_view.py`](../tools/model_view.py)).
