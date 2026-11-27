@@ -1,8 +1,7 @@
 # <UI> <screen name> (<version>)
 
 <!-- Screen library file, for screenshot upload (release 1.1). One file per screen type.
-Location: knowledge/vsphere/tools/<ui>/screens/<slug>.md for vSphere Client and esxtop;
-knowledge/vcf-operations/<features|dashboards|reports>/screens/<slug>.md for VCF Operations. The image goes in the images/ folder next to it. -->
+Location: knowledge/vsphere/tools/<ui>/screens/<slug>.md for vSphere Client and esxtop; knowledge/vcf-operations/<features|dashboards|reports>/screens/<slug>.md for VCF Operations. The image goes in the images/ folder next to it. -->
 
 ![<what the screen shows>](images/<ui>-<screen>-<version>.png)
 

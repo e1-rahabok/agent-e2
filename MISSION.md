@@ -1,7 +1,6 @@
 # Mission
 
-Not indexed.
-Related reading: [ARCHITECTURE.md](ARCHITECTURE.md) explains how the parts run, [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) how the expertise is codified, [harness/AGENT.md](harness/AGENT.md) the agent, [benchmark/design.md](benchmark/design.md) how the claim is proved, and [benchmark/models.md](benchmark/models.md) which model is used.
+Not indexed. Related reading: [ARCHITECTURE.md](ARCHITECTURE.md) explains how the parts run, [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) how the expertise is codified, [harness/AGENT.md](harness/AGENT.md) the agent, [benchmark/design.md](benchmark/design.md) how the claim is proved, and [benchmark/models.md](benchmark/models.md) which model is used.
 
 ## 1. Mission
 - Provides the VMware Cloud Foundation (VCF) 9 performance and capacity management knowledge available locally in a private cloud.

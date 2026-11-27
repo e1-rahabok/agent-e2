@@ -442,8 +442,7 @@ Every question touched, by id: file name now, the change, level, key (only where
 | 0470 | L3-107-three-small-clusters-or-one-large.md | New question, 9 options: Three small clusters or one large one | 300 |  |
 
 ## Appendix B. Knowledge-base issues found by the audit
-For the author and plan.md M1; no knowledge file was changed. Each item was checked against the file's text when the list was made.
-Sources: 11 review reports, 11 break reports, 8 blind-key reports. BROKEN items dropped. Quotes re-checked by grep against knowledge/ on 2026-11-16. Question ids are numeric (L-ids mapped from benchmark/questions).
+For the author and plan.md M1; no knowledge file was changed. Each item was checked against the file's text when the list was made. Sources: 11 review reports, 11 break reports, 8 blind-key reports. BROKEN items dropped. Quotes re-checked by grep against knowledge/ on 2026-11-16. Question ids are numeric (L-ids mapped from benchmark/questions).
 
 ### Contradictions
 

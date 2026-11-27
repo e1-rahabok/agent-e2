@@ -1,7 +1,6 @@
 # Thresholds in Agent E2: design and implementation
 
-Status: design, with Q152-Q158 answered. Built: one copy of the KPI levels; sections named by use; alerts in their own file (section 3). Section 3 describes what is built; sections 4-14 the target; section 15 the work.
-Not indexed.
+Status: design, with Q152-Q158 answered. Built: one copy of the KPI levels; sections named by use; alerts in their own file (section 3). Section 3 describes what is built; sections 4-14 the target; section 15 the work. Not indexed.
 
 The performance SLA and the SLI are removed from operations (the SLA is a business contract, and the KPI is enough). The `sla` and `sli` sections of `thresholds-performance.yaml` and their 7 rows are gone; the Harness, lint and tests no longer know the uses. Rows and sections below that still show `sla` or `sli` for performance are the earlier design, kept for the record; the availability and security SLA (contract) rows of the future files stay.
 

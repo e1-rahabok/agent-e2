@@ -10,5 +10,4 @@ Run 2026-11-19, Muse Glimmer 30B (reasoning effort low), 3 runs of `steps/step-1
 | VM DRS Score is execution efficiency, not contention: read the VM's contention counters | yes | yes | yes |
 | A claim to avoid stated as true | none | none | none |
 
-Result: passed, 3 of 3.
-Flaws kept in run 1: two side paragraphs that the question does not need (ESXi CPU Demand, and how Co-stop works).
+Result: passed, 3 of 3. Flaws kept in run 1: two side paragraphs that the question does not need (ESXi CPU Demand, and how Co-stop works).

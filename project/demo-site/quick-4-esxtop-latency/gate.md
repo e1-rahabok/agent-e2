@@ -10,5 +10,4 @@ Run 2026-11-19, Muse Glimmer 30B (reasoning effort low), 3 runs of `steps/step-1
 | Below 10 ms is not healthy here | yes | yes | yes |
 | A claim to avoid stated as true | none | none | none |
 
-Result: passed, 3 of 3.
-Flaws kept in run 1: none found.
+Result: passed, 3 of 3. Flaws kept in run 1: none found.

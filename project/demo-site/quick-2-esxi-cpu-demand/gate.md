@@ -10,5 +10,4 @@ Run 2026-11-19, Muse Glimmer 30B (reasoning effort low), 3 runs of `steps/step-1
 | Contention from Ready and Co-stop, not Demand minus Usage | yes | yes | yes |
 | A claim to avoid stated as true | none | none | none |
 
-Result: passed, 3 of 3. All three read the screenshots: VCF Operations Demand about 2.9 GHz, Usage about 324-484 MHz, vCenter Demand about 200 MHz.
-Flaws kept in run 1: none found.
+Result: passed, 3 of 3. All three read the screenshots: VCF Operations Demand about 2.9 GHz, Usage about 324-484 MHz, vCenter Demand about 200 MHz. Flaws kept in run 1: none found.
