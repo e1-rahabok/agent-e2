@@ -133,7 +133,7 @@ Features and content pushed out of release 1.0, for the author to work on (Q-E2-
 
 ### Gateway benchmark
 - Two runs of google/gemma-4-31b-it, Base and Agent E2 (modes `baseline` and `agent-e2`), and the frontier reference in one mode, `web` (search available, Opus decides whether to search). Every question of the run set, 5 runs per question. alibaba/qwen3.8-27b and meta/muse-glimmer-30b wait for the model of the on-premises deployment. How to run, time and cost: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
-- The full round never runs (the author; R-E2-031 in [test-spending.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/requirements/test-spending.md)): the round of 2026-11-16 stays the benchmark's record. The free checks test each change, and the answer set runs only on the author's go.
+- The full round never runs (the author; R-E2-031 in [test-spending.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/requirements/test-spending.md)): the round of 2026-11-16 stays the benchmark's record. The free checks test each change; the answer set runs with each change to what the model reads, under US$10 without asking and from US$10 on the author's go (CONSTRAINT-1).
 - Answers whose inputs are unchanged are copied from the earlier round; the round of 2026-11-16 has no inputs fingerprint, so the first round after it asks every answer. A grade of the answer set whose inputs are unchanged is reused the same way when the grader is built (R-E2-005).
 - After each round: sort each wrong answer into knowledge, retrieval or model from the trace (reading set, every needed file present or not); `tools_used` (compute, gap, repair) and `verify_flags` against wrong answers.
 

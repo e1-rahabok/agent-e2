@@ -32,18 +32,21 @@ Test scenarios:
 
 Why: the round of 16 November 2026 cost US$115 against a projection of US$77 to 85, because only the projection was checked before the round started.
 
-Source: CONSTRAINT-1 (US$100 a test run at most); the author, 2026-11-28 ("It can't be $71. Way too expensive", on the projection of the full round); DESIGN-31.
+Source: CONSTRAINT-1 (US$100 a test run at most; a step under US$10 without asking); the author, 2026-11-28 ("It can't be $71. Way too expensive", on the projection of the full round; "Anything under $10 no need my approval", [round 6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-6.md#q-ws-141-what-may-be-spent-without-asking-the-author)); DESIGN-31.
 
 - Given a benchmark round, and the limit `release.max_cost_usd` of `runner_config.yaml`, US$25
 - When the money it has spent reaches the limit: the larger of the list price of the tokens of the answers it asked, runs restarted with other settings included, and the drop in the gateway's credit balance since its preflight
 - Then it starts no new answer, lets the answers in progress finish, and exits with code 9, naming the amount spent and the limit
 - And the preflight still refuses a round whose projected cost is above the limit
 - And a resume after the author raises the limit continues where the round stopped
+- And a run of the answer set ([`benchmark/runner/answer_grader.py`](../../benchmark/runner/answer_grader.py)) stops at `--max-cost-usd`, US$9 unless the author's go names another amount, at most US$100, so a run started without asking stays below the author's US$10 line
+- And an answer of the answer set is saved before it is graded, so a grading that fails does not pay for the answer again
 
 Test scenarios:
 - T-E2-030a (anywhere, automated by [benchmark/runner/test_runner.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/test_runner.py)): a round whose run records answers worth more than the limit exits with code 9 and leaves a stop file in the run's folder; a resume removes the stop file before it starts the run again.
 - T-E2-030b (anywhere, automated by the same file, offline with the mock client): a run whose folder holds a stop file starts no answer and exits with code 3.
 - T-E2-030c (anywhere, automated by the same file): the spending counted is the larger of the two figures; a balance that cannot be read counts the list price alone.
+- T-E2-030d (anywhere, automated by the same file, offline): the answer set's default limit is below US$10; a run whose limit is reached starts no answer; a run whose grading fails keeps the answer it graded.
 
 ### R-E2-031 The full round never runs
 

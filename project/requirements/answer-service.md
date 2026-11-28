@@ -65,7 +65,7 @@ Test scenarios:
 
 Milestone: M8.
 
-Why it waits: the author, 2026-11-28: the full round never runs, and the work of the service milestone changes no knowledge, so that milestone closes on the free automatic checks. The answer set, its grader and its graded runs wait for a change of knowledge or of the model, and for the author's go.
+Why it waits: the pass on the shipped configuration and the author's grade of 20 answers belong to M8 (DESIGN-19 in the workspace's [system design](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/system.md)). Before M8 the set runs with each change to what the model reads or to the model: a run under US$10 starts without asking, one of US$10 or more on the author's go (CONSTRAINT-1).
 
 Why: accuracy is measured only on questions shaped like the ones people ask, with their screens, files and conversations.
 
@@ -88,7 +88,7 @@ Test scenarios:
 
 Milestone: M8.
 
-Why it waits: the author, 2026-11-28: the full round never runs, and the work of the service milestone changes no knowledge, so that milestone closes on the free automatic checks. The answer set, its grader and its graded runs wait for a change of knowledge or of the model, and for the author's go.
+Why it waits: the pass on the shipped configuration and the author's grade of 20 answers belong to M8 (DESIGN-19 in the workspace's [system design](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/system.md)). Before M8 the set runs with each change to what the model reads or to the model: a run under US$10 starts without asking, one of US$10 or more on the author's go (CONSTRAINT-1).
 
 Why: the author cannot grade every run (CONSTRAINT-8), and a grader that runs on every change catches a regression before it ships.
 
@@ -101,10 +101,11 @@ Source: answer to Q-WS-5 ("It was graded by Opus 5.5", the grader before the aut
 - And it also marks whether the answer states the likely wrong answer (misconception) and whether it says the question is not settled (unsure)
 - And it sees what Agent E2 saw: the question, the facts, the conversation, the CSV text and the screenshots
 - And an answer that asked a clarifying question is scored on its final answer after the scripted reply
+- And the grader's reply may use 4000 tokens, its reasoning included, because at 800 the reasoning cut one reply in two before its JSON; a grading that fails on a reply cut at that cap says so
 - And a grade is reused, with no call to the grader, when the answer, the question with its facts and key points, the rubric and the grader model equal those of an earlier grade
 
 Test scenarios:
-- T-E2-005a (anywhere, automated by [`benchmark/runner/answer_grader.py`](../../benchmark/runner/answer_grader.py), to build, with the mock client of [harness/model_client.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/model_client.py)): a reply that is not valid JSON gets one retry, then fails the grading with the reply's first 200 characters; a valid reply gives score, misconception, unsure, missed and reason.
+- T-E2-005a (anywhere, automated by [`benchmark/runner/answer_grader.py`](../../benchmark/runner/answer_grader.py), to build, with the mock client of [harness/model_client.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/model_client.py)): a reply that is not valid JSON gets one retry, then fails the grading with the reply's first 200 characters, and names the cap of 4000 tokens when the reply was cut there; a valid reply gives score, misconception, unsure, missed and reason.
 - T-E2-005b (anywhere, automated, to build): for a question with a screenshot, the grader's request holds the image; for a question with a CSV, the CSV text.
 - T-E2-005c (anywhere, manual once): the author grades 20 answers picked at random; the grader agrees with the author on right (2 or 3) against not right (0 or 1) for at least 17 of them. Below that, the rubric is fixed and the 20 are graded again.
 - T-E2-005d (anywhere, automated by [`benchmark/runner/answer_grader.py`](../../benchmark/runner/answer_grader.py), to build, with the mock client): grading the same answers twice calls the grader once per answer; a changed answer, key point or rubric is graded again.
@@ -113,7 +114,7 @@ Test scenarios:
 
 Milestone: M8.
 
-Why it waits: the author, 2026-11-28: the full round never runs, and the work of the service milestone changes no knowledge, so that milestone closes on the free automatic checks. The answer set, its grader and its graded runs wait for a change of knowledge or of the model, and for the author's go.
+Why it waits: the pass on the shipped configuration and the author's grade of 20 answers belong to M8 (DESIGN-19 in the workspace's [system design](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/system.md)). Before M8 the set runs with each change to what the model reads or to the model: a run under US$10 starts without asking, one of US$10 or more on the author's go (CONSTRAINT-1).
 
 Why: a confident wrong answer is the main risk (RISK-1), so release 1.0 ships only a configuration that passes the set.
 
@@ -125,12 +126,12 @@ Source: SCOPE-6; answers to Q-WS-5 and Q-WS-I3 ("Accuracy matters more"); GOAL-4
 - And at most 5% of the answers are confidently wrong (score 0 and not marked unsure)
 - And no answer is marked as stating a misconception
 - And the report records, per answer: the score, the model, the knowledge commit, the time taken and the tokens used
-- And an answer whose inputs have not changed is reused (R-E2-029), and the run stops when its spending reaches US$100 (R-E2-030)
+- And an answer whose inputs have not changed is reused (R-E2-029), and the run stops when its spending reaches its limit: US$9 for a run started without asking, the amount of the author's go otherwise, at most US$100 (R-E2-030)
 - And when the first run's mean credit is below 0.5, the limits above become the first run's own values, recorded in that report and in this requirement, and no later run may fall below them
 
 Test scenarios:
-- T-E2-006a (anywhere with the gateway key, automated by [`benchmark/runner/answer_grader.py`](../../benchmark/runner/answer_grader.py), to build): run the set; write `benchmark/results/answer-set-<date>/report.md`; exit 1 when any limit is missed. The run stays within the US$100 benchmark budget of CONSTRAINT-1 (gateway spending).
-- T-E2-006b (anywhere, manual): rerun after every change of model, of a prompt in [`harness/`](https://github.com/e1-rahabok/agent-e2/tree/main/harness), or of `service_config.yaml`, and before each roadmap milestone that ships Agent E2 is closed.
+- T-E2-006a (anywhere with the gateway key, automated by [`benchmark/runner/answer_grader.py`](../../benchmark/runner/answer_grader.py), to build): run the set; write `benchmark/results/answer-set-<date>/report.md`; exit 1 when any limit is missed. A run started without asking stops at US$9, below the author's US$10 line in CONSTRAINT-1 (gateway spending); `--label` gives a run with a change switched off its own folder.
+- T-E2-006b (anywhere with the gateway key, manual): run with every change of what the model reads or of the model, by the workspace's [test plan](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/test-plan.md), section Tests for each kind of change; when a setting switches the change off, run with it off and on and compare the two reports. No run starts because a milestone closes.
 
 ### R-E2-021 A Day 0 or Day 1 question gets a pointer, never steps
 
