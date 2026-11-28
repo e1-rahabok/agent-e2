@@ -1,0 +1,15 @@
+id: acme-03-closed-for-new-vms
+kind: acme
+question: Can I add more VMs to this cluster? The performance score is 90.
+facts: facts/acme-capacity-closed.json
+role: capacity
+key_points:
+- 'No: the page shows the cluster closed for new VMs and VM upsizes.'
+- 'The reason is Consumption: 88% (95th percentile, last 24 hours), above the close-for-business limit of 80%.'
+- 'Performance 90% does not open the cluster: contention is not below 40%, so there is no override, and Risk 60% does not decide because
+  Consumption and Performance are not both orange.'
+- 'It says what to do next: free or add capacity until Consumption falls under the limit, then check the cluster again.'
+likely_wrong: Opens the cluster because Performance is high, or says Risk decides the state.
+knowledge:
+- vsphere/object-types/cluster/models/close-for-business
+- vsphere/object-types/cluster/models/cluster-consumption

@@ -1,0 +1,16 @@
+{
+ "screen": {
+  "page": "ACME-C-02 \u00b7 Capacity \u00b7 Last 24 hours"
+ },
+ "object": {
+  "kind": "cluster",
+  "name": "ACME-C-02"
+ },
+ "pillar": "Capacity",
+ "window": "Last 24 hours",
+ "check": {
+  "consumption": 88,
+  "performance": 90,
+  "risk": 60
+ }
+}

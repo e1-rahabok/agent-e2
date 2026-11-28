@@ -1,0 +1,16 @@
+id: shot-01-guest-metrics
+kind: screenshot
+question: In this screenshot, which of the four charts would the VMware team own, and which belong to the Windows side?
+attachments:
+- files/vm-metric-tree.png
+role: l2
+key_points:
+- Guest CPU Queue and Guest Free Memory are Guest OS (Windows) counters, read inside the guest through VMware Tools.
+- CPU Ready and CPU Co-stop are VMkernel counters, a VM metric the guest cannot see.
+- 'The decision is by the layer that produces the metric, not by the object that stores it: CPU Queue sits on the VM object but the
+  guest produces it.'
+likely_wrong: Treats every chart on the VM object as a VM metric.
+knowledge:
+- vsphere/architecture/vm-vs-guest-os
+- vsphere/architecture/metric-sources
+- guest-os/cpu/metrics/run-queue

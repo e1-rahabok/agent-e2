@@ -1,0 +1,13 @@
+id: acme-02-steady-score
+kind: acme
+question: Is anything wrong with this cluster?
+facts: facts/acme-performance-steady.json
+role: l1
+key_points:
+- 'The page shows Cluster Performance stayed within its normal movement over the last 24 hours: median 87%, lowest 85%, highest 89%.'
+- 'No drop: a move counts from 5 points, and the worst point is 2 points from the median.'
+- 'The score never went below 75%, where green ends: nothing on this page is wrong with Performance.'
+- The answer does not invent a problem and does not claim to have checked what the page does not show, such as Capacity.
+likely_wrong: Finds a problem in the 85% low point, or says the cluster is healthy in every respect, Capacity included.
+knowledge:
+- vsphere/object-types/cluster/cluster-performance

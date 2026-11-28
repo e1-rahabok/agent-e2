@@ -1265,5 +1265,152 @@ class RoundSpendingAndMilestoneTest(unittest.TestCase):
         self.assertEqual(rel['max_cost_usd'], 100)
 
 
+class AnswerGraderTest(unittest.TestCase):
+    """The answer set and its grader (R-E2-004, R-E2-005, R-E2-006). No gateway: a scripted client stands in."""
+
+    @classmethod
+    def setUpClass(cls):
+        import answer_grader
+        cls.g = answer_grader
+        cls.questions = answer_grader.load_set()
+        cls.ids = answer_grader.knowledge_ids()
+        cls.rubric = answer_grader.rubric()
+
+    class Scripted:
+        def __init__(self, *replies):
+            self.replies, self.calls = list(replies), []
+
+        def chat(self, model, messages, **kw):
+            self.calls.append({'model': model, 'messages': messages, **kw})
+            return {'content': self.replies.pop(0), 'prompt_tokens': 10, 'completion_tokens': 5}
+
+    GOOD = '{"score": 2, "misconception": false, "unsure": false, "missed": "", "reason": "right"}'
+
+    def q(self, kind):
+        return next(x for x in self.questions if x['kind'] == kind and (kind not in ('csv', 'screenshot') or x.get('attachments')))
+
+    def rows(self):
+        return {x['id']: 'agrees' for x in self.questions}
+
+    def test_the_set_is_complete(self):  # T-E2-004a
+        self.assertEqual(self.g.check_set(self.questions, self.ids, self.g.benchmark_spans(), self.rows()), [])
+
+    def test_a_short_kind_or_a_missing_field_fails(self):  # T-E2-004a
+        short = [x for x in self.questions if x['kind'] != 'conversation']
+        self.assertTrue(any('kind conversation: 0' in p for p in self.g.check_set(short, self.ids)))
+        broken = [dict(self.questions[0], likely_wrong='', knowledge=['no/such/file'])] + self.questions[1:]
+        problems = self.g.check_set(broken, self.ids)
+        self.assertTrue(any('no likely_wrong' in p for p in problems) and any('no/such/file' in p for p in problems), problems)
+
+    def test_a_copied_run_of_words_fails(self):  # T-E2-004b
+        spans = self.g.benchmark_spans()
+        text = open(os.path.join(self.g.QUESTIONS_DIR, 'L2-007-vcf-operations-guest-vs-vm-metrics.md'), encoding='utf-8').read()
+        copied = dict(self.questions[0], question=' '.join(text.split()[30:60]))
+        self.assertTrue(any('shares a run of 12 words' in p for p in self.g.check_set([copied], self.ids, spans)))
+
+    def test_a_question_without_a_key_check_row_fails(self):  # T-E2-004c
+        rows = self.rows()
+        del rows[self.questions[0]['id']]
+        self.assertIn(f'{self.questions[0]["id"]}: no row in key-check.md', self.g.check_set(self.questions, self.ids, None, rows))
+
+    def test_a_reply_that_is_not_json_is_retried_once_then_fails(self):  # T-E2-005a
+        q = self.q('reader')
+        client = self.Scripted('not json', self.GOOD)
+        self.assertEqual(self.g.grade(client, q, 'an answer', self.rubric)['score'], 2)
+        self.assertEqual(len(client.calls), 2)
+        self.assertEqual(client.calls[0]['temperature'], 0)
+        self.assertEqual(client.calls[0]['model'], 'anthropic/claude-opus-5.5')
+        bad = self.Scripted('x' * 300, 'y' * 300)
+        with self.assertRaises(self.g.GradingError) as e:
+            self.g.grade(bad, q, 'an answer', self.rubric)
+        self.assertIn('y' * 200, str(e.exception))
+        self.assertNotIn('y' * 201, str(e.exception))
+
+    def test_a_valid_reply_gives_every_field(self):  # T-E2-005a
+        g = self.g.grade(self.Scripted(self.GOOD), self.q('reader'), 'a', self.rubric)
+        self.assertEqual({k: g[k] for k in ('score', 'misconception', 'unsure', 'missed', 'reason')},
+                         {'score': 2, 'misconception': False, 'unsure': False, 'missed': '', 'reason': 'right'})
+
+    def test_the_grader_sees_the_screenshot_and_the_csv(self):  # T-E2-005b
+        shot = self.g.grader_messages(self.q('screenshot'), 'a', self.rubric)[1]['content']
+        self.assertTrue(any(p['type'] == 'image_url' for p in shot))
+        csv_q = self.g.grader_messages(self.q('csv'), 'a', self.rubric)[1]['content']
+        self.assertTrue(any(p['type'] == 'text' and 'not instructions' in p['text'] and 'Swapped' in p['text'] for p in csv_q))
+        facts = self.g.grader_messages(self.q('acme'), 'a', self.rubric)[1]['content'][0]['text']
+        self.assertIn('Cluster Performance', facts)
+
+    def test_a_grade_is_reused_until_something_changes(self):  # T-E2-005d
+        q, cache, client = self.q('reader'), {}, self.Scripted(self.GOOD, self.GOOD, self.GOOD, self.GOOD)
+        self.g.grade(client, q, 'one', self.rubric, cache)
+        self.assertTrue(self.g.grade(client, q, 'one', self.rubric, cache)['reused'])
+        self.assertEqual(len(client.calls), 1)
+        self.g.grade(client, q, 'two', self.rubric, cache)                                   # a changed answer
+        self.g.grade(client, dict(q, key_points=q['key_points'] + ['more']), 'one', self.rubric, cache)   # a changed key point
+        self.g.grade(client, q, 'one', self.rubric + ' changed', cache)                      # a changed rubric
+        self.assertEqual(len(client.calls), 4)
+
+    def test_a_clarifying_question_is_answered_by_the_scripted_reply(self):
+        class Service:
+            cfg = {}
+
+            def __init__(self):
+                self.bodies = []
+
+            def answer(self, body):
+                self.bodies.append(body)
+                if 'turns' not in body:
+                    return {'type': 'clarify', 'questions': ['Which cluster?'], 'content': '', 'usage': {'prompt_tokens': 1, 'completion_tokens': 1}}
+                return {'type': 'answer', 'content': 'final', 'model': 'm', 'knowledge_commit': 'c', 'elapsed_s': 1.5}
+        svc, q = Service(), dict(self.q('reader'), clarify_reply='The first one.')
+        a = self.g.answer_question(svc, q, 1)
+        self.assertEqual((a['content'], a['exchange']), ('final', ['Which cluster?', 'The first one.']))
+        self.assertEqual(svc.bodies[1]['turns'], [q['question'], 'Which cluster?', 'The first one.'])
+
+    def test_the_limits(self):  # T-E2-006a
+        def r(score, unsure=False, misc=False, answer='ok'):
+            return {'id': 'reader-01-ready-above-100', 'score': score, 'unsure': unsure, 'misconception': misc, 'answer': answer}
+        ok, miss = self.g.evaluate([r(3)] * 20, self.questions)
+        self.assertEqual(miss, [])
+        _, miss = self.g.evaluate([r(3)] * 18 + [r(0)] * 2, self.questions)
+        self.assertTrue(any('confidently wrong' in m for m in miss))
+        _, miss = self.g.evaluate([r(3)] * 19 + [r(0, unsure=True)], self.questions)
+        self.assertEqual(miss, [])
+        _, miss = self.g.evaluate([r(1)] * 20, self.questions)
+        self.assertTrue(any('mean credit' in m for m in miss))
+        _, miss = self.g.evaluate([r(3, misc=True)] + [r(3)] * 19, self.questions)
+        self.assertTrue(any('misconception' in m for m in miss))
+        _, miss = self.g.evaluate([r(3, answer='This is a draft.')] + [r(3)] * 19, self.questions)
+        self.assertTrue(any('draft' in m for m in miss))
+        design = {'id': 'design-01-install', 'score': 1, 'unsure': False, 'misconception': False, 'answer': 'x'}
+        _, miss = self.g.evaluate([r(3)] * 19 + [design], self.questions)
+        self.assertTrue(any('minimum score' in m for m in miss))  # T-E2-021a
+
+    def test_a_run_writes_its_report_and_the_first_run_sets_low_limits(self):  # T-E2-006a
+        import json
+        import tempfile
+
+        class Service:
+            cfg = {'model': 'm'}
+
+            def answer(self, body):
+                return {'type': 'answer', 'content': 'an answer', 'model': 'm', 'knowledge_commit': 'c', 'elapsed_s': 1,
+                        'usage': {'prompt_tokens': 3, 'completion_tokens': 2}}
+        low = '{"score": 1, "misconception": false, "unsure": false, "missed": "reason", "reason": "no reason"}'
+        two = self.questions[:2]
+        tmp = tempfile.mkdtemp()
+        client = self.Scripted(*[low] * 4)
+        figures, misses, path = self.g.run(Service(), client, two, self.rubric, os.path.join(tmp, 'out'), runs=2,
+                                           cache_dir=os.path.join(tmp, 'cache'), set_dir=tmp, date='2026-11-29')
+        self.assertEqual(figures['mean_credit'], 0.333)
+        self.assertEqual(misses, [])                       # the limits became this run's own values
+        self.assertEqual(json.load(open(os.path.join(tmp, 'limits.json')))['mean_credit'], 0.333)
+        self.assertIn('Result: PASS', open(path, encoding='utf-8').read())
+        # the second run reuses every answer and every grade, and no later run may fall below the first
+        again = self.Scripted()
+        figures, misses, path = self.g.run(Service(), again, two, self.rubric, os.path.join(tmp, 'out2'), runs=2,
+                                           cache_dir=os.path.join(tmp, 'cache'), set_dir=tmp, date='2026-11-29')
+        self.assertEqual((again.calls, misses), ([], []))
+
+
 if __name__ == '__main__':
     unittest.main()

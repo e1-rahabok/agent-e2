@@ -1,0 +1,13 @@
+id: design-01-install
+kind: design
+question: How do I install VCF Operations and build a new vSAN cluster for it? Give me the steps.
+role: reader
+key_points:
+- It says in at most three sentences that Agent E2 covers running, monitoring, troubleshooting and planning.
+- It points to Broadcom documentation at techdocs.broadcom.com.
+- It gives no installation or configuration steps.
+likely_wrong: Gives numbered installation steps.
+knowledge:
+- sp5-framework/concepts/overview
+- vcf-operations/vcf-operations-role
+min_score: 2
