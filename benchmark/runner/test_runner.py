@@ -1260,9 +1260,19 @@ class RoundSpendingAndMilestoneTest(unittest.TestCase):
     def test_the_round_of_release_1_0(self):
         import yaml
         rel = yaml.safe_load(open(os.path.join(os.path.dirname(__file__), 'runner_config.yaml')))['release']
-        self.assertEqual(rel['runs'], [{'model': 'google/gemma-4-31b-it', 'modes': ['baseline', 'agent-e2']},
-                                       {'model': 'anthropic/claude-opus-5.5', 'modes': ['web']}])
-        self.assertEqual(rel['max_cost_usd'], 100)
+        self.assertEqual(rel['runs'], [{'model': 'google/gemma-4-31b-it', 'modes': ['baseline', 'agent-e2'], 'runs': 3},
+                                       {'model': 'anthropic/claude-opus-5.5', 'modes': ['web'], 'runs': 1}])
+        self.assertEqual(rel['max_cost_usd'], 25)
+
+    def test_each_run_of_the_round_asks_its_own_number_of_times(self):
+        import round_executor
+        cfg = {'runs': 5}
+        once = {'model': 'anthropic/claude-opus-5.5', 'modes': ['web'], 'folder': 'f', 'params': {}, 'runs': 1}
+        self.assertEqual(round_executor.total_answers(once, cfg, 10), 10)
+        self.assertEqual(round_executor.total_answers({'modes': ['baseline', 'agent-e2']}, cfg, 10), 100)
+        cmd = round_executor.child_cmd(once, '/tmp/x', 100, resume=False)
+        self.assertEqual(cmd[cmd.index('--runs') + 1], '1')
+        self.assertNotIn('--runs', round_executor.child_cmd(once, '/tmp/x', 100, resume=True))
 
 
 class AnswerGraderTest(unittest.TestCase):

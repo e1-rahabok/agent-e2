@@ -163,7 +163,7 @@ python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
 
 ### Spending stop
 - [spending_stop.py](spending_stop.py) counts what a round has spent: the larger of the list price of the answers it asked (`cost_usd`, the folders restarted with other settings included) and the drop in the gateway's credit balance since the preflight, read at most once a minute (R-E2-030). The balance also counts web searches, retries and failed calls; the list price also counts calls paid by the author's own provider key, which the balance never sees.
-- At `release.max_cost_usd` (US$ 100, CONSTRAINT-1) `round_executor.py` writes `.spending-stop` into each run folder. A run starts no new answer while the file is there, lets the running ones finish and exits with code 3; the round then exits with code 9 (`SPENT`). A resume removes the files and checks the limit again, so it continues only after the limit is raised.
+- At `release.max_cost_usd` (US$ 25, DESIGN-31) `round_executor.py` writes `.spending-stop` into each run folder. A run starts no new answer while the file is there, lets the running ones finish and exits with code 3; the round then exits with code 9 (`SPENT`). A resume removes the files and checks the limit again, so it continues only after the limit is raised.
 
 ### Answer set
 - [answer_grader.py](answer_grader.py) runs the answer set of release 1.0 (R-E2-004 to R-E2-006 in [answer-service.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/requirements/answer-service.md)): one YAML file per question in [benchmark/answer-set](https://github.com/e1-rahabok/agent-e2/tree/main/benchmark/answer-set), each with its key points, its likely wrong answer and its knowledge files.

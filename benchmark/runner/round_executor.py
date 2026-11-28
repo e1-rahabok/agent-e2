@@ -86,7 +86,7 @@ def reconcile_with_folders(state, out_dir, cfg, n_questions):
 
 
 def total_answers(entry, cfg, n_questions):
-    return len(entry['modes']) * n_questions * cfg['runs']
+    return len(entry['modes']) * n_questions * entry.get('runs', cfg['runs'])
 
 
 def count_valid(folder):
@@ -106,7 +106,10 @@ def child_cmd(entry, out_dir, minutes_left, resume, extra=''):
         cmd += ['--resume', os.path.join(out_dir, entry['folder'])]
     else:
         cmd += ['--models', entry['model'], '--modes', ','.join(entry['modes']), '--name', entry['folder'],
+                '--runs', str(entry.get('runs') or ''),
                 '--params', json.dumps({entry['model']: entry['params']} if entry.get('params') else {})]
+        if not entry.get('runs'):
+            i = cmd.index('--runs'); del cmd[i:i + 2]
         if entry.get('hosts'):
             cmd += ['--hosts', json.dumps({entry['model']: entry['hosts']})]
     return cmd
@@ -204,9 +207,9 @@ def main():
     plan = [p for p in rel['runs'] if not only or p['model'] in only]
 
     if a.dry_run:
-        print(f'Round plan: {len(plan)} runs, {cfg["runs"]} runs per question.')
+        print(f'Round plan: {len(plan)} runs.')
         for p in plan:
-            print(f'  {p["model"]}: {", ".join(p["modes"])}  settings {json.dumps((cfg.get("model_params") or {}).get(p["model"]) or [{}])}')
+            print(f'  {p["model"]}: {", ".join(p["modes"])}, {p.get("runs", cfg["runs"])} runs per question  settings {json.dumps((cfg.get("model_params") or {}).get(p["model"]) or [{}])}')
         print(f'  folders: {a.out}/<date>-<model>; limit {rel["max_cost_usd"]} US$ spent (the round stops there), {rel["max_hours"]} h')
         print('  a new round needs --milestone; answers whose inputs are unchanged are reused from the run folders already there')
         return
@@ -247,7 +250,7 @@ def main():
             params = verdict[p['model']]['params'] if p['model'] in verdict else ladder[0]
             state['runs'].append({'model': p['model'], 'modes': p['modes'], 'folder': run_name([p['model']], a.out), 'params': params,
                                   'rung': ladder.index(params) if params in ladder else 0, 'status': 'pending', 'note': '', 'retries': 0,
-                                  'hosts': hosts.get(p['model'], [])})
+                                  'hosts': hosts.get(p['model'], []), 'runs': p.get('runs', cfg['runs'])})
         save_state(a.out, state, lock)
     import question_files
     n_questions = len([c for c in question_files.load() if c.scorable])

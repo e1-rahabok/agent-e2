@@ -32,9 +32,9 @@ Test scenarios:
 
 Why: the round of 16 November 2026 cost US$115 against a projection of US$77 to 85, because only the projection was checked before the round started.
 
-Source: CONSTRAINT-1 (US$100 a test run); DESIGN-31.
+Source: CONSTRAINT-1 (US$100 a test run at most); the author, 2026-11-28 ("It can't be $71. Way too expensive", on the projection of the full round); DESIGN-31.
 
-- Given a benchmark round, and the limit `release.max_cost_usd` of `runner_config.yaml`, US$100
+- Given a benchmark round, and the limit `release.max_cost_usd` of `runner_config.yaml`, US$25
 - When the money it has spent reaches the limit: the larger of the list price of the tokens of the answers it asked, runs restarted with other settings included, and the drop in the gateway's credit balance since its preflight
 - Then it starts no new answer, lets the answers in progress finish, and exits with code 9, naming the amount spent and the limit
 - And the preflight still refuses a round whose projected cost is above the limit
@@ -47,15 +47,15 @@ Test scenarios:
 
 ### R-E2-031 The full round runs only for a milestone
 
-Why: between milestones, the free checks and the answer set test each change, and three full rounds in one week of November 2026 spent US$350. Release 1.0 runs Gemma 4 31B, so the other candidates choose nothing in it.
+Why: between milestones, the free checks and the answer set test each change, and three full rounds in one week of November 2026 spent US$350. Release 1.0 runs Gemma 4 31B, so the other candidates choose nothing in it. The frontier reference is a comparison, so one answer per question gives its score, and it cost US$58 of the US$71 a round of 5 runs would cost. Gemma's 3 runs keep the score within about 6 points and still give the projection of 3 answer samples agreeing.
 
 Source: the author, 2026-11-28 ("the full test run only at milestones", [round 6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-6.md#spending-on-tests)); SCOPE-6 (Gemma 4 31B); DESIGN-31.
 
 - Given [`benchmark/runner/round_executor.py`](../../benchmark/runner/round_executor.py)
 - When a new round starts
 - Then it refuses to start without `--milestone`, the milestone of the workspace's ROADMAP.md the round serves, such as `M3`, and the round's summary names that milestone
-- And release 1.0's round asks Gemma 4 31B in the baseline and Agent E2 modes, and the frontier reference, Claude Opus 5.5, in the web mode
+- And release 1.0's round asks Gemma 4 31B in the baseline and Agent E2 modes, 3 runs per question, and the frontier reference, Claude Opus 5.5, in the web mode, 1 run per question
 
 Test scenarios:
 - T-E2-031a (anywhere, automated by [benchmark/runner/test_runner.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/test_runner.py)): a new round without `--milestone` exits with code 2 and starts no run; with `--milestone M3` it starts; a resume needs no milestone.
-- T-E2-031b (anywhere, automated by the same file): `release.runs` of `runner_config.yaml` holds exactly those two entries, and `release.max_cost_usd` is 100.
+- T-E2-031b (anywhere, automated by the same file): `release.runs` of `runner_config.yaml` holds exactly those two entries with their runs per question, and `release.max_cost_usd` is 25; each run of a round asks its own number of runs per question, and a resume keeps it.
