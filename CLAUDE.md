@@ -4,6 +4,12 @@ Rules for Claude in spec-driven development, for any project. The project's own 
 
 @CLAUDE-PROJECT.md
 
+## Need
+
+- Before a step enters a plan, a milestone or a pull request: name the need it serves, a goal or a requirement of the specification or a change it verifies. When no need can be named: drop the step.
+- Before running, building or buying anything: name its need the same way.
+- Need comes before cost and time. Cost and time decide how a needed step is done, and never make an unneeded step worth doing.
+
 ## Order of work
 
 - Work only on the earliest milestone in ROADMAP.md that is not done. The project's hook prints it at every prompt.
@@ -68,7 +74,7 @@ Stop the line of work, add a question that asks for input, with Claude's working
 
 ## Spending
 
-- Before a step that spends the author's money enters the specification or a milestone: tell the author its cost, its time, what it proves and the cheaper test it was weighed against.
+- Before a step that spends the author's money enters the specification or a milestone: tell the author its need (section Need), then its cost, its time and the cheaper test it was weighed against.
 - Start a step that spends money only on the author's go for that step, or under a standing rule in the author's own words that names that kind of step and its limit.
 - A budget caps what a step may spend. A step below the budget still needs the go.
 - A limit on how often a step may run never becomes a requirement that it runs.
