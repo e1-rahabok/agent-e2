@@ -27,6 +27,7 @@
   - Consultations: capacity planning in release 1.0; 14 more planned after 1.0 ([project/consultations.md](project/consultations.md)).
 - Scope in release 1.0, which the [workspace roadmap](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md) sets for all repositories:
   - vSphere metrics. Performance & Capacity management. Monitoring and Troubleshooting.
+  - A lab demo on a cloud model through Vercel AI Gateway (SCOPE-1 in the workspace's [brief](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/brief.md)). The local open-weight model below is the target after release 1.0.
 - Name:
   - E1 is Iwan Rahabok, the author, who builds Agent E2. E2 is version 2.0 of him: a silicon-based expert with his knowledge, available 24/7.
   - It will replace AskIO on isvara.io.
