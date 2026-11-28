@@ -63,6 +63,10 @@ Test scenarios:
 
 ### R-E2-004 An answer set of free-text questions for release 1.0 exists
 
+Milestone: M8.
+
+Why it waits: the author, 2026-11-28: the full round never runs, and the work of the service milestone changes no knowledge, so that milestone closes on the free automatic checks. The answer set, its grader and its graded runs wait for a change of knowledge or of the model, and for the author's go.
+
 Why: accuracy is measured only on questions shaped like the ones people ask, with their screens, files and conversations.
 
 Source: SCOPE-6; answers to Q-WS-5 ("The grader should be automated") and Q-WS-I1 (conversations, CSV files and screenshots); GOAL-4 (release 1.0 success: Agent E2 explains a real lab KPI correctly); [SCOPE-6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/brief.md) (the author, 2026-11-27: about 15 questions in release 1.0, since the grader has lower priority; more after release 1.0).
@@ -81,6 +85,10 @@ Test scenarios:
 - T-E2-004c (anywhere, automated by the same tool, then manual once): the tool fails when a question has no row in `key-check.md`; the author reviews the uncertain rows once, and a row stays uncertain until the author's decision is written into the question's key.
 
 ### R-E2-005 An automated grader scores every answer
+
+Milestone: M8.
+
+Why it waits: the author, 2026-11-28: the full round never runs, and the work of the service milestone changes no knowledge, so that milestone closes on the free automatic checks. The answer set, its grader and its graded runs wait for a change of knowledge or of the model, and for the author's go.
 
 Why: the author cannot grade every run (CONSTRAINT-8), and a grader that runs on every change catches a regression before it ships.
 
@@ -102,6 +110,10 @@ Test scenarios:
 - T-E2-005d (anywhere, automated by [`benchmark/runner/answer_grader.py`](../../benchmark/runner/answer_grader.py), to build, with the mock client): grading the same answers twice calls the grader once per answer; a changed answer, key point or rubric is graded again.
 
 ### R-E2-006 The answer set passes on the shipped configuration
+
+Milestone: M8.
+
+Why it waits: the author, 2026-11-28: the full round never runs, and the work of the service milestone changes no knowledge, so that milestone closes on the free automatic checks. The answer set, its grader and its graded runs wait for a change of knowledge or of the model, and for the author's go.
 
 Why: a confident wrong answer is the main risk (RISK-1), so release 1.0 ships only a configuration that passes the set.
 
@@ -138,17 +150,22 @@ Test scenarios:
 
 ### R-E2-025 A value in a question or a screenshot gets its band from the catalog
 
+Milestone: M5.
+
+The setting `question_bands` of `service_config.yaml` switches it, shipped off: the author, 2026-11-28, wants no change to what the model reads until an answer test is allowed. M5 (isvara.io Ask, with screenshots) switches it on once the answer set shows the effect.
+
 Why: a band chosen by the model can differ from the catalog's limits; code reads the limits the same way every time.
 
 Source: Q-WS-62 (the band lookup by code in release 1.0, also for values typed in a question or read from a screenshot); [DESIGN-2](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/system.md).
 
-- Given a question that states a metric's value, or a screenshot from which Agent E2 reads one ([R-E2-012](#r-e2-012-agent-e2-reads-screenshots-a-caller-sends)), for a metric with five limits in the catalog
+- Given `question_bands` switched on, and a question that states a metric's value, or a screenshot from which Agent E2 reads one ([R-E2-012](#r-e2-012-agent-e2-reads-screenshots-a-caller-sends)), for a metric with five limits in the catalog
 - When Agent E2 answers
 - Then code computes the value's band from the catalog's limits, as [expert_agent.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/expert_agent.py) `metric_band_lines` does for the figures PCM sends
 - And the answer states that band and no other
 
 Test scenarios:
-- T-E2-025a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): with a mock client whose understand stage reads "Peak CPU Co-stop among any vCPU 7.7%" from the question, a metric named as the catalog names it, the answer request holds a band line that says red, from the catalog limits 0, 1, 2, 4 and 8.
+- T-E2-025c (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py)): with `question_bands` off, as shipped, the answer request holds no band line for a value in the question.
+- T-E2-025a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py)): with `question_bands` on and a mock client whose understand stage reads "Peak CPU Co-stop among any vCPU 7.7%" from the question, a metric named as the catalog names it, the answer request holds a band line that says red, from the catalog limits 0, 1, 2, 4 and 8.
 - T-E2-025b (anywhere, the same test): the same value read from a screenshot's `attachments_read` gets the same band line.
 
 ## Time and progress
