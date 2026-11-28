@@ -12,8 +12,8 @@
   <img src="https://img.shields.io/badge/-Linux-6e7781?style=for-the-badge&logo=linux&logoColor=white&labelColor=3d444d" alt="Linux">
 </p>
 <p align="center">
-  <img src="https://img.shields.io/badge/model-open%20weights%2C%20local-6e7781?labelColor=3d444d" alt="Model: open weights, local">
-  <img src="https://img.shields.io/badge/runs-locally%20%28data%20stays%20on%20site%29-6e7781?labelColor=3d444d" alt="Runs locally">
+  <img src="https://img.shields.io/badge/target%20model-open%20weights%2C%20local-6e7781?labelColor=3d444d" alt="Target model: open weights, local">
+  <img src="https://img.shields.io/badge/target-runs%20locally%20%28data%20stays%20on%20site%29-6e7781?labelColor=3d444d" alt="Target: runs locally">
   <img src="https://img.shields.io/badge/target-99%25%20final%20score-6e7781?labelColor=3d444d" alt="Target: 99% final score">
 </p>
 
@@ -22,11 +22,11 @@
 # Agent E2
 
 - What it is:
-  - A VMware consultant, not an LLM aid. It answers Level 400 questions, and it leads a consultation: asked "Can you guide me over capacity planning for a vSphere cluster? You're my expert consultant", it interviews you for what the plan needs, names every default it assumes, computes the answer with code, and explains which number limits your hosts and why.
+  - A VMware consultant, not an LLM aid. It answers Level 400 questions. After release 1.0 it is to lead consultations: asked "Can you guide me over capacity planning for a vSphere cluster? You're my expert consultant", it interviews you for what the plan needs, names every default it assumes, computes the answer with code, and explains which number limits your hosts and why.
   - Under the hood, an expert system on a local LLM. The agent and the harness lead: code follows the expert's procedure, decides what to read from the knowledge base's map, asks for missing inputs and computes the exact values; the model reads and writes ([harness/AGENT.md](harness/AGENT.md)).
-  - Consultations: capacity planning in release 1.0; 14 more planned after 1.0 ([project/consultations.md](project/consultations.md)).
+  - Consultations: none in release 1.0; capacity planning comes first after it, then 14 more (SCOPE-19 in the workspace's [brief](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/brief.md); [project/consultations.md](project/consultations.md)).
 - Scope in release 1.0, which the [workspace roadmap](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md) sets for all repositories:
-  - vSphere metrics. Performance & Capacity management. Monitoring and Troubleshooting.
+  - Day 2 knowledge only (SCOPE-2): running, monitoring, troubleshooting and planning, with vSphere metrics and performance and capacity management first. Asked about design, installation, configuration or upgrades, Agent E2 says they are out of scope and points to Broadcom's documentation.
   - A lab demo on a cloud model through Vercel AI Gateway (SCOPE-1 in the workspace's [brief](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/brief.md)). The local open-weight model below is the target after release 1.0.
 - Name:
   - E1 is Iwan Rahabok, the author, who builds Agent E2. E2 is version 2.0 of him: a silicon-based expert with his knowledge, available 24/7.
@@ -41,8 +41,8 @@
 | [private-cloud-manager](https://github.com/e1-rahabok/private-cloud-manager) | PCM, Private Cloud Manager: a web app for operations roles. Its Agent E2 panel calls this repository's API. |
 | [PCM-Adapter](https://github.com/e1-rahabok/PCM-Adapter) | The VCF vCommunity Adapter, a VCF Operations management pack. It computes Agent E2's KPIs and models in the customer's VCF Operations. |
 
-- They reinforce each other: Agent E2 explains the scores the adapter computes, and reads them; isvara.io lets readers try Agent E2 before deploying it; the adapter puts the same thresholds and models on the customer's screens.
-- How the four fit, their contracts, decisions and roadmap: [private-cloud-workspace](https://github.com/e1-rahabok/private-cloud-workspace).
+- They reinforce each other: Agent E2 explains the scores the adapter computes, from the values its caller sends (PCM reads them from VCF Operations); isvara.io lets readers try Agent E2 before deploying it; the adapter puts the same thresholds and models on the customer's screens.
+- How the four fit, their contracts, the specification that binds them and the roadmap: [private-cloud-workspace](https://github.com/e1-rahabok/private-cloud-workspace).
 
 **Business problem:**
 
@@ -68,7 +68,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | Knowledge base | Level 400 facts, mechanisms, misconceptions, flows and exact data                     | `knowledge/`          |
 | Harness        | Retrieval, exact tools, rules, budgets, answer verifier                      | `harness/`            |
 | Agent          | The expert's procedure as code: reads the question into a case, plans what to read, computes, checks; calls the model to read and write | [`harness/AGENT.md`](harness/AGENT.md)    |
-| Model          | An open-weight vision model on local GPUs, chosen by the benchmark           | [`benchmark/models.md`](benchmark/models.md) |
+| Model          | Gemma 4 31B in release 1.0 (SCOPE-6); later a local vision model | [`benchmark/models.md`](benchmark/models.md) |
 
 - The benchmark tests the whole system, not the model. It is a proof, not a goal: Agent E2 against the release gate and the frontier model; it also picks the model.
 
@@ -92,12 +92,12 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | [benchmark/models.md](benchmark/models.md)           | Model design: which frozen model to ship, size and hardware; frontier reference                             |
 | [benchmark/live-test.md](benchmark/live-test.md)     | The system deployed on a local model: setup, steps, pass criteria                                        |
 | [project/plan.md](project/plan.md)                   | Milestones, open work                                                                            |
-| [project/consultations.md](project/consultations.md) | The consultations Agent E2 leads: capacity planning in 1.0, 14 more after 1.0                                |
+| [project/consultations.md](project/consultations.md) | The consultations Agent E2 is to lead after 1.0: capacity planning first, then 14 more                     |
 | [CONTRIBUTING.md](CONTRIBUTING.md)                   | How to add or change a file                                                                                 |
 
 ## Status
 
-- Goal not achieved yet. Latest round ([`benchmark/results/README.md`](benchmark/results/README.md)): Agent E2 on Muse-Glimmer-30B scored 84% final, the frontier reference 79%. It fails the release gate on the final score (limit 85%) and on confident-wrong (15%, limit 3%). The knowledge base and the harness have changed since that round.
+- Goal not achieved yet. Latest round ([`benchmark/results/README.md`](benchmark/results/README.md)): Agent E2 on Muse-Glimmer-30B scored 84% final, the frontier reference 79%. It fails the release gate on the final score (limit 85%) and on confident-wrong (15%, limit 3%). The knowledge base and the harness have changed since that round. Release 1.0 runs Gemma 4 31B (SCOPE-6), and its own gate is the graded free-text answer set (DESIGN-19 in the workspace's [system design](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/system.md)).
 - A round runs two runs per candidate model, Base (the model alone) and Agent E2, and the frontier reference ([`benchmark/RUN.md`](benchmark/RUN.md)).
 - The question set by area and level: `python3 project/tools/question_coverage.py`.
 - Retrieval check: current numbers in [`project/plan.md`](project/plan.md), section Retrieval.
