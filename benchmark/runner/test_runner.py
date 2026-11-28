@@ -1356,6 +1356,19 @@ class AnswerGraderTest(unittest.TestCase):
         self.assertIn('y' * 200, str(e.exception))
         self.assertNotIn('y' * 201, str(e.exception))
 
+    def test_the_reply_has_room_for_the_reasoning_and_a_cut_reply_says_so(self):  # T-E2-005a
+        q = self.q('reader')
+        client = self.Scripted(self.GOOD)
+        self.g.grade(client, q, 'an answer', self.rubric)
+        self.assertEqual(client.calls[0]['max_tokens'], 4000)
+
+        class Cut(self.Scripted):
+            def chat(self, model, messages, **kw):
+                return {**super().chat(model, messages, **kw), 'finish_reason': 'length'}
+        with self.assertRaises(self.g.GradingError) as e:
+            self.g.grade(Cut('', '{"score": 2, "missed'), q, 'an answer', self.rubric)
+        self.assertIn('cut at 4000 tokens', str(e.exception))
+
     def test_a_valid_reply_gives_every_field(self):  # T-E2-005a
         g = self.g.grade(self.Scripted(self.GOOD), self.q('reader'), 'a', self.rubric)
         self.assertEqual({k: g[k] for k in ('score', 'misconception', 'unsure', 'missed', 'reason')},
@@ -1440,6 +1453,28 @@ class AnswerGraderTest(unittest.TestCase):
         figures, misses, path = self.g.run(Service(), again, two, self.rubric, os.path.join(tmp, 'out2'), runs=2,
                                            cache_dir=os.path.join(tmp, 'cache'), set_dir=tmp, date='2026-11-29')
         self.assertEqual((again.calls, misses), ([], []))
+
+    def test_a_run_without_the_authors_go_stops_below_ten_dollars(self):  # T-E2-030d
+        import json
+        import tempfile
+        self.assertLess(self.g.MAX_COST_USD, 10)
+
+        class Service:
+            cfg = {'model': 'm'}
+
+            def answer(self, body):
+                return {'type': 'answer', 'content': 'paid answer', 'model': 'm', 'knowledge_commit': 'c', 'elapsed_s': 1,
+                        'usage': {'prompt_tokens': 3, 'completion_tokens': 2}}
+        tmp = tempfile.mkdtemp()
+        with self.assertRaises(RuntimeError):
+            self.g.run(Service(), self.Scripted(), self.questions[:1], self.rubric, os.path.join(tmp, 'out'), runs=1,
+                       cache_dir=os.path.join(tmp, 'cache'), set_dir=tmp, stop=lambda: True)
+        # a grading that fails keeps the answer it graded, so the answer is not paid for again
+        with self.assertRaises(self.g.GradingError):
+            self.g.run(Service(), self.Scripted('not json', 'still not json'), self.questions[:1], self.rubric,
+                       os.path.join(tmp, 'out'), runs=1, cache_dir=os.path.join(tmp, 'cache'), set_dir=tmp)
+        kept = json.load(open(os.path.join(tmp, 'cache', 'answers.json')))
+        self.assertEqual([a['content'] for a in kept.values()], ['paid answer'])
 
 
 if __name__ == '__main__':
