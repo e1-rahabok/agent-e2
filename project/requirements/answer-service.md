@@ -82,7 +82,7 @@ Test scenarios:
 
 Why: the author cannot grade every run (CONSTRAINT-8), and a grader that runs on every change catches a regression before it ships.
 
-Source: answer to Q-WS-5 ("It was graded by Opus 5.5"); SCOPE-6; the author, 2026-11-28 ("no re-grading of answers that haven't changed", [round 6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-6.md#spending-on-tests)); DESIGN-30.
+Source: answer to Q-WS-5 ("It was graded by Opus 5.5"); SCOPE-6; the author, 2026-11-28 ("no re-grading of answers that haven't changed", [round 6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-6.md#spending-on-tests)); DESIGN-31.
 
 - Given an answer to an answer-set question
 - When the grader reads it

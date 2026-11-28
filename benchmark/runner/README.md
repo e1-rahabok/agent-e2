@@ -158,7 +158,7 @@ python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
 ### Reused answers
 - [answer_reuse.py](answer_reuse.py) hashes the inputs of each answer into the column `inputs_hash` of `answers.csv` (R-E2-029 in [test-spending.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/requirements/test-spending.md)). Before it asks anything, `run_executor.py` reads the `answers.csv` of every other folder in [benchmark/results](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results) (not the `-invalid-` ones) and copies each answer with the same hash and no error: no model is called, the column `reused_from` names the folder, and the answer is scored again against the current `## Answers`.
 - The inputs: the mode, the model, its request settings, the run number, the track, the question as the model sees it in that run (stem, options in the run's order, tables) and its images. Baseline adds the code and prompts that build its request; web adds its tools, the `web` settings and [public_web_lookup.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/public_web_lookup.py); Agent E2 adds every file of `knowledge/` and `harness/` except the tests, the keys of `runner_config.yaml` that reach an answer (every key except those in `SCHEDULE_KEYS`) and the search method.
-- Why the whole of `knowledge/` and `harness/` for Agent E2: a change to a file the answer did not read can still change what search finds (DESIGN-30, rejected option b).
+- Why the whole of `knowledge/` and `harness/` for Agent E2: a change to a file the answer did not read can still change what search finds (DESIGN-31, rejected option b).
 - `--no-reuse` asks every answer. The cost of a run counts only the answers it asked.
 
 ### Spending stop

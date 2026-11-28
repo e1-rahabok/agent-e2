@@ -102,7 +102,7 @@ snapshots:                    # round_executor.py pushes the answers, configs an
   remote: origin
 
 release:                      # the full round, only before a milestone is closed (--milestone, R-E2-031): benchmark/RUN.md. One run folder per entry, all started together (round_executor.py)
-  runs:                       # release 1.0 runs Gemma 4 31B (SCOPE-6): Qwen and Muse-Glimmer wait for the model choice of the on-premises deployment (DESIGN-30)
+  runs:                       # release 1.0 runs Gemma 4 31B (SCOPE-6): Qwen and Muse-Glimmer wait for the model choice of the on-premises deployment (DESIGN-31)
     - {model: google/gemma-4-31b-it, modes: [baseline, agent-e2]}
     - {model: anthropic/claude-opus-5.5, modes: [web]}    # frontier reference as a user meets it: search available, the model decides; no prompt-only mode (author, 2026-11-13)
   reference: anthropic/claude-opus-5.5

@@ -1,4 +1,4 @@
-"""The spending stop of a test run (R-E2-030 in project/requirements/test-spending.md; DESIGN-30 in the workspace's system design).
+"""The spending stop of a test run (R-E2-030 in project/requirements/test-spending.md; DESIGN-31 in the workspace's system design).
 
 A run counts the larger of two figures and stops starting answers when it reaches its limit (runner_config.yaml,
 release.max_cost_usd, US$100 by CONSTRAINT-1):

@@ -1,4 +1,4 @@
-"""Reuse of unchanged answers (R-E2-029 in project/requirements/test-spending.md; DESIGN-30 in the workspace's system design).
+"""Reuse of unchanged answers (R-E2-029 in project/requirements/test-spending.md; DESIGN-31 in the workspace's system design).
 
 An answer whose inputs equal those of an earlier answer is copied from the earlier run folder, and no model is called for it.
 The inputs are hashed into the `inputs_hash` column of answers.csv:
@@ -13,7 +13,7 @@ The inputs are hashed into the `inputs_hash` column of answers.csv:
 
 The key of a question (`## Answers`) is not an input: the model never sees it, so a reused answer is scored against the
 current key. An Agent E2 answer is not reused when only the files it read are unchanged: a change to another file can
-change what search finds (DESIGN-30, rejected option b).
+change what search finds (DESIGN-31, rejected option b).
 """
 import csv
 import hashlib

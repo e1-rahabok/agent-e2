@@ -1,6 +1,6 @@
 # Requirements: spending on tests
 
-How Agent E2's tests that call a model keep the author's spending down: what is asked again, when a run stops, and when the full round runs. Every requirement here belongs to milestone M3 in the workspace's [ROADMAP.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md); the author asked for them on 2026-11-28, before M3 opened. The design and its reasons are DESIGN-30 in the workspace's [system design](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/system.md), and the budget is CONSTRAINT-1 in its [brief](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/brief.md). Other IDs are explained in the [glossary](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/glossary.md).
+How Agent E2's tests that call a model keep the author's spending down: what is asked again, when a run stops, and when the full round runs. Every requirement here belongs to milestone M3 in the workspace's [ROADMAP.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md); the author asked for them on 2026-11-28, before M3 opened. The design and its reasons are DESIGN-31 in the workspace's [system design](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/system.md), and the budget is CONSTRAINT-1 in its [brief](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/brief.md). Other IDs are explained in the [glossary](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/glossary.md).
 
 Files involved:
 
@@ -13,7 +13,7 @@ Files involved:
 
 Why: an answer whose inputs have not changed is one more sample of the same thing, so asking again spends money and measures nothing new. In November 2026 the frontier reference was about half of each round, though its answers do not depend on Agent E2 and most questions had not changed.
 
-Source: the author, 2026-11-28 ("no re-grading of answers that haven't changed", [round 6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-6.md#spending-on-tests)); CONSTRAINT-1; DESIGN-30.
+Source: the author, 2026-11-28 ("no re-grading of answers that haven't changed", [round 6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-6.md#spending-on-tests)); CONSTRAINT-1; DESIGN-31.
 
 - Given a benchmark run, and the run folders already in [`benchmark/results/`](../../benchmark/results)
 - When an answer's inputs equal those of an earlier answer that did not fail
@@ -32,7 +32,7 @@ Test scenarios:
 
 Why: the round of 16 November 2026 cost US$115 against a projection of US$77 to 85, because only the projection was checked before the round started.
 
-Source: CONSTRAINT-1 (US$100 a test run); DESIGN-30.
+Source: CONSTRAINT-1 (US$100 a test run); DESIGN-31.
 
 - Given a benchmark round, and the limit `release.max_cost_usd` of `runner_config.yaml`, US$100
 - When the money it has spent reaches the limit: the larger of the list price of the tokens of the answers it asked, runs restarted with other settings included, and the drop in the gateway's credit balance since its preflight
@@ -49,7 +49,7 @@ Test scenarios:
 
 Why: between milestones, the free checks and the answer set test each change, and three full rounds in one week of November 2026 spent US$350. Release 1.0 runs Gemma 4 31B, so the other candidates choose nothing in it.
 
-Source: the author, 2026-11-28 ("the full test run only at milestones", [round 6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-6.md#spending-on-tests)); SCOPE-6 (Gemma 4 31B); DESIGN-30.
+Source: the author, 2026-11-28 ("the full test run only at milestones", [round 6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-6.md#spending-on-tests)); SCOPE-6 (Gemma 4 31B); DESIGN-31.
 
 - Given [`benchmark/runner/round_executor.py`](../../benchmark/runner/round_executor.py)
 - When a new round starts
