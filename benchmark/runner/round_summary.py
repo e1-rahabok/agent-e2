@@ -18,6 +18,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
+import answer_reuse  # noqa: E402
 import score_report  # noqa: E402
 
 REPO = 'https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results'
@@ -40,7 +41,8 @@ def load(folders):
         times = sorted(r['time'] for r in allrows if r.get('time'))
         info.append({'folder': os.path.basename(f), 'cfg': cfg, 'answers': len(ok), 'failed': len(allrows) - len(ok),
                      'first': times[0] if times else '', 'last': times[-1] if times else '',
-                     'cost': sum(float(r['cost_usd'] or 0) for r in ok),
+                     'cost': answer_reuse.new_spending(allrows),
+                     'reused': sum(1 for r in ok if r.get('reused_from')),
                      'truncated': sum(1 for r in ok if str(r.get('truncated') or '0') == '1'),
                      'unparsed': sum(1 for r in ok if r['answer_type'] == 'deterministic' and str(r['parse_ok']) == '0')})
         rows += ok
@@ -90,7 +92,7 @@ def reading(fin, rows, info, ref):
     return out
 
 
-def build(folders, today=None):
+def build(folders, today=None, milestone=None):
     rows, info = load(folders)
     fin = score_report.final(rows)
     ref = score_report.REFERENCE
@@ -99,17 +101,18 @@ def build(folders, today=None):
     n_q = len(cfg0.get('questions') or [])
     L = [f'# Benchmark results: round of {dates[0][:4]}-{dates[0][4:6]}-{dates[0][6:]}', '',
          f'- {len(info)} runs, {n_q} questions, {cfg0.get("runs")} runs per question, sampling {json.dumps(cfg0.get("sampling")) if cfg0.get("sampling") else cfg0.get("temperature")}. '
-         f'Written by `benchmark/runner/round_summary.py` from the run folders; every number below comes from them.',
+         f'Written by `benchmark/runner/round_summary.py` from the run folders; every number below comes from them.'
+         + (f' The round served milestone {milestone} of the workspace\'s ROADMAP.md.' if milestone else ''),
          '- How to read a score: the exact value is read at plus or minus 5 points. The benchmark is a proof: Agent E2 against the release gate and the frontier reference. '
          'Method and scoring: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md).', '']
-    L += ['## Runs', '', '| Run folder | Model | Modes | Request settings | Answers | Failed | Cut off | First to last answer | Cost US$ |', '|---|---|---|---|---|---|---|---|---|']
+    L += ['## Runs', '', '| Run folder | Model | Modes | Request settings | Answers | Reused | Failed | Cut off | First to last answer | Cost US$ |', '|---|---|---|---|---|---|---|---|---|---|']
     for i in info:
         c = i['cfg']
         m = list(c['models'])[0] if len(c['models']) == 1 else ', '.join(c['models'])
         prm = '; '.join(json.dumps(v) for v in (c.get('model_params') or {}).values()) or 'default'
-        L.append(f'| [{i["folder"]}]({REPO}/{i["folder"]}/report.md) | {m} | {", ".join(c["modes"])} | `{prm}` | {i["answers"]} | {i["failed"]} | '
+        L.append(f'| [{i["folder"]}]({REPO}/{i["folder"]}/report.md) | {m} | {", ".join(c["modes"])} | `{prm}` | {i["answers"]} | {i["reused"]} | {i["failed"]} | '
                  f'{i["truncated"]} | {_minutes(i):.0f} min | {i["cost"]:.2f} |')
-    L += ['', f'- Total cost US$ {sum(i["cost"] for i in info):.2f}. Agent E2: up-front blocks '
+    L += ['', f'- Total cost US$ {sum(i["cost"] for i in info):.2f}, at list price, of the answers this round asked; a reused answer, copied from an earlier round because its inputs were unchanged, costs nothing again. Agent E2: up-front blocks '
               f'{", ".join(k for k, v in (cfg0.get("primer") or {}).items() if v) or "none"}; case read by the model: {"on" if cfg0.get("case_model", True) else "off"}; '
               f'gap follow-up: {"on" if cfg0.get("gap_followup", True) else "off"}.', '']
     L += ['## Final score', '', '| Model | Mode | Final | ± margin | Level 100 | Level 200 | Level 300 | Level 400 | Confident wrong |', '|---|---|---|---|---|---|---|---|---|']

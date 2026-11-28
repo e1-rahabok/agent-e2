@@ -15,7 +15,7 @@ Why: an answer whose inputs have not changed is one more sample of the same thin
 
 Source: the author, 2026-11-28 ("no re-grading of answers that haven't changed", [round 6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-6.md#spending-on-tests)); CONSTRAINT-1; DESIGN-30.
 
-- Given a benchmark run, and the run folders already in `benchmark/results/`
+- Given a benchmark run, and the run folders already in [`benchmark/results/`](../../benchmark/results)
 - When an answer's inputs equal those of an earlier answer that did not fail
 - And the inputs are: the question as the model sees it in that run (stem, options in the run's order, tables) and its images; the mode, the model, its request settings and the run number; for the baseline and web modes, the code and prompts that build their requests; for Agent E2, every file of `knowledge/` and `harness/` except the tests, the answer settings of `runner_config.yaml` and the search method
 - Then the earlier answer is copied into the run, its column `reused_from` names the run that first asked it, and no model is called for it
@@ -51,7 +51,7 @@ Why: between milestones, the free checks and the answer set test each change, an
 
 Source: the author, 2026-11-28 ("the full test run only at milestones", [round 6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-6.md#spending-on-tests)); SCOPE-6 (Gemma 4 31B); DESIGN-30.
 
-- Given `benchmark/runner/round_executor.py`
+- Given [`benchmark/runner/round_executor.py`](../../benchmark/runner/round_executor.py)
 - When a new round starts
 - Then it refuses to start without `--milestone`, the milestone of the workspace's ROADMAP.md the round serves, such as `M3`, and the round's summary names that milestone
 - And release 1.0's round asks Gemma 4 31B in the baseline and Agent E2 modes, and the frontier reference, Claude Opus 5.5, in the web mode

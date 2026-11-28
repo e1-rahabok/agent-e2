@@ -129,6 +129,7 @@ Preferred, not required:
 | meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for multi-turn tool use (weights 2026-08) | Round, effort low: Agent E2 84% (Level 400 83%), Base 41%, confident wrong 15% |
 
 - 3 candidates from 3 vendors (Google, Alibaba, Meta), all dense, all tier A (one 48 GB GPU at 4-bit or 8-bit).
+- Release 1.0's round asks only Gemma 4 31B, the model release 1.0 runs (SCOPE-6), with the frontier reference. Qwen and Muse-Glimmer run again when the model of the on-premises deployment is chosen (R-E2-031 in [test-spending.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/requirements/test-spending.md)).
 - Next challenger: a current-generation dense vision model of about 70B, after 1.0 (none on the gateway: only Llama 3.1 and 3.3 70B, text only; [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Milestones, list After 1.0).
 - Vision tags checked in the gateway model list.
 - Muse-Glimmer-30B: the gateway does not tag it `open-weights`; the weights and the Apache 2.0 licence are on Hugging Face (`meta-models/Muse-Glimmer-30B`, 29.8B parameters).

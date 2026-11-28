@@ -7,7 +7,7 @@ README.md: 6
 REPOSITORY-MAP.md: 19
 SECURITY.md: 13
 benchmark/README.md: 8
-benchmark/RUN.md: 7
+benchmark/RUN.md: 5
 benchmark/design.md: 18
 benchmark/live-test.md: 9
 benchmark/models.md: 22
