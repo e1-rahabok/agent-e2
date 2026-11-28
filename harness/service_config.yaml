@@ -46,4 +46,4 @@ trace_dir: ~/.agent-e2/traces      # one JSON file per answer; the env variable 
 trace_days: 30
 answer_reserve_tokens: 60000       # kept free in the context window for the knowledge files and the answer
 max_body_bytes: 41943040           # 40 MB: five images and three CSV files in base64, with the text
-question_bands: false           # R-E2-025: the band of a value in a question or screenshot, by code; off until M5 and an answer test
+question_bands: true            # R-E2-025: the band of a value in a question or screenshot, by code; false restores the earlier request
