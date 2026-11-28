@@ -29,7 +29,7 @@
   - vSphere metrics. Performance & Capacity management. Monitoring and Troubleshooting.
 - Name:
   - E1 is Iwan Rahabok, the author, who builds Agent E2. E2 is version 2.0 of him: a silicon-based expert with his knowledge, available 24/7.
-  - Designed to replace AskIO on isvara.io.
+  - It will replace AskIO on isvara.io.
 
 **One body of knowledge, four repositories:**
 
