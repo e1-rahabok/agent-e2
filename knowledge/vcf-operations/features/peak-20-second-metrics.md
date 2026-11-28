@@ -32,7 +32,7 @@
 | VM Disk | Read and Write Latency (ms) | Peak Latency within collection cycle |
 | VM Network | Usage Rate (KB/s) | Peak Usage Rate within collection cycle |
 | VM Network | Packets/sec | Peak Network Packets/sec within collection cycle |
-| VM Network | Transmitted Packets Dropped | Peak Transmitted Packet Dropped within collection cycle |
+| VM Network | Transmitted Packets Dropped | Peak Transmitted Packet Dropped within collection cycle (`net\|droppedTxPct_max`) |
 
 ## Limitations
 - No pattern within the 300 seconds: one point. Compare with the average: a large gap means a one-off.
@@ -83,7 +83,6 @@ source:
   document: Knowledge base; Broadcom KB 444403, Understanding "Peak" or "Worst" Performance Metrics in VMware VCF / Aria Operations (VCF Operations 9.x)
   path: 'Consumer Objects > Performance: VM & Guest OS > 20-second Peak Metrics; KB 444403 (15 samples of 20 seconds per 5-minute cycle; vCenter keeps 20-second data typically 1 hour; VCF Operations "permanently records that brief spike")'
 corrections: []
-review_notes:
-- 'To check: Section ''Pairs'': the key of Peak Transmitted Packet Dropped within collection cycle; the VM key list collected from VCF Operations 9.1.1 (project/sources/export-templates/vcf-operations) has no exact key, the closest are net|droppedTxPct_max and net|droppedTx_summation; the VCF Operations 9.1 metric reference.'
+review_notes: []
 status: draft
 ```
