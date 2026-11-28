@@ -36,3 +36,13 @@ primer:
   rules: true
   terms: true
 provider_order: {}
+# The answer service (answer_service.py): jobs, traces, attachments (R-E2-008, R-E2-014, R-E2-023)
+max_running_jobs: 4                # answers running at once; more wait, up to max_queued_jobs, then HTTP 429
+max_queued_jobs: 20
+job_time_limit_s: 600              # a job that runs longer fails with time_limit
+job_keep_s: 900                    # a finished job can be read this long
+heartbeat_s: 5                     # a waiting or running job's updated_at moves at least this often
+trace_dir: ~/.agent-e2/traces      # one JSON file per answer; the env variable AGENT_E2_TRACE_DIR replaces it
+trace_days: 30
+answer_reserve_tokens: 60000       # kept free in the context window for the knowledge files and the answer
+max_body_bytes: 41943040           # 40 MB: five images and three CSV files in base64, with the text
