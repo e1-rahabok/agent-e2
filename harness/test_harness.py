@@ -964,7 +964,7 @@ class WebTest(unittest.TestCase):
         self.assertNotIn('Menu', p['text'])
 
     def test_private_and_non_http_refused(self):
-        for u in ('http://127.0.0.1/x', 'http://10.0.0.5/x', 'file:///etc/passwd'):
+        for u in ('http://127.0.0.1/x', 'http://10.20.0.5/x', 'file:///etc/passwd'):
             self.assertIn('error', self.web.fetch(u, 'q', {}))
         self.assertEqual(self.calls, [])
 
