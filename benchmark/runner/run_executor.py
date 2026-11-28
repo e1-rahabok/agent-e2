@@ -8,6 +8,9 @@ Examples:
   AI_GATEWAY_API_KEY=... python3 benchmark/runner/run_executor.py              # full matrix from runner_config.yaml
   python3 benchmark/runner/run_executor.py --resume benchmark/results/<benchmark-id>   # models, modes, runs and questions come from the folder
   python3 benchmark/runner/run_executor.py --models <id> --max-minutes 110            # stops cleanly after 110 minutes (exit code 3)
+  python3 benchmark/runner/run_executor.py --no-reuse ...                              # ask every answer, even one whose inputs are unchanged
+An answer whose inputs equal an earlier answer's in another run folder of the same results folder is copied, not asked
+(answer_reuse.py, R-E2-029). A run whose folder holds the spending stop file starts no new answer (spending_stop.py, R-E2-030).
 Exit codes: benchmark/runner/exit_codes.py. A whole benchmark round: benchmark/RUN.md.
 """
 import argparse
@@ -30,6 +33,8 @@ import exit_codes  # noqa: E402
 import question_files  # noqa: E402
 import knowledge_loader  # noqa: E402
 import answer_modes  # noqa: E402
+import answer_reuse  # noqa: E402
+import spending_stop  # noqa: E402
 import score_report  # noqa: E402
 from adaptive_concurrency import AdaptiveConcurrency  # noqa: E402
 from bad_answer_guard import StopRunOnBadAnswers  # noqa: E402
@@ -42,7 +47,8 @@ FIELDS = ['benchmark_id', 'time', 'model', 'provider', 'mode', 'track', 'questio
           'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'misconception', 'unsure', 'parse_ok',
           'retrieval_recall', 'ids_used', 'steps', 'prompt_tokens', 'completion_tokens',
           'latency', 'cost_usd', 'index_version', 'error', 'reason', 'tools_used', 'verify_flags', 'repaired',
-          'credit', 'confident_wrong', 'answer_text', 'truncated']
+          'credit', 'confident_wrong', 'answer_text', 'truncated', 'inputs_hash', 'reused_from']
+QUESTION_FIELDS = ('answer_type', 'technology', 'task', 'level')   # metadata of the question, refreshed on a reused answer
 
 
 def main():
@@ -69,6 +75,7 @@ def main():
     ap.add_argument('--params', help='JSON {model: {"reasoning": {...}, "max_tokens": N}}: settings sent with every request of that model. '
                     'Default: the first entry of the model\'s list in config model_params (benchmark/runner/round_sample_check.py picks the entry that works)')
     ap.add_argument('--no-health', action='store_true', help='do not stop a run whose answers are cut off, unparsable or failing')
+    ap.add_argument('--no-reuse', action='store_true', help='ask every answer, even one whose inputs equal an earlier answer\'s (answer_reuse.py)')
     a = ap.parse_args()
 
     cfg = yaml.safe_load(open(a.config))
@@ -143,7 +150,7 @@ def main():
     print(f'Questions: {len(questions_)}. Skipped (no key, awaiting input or retired): {", ".join(skipped) or "none"}')
     print(f'Models: {len(models_)}  Modes: {", ".join(modes_)}  Runs: {cfg["runs"]}  Answers: {len(tasks)}')
     est = _estimate(tasks, meta)
-    print(f'Estimated cost: US$ {est:.2f} (rough; Agent E2 counted as the case call plus one answer)')
+    print(f'Estimated cost: US$ {est:.2f} (rough; Agent E2 counted as the case call plus one answer; answers reused from earlier runs not subtracted)')
     if a.dry_run:
         return
 
@@ -176,6 +183,21 @@ def main():
                'groups': {c.id: {'answer_type': c.answer_type, 'input': c.input_types, 'level': c.level} for c in questions_}, 'retrieval': 'hybrid' if embed else 'bm25', 'embedding_model': embed,
                'mock': a.mock, 'config': cfg}, open(os.path.join(run_dir, 'config.json'), 'w'), indent=2)
 
+    # Reuse (R-E2-029): the inputs of every answer still to do, and the earlier answers with the same inputs.
+    mode_hash = answer_reuse.mode_inputs(cfg, knowledge_loader.ROOT, answer_modes, {'retrieval': 'hybrid' if embed else 'bm25', 'embedding_model': embed})
+    image_hash = {}
+    hash_of = {}
+    for m, mode, c, tr, r in tasks:
+        question, _ = c.render(random.Random(f'{c.id}-{r}'))
+        if tr == 'vision' and c.id not in image_hash:
+            image_hash[c.id] = answer_reuse.digest(c.image_parts())
+        settings = {'params': params.get(m), 'sampling': sampling.get(m), 'max_tokens': cfg['max_tokens'], 'temperature': cfg.get('temperature')}
+        hash_of[(m, mode, c.id, tr, r)] = answer_reuse.inputs_hash(mode, m, settings, r, tr, question, image_hash.get(c.id) if tr == 'vision' else None,
+                                                                   mode_hash[mode], a.mock)
+    earlier = {} if a.no_reuse else answer_reuse.earlier_answers(os.path.dirname(os.path.abspath(run_dir)), skip_folder=run_dir)
+    reuse = [(t, earlier[hash_of[(t[0], t[1], t[2].id, t[3], t[4])]]) for t in tasks if hash_of[(t[0], t[1], t[2].id, t[3], t[4])] in earlier]
+    tasks = [t for t in tasks if hash_of[(t[0], t[1], t[2].id, t[3], t[4])] not in earlier]
+
     lock = threading.Lock()
     new = not os.path.exists(answers_path) or os.path.getsize(answers_path) == 0
     fa = open(answers_path, 'a', newline='')
@@ -185,6 +207,23 @@ def main():
     if new:
         w.writeheader()
     ft = open(os.path.join(run_dir, 'traces.jsonl'), 'a')
+    for (m, mode, c, track, r), old in reuse:
+        row = dict(old)
+        row.update({'benchmark_id': benchmark_id, 'time': dt.datetime.now().isoformat(timespec='seconds'), 'reused_from': old.get('reused_from') or old['benchmark_id'],
+                    'input': ' '.join(c.input_types), 'correct': ','.join(c.answer), 'inputs_hash': hash_of[(m, mode, c.id, track, r)]})
+        row.update({k: getattr(c, k) for k in QUESTION_FIELDS})
+        row['technology'] = ' '.join(c.technology)
+        row.update(question_files.score(c, answer_reuse.picked_of(old)))        # the current key: it is not an input
+        row['credit'] = row['exact']
+        row['confident_wrong'] = int(not row['exact'] and not row['unsure'])
+        used = (old.get('ids_used') or '').split()
+        row['retrieval_recall'] = round(len(set(used) & set(c.knowledge)) / len(c.knowledge), 3) if (c.knowledge and mode == answer_modes.AGENT) else ''
+        w.writerow(row)
+        ft.write(json.dumps({'question_id': c.id, 'model': m, 'mode': mode, 'track': track, 'run': r, 'reused_from': row['reused_from'], 'trace': []}) + '\n')
+    fa.flush()
+    ft.flush()
+    if reuse:
+        print(f'Reused {len(reuse)} answers whose inputs are unchanged (no model called); {len(tasks)} to ask.')
     print(f'Benchmark folder: {run_dir}  ({len(tasks)} answers to go)')
 
     def answer_one(task):
@@ -195,7 +234,7 @@ def main():
         row = {'benchmark_id': benchmark_id, 'time': dt.datetime.now().isoformat(timespec='seconds'), 'model': m, 'mode': mode,
                'track': track, 'question_id': c.id, 'answer_type': c.answer_type, 'input': ' '.join(c.input_types), 'technology': ' '.join(c.technology), 'task': c.task, 'level': c.level, 'run': r,
                'temperature': sampling.get(m, {}).get('temperature', ''), 'options_order': ''.join({'UN': '?'}.get(v, v) for v in mapping.values()),
-               'correct': ','.join(c.answer), 'index_version': sha[:12]}
+               'correct': ','.join(c.answer), 'index_version': sha[:12], 'inputs_hash': hash_of[(m, mode, c.id, track, r)], 'reused_from': ''}
         try:
             order = inference_providers.order_for_run(hosts.get(m) or [], r)       # this run's preferred host first, the others as fallback
             cfg_a = dict(cfg, provider_order={**(cfg.get('provider_order') or {}), m: order}) if order else cfg
@@ -233,9 +272,10 @@ def main():
         return row
 
     health = None if (a.no_health or a.mock) else StopRunOnBadAnswers()
+    stop_path = os.path.join(run_dir, spending_stop.STOP_FILE)     # written by round_executor.py at the round's spending limit
 
     def late():
-        return (deadline is not None and time.monotonic() >= deadline) or bool(health and health.reason)
+        return (deadline is not None and time.monotonic() >= deadline) or bool(health and health.reason) or os.path.exists(stop_path)
 
     def one(task):
         if late():
@@ -272,7 +312,8 @@ def main():
         sys.exit(health.code)
     if left:
         # Not a finished run: no report, which would score a partial run.
-        print(f'Stopped at the {limit:g}-minute limit: {len(tasks) - left} answers done, {left} to go, {errors} errors.')
+        why = 'the spending limit of the round (spending_stop.py)' if os.path.exists(stop_path) else f'the {limit:g}-minute limit'
+        print(f'Stopped at {why}: {len(tasks) - left} answers done, {left} to go, {errors} errors.')
         print(f'Resume: python3 benchmark/runner/run_executor.py --resume {run_dir}')
         sys.exit(exit_codes.STOPPED)
 

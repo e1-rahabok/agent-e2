@@ -589,7 +589,7 @@ class RoundRecoveryTest(unittest.TestCase):
         out = os.path.join(d, 'out')
         os.makedirs(out)
         p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'round_executor.py'), '--out', out, '--skip-preflight',
-                            '--only', model, *extra], capture_output=True, text=True, env=env, timeout=120)
+                            '--milestone', 'M3', '--only', model, *extra], capture_output=True, text=True, env=env, timeout=120)
         calls = [json.loads(x) for x in open(os.path.join(d, 'log.txt')).read().splitlines()] if os.path.exists(os.path.join(d, 'log.txt')) else []
         return p, calls, out
 
@@ -602,7 +602,7 @@ class RoundRecoveryTest(unittest.TestCase):
         self.assertIn('NOT complete', p.stdout)
 
     def test_a_gateway_outage_waits_and_resumes_the_same_folder_without_new_settings(self):
-        p, calls, out = self.round_('alibaba/qwen3.8-27b', [exit_codes.GATEWAY_DOWN, exit_codes.GATEWAY_DOWN, exit_codes.STOPPED])
+        p, calls, out = self.round_('anthropic/claude-opus-5.5', [exit_codes.GATEWAY_DOWN, exit_codes.GATEWAY_DOWN, exit_codes.STOPPED])
         self.assertEqual(len(calls), 3, p.stdout + p.stderr)
         self.assertNotIn('--resume', calls[0])
         self.assertIn('--resume', calls[1])
@@ -619,10 +619,11 @@ class RoundRecoveryTest(unittest.TestCase):
         self.assertFalse([n for n in os.listdir(out) if 'invalid' in n])
 
     def test_invalid_answers_restart_the_run_with_the_next_settings_and_keep_the_folder_as_evidence(self):
-        p, calls, out = self.round_('alibaba/qwen3.8-27b', [exit_codes.UNHEALTHY, exit_codes.STOPPED])
+        p, calls, out = self.round_('anthropic/claude-opus-5.5', [exit_codes.UNHEALTHY, exit_codes.STOPPED])     # two settings in model_params
         self.assertEqual(len(calls), 2, p.stdout + p.stderr)
-        self.assertIn('"none"', calls[0][calls[0].index('--params') + 1])
-        self.assertIn('"low"', calls[1][calls[1].index('--params') + 1])
+        self.assertIn('"medium"', calls[0][calls[0].index('--params') + 1])
+        self.assertNotIn('"reasoning"', calls[1][calls[1].index('--params') + 1])
+        self.assertIn('8000', calls[1][calls[1].index('--params') + 1])
         self.assertNotIn('--resume', calls[1])                            # from the beginning: mixed settings would measure nothing
         self.assertTrue([n for n in os.listdir(out) if '-invalid-0' in n])
         self.assertEqual(p.returncode, exit_codes.STOPPED)
@@ -890,19 +891,19 @@ class RoundMockTest(unittest.TestCase):
             os.makedirs(os.path.join(out, '20261101-old'))
             open(os.path.join(out, '20261101-old', 'config.json'), 'w').write('{}')
             p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'round_executor.py'), '--out', out,
-                                '--skip-preflight', '--child-args', '--mock --runs 1 --questions L1-001,L1-002'],
+                                '--skip-preflight', '--milestone', 'M3', '--child-args', '--mock --runs 1 --questions L1-001,L1-002'],
                                capture_output=True, text=True, env=dict(os.environ, AI_GATEWAY_API_KEY='x'), timeout=300)
             self.assertEqual(p.returncode, exit_codes.OK, p.stdout + p.stderr)
             names = sorted(n for n in os.listdir(out))
-            self.assertEqual([n.split('-', 1)[1] for n in names if n != 'README.md'],
-                             ['claude-opus-5.5', 'gemma-4-31b-it', 'muse-glimmer-30b', 'qwen3.8-27b'])
+            self.assertEqual([n.split('-', 1)[1] for n in names if n != 'README.md'], ['claude-opus-5.5', 'gemma-4-31b-it'])   # release 1.0 (R-E2-031)
             self.assertIn('README.md', names)
             self.assertNotIn('.round.json', os.listdir(out))               # a finished round leaves no state
             self.assertNotIn('20261101-old', os.listdir(out))               # earlier round deleted
             text = open(os.path.join(out, 'README.md')).read()
-            for m in ('gemma-4-31b-it', 'qwen3.8-27b', 'muse-glimmer-30b', 'claude-opus-5.5'):
+            for m in ('gemma-4-31b-it', 'claude-opus-5.5'):
                 self.assertIn(m, text)
             self.assertIn('## Reading', text)
+            self.assertIn('milestone M3', text)
 
 
 class ProviderHostsTest(unittest.TestCase):
@@ -1042,6 +1043,226 @@ class PreflightLadderTest(unittest.TestCase):
         v, calls = self.run_check([[dict(self.good(), error='HTTP 402: no funds')]])
         self.assertTrue(v['refused'])
         self.assertEqual(len(calls), 1)
+
+
+def _rows(folder):
+    import csv
+    with open(os.path.join(folder, 'answers.csv'), newline='') as fh:
+        return list(csv.DictReader(fh))
+
+
+def _write_rows(folder, rows):
+    import csv
+    with open(os.path.join(folder, 'answers.csv'), 'w', newline='') as fh:
+        w = csv.DictWriter(fh, fieldnames=list(rows[0]))
+        w.writeheader()
+        w.writerows(rows)
+
+
+class AnswerReuseTest(unittest.TestCase):
+    """R-E2-029: an answer whose inputs equal an earlier answer's is copied, not asked. Offline (--mock)."""
+
+    RUN = os.path.join(os.path.dirname(__file__), 'run_executor.py')
+    ARGS = ['--mock', '--models', 'x/one', '--modes', 'baseline,agent-e2', '--runs', '2', '--questions', 'L1-001,L1-002']
+
+    def run_py(self, out, *extra):
+        import subprocess
+        before = set(os.listdir(out))
+        p = subprocess.run([sys.executable, self.RUN, *self.ARGS, '--out', out, *extra], capture_output=True, text=True, timeout=300)
+        self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+        return p, os.path.join(out, (set(os.listdir(out)) - before).pop())
+
+    def test_a_second_run_reuses_every_answer_and_calls_no_model(self):
+        import json
+        import tempfile
+        with tempfile.TemporaryDirectory() as out:
+            _, first = self.run_py(out)
+            p, second = self.run_py(out)
+            a, b = _rows(first), _rows(second)
+            self.assertEqual(len(a), 8)
+            self.assertTrue(all(r['inputs_hash'] for r in a))
+            self.assertFalse(any(r['reused_from'] for r in a))
+            self.assertEqual({r['reused_from'] for r in b}, {os.path.basename(first)})
+            self.assertIn('Reused 8 answers', p.stdout)
+            key = lambda r: (r['mode'], r['question_id'], r['run'])      # noqa: E731
+            self.assertEqual(sorted((key(r), r['answer_letters'], r['exact']) for r in a), sorted((key(r), r['answer_letters'], r['exact']) for r in b))
+            traces = [json.loads(x) for x in open(os.path.join(second, 'traces.jsonl'))]
+            self.assertTrue(traces and all(t['trace'] == [] and t['reused_from'] for t in traces))       # no model call
+            _, third = self.run_py(out, '--no-reuse')
+            self.assertFalse(any(r['reused_from'] for r in _rows(third)))
+
+    def test_only_answers_whose_inputs_changed_are_asked_again(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as out:
+            _, first = self.run_py(out)
+            rows = _rows(first)
+            for r in rows:                      # as if a knowledge file had changed: every Agent E2 answer has new inputs
+                if r['mode'] == 'agent-e2':
+                    r['inputs_hash'] = 'changed-' + r['inputs_hash']
+            _write_rows(first, rows)
+            p, second = self.run_py(out)
+            b = _rows(second)
+            self.assertEqual({r['mode'] for r in b if r['reused_from']}, {'baseline'})
+            self.assertEqual({r['mode'] for r in b if not r['reused_from']}, {'agent-e2'})
+            self.assertIn('Reused 4 answers', p.stdout)
+
+    def test_a_changed_key_scores_the_reused_answer_again(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as out:
+            _, first = self.run_py(out)
+            rows = _rows(first)
+            keys = {c.id: c.answer for c in question_files.load('L1-001,L1-002')}
+            for r in rows:                      # the earlier answer picked the current key, though its row was scored wrong
+                r.update({'answer_letters': ','.join(keys[r['question_id']]), 'parse_ok': '1', 'exact': '0', 'credit': '0'})
+            _write_rows(first, rows)
+            _, second = self.run_py(out)
+            self.assertEqual({(r['exact'], r['credit'], r['confident_wrong']) for r in _rows(second)}, {('1', '1', '0')})
+
+    def test_inputs_of_each_mode(self):
+        import tempfile
+        import answer_modes
+        import answer_reuse
+        with tempfile.TemporaryDirectory() as root:
+            for path, text in (('knowledge/a.md', 'one'), ('harness/public_web_lookup.py', 'x = 1'), ('harness/test_x.py', 't')):
+                os.makedirs(os.path.dirname(os.path.join(root, path)), exist_ok=True)
+                open(os.path.join(root, path), 'w').write(text)
+            cfg = {'max_tokens': 4000, 'concurrency': 12, 'web': {'enabled': True}}
+            before = answer_reuse.mode_inputs(cfg, root, answer_modes, {'retrieval': 'bm25'})
+            self.assertEqual(before, answer_reuse.mode_inputs(dict(cfg, concurrency=20), root, answer_modes, {'retrieval': 'bm25'}))   # scheduling only
+            open(os.path.join(root, 'harness', 'test_x.py'), 'w').write('changed test')
+            self.assertEqual(before, answer_reuse.mode_inputs(cfg, root, answer_modes, {'retrieval': 'bm25'}))   # tests are not inputs
+            open(os.path.join(root, 'knowledge', 'a.md'), 'w').write('two')
+            after = answer_reuse.mode_inputs(cfg, root, answer_modes, {'retrieval': 'bm25'})
+            self.assertNotEqual(before['agent-e2'], after['agent-e2'])
+            self.assertEqual((before['baseline'], before['web']), (after['baseline'], after['web']))
+            self.assertNotEqual(after['agent-e2'], answer_reuse.mode_inputs(dict(cfg, max_tokens=8000), root, answer_modes, {'retrieval': 'bm25'})['agent-e2'])
+            self.assertNotEqual(after['agent-e2'], answer_reuse.mode_inputs(cfg, root, answer_modes, {'retrieval': 'hybrid'})['agent-e2'])
+        h = lambda text, run=1, model='m': answer_reuse.inputs_hash('baseline', model, {}, run, 'text', text, None, 'b', False)   # noqa: E731
+        self.assertEqual(h('stem A'), h('stem A'))
+        self.assertNotEqual(h('stem A'), h('stem B'))           # a changed stem is asked again
+        self.assertNotEqual(h('stem A'), h('stem A', run=2))    # each run keeps its own sample
+        self.assertNotEqual(h('stem A'), h('stem A', model='n'))
+
+
+class SpendingStopTest(unittest.TestCase):
+    """R-E2-030: a test run stops when the money it spent reaches its limit."""
+
+    def test_the_larger_of_list_price_and_balance_drop_counts(self):
+        import spending_stop
+        stop = spending_stop.SpendingStop(100, lambda: 30.0, start_balance=200.0, balance=lambda: 150.0, every_seconds=0)
+        self.assertEqual(stop.spent(), 50.0)
+        self.assertFalse(stop.reached())
+        stop = spending_stop.SpendingStop(100, lambda: 104.0, start_balance=200.0, balance=lambda: 150.0, every_seconds=0)
+        self.assertTrue(stop.reached())                       # a call paid by the author's own provider key shows in the list price only
+
+    def test_an_unreadable_balance_counts_the_list_price_alone(self):
+        import spending_stop
+
+        def broken():
+            raise OSError('no network')
+        self.assertEqual(spending_stop.SpendingStop(100, lambda: 12.5, start_balance=200.0, balance=broken, every_seconds=0).spent(), 12.5)
+        self.assertEqual(spending_stop.SpendingStop(100, lambda: 12.5).spent(), 12.5)
+
+    def test_the_balance_is_read_at_most_once_a_minute(self):
+        import spending_stop
+        clock, reads = _Clock(), []
+
+        def balance():
+            reads.append(1)
+            return 150.0
+        stop = spending_stop.SpendingStop(100, lambda: 0.0, start_balance=200.0, balance=balance, clock=clock)
+        stop.spent()
+        stop.spent()
+        clock.t += 61
+        stop.spent()
+        self.assertEqual(len(reads), 2)
+
+    def test_a_run_with_the_stop_file_starts_no_answer(self):
+        import subprocess
+        import tempfile
+        import spending_stop
+        run = os.path.join(os.path.dirname(__file__), 'run_executor.py')
+        with tempfile.TemporaryDirectory() as out:
+            subprocess.run([sys.executable, run, '--mock', '--models', 'x/one', '--modes', 'baseline', '--runs', '1', '--questions', 'L1-001',
+                            '--out', out, '--max-minutes', '0'], capture_output=True, text=True, timeout=300)
+            folder = os.path.join(out, os.listdir(out)[0])
+            open(os.path.join(folder, spending_stop.STOP_FILE), 'w').write('limit')
+            p = subprocess.run([sys.executable, run, '--mock', '--resume', folder], capture_output=True, text=True, timeout=300)
+            self.assertEqual(p.returncode, exit_codes.STOPPED, p.stdout + p.stderr)
+            self.assertIn('spending limit', p.stdout)
+            self.assertEqual(_rows(folder), [])
+
+
+class RoundSpendingAndMilestoneTest(unittest.TestCase):
+    """R-E2-030 and R-E2-031 in round_executor.py, with a fake run_executor.py: no model call."""
+
+    FAKE = (
+        "import sys, os, json\n"
+        "a = sys.argv\n"
+        "out = a[a.index('--out') + 1]\n"
+        "folder = a[a.index('--resume') + 1] if '--resume' in a else os.path.join(out, a[a.index('--name') + 1])\n"
+        "os.makedirs(folder, exist_ok=True)\n"
+        "open(os.environ['FAKE_LOG'], 'a').write(json.dumps({'stop_file': os.path.exists(os.path.join(folder, '.spending-stop'))}) + '\\n')\n"
+        "json.dump({}, open(os.path.join(folder, 'config.json'), 'w'))\n"
+        "open(os.path.join(folder, 'answers.csv'), 'w').write('model,mode,question_id,track,run,error,cost_usd,reused_from\\n'\n"
+        "    'm,web,Q1,text,1,,70,\\nm,web,Q2,text,1,,45,\\nm,web,Q3,text,1,,500,20261116-m\\n')\n"
+        "sys.exit(3)\n")
+
+    def setUp(self):
+        import tempfile
+        self.d = tempfile.mkdtemp()
+        self.addCleanup(__import__('shutil').rmtree, self.d, True)
+        open(os.path.join(self.d, 'child.py'), 'w').write(self.FAKE)
+        self.out = os.path.join(self.d, 'out')
+        os.makedirs(self.out)
+
+    def round_(self, *extra, config=None):
+        import subprocess
+        env = dict(os.environ, AI_GATEWAY_API_KEY='x', RUN_ALL_FAST='1', RUN_ALL_NO_SNAPSHOTS='1', RUN_ALL_CHILD=os.path.join(self.d, 'child.py'),
+                   FAKE_LOG=os.path.join(self.d, 'log.txt'))
+        cmd = [sys.executable, os.path.join(os.path.dirname(__file__), 'round_executor.py'), '--out', self.out, '--skip-preflight',
+               '--only', 'anthropic/claude-opus-5.5', *extra] + (['--config', config] if config else [])
+        return subprocess.run(cmd, capture_output=True, text=True, env=env, timeout=120)
+
+    def launches(self):
+        import json
+        path = os.path.join(self.d, 'log.txt')
+        return [json.loads(x) for x in open(path).read().splitlines()] if os.path.exists(path) else []
+
+    def test_a_new_round_needs_a_milestone_and_a_resume_does_not(self):
+        p = self.round_()
+        self.assertEqual(p.returncode, 2, p.stdout + p.stderr)
+        self.assertIn('--milestone', p.stderr)
+        self.assertEqual(self.launches(), [])
+        self.assertEqual(self.round_('--milestone', 'next week').returncode, 2)
+        p = self.round_('--milestone', 'M3')
+        self.assertEqual(len(self.launches()), 1, p.stdout + p.stderr)
+        p = self.round_('--resume')
+        self.assertNotIn('needs --milestone', p.stderr)
+        self.assertEqual(len(self.launches()), 2, p.stdout + p.stderr)
+
+    def test_the_round_stops_at_its_limit_and_a_resume_after_a_raise_removes_the_stop_files(self):
+        import yaml
+        import spending_stop
+        p = self.round_('--milestone', 'M3')
+        self.assertEqual(p.returncode, exit_codes.SPENT, p.stdout + p.stderr)       # 70 + 45 asked = 115 > 100; the reused 500 costs nothing again
+        self.assertIn('115.00', p.stdout)
+        folder = [n for n in os.listdir(self.out) if n.endswith('claude-opus-5.5')][0]
+        self.assertTrue(os.path.exists(os.path.join(self.out, folder, spending_stop.STOP_FILE)))
+        cfg = yaml.safe_load(open(os.path.join(os.path.dirname(__file__), 'runner_config.yaml')))
+        cfg['release']['max_cost_usd'] = 200                                        # the human raised the limit
+        raised = os.path.join(self.d, 'raised.yaml')
+        yaml.safe_dump(cfg, open(raised, 'w'))
+        p = self.round_('--resume', config=raised)
+        self.assertEqual(self.launches()[-1], {'stop_file': False}, p.stdout + p.stderr)
+        self.assertEqual(p.returncode, exit_codes.STOPPED, p.stdout + p.stderr)
+
+    def test_the_round_of_release_1_0(self):
+        import yaml
+        rel = yaml.safe_load(open(os.path.join(os.path.dirname(__file__), 'runner_config.yaml')))['release']
+        self.assertEqual(rel['runs'], [{'model': 'google/gemma-4-31b-it', 'modes': ['baseline', 'agent-e2']},
+                                       {'model': 'anthropic/claude-opus-5.5', 'modes': ['web']}])
+        self.assertEqual(rel['max_cost_usd'], 100)
 
 
 if __name__ == '__main__':

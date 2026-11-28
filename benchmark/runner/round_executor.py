@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Run a whole benchmark round without anyone at the keyboard: preflight, all runs in parallel, recovery, summary.
 
-  python3 benchmark/runner/round_executor.py --max-minutes 110      # start the round (stops cleanly after 110 minutes: exit 3)
+  python3 benchmark/runner/round_executor.py --milestone M3 --max-minutes 110   # start the round for a milestone (stops cleanly after 110 minutes: exit 3)
   python3 benchmark/runner/round_executor.py --resume --max-minutes 110   # continue after exit 3 (or after a top-up, exit 6)
   python3 benchmark/runner/round_executor.py --dry-run               # print the plan; no API call
 
@@ -12,8 +12,10 @@ Steps (benchmark/RUN.md has the full playbook):
   3. Recovery: a crashed run is relaunched with --resume (config `release.retries` times); answers that failed are retried the same way;
      a run stopped by the time limit is relaunched by you with --resume. A run whose answers are invalid, or a refused key, is not retried.
   4. When every run is complete: round_summary.py writes benchmark/results/README.md, earlier run folders are deleted (git history keeps them).
+The full round runs only for a milestone (R-E2-031): a new round needs --milestone. Answers whose inputs are unchanged are copied from
+the earlier run folders (answer_reuse.py, R-E2-029). The round stops at its spending limit, release.max_cost_usd (spending_stop.py, R-E2-030).
 Exit codes: exit_codes.py. 0 = the round is complete; 3 = relaunch with --resume; 6 = top up credits or key budget, then --resume;
-4, 5, 7 = a run failed: read the printed list.
+9 = the spending limit was reached: tell the human; 4, 5, 7 = a run failed: read the printed list.
 """
 import argparse
 import csv
@@ -23,6 +25,7 @@ import os
 import shutil
 import subprocess
 import sys
+import re
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -32,7 +35,9 @@ import yaml
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(HERE, '..', '..', 'harness'))
+import answer_reuse  # noqa: E402
 import exit_codes  # noqa: E402
+import spending_stop  # noqa: E402
 from run_folder_names import run_name  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
@@ -107,6 +112,36 @@ def child_cmd(entry, out_dir, minutes_left, resume, extra=''):
     return cmd
 
 
+def round_folders(out_dir, state):
+    """Every run folder of the round, the ones kept as evidence of invalid settings included: all of them spent money."""
+    names = {e['folder'] for e in state['runs']}
+    return [os.path.join(out_dir, n) for n in sorted(os.listdir(out_dir))
+            if n in names or any(n.startswith(f'{x}-invalid-') for x in names)] if os.path.isdir(out_dir) else []
+
+
+def list_price(out_dir, state):
+    """List-price cost of the answers the round asked itself (reused answers cost nothing again)."""
+    total = 0.0
+    for f in round_folders(out_dir, state):
+        path = os.path.join(f, 'answers.csv')
+        if os.path.exists(path):
+            with open(path, newline='') as fh:
+                total += answer_reuse.new_spending(csv.DictReader(fh))
+    return total
+
+
+def set_stop_files(out_dir, state, on):
+    """Write (on) or remove the spending stop file in every run folder of the round."""
+    for e in state['runs']:
+        folder = os.path.join(out_dir, e['folder'])
+        path = os.path.join(folder, spending_stop.STOP_FILE)
+        if on:
+            os.makedirs(folder, exist_ok=True)
+            open(path, 'w').write('The round reached its spending limit (release.max_cost_usd).\n')
+        elif os.path.exists(path):
+            os.remove(path)
+
+
 def remove_old(results_dir, keep):
     """Delete run folders that are not part of this round; git history keeps them. Return their names."""
     removed = []
@@ -143,6 +178,7 @@ def main():
     ap.add_argument('--skip-preflight', action='store_true', help='start without the sample (not for the real round)')
     ap.add_argument('--only', help='comma-separated models: run only these entries of release.runs')
     ap.add_argument('--dry-run', action='store_true', help='print the plan and stop')
+    ap.add_argument('--milestone', help='the milestone of the workspace ROADMAP.md this round serves, e.g. M3: a new round needs it (R-E2-031)')
     ap.add_argument('--child-args', default='', help='test only: extra flags for every run_executor.py, e.g. "--mock --runs 1 --questions L4-0"')
     a = ap.parse_args()
     cfg = yaml.safe_load(open(a.config))
@@ -158,6 +194,12 @@ def main():
         state = None
     if a.resume and not state:
         sys.exit('No round in progress: nothing to resume. Start one without --resume.')
+    if not (state or a.dry_run):
+        if not a.milestone:
+            ap.error('a new round needs --milestone, the milestone of the workspace ROADMAP.md it serves (for example M3): '
+                     'the full round runs only before a milestone is closed (R-E2-031). Between milestones the free checks and the answer set test each change.')
+        if not re.fullmatch(r'M\d+', a.milestone):
+            ap.error(f'--milestone {a.milestone!r}: give a milestone of the workspace ROADMAP.md, such as M3')
     only = set(a.only.split(',')) if a.only else None
     plan = [p for p in rel['runs'] if not only or p['model'] in only]
 
@@ -165,7 +207,8 @@ def main():
         print(f'Round plan: {len(plan)} runs, {cfg["runs"]} runs per question.')
         for p in plan:
             print(f'  {p["model"]}: {", ".join(p["modes"])}  settings {json.dumps((cfg.get("model_params") or {}).get(p["model"]) or [{}])}')
-        print(f'  folders: {a.out}/<date>-<model>; limit {rel["max_cost_usd"]} US$, {rel["max_hours"]} h')
+        print(f'  folders: {a.out}/<date>-<model>; limit {rel["max_cost_usd"]} US$ spent (the round stops there), {rel["max_hours"]} h')
+        print('  a new round needs --milestone; answers whose inputs are unchanged are reused from the run folders already there')
         return
 
     if not os.environ.get('AI_GATEWAY_API_KEY'):
@@ -173,7 +216,7 @@ def main():
 
     # 1. preflight (a fresh round only: a resume keeps the settings its folders started with)
     if not state:
-        state = {'started': dt.datetime.now().isoformat(timespec='seconds'), 'runs': []}
+        state = {'started': dt.datetime.now().isoformat(timespec='seconds'), 'milestone': a.milestone, 'start_balance': None, 'runs': []}
         if not a.skip_preflight:
             import round_sample_check
             from model_client import GatewayClient
@@ -187,6 +230,7 @@ def main():
                 print('Preflight failed: the round is not started and nothing more is spent. Fix the cause named above, then start again.')
                 sys.exit(exit_codes.PREFLIGHT)
             verdict = rep['runs']
+            state['start_balance'] = rep.get('credits')      # the spending stop counts the drop from here (spending_stop.py)
         else:
             verdict = {}
         hosts = {}
@@ -209,6 +253,20 @@ def main():
     n_questions = len([c for c in question_files.load() if c.scorable])
 
     stop_all = threading.Event()
+    spent = threading.Event()
+    balance = None
+    if state.get('start_balance') is not None:
+        from model_client import GatewayClient
+        balance = GatewayClient(cfg['gateway']).credits
+    stop = spending_stop.SpendingStop(rel['max_cost_usd'], lambda: list_price(a.out, state), state.get('start_balance'), balance,
+                                      every_seconds=0 if os.environ.get('RUN_ALL_FAST') else 60)
+
+    def check_spending():
+        if not spent.is_set() and stop.reached():
+            spent.set()
+            set_stop_files(a.out, state, True)
+            print(f'[{dt.datetime.now():%H:%M}] SPENDING LIMIT: US$ {stop.spent():.2f} spent of US$ {rel["max_cost_usd"]} '
+                  '(release.max_cost_usd): no new answer starts; the answers in progress finish.', flush=True)
 
     def left():
         return None if deadline is None else (deadline - time.monotonic()) / 60
@@ -296,6 +354,10 @@ def main():
 
     done = threading.Event()
     threading.Thread(target=report_progress, daemon=True).start()
+
+    def spending_loop():
+        while not done.wait(1 if os.environ.get('RUN_ALL_FAST') else 30):
+            check_spending()
     snap = cfg.get('snapshots') or {}
 
     def take_snapshot():
@@ -318,6 +380,9 @@ def main():
         for e in reconcile_with_folders(state, a.out, cfg, n_questions):
             print(f'{e["folder"]}: {e["status"]} (from the folder: the state file said otherwise)', flush=True)
         save_state(a.out, state, lock)
+        set_stop_files(a.out, state, False)        # a resume checks the limit again, which the human may have raised
+    check_spending()
+    threading.Thread(target=spending_loop, daemon=True).start()
     live = [e for e in state['runs'] if e['status'] not in ('complete', 'invalid')]
     for e in live:
         if e['status'] in ('stopped', 'running', 'failed', 'refused', 'outage'):
@@ -332,6 +397,7 @@ def main():
     with ThreadPoolExecutor(max_workers=max(len(live), 1)) as ex:
         list(ex.map(safe_drive, live))
     done.set()
+    check_spending()
     save_state(a.out, state, lock)
     if snap.get('enabled') and not os.environ.get('RUN_ALL_NO_SNAPSHOTS'):
         take_snapshot()
@@ -344,6 +410,10 @@ def main():
     if by['refused']:
         print('The gateway refused (HTTP 402/401/403): raise the key budget or add credits (benchmark/RUN.md, section Before you start), then round_executor.py --resume.')
         sys.exit(exit_codes.BUDGET)
+    if spent.is_set() and (by['stopped'] or by['pending']):
+        print(f'Spending limit reached: US$ {stop.spent():.2f} spent of US$ {rel["max_cost_usd"]} (release.max_cost_usd, R-E2-030). The round is NOT complete. '
+              'Tell the human the amount. Only the human raises the limit; then: python3 benchmark/runner/round_executor.py --resume --max-minutes 110')
+        sys.exit(exit_codes.SPENT)
     if by['stopped'] or by['pending']:
         print('Time limit reached. Relaunch: python3 benchmark/runner/round_executor.py --resume --max-minutes 110')
         sys.exit(exit_codes.STOPPED)
@@ -357,7 +427,7 @@ def main():
     folders = [os.path.join(a.out, e['folder']) for e in state['runs']]
     for f in folders:
         score_report.write(f)                     # a retried run needs its report again
-    open(os.path.join(a.out, 'README.md'), 'w').write(round_summary.build(folders))
+    open(os.path.join(a.out, 'README.md'), 'w').write(round_summary.build(folders, milestone=state.get('milestone')))
     removed = remove_old(a.out, {e['folder'] for e in state['runs']})
     for name in (STATE, PROGRESS, PREFLIGHT):
         if os.path.exists(os.path.join(a.out, name)):

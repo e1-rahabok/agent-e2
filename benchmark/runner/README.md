@@ -1,7 +1,7 @@
 # Benchmark runner
 
 Runs every question (multiple choice, with text, tables or screenshots) against the candidate open-weight models through Vercel AI Gateway, scores the letters automatically, and writes a report with one final score.
-A whole round (four runs, preflight, recovery, summary) without anyone at the keyboard: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
+A whole round (preflight, runs, recovery, summary), only before a milestone is closed, without anyone at the keyboard: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
 Design: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md). Models: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md). Not indexed.
 
 ## Setup
@@ -37,10 +37,10 @@ python3 benchmark/runner/run_executor.py --resume benchmark/results/<run-folder>
 
 ```bash
 python3 benchmark/runner/round_sample_check.py
-python3 benchmark/runner/round_executor.py --max-minutes 110
+python3 benchmark/runner/round_executor.py --milestone M3 --max-minutes 110
 python3 benchmark/runner/round_executor.py --resume --max-minutes 110
 ```
-- The final round: a sample first, then all runs in parallel, then the summary. See "A whole round" below and [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
+- The full round, for a milestone of the workspace's ROADMAP.md: a sample first, then all runs in parallel, then the summary. See "A whole round" below and [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
 
 ```bash
 python3 -m unittest benchmark/runner/test_runner.py
@@ -155,6 +155,16 @@ python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
 - Cannot be done inside the process: a command cannot extend the 2-hour limit of the session that started it. The relaunch is a new command: when a run exits with code 3 (or its process is gone and the folder has fewer answers than the matrix), start `python3 benchmark/runner/run_executor.py --resume <folder> --max-minutes 110` again. The 15-minute progress check does this on its own: it counts the rows of `answers.csv` by `model` and relaunches a dead run.
 - `index_version` in `config.json` is the commit at the last resume; each row of `answers.csv` keeps the commit of its own answer. A resume after a change to the knowledge base mixes two versions in one run: stop edits to `knowledge/` during a run.
 
+### Reused answers
+- [answer_reuse.py](answer_reuse.py) hashes the inputs of each answer into the column `inputs_hash` of `answers.csv` (R-E2-029 in [test-spending.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/requirements/test-spending.md)). Before it asks anything, `run_executor.py` reads the `answers.csv` of every other folder in [benchmark/results](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results) (not the `-invalid-` ones) and copies each answer with the same hash and no error: no model is called, the column `reused_from` names the folder, and the answer is scored again against the current `## Answers`.
+- The inputs: the mode, the model, its request settings, the run number, the track, the question as the model sees it in that run (stem, options in the run's order, tables) and its images. Baseline adds the code and prompts that build its request; web adds its tools, the `web` settings and [public_web_lookup.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/public_web_lookup.py); Agent E2 adds every file of `knowledge/` and `harness/` except the tests, the keys of `runner_config.yaml` that reach an answer (every key except those in `SCHEDULE_KEYS`) and the search method.
+- Why the whole of `knowledge/` and `harness/` for Agent E2: a change to a file the answer did not read can still change what search finds (DESIGN-31, rejected option b).
+- `--no-reuse` asks every answer. The cost of a run counts only the answers it asked.
+
+### Spending stop
+- [spending_stop.py](spending_stop.py) counts what a round has spent: the larger of the list price of the answers it asked (`cost_usd`, the folders restarted with other settings included) and the drop in the gateway's credit balance since the preflight, read at most once a minute (R-E2-030). The balance also counts web searches, retries and failed calls; the list price also counts calls paid by the author's own provider key, which the balance never sees.
+- At `release.max_cost_usd` (US$ 100, CONSTRAINT-1) `round_executor.py` writes `.spending-stop` into each run folder. A run starts no new answer while the file is there, lets the running ones finish and exits with code 3; the round then exits with code 9 (`SPENT`). A resume removes the files and checks the limit again, so it continues only after the limit is raised.
+
 ### Request settings per model (reasoning)
 - A reasoning model spends tokens thinking before it writes the `ANSWER:` line. `max_tokens` counts the thinking. When the thinking uses all of it, the answer is cut off, no letter is found and the answer scores as wrong: the run measures the cap, not the model.
 - Measured with the default settings: alibaba/qwen3.8-27b used 3,700-4,300 tokens per answer in every mode (85% of its baseline answers hit the 4,000 cap, 549 of its 1,350 multiple-choice answers had no readable letter) and took 25-38 s per answer; google/gemma-4-31b-it used 160-380 tokens and 9-20 s.
@@ -170,11 +180,12 @@ python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
 
 ### Preflight (before a round)
 - [round_sample_check.py](round_sample_check.py) answers a sample (6 multiple-choice text questions and 1 screenshot question) in every mode of every run of the round, through `run_executor.py`: the code and the settings of the real run. It tries a model's `model_params` entries in order until one passes: no API error, 95% of letters readable, no answer cut off, mean completion tokens under half of `max_tokens`, every mode answered.
-- It reads the credits (`/v1/credits`), projects time and cost of the whole round from the sample, and refuses the round when the projected cost times `release.cost_safety` is above the credits or `release.max_cost_usd`, or the time is above `release.max_hours`. The key's own budget cannot be read; it shows only as an HTTP 402.
+- It reads the credits (`/v1/credits`), which become the start of the spending stop's balance drop, projects time and cost of the whole round from the sample, and refuses the round when the projected cost times `release.cost_safety` is above the credits or `release.max_cost_usd`, or the time is above `release.max_hours`. The key's own budget cannot be read; it shows only as an HTTP 402.
 - The projection is rough: seven questions per mode. Live : 1.5 to 2.5 minutes of wall time for two models at once, about US$ 0.55 for all four.
 
 ### A whole round: round_executor.py
-- [round_executor.py](round_executor.py) runs `release.runs` of `runner_config.yaml` (one run_executor.py per model, all at once, each in `benchmark/results/<date>-<model>/`): preflight, runs, recovery, summary. Playbook, approvals and expectations: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
+- [round_executor.py](round_executor.py) runs `release.runs` of `runner_config.yaml` (one run_executor.py per model, all at once, each in `benchmark/results/<date>-<model>/`): preflight, runs, recovery, summary. Release 1.0's round is Gemma 4 31B (baseline, agent-e2) and the frontier reference (web).
+- A new round needs `--milestone M<n>`, the milestone of the workspace's ROADMAP.md it serves (R-E2-031); without it the round refuses to start (exit 2). The summary names the milestone. A resume needs none. Playbook, approvals and expectations: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
 - Recovery: a run that crashed (exit 1 and others) is relaunched with `--resume`, up to `release.retries` times; answers that failed are retried the same way. A gateway outage (exit 8) waits and resumes the same folder. A run whose answers are invalid (exit 5: cut off, unreadable, a bad request) restarts from the beginning with the next entry of the model's `model_params`; the invalid folder is kept as evidence and moves to the archive at the end. A refused key (exit 6) stops the round.
 - State is in `benchmark/results/.round.json` (not in git). `--resume` resumes every unfinished run, whatever stopped it: it starts from the folders, not from the state file (`reconcile_with_folders`). A folder with every answer is complete; a run stopped by the time limit, a refused key, an outage or a crash is pending again; only a run marked invalid for its settings waits. Without `--resume` a second start is refused while a round is in progress; `--new` discards the state.
 - Snapshots: every `snapshots.every_minutes` (15) and at the end, [run_folders_backup.py](run_folders_backup.py) pushes the `answers.csv`, `config.json` and `report.md` of every run folder to the branch `snapshots/round-<date>`, built with a temporary git index, so the working branch is not touched. The branch is never merged; the author deletes it after the round.
@@ -183,7 +194,7 @@ python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
 - [round_alive_check.py](round_alive_check.py): per run, whether a process works on the folder, good answers against the total, the time of the last written answer and the cost. Verdicts: DONE, ALIVE, STALLED (no answer for `--stall-minutes`), DEAD, MACHINE RESTARTED; LOW BUDGET at 80% of `--budget`. A progress report says "running" only when it says ALIVE and the counts moved. Exit 0 when every run is DONE or ALIVE, 2 otherwise.
 - [round_resume.py](round_resume.py), called by the SessionStart hook [.claude/hooks/resume_unfinished_benchmark_round.sh](https://github.com/e1-rahabok/agent-e2/blob/main/.claude/hooks/resume_unfinished_benchmark_round.sh): when a round is in progress, a run is unfinished and no process works on it, it starts `round_executor.py --resume` detached. It does nothing otherwise. Not tested live: whether a machine restart starts a session (and so the hook) without a message is not known.
 - When every run is complete it writes [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md) with [round_summary.py](round_summary.py) (one analysis of all runs, every number from the run folders) and deletes earlier run folders (git history keeps them). It does not commit or merge.
-- Exit codes ([exit_codes.py](exit_codes.py)): 0 done; 1 crashed; 3 stopped at `--max-minutes`, relaunch with `--resume`; 4 preflight failed; 5 invalid answers; 6 credits, key or team budget refused; 7 some runs done, others failed; 8 the gateway or a provider kept failing (wait, then resume the same folder).
+- Exit codes ([exit_codes.py](exit_codes.py)): 0 done; 1 crashed; 3 stopped at `--max-minutes`, relaunch with `--resume`; 4 preflight failed; 5 invalid answers; 6 credits, key or team budget refused; 7 some runs done, others failed; 8 the gateway or a provider kept failing (wait, then resume the same folder); 9 the round spent `release.max_cost_usd`.
 
 ### Temperature
 - Temperature controls randomness in the model's word choice. 0 = always the most likely word. Higher = more varied.
@@ -214,7 +225,7 @@ python3 benchmark/runner/screen_answer_check.py --out /tmp/answers.json
 | File | Content | In git |
 |---|---|---|
 | `config.json` | Index version (git SHA), models with tags and prices, request settings per model (`model_params`), up-front blocks, settings | Yes |
-| `answers.csv` | One row per answer: model, provider, mode, track, question, answer type, input, level, run, option order, letters, scores (exact, partial, misconception, unsure, credit, confident wrong), retrieval recall (Agent E2), model calls (`steps`), stages that acted (`tools_used`: compute, gap, repair, consensus) or the web reference's tools, verifier flags, repaired, tokens, latency, cost | Yes |
+| `answers.csv` | One row per answer: model, provider, mode, inputs hash, the folder it was reused from (empty when asked), track, question, answer type, input, level, run, option order, letters, scores (exact, partial, misconception, unsure, credit, confident wrong), retrieval recall (Agent E2), model calls (`steps`), stages that acted (`tools_used`: compute, gap, repair, consensus) or the web reference's tools, verifier flags, repaired, tokens, latency, cost | Yes |
 | `report.md` | Final score and sub-scores; release gate and consensus projection; multiple-choice matrix (exact, partial, majority, margin, consistency, misconception, parse failures, recall, model calls, cost), by area and task; hardest questions | Yes |
 | `traces.jsonl` | Full prompt and retrieval trace per answer | No (large); keep locally |
 | `run.log` | Console output of the run, written by `round_executor.py` | No |

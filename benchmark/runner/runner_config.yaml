@@ -101,14 +101,13 @@ snapshots:                    # round_executor.py pushes the answers, configs an
   branch_prefix: snapshots/round-   # + the date; never merged: the author deletes it after the round
   remote: origin
 
-release:                      # the final round: benchmark/RUN.md. One run folder per entry, all started together (round_executor.py)
-  runs:
+release:                      # the full round, only before a milestone is closed (--milestone, R-E2-031): benchmark/RUN.md. One run folder per entry, all started together (round_executor.py)
+  runs:                       # release 1.0 runs Gemma 4 31B (SCOPE-6): Qwen and Muse-Glimmer wait for the model choice of the on-premises deployment (DESIGN-31)
     - {model: google/gemma-4-31b-it, modes: [baseline, agent-e2]}
-    - {model: alibaba/qwen3.8-27b, modes: [baseline, agent-e2]}
-    - {model: meta/muse-glimmer-30b, modes: [baseline, agent-e2]}
     - {model: anthropic/claude-opus-5.5, modes: [web]}    # frontier reference as a user meets it: search available, the model decides; no prompt-only mode (author, 2026-11-13)
   reference: anthropic/claude-opus-5.5
-  max_cost_usd: 150           # preflight refuses the round when the projected cost (with the safety factor) is above this
+  max_cost_usd: 100           # CONSTRAINT-1: the round stops when the money it spent reaches this (spending_stop.py, R-E2-030), and the preflight
+                              # refuses a round whose projected cost (with the safety factor) is above it
   cost_safety: 1.3            # the sample is small: projected cost x this factor must fit the credits and max_cost_usd
   max_hours: 6                # preflight refuses the round when the slowest run is projected above this
   preflight:

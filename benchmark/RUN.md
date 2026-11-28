@@ -1,12 +1,12 @@
 # Run a benchmark round
 
-How to run the final benchmark round, what it costs, how long it takes and what the runner does when something fails. Not indexed.
+How to run the full benchmark round, what it costs, how long it takes and what the runner does when something fails. The full round runs only before a milestone of the workspace's [ROADMAP.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md) is closed, and it stops when it has spent US$ 100 (R-E2-030 and R-E2-031 in [test-spending.md](../project/requirements/test-spending.md)). Between milestones, the free checks and the answer set test each change. Not indexed.
 Runner details: [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md). Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md).
 
 ## Give this prompt to your LLM
 
 ```text
-Run the final benchmark round. Follow benchmark/RUN.md exactly.
+Run the full benchmark round for milestone M<n>. Follow benchmark/RUN.md exactly.
 I have approved everything it lists. Do not stop to ask me.
 Stop only for the cases under "Needs the human".
 Send me one short progress message every 15 minutes.
@@ -18,45 +18,50 @@ When the round is complete: merge it to main, then give me the summary.
 
 ## Before you start (only you can do these)
 1. `AI_GATEWAY_API_KEY` is set in the environment of the session.
-2. Credits: at least US$ 100 (the projection is US$ 77 with the safety factor). The preflight reads the balance and refuses the round if the balance is below the projected cost times 1.3.
-3. Budgets: check both the key's budget and the team's budget (Vercel dashboard, AI Gateway, API Keys and Budgets & Spend). Each needs room for the projected cost times 1.3 plus margin, on top of what it has already used, and its refresh period must not reset in the middle of the round. The runner cannot read either budget. An empty one shows as HTTP 402, and the message says which one ("Team budget exceeded"). On the key had used US$ 150.43 of 150. On the round stopped on the team budget of US$ 100, with US$ 47 left on the key. Before the round, tell the human the amounts and the periods.
+2. Credits: at least US$ 100 (the projection is about US$ 85 with the safety factor). The preflight reads the balance and refuses the round if the balance is below the projected cost times 1.3.
+3. Budgets: check both the key's budget and the team's budget (Vercel dashboard, AI Gateway, API Keys and Budgets & Spend). Each needs room for US$ 100, the most a round spends, on top of what it has already used, and its refresh period must not reset in the middle of the round. The runner cannot read either budget. An empty one shows as HTTP 402, and the message says which one ("Team budget exceeded"). Before the round, tell the human the amounts and the periods.
 4. Everything is committed. The index version is the commit SHA, so the questions, `knowledge/` and `harness/` must not change during the round. A resume after a change would mix two versions in one run.
 5. The session works on its own branch, started from `main`.
-6. This is a development round, not the release round. The held-out set of 30 ([benchmark/design.md](design.md), section 7.5) is drawn at release and does not exist yet, so that gate is not read. The run set is every question with status `draft` or `reviewed`. Most are drafts (count: `python3 project/tools/question_coverage.py`), so the scores are read before the author has reviewed the questions (Q-E2-256).
+6. The round serves the milestone named with `--milestone` (the workspace's open milestone, such as `M3`), and its summary names it. It is not yet the release gate. The held-out set of 30 ([benchmark/design.md](design.md), section 7.5) is drawn at release and does not exist yet, so that gate is not read. The run set is every question with status `draft` or `reviewed`. Most are drafts (count: `python3 project/tools/question_coverage.py`), so the scores are read before the author has reviewed the questions (Q-E2-256).
 7. Commands use `python3`; on a machine where only `python` exists (Windows), use `python`.
 
 ## Expect
 
-Each candidate runs twice, as Base (`baseline`) and as Agent E2 (`agent-e2`). The frontier reference runs in one mode, `web`: search is available and Opus decides whether to use it. Every question of the run set is asked (291 ; questions with status `awaiting-input`, `retired` or `deferred` do not run), 5 runs each. There is no judge, because every question is multiple choice (Q-E2-199).
+Release 1.0 runs Gemma 4 31B (SCOPE-6 in the workspace's [brief](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/brief.md)), so the round asks it twice, as Base (`baseline`) and as Agent E2 (`agent-e2`). The frontier reference runs in one mode, `web`: search is available and Opus decides whether to use it. Qwen and Muse-Glimmer are left out until the model of the on-premises deployment is chosen (`release.runs` in [`runner_config.yaml`](runner/runner_config.yaml)). Every question of the run set is asked (291 ; questions with status `awaiting-input`, `retired` or `deferred` do not run), 5 runs each. There is no judge, because every question is multiple choice (Q-E2-199).
 
-The projection comes from the validity sample (Gemma, 9 questions: US$ 0.0026 and 33 s per Agent E2 answer on the gateway, 2 model calls each) and the model prices. The Opus figures come from the round. They were scaled from the 226-question projection to 291 questions (x 1.29). Read them as plus or minus 30%; the preflight gives the real numbers before the round starts.
+The figures come from the round of 2026-11-16, the last one with the 32,000-token reading set. The list price is what the runner records; the gateway billed more, because providers charge above the list price and failed or retried calls also cost money. Read them as plus or minus 30%; the preflight gives the real numbers before the round starts.
 
-| Run folder | Modes | Answers | Request settings | Time | Cost US$ |
-|---|---|---|---|---|---|
-| `<date>-gemma-4-31b-it` | baseline, agent-e2 | 2,910 | default | about 80 min | about 4.5 |
-| `<date>-qwen3.8-27b` | baseline, agent-e2 | 2,910 | reasoning off | about 80 min | about 4.5 |
-| `<date>-muse-glimmer-30b` | baseline, agent-e2 | 2,910 | reasoning off | about 90 min | about 10 |
-| `<date>-claude-opus-5.5` | web | 1,455 | effort medium, 8,000 tokens | about 105 min | about 40 |
-| Total | | 10,185 | | about 2 hours | about 59 (77 with the safety factor) |
+| Run folder | Answers | Time | Cost US$, list price and billed |
+|---|---|---|---|
+| `<date>-gemma-4-31b-it` | 2,910 | about 3.5 hours | 8.27 and 12.96 |
+| `<date>-claude-opus-5.5` | 1,455 | about 3 hours | 57.58 and 58.44 |
+| Total | 4,365 | about 3.5 hours | 65.85 and 71.40 |
 
-- The larger reading set adds about 11,000 input tokens to each of the 4,365 Agent E2 answers, which costs about US$ 5 to 10 more on the three candidates. Read the total as about US$ 66 (about 85 with the safety factor). The table rows above are from before this change. The preflight prices it for real.
-- The four runs go in parallel, so the round lasts as long as the slowest run. That is Opus, at its starting concurrency of 3; the runner raises the concurrency while the provider allows.
-- An Agent E2 answer sends about 28,500 input tokens over its 2 model calls, against about 400 for Base. The case call takes about 1,500. The answer call takes about 27,000 with the reading set, which averaged 20,000 tokens before the related tier and 27,000 after, against the 32,000 budget.
-- Add about 3 minutes for the preflight (under US$ 1) and 1 relaunch. One command lives 2 hours and the runner stops at 110 minutes.
-- The projection is checked again before anything long starts. If it is above the credits, `max_cost_usd` (150) or `max_hours` (6) in [`benchmark/runner/runner_config.yaml`](runner/runner_config.yaml), the round does not start.
+- Gemma runs the modes `baseline` and `agent-e2` at its default request settings. Opus runs the mode `web` at effort medium and 8,000 tokens.
+- With the safety factor of 1.3, the projection is about US$ 85, under the limit of US$ 100.
+- The two runs go in parallel, so the round lasts as long as the slower run. Opus starts at a concurrency of 3; the runner raises it while the provider allows.
+- An Agent E2 answer sends about 28,500 input tokens over its 2 model calls, against about 400 for Base. The case call takes about 1,500. The answer call takes about 27,000 with the reading set, against the 32,000 budget.
+- Add about 3 minutes for the preflight (under US$ 1) and 1 or 2 relaunches. One command lives 2 hours and the runner stops at 110 minutes.
+- The projection is checked again before anything long starts. If it is above the credits, `max_cost_usd` (100) or `max_hours` (6) in [`benchmark/runner/runner_config.yaml`](runner/runner_config.yaml), the round does not start.
+
+### Spending stop and reused answers
+
+- An answer whose inputs are unchanged since an earlier round is copied from that round's run folder, and no model is called for it (R-E2-029). Its `reused_from` column names the folder that first asked it, and it is scored against the current answer key. The inputs are listed in [`answer_reuse.py`](runner/answer_reuse.py): for Agent E2, any change to `knowledge/` or `harness/` asks every Agent E2 answer again; the reference and Base answers are asked again only when their question or their request changes.
+- The folders of the round of 2026-11-16 have no inputs fingerprint, so the first round after it asks every answer. From then on, a round asks only what changed.
+- While the round runs, it counts the money it has spent: the larger of the list price of the answers it asked and the drop in the gateway's credit balance since the preflight (R-E2-030). At US$ 100 it starts no new answer, lets the answers in progress finish, and exits with code 9.
 
 ## What happens
 
 1. Preflight (`round_sample_check.py`): it checks the credits, then asks a sample of 7 questions (6 multiple-choice text questions and 1 screenshot question) in every mode of every run, with the real code and settings. For each model it picks the first request setting that gives clean answers. A model with no clean setting stops the round before anything is spent.
-2. Four `run_executor.py` in parallel, one folder per model: `benchmark/results/<date>-<model>/`.
+2. Two `run_executor.py` in parallel, one folder per model: `benchmark/results/<date>-<model>/`. Each first copies the answers whose inputs are unchanged since the earlier round, then asks the rest.
 3. Health check inside each run: stops it when 25% of the last 40 answers are cut off, unreadable or failed.
 4. Recovery (table below).
-5. When all four runs are complete, `round_summary.py` writes [`benchmark/results/README.md`](results/README.md), one analysis of all runs. The run folders of earlier rounds are deleted; git history keeps them. The retrieval check outputs (`retrieval-<date>/`) stay.
+5. When both runs are complete, `round_summary.py` writes [`benchmark/results/README.md`](results/README.md), one analysis of all runs, with the milestone and the number of reused answers. The run folders of earlier rounds are deleted; git history keeps them, and the new folders hold the answers reused from them. The retrieval check outputs (`retrieval-<date>/`) stay.
 
 ## Steps for the LLM
 
 1. Check `test -n "$AI_GATEWAY_API_KEY"` and that `git status` is clean. If the key is missing, stop and tell the human.
-2. Start the round in the background with one command and no wrapper shell, `nohup` or `&`: `python3 benchmark/runner/round_executor.py --max-minutes 110`. Use the longest background timeout (7,200,000 ms). The system then reports when the command itself ends. A wrapped run reported the wrapper's end after seconds. The same rule applies to any run started by hand with `run_executor.py --resume`.
+2. Start the round in the background with one command and no wrapper shell, `nohup` or `&`: `python3 benchmark/runner/round_executor.py --milestone M<n> --max-minutes 110`, with the milestone the human named. Without `--milestone` the round refuses to start (exit 2). A resume needs no milestone. Use the longest background timeout (7,200,000 ms). The system then reports when the command itself ends. A wrapped run reported the wrapper's end after seconds. The same rule applies to any run started by hand with `run_executor.py --resume`.
 3. Every 10 minutes run `python3 benchmark/runner/round_alive_check.py` and send the human one line: per run, the verdict (ALIVE, DONE, STALLED, DEAD, MACHINE RESTARTED), good answers against the total, time left. Say "running" only when the command says ALIVE and the good-answer count moved since the last check. After STALLED, DEAD or MACHINE RESTARTED, relaunch with `python3 benchmark/runner/round_executor.py --resume --max-minutes 110` (it resumes every unfinished run, whatever stopped it) and tell the human. Schedule the next check with `send_later` or `ScheduleWakeup`, and never poll with `sleep`. The runner pushes answers and configs to the branch `snapshots/round-<date>` every 15 minutes, so do not commit run folders by hand during the round.
 4. When the command ends, read its exit code and last lines:
 
@@ -69,6 +74,7 @@ The projection comes from the validity sample (Gemma, 9 questions: US$ 0.0026 an
 | 6 | The gateway refused (HTTP 402, 401, 403) | Stop and tell the human. The saved error shows which budget ran out (the team's or the key's). The human raises it or adds credits and says "resume"; then run `round_executor.py --resume --max-minutes 110`, which resumes the refused runs too |
 | 8 | The gateway or a provider kept failing | The runner waits and resumes the same folder by itself (`release.outage_waits` times). Only when it gives up, stop and report the run and the error text. Do not change settings |
 | 7 | Some runs complete, others failed | Stop and report the list printed under "Round status". Do not merge a partial round |
+| 9 | The round spent its limit of US$ 100 | Stop and tell the human the amount spent. Never raise `max_cost_usd` |
 | 1, other | The orchestrator itself crashed | Relaunch once with `--resume`. A second crash: stop and report the traceback |
 
    The runner recovers by itself from these:
@@ -82,7 +88,7 @@ The projection comes from the validity sample (Gemma, 9 questions: US$ 0.0026 an
 
 ## After the round
 
-1. Run `ls benchmark/results`. It should show four run folders, [`README.md`](results/README.md) and the retrieval check outputs (`retrieval-<date>/`), nothing else. Read [`README.md`](results/README.md).
+1. Run `ls benchmark/results`. It should show two run folders, [`README.md`](results/README.md) and the retrieval check outputs (`retrieval-<date>/`), nothing else. Read [`README.md`](results/README.md).
 2. `python3 project/tools/rules_check.py` must report 0 problems, and `python3 -m unittest harness/test_harness.py` and `python3 -m unittest benchmark/runner/test_runner.py` must pass. Read the output, not only the exit codes.
 3. Update the Gateway benchmark row of [`project/plan.md`](../project/plan.md) with the final scores, and its open work with anything unexpected. Time and cost against the projection go in the pull request text. Update the "Result so far" cells in [`benchmark/models.md`](models.md), section 4, from the README.
 4. Commit everything: the run folders without `traces.jsonl`, [`README.md`](results/README.md), the archive move, and the plan and models changes. The commit message describes the change in plain words and names no model.
@@ -108,6 +114,7 @@ Give these before the round, so that nothing waits for a click.
 
 Only these stop the round.
 - credits or key budget used up (exit 6), or credits too low at the start (exit 4);
+- the round spent its limit of US$ 100 (exit 9). The limit is the author's (CONSTRAINT-1). Only after the author raises `release.max_cost_usd`, `round_executor.py --resume --max-minutes 110` continues where the round stopped;
 - no clean request setting for a model, or invalid answers on its last setting (exits 4, 5);
 - a failure the table above does not recover (exit 7, second crash);
 - a merge conflict that is not in [`project/plan.md`](../project/plan.md) or [`benchmark/models.md`](models.md).
@@ -121,5 +128,6 @@ Only these stop the round.
 ## A smaller run
 
 - One model, one mode: `python3 benchmark/runner/run_executor.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-004`.
+- A smaller run also copies unchanged answers from the folders in [`benchmark/results/`](results); `--no-reuse` asks every answer.
 - `run_executor.py --dry-run` prints the answers and a rough cost. It undercounts a model that thinks, so trust `round_sample_check.py --models <id>` instead.
 - `python3 benchmark/runner/round_executor.py --dry-run` prints the plan of the round without any call.

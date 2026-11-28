@@ -82,7 +82,7 @@ Test scenarios:
 
 Why: the author cannot grade every run (CONSTRAINT-8), and a grader that runs on every change catches a regression before it ships.
 
-Source: answer to Q-WS-5 ("It was graded by Opus 5.5"); SCOPE-6.
+Source: answer to Q-WS-5 ("It was graded by Opus 5.5"); SCOPE-6; the author, 2026-11-28 ("no re-grading of answers that haven't changed", [round 6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-6.md#spending-on-tests)); DESIGN-31.
 
 - Given an answer to an answer-set question
 - When the grader reads it
@@ -90,11 +90,13 @@ Source: answer to Q-WS-5 ("It was graded by Opus 5.5"); SCOPE-6.
 - And it also marks whether the answer states the likely wrong answer (misconception) and whether it says the question is not settled (unsure)
 - And it sees what Agent E2 saw: the question, the facts, the conversation, the CSV text and the screenshots
 - And an answer that asked a clarifying question is scored on its final answer after the scripted reply
+- And a grade is reused, with no call to the grader, when the answer, the question with its facts and key points, the rubric and the grader model equal those of an earlier grade
 
 Test scenarios:
 - T-E2-005a (anywhere, automated by `benchmark/runner/answer_grader.py`, to build, with the mock client of [harness/model_client.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/model_client.py)): a reply that is not valid JSON gets one retry, then fails the grading with the reply's first 200 characters; a valid reply gives score, misconception, unsure, missed and reason.
 - T-E2-005b (anywhere, automated, to build): for a question with a screenshot, the grader's request holds the image; for a question with a CSV, the CSV text.
 - T-E2-005c (anywhere, manual once): the author grades 20 answers picked at random; the grader agrees with the author on right (2 or 3) against not right (0 or 1) for at least 17 of them. Below that, the rubric is fixed and the 20 are graded again.
+- T-E2-005d (anywhere, automated by `benchmark/runner/answer_grader.py`, to build, with the mock client): grading the same answers twice calls the grader once per answer; a changed answer, key point or rubric is graded again.
 
 ### R-E2-006 The answer set passes on the shipped configuration
 
@@ -108,6 +110,7 @@ Source: SCOPE-6; answers to Q-WS-5 and Q-WS-I3 ("Accuracy matters more"); GOAL-4
 - And at most 5% of the answers are confidently wrong (score 0 and not marked unsure)
 - And no answer is marked as stating a misconception
 - And the report records, per answer: the score, the model, the knowledge commit, the time taken and the tokens used
+- And an answer whose inputs have not changed is reused (R-E2-029), and the run stops when its spending reaches US$100 (R-E2-030)
 - And when the first run's mean credit is below 0.5, the limits above become the first run's own values, recorded in that report and in this requirement, and no later run may fall below them
 
 Test scenarios:
