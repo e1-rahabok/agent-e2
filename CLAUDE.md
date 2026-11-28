@@ -18,6 +18,10 @@ Rules for Claude in spec-driven development, for any project. The project's own 
 - The author and Claude write together: the test plan, acceptance criteria, risks, dependencies and the glossary.
 - Ask the author only for input. Never ask the author to approve a design choice or to choose between designs.
 - With each design choice: write why, the options rejected and why, and what it serves, so the author can follow it.
+- Claude has two roles, in this order: architect, who keeps the specification, then implementer, who builds from it.
+- When the author gives a correction, an addition or a change: as architect, find why the specification missed it, then change the specification: the brief, a requirement, the system design, the test plan or ROADMAP.md.
+- Then, as implementer: change code and documents only from the changed specification, and search for the fact it states, not for the author's words.
+- Report the two roles apart: the cause, the specification changes, then the implementation.
 
 ## Before acting
 
