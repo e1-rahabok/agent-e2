@@ -1,14 +1,15 @@
 """The answer set of release 1.0 and its automated grader (R-E2-004, R-E2-005, R-E2-006 in project/requirements/answer-service.md).
 
     python3 benchmark/runner/answer_grader.py --check          # the set is complete and its keys are checked: no model call
-    python3 benchmark/runner/answer_grader.py                  # answer every question 3 times, grade, write the report
+    python3 benchmark/runner/answer_grader.py                  # answer every question 3 times, grade, write the report; stops at US$9
+    python3 benchmark/runner/answer_grader.py --config off.yaml --label band-off   # a change switched off, for the comparison
 
 The set is one YAML file per question in benchmark/answer-set/ (fields: id, kind, question, key_points, likely_wrong, knowledge,
 and as needed facts, role, page, history, attachments, min_score, clarify_reply). Each question is answered by the service
 (harness/answer_service.py, its shipped service_config.yaml). Claude Haiku 5.5 at low effort grades each answer 0 to 3 by the rubric in
 benchmark/free-text-rubric.md. A grade is reused when the answer, the question with its key points, the rubric and the grader
-model are the same; an answer is reused when the question, the run number and every file of knowledge/ and harness/ are the same.
-The report is benchmark/results/answer-set-<date>/report.md; the exit code is 1 when a limit is missed.
+model are the same; an answer is reused when the question, the run number, every file of knowledge/ and harness/ and the answer settings are the
+same. The report is benchmark/results/answer-set-<date>/report.md, or answer-set-<date>-<label>/ with --label; the exit code is 1 when a limit is missed.
 """
 import argparse
 import base64
@@ -37,6 +38,8 @@ KEY_CHECK = 'key-check.md'
 LIMITS_FILE = 'limits.json'          # written by the first run when its mean credit is below FIRST_RUN_FLOOR (R-E2-006)
 GRADER_MODEL = 'anthropic/claude-haiku-5.5'   # R-E2-005: the cheapest grader that agrees with the author; Opus 5.5 if it does not
 GRADER_REASONING = {'effort': 'low'}
+GRADER_MAX_TOKENS = 4000            # R-E2-005: the reply's cap counts the reasoning too; at 800 one reply in two was cut before its JSON
+MAX_COST_USD = 9                    # R-E2-030: a run started without the author's go stays below the author's US$10 line (CONSTRAINT-1)
 MIN_KINDS = {'acme': 3, 'reader': 5, 'csv': 2, 'screenshot': 2, 'conversation': 1, 'design': 1}
 REQUIRED = ('id', 'kind', 'question', 'key_points', 'likely_wrong', 'knowledge')
 RUNS = 3
@@ -227,14 +230,14 @@ def parse_reply(text):
 
 def grade(client, q, answer, rubric_text, cache=None, model=GRADER_MODEL, exchange=None):
     """Grade one answer (T-E2-005a, T-E2-005b, T-E2-005d). A reply that is not valid JSON gets one retry, then the grading fails
-    with the reply's first 200 characters. Returns the grade with `reused` (true when the cache held it) and `tokens`."""
+    with the reply's first 200 characters, and names the cap when the reply was cut there. Returns the grade with `reused` (true when the cache held it) and `tokens`."""
     key = answer_reuse.digest('grade-1', answer, fingerprint(q), rubric_text, model, exchange or [])
     if cache is not None and key in cache:
         return {**cache[key], 'reused': True}
     messages = grader_messages(q, answer, rubric_text, exchange)
     tokens = 0
     for attempt in range(2):
-        res = client.chat(model, messages, temperature=0, max_tokens=800, reasoning=GRADER_REASONING)
+        res = client.chat(model, messages, temperature=0, max_tokens=GRADER_MAX_TOKENS, reasoning=GRADER_REASONING)
         tokens += res.get('prompt_tokens', 0) + res.get('completion_tokens', 0)
         g = parse_reply(res.get('content'))
         if g:
@@ -244,7 +247,8 @@ def grade(client, q, answer, rubric_text, cache=None, model=GRADER_MODEL, exchan
             return {**g, 'reused': False}
         messages = messages + [{'role': 'assistant', 'content': res.get('content') or ''},
                                {'role': 'user', 'content': 'Reply with the JSON object only.'}]
-    raise GradingError(f'{q["id"]}: the grader did not reply with valid JSON: {(res.get("content") or "")[:200]}')
+    cut = f' (cut at {GRADER_MAX_TOKENS} tokens)' if res.get('finish_reason') == 'length' else ''
+    raise GradingError(f'{q["id"]}: the grader did not reply with valid JSON{cut}: {(res.get("content") or "")[:200]}')
 
 
 # ---------------------------------------------------------------- answering
@@ -341,6 +345,7 @@ def run(service, client, questions, rubric_text, out_dir, runs=RUNS, cache_dir=N
             if stop is not None and stop():
                 raise RuntimeError('the spending limit is reached: stop and tell the author')
             a = answer_question(service, q, n, caches['answers'], service_hash)
+            json.dump(caches['answers'], open(os.path.join(cache_dir, 'answers.json'), 'w'))   # before grading: a failed grading keeps the paid answer
             g = grade(client, q, a['content'], rubric_text, caches['grades'], exchange=a['exchange'])
             reused_a += a['reused']
             reused_g += g['reused']
@@ -374,8 +379,10 @@ def main(argv=None):
     ap.add_argument('--check', action='store_true', help='check the set only: no model call')
     ap.add_argument('--runs', type=int, default=RUNS)
     ap.add_argument('--config', default=os.path.join(ROOT, 'harness', 'service_config.yaml'))
-    ap.add_argument('--max-cost-usd', type=float, default=100, help='stop at this much gateway spending (CONSTRAINT-1)')
+    ap.add_argument('--max-cost-usd', type=float, default=MAX_COST_USD,
+                    help='stop at this much gateway spending; above the default only on the author\'s go (CONSTRAINT-1)')
     ap.add_argument('--only', help='answer only the questions whose id starts with this')
+    ap.add_argument('--label', help='name the run: its report goes to answer-set-<date>-<label>, so a run with a change off keeps its own')
     a = ap.parse_args(argv)
     questions = load_set()
     problems = check_set(questions, knowledge_ids(), benchmark_spans(), key_check_rows(os.path.join(SET_DIR, KEY_CHECK)))
@@ -397,7 +404,7 @@ def main(argv=None):
     chosen = [q for q in questions if not a.only or q['id'].startswith(a.only)]
     day = datetime.date.today().isoformat()
     try:
-        figures, misses, path = run(service, grader, chosen, rubric(), os.path.join(RESULTS_DIR, f'answer-set-{day}'), a.runs,
+        figures, misses, path = run(service, grader, chosen, rubric(), os.path.join(RESULTS_DIR, f'answer-set-{day}' + (f'-{a.label}' if a.label else '')), a.runs,
                                     stop=lambda: stopper.spent() >= a.max_cost_usd)
     except RuntimeError as e:
         print(e)

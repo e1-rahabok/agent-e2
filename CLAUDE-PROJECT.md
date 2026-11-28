@@ -64,7 +64,11 @@ How Claude works in this repository. Read at the start of every session. The des
 - Every candidate model must read screenshots (vision). Models: [`benchmark/models.md`](benchmark/models.md).
 - Baseline runs use no knowledge base. The model and its reasoning setting are in the run folder's `config.json` (`model_params`).
 - Run a benchmark round: [`benchmark/RUN.md`](benchmark/RUN.md) (one prompt, the approvals to give up front, time and cost).
-- Never start a full benchmark round: the author ruled it out, and `round_executor.py` refuses one. Test a change with the free checks; run the answer set only on the author's go ([test-spending.md](project/requirements/test-spending.md)).
+- Never start a full benchmark round: the author ruled it out, and `round_executor.py` refuses one.
+- Test a change with the free checks, then with the answer set when it changes what the model reads or the model: the workspace's [test plan](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/test-plan.md), section Tests for each kind of change.
+- Start a paid step under US$10 without asking, after naming its need: the author, 2026-11-28: "Anything under $10 no need my approval" (CONSTRAINT-1). Run the answer set at its default limit, US$9 (`--max-cost-usd`).
+- Wait for the author's go before a paid step of US$10 or more, and give it the limit the go names ([test-spending.md](project/requirements/test-spending.md)).
+- After a paid step: report what it spent and what the key has left.
 - When a round exits at its spending limit (exit 9): stop and tell the author; never raise `release.max_cost_usd` (US$25 a round, DESIGN-31 in the workspace's system design).
 - While a benchmark runs, send the author a short progress report every 15 minutes: answers done, errors, time left.
 
