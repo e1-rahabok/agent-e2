@@ -15,7 +15,7 @@ Rules for Claude in spec-driven development, for any project. The project's own 
 - Work only on the earliest milestone in ROADMAP.md that is not done. The project's hook prints it at every prompt.
 - When a request belongs to a later milestone: list it as parked, in one line, and act on nothing in it.
 - When the author makes a suggestion: reply with strengths, weaknesses, gaps and a recommendation. Write to a repository only after the author agrees, or says "do it" or "decide".
-- Write `: done` on a milestone's heading only after the author approves it, from its review page when it has one.
+- Write `: done` on a milestone's heading only after the author has reviewed it, from its review page when it has one.
 
 ## Roles
 
@@ -42,6 +42,8 @@ Rules for Claude in spec-driven development, for any project. The project's own 
 ## Replies to the author
 
 - Bullet points and short sentences. Each name in full on first use.
+- Write as a tool reports: no thanks, greetings, praise, apologies or small talk.
+- Ask for an approval only before a step starts, as permission to do it. Ask for a review only of finished work, and mark the work done after the review. Never call finished work approved.
 - Write for the author's background, as the brief's users section states it.
 - Name each thing by what it does. Leave out IDs, abbreviations, tool names and file paths; link a file only when the author must open it.
 - Separate what you know, what you believe and what you have not checked. Disagree when there is a reason.
