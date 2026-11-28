@@ -298,8 +298,9 @@ def capacity_text(r):
     if isinstance(k, (int, float)):
         if r['both_orange']:
             t = (f"Cluster Risk (%) {f(k)}% (95th percentile), {'above' if k > r['risk_limit'] else 'not above'} the "
-                 f"{'production' if r['production'] else 'non-production'} limit of {f(r['risk_limit'])}%: it decides, as "
-                 'Consumption and Cluster Performance (%) are both orange.')
+                 f"production limit of {f(r['risk_limit'])}%: it decides, as Consumption and Cluster Performance (%) are "
+                 'both orange. Every cluster gets the production limit, as the environment of a cluster is not known; '
+                 f"a non-production cluster's own limit is {f(L['closure-cluster-risk-nonprod'])}%.")
         else:
             t = (f"Cluster Risk (%) {f(k)}% (95th percentile) does not decide: Consumption and Cluster Performance (%) "
                  'are not both orange.')

@@ -34,6 +34,7 @@
   - Rule 2: Consumption and Performance are both orange, and Risk is orange or red. Busy and slow at once, and heading the wrong way.
 - Risk never closes a cluster on its own: it is a leading indicator that buys time.
 - Keep two settings. Production focuses on performance and closes at Risk orange. Non-production focuses on cost: it runs fuller and closes at Risk red ([`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../decision-tree/can-cluster-take-more-vms.md), step 6). With one setting for every cluster, use production: it is the more conservative.
+- Release 1.0 applies the production setting, Risk above 60%, to every cluster: Close for Business has no data on a cluster's environment, and Agent E2 does not know it either. A non-production cluster is closed at Risk orange too.
 - Not published when one of the three scores has no data in the window.
 
 | Performance | Risk | Consumption | Close for Business |
@@ -60,6 +61,7 @@
 - "The score shows red, so the cluster is closed" → closure needs a value clearly inside the band: Performance below 20, Consumption above 80. A Consumption of 78 shows red and leaves the cluster open.
 - "Close for Business is blank, so the cluster is open" → one of the three scores had no data; the decision was not made.
 - "One closure setting suits every cluster" → production closes at Risk orange. A non-production cluster focuses on cost and can run until Risk is red: keep a separate setting for it.
+- "Close for Business closed a non-production cluster at Risk 65%, so the decision is wrong" → release 1.0 applies the production setting to every cluster, because the environment of a cluster is not known. With the non-production setting, the cluster would stay open until Risk is above 80%.
 
 ## Metadata
 ```yaml
@@ -92,7 +94,6 @@ source:
   document: Knowledge base
   path: 'Capacity Management > Capacity Model > Cluster Closure; Logic'
 corrections: []
-review_notes:
-- 'To check after 1.0: Section ''The rule'': the management pack that publishes Close for Business closes at the display band edges (25, 50, 75) and applies the production Risk setting to every cluster; until the pack follows the closure thresholds of this file, a published value can differ from this rule (plan, After 1.0, pack fixes).'
+review_notes: []
 status: draft
 ```
