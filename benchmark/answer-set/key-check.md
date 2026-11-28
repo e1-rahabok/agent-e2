@@ -6,7 +6,7 @@ An independent agent answered each question from the knowledge files, the facts 
 |---|---|---|
 | acme-01-score-dip | agrees | Same step at 07:35, same low of 42 at 13:00, same 10 h 30 min below 75%. It added that the dip alone would not close the cluster. |
 | acme-02-steady-score | agrees | Same figures. It also named what the page does not show. |
-| acme-03-closed-for-new-vms | agrees | Same reason (Consumption above 80), Performance and Risk do not decide. |
+| acme-03-capacity-closed | agrees | Same reason (Consumption above 80), Performance and Risk do not decide. |
 | conv-01-more-vcpus | agrees | Same: more vCPUs raise Ready and Co-stop; find the cause first. |
 | csv-01-swapped-flat | agrees | Same: nothing swapped in the hour, Swapped is history. It read the gap to Swap target (about 0.44 GB) as the most ESXi could still swap; the key says the target is not queued memory. Both say it is not swapping now. |
 | csv-02-host-hides-vm | agrees | Same window 04:15 to 04:40, same peak 9.32%, host peak 0.39%. |

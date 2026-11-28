@@ -1,4 +1,4 @@
-id: acme-03-closed-for-new-vms
+id: acme-03-capacity-closed
 kind: acme
 question: Can I add more VMs to this cluster? The performance score is 90.
 facts: facts/acme-capacity-closed.json
