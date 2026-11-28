@@ -150,22 +150,20 @@ Test scenarios:
 
 ### R-E2-025 A value in a question or a screenshot gets its band from the catalog
 
-Milestone: M5.
-
-The setting `question_bands` of `service_config.yaml` switches it, shipped off: the author, 2026-11-28, wants no change to what the model reads until an answer test is allowed. M5 (isvara.io Ask, with screenshots) switches it on once the answer set shows the effect.
+The setting `question_bands` of `service_config.yaml` switches it, shipped on: the author, 2026-11-28, expects the band by code to improve answers, and wants it kept. Switching it off restores the earlier request.
 
 Why: a band chosen by the model can differ from the catalog's limits; code reads the limits the same way every time.
 
 Source: Q-WS-62 (the band lookup by code in release 1.0, also for values typed in a question or read from a screenshot); [DESIGN-2](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/system.md).
 
-- Given `question_bands` switched on, and a question that states a metric's value, or a screenshot from which Agent E2 reads one ([R-E2-012](#r-e2-012-agent-e2-reads-screenshots-a-caller-sends)), for a metric with five limits in the catalog
+- Given `question_bands` switched on, as shipped, and a question that states a metric's value, or a screenshot from which Agent E2 reads one ([R-E2-012](#r-e2-012-agent-e2-reads-screenshots-a-caller-sends)), for a metric with five limits in the catalog
 - When Agent E2 answers
 - Then code computes the value's band from the catalog's limits, as [expert_agent.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/expert_agent.py) `metric_band_lines` does for the figures PCM sends
 - And the answer states that band and no other
 
 Test scenarios:
-- T-E2-025c (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py)): with `question_bands` off, as shipped, the answer request holds no band line for a value in the question.
-- T-E2-025a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py)): with `question_bands` on and a mock client whose understand stage reads "Peak CPU Co-stop among any vCPU 7.7%" from the question, a metric named as the catalog names it, the answer request holds a band line that says red, from the catalog limits 0, 1, 2, 4 and 8.
+- T-E2-025c (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py)): `question_bands` is on in `service_config.yaml`; with it switched off the answer request holds no band line for a value in the question.
+- T-E2-025a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py)): with the shipped setting and a mock client whose understand stage reads "Peak CPU Co-stop among any vCPU 7.7%" from the question, a metric named as the catalog names it, the answer request holds a band line that says red, from the catalog limits 0, 1, 2, 4 and 8.
 - T-E2-025b (anywhere, the same test): the same value read from a screenshot's `attachments_read` gets the same band line.
 
 ## Time and progress

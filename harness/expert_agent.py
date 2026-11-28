@@ -127,7 +127,7 @@ def _interval(text):
     return None
 
 
-def compute(case, question, retriever, used, question_bands=False):
+def compute(case, question, retriever, used, question_bands=True):
     """Stage 3: exact values the model reads instead of computing. Catalog facts of the files read come with the
     reading set (catalog_database.facts_for); here: summation counters given in ms, turned into % by arithmetic_calculator.py."""
     lines, cat = [], catalog_database.get(retriever.docs)
@@ -161,7 +161,7 @@ def compute(case, question, retriever, used, question_bands=False):
     lines += kpi_time_lines(question, cat)
     lines += depth_breadth_lines(question, cat)
     lines += metric_band_lines(question, cat)
-    if question_bands:   # R-E2-025: shipped off until an answer test is allowed
+    if question_bands:   # R-E2-025: shipped on (setting question_bands)
         lines += case_band_lines(case, cat)
     return ('Computed (exact):\n' + '\n'.join(dict.fromkeys(lines))) if lines else ''
 
@@ -846,7 +846,7 @@ def prepare(client, model, question, images, cfg, trace, retriever, kind, prompt
     case = understand(client, model, read_as, images, cfg, trace, kw)                                    # 1
     reading, used, hits, tiers = reading_plan.reading_set(retriever, read_as, cfg, case=case, first_file=first_file)                  # 2
     _step(trace, 'plan', question[:200], {t: [i for i in used if tiers[i] == t] for t in reading_plan.ORDER if t in tiers.values()})
-    computed = compute(case, question, retriever, used, cfg.get('question_bands', False))                                                  # 3
+    computed = compute(case, question, retriever, used, cfg.get('question_bands', True))                                                  # 3
     if computed:
         _step(trace, 'compute', '', computed.split('\n')[1:])
     cover = coverage(tiers)
