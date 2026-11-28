@@ -2178,8 +2178,18 @@ class AnswerServiceCallsTest(unittest.TestCase):
         band = arithmetic_calculator.part_score(7.7, CAT.kpi_limits('Peak CPU Co-stop among any vCPU')['limits'])[1]
         for attachments in ([], [attach('chart.png', PNG)]):
             model = ServiceWithModel(case=case)
-            self.service(model).answer({'question': 'Is Peak CPU Co-stop among any vCPU 7.7% a problem?', 'attachments': attachments})
+            self.service(model, question_bands=True).answer(
+                {'question': 'Is Peak CPU Co-stop among any vCPU 7.7% a problem?', 'attachments': attachments})
             final = [t for t in model.user_texts() if 'Bands of the values' in t]
             self.assertTrue(final, attachments)
             self.assertIn(f'Peak CPU Co-stop among any vCPU 7.7%: {band}', final[-1])
         self.assertEqual(band, 'red')
+
+    def test_the_band_of_a_value_in_the_question_is_off_as_shipped(self):  # T-E2-025c
+        case = {'kind': 'metric-meaning', 'objects': ['cluster'], 'claims': [],
+                'metrics': [{'name': 'Peak CPU Co-stop among any vCPU', 'object': 'VM', 'value': 7.7, 'unit': '%'}]}
+        model = ServiceWithModel(case=case)
+        self.service(model).answer({'question': 'Is Peak CPU Co-stop among any vCPU 7.7% a problem?'})
+        self.assertFalse([t for t in model.user_texts() if 'Bands of the values' in t])
+        import yaml
+        self.assertIs(yaml.safe_load(open(os.path.join(os.path.dirname(__file__), 'service_config.yaml')))['question_bands'], False)
