@@ -144,7 +144,7 @@ Source: Q-WS-62 (the band lookup by code in release 1.0, also for values typed i
 - And the answer states that band and no other
 
 Test scenarios:
-- T-E2-025a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): with a mock client whose understand stage reads "Co-stop 7.7%" from the question, the answer request holds a band line that says red, from the catalog limits 0, 1, 2, 4 and 8.
+- T-E2-025a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): with a mock client whose understand stage reads "Peak CPU Co-stop among any vCPU 7.7%" from the question, a metric named as the catalog names it, the answer request holds a band line that says red, from the catalog limits 0, 1, 2, 4 and 8.
 - T-E2-025b (anywhere, the same test): the same value read from a screenshot's `attachments_read` gets the same band line.
 
 ## Time and progress
@@ -174,7 +174,7 @@ Source: SCOPE-6; answer to Q-WS-I3.
 
 - Given a job whose model call fails, or which runs longer than 10 minutes
 - When the caller polls it
-- Then `state` is `failed` with `error.reason` set to `model_error` or `time_limit`, and a sentence a person can read
+- Then `state` is `failed` with `error.reason` set to `model_error`, `time_limit` or, for a fault of the service itself, `internal_error`, and a sentence a person can read
 - And no job stays running for more than 10 minutes
 - And a finished or failed job can be read for 15 minutes, then returns HTTP 404
 - And at most `max_running_jobs` jobs run at once (a setting of `service_config.yaml`, 4); a further job waits as `queued`, up to `max_queued_jobs` (20); a call beyond that answers HTTP 429 with `Retry-After` and starts nothing
