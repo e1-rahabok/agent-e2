@@ -73,10 +73,10 @@ Source: SCOPE-6; answers to Q-WS-5 ("The grader should be automated") and Q-WS-I
 - And the 2 live-demo questions, on facts recorded from the lab, are added in M8 by R-E2-026, so the set holds about 15 questions at release 1.0
 - And each question has its expected key points, its likely wrong answer, and the knowledge files that hold the answer
 - And no question copies the wording of a multiple-choice benchmark question
-- And an independent agent has tried each key: it answers the question from the knowledge files without seeing the key, and `benchmark/answer-set/key-check.md` records, per question, whether its answer agrees with the key; each question where it disagrees is listed as uncertain, for the author to review
+- And an independent agent has tried each key: it answers the question from the knowledge files without seeing the key, and [`benchmark/answer-set/key-check.md`](../../benchmark/answer-set/key-check.md) records, per question, whether its answer agrees with the key; each question where it disagrees is listed as uncertain, for the author to review
 
 Test scenarios:
-- T-E2-004a (anywhere, automated by `benchmark/runner/answer_grader.py`, to build in agent-e2): count the questions by kind in `benchmark/answer-set/`; fail when a kind is short or a question lacks a key-point list, a likely wrong answer or a knowledge id that exists.
+- T-E2-004a (anywhere, automated by [`benchmark/runner/answer_grader.py`](../../benchmark/runner/answer_grader.py), to build in agent-e2): count the questions by kind in [`benchmark/answer-set/`](../../benchmark/answer-set); fail when a kind is short or a question lacks a key-point list, a likely wrong answer or a knowledge id that exists.
 - T-E2-004b (anywhere, automated by the same tool): no answer-set question shares a run of 12 or more words with any file in [benchmark/questions/](https://github.com/e1-rahabok/agent-e2/tree/main/benchmark/questions).
 - T-E2-004c (anywhere, automated by the same tool, then manual once): the tool fails when a question has no row in `key-check.md`; the author reviews the uncertain rows once, and a row stays uncertain until the author's decision is written into the question's key.
 
@@ -95,10 +95,10 @@ Source: answer to Q-WS-5 ("It was graded by Opus 5.5"); SCOPE-6; the author, 202
 - And a grade is reused, with no call to the grader, when the answer, the question with its facts and key points, the rubric and the grader model equal those of an earlier grade
 
 Test scenarios:
-- T-E2-005a (anywhere, automated by `benchmark/runner/answer_grader.py`, to build, with the mock client of [harness/model_client.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/model_client.py)): a reply that is not valid JSON gets one retry, then fails the grading with the reply's first 200 characters; a valid reply gives score, misconception, unsure, missed and reason.
+- T-E2-005a (anywhere, automated by [`benchmark/runner/answer_grader.py`](../../benchmark/runner/answer_grader.py), to build, with the mock client of [harness/model_client.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/model_client.py)): a reply that is not valid JSON gets one retry, then fails the grading with the reply's first 200 characters; a valid reply gives score, misconception, unsure, missed and reason.
 - T-E2-005b (anywhere, automated, to build): for a question with a screenshot, the grader's request holds the image; for a question with a CSV, the CSV text.
 - T-E2-005c (anywhere, manual once): the author grades 20 answers picked at random; the grader agrees with the author on right (2 or 3) against not right (0 or 1) for at least 17 of them. Below that, the rubric is fixed and the 20 are graded again.
-- T-E2-005d (anywhere, automated by `benchmark/runner/answer_grader.py`, to build, with the mock client): grading the same answers twice calls the grader once per answer; a changed answer, key point or rubric is graded again.
+- T-E2-005d (anywhere, automated by [`benchmark/runner/answer_grader.py`](../../benchmark/runner/answer_grader.py), to build, with the mock client): grading the same answers twice calls the grader once per answer; a changed answer, key point or rubric is graded again.
 
 ### R-E2-006 The answer set passes on the shipped configuration
 
@@ -116,7 +116,7 @@ Source: SCOPE-6; answers to Q-WS-5 and Q-WS-I3 ("Accuracy matters more"); GOAL-4
 - And when the first run's mean credit is below 0.5, the limits above become the first run's own values, recorded in that report and in this requirement, and no later run may fall below them
 
 Test scenarios:
-- T-E2-006a (anywhere with the gateway key, automated by `benchmark/runner/answer_grader.py`, to build): run the set; write `benchmark/results/answer-set-<date>/report.md`; exit 1 when any limit is missed. The run stays within the US$100 benchmark budget of CONSTRAINT-1 (gateway spending).
+- T-E2-006a (anywhere with the gateway key, automated by [`benchmark/runner/answer_grader.py`](../../benchmark/runner/answer_grader.py), to build): run the set; write `benchmark/results/answer-set-<date>/report.md`; exit 1 when any limit is missed. The run stays within the US$100 benchmark budget of CONSTRAINT-1 (gateway spending).
 - T-E2-006b (anywhere, manual): rerun after every change of model, of a prompt in [`harness/`](https://github.com/e1-rahabok/agent-e2/tree/main/harness), or of `service_config.yaml`, and before each roadmap milestone that ships Agent E2 is closed.
 
 ### R-E2-021 A Day 0 or Day 1 question gets a pointer, never steps
@@ -202,7 +202,7 @@ Source: SCOPE-6; CONSTRAINT-1 (gateway spending: US$100 per benchmark run, US$50
 
 Test scenarios:
 - T-E2-010a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): with a mock client that reports 100 prompt and 20 completion tokens per call, `usage` equals the sum over the calls the trace records.
-- T-E2-010b (anywhere, automated by `benchmark/runner/answer_grader.py`): the answer-set report gives the median per answer.
+- T-E2-010b (anywhere, automated by [`benchmark/runner/answer_grader.py`](../../benchmark/runner/answer_grader.py)): the answer-set report gives the median per answer.
 
 ## Conversations, CSV files and screenshots
 
@@ -385,7 +385,7 @@ Milestone: M8.
 - And where the recorded facts lack a part, the answer's key points include what the page did not supply ([R-E2-018](#r-e2-018-a-missing-fact-is-said-never-guessed))
 
 Test scenarios:
-- T-E2-026a (lab, automated by PCM's lab tool of [R-LIVE-031](https://github.com/e1-rahabok/private-cloud-manager/blob/main/spec/requirements/live-demo.md), to write): record the facts PCM sends for one lab cluster's Performance and Capacity tabs into `benchmark/answer-set/`, with the date and the adapter version.
+- T-E2-026a (lab, automated by PCM's lab tool of [R-LIVE-031](https://github.com/e1-rahabok/private-cloud-manager/blob/main/spec/requirements/live-demo.md), to write): record the facts PCM sends for one lab cluster's Performance and Capacity tabs into [`benchmark/answer-set/`](../../benchmark/answer-set), with the date and the adapter version.
 - T-E2-026b (anywhere with the gateway key, automated by the answer-set grader of R-E2-005): run the 2 questions on the recorded facts; expect a mean credit of at least 0.67 each.
 
 ## Not in this file
