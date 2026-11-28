@@ -45,10 +45,10 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | `reading_plan.py` | Stage 2, the reading plan (`AGENT.md`, section 4.2): named files, search, mechanism links, one search per claim, packed by tier with best sections. Also read by the retrieval check. |
 | `expert_agent.py` | The agent: stages 1 and 3-6 (case, compute, ask, answer, check). Design: `AGENT.md`. |
 | `answer_modes.py` | Entry point `answer(mode, ...)`: `agent-e2` (the agent), and the benchmark references `baseline` (the model alone) and `web` (the model alone with web search); prompts; verifier repair; consensus on one reading set; the conversation (`converse`). |
-| `answer_jobs.py` | Answer jobs: start, stage, heartbeat, time limit, cap on running jobs (R-E2-007, R-E2-008). |
-| `answer_progress.py` | Stage, seconds per stage and model use of one answer; counts the calls of the model client. |
-| `answer_attachments.py` | Screenshots and CSV files a caller sends: type read from content, size limits, refusal naming the file. |
-| `answer_traces.py` | Traces kept 30 days in files, with unguessable IDs. |
+| `answer_jobs.py` | Answer jobs: stage, heartbeat, time limit, cap. |
+| `answer_progress.py` | Stage, seconds and model use of one answer. |
+| `answer_attachments.py` | Screenshots and CSV files: type from content, limits. |
+| `answer_traces.py` | Traces kept 30 days, unguessable IDs. |
 | `answer_service.py` | Agent E2 as a service for PCM: `POST /v1/answer` (question, live facts, role, and the conversation's earlier turns, `history`, all of them) runs `answer_modes.converse('agent-e2', ...)` and returns the opening the person reads first (written by code from the calculator's numbers, in plain words), the answer that continues from it, the files read and the computed facts (for review). Config `service_config.yaml`; web lookup off. |
 | `user_suggestions.py`, `user_suggestions.yaml` | The questions a PCM page suggests, by its situation: `POST /v1/suggest` (page kind, pillar, KPI series) returns the level (good, medium, bad), the movement (declining, dip, rising) and 3 questions. Code and calculator, no model call. Release 1.0: Cluster Performance and Capacity, ESXi Performance, VM Performance. |
 | `answer_shape.py` | What a question asks, read by the model on the bare question (one call, temperature 0): the answer shape (explain, advise, diagnose or general) and whether it needs the page's values. A question on how a score works in general gets the page named but not its figures or drill-down. Unreadable reply: the page is kept, the case's kind decides the shape. |
