@@ -29,9 +29,10 @@ jobs:
         with:
           repository: e1-rahabok/private-cloud-workspace
           path: private-cloud-workspace
+      # The export generator tests read files with Path.read_text(newline=...), which Python 3.13 added.
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
       - run: pip install pyyaml==6.0.2 requests==2.32.3
       - name: Knowledge rules check
         run: python project/tools/rules_check.py
