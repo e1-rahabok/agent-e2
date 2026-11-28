@@ -173,7 +173,7 @@ flowchart LR
 | [`project/README.md`](project/README.md) | What the project folder holds |
 | [`project/plan.md`](project/plan.md) | Milestones, open work. Read first |
 | [`project/requirements/`](project/requirements) | This repository's requirements for release 1.0, each with its test scenarios; the workspace's ROADMAP.md names the milestone of each |
-| [`project/consultations.md`](project/consultations.md) | The consultations Agent E2 leads: capacity planning (1.0) and 14 after 1.0, one entry each, for the author to edit |
+| [`project/consultations.md`](project/consultations.md) | The consultations Agent E2 is to lead after 1.0: capacity planning first, then 14 more, one entry each, for the author to edit |
 | [`project/author-questions.md`](project/author-questions.md), [`project/author-questions-resolved.md`](project/author-questions-resolved.md) | Open questions for the author (Release 1.0, Future release); answered ones, kept as history |
 | [`project/design-thresholds.md`](project/design-thresholds.md) | Threshold catalog design: use cases, files, fields. Proposal |
 | [`project/demo-site/`](project/demo-site) | Demo scenarios: one folder each, with its steps, gate and recorded results. Built by `demo_page_builder.py` |
