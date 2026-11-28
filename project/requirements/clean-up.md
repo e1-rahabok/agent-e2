@@ -1,6 +1,6 @@
 # Requirements: clean-up of agent-e2
 
-The clean-up of agent-e2 in milestone M2 of the workspace's [ROADMAP.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md): the plan for release 1.0 and the older benchmarks. Question IDs point at the interview ([round 1](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/interview-round-1.md), [round 2](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/interview-round-2.md), [round 3](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/interview-round-3.md), [round 4](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/interview-round-4.md)); other IDs are explained in the [glossary](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/glossary.md).
+The clean-up of agent-e2 in milestone M2 of the workspace's [ROADMAP.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md): the plan for release 1.0 and the older benchmarks. Question IDs point at the interview ([round 1](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-1.md), [round 2](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-2.md), [round 3](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-3.md), [round 4](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-4.md)); other IDs are explained in the [glossary](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/glossary.md).
 
 ## Agent E2's repository for release 1.0
 
@@ -8,13 +8,15 @@ The clean-up of agent-e2 in milestone M2 of the workspace's [ROADMAP.md](https:/
 
 Milestone: M2.
 
+Why: a session reads the plan first, so an outdated plan sends it the wrong way.
+
 Source: Q-WS-6 (round 1: "Update Agent E2's plan. It's outdated."); Q-WS-58 (round 2: milestones A1 to A6).
 
 - Given Agent E2's [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md)
 - When a session reads it at the start of work
 - Then its milestones are A1 to A6 as decided in Q-WS-58, with the items of the on-premises deployment (local model, offline bundle, live test with blocked network) listed as parked
 - And its fine-tuning row points to the workspace's [design note](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/fine-tuning.md)
-- And agent-e2's CLAUDE-PROJECT.md sends questions that bind several repositories to this workspace (WD-019)
+- And agent-e2's CLAUDE-PROJECT.md sends questions that bind several repositories to this workspace (DESIGN-23)
 
 Test scenarios:
 - T-REPO-003a (anywhere, manual review): the plan's milestone table has A1 to A6 and a parked row for the on-premises deployment; agent-e2's rules check passes.
@@ -22,6 +24,8 @@ Test scenarios:
 ### R-REPO-004 The older benchmarks are removed
 
 Milestone: M2.
+
+Why: old benchmark results quote numbers from earlier designs, and a reader takes them for today's.
 
 Source: Q-WS-12 (round 1: "Remove them permanently."); Q-WS-59 (round 2: what is removed and what stays).
 
