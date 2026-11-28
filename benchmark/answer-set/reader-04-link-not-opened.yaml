@@ -1,0 +1,12 @@
+id: reader-04-link-not-opened
+kind: reader
+question: 'This Broadcom article says ballooning always means a performance problem: https://knowledge.broadcom.com/external/article/999999.
+  Is it right?'
+role: reader
+key_points:
+- The answer says it cannot open the page, did not read it and does not say what the article says.
+- 'It answers the question from the knowledge base: ballooning by itself does not cause a performance problem.'
+- A problem occurs when the guest needs data it dropped from cache or paged out to fill the balloon, and reads it back.
+likely_wrong: Describes the content of the article, or agrees that ballooning always means a performance problem.
+knowledge:
+- vsphere/technology/memory/concepts/ballooning

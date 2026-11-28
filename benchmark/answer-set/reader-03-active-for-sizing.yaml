@@ -1,0 +1,13 @@
+id: reader-03-active-for-sizing
+kind: reader
+question: vCenter shows my VM with 1 GB Active and 12 GB Consumed. Can I cut it from 16 GB to 2 GB?
+role: reader
+key_points:
+- 'No: Active is a sampled estimate, lower than Consumed, and it is not memory utilization.'
+- Neither Active nor Consumed suits sizing; Consumed can include guest cache.
+- It says to size from Guest OS memory counters.
+likely_wrong: Says Active is what the VM really needs, so 2 GB is enough.
+knowledge:
+- vsphere/technology/memory/metrics/virtual-motherboard/active
+- vsphere/technology/memory/metrics/virtual-motherboard/consumed
+- vsphere/technology/memory/configuration/memory-sizing

@@ -1,0 +1,17 @@
+id: shot-02-demand-below-usage
+kind: screenshot
+question: On this host chart from vCenter, Demand sits below Usage the whole time. Is that an error, and will VCF Operations show the
+  same Demand?
+attachments:
+- files/esxi-cpu-demand-usage.png
+role: l2
+key_points:
+- 'It is normal on a quiet host: vCenter Demand adds up what the VMs want to run, and Usage also counts the kernel own work.'
+- Demand averages about 199 MHz and Usage about 342 MHz in the legend.
+- 'VCF Operations does not show the same Demand: it also adds the kernel CPU reservation, and per VM takes the higher of demand and
+  reservation.'
+- The same name carries two formulas in the two tools; Usage is the same counter in both.
+likely_wrong: Says the two tools show the same Demand, or that Demand below Usage is an error.
+knowledge:
+- vsphere/technology/cpu/metrics/host/demand
+- vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics

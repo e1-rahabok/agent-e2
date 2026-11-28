@@ -1,0 +1,17 @@
+id: csv-01-swapped-flat
+kind: csv
+question: The owner of this VM sees Swapped at about 9 GB and asks whether ESXi is swapping it right now and whether it will swap another
+  9.5 GB. In the same hour Swap in rate and Swap out rate stay at 0. What does the file show?
+attachments:
+- files/vm-memory-1-hour.csv
+role: l2
+key_points:
+- 'Swapped is 9,486,212 KB in every sample of the hour: nothing goes out and nothing comes back, so ESXi is not swapping the VM now.'
+- Swapped is the amount out at the moment, built up in the past; it is not a rate.
+- Swap target is the level ESXi aims at; it is not memory queued on top of Swapped, and ESXi need not reach it.
+- Granted stays at 6,118,124 KB all hour.
+likely_wrong: Says ESXi will swap another 9.5 GB, or that the VM is slow because it is short of memory.
+knowledge:
+- vsphere/technology/memory/metrics/virtual-motherboard/swapped
+- vsphere/technology/memory/metrics/virtual-motherboard/swap-target
+- vsphere/technology/memory/metrics/virtual-motherboard/granted

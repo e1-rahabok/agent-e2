@@ -1,0 +1,12 @@
+id: reader-05-memory-limit
+kind: reader
+question: Should I set a memory limit on a VM so it cannot take too much host memory?
+role: reader
+key_points:
+- 'No: a limit caps the VM at every moment, whether or not the host is short of memory.'
+- The guest does not see the limit, so it behaves worse than a VM configured smaller.
+- Memory above the limit is reclaimed by ballooning, then compression and host swapping.
+- 'It says what to set: size the VM to the memory it needs, or remove the limit.'
+likely_wrong: Says a limit acts only when the host is short of memory, so it is a safe cap.
+knowledge:
+- vsphere/technology/memory/concepts/memory-limit

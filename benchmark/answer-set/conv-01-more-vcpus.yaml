@@ -1,0 +1,19 @@
+id: conv-01-more-vcpus
+kind: conversation
+question: So should I give it more vCPUs to fix that?
+role: l2
+history:
+- question: What is CPU Ready?
+  answer: Ready is the time a vCPU wanted to run and the kernel had no physical thread to give it.
+- question: A 4-vCPU VM of mine shows Ready of 12%. Is that high?
+  answer: 'Judge it against Run: Ready is runtime demanded and not given. Compare the 12% with the VM Run value before deciding.'
+key_points:
+- 'No: more vCPUs can raise Ready and Co-stop, so they do not fix a Ready problem.'
+- It stays on the 4-vCPU VM with Ready 12% from the earlier turns.
+- It says to add vCPUs only when the Guest OS run queue shows a CPU bottleneck and the VM has no contention.
+- 'It names causes to check for the Ready: a CPU limit, too few shares against other VMs, or a busy host, where other VMs show Ready
+  too.'
+likely_wrong: Says to add vCPUs.
+knowledge:
+- vsphere/technology/cpu/metrics/virtual-motherboard/ready
+- guest-os/cpu/metrics/run-queue

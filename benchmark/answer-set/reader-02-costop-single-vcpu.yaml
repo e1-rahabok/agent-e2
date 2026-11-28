@@ -1,0 +1,12 @@
+id: reader-02-costop-single-vcpu
+kind: reader
+question: My VM has one vCPU and its CPU Co-stop is always 0. Does that prove it has no CPU contention?
+role: reader
+key_points:
+- 'No: Co-stop applies only to VMs with more than one vCPU; on a one-vCPU VM it is always 0.'
+- A 0 therefore says nothing about contention on this VM.
+- It points to CPU Ready as the counter that shows a one-vCPU VM waiting for a physical CPU.
+likely_wrong: Says Co-stop 0 shows the VM has no CPU contention.
+knowledge:
+- vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
+- vsphere/technology/cpu/metrics/virtual-motherboard/ready

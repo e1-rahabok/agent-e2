@@ -1,0 +1,19 @@
+id: csv-02-host-hides-vm
+kind: csv
+question: Users of ord-api-03 report slowness around 04:30. The host chart (esx-c22) shows memory Latency under 0.4% all night. Was
+  memory the cause?
+attachments:
+- files/ord-api-03-memory-12h.csv
+- files/esx-c22-memory-12h.csv
+role: l2
+key_points:
+- 'Yes, memory is a likely cause: the VM file shows memory Latency of 5% to 9% from 04:15 to 04:40, with Swap in rate above 3,800 at
+  those times.'
+- 'The VM waited for memory: swap in is contention, because the guest asked for a swapped page and waited.'
+- 'The host value is an average over the host VMs and hides the VM that waits: the host peaks at 0.39% at 04:30.'
+- It says to read the worst VM, not the host value.
+likely_wrong: Rules memory out because the host Latency is low.
+knowledge:
+- vsphere/technology/memory/metrics/virtual-motherboard/latency
+- vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate
+- vsphere/technology/memory/metrics/host/latency

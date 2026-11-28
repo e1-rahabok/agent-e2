@@ -1,0 +1,16 @@
+id: acme-01-score-dip
+kind: acme
+question: Why did the cluster score drop this morning, and is it still a problem?
+facts: facts/acme-performance-dip.json
+role: l2
+key_points:
+- The page shows Cluster Performance changed level at about 07:35, from 78% the hour before to 55% the hour after, and fell to its lowest,
+  42%, at 13:00.
+- 'The drop is real, not normal movement: the lowest point is 36 points below the median of 78%.'
+- The score stayed below 75% (where green ends) for about 10 hours 30 minutes, from 08:00 to 18:25, and below 50% for 30 minutes.
+- 'The page does not say which part pulled the score down: the answer says so and gives no part or cause as fact.'
+- 'It points to what to check next: CPU Ready and Co-stop of the cluster VMs, the counters behind Cluster Performance.'
+likely_wrong: Names a cause the page does not show (a host failure, a backup job or a noisy VM) as fact, or calls the drop normal movement.
+knowledge:
+- vsphere/object-types/cluster/cluster-performance
+- vsphere/technology/cpu/metrics/virtual-motherboard/ready

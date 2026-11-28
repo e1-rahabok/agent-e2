@@ -1,0 +1,13 @@
+id: reader-01-ready-above-100
+kind: reader
+question: My VM shows CPU Ready above 100% on a chart. Is the counter broken?
+role: reader
+page: vsphere/technology/cpu/metrics/virtual-motherboard/ready
+key_points:
+- 'No, it is not broken: VM CPU Ready can exceed 100%.'
+- The cause is summation across vCPUs, not an average.
+- 'It reads Ready against Run: Ready 5% with Run 95% is low, Ready 2% with Run 10% is very high.'
+- A CPU limit on the VM impacts Ready, so the limit is one thing to check.
+likely_wrong: Says a value above 100% is impossible and the counter or the chart is wrong.
+knowledge:
+- vsphere/technology/cpu/metrics/virtual-motherboard/ready
