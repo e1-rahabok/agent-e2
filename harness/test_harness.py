@@ -2033,8 +2033,8 @@ class AnswerServiceCallsTest(unittest.TestCase):
         self.assertTrue(out['sources'])
         for s in out['sources']:
             self.assertEqual(set(s), {'id', 'title'})
-            self.assertEqual(s['title'], DOCS[s['id']].title)
-        self.assertEqual([s['id'] for s in out['sources']], [i for i in out['files_read'] if i in DOCS])
+            self.assertTrue(os.path.isfile(os.path.join(knowledge_loader.ROOT, 'knowledge', s['id'] + '.md')))
+        self.assertEqual([s['title'] for s in out['sources']], [DOCS[i].title for i in out['files_read'] if i in DOCS])
         self.assertEqual(out['lead'], '')
         trace = svc.traces.get(out['trace_id'])
         self.assertEqual((trace['model'], trace['knowledge_commit'], trace['files_read']), (svc.model, svc.commit, out['files_read']))

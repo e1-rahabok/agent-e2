@@ -546,6 +546,11 @@ class Service:
         return topic_decision.decide(self.client, self.model, first, history, body.get('topic_choice'), self.docs, self.cfg,
                                      (self.cfg.get('provider_order') or {}).get(self.model))
 
+    def doc_for(self, file):
+        """The document of a file ID as `sources` gives it (the path under knowledge/ without .md), or of the ID the document
+        names itself, or None."""
+        return next((d for d in self.docs.values() if file_id(d) == file), self.docs.get(file))
+
     def check_request(self, body):
         """Everything about a call that can be refused before a model is called; returns its attachments (R-E2-014, R-E2-022)."""
         if not isinstance(body, dict):
@@ -555,7 +560,7 @@ class Service:
         conversation(body.get('history'))
         attachments = answer_attachments.parse(body.get('attachments'))
         page = body.get('page')
-        if page is not None and (not isinstance(page, str) or page not in self.docs):
+        if page is not None and (not isinstance(page, str) or self.doc_for(page) is None):
             raise ValueError('page: no such knowledge file')
         if body.get('role') not in (None, '') and body['role'] not in ROLES:
             raise ValueError('role: one of ' + ', '.join(ROLES))
@@ -587,7 +592,7 @@ class Service:
         out = self._answer(body, attachments, progress)
         trace = out.pop('_trace')
         report = progress.finish()
-        sources = [{'id': i, 'title': self.docs[i].title} for i in out['files_read'] if i in self.docs]
+        sources = [{'id': file_id(self.docs[i]), 'title': self.docs[i].title} for i in out['files_read'] if i in self.docs]
         read = next((s['output'].get('images') for s in trace if s.get('action') == 'understand' and isinstance(s.get('output'), dict)), None)
         trace_id = self.traces.new_id()
         out.update(report, sources=sources, trace_id=trace_id,
@@ -629,7 +634,7 @@ class Service:
             turns = [question_text(body, lead, **extra)]
         progress.enter('understand')
         out = answer_modes.converse('agent-e2', self.client, self.model, turns, [a.part() for a in attachments], self.cfg,
-                                    self.retriever, history, shape, body.get('page'))
+                                    self.retriever, history, shape, self.doc_for(body['page']).id if body.get('page') else None)
         progress.enter('check')
         computed = [line for s in out['trace'] if s.get('action') == 'compute' for line in (s.get('output') or [])]
         content = no_file_refs(out['result'].get('content'), self.docs)
@@ -681,6 +686,11 @@ class Service:
                                temperature=self.cfg.get('temperature'), max_tokens=self.cfg.get('max_tokens', 2000))
         again = (res.get('content') or '').strip()
         return again if again and not pipeline_words(again) else text
+
+
+def file_id(doc):
+    """A knowledge file's ID for the caller: its path under knowledge/ without .md, so `knowledge/<id>.md` opens it."""
+    return os.path.relpath(doc.path, os.path.join(knowledge_loader.ROOT, 'knowledge'))[:-3]
 
 
 def _stage(name):
