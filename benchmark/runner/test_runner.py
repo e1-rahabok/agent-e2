@@ -1319,7 +1319,8 @@ class AnswerGraderTest(unittest.TestCase):
         self.assertEqual(self.g.grade(client, q, 'an answer', self.rubric)['score'], 2)
         self.assertEqual(len(client.calls), 2)
         self.assertEqual(client.calls[0]['temperature'], 0)
-        self.assertEqual(client.calls[0]['model'], 'anthropic/claude-opus-5.5')
+        self.assertEqual(client.calls[0]['model'], 'anthropic/claude-haiku-5.5')
+        self.assertEqual(client.calls[0]['reasoning'], {'effort': 'low'})
         bad = self.Scripted('x' * 300, 'y' * 300)
         with self.assertRaises(self.g.GradingError) as e:
             self.g.grade(bad, q, 'an answer', self.rubric)

@@ -84,11 +84,12 @@ Test scenarios:
 
 Why: the author cannot grade every run (CONSTRAINT-8), and a grader that runs on every change catches a regression before it ships.
 
-Source: answer to Q-WS-5 ("It was graded by Opus 5.5"); SCOPE-6; the author, 2026-11-28 ("no re-grading of answers that haven't changed", [round 6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-6.md#spending-on-tests)); DESIGN-31.
+Source: answer to Q-WS-5 ("It was graded by Opus 5.5", the grader before the author's cost rule); the author, 2026-11-28 (no bill beyond the existing Vercel gateway spend; the cheapest grader that agrees with the author, Haiku at low effort, a different maker from the answering model Gemma); SCOPE-6; the author, 2026-11-28 ("no re-grading of answers that haven't changed", [round 6](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/author-input/interview-round-6.md#spending-on-tests)); DESIGN-31.
 
 - Given an answer to an answer-set question
 - When the grader reads it
-- Then Claude Opus 5.5 (`anthropic/claude-opus-5.5`, temperature 0) scores it 0 to 3 by the rubric in [benchmark/free-text-rubric.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/free-text-rubric.md): 0 wrong, or the likely wrong answer, or a contradicted key point; 1 the conclusion avoids the trap but the reason is missing or wrong; 2 right conclusion with the right reason; 3 as 2, and every key point or what to check next
+- Then Claude Haiku 5.5 (`anthropic/claude-haiku-5.5`, temperature 0, low reasoning effort) scores it 0 to 3 by the rubric in [benchmark/free-text-rubric.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/free-text-rubric.md): 0 wrong, or the likely wrong answer, or a contradicted key point; 1 the conclusion avoids the trap but the reason is missing or wrong; 2 right conclusion with the right reason; 3 as 2, and every key point or what to check next
+- And the grader is a cheaper model than Opus 5.5 because a run grades every answer and the gateway bills by use; the author's check (T-E2-005c) guards its quality, and when it fails the grader moves to `anthropic/claude-opus-5.5` before the rubric is changed
 - And it also marks whether the answer states the likely wrong answer (misconception) and whether it says the question is not settled (unsure)
 - And it sees what Agent E2 saw: the question, the facts, the conversation, the CSV text and the screenshots
 - And an answer that asked a clarifying question is scored on its final answer after the scripted reply

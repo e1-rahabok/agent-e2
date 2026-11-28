@@ -5,7 +5,7 @@
 
 The set is one YAML file per question in benchmark/answer-set/ (fields: id, kind, question, key_points, likely_wrong, knowledge,
 and as needed facts, role, page, history, attachments, min_score, clarify_reply). Each question is answered by the service
-(harness/answer_service.py, its shipped service_config.yaml). Claude Opus 5.5 grades each answer 0 to 3 by the rubric in
+(harness/answer_service.py, its shipped service_config.yaml). Claude Haiku 5.5 at low effort grades each answer 0 to 3 by the rubric in
 benchmark/free-text-rubric.md. A grade is reused when the answer, the question with its key points, the rubric and the grader
 model are the same; an answer is reused when the question, the run number and every file of knowledge/ and harness/ are the same.
 The report is benchmark/results/answer-set-<date>/report.md; the exit code is 1 when a limit is missed.
@@ -35,7 +35,8 @@ RUBRIC_FILE = os.path.join(ROOT, 'benchmark', 'free-text-rubric.md')
 RESULTS_DIR = os.path.join(ROOT, 'benchmark', 'results')
 KEY_CHECK = 'key-check.md'
 LIMITS_FILE = 'limits.json'          # written by the first run when its mean credit is below FIRST_RUN_FLOOR (R-E2-006)
-GRADER_MODEL = 'anthropic/claude-opus-5.5'
+GRADER_MODEL = 'anthropic/claude-haiku-5.5'   # R-E2-005: the cheapest grader that agrees with the author; Opus 5.5 if it does not
+GRADER_REASONING = {'effort': 'low'}
 MIN_KINDS = {'acme': 3, 'reader': 5, 'csv': 2, 'screenshot': 2, 'conversation': 1, 'design': 1}
 REQUIRED = ('id', 'kind', 'question', 'key_points', 'likely_wrong', 'knowledge')
 RUNS = 3
@@ -233,7 +234,7 @@ def grade(client, q, answer, rubric_text, cache=None, model=GRADER_MODEL, exchan
     messages = grader_messages(q, answer, rubric_text, exchange)
     tokens = 0
     for attempt in range(2):
-        res = client.chat(model, messages, temperature=0, max_tokens=800)
+        res = client.chat(model, messages, temperature=0, max_tokens=800, reasoning=GRADER_REASONING)
         tokens += res.get('prompt_tokens', 0) + res.get('completion_tokens', 0)
         g = parse_reply(res.get('content'))
         if g:
