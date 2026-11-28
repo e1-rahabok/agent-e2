@@ -4,7 +4,9 @@ What Agent E2 publishes for isvara.io to build its articles from, and how it is 
 
 ### R-E2-027 The export holds every knowledge file, with what an article needs
 
-Source: Q-WS-41 (the recommendation of one record per published file; the author asked to review the change first, in the [before and after](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/isvara-before-and-after.md)); [WD-005](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/DECISIONS.md); [WD-027](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/DECISIONS.md).
+Why: isvara.io builds every article from the export, so a field the export lacks is missing from every page.
+
+Source: Q-WS-41 (the recommendation of one record per published file; the author asked to review the change first, in the [before and after](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/isvara-before-and-after.md)); [DESIGN-3](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/system.md); [SCOPE-9](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/brief.md).
 
 - Given agent-e2 at one commit
 - When the export tool runs
@@ -18,12 +20,14 @@ Test scenarios:
 
 ### R-E2-028 KNOWLEDGE-ENGINEERING.md holds the knowledge model
 
-Source: [WD-035](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/DECISIONS.md) (adding the knowledge model to agent-e2's KNOWLEDGE-ENGINEERING.md stays in release 1.0); [WD-027](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/DECISIONS.md).
+Why: Agent E2's knowledge is organised in KNOWLEDGE-ENGINEERING.md, so the model that isvara.io and the coverage table use must be there too.
 
-- Given the workspace's [knowledge model](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/knowledge-model.md)
+Source: [SCOPE-16](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/brief.md) (adding the knowledge model to agent-e2's KNOWLEDGE-ENGINEERING.md stays in release 1.0); [SCOPE-9](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/brief.md).
+
+- Given the workspace's [knowledge model](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/knowledge-model.md)
 - When a session reads agent-e2's [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md)
 - Then it finds the three learning paths and the tags each comes from, the four lenses as a completeness check with the form that serves each lens, and the Day 2 boundary
-- And the forms deferred by WD-035 (workload footprints, investigations over several steps, "At large scale" notes) are named as after release 1.0
+- And the forms deferred by SCOPE-16 (workload footprints, investigations over several steps, "At large scale" notes) are named as after release 1.0
 
 Test scenarios:
 - T-E2-028a (anywhere, automated by agent-e2's rules check, extended): KNOWLEDGE-ENGINEERING.md names each value of `retriever_guide` under one lens, as the knowledge model maps them (how-it-works; metric-meaning; what-to-set, health-check and decision-tree; troubleshooting), except `term-meaning`, the glossary, which serves search; a form under no lens fails.
