@@ -148,7 +148,7 @@ def run_preflight(cfg, cfg_path, plan, client, log=print, only=None):
             v['modes'] = p['modes']
             if v['ok']:
                 conc = (cfg.get('concurrency_by_model') or {}).get(p['model'], cfg['concurrency'])
-                v['minutes'], v['cost'] = project(v['stats'], v['n_questions'], cfg['runs'], conc)
+                v['minutes'], v['cost'] = project(v['stats'], v['n_questions'], p.get('runs', cfg['runs']), conc)
             report['runs'][p['model']] = v
             report['ok'] &= v['ok']
             report['refused'] |= bool(v.get('refused'))
