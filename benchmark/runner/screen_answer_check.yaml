@@ -145,7 +145,7 @@ asks:
     shape: [diagnose]
   - id: P02
     page: SG-S-01 Performance
-    question: Which metrics pulls the Cluster Performance down?
+    question: Which metric pulls Cluster Performance down?
     page_values: true
     shape: [diagnose, general]
   - id: P03

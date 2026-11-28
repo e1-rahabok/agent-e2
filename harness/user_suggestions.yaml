@@ -17,7 +17,7 @@ performance:
       - Does the good average hide VMs that still suffer?
       - Is a good score here a reason to add more VMs?
     medium:
-      - Which metrics pulls the Cluster Performance down?
+      - Which metric pulls Cluster Performance down?
       - Is it a few VMs or most of them?
       - Is one host the cause of the slowness?
     bad:
