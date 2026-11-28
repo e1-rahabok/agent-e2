@@ -83,6 +83,6 @@ How Claude works in this repository. Read at the start of every session. The des
 - Work on the branch named for the session.
 - Merge the session branch to `main` through a pull request after each change set, with a merge commit so each change stays visible.
 - Always land the work on `main`: merge the pull request yourself in the same session, with no open pull request or side branch left behind. Before ending, check that `main` holds the change.
-- Delete the branch on GitHub right after its pull request is merged; the repository setting "Automatically delete head branches" does it. A cloud session cannot delete a branch by `git push --delete` (HTTP 403): if a merged branch remains, list it for the author. The author reads only `main`.
+- The branch of a merged pull request is deleted by the repository setting "Automatically delete head branches". Every other branch that is not ahead of `main` is deleted by [.github/workflows/branch-cleanup.yml](.github/workflows/branch-cleanup.yml) (DESIGN-28 in the workspace's [system design](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/spec/design/system.md)). A cloud session cannot delete a branch (HTTP 403), and does not ask the author to. The author reads only `main`.
 - Commit messages and PR text describe the change, in plain words. No model names.
 - Do not delete files unless the author asks. Git history keeps every deleted file.
