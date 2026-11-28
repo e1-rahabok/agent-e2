@@ -9,10 +9,34 @@ section Agent E2 in PCM). The answer is the shipped pipeline, `answer_modes.conv
        round: [question, Agent E2's questions, the user's reply]), "history": [{"question": "...", "answer": "..."}, ...]
        (optional: every earlier turn of the current topic, oldest first, uncut; the service holds no state, so the caller
        keeps the conversation), "topic_choice": "auto" | "new" | "continue" (optional, default auto: Agent E2 decides; new
-       or continue: the user chose), "role": "l1" | "l2" | "capacity" | "executive" (optional)}
+       or continue: the user chose), "role": "l1" | "l2" | "capacity" | "executive" | "reader" (optional; reader: a reader of
+       isvara.io), "page": "<knowledge file id>" (optional: the article a reader has open; read first; 400 when it is no file),
+       "attachments": [{"name": "...", "type": "image/png" (optional), "data": "<base64>"}, ...] (optional: up to 5 images,
+       PNG, JPEG or WebP, 5 MB each, and 3 CSV files, 2 MB each; the type is read from the content; one that cannot be read
+       is refused with 400 naming it), "async": true (optional: start a job, see below)}
     -> 200 {"type": "answer" | "clarify", "content": "...", "questions": [...], "files_read": [...],
             "lead": "...", "computed": [...], "topic": {"continues": true | false, "by": "user" | "first" | "code" |
-            "model" | "unsure"}, "shape": "...", "page_values": true | false, "model": "...", "knowledge_commit": "..."}
+            "model" | "unsure"}, "shape": "...", "page_values": true | false, "model": "...", "knowledge_commit": "...",
+            "sources": [{"id": "<knowledge file id>", "title": "..."}, ...], "attachments_read": [...], "missing_facts": [...],
+            "trace_id": "...", "elapsed_s": n, "stage_seconds": {"<stage>": n, ...},
+            "usage": {"model_calls": n, "prompt_tokens": n, "completion_tokens": n}}
+    sources: the knowledge files the answer used, each opening at `knowledge/<id>.md`; the text holds no file ID.
+    attachments_read: per image, what was read from it. missing_facts: the facts a feature needed and the call lacked (the
+    table below), and each value that reads "No data"; the answer says what the page did not supply and gives no value for it.
+    trace_id: GET /v1/traces/<trace_id> returns, for 30 days, what Agent E2 read, computed and checked (attachments by name,
+    type and size only). elapsed_s, stage_seconds and usage: the time and the model use of this answer.
+    With "async": true the call answers HTTP 202 {"job": "<id>", "state": "queued"} at once, and the answer is a job:
+    GET /v1/jobs/<id> -> 200 {"job", "state": "queued" | "running" | "done" | "failed", "stage": null | "topic" | "shape" |
+            "understand" | "plan" | "compute" | "write" | "check" | "rewrite", "elapsed_s": n, "updated_at": "<ISO time>",
+            "result": {the /v1/answer reply} (when done), "error": {"reason": "model_error" | "time_limit" | "internal_error",
+            "message": "..."} (when failed)}
+    updated_at moves at least every 10 seconds while the job is queued or running. A job ends after 10 minutes with time_limit.
+    A finished or failed job can be read for 15 minutes, then 404; a restart of the service loses its jobs. At most 4 jobs run
+    at once and 20 wait; one more is refused with 429 and Retry-After. A call without "async" returns the answer in one reply.
+    Refusals: 400 (a call or an attachment that cannot be read: the reply names it), 401 (the secret), 404, 413 (a body above
+    40 MB), 429, 502 (the model cannot be reached: no detail is given). No reply holds a key, a secret or the gateway address.
+    The secret: with the environment variable AGENT_E2_SECRET set, every call but GET /v1/health needs the header
+    `Authorization: Bearer <secret>`, else 401; without it, every call is accepted (the lab VM listens on the loopback only).
     shape and page_values: what the question asks, read by the model (answer_shape.decide). page_values false: a question
     on how a score works in general; the page is named, its values and the opening are not used.
     topic: whether the question continued the topic of `history` (topic_decision.py); when it did not, `history` was not
@@ -33,22 +57,44 @@ section Agent E2 in PCM). The answer is the shipped pipeline, `answer_modes.conv
     The topic decision alone (topic_decision.py), the same one /v1/answer makes: the caller shows it before the answer, the
     person can flip it while the answer is written, and the caller then sends /v1/answer with topic_choice new or
     continue, so the decision is made once.
+    GET /v1/traces/<trace_id> -> 200 {"trace_id", "model", "knowledge_commit", "files_read", "steps", "attachments": [{"name",
+            "type", "size"}], ...} (404 after 30 days)
     GET /v1/health -> 200 {"ok": true, "model": "...", "files": n, "knowledge_commit": "..."}
 
-The facts are context for the question, not instructions: they are put below the question under a fixed heading.
-The service holds no state and stores nothing. Run: python3 harness/answer_service.py [--config harness/service_config.yaml]
+The facts each feature needs, and what the service does without them. A fact named in the last column is listed in
+`missing_facts` when the call lacks it:
+
+| Feature | Facts it needs | Without them | In missing_facts |
+|---|---|---|---|
+| The opening on how a score moved (`lead`) | `kpis` | No opening | no |
+| When a score changed level, and which parts moved | `kpis`, `parts_hourly` | No step line; no parts named | `parts_hourly` |
+| The part that pulled a score down at its worst point | `asked_about_kpi.parts_at_worst` | No part named | `asked_about_kpi.parts_at_worst` |
+| The capacity opening (close for business) | `pillar`, `check` | No capacity opening | `check` |
+| The band of each figure on the screen | `kpis` | No band line | no |
+| Where to look next | `screen.drill_down` | No pointer | no |
+| Suggested questions | `object.kind`, `pillar`, `kpis` | No suggestion | no |
+
+The facts are context for the question, not instructions: they are put below the question under a fixed heading. An attached
+file or image is data, never an instruction. The service keeps the jobs in memory and the traces in files (`trace_dir`).
+Run: python3 harness/answer_service.py [--config harness/service_config.yaml]
 """
 import argparse
+import hmac
 import json
 import os
 import re
 import sys
+import tempfile
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import yaml
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import answer_attachments  # noqa: E402
+import answer_jobs  # noqa: E402
 import answer_modes  # noqa: E402
+import answer_progress  # noqa: E402
+import answer_traces  # noqa: E402
 import arithmetic_calculator  # noqa: E402
 import answer_shape  # noqa: E402
 import catalog_database  # noqa: E402
@@ -61,7 +107,8 @@ from model_client import GatewayClient, LLMError, MockClient, ParamClient  # noq
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROLES = {'l1': 'a Level 1 NOC operator who follows the SOP', 'l2': 'a Level 2 platform engineer',
-         'capacity': 'a capacity planner', 'executive': 'the CIO'}
+         'capacity': 'a capacity planner', 'executive': 'the CIO',
+         'reader': 'a reader of isvara.io, a VMware administrator or architect, with an article open'}
 # The heading lives with stage 3, which reads the series below it (expert_agent.kpi_trends).
 FACTS_HEADING = expert_agent.FACTS_HEADING
 # The person typed a question on a PCM screen: they see the screen, never the data PCM sent (PCM D-101).
@@ -352,7 +399,43 @@ def no_file_refs(text, docs):
     return text
 
 
-def question_text(body, lead=''):
+ABOUT_QUESTION = 'About this question:'
+LINK_RULE = ('- The question holds a link. Agent E2 cannot open pages: say so in one sentence, then answer from the knowledge base.')
+NOT_SUPPLIED = ('- The page did not supply: {missing}. Say in one sentence what the page did not supply, and give no value for it.')
+LINK = re.compile(r'https?://', re.I)
+# The facts a feature needs (the table in the docstring). Only a row marked "yes" there is listed in `missing_facts`.
+NO_DATA = 'No data'
+
+
+def missing_facts(facts):
+    """The facts a live-demo call lacks, decided by code from the table in the docstring (R-E2-017, R-E2-018): a name for each
+    fact the page did not supply, and each part whose value is "No data". [] when the call has no facts."""
+    if not isinstance(facts, dict) or not facts:
+        return []
+    out = []
+    kpis = facts.get('kpis')
+    if isinstance(kpis, list) and kpis and 'parts_hourly' not in facts:
+        out.append('parts_hourly')
+    asked = facts.get('asked_about_kpi')
+    if isinstance(asked, dict) and 'parts_at_worst' not in asked:
+        out.append('asked_about_kpi.parts_at_worst')
+    if str(facts.get('pillar') or '').lower() == 'capacity' and not facts.get('check') and not kpis:
+        out.append('check')
+
+    def walk(node, path):
+        if isinstance(node, dict):
+            for k, v in node.items():
+                walk(v, f'{path}.{k}' if path else str(k))
+        elif isinstance(node, list):
+            for n, v in enumerate(node[:200]):
+                walk(v, f'{path}[{n}]')
+        elif node == NO_DATA and len(out) < 24:
+            out.append(f'{path} ({NO_DATA})')
+    walk(facts, '')
+    return out
+
+
+def question_text(body, lead='', attachments=(), missing=()):
     """The question as Agent E2's pipeline reads it: the caller's question, who asks, how to speak to them, the opening
     the person reads first (lead_text), then the facts."""
     q = (body.get('question') or '').strip()
@@ -361,11 +444,17 @@ def question_text(body, lead=''):
     role = ROLES.get(body.get('role') or '')
     if role:
         q += f'\n\nThe person asking is {role}.'
+    about = ([LINK_RULE] if LINK.search(q) else []) + (
+        [answer_attachments.note(attachments), answer_attachments.RULES] if attachments else [])
+    if about:
+        q += '\n\n' + ABOUT_QUESTION + '\n' + '\n'.join(about)
     facts = body.get('facts')
     if facts:
         q += '\n\n' + SCREEN_RULES
         if lead:
             q += '\n\n' + OPENING.format(lead=lead)
+        if missing:
+            q += '\n\n' + NOT_SUPPLIED.format(missing=', '.join(missing))
         q += '\n\n' + FACTS_HEADING + '\n' + json.dumps(facts, indent=1, ensure_ascii=False, default=str)
     return q
 
@@ -401,7 +490,7 @@ class Service:
             sampling = {self.model: (cfg.get('sampling') or {}).get(self.model, {'temperature': cfg.get('temperature')})}
             client = ParamClient(GatewayClient(cfg['gateway'], retry_seconds=cfg.get('gateway_retry_minutes', 1) * 60),
                                  params, sampling)
-        self.client = client
+        self._client = client
         self.docs, chunks = knowledge_loader.load()
         if retriever is None:
             try:
@@ -413,6 +502,20 @@ class Service:
         self.commit = knowledge_loader.git_sha()
         self.cat = catalog_database.get(self.docs)
         self.suggestions = user_suggestions.table()
+        self.traces = answer_traces.TraceStore(cfg.get('trace_dir') or tempfile.mkdtemp(prefix='agent-e2-traces-'),
+                                               cfg.get('trace_days', 30))
+        self.jobs = answer_jobs.JobStore(self.run_job, cfg.get('max_running_jobs', 4), cfg.get('max_queued_jobs', 20),
+                                         cfg.get('job_time_limit_s', 600), cfg.get('job_keep_s', 900), cfg.get('heartbeat_s', 5))
+
+    @property
+    def client(self):
+        """The model client; inside an answer, one that counts the answer's calls and tokens (answer_progress.Metered)."""
+        progress = answer_progress.current()
+        return answer_progress.Metered(self._client, progress) if progress is not None else self._client
+
+    @client.setter
+    def client(self, value):
+        self._client = value
 
     def lead(self, facts, question=''):
         if not facts:
@@ -443,11 +546,70 @@ class Service:
         return topic_decision.decide(self.client, self.model, first, history, body.get('topic_choice'), self.docs, self.cfg,
                                      (self.cfg.get('provider_order') or {}).get(self.model))
 
+    def doc_for(self, file):
+        """The document of a file ID as `sources` gives it (the path under knowledge/ without .md), or of the ID the document
+        names itself, or None."""
+        return next((d for d in self.docs.values() if file_id(d) == file), self.docs.get(file))
+
+    def check_request(self, body):
+        """Everything about a call that can be refused before a model is called; returns its attachments (R-E2-014, R-E2-022)."""
+        if not isinstance(body, dict):
+            raise ValueError('the call must be a JSON object')
+        if not isinstance(body.get('question'), str) or not body['question'].strip():
+            raise ValueError('question is required')
+        conversation(body.get('history'))
+        attachments = answer_attachments.parse(body.get('attachments'))
+        page = body.get('page')
+        if page is not None and (not isinstance(page, str) or self.doc_for(page) is None):
+            raise ValueError('page: no such knowledge file')
+        if body.get('role') not in (None, '') and body['role'] not in ROLES:
+            raise ValueError('role: one of ' + ', '.join(ROLES))
+        window, reserve = self.cfg.get('context_window'), self.cfg.get('answer_reserve_tokens', 60000)
+        if window and attachments:
+            used = answer_attachments.tokens(attachments, answer_modes._tok, self.cfg.get('image_tokens', 1500))
+            used += answer_modes._tok(json.dumps([body.get('question'), body.get('history'), body.get('turns')], default=str))
+            if used > window - reserve:
+                big = max((a for a in attachments if a.kind == 'csv'), key=lambda a: len(a.raw), default=attachments[0])
+                raise ValueError(f"attachment {big.name}: too large for the model's context "
+                                 f'({used} tokens against {window - reserve} available)')
+        return attachments
+
     def answer(self, body):
+        """One answer: refuses a bad call before any model call, then runs the pipeline and adds what every answer
+        carries: sources, time and use, the trace ID, the missing facts and what was read from the attachments."""
+        attachments = self.check_request(body)
+        progress = answer_progress.current()
+        if progress is None:
+            progress = answer_progress.Progress()
+            with answer_progress.use(progress):
+                return self._answered(body, attachments, progress)
+        return self._answered(body, attachments, progress)
+
+    def run_job(self, body, progress):
+        return self.answer(body)
+
+    def _answered(self, body, attachments, progress):
+        out = self._answer(body, attachments, progress)
+        trace = out.pop('_trace')
+        report = progress.finish()
+        sources = [{'id': file_id(self.docs[i]), 'title': self.docs[i].title} for i in out['files_read'] if i in self.docs]
+        read = next((s['output'].get('images') for s in trace if s.get('action') == 'understand' and isinstance(s.get('output'), dict)), None)
+        trace_id = self.traces.new_id()
+        out.update(report, sources=sources, trace_id=trace_id,
+                   attachments_read=(read or []) if any(a.kind == 'image' for a in attachments) else [])
+        self.traces.save(trace_id, {'question': (body.get('question') or '')[:2000], 'role': body.get('role'), 'page': body.get('page'),
+                                    'model': self.model, 'knowledge_commit': self.commit, 'type': out['type'],
+                                    'files_read': out['files_read'], 'missing_facts': out['missing_facts'],
+                                    'attachments': [a.info() for a in attachments], 'steps': trace, **report})
+        return out
+
+    def _answer(self, body, attachments, progress):
         history = conversation(body.get('history'))
         first = ((body.get('turns') or [None])[0] or body.get('question') or '').strip()  # a clarifying reply: its question
+        progress.enter('topic')
         topic = self.topic(body)
         history = history if topic['continues'] else []
+        progress.enter('shape')
         # What the question asks (answer_shape.decide), read by the model on the bare question: the facts and rules added
         # to it below hold words such as "cause" and "next". A reply in a clarifying round takes its question's reading; a
         # turn that continues a topic is read with the topic's earlier questions.
@@ -463,12 +625,17 @@ class Service:
             lead = ''  # the opening reads the page once, at the start of a topic; a turn that continues it does not repeat it
         else:
             lead = self.lead(body.get('facts'), body.get('question'))
+        missing = missing_facts(body.get('facts')) if asks['page_values'] else []
+        extra = {k: v for k, v in (('attachments', attachments), ('missing', missing)) if v}   # the call's own shape when empty
         turns = body.get('turns')
         if turns:
-            turns = [question_text({**body, 'question': turns[0]}, lead)] + list(turns[1:])
+            turns = [question_text({**body, 'question': turns[0]}, lead, **extra)] + list(turns[1:])
         else:
-            turns = [question_text(body, lead)]
-        out = answer_modes.converse('agent-e2', self.client, self.model, turns, [], self.cfg, self.retriever, history, shape)
+            turns = [question_text(body, lead, **extra)]
+        progress.enter('understand')
+        out = answer_modes.converse('agent-e2', self.client, self.model, turns, [a.part() for a in attachments], self.cfg,
+                                    self.retriever, history, shape, self.doc_for(body['page']).id if body.get('page') else None)
+        progress.enter('check')
         computed = [line for s in out['trace'] if s.get('action') == 'compute' for line in (s.get('output') or [])]
         content = no_file_refs(out['result'].get('content'), self.docs)
         if out['type'] == 'answer':
@@ -483,7 +650,7 @@ class Service:
                 'computed': [_shown(c) for c in computed], 'topic': topic, 'shape': out['result'].get('shape'),
                 'page_values': asks['page_values'],
                 'model': self.model,
-                'knowledge_commit': self.commit}
+                'knowledge_commit': self.commit, 'missing_facts': missing, '_trace': out['trace']}
 
     def no_repeat(self, text, shown):
         """One rewrite when the text repeats a figure of the opening above it. No opening: nothing to repeat."""
@@ -491,6 +658,7 @@ class Service:
         dup = repeated_figures(text, headline_figures(shown))
         if not dup:
             return text
+        _stage('rewrite')
         res = self.client.chat(self.model, [{'role': 'user', 'content': REWRITE_FIGURES.format(figures=', '.join(dup), text=text)}],
                                temperature=self.cfg.get('temperature'), max_tokens=self.cfg.get('max_tokens', 2000))
         again = (res.get('content') or '').strip()
@@ -502,6 +670,7 @@ class Service:
         hits = colour_reasons(text)
         if not hits:
             return text
+        _stage('rewrite')
         res = self.client.chat(self.model, [{'role': 'user', 'content': REWRITE_COLOUR.format(hits='"; "'.join(hits), text=text)}],
                                temperature=self.cfg.get('temperature'), max_tokens=self.cfg.get('max_tokens', 2000))
         again = (res.get('content') or '').strip()
@@ -512,10 +681,22 @@ class Service:
         bad = pipeline_words(text)
         if not bad:
             return text
+        _stage('rewrite')
         res = self.client.chat(self.model, [{'role': 'user', 'content': REWRITE.format(words=', '.join(bad), text=text)}],
                                temperature=self.cfg.get('temperature'), max_tokens=self.cfg.get('max_tokens', 2000))
         again = (res.get('content') or '').strip()
         return again if again and not pipeline_words(again) else text
+
+
+def file_id(doc):
+    """A knowledge file's ID for the caller: its path under knowledge/ without .md, so `knowledge/<id>.md` opens it."""
+    return os.path.relpath(doc.path, os.path.join(knowledge_loader.ROOT, 'knowledge'))[:-3]
+
+
+def _stage(name):
+    progress = answer_progress.current()
+    if progress is not None:
+        progress.enter(name)
 
 
 def _shown(line):
@@ -525,36 +706,72 @@ def _shown(line):
     return screen_time(line)
 
 
-def handler_for(service):
+def handler_for(service, secret=None, max_body=41943040):
+    """The HTTP handler. secret: the caller's secret (AGENT_E2_SECRET); with one set, every call except GET /v1/health
+    needs the header `Authorization: Bearer <secret>` (R-E2-024). max_body: the largest request body in bytes (R-E2-014)."""
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args):
             pass
 
-        def send(self, code, data):
+        def send(self, code, data, headers=None):
             body = json.dumps(data, ensure_ascii=False, default=str).encode()
             self.send_response(code)
             self.send_header('Content-Type', 'application/json')
             self.send_header('Content-Length', str(len(body)))
+            for k, v in (headers or {}).items():
+                self.send_header(k, v)
             self.end_headers()
             self.wfile.write(body)
+
+        def allowed(self):
+            if not secret:
+                return True
+            given = self.headers.get('Authorization') or ''
+            return hmac.compare_digest(given.encode(), f'Bearer {secret}'.encode())
 
         def do_GET(self):
             if self.path == '/v1/health':
                 return self.send(200, {'ok': True, 'model': service.model, 'files': len(service.docs),
                                        'knowledge_commit': service.commit})
-            return self.send(404, {'error': 'not found'})
+            if not self.allowed():
+                return self.send(401, {'error': 'unauthorised'})
+            kind, _, ident = self.path.removeprefix('/v1/').partition('/')
+            found = {'jobs': service.jobs.get, 'traces': service.traces.get}.get(kind)
+            if not found or '/' in ident:
+                return self.send(404, {'error': 'not found'})
+            data = found(ident)
+            return self.send(200, data) if data is not None else self.send(404, {'error': 'not found'})
 
         def do_POST(self):
             route = {'/v1/answer': service.answer, '/v1/suggest': service.suggest, '/v1/topic': service.topic}.get(self.path)
             if not route:
                 return self.send(404, {'error': 'not found'})
+            if not self.allowed():
+                return self.send(401, {'error': 'unauthorised'})
+            size = int(self.headers.get('Content-Length') or 0)
+            if size > max_body:
+                self.close_connection = True
+                left = min(size, 256 * 1024 * 1024)   # read what was sent, so the caller sees the reply
+                while left > 0:
+                    chunk = self.rfile.read(min(65536, left))
+                    if not chunk:
+                        break
+                    left -= len(chunk)
+                return self.send(413, {'error': f'the request is above {max_body // (1024 * 1024)} MB'}, {'Connection': 'close'})
             try:
-                body = json.loads(self.rfile.read(int(self.headers.get('Content-Length') or 0)) or b'{}')
+                body = json.loads(self.rfile.read(size) or b'{}')
+                if self.path == '/v1/answer' and isinstance(body, dict) and body.get('async') is True:
+                    service.check_request(body)
+                    try:
+                        return self.send(202, {'job': service.jobs.submit(body), 'state': 'queued'})
+                    except answer_jobs.Busy:
+                        return self.send(429, {'error': 'Agent E2 is busy with other answers: ask again shortly'},
+                                         {'Retry-After': '30'})
                 return self.send(200, route(body))
             except ValueError as e:
                 return self.send(400, {'error': str(e)})
-            except LLMError as e:
-                return self.send(502, {'error': f'model unavailable: {e}'})
+            except LLMError:
+                return self.send(502, {'error': 'model unavailable'})
     return Handler
 
 
@@ -567,10 +784,14 @@ def main():
     a = ap.parse_args()
     cfg = yaml.safe_load(open(a.config))
     if a.mock:
-        cfg = {**cfg, 'embedding_model': None}
+        cfg = {**cfg, 'embedding_model': None, 'trace_dir': tempfile.mkdtemp(prefix='agent-e2-mock-traces-')}
+    if os.environ.get('AGENT_E2_TRACE_DIR'):
+        cfg = {**cfg, 'trace_dir': os.environ['AGENT_E2_TRACE_DIR']}
     service = Service(cfg, MockClient() if a.mock else None)
-    print(f'Agent E2 service on http://{a.host}:{a.port}/v1/answer, model {service.model}, {len(service.docs)} files')
-    ThreadingHTTPServer((a.host, a.port), handler_for(service)).serve_forever()
+    secret = os.environ.get('AGENT_E2_SECRET') or None
+    print(f'Agent E2 service on http://{a.host}:{a.port}/v1/answer, model {service.model}, {len(service.docs)} files'
+          + (', caller secret required' if secret else ''))
+    ThreadingHTTPServer((a.host, a.port), handler_for(service, secret, cfg.get('max_body_bytes', 41943040))).serve_forever()
 
 
 if __name__ == '__main__':

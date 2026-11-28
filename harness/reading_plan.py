@@ -234,9 +234,14 @@ def _sections(retriever, doc_id, scores, cap):
     return f'### {d.title} (sections)\nid: {d.id} | status: {d.status}\n{body}'
 
 
-def reading_set(retriever, question, cfg, budget=None, case=None):
-    """The reading set: (text, ids used in order, search hits, tier of each id)."""
+def reading_set(retriever, question, cfg, budget=None, case=None, first_file=None):
+    """The reading set: (text, ids used in order, search hits, tier of each id). first_file: a knowledge file the caller
+    names (isvara.io's open article, R-E2-022); it is read whole and comes first."""
     tiers, matched, hits = plan(retriever, question, cfg, case)
+    if first_file in retriever.docs:
+        tiers = {**tiers, 'flow': [first_file] + [i for i in tiers.get('flow', []) if i != first_file]}
+        for t in ORDER[1:]:
+            tiers[t] = [i for i in tiers.get(t, []) if i != first_file]
     ids, whole = [], set()
     named_whole = cfg.get('plan_named_whole')   # named files read whole; the others give their best sections. None: all
     for t in ORDER:

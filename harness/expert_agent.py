@@ -14,6 +14,7 @@ The model makes no tool calls, so no tool-call format can break and no fallback 
 import json
 import re
 
+import answer_progress
 import answer_shape
 import arithmetic_calculator
 import catalog_database
@@ -67,6 +68,7 @@ def _step(trace, action, inp, out, res=None):
     if res:
         s.update({k: res.get(k) for k in ('prompt_tokens', 'completion_tokens', 'latency', 'provider')})
     trace.append(s)
+    answer_progress.note(action)
 
 
 def _tok(text):
@@ -159,7 +161,33 @@ def compute(case, question, retriever, used):
     lines += kpi_time_lines(question, cat)
     lines += depth_breadth_lines(question, cat)
     lines += metric_band_lines(question, cat)
+    lines += case_band_lines(case, cat)
     return ('Computed (exact):\n' + '\n'.join(dict.fromkeys(lines))) if lines else ''
+
+
+def case_band_lines(case, cat):
+    """Stage 3: the band of each value the question states or a screenshot shows (the case's metrics), from the catalog's five
+    limits for a metric that has them (R-E2-025). The model gives this band and no other. Figures from a caller's facts are
+    banded by metric_band_lines."""
+    parts, seen = [], set()
+    for m in case.get('metrics') or []:
+        if not isinstance(m, dict) or not m.get('name'):
+            continue
+        v = m.get('value')
+        if not isinstance(v, (int, float)) or isinstance(v, bool):
+            continue
+        lim = cat.kpi_limits(str(m['name']))
+        if lim is None or (m['name'], v) in seen:
+            continue
+        seen.add((m['name'], v))
+        unit = str(m.get('unit') or '').strip()
+        unit = unit if unit in ('%', '') else ' ' + unit
+        parts.append(f"{m['name']} {_num(v)}{unit}: {arithmetic_calculator.part_score(v, lim['limits'])[1]}")
+    if not parts:
+        return []
+    return ['- Bands of the values in the question or its screenshots, from the catalog limits. Give these bands, never your own '
+            'reading of the limits; a band is the label of a value, never the reason it is a problem: ' + '; '.join(parts[:24])
+            + '. [arithmetic_calculator.py: part_score with the five limits]']
 
 
 # ---------- live facts from a caller (harness/answer_service.py) ----------
@@ -802,7 +830,7 @@ def history_msgs(history):
 
 
 # ---------- the pipeline ----------
-def prepare(client, model, question, images, cfg, trace, retriever, kind, prompts, history=None, shape=None):
+def prepare(client, model, question, images, cfg, trace, retriever, kind, prompts, history=None, shape=None, first_file=None):
     """Stages 1-4: everything before the model writes. The result is shared by every consensus sample, so the
     samples differ only in the model's reasoning, never in what it read. prompts: answer_modes.PROMPTS.
     history: the current topic's earlier turns, [{question, answer}], oldest first, all of them; given only when the
@@ -815,7 +843,7 @@ def prepare(client, model, question, images, cfg, trace, retriever, kind, prompt
     if history:
         _step(trace, 'topic', '', f'continues: {len(history)} earlier questions join the search')
     case = understand(client, model, read_as, images, cfg, trace, kw)                                    # 1
-    reading, used, hits, tiers = reading_plan.reading_set(retriever, read_as, cfg, case=case)                  # 2
+    reading, used, hits, tiers = reading_plan.reading_set(retriever, read_as, cfg, case=case, first_file=first_file)                  # 2
     _step(trace, 'plan', question[:200], {t: [i for i in used if tiers[i] == t] for t in reading_plan.ORDER if t in tiers.values()})
     computed = compute(case, question, retriever, used)                                                  # 3
     if computed:
