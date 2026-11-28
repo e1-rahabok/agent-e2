@@ -1,5 +1,7 @@
 # Run a benchmark round
 
+> **The full round never runs** (the author, 2026-11-28; R-E2-031 in [test-spending.md](../project/requirements/test-spending.md)). `release.full_round` in [`runner_config.yaml`](runner/runner_config.yaml) is `false`, and `round_executor.py` refuses a new round with exit code 2. Agent E2 is tested by the free checks and the answer set, which runs only on the author's go. The rest of this file describes the round machinery that the tests still cover.
+
 How to run the full benchmark round, what it costs, how long it takes and what the runner does when something fails. The full round runs only before a milestone of the workspace's [ROADMAP.md](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/ROADMAP.md) is closed, and it stops when it has spent US$ 100 (R-E2-030 and R-E2-031 in [test-spending.md](../project/requirements/test-spending.md)). Between milestones, the free checks and the answer set test each change. Not indexed.
 Runner details: [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md). Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md).
 

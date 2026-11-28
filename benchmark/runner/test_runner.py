@@ -30,6 +30,17 @@ def row(question, answer_type, inp, level, credit, run, track='text', exact=None
             'confident_wrong': cw}
 
 
+
+def allowed_round_config(folder):
+    """A copy of runner_config.yaml that allows the full round, for the tests of the round machinery. The real file never
+    does (release.full_round false, R-E2-031)."""
+    import yaml
+    cfg = yaml.safe_load(open(os.path.join(os.path.dirname(__file__), 'runner_config.yaml')))
+    cfg['release']['full_round'] = True
+    path = os.path.join(folder, 'allowed-round.yaml')
+    yaml.safe_dump(cfg, open(path, 'w'))
+    return path
+
 class AttachmentTest(unittest.TestCase):
     """A CSV attachment reaches the model as text; a link to an attachment reaches it as its words only."""
     def _question(self):
@@ -589,7 +600,7 @@ class RoundRecoveryTest(unittest.TestCase):
         out = os.path.join(d, 'out')
         os.makedirs(out)
         p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'round_executor.py'), '--out', out, '--skip-preflight',
-                            '--milestone', 'M3', '--only', model, *extra], capture_output=True, text=True, env=env, timeout=120)
+                            '--milestone', 'M3', '--only', model, '--config', allowed_round_config(d), *extra], capture_output=True, text=True, env=env, timeout=120)
         calls = [json.loads(x) for x in open(os.path.join(d, 'log.txt')).read().splitlines()] if os.path.exists(os.path.join(d, 'log.txt')) else []
         return p, calls, out
 
@@ -891,7 +902,7 @@ class RoundMockTest(unittest.TestCase):
             os.makedirs(os.path.join(out, '20261101-old'))
             open(os.path.join(out, '20261101-old', 'config.json'), 'w').write('{}')
             p = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'round_executor.py'), '--out', out,
-                                '--skip-preflight', '--milestone', 'M3', '--child-args', '--mock --runs 1 --questions L1-001,L1-002'],
+                                '--skip-preflight', '--milestone', 'M3', '--config', allowed_round_config(d), '--child-args', '--mock --runs 1 --questions L1-001,L1-002'],
                                capture_output=True, text=True, env=dict(os.environ, AI_GATEWAY_API_KEY='x'), timeout=300)
             self.assertEqual(p.returncode, exit_codes.OK, p.stdout + p.stderr)
             names = sorted(n for n in os.listdir(out))
@@ -1221,7 +1232,7 @@ class RoundSpendingAndMilestoneTest(unittest.TestCase):
         env = dict(os.environ, AI_GATEWAY_API_KEY='x', RUN_ALL_FAST='1', RUN_ALL_NO_SNAPSHOTS='1', RUN_ALL_CHILD=os.path.join(self.d, 'child.py'),
                    FAKE_LOG=os.path.join(self.d, 'log.txt'))
         cmd = [sys.executable, os.path.join(os.path.dirname(__file__), 'round_executor.py'), '--out', self.out, '--skip-preflight',
-               '--only', 'anthropic/claude-opus-5.5', *extra] + (['--config', config] if config else [])
+               '--only', 'anthropic/claude-opus-5.5', *extra, '--config', config or allowed_round_config(self.d)]
         return subprocess.run(cmd, capture_output=True, text=True, env=env, timeout=120)
 
     def launches(self):
@@ -1251,11 +1262,18 @@ class RoundSpendingAndMilestoneTest(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(self.out, folder, spending_stop.STOP_FILE)))
         cfg = yaml.safe_load(open(os.path.join(os.path.dirname(__file__), 'runner_config.yaml')))
         cfg['release']['max_cost_usd'] = 200                                        # the human raised the limit
+        cfg['release']['full_round'] = True
         raised = os.path.join(self.d, 'raised.yaml')
         yaml.safe_dump(cfg, open(raised, 'w'))
         p = self.round_('--resume', config=raised)
         self.assertEqual(self.launches()[-1], {'stop_file': False}, p.stdout + p.stderr)
         self.assertEqual(p.returncode, exit_codes.STOPPED, p.stdout + p.stderr)
+
+    def test_the_full_round_never_starts_with_the_real_configuration(self):
+        p = self.round_('--milestone', 'M3', config=os.path.join(os.path.dirname(__file__), 'runner_config.yaml'))
+        self.assertEqual(p.returncode, 2, p.stdout + p.stderr)
+        self.assertIn('never runs', p.stderr)
+        self.assertEqual(self.launches(), [])
 
     def test_the_round_of_release_1_0(self):
         import yaml
@@ -1263,6 +1281,7 @@ class RoundSpendingAndMilestoneTest(unittest.TestCase):
         self.assertEqual(rel['runs'], [{'model': 'google/gemma-4-31b-it', 'modes': ['baseline', 'agent-e2'], 'runs': 3},
                                        {'model': 'anthropic/claude-opus-5.5', 'modes': ['web'], 'runs': 1}])
         self.assertEqual(rel['max_cost_usd'], 25)
+        self.assertIs(rel['full_round'], False)
 
     def test_each_run_of_the_round_asks_its_own_number_of_times(self):
         import round_executor

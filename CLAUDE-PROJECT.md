@@ -64,7 +64,7 @@ How Claude works in this repository. Read at the start of every session. The des
 - Every candidate model must read screenshots (vision). Models: [`benchmark/models.md`](benchmark/models.md).
 - Baseline runs use no knowledge base. The model and its reasoning setting are in the run folder's `config.json` (`model_params`).
 - Run a benchmark round: [`benchmark/RUN.md`](benchmark/RUN.md) (one prompt, the approvals to give up front, time and cost).
-- Before starting a full benchmark round: pass `--milestone` with the workspace milestone it serves; between milestones, test a change with the free checks and the answer set ([test-spending.md](project/requirements/test-spending.md)).
+- Never start a full benchmark round: the author ruled it out, and `round_executor.py` refuses one. Test a change with the free checks; run the answer set only on the author's go ([test-spending.md](project/requirements/test-spending.md)).
 - When a round exits at its spending limit (exit 9): stop and tell the author; never raise `release.max_cost_usd` (US$25 a round, DESIGN-31 in the workspace's system design).
 - While a benchmark runs, send the author a short progress report every 15 minutes: answers done, errors, time left.
 

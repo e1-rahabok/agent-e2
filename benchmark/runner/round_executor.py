@@ -198,6 +198,9 @@ def main():
     if a.resume and not state:
         sys.exit('No round in progress: nothing to resume. Start one without --resume.')
     if not (state or a.dry_run):
+        if not rel.get('full_round'):
+            ap.error('the full benchmark round never runs (the author, 2026-11-28; R-E2-031): release.full_round is false. '
+                     'Test a change with the free checks and the answer set, which starts only on the author\'s go.')
         if not a.milestone:
             ap.error('a new round needs --milestone, the milestone of the workspace ROADMAP.md it serves (for example M3): '
                      'the full round runs only before a milestone is closed (R-E2-031). Between milestones the free checks and the answer set test each change.')
