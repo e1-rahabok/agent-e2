@@ -1,0 +1,47 @@
+name: Agent E2 tests
+
+# Agent E2's own checks and unit tests on every pull request and every push to main (the workspace's test plan,
+# section Own tests in CI; RISK-7 in its brief, a failing test goes unnoticed): the knowledge rules check, the harness and benchmark runner tests, and
+# every test of project/tools. They need no model and no key; the benchmark itself needs the gateway key and runs
+# in a session (benchmark/RUN.md).
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: agent-e2
+    steps:
+      # The rules check reads the workspace's flagged phrases from its clone next to this one (R-WS-006).
+      - uses: actions/checkout@v4
+        with:
+          path: agent-e2
+      - uses: actions/checkout@v4
+        with:
+          repository: e1-rahabok/private-cloud-workspace
+          path: private-cloud-workspace
+      # The export generator tests read files with Path.read_text(newline=...), which Python 3.13 added.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install pyyaml==6.0.2 requests==2.32.3
+      - name: Knowledge rules check
+        run: python project/tools/rules_check.py
+      - name: Harness unit tests
+        run: python -m unittest harness/test_harness.py
+      - name: Benchmark runner unit tests
+        run: python -m unittest benchmark/runner/test_runner.py
+      - name: Tests of the project tools
+        run: |
+          status=0
+          for t in project/tools/test_*.py; do python -m unittest "$t" || status=1; done
+          exit $status

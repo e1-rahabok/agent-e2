@@ -1,5 +1,5 @@
 # Opens a pull request when a dependency or a GitHub Action has a newer release, and for every security advisory
-# (DESIGN-25 in the workspace's system design; checked by checks/workflows.py, R-WS-012).
+# (DESIGN-25 in the workspace's system design; checked by tools/workflows.py, R-WS-012).
 version: 2
 updates:
   - package-ecosystem: "github-actions"
