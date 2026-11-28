@@ -5,7 +5,7 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
 The general writing rules of every repository, for documents, commit messages and pull request text, are held once in the workspace: [writing rules](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/writing/README.md) and the [flagged phrases](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/writing/flagged-phrases.yaml) of generated text, each with its plain replacement (R-WS-006). This file holds the rules particular to knowledge files, and why a general rule matters more for them.
 
 ## Rules
-- One fact per bullet or table row. A mistake should sit on one line.
+- One fact per bullet or table row, as the workspace's [writing rules](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/writing/README.md) say; for a knowledge file it also means each bullet reaches the model as one fact (section Editing a knowledge file).
 - One English word per concept. The agent's vocabulary: [`knowledge/glossary.md`](../../knowledge/glossary.md). Words to avoid: [vocabulary.md](vocabulary.md). Repository terms: [`project/terms.md`](../terms.md).
 - State mechanism and reason, not only the definition.
 - Facts may come from the source, official docs, or Claude's own knowledge; the author chooses what goes in. A fact still to check gets a `review_notes` line with its section and the URL to check against. No generic filler.
@@ -22,11 +22,11 @@ The general writing rules of every repository, for documents, commit messages an
 - One vSphere object type per metric file (exceptions: KNOWLEDGE-ENGINEERING.md, section 5).
 - Refer to another knowledge file as a link with its id: ``[`id`](relative/path.md)``. GitHub makes it clickable for review; the harness keeps only `id` for the model ([`ARCHITECTURE.md`](../../ARCHITECTURE.md), section Ingest). The same in every Markdown file of the repository, [`knowledge/glossary.md`](../../knowledge/glossary.md) included: its parser keeps only `id` as well. [`project/tools/link_rewriter.py`](../tools/link_rewriter.py) adds missing links; lint fails on a bare id.
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation. The model never gets the chart, so every fact a chart shows is also in the text; never write "the diagram shows" (check with [`project/tools/model_view.py`](../tools/model_view.py)).
-- Tables: short cells (about 12 words). At most 4 columns when cells hold text; number tables such as colour bands can have more. When rows carry long explanations, use one bullet block per row instead (bold item, one sub-bullet per field). GitHub renders a fixed-width column, so wide tables wrap every cell. Split a wide table in two, or move long explanations to bullets under the table.
+- Tables follow the workspace's [writing rules](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/writing/README.md). In a knowledge file a table survives chunking only when it is simple, so prefer one bullet block per row when rows carry explanations.
 - Every metric file says whether the counter is for operations: its use, or "not for operations" with the reason. The vSphere Client and VCF Operations show counters that only serve the kernel, and administrators misuse them; Agent E2 advises on which metrics matter.
 - Every metric file ends its body with `## Misconceptions`, written in the misconception format of KNOWLEDGE-ENGINEERING.md, section 4.
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Avoid "need", "want", "wish".
-- Quotation marks only for verbatim text. Paraphrase without quotes, so the author can search the book for real quotes.
+- Quotation marks only for verbatim text, as the workspace's writing rules say, so the author can search the book for real quotes.
 
 ## Editing a knowledge file (author's checklist)
 How the model reads a file: the harness cuts it at every `##` heading, and each piece reaches the model alone, with only the file title and that heading in front. So:
