@@ -17,8 +17,18 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: agent-e2
     steps:
+      # The rules check reads the workspace's flagged phrases from its clone next to this one (R-WS-006).
       - uses: actions/checkout@v4
+        with:
+          path: agent-e2
+      - uses: actions/checkout@v4
+        with:
+          repository: e1-rahabok/private-cloud-workspace
+          path: private-cloud-workspace
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
