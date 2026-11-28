@@ -22,10 +22,10 @@ jobs:
         working-directory: agent-e2
     steps:
       # The rules check reads the workspace's flagged phrases from its clone next to this one (R-WS-006).
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: agent-e2
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: e1-rahabok/private-cloud-workspace
           path: private-cloud-workspace
