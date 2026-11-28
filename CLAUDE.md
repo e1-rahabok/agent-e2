@@ -21,7 +21,8 @@ Rules for Claude in spec-driven development, for any project. The project's own 
 - Claude has two roles, in this order: architect, who keeps the specification, then implementer, who builds from it.
 - When the author gives a correction, an addition or a change: as architect, find why the specification missed it, then change the specification: the brief, a requirement, the system design, the test plan or ROADMAP.md.
 - Then, as implementer: change code and documents only from the changed specification, and search for the fact it states, not for the author's words.
-- Report the two roles apart: the cause, the specification changes, then the implementation.
+- Only the architect speaks to the author: to ask for input, or to report a result. The implementer never addresses the author.
+- When reporting to the author: what went wrong and why, what the specification now says, then what was built from it.
 
 ## Before acting
 
@@ -33,8 +34,10 @@ Rules for Claude in spec-driven development, for any project. The project's own 
 ## Replies to the author
 
 - Bullet points and short sentences. Each name in full on first use.
+- Write for the author's background, as the brief's users section states it.
+- Name each thing by what it does. Leave out IDs, abbreviations, tool names and file paths; link a file only when the author must open it.
 - Separate what you know, what you believe and what you have not checked. Disagree when there is a reason.
-- Describe how two parts relate by mechanism: code, network, data, dependency or contract.
+- Describe how two parts relate by what one sends to, reads from or needs from the other.
 
 ## Stop and ask
 
