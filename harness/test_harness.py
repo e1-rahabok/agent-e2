@@ -1838,6 +1838,15 @@ class CapacityOpeningTest(unittest.TestCase):
         self.assertIn('it decides', self.text(70, 30, 65))
         self.assertTrue(self.text(70, 30, 65).endswith('**Closed for new VMs and VM upsizes.**'))
         self.assertTrue(self.text(70, 30, 50).endswith('**Open for new VMs.**'))
+
+    def test_every_cluster_gets_the_production_risk_limit(self):
+        # Q-WS-138: release 1.0 has no data on a cluster's environment, so a non-production cluster closes above 60% too.
+        t = self.text(70, 30, 65)
+        self.assertIn('the production limit of 60%', t)
+        self.assertIn("a non-production cluster's own limit is 80%", t)
+        r = expert_agent.capacity_check_row(
+            {'pillar': 'Capacity', 'production': False, 'check': {'consumption': 70, 'performance': 30, 'risk': 65}}, CAT)
+        self.assertEqual((r['risk_limit'], r['closed']), (60, True))
         self.assertIn('does not decide', self.text(30, 45, 90))
 
     def test_one_bullet_per_check_and_the_decision_apart(self):

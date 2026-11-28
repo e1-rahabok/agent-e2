@@ -394,7 +394,8 @@ def capacity_check_row(facts, cat):
     can-cluster-take-more-vms): Consumption first; contention (Cluster Performance (%)) overrides; Risk decides only when
     both are orange. Values: the latest Periodic Cluster Check the caller sent (95th percentile of 24 hours for Consumption
     and Risk, 5th for Performance), else the same percentiles of the series. Limits: catalog/thresholds-capacity,
-    decisions. None when the facts are not a cluster's Capacity page or card."""
+    decisions. Risk: the production limit for every cluster, as release 1.0 has no data on a cluster's environment
+    (Q-WS-138). None when the facts are not a cluster's Capacity page or card."""
     if not isinstance(facts, dict) or str(facts.get('pillar') or '').lower() != 'capacity':
         return None
     lim = {r['id']: r['value'] for r in cat._q("SELECT id, value FROM thresholds WHERE use = 'decision' AND id LIKE 'closure-cluster-%'")}
@@ -417,12 +418,11 @@ def capacity_check_row(facts, cat):
     c_lv = 'red' if c > lim['closure-cluster-consumption-red'] else 'orange' if c > lim['closure-cluster-consumption-orange'] else 'clear'
     p_lv = None if not isinstance(pf, (int, float)) else 'red' if pf < lim['closure-cluster-performance-red'] else \
         'orange' if pf < lim['closure-cluster-performance-orange'] else 'clear'
-    production = facts.get('production', True) is not False
-    r_lim = lim['closure-cluster-risk-prod' if production else 'closure-cluster-risk-nonprod']
+    r_lim = lim['closure-cluster-risk-prod']
     both = c_lv == 'orange' and p_lv == 'orange'
     closed = 'red' in (c_lv, p_lv) or (both and isinstance(r, (int, float)) and r > r_lim)
     return {'consumption': c, 'performance': pf, 'risk': r, 'c_level': c_lv, 'p_level': p_lv, 'both_orange': both,
-            'closed': closed, 'production': production, 'limits': lim, 'risk_limit': r_lim, 'from_check': bool(chk)}
+            'closed': closed, 'limits': lim, 'risk_limit': r_lim, 'from_check': bool(chk)}
 
 
 def _bare_name(n):

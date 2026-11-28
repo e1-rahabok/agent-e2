@@ -103,8 +103,8 @@ decisions:
   operator: '>'
   value: 60
   unit: '%'
-  condition: production cluster; Cluster Consumption and Cluster Performance both orange
-  meaning: Orange. Production cluster closed.
+  condition: production cluster, and every cluster in release 1.0; Cluster Consumption and Cluster Performance both orange
+  meaning: 'Orange. Production cluster closed. Release 1.0 applies this level to every cluster: Close for Business has no data on a cluster''s environment.'
   source: knowledge-base
   kb: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
   quote: 'production: above 60% (orange) → no: closed;'
@@ -115,7 +115,7 @@ decisions:
   value: 80
   unit: '%'
   condition: non-production cluster; Cluster Consumption and Cluster Performance both orange
-  meaning: Red. Non-production cluster closed.
+  meaning: 'Red. Non-production cluster closed. Not applied in release 1.0: Close for Business has no data on a cluster''s environment, so every cluster gets the production level.'
   source: knowledge-base
   kb: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
   quote: 'non-production: above 80% (red) → no: closed.'

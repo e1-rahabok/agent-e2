@@ -111,7 +111,7 @@ def _performance(series, kind, cat):
     return (LEVEL[level] if level else None), movement, worst_at, basis
 
 
-def _capacity(series, cat, production=True):
+def _capacity(series, cat):
     basis = []
     cons, perf, risk = (_find(series, n) for n in ('Cluster Consumption', 'Cluster Performance', 'Cluster Risk'))
     if not cons or len(_nums(cons)) < MIN_POINTS:
@@ -123,7 +123,7 @@ def _capacity(series, cat, production=True):
     c_band = 'red' if c95 > lim['closure-cluster-consumption-red'] else 'orange' if c95 > lim['closure-cluster-consumption-orange'] else 'clear'
     p_band = None if p5 is None else 'red' if p5 < lim['closure-cluster-performance-red'] else \
         'orange' if p5 < lim['closure-cluster-performance-orange'] else 'clear'
-    risk_limit = lim['closure-cluster-risk-prod' if production else 'closure-cluster-risk-nonprod']
+    risk_limit = lim['closure-cluster-risk-prod']  # every cluster in release 1.0: no data on its environment (Q-WS-138)
     closed = 'red' in (c_band, p_band) or (c_band == p_band == 'orange' and r95 is not None and r95 > risk_limit)
     basis.append(f'Close-for-business, last 24 hours: Cluster Consumption 95th percentile {c95:g}% ({c_band})'
                  + (f', Cluster Performance 5th percentile {p5:g}% ({p_band})' if p5 is not None else '')
@@ -159,7 +159,7 @@ def suggest(facts, cat, tbl=None, screen_time=lambda x: x):
     if pillar == 'performance':
         level, movement, worst_at, basis = _performance(series, kind, cat)
     else:
-        level, movement, basis = _capacity(series, cat, production=facts.get('production', True) is not False)
+        level, movement, basis = _capacity(series, cat)
     out['basis'] += basis
     out['situation'].update(level=level, movement=movement)
     if level is None:
