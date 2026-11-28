@@ -32,7 +32,7 @@ Key on the left, the API name. The screen label is not in the API: it comes from
 | Guest Needed Memory | `guest|mem.needed_latest` | yes |
 | Page Out Rate | `guest|page.outRate_latest` | yes |
 | Guest CPU Queue | `guest|cpu_queue` | yes |
-| Network Peak Transmitted Packet Dropped | none exact; `net|droppedTxPct_max` and `net|droppedTx_summation` are the closest | **unclear** |
+| Network Peak Transmitted Packet Dropped | `net|droppedTxPct_max`, the 20-second peak | yes |
 | Virtual disk read latency | `virtualDisk:scsi0:0|totalReadLatency_average` | yes (per disk) |
 | Virtual disk IOPS per `scsiX:Y` | `virtualDisk:scsi0:0|numberReadAveraged_average`, `numberWriteAveraged_average` | yes (per disk) |
 | Virtual disk peak latency | `virtualDisk|peak_vDisk_readLatency`, `peak_vDisk_writeLatency` | yes |
