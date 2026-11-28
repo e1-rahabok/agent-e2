@@ -41,7 +41,7 @@ An English word has a general meaning and a VMware operations meaning. Each word
 | harness | The execution environment and guardrails around the model (`harness/`): search engine, catalog, calculator, flow executor, budgets, the verifier. The agent runs on it and uses its tools | wrapper |
 | runner | The benchmark code ([`benchmark/runner/`](../benchmark/runner)) | - |
 | Enterprise Readiness | The category of mandatory-by-policy components an enterprise requires (availability, recoverability, security, observability, governance, IT operations management, dev/test/QA copies). It is not virtualization overhead | enterprise requirement cost, enterprise overhead |
-| judge | The model that scored free-text answers 0-3; archived (Q-E2-199): every question is multiple choice | grader |
+| grader | The model that scores a free-text answer 0-3 by the [rubric](../benchmark/free-text-rubric.md) (R-E2-005, Q-E2-264) | judge |
 | candidate | A model in the benchmark | model under test, AI under test |
 | test | A code test only: [`harness/test_harness.py`](../harness/test_harness.py), [`benchmark/runner/test_runner.py`](../benchmark/runner/test_runner.py) | the benchmark |
 | retrieval check | [`benchmark/runner/retrieval_check.py`](../benchmark/runner/retrieval_check.py): are the files each question needs found, without a model. Guide: [`benchmark/retrieval-check.md`](../benchmark/retrieval-check.md) | retrieval test, harness-only test |

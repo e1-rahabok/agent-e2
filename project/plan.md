@@ -138,7 +138,7 @@ Features and content pushed out of release 1.0, for the author to work on (Q-E2-
 
 ### On-premises deployment, after release 1.0
 Live test:
-- The code changes in [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md), section 4: `--local` server, vision and context from config, judge later, timings per turn.
+- The code changes in [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md), section 4: `--local` server, vision and context from config, timings per turn.
 - Constrained final line: grammar-guided decoding (vLLM, llama.cpp) for the `ANSWER:` line only, reasoning left free; would replace the repair turn.
 - Measure seconds per model turn on the target GPU; set the time limit from the operator session.
 

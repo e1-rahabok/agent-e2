@@ -1,5 +1,5 @@
 # Known style debt: file -> number of problems found by the workspace's tools/style.py (R-WS-006).
-# May only shrink: lower a number, or remove a clean file, in the pull request that fixes it. Q-E2-272 in project/author-questions.md.
+# May only shrink: lower a number, or remove a clean file, in the pull request that fixes it. Q-E2-272 in project/author-questions-resolved.md.
 ARCHITECTURE.md: 16
 KNOWLEDGE-ENGINEERING.md: 18
 MISSION.md: 27
