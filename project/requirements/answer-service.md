@@ -9,7 +9,7 @@ Files involved:
 - The service and its settings: [harness/answer_service.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/answer_service.py) and [harness/service_config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/harness/service_config.yaml).
 - The pipeline it runs: [harness/answer_modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/answer_modes.py) (`converse`) and [harness/expert_agent.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/expert_agent.py).
 - PCM's client: [pcm/core/agent_e2.py](https://github.com/e1-rahabok/private-cloud-manager/blob/main/pcm/core/agent_e2.py).
-- The contract check: [checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/checks/agent_e2_api.py).
+- The contract check: [contract-checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/contract-checks/agent_e2_api.py).
 - The free-text rubric that the grader of the answer set uses, kept from the deleted judge: [benchmark/free-text-rubric.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/free-text-rubric.md).
 
 ## Model and knowledge
@@ -26,7 +26,7 @@ Source: SCOPE-6 (Agent E2 in release 1.0: accuracy first, the model, drafts used
 - And every answer names the same model and the `knowledge_commit` it was written from
 
 Test scenarios:
-- T-E2-001a (anywhere, automated by [checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/checks/agent_e2_api.py), to extend): read `model` from `/v1/health` and from one answer; both equal the `model` line of [service_config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/harness/service_config.yaml).
+- T-E2-001a (anywhere, automated by [contract-checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/contract-checks/agent_e2_api.py), to extend): read `model` from `/v1/health` and from one answer; both equal the `model` line of [service_config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/harness/service_config.yaml).
 - T-E2-001b (anywhere, manual at each model change): the answer-set report for the new model exists and passes before `service_config.yaml` changes.
 
 ### R-E2-002 Every knowledge file is used, drafts included
@@ -162,7 +162,7 @@ Source: SCOPE-6 ("an answer may take minutes; no streaming, but the user always 
 
 Test scenarios:
 - T-E2-007a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py), to build): a mock client that sleeps 35 seconds in the answer call; poll every 2 seconds; expect the stages in pipeline order, `updated_at` never older than 10 seconds, and `result` at the end.
-- T-E2-007b (anywhere, automated by [checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/checks/agent_e2_api.py), to extend): the job reply has every field above with its type; `result` passes the same field check as `/v1/answer`.
+- T-E2-007b (anywhere, automated by [contract-checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/contract-checks/agent_e2_api.py), to extend): the job reply has every field above with its type; `result` passes the same field check as `/v1/answer`.
 
 ### R-E2-008 A stuck or failed answer ends with a reason
 
@@ -209,7 +209,7 @@ Source: answer to Q-WS-I1 ("Agent E2 is capable of answering back, forming a cha
 
 Test scenarios:
 - T-E2-011a (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py) and [benchmark/runner/topic_check.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/topic_check.py)): the existing conversation and topic tests pass.
-- T-E2-011b (anywhere, automated by [checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/checks/agent_e2_api.py), to extend): an isvara.io-shaped call with two earlier turns and no facts returns `topic` with `continues` and `by`.
+- T-E2-011b (anywhere, automated by [contract-checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/contract-checks/agent_e2_api.py), to extend): an isvara.io-shaped call with two earlier turns and no facts returns `topic` with `continues` and `by`.
 
 ### R-E2-012 Agent E2 reads screenshots a caller sends
 
@@ -286,7 +286,7 @@ Source: DESIGN-1 (PCM and isvara.io both use Agent E2; Agent E2 replaces AskIO);
 - Then the answer uses no PCM screen rule: it names no PCM page, tab, chart or Sources list, and has no opening (`lead` is empty)
 
 Test scenarios:
-- T-E2-015a (anywhere, automated by [checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/checks/agent_e2_api.py), to extend): an isvara.io-shaped call returns every field of the answer with its type, and an empty `lead`.
+- T-E2-015a (anywhere, automated by [contract-checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/contract-checks/agent_e2_api.py), to extend): an isvara.io-shaped call returns every field of the answer with its type, and an empty `lead`.
 - T-E2-015b (anywhere with the gateway key, automated by the answer-set grader): no reader answer in the report contains "PCM", "this page" or "the tab".
 
 ### R-E2-016 Every answer lists the knowledge files it used, by ID and title
@@ -302,7 +302,7 @@ Source: answer to Q-WS-45 ("User must be able to click on the cited page"); SCOP
 - And the answer text itself holds no file ID or path
 
 Test scenarios:
-- T-E2-016a (anywhere, automated by [checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/checks/agent_e2_api.py), to extend): every `sources` id resolves to `knowledge/<id>.md` in the agent-e2 clone; every title equals that file's first heading.
+- T-E2-016a (anywhere, automated by [contract-checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/contract-checks/agent_e2_api.py), to extend): every `sources` id resolves to `knowledge/<id>.md` in the agent-e2 clone; every title equals that file's first heading.
 - T-E2-016b (anywhere, automated by [harness/test_harness.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/test_harness.py)): the existing `no_file_refs` tests pass.
 
 ### R-E2-022 isvara.io names the article the reader has open
@@ -350,7 +350,7 @@ Source: answer to Q-WS-36; SCOPE-5 (PCM's live demo shows what the VCF vCommunit
 - And the answer says in one sentence what the page did not supply, and gives no value for it
 
 Test scenarios:
-- T-E2-018a (anywhere, automated by [checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/checks/agent_e2_api.py), to extend): a fixture in the shape of PCM's live facts ([R-LIVE-028](https://github.com/e1-rahabok/private-cloud-manager/blob/main/spec/requirements/live-demo.md)), without `parts_hourly`, returns `missing_facts` holding `parts_hourly`. The same check on facts recorded from the lab is [R-E2-026](#r-e2-026-agent-e2-answers-correctly-on-facts-recorded-from-the-lab).
+- T-E2-018a (anywhere, automated by [contract-checks/agent_e2_api.py](https://github.com/e1-rahabok/private-cloud-workspace/blob/main/contract-checks/agent_e2_api.py), to extend): a fixture in the shape of PCM's live facts ([R-LIVE-028](https://github.com/e1-rahabok/private-cloud-manager/blob/main/spec/requirements/live-demo.md)), without `parts_hourly`, returns `missing_facts` holding `parts_hourly`. The same check on facts recorded from the lab is [R-E2-026](#r-e2-026-agent-e2-answers-correctly-on-facts-recorded-from-the-lab).
 
 ### R-E2-026 Agent E2 answers correctly on facts recorded from the lab
 

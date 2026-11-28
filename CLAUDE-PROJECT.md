@@ -75,6 +75,7 @@ How Claude works in this repository. Read at the start of every session. The des
 
 ## Validation
 - Before every commit: `python3 project/tools/rules_check.py` reports 0 problems, `python3 -m unittest harness/test_harness.py` and `python3 -m unittest benchmark/runner/test_runner.py` pass. Check the result itself, not only that the command ran: a pipe into `grep` or `tail` hides a failure.
+- On every pull request: [.github/workflows/tests.yml](.github/workflows/tests.yml) runs the same three, and every `project/tools/test_*.py`.
 - Allowed tag values and avoided phrases live in [`project/tools/rules_check_values.yaml`](project/tools/rules_check_values.yaml). Change them there, not in the script.
 - A change to structure or retrieval needs a before and after number from the retrieval check or the benchmark. The retrieval check runs on the run set as it is (Q-E2-206); re-baseline when the question bank changes.
 
